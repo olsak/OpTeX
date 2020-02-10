@@ -1,0 +1,8 @@
+
+*.fmt
+*.gz
+*.log
+*.pdf
+*.ref
+*.tmp
+*.zip

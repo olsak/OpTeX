@@ -1,0 +1,6 @@
+= OpTeX
+
+Unofficial mirror of OpTeX.
+
+See http://petr.olsak.net/optex/
+
