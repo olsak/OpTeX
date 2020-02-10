@@ -1,0 +1,55 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_fontdecl [Linux Libertine] \libertine {Free Linux Libertine fonts}
+        {\sans \mono \caps} {\rm \bf \it \bi \initials \displ \keybr} {TX}
+        "Linux Libertine O"
+
+\_wlog{\_detokenize{%
+Modifiers^^J
+ \sans ...... smaller serifs^^J
+ \caps ...... caps & small caps^^J
+Special variants:^^J
+ \initials .. special initials (only uppercase letters)^^J
+ \displ ..... display variant, suitable at big sizes^^J
+ \mono ...... non-proportional^^J
+ \keybr ..... keyboard, emulates keyboard buttons^^J
+}}
+
+\_protected\_def \_libertine {%
+   \_def \_currfamily {libertine}%
+   \_def\_fontnamegen {"Linux \_mainfamV\_V\_subfamV O/\_currV:\_capsV\_fontfeatures"}% 
+   \_resetmod
+}
+
+\_moddef \resetmod {\_fsetV mainfam=Libertine,subfam={},caps={} \_fvars {} B I BI }
+\_moddef \sans     {\_fsetV mainfam=Biolinum,subfam={} }
+\_moddef \mono     {\_fsetV mainfam=Libertine,subfam={Mono } \_fvars {} . . . }
+\_moddef \caps     {\_fsetV caps=+smcp; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_famvardef \initials {\_fsetV mainfam=Libertine,subfam={Initials } \_fvars {} . . . \rm}
+\_famvardef \displ    {\_fsetV mainfam=Libertine,subfam={Display } \_fvars {} . . . \rm}
+\_famvardef \keybr    {\_fsetV mainfam=Biolinum,subfam={Keyboard } \_fvars {} . . . \rm}
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+This is another example where the font names (no font files) are declared.
+Linux Libertine font is typically installed on Linux systems.
+The \_V macro generates a space. We provide following fonts:
+
+normal:  "Linux Libertine O:\_fontfeatures"   
+         "Linux Libertine O/B:\_fontfeatures" 
+         "Linux Libertine O/I:\_fontfeatures" 
+         "Linux Libertine O/BI:\_fontfeatures"
+mono  :  "Linux Libertine Mono O:\_fontfeatures"   
+sans:    "Linux Biolinum O:\_fontfeatures"    
+         "Linux Biolinum O/B:\_fontfeatures"
+         "Linux Biolinum O/I:\_fontfeatures"
+         "Linux Biolinum O/BI:\_fontfeatures"
+special: "Linux Libertine Initials O:\_fontfeatures"
+         "Linux Libertine Display O:\_fontfeatures"
+         "Linux Biolinum Keyboard O:\_fontfeatures"
+ 
+Another file f-libertine.opm declares Linux Libertine family from font files.

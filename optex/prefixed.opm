@@ -1,0 +1,133 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \public {Prefixing and code syntax <2020-01-23>}
+
+% all TeX82 primitives have alternative control sequence \_hbox \_string, ...
+
+\let\_directlua = \directlua
+
+\_directlua {
+   tex.enableprimitives('_', tex.extraprimitives('tex'))
+}
+
+\_let\_ea =\_expandafter  % usefull shortcut
+
+\_long\_def \_xargs #1#2{\_ifx #2;\_else \_ea#1\_ea#2\_ea\_xargs \_ea #1\_fi}
+\_long\_def \_xstring #1{\_ea\_xstringA \_string#1^}
+\_def \_xstringA #1#2^{#2}
+
+\_def \_public {\_xargs \_publicA}
+\_def \_publicA #1{\_ea\_let \_ea#1\_csname _\_xstring #1\_endcsname} 
+
+\_def \_private {\_xargs \_privateA}
+\_def \_privateA #1{\_ea\_let \_csname _\_xstring #1\_endcsname =#1} 
+
+\_def \_codedecl #1#2{%
+   \_ifx #1\_undefined \_wterm{#2}%
+   \_else \_expandafter \_endinput \_fi
+}
+\_def \_wterm {\_immediate \_write16 }
+
+\_public \public \private \xargs \xstring \ea \wterm ;
+
+\_endcode %----------------------------------------------------
+
+
+\secc Prefixing control sequences
+
+All control sequences used in \OpTeX/ are used and defined with `_` prefix. 
+Then user can be sure that when he/she does \def\foo then internal macros of
+\OpTeX/ nor \TeX/ primitives will be not damaged. For example
+`\def\ifx{something}` will not damage maros because \OpTeX/'s macros 
+are using `\_ifx` instead `\ifx`.
+
+All \TeX/ primitives are initialzed with two representative control
+sequences: `\word` and `\_word`, for example `\hbox` and `\_hbox`.
+The first alternative is reserved for users or such control sequences 
+can be re-defined by user.
+
+Note that \OpTeX/ sets the character `_` as letter, so it can be used in
+control sequences. When a control sequence begins with this character 
+then it means that it is a primitive or it is used in \OpTeX/ macros as
+internal. User can redefine such control sequence only if he/she explicitly 
+know what happens.
+
+We newer change catcode of `_`, so internal macros can be 
+redefined by user without problems if it is desired. We need not 
+something like `\makealetter` from \LaTeX/.
+
+\OpTeX/ defines all new macros as prefixed. For public usage of such macros 
+we need to set non-prefixed version. This is done by 
+
+\begtt
+\_public <list of control sequences> ;
+\endtt
+
+For example `\_public \foo \bar ;` does `\let\foo=\_foo`, `\let\bar=\_bar`.
+
+At the end of each code segment in \OpTeX/, the `\_public` macro is used. You
+can see, what macros are defined for public usage in such code segment. 
+
+The macro `\_private` does reverse job to `\_public` with the same syntax.
+For example `\_private \foo \bar ;` does `\let\_foo=\foo`, `\let\_bar=\bar`.
+This should be used when nonprefixed variant of control sequence is declared
+already but we need the prefixed variant too.
+
+
+\secc Name space of control sequences for users
+
+User can define or declare any control sequence with a name without any `_`.
+This does not make any problem. Only one exception is the reserved control
+sequence `\par` which is generated and used as internal in \TeX/.
+
+User can define or declare control seqquences with `_` character, for
+example `\my_control_sequence`, but with the following exceptions:
+
+\begitems
+* Control sequences which begins with one `_` and there is no second `_` in
+  it and all used letters are lowercase, are reserved for \TeX/ primitives and 
+  \OpTeX/ internal macros.
+* Control sequences (terminated by non-letter) in the form 
+  `\<word>_` or `\<word>_<one-letter>`, where
+  <word> is a sequence of letters, are unaccesible, because they
+  are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
+  `_<one-letter>`. This is important for writing math, for example:
+\begtt  
+  \int_a^b    ... is interpreted as \int _a^b
+  \max_M      ... is interpreted as \max _M
+  \alpha_{ij} ... is interpreted as \alpha _{ij}
+\endtt
+  This feature is implemented using lua code at input processor level, see
+  math-macro.opm for more details. You can deactivate this feature by
+  `\mathsboff`. After this, you can stil write  `$∫_a^b$` or `$\int _a^b$` 
+  without problems but `\int_a^b` yields to undefined control sequence
+  `\int_a`. You can activate this feature again by `\mathsbon` -- the 
+  effect will take shape from next line read from input file.
+* Control sequences in the form `\_<pkg>_<word>` is intended for package
+  writers as internal macros for a package with `<pkg>` identifier.
+\enditems
+
+All other control sequences can be used in user name space. For example `\word`,
+`\word_xx`, `\Word_x`, `\word_x_y`.
+
+
+\secc Macro files syntax
+
+Each segment of \OpTeX/ marcos is stored in one file with `.opm` extension
+(means OPtex Macros). Your macros should be in normal *.tex file.
+
+The code in `*.opm` files starts by `\_codedecl` and ends by `\_endcode`.
+The `\_endcode` is equivalent for `\endinput`, so documentation can follow.
+The `\_codedecl` has syntax:
+
+\begtt
+\_codedecl \sequence {Name <version>}
+\endtt
+
+If the mentioned `\sequence` is defined, then `\_codedecl` does the same as
+`\endinput`: this protect from reading the file twice. We suppose, that
+`\sequence` is defined.
+
+We can read the `*.opm` file in documentation mode. Then the code and the
+comments after `\_endcode` are printed.
+

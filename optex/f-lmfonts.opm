@@ -1,0 +1,194 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_fontdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
+        {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital 
+         \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {CM+AMS}
+        "[lmroman10-regular]"
+
+\_wlog{\_detokenize{%
+Modifiers (selects subfamily):^^J
+ \modreset .. implicit values (serif, bold extended, nocaps)^^J
+ \sans ...... sans serif subfamily^^J
+ \quotset ... quotation subfamily^^J
+ \ttset ..... typewriter subfamily^^J
+ \ttprop .... proportional typewriter-like subfamily^^J
+ \ttlight ... light typewriter subfamily^^J
+ \ttcond .... condensed typewriter subfamily^^J
+ \upital .... upright italic (only \rm)^^J
+ \dunhill ... dunhill roman subfamily (only \rm, \it)^^J
+Submodifiers (setlects special variants of given subfamily):^^J
+ \caps ...... caps & small caps (available only at limited shapes)^^J
+ \slant ..... slanted (default in some subfamilies)^^J
+ \nbold ..... normal bold (\roman gives extended bold by default)^^J
+ \bolder .... extended bold^^J
+}}
+
+\_protected\_def \LMfonts {%
+   \_def \_currfamily {LMfonts}%
+   \_def \_fontnamegen {[\_optname{lm\_subfamV.\_currV}]:\_fontfeatures}%
+   \_resetmod
+}
+
+\_def\_LMregfont #1 #2 #3{%
+   \_edef\_tmp {\_noexpand\_regoptsizes #1 #2 \_ea\_detokenize\_ea{#3}}%
+   \_lowercase\_ea{\_tmp}% OTF file names are lowercase
+}
+\_def \_regoptFS {5 <5.5 6 <6.5 7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <15 17 <*}
+\_def \_regoptFT {5 <5.5 6 <6.5 7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <*}
+\_def \_regoptST {7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <*}
+\_def \_regoptES {8 <8.5 9 <9.5 10 <11.1 12 <15 17 <*}
+\_def \_regoptET {8 <8.5 9 <9.5 10 <11.1 12 <*}
+\_def \_regoptT  {10 <*}
+\_def \_regoptE  {8 <*}
+
+\_LMregfont lmrm.r     LMRoman?-Regular        \_regoptFS  % 5-17
+\_LMregfont lmrm.bx    LMRoman?-Bold           \_regoptFT  % 5-12
+\_LMregfont lmrm.i     LMRoman?-Italic         \_regoptST  % 7-12
+\_LMregfont lmrm.bxi   LMRoman?-BoldItalic     \_regoptT   % 10
+\_LMregfont lmrm.isl   LMRomanSlant?-Regular   \_regoptES  % 8-17
+\_LMregfont lmrm.bxisl LMRomanSlant?-Bold      \_regoptT   % 10
+\_LMregfont lmrm.b     LMRomanDemi?-Regular    \_regoptT   % 10
+\_LMregfont lmrm.bi    LMRomanDemi?-Oblique    \_regoptT   % 10
+
+\_LMregfont lmss.r     LMSans?-Regular          \_regoptES  % 8-17
+\_LMregfont lmss.bx    LMSans?-Bold             \_regoptT   % 10
+\_LMregfont lmss.i     LMSans?-Oblique          \_regoptES  % 8-17
+\_LMregfont lmss.bxi   LMSans?-BoldOblique      \_regoptT   % 10
+\_LMregfont lmss.b     LMSansDemiCond?-Regular  \_regoptT   % 10
+\_LMregfont lmss.bi    LMSansDemiCond?-Oblique  \_regoptT   % 10
+
+\_LMregfont lmsq.r     LMSansQuot?-Regular      \_regoptE  % 8
+\_LMregfont lmsq.b     LMSansQuot?-Bold         \_regoptE  % 8
+\_LMregfont lmsq.i     LMSansQuot?-Oblique      \_regoptE  % 8
+\_LMregfont lmsq.bi    LMSansQuot?-BoldOblique  \_regoptE  % 8
+
+\_LMregfont lmtt.r     LMMono?-Regular        \_regoptET  % 8-12
+\_LMregfont lmtt.b     LMMonoLt?-Bold         \_regoptT   % 10
+\_LMregfont lmtt.i     LMMono?-Italic         \_regoptT   % 10
+\_LMregfont lmtt.bi    LMMonoLt?-BoldOblique  \_regoptT   % 10
+\_LMregfont lmtt.isl   LMMonoSlant?-Regular   \_regoptT   % 10
+\_optfontalias {lmtt.bisl} {lmtt.bi} 
+
+\_LMregfont lmtp.r     LMMonoPropLt?-Regular      \_regoptT  % 10
+\_LMregfont lmtp.bx    LMMonoPropLt?-Bold         \_regoptT  % 10
+\_LMregfont lmtp.i     LMMonoPropLt?-Oblique      \_regoptT  % 10
+\_LMregfont lmtp.bxi   LMMonoPropLt?-BoldOblique  \_regoptT  % 10
+\_LMregfont lmtp.b     LMMonoProp?-Regular        \_regoptT  % 10
+\_LMregfont lmtp.bi    LMMonoProp?-Oblique        \_regoptT  % 10
+
+\_LMregfont lmtl.r     LMMonoLt?-Regular  \_regoptT  % 10
+\_LMregfont lmtl.i     LMMonoLt?-Oblique  \_regoptT  % 10
+
+\_LMregfont lmtc.r     LMMonoLtCond?-Regular  \_regoptT  % 10
+\_LMregfont lmtc.i     LMMonoLtCond?-Oblique  \_regoptT  % 10
+
+\_LMregfont lmrm.rc    LMRomanCaps?-Regular \_regoptT  % 10
+\_LMregfont lmrm.ic    LMRomanCaps?-Oblique \_regoptT  % 10
+\_LMregfont lmtt.rc    LMMonoCaps?-Regular  \_regoptT  % 10
+\_LMregfont lmtt.ic    LMMonoCaps?-Oblique  \_regoptT  % 10
+
+\_LMregfont lmmu.r     LMRomanUnsl?-Regular    \_regoptT  % 10
+\_LMregfont lmdu.r     LMRomanDunh?-Regular    \_regoptT  % 10
+\_LMregfont lmdu.sl    LMRomanDunh?-Oblique    \_regoptT  % 10
+
+% main modifiers (they select a subfamily)
+\_moddef \resetmod {\_fsetV subfam=rm \_fvars r bx i bxi }
+\_moddef \sans     {\_fsetV subfam=ss \_fvars r bx i bxi }
+\_moddef \quotset  {\_fsetV subfam=sq \_fvars r b i bi }
+\_moddef \ttset    {\_fsetV subfam=tt \_fvars r b i bi }
+\_moddef \ttprop   {\_fsetV subfam=tp \_fvars r b i bi }
+\_moddef \ttlight  {\_fsetV subfam=tl \_fvars r . i . }
+\_moddef \ttcond   {\_fsetV subfam=tc \_fvars r . i . }
+\_moddef \upital   {\_fsetV subfam=mu \_fvars r . . . }
+\_moddef \dunhill  {\_fsetV subfam=du \_fvars r . sl . }
+
+% submodifiers (they select special vaiants in a subfamily)
+\_moddef \nbold    {\_onlyif subfam=rm,ss,tp: {\_fvars r b i bi }}
+\_moddef \bolder   {\_onlyif subfam=rm,ss,tp: {\_fvars r bx i bxi }} 
+\_moddef \slant    {\_onlyif subfam=rm:       {\_fvars r bx isl bxisl }%
+                    \_onlyif subfam=tt:       {\_fvars r b isl bisl }}
+\_moddef \caps     {\_onlyif subfam=rm,tt:    {\_fvars rc . ic . }}
+
+\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}} 
+\_private \LMfonts \ttset ; % \tt variant selector re-defined
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+\sec How to wite font-macro-file with optical sizes for \OpTeX/
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+First, look at more clear example in `f-hermes.opm`. The basic documentation
+is there.
+
+You can use `\_optname` macro in upur `\_fontnamegen`. This macro is fully
+expandable and its input is `<internal-template>` and its output is a
+part of your `\_fontnamegen`, i.e. it is a part of a real font file name with
+`.otf` extension. Shortly speaking:
+
+\begtt
+   \_optname{<internal-template>} -> <part-of-file-name>
+\endtt
+
+You can declare a collection of file names for only one
+<optical-name-template> by `\_regoptsizes`. The syntax is shown for one real
+case:
+
+\begtt
+  \_regoptsizes lmr.r lmroman?-regular
+     5 <5.5 6 <6.5 7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <15 17 <* 
+\endtt
+
+In general: 
+
+\begtt
+   \_regoptsizes <internal-template> {<default-size>} <resizing-data>
+\endtt
+
+Suppose our example above. Then `\_optname{lmr.r}` expands to
+lmroman?-regular where the question mark is substituted by a number
+depending on current `\_optsize`. If the `\_optsize` lies between two boundary
+values (they are prefixed by `<` character) then the number written between
+them is used. For example if $11.1 \lt \_optsize \_le 15$ then 12 is
+substituted instead question mark. The <resizing-data> virtually begins
+with zero `<0`, but it is not explicitly written. The right part of
+<resizing-data> must be terminated by `<*` which means "less than infinity".
+
+If `\_optname` gets an argument which is not registered <internal-template>
+then it expands to `\_failedoptname` which typically ends to error message
+about missing font. You can redefine `\_failedoptname` macro to some
+existing font if you fint it useful.
+
+We are using a special macro \_LMregfont which sets the file names to
+lowercase and enables to use a shortcasts isntead real <resizing-data>.
+There are shortcats `\_regoptFS`, `\_regoptT`, etc. here. THe collection of
+<internal-templates> are declared, each of them covers a collection of real
+file names.
+
+The modifiers redefines \_subfamV and \_currV ouput in this file
+`f-lmfonts.opm`. These outputs are used in the paramater of `\_optname`, so
+they decalre parts of <internal-template>, no parts of real file name.
+
+The `\optfontalias {<new-template>} {<declared-template>} decales
+<new-template> wit the same meaning as previously <declared-template>.
+
+The `\_optname` macro can be used even if no otical sizes are provided by
+a font family. Suppose that font file names are much more chaotic (because
+artists are very creative people), so you need to declare more systematic
+<internal-templates> and do an alias from each <internal-template> to
+<real-font-name>. For example, you can do it as folows:
+
+\begtt
+   \def\fontalias #1 #2 {\_regoptsizes #1 ?#2 {} <*}
+%             alias name           real font name
+   \fontalias crea-a-regular       {Creative Font}
+   \fontalias crea-a-bold          {Creative FontBold}
+   \fontalias crea-a-italic        {Creative olique}
+   \fontalias crea-a-bolditalic    {Creative Bold plus italic}
+   \fontalias crea-b-regular       {Creative Regular subfam}
+   \fontalias crea-b-bold          {Creative subfam bold}
+   \fontalias crea-b-italic        {Creative-subfam Oblique}
+   \fontalias crea-b-bolditalic    {Creative Bold subfam Oblique}
+\endtt
+

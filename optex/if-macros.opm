@@ -1,0 +1,95 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-01-23>}
+
+% \newif like in plain\TeX/:
+
+\_def\_newif #1{\_ea\_newifA \_string #1\_relax#1}
+\_ea\_def \_ea\_newifA \_string\if #1\_relax#2{%
+   \_sdef{#1true}{\_let#2=\_iftrue}%
+   \_sdef{#1false}{\_let#2=\_iffalse}%
+   \_let#2=\_iffalse
+}
+\_def\_newifi #1{\_ea\_newifiA \string#1\_relax#1}
+\_ea\_def \_ea\_newifiA \string\_if #1\_relax#2{%
+   \_sdef{_#1true}{\_let#2=\_iftrue}%
+   \_sdef{_#1false}{\_let#2=\_iffalse}%
+   \_let#2=\_iffalse
+}
+
+% \loop like in plain\TeX/:
+
+\_def \_loop #1\repeat{\_def\_body{#1}\_iterate}
+\_def \_iterate {\_body \_ea \_iterate \_fi}
+\_let \repeat=\fi % this makes \loop...\if...\repeat skippable
+
+% \isempty{text}\iftrue,  \isempty{text}\iffalse:
+
+\_def \_isempty #1#2{\_ea\_ifx\_ea\_relax\_detokenize{#1}\_relax 
+    \_else \_ea\_unless \_fi #2}
+\_def \_isnoempty #1#2{\_ea\_ifx\_ea\_relax\_detokenize{#1}\_relax 
+    \_ea\_unless \_fi #2}
+\_def \_istoksempty #1{\_ea\_isempty\_ea{\_the#1}}
+
+% \isinlist\list{text}\iftrue,  \isinlist\list{text}\false:
+
+\_long\_def\_isinlist#1#2{\_begingroup 
+   \_long\_def\_tmp##1#2##2\_end/_{\_endgroup\_isnoempty{##2}}%
+   \_ea\_tmp#1\_endlistsep#2\_end/_%
+}
+
+% \isnextchar <char>{exec if true}{exec if false}
+
+\_long\_def\_isnextchar#1#2#3{\_begingroup\_toks0={\_endgroup#2}\_toks1={\_endgroup#3}%
+   \_let\_tmp=#1\_futurelet\_next\_isnextcharA
+}
+\_def\_isnextcharA{\_the\_toks\_ifx\_tmp\_next0\_else1\_fi\_space}
+
+% \isfile{name}\iftrue
+
+\_newread \_testin
+
+\_def\_isfile #1{%
+   \_openin\_testin =#1
+   \_ifeof\_testin \_ea\_unless
+   \_else \_closein\_testin
+   \_fi
+}
+
+% \removespaces text with spaces {} -> textwithspaces
+
+\_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
+
+
+\_public
+   \newif \loop \repeat \isempty \istoksempty \isinlist \isnextchar 
+   \isfile \removespaces ;
+
+\_endcode %---------------------------------------------------------
+
+The `\newif` macro works like in plain\TeX. It means that
+after `\newif\ifxxx` you can use `\xxxtrue` or
+`\xxxfalse` to set the boolean value and use `\ifxxx true\else false\fi`
+to test this value. The defalut value is false.
+
+The macro `\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
+`\_xxxfalse`. This means that it is usable for _prefixed macros.
+
+The `\loop <codeA> \ifsomething <codeB> \repeat` loops `<codeA> <codeB>`
+until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
+finished. This works like in plain\TeX.
+
+The macro `\isempty{<text>}\iftrue <codeA>\else <codeB>\fi` executes <codeA>
+if <text> is empty and <codeB> if it is nonempty. You can use
+`\isempty{<text>}\iffalse <codeB>\else <codeA>\fi` too. This macro is
+expandable.
+
+The macro `\isinlist\list{<text>}\iftrue` acts like `\iftrue` if the
+`<text>` is included the macro body of `\list`. Else it acts like
+`\ifflase`. You can write `\isinlist\list{<text>}\iffalse` to reverse the
+boolean value of this condition. THe macro is not expandable.
+
+The macro `\isnextchar <char>{<codeA>}{<codeB>}` executes `<codeA>` if next
+character is equal to <char>. Else the `<codeB>` is executed. The macro is
+not expandable.
+

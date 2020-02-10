@@ -1,0 +1,37 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \rm {Latin Modern fonts (EC) preloaded <2020-01-23>}
+
+% Only few text fonts are preloaded:
+
+\_font\_tenrm=ec-lmr10   % roman text
+\_font\_tenbf=ec-lmbx10  % boldface extended
+\_font\_tenit=ec-lmri10  % text italic
+\_font\_tenbi=ec-lmbxi10 % bold italic
+\_font\_tentt=ec-lmtt10  % typewriter
+\_tenrm
+
+\_protected\_def\_rm{\_tryloadrm \_tenrm \_fam0 } 
+% \bf, \it, \bi, \tt are defined in math-preload.opm
+\_let\_tryload=\_relax
+
+\_public \rm ;
+
+\_endcode %---------------------------------------------------
+
+Format in lua\TeX/ can download only non-unicode fonts, Latin Modern EC is
+loaded here. These fonts are totally unusable in LuaTeX when languages with out
+of ASCII or ISO-1 alphabets are used (for example Czech). So, we load only
+few fonts here for simple testing the format. But, if an user needs to do a
+more serious work, he/she can use `\fontfam` macro in order to load a
+selected font family of unicode fonts.
+
+The non-unicode fonts are not suported in op\TeX/. Use \fontfam[lmfonts]
+at the begin of yor document.
+
+The font resizing macros are in fonts-resize.opm file.
+
+The `\fontfam` macro is defined in fontfam.opm file.
+
+The fonts for maths are preloaded in math-macros.opm file.
+

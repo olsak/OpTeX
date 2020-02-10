@@ -1,0 +1,107 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \langlist {Initialization of hypenation patterns <2019-05-21>}
+
+\_chardef\_enPatt=0
+\_def\_pattlist{\_enPatt=0}
+\_def\_langlist{en(USpreloaded)}
+\_sdef{_lan:0}{en}
+\_sdef{_ulan:USpreloaded}{en}
+\_def\enlang{\_uselang{en}\_enPatt23} % \lefthyph=2 \righthyph=3
+\_sdef{langspecific:en}{\_nonfrenchspacing}
+
+\_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks
+\_input hyphen  % en(USpreloaded) patterns from TeX82
+
+\_def\_preplang #1 #2 #3#4 #5 {%
+   \_chardef#3=#4
+   \_sdef{_lan:#4}{#1}\_sdef{_ulan:#2}{#1}%  
+   \_def\_next{\_expandafter\_noexpand\_csname #1lang\_endcsname}
+   \_expandafter\_edef \_csname #1lang\_endcsname {%
+      \_noexpand\_loadpattrs #2 #4 
+      \_gdef\_next{\_noexpand\_uselang{#1}#3#5}%
+      \_next
+   }
+   \_addto\_langlist{ #1(#2)}%
+}
+\_def\_loadpattrs#1 #2 {%
+   \_directlua{
+      require("luatex-hyphen")
+      luatexhyphen.loadlanguage("#1",#2)
+   }%
+}
+\_def\_uselang#1#2#3#4{\_language=#2\_lefthyphenmin=#3\_righthyphenmin=#4\_relax
+   \_frenchspacing  % \nonfrenchspacing can be set in \cs{langspecific:lan}
+   \_cs{langscpecific:#1}%
+}
+\_def\_uselanguage#1{\_cs{\_cs{_ulan:#1}lan}}
+
+\_preplang enus usenglishmax \_enusPatt 100 23
+\_preplang engb ukenglish    \_engbPatt 101 23
+\_preplang it   italian      \_itPatt 102 22
+\_preplang ia   interlingua  \_iaPatt 103 22
+\_preplang id   indonesian   \_idPatt 104 22
+
+\_preplang cs   czech      \_csPatt 115 23
+\_preplang sk   slovak     \_skPatt 116 23
+\_preplang de   ngerman    \_dePatt 121 22
+\_preplang fr   french     \_frPatt 122 22
+\_preplang pl   polish     \_plPatt 123 22 
+\_preplang cy   welsh      \_cyPatt 124 23
+\_preplang da   danish     \_daPatt 125 22
+\_preplang es   spanish    \_esPatt 126 22
+\_preplang sl   slovenian  \_slPatt 128 22
+\_preplang fi   finnish    \_fiPatt 129 22
+\_preplang hy   hungarian  \_huPatt 130 22
+\_preplang tr   turkish    \_trPatt 131 22
+\_preplang et   estoniak   \_etPatt 132 23
+\_preplang eu   basque     \_euPatt 133 22
+\_preplang ga   irish      \_gaPatt 134 23
+\_preplang nb   bokmal     \_nbPatt 135 22
+\_preplang nn   nynorsk    \_nnPatt 136 22
+\_preplang nl   dutch      \_nlPatt 137 22
+\_preplang pt   portuguese \_ptPatt 138 23
+\_preplang ro   romanian   \_roPatt 139 22
+\_preplang hr   croatian   \_hrPatt 140 22
+\_preplang zh   pinyin     \_zhPatt 141 11
+\_preplang is   icelandic  \_isPatt 142 22
+\_preplang hsb  uppersorbian \_hsbPatt 143 22
+\_preplang af   afrikaans  \_afPatt 144 12
+\_preplang gl   galician   \_glPatt 145 22
+\_preplang kmr  kurmanji   \_kmrPatt 146 22
+\_preplang tk   turkmen    \_tkPatt 147 22
+\_preplang la   latin      \_laPatt 148 22
+\_preplang lac  classiclatin \_lacPatt 149 22
+\_preplang lal  liturgicallatin \_lalPatt 150 22
+\_preplang elm  monogreek  \_elmPatt 201 11
+\_preplang elp  greek      \_elpPatt 202 11
+\_preplang grc  ancientgreek \_grcPatt 203 11
+\_preplang ca   catalan    \_caPatt 204 22
+\_preplang cop  coptic     \_copPatt 205 11
+\_preplang mn   mongolian  \_mnPatt 206 22
+\_preplang sa   sanskrit   \_saPatt 207 13
+\_preplang ru   russian    \_ruPatt 208 22
+\_preplang uk   ukrainian  \_ukPatt 209 22
+\_preplang hy   armenian   \_hyPatt 210 12
+\_preplang as   assamese   \_asPatt 211 11
+\_preplang hi   hindi      \_hiPatt 212 11
+\_preplang kn   kannada    \_knPatt 213 11
+\_preplang lv   latvian    \_lvPatt 215 22
+\_preplang lt   lithuanian \_ltPatt 216 22
+\_preplang ml   malayalam  \_mlPatt 217 11
+\_preplang mr   marathi    \_mrPatt 218 11
+\_preplang or   oriya      \_orPatt 219 11
+\_preplang pa   panjabi    \_paPatt 220 11
+\_preplang ta   tamil      \_taPatt 221 11
+\_preplang te   telugu     \_tePatt 222 11
+
+\message{Language hyph.patterns ready to load: \_langlist.
+   Use \string\<shortname>lang to initialize language,
+   \string\cslang\space for example}
+
+\_public
+   \uselanguage \langlist ;
+
+\_endcode % ---------------------------------------------
+
+

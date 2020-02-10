@@ -1,0 +1,50 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \sdef {Basic macros for OpTeX <2019-05-21>}
+
+\let\_bgroup={  \let\_egroup=}
+
+\_bgroup \_lccode`\.=`\\ \_lowercase{\_egroup \_def\_nbackslash {.}}
+\_edef \_nbb {\_nbackslash\_nbackslash}
+\_edef \_pcent{\_xstring\%}
+\_def \_empty {}
+\_def \_space { }
+\_def \_null {\_hbox{}}
+\_def \_wlog {\_immediate\_write-1 } % write on log file (only)
+\_def \_wterm {\_immediate\_write16 }
+\_def \_opwarning #1{\_wterm{WARNING: #1.}}
+
+\_def \_sdef #1{\_ea\_def \_csname#1\_endcsname}
+\_def \_sxdef #1{\_ea\_xdef \_csname#1\_endcsname}
+\_def \_slet #1#2{\_ea\_let \_csname#1\_ea\_endcsname \_csname#2\_endcsname}
+\_def \_adef #1{\_catcode`#1=13 \_begingroup \_lccode`\~=`#1\_lowercase{\_endgroup\_def~}}
+\_def \_cs #1{\_csname#1\_endcsname}
+
+\_long\_def \_addto #1#2{\_ea\_def\_ea#1\_ea{#1#2}}
+\_ea\_def \_ea\_meaningsepare \_ea#\_ea1\_string m#2:#3->#4^{{#1}{#3}{#4}}
+
+\_bgroup \_catcode`!=3 \_catcode`?=3
+\_gdef\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
+   \_long\_def\_replacestringsA##1#2{\_def #1{##1}\_replacestringsB}%
+   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_addto #1{#3##1}%
+      \_ea\_replacestringsB\_fi}%      
+   \_ea\_replacestringsA #1?#2!#2%
+   \_long\_def\_replacestringsA##1?{\_def #1{##1}}\_ea\_replacestringsA #1}
+\_egroup
+
+\_def\_loggingall{\_tracingcommands=3 \tracingstats=2 \tracingassigns=1
+  \tracingpages=1 \tracingoutput=1 \tracinglostchars=1
+  \tracingmacros=2 \tracingparagraphs=1 \tracingrestores=1 }
+\_def\_tracingall{\tracingonline=1 \loggingall}
+
+\_def\_remfirstunderscore#1{\_ea\_remfirstunderscoreA#1\_relax#1}
+\_def\_remfirstunderscoreA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi}
+
+\_public
+   \bgroup \egroup \nbackslash \sdef \sxdef \slet \cs \adef
+   \addto \meaningsepare \wlog \wterm \opwarning 
+   \empty \space \null \nbb \pcent \ncaret
+   \isinlist \replstring \remfirstunderscore \loggingall \tracingall ; 
+
+\_endcode % -------------------------------------
+

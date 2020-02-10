@@ -1,0 +1,145 @@
+%% This is part of SpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \pdfprimitive {LuaTeX initialization code <2020-01-23>}
+
+\_directlua {
+    % enable all primitives without prefixing
+    tex.enableprimitives('', tex.extraprimitives())
+    % enable all primitives with _ prefix
+    tex.enableprimitives('_', tex.extraprimitives())
+}
+
+\_let\_pdfpagewidth        \pagewidth
+\_let\_pdfpageheight       \pageheight
+\_let\_pdfadjustspacing    \adjustspacing
+\_let\_pdfprotrudechars    \protrudechars
+\_let\_pdfnoligatures      \ignoreligaturesinfont
+\_let\_pdffontexpand       \expandglyphsinfont
+\_let\_pdfcopyfont         \copyfont
+\_let\_pdfxform            \saveboxresource
+\_let\_pdflastxform        \lastsavedboxresourceindex
+\_let\_pdfrefxform         \useboxresource
+\_let\_pdfximage           \saveimageresource
+\_let\_pdflastximage       \lastsavedimageresourceindex
+\_let\_pdflastximagepages  \lastsavedimageresourcepages
+\_let\_pdfrefximage        \useimageresource
+\_let\_pdfsavepos          \savepos
+\_let\_pdflastxpos         \lastxpos
+\_let\_pdflastypos         \lastypos
+\_let\_pdfoutput           \outputmode
+\_let\_pdfdraftmode        \draftmode
+\_let\_pdfpxdimen          \pxdimen
+\_let\_pdfinsertht         \insertht
+\_let\_pdfnormaldeviate    \normaldeviate
+\_let\_pdfuniformdeviate   \uniformdeviate
+\_let\_pdfsetrandomseed    \setrandomseed
+\_let\_pdfrandomseed       \randomseed
+\_let\_pdfprimitive        \primitive
+\_let\_ifpdfprimitive      \ifprimitive
+\_let\_ifpdfabsnum         \ifabsnum
+\_let\_ifpdfabsdim         \ifabsdim
+
+\_public
+   \pdfpagewidth \pdfpageheight \pdfadjustspacing \pdfprotrudechars
+   \pdfnoligatures \pdffontexpand \pdfcopyfont \pdfxform \pdflastxform
+   \pdfrefxform \pdfximage \pdflastximage \pdflastximagepages \pdfrefximage
+   \pdfsavepos \pdflastxpos \pdflastypos \pdfoutput \pdfdraftmode \pdfpxdimen
+   \pdfinsertht \pdfnormaldeviate \pdfuniformdeviate \pdfsetrandomseed
+   \pdfrandomseed \pdfprimitive \ifpdfprimitive \ifpdfabsnum \ifpdfabsdim ;
+
+\_directlua {tex.enableprimitives('pdf',{'tracingfonts'})}
+
+\_protected\_def \_pdftexversion     {\_numexpr 140\_relax}
+           \_def \_pdftexrevision    {7}
+\_protected\_def \_pdflastlink       {\_numexpr\_pdffeedback lastlink\_relax}
+\_protected\_def \_pdfretval         {\_numexpr\_pdffeedback retval\_relax}
+\_protected\_def \_pdflastobj        {\_numexpr\_pdffeedback lastobj\_relax}
+\_protected\_def \_pdflastannot      {\_numexpr\_pdffeedback lastannot\_relax}
+           \_def \_pdfxformname      {\_pdffeedback xformname}
+{\_outputmode=1
+           \_xdef\_pdfcreationdate   {\_pdffeedback creationdate}
+}
+           \_def \_pdffontname       {\_pdffeedback fontname}
+           \_def \_pdffontobjnum     {\_pdffeedback fontobjnum}
+           \_def \_pdffontsize       {\_pdffeedback fontsize}
+           \_def \_pdfpageref        {\_pdffeedback pageref}
+           \_def \_pdfcolorstackinit {\_pdffeedback colorstackinit}
+\_protected\_def \_pdfliteral        {\_pdfextension literal}
+\_protected\_def \_pdfcolorstack     {\_pdfextension colorstack}
+\_protected\_def \_pdfsetmatrix      {\_pdfextension setmatrix}
+\_protected\_def \_pdfsave           {\_pdfextension save\relax}
+\_protected\_def \_pdfrestore        {\_pdfextension restore\relax}
+\_protected\_def \_pdfobj            {\_pdfextension obj }
+\_protected\_def \_pdfrefobj         {\_pdfextension refobj }
+\_protected\_def \_pdfannot          {\_pdfextension annot }
+\_protected\_def \_pdfstartlink      {\_pdfextension startlink }
+\_protected\_def \_pdfendlink        {\_pdfextension endlink\relax}
+\_protected\_def \_pdfoutline        {\_pdfextension outline }
+\_protected\_def \_pdfdest           {\_pdfextension dest }
+\_protected\_def \_pdfthread         {\_pdfextension thread }
+\_protected\_def \_pdfstartthread    {\_pdfextension startthread }
+\_protected\_def \_pdfendthread      {\_pdfextension endthread\relax}
+\_protected\_def \_pdfinfo           {\_pdfextension info }
+\_protected\_def \_pdfcatalog        {\_pdfextension catalog }
+\_protected\_def \_pdfnames          {\_pdfextension names }
+\_protected\_def \_pdfincludechars   {\_pdfextension includechars }
+\_protected\_def \_pdffontattr       {\_pdfextension fontattr }
+\_protected\_def \_pdfmapfile        {\_pdfextension mapfile }
+\_protected\_def \_pdfmapline        {\_pdfextension mapline }
+\_protected\_def \_pdftrailer        {\_pdfextension trailer }
+\_protected\_def \_pdfglyphtounicode {\_pdfextension glyphtounicode }
+
+\_protected\_edef\_pdfcompresslevel       {\pdfvariable compresslevel}
+\_protected\_edef\_pdfobjcompresslevel    {\pdfvariable objcompresslevel}
+\_protected\_edef\_pdfdecimaldigits       {\pdfvariable decimaldigits}
+\_protected\_edef\_pdfgamma               {\pdfvariable gamma}
+\_protected\_edef\_pdfimageresolution     {\pdfvariable imageresolution}
+\_protected\_edef\_pdfimageapplygamma     {\pdfvariable imageapplygamma}
+\_protected\_edef\_pdfimagegamma          {\pdfvariable imagegamma}
+\_protected\_edef\_pdfimagehicolor        {\pdfvariable imagehicolor}
+\_protected\_edef\_pdfimageaddfilename    {\pdfvariable imageaddfilename}
+\_protected\_edef\_pdfpkresolution        {\pdfvariable pkresolution}
+\_protected\_edef\_pdfinclusioncopyfonts  {\pdfvariable inclusioncopyfonts}
+\_protected\_edef\_pdfinclusionerrorlevel {\pdfvariable inclusionerrorlevel}
+\_protected\_edef\_pdfgentounicode        {\pdfvariable gentounicode}
+\_protected\_edef\_pdfpagebox             {\pdfvariable pagebox}
+\_protected\_edef\_pdfminorversion        {\pdfvariable minorversion}
+\_protected\_edef\_pdfuniqueresname       {\pdfvariable uniqueresname}
+\_protected\_edef\_pdfhorigin             {\pdfvariable horigin}
+\_protected\_edef\_pdfvorigin             {\pdfvariable vorigin}
+\_protected\_edef\_pdflinkmargin          {\pdfvariable linkmargin}
+\_protected\_edef\_pdfdestmargin          {\pdfvariable destmargin}
+\_protected\_edef\_pdfthreadmargin        {\pdfvariable threadmargin}
+\_protected\_edef\_pdfpagesattr           {\pdfvariable pagesattr}
+\_protected\_edef\_pdfpageattr            {\pdfvariable pageattr}
+\_protected\_edef\_pdfpageresources       {\pdfvariable pageresources}
+\_protected\_edef\_pdfxformattr           {\pdfvariable xformattr}
+\_protected\_edef\_pdfxformresources      {\pdfvariable xformresources}
+\_protected\_edef\_pdfpkmode              {\pdfvariable pkmode}
+
+\_public
+   \pdftexversion \pdftexrevision \pdflastlink \pdfretval \pdflastobj
+   \pdflastannot \pdfxformname \pdfcreationdate \pdffontname \pdffontobjnum
+   \pdffontsize \pdfpageref \pdfcolorstackinit \pdfliteral \pdfcolorstack
+   \pdfsetmatrix \pdfsave \pdfrestore \pdfobj \pdfrefobj \pdfannot
+   \pdfstartlink \pdfendlink \pdfoutline \pdfdest \pdfthread \pdfstartthread
+   \pdfendthread \pdfinfo \pdfcatalog \pdfnames \pdfincludechars \pdffontattr
+   \pdfmapfile \pdfmapline \pdftrailer \pdfglyphtounicode \pdfcompresslevel
+   \pdfobjcompresslevel \pdfdecimaldigits \pdfgamma \pdfimageresolution
+   \pdfimageapplygamma \pdfimagegamma \pdfimagehicolor \pdfimageaddfilename
+   \pdfpkresolution \pdfinclusioncopyfonts \pdfinclusionerrorlevel
+   \pdfgentounicode \pdfpagebox \pdfminorversion \pdfuniqueresname \pdfhorigin
+   \pdfvorigin \pdflinkmargin \pdfdestmargin \pdfthreadmargin \pdfpagesattr
+   \pdfpageattr \pdfpageresources \pdfxformattr \pdfxformresources \pdfpkmode ;
+
+\_pdfminorversion     = 5
+\_pdfobjcompresslevel = 2
+\_pdfcompresslevel    = 9
+\_pdfdecimaldigits    = 3
+\_pdfpkresolution     = 600
+
+\_endcode
+
+Non-TeX82 primitives are initialized here in non-prefix and _prefixed form.
+Macros for emulation of pdfTeX primitives are set here too.
+

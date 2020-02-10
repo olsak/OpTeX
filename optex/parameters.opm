@@ -1,0 +1,167 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \normalbaselineskip {Parameter settings <2020-01-23>}
+
+% Settings like in plainTeX:
+
+\_pretolerance=100
+\_tolerance=200 % INITEX sets this to 10000
+\_hbadness=1000
+\_vbadness=1000
+\_linepenalty=10
+\_hyphenpenalty=50
+\_exhyphenpenalty=50
+\_binoppenalty=700
+\_relpenalty=500
+\_clubpenalty=150
+\_widowpenalty=150
+\_displaywidowpenalty=50
+\_brokenpenalty=100
+\_predisplaypenalty=10000
+% \_postdisplaypenalty=0
+% \_interlinepenalty=0
+% \_floatingpenalty=0, set during \insert
+% \_outputpenalty=0, set before TeX enters \output
+\_doublehyphendemerits=10000
+\_finalhyphendemerits=5000
+\_adjdemerits=10000
+% \_looseness=0, cleared by TeX after each paragraph
+% \_pausing=0
+% \_holdinginserts=0
+% \_tracingonline=0
+% \_tracingmacros=0
+% \_tracingstats=0
+% \_tracingparagraphs=0
+% \_tracingpages=0
+% \_tracingoutput=0
+\_tracinglostchars=1
+% \_tracingcommands=0
+% \_tracingrestores=0
+% \_language=0
+\_uchyph=1
+% \_lefthyphenmin=2 \_righthyphenmin=3 set below
+% \_globaldefs=0
+% \_maxdeadcycles=25 % INITEX does this
+% \_hangafter=1 % INITEX does this, also TeX after each paragraph
+% \_fam=0
+% \_mag=1000 % INITEX does this
+% \_escapechar=`\\ % INITEX does this
+\_defaulthyphenchar=`\-
+\_defaultskewchar=-1
+% \_endlinechar=`\^^M % INITEX does this
+%\_newlinechar=-1
+\_delimiterfactor=901
+% \_time=now % TeX does this at beginning of job
+% \_day=now % TeX does this at beginning of job
+% \_month=now % TeX does this at beginning of job
+% \_year=now % TeX does this at beginning of job
+\_showboxbreadth=5
+\_showboxdepth=3
+\_errorcontextlines=5
+
+\_hfuzz=0.1pt
+\_vfuzz=0.1pt
+\_overfullrule=5pt
+%\_hsize=6.5in
+%\_vsize=8.9in
+\_maxdepth=4pt
+\_splitmaxdepth=\_maxdimen
+\_boxmaxdepth=\_maxdimen
+% \_lineskiplimit=0pt, changed by \_normalbaselines
+\_delimitershortfall=5pt
+\_nulldelimiterspace=1.2pt
+\_scriptspace=0.5pt
+% \_mathsurround=0pt
+% \_predisplaysize=0pt, set before TeX enters $$
+% \_displaywidth=0pt, set before TeX enters $$
+% \_displayindent=0pt, set before TeX enters $$
+\_parindent=20pt
+% \_hangindent=0pt, zeroed by TeX after each paragraph
+% \_hoffset=0pt
+% \_voffset=0pt
+
+% \_baselineskip=0pt, changed by \normalbaselines
+% \_lineskip=0pt, changed by \normalbaselines
+\_parskip=0pt plus 1pt
+\_abovedisplayskip=12pt plus 3pt minus 9pt
+\_abovedisplayshortskip=0pt plus 3pt
+\_belowdisplayskip=12pt plus 3pt minus 9pt
+\_belowdisplayshortskip=7pt plus 3pt minus 4pt
+% \_leftskip=0pt
+% \_rightskip=0pt
+\_topskip=10pt
+\_splittopskip=10pt
+% \_tabskip=0pt
+% \_spaceskip=0pt
+% \_xspaceskip=0pt
+\_parfillskip=0pt plus 1fil
+
+\_thinmuskip=3mu
+\_medmuskip=4mu plus 2mu minus 4mu
+\_thickmuskip=5mu plus 5mu
+
+% We also define special registers that function like parameters:
+\_newskip\_smallskipamount \_smallskipamount=3pt plus 1pt minus 1pt
+\_newskip\_medskipamount \_medskipamount=6pt plus 2pt minus 2pt
+\_newskip\_bigskipamount \_bigskipamount=12pt plus 4pt minus 4pt
+\_newskip\_normalbaselineskip \_normalbaselineskip=12pt
+\_newskip\_normallineskip \_normallineskip=1pt
+\_newdimen\_normallineskiplimit \_normallineskiplimit=0pt
+\_newdimen\_jot \_jot=3pt
+\_newcount\_interdisplaylinepenalty \_interdisplaylinepenalty=100
+\_newcount\_interfootnotelinepenalty \_interfootnotelinepenalty=100
+
+\_def\_normalbaselines{\_lineskip=\_normallineskip
+  \_baselineskip=\_normalbaselineskip \_lineskiplimit=\_normallineskiplimit}
+\_def\_frenchspacing{\_sfcode`\.=1000 \sfcode`\?=1000 \sfcode`\!=1000
+  \sfcode`\:=1000 \sfcode`\;=1000 \sfcode`\,=1000 }
+\_def\_nonfrenchspacing{\_sfcode`\.=3000 \sfcode`\?=3000 \sfcode`\!=3000
+  \sfcode`\:=2000 \sfcode`\;=1500 \sfcode`\,=1250 }
+\_public 
+   \normalbaselines \frenchspacing \nonfrenchspacing ;
+
+\_normalbaselines % baseline setting, 
+                  % \nonfrenchspacing is not set -- we are living in Europe
+
+% Different values than in plaiTeX:
+
+\_outputmode=1   % PDF ouput
+\_pdfvorigin=0pt
+\_pdfhorigin=0pt
+\_hoffset=20mm
+\_voffset=20mm
+\_hsize=170mm  % 210mm (from A4 size) - 2*20mm (default margins)
+\_vsize=257mm  % 297mm (from A4 size) - 2*20mm (default margins)
+\_pagewidth=210 true mm
+\_pageheight=297 true mm
+
+\_def\_plaintexsetting{%
+   \_pdfvorigin=1in
+   \_pdfhorigin=1in
+   \_hoffset=0pt
+   \_voffset=0pt
+   \_hsize=6.5in 
+   \_vsize=8.9in
+   \_pagewidth=8.5 true in
+   \_pageheight=11 true in
+}
+
+\_public
+   \smallskipamount \medskipamount \bigskipamount 
+   \normalbaselineskip \normallineskip \normallineskiplimit
+   \jot \interdisplaylinepenalty \interfootnotelinepenalty 
+   \plaintexsetting ;
+
+\_endcode %----------------------------------------------------
+
+
+The parameters are set to the same values as in plain\TeX, but there is one
+exception: The origin is at the top-left edge of the paper (this is more
+practical than the origin in positioned in non-SI units). The default
+typographical mirror is derived from A4 paper size and 20mm margins, not
+from letter paper size and 1in margins. The reason is that we are living in
+Europe where A4 paper is common in printers.
+
+The macro `\plaintexsetting` removes the difference described above and sets
+the typographical mirror as in old plain\TeX.
+

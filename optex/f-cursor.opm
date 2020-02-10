@@ -1,0 +1,26 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_fontdecl [Cursor] \Cursor {TeX Gyre Cursor fonts based on Courier}
+        {\caps} {\rm \bf \it \bi} {TX}
+        "[texgyrecursor-regular]"
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_protected\def \Cursor {%
+   \_def \_currfamily {Cursor}%
+   \_def \_fontnamegen {"[texgyrecursor-\_currV]:\_capsV\_fontfeatures"}% 
+   \_resetmod
+}
+\_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

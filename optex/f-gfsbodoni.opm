@@ -1,0 +1,25 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_fontdecl [GFS Bodoni] \GFSBodoni {Based on Bodoni with greek letters}
+        {} {\rm \bf \it \bi} {TX}
+        "[GFSBodoni]"
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... doesn't work even though otfinfo -f lists cmcp^^J
+}}
+
+\_protected\def \GFSBodoni {%
+   \_def \_currfamily {GFSBodoni}%
+   \_def \_fontnamegen {"[GFSBodoni\_currV]:\_fontfeatures"}% 
+   \_resetmod
+}
+\_moddef \resetmod {\_fvars {} Bold It BoldIt }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

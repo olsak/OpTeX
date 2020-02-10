@@ -1,0 +1,62 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_fontdecl [Linux Libertine] \Libertine {Free Linux Libertine fonts}
+        {\sans \mono \caps \semi} {\rm \bf \it \bi \initials \displ \keybr} {TX}
+        "[LinLibertine_R]"
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \sans ...... smaller serifs^^J
+ \mono ...... non-proportional^^J
+ \semi ...... semi-bold variants (\rm, \it)^^J
+ \caps ...... caps & small caps^^J
+Special variants:^^J
+ \initials .. special initials (only uppercase letters)^^J
+ \displ ..... display variant, suitable at big sizes^^J
+ \keybr ..... keyboard, emulates keyboard buttons^^J
+}}
+
+\_protected\_def \Libertine {%
+   \_def \_currfamily {Libertine}%
+   \_def\_fontnamegen {"[Lin\_subfamV _\_currV]:\_capsV\_fontfeatures"}%
+   \_resetmod
+}
+\_moddef \resetmod {\_fsetV subfam=Libertine,caps={} \_fvars R RB RI RBI }
+\_moddef \sans     {\_fsetV subfam=Biolinum \_fvars R RB RI RBO }
+\_moddef \mono     {\_fsetV subfam=Libertine \_fvars M MB MO MBO }
+\_moddef \semi     {\_fsetV subfam=Libertine \_fvars RZ . RZI . }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_famvardef \initials {\_fsetV subfam=Libertine \_fvars I . . . \rm}
+\_famvardef \displ    {\_fsetV subfam=Libertine \_fvars DR . . . \rm}
+\_famvardef \keybr    {\_fsetV subfam=Biolinum  \_fvars K . . . \rm}
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+This file declares Linux Libertine font family from font files. The
+following fonts are provided:
+
+normal:  "[LinLibertine_R]:\_fontfeatures"
+         "[LinLibertine_RB]:\_fontfeatures"
+         "[LinLibertine_RI]:\_fontfeatures"
+         "[LinLibertine_RBI  ]:\_fontfeatures"
+         "[LinLibertine_RZI]:\_fontfeatures"
+         "[LinLibertine_RZ]:\_fontfeatures"
+mono:    "[LinLibertine_M]:\_fontfeatures"  
+         "[LinLibertine_MB]:\_fontfeatures"  
+         "[LinLibertine_MO]:\_fontfeatures"  
+         "[LinLibertine_MBO]:\_fontfeatures" 
+sans:    "[LinBiolinum_RB]:\_fontfeatures" 
+         "[LinBiolinum_RBO]:\_fontfeatures" 
+         "[LinBiolinum_R]:\_fontfeatures" 
+         "[LinBiolinum_RI]:\_fontfeatures"  
+special: "[LinLibertine_I]:\_fontfeatures"   
+         "[LinLibertine_DR]:\_fontfeatures"   
+         "[LinBiolinum_K]:\_fontfeatures"
+
+See an alternative `f-libertine-s.opm` where the same font family is
+declared using font names used in operating system. 
+

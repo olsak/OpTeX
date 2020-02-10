@@ -1,0 +1,169 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \typosize {Font managing macros from OPmac <2019-05-21>}
+
+\_protected\_def \_typosize [#1/#2]{%
+   \_textfontsize{#1}\_mathfontsize{#1}\_setbaselineskip{#2}%
+   \_setmainvalues \_ignorespaces
+}
+\_protected\_def \_textfontsize #1{\_if$#1$\_else \_setfontsize{at#1\_ptunit}\_fi}
+
+\_def \_mathfontsize #1{\_if$#1$\_else
+    \_tmpdim=#1\_ptunit
+    \_edef\_sizemtext{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
+    \_tmpdim=0.7\_tmpdim
+    \_edef\_sizemscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
+    \_tmpdim=#1\_ptunit \_tmpdim=0.5\_tmpdim
+    \_edef\_sizemsscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
+    \_fi
+}
+\_protected\_def \_typoscale [#1/#2]{%
+   \_ifx$#1$\_def\_tmp{[/}\_else
+      \_settmpdim{#1}\_optsize
+      \_edef\_tmp{[\_ea\_ignorept\_the\_tmpdim/}\_fi
+   \_ifx$#2$\_edef\_tmp{\_tmp]}\_else
+      \_settmpdim{#2}\_baselineskip
+      \_edef\_tmp{\_tmp \_ea\_ignorept\_the\_tmpdim]}\fi
+   \_ea\_typosize\_tmp 
+}
+\def\_settmpdim#1#2{%
+   \_tmpdim=#1pt \_divide\_tmpdim by1000
+   \_tmpdim=\_ea\_ignorept \_the#2\_tmpdim
+}
+\_def \_setbaselineskip #1{\_if$#1$\_else
+   \_tmpdim=#1\_ptunit
+   \_baselineskip=\_tmpdim \_relax 
+   \_bigskipamount=\_tmpdim plus.33333\_tmpdim minus.33333\_tmpdim
+   \_medskipamount=.5\_tmpdim plus.16666\_tmpdim minus.16666\_tmpdim
+   \_smallskipamount=.25\_tmpdim plus.08333\_tmpdim minus.08333\_tmpdim
+   \_normalbaselineskip=\_tmpdim
+   \_jot=.25\_tmpdim
+   \_maxdepth=.33333\_tmpdim
+   \_setbox\_strutbox=\_hbox{\_vrule height.709\_tmpdim depth.291\_tmpdim width0pt}%
+   \_fi
+}
+\_def\_setmainvalues {%
+   \_mainbaselineskip=\_baselineskip
+   \_mainfosize=\_optsize
+   \_bf \_it \_bi \_rm \_normalmath  % load fonts if \typosize is running firstly
+   \_def \_setmainvalues{\_rm \_everymath={\_normalmath}\_everydisplay={\_normalmath}}%
+}
+\_def\_scalemain {%
+   \_ifdim \_mainfosize >0pt
+      \_optsize=\_mainfosize  \_baselineskip=\_mainbaselineskip \fi
+}
+
+\_newskip   \_mainbaselineskip   \_mainbaselineskip=0pt \_relax
+\_newdimen  \_mainfosize         \_mainfosize=0pt
+
+\_protected\_def\_thefontsize[#1]{\_if$#1$\_else 
+     \_tmpdim=#1\_ptunit
+     \_newcurrfontsize{at\_tmpdim}%
+  \_fi
+  \_ignorespaces
+}
+\_protected\_def\_thefontscale[#1]{\_ifx$#1$\_else
+     \_tmpdim=#1pt \_divide\_tmpdim by1000
+     \_tmpdim=\_ea\_ea\_ea\_ignorept \_pdffontsize\_font \_tmpdim
+     \_newcurrfontsize{at\_tmpdim}%
+  \_fi
+  \_ignorespaces
+}
+\_protected\_def\_em {%
+   \_ea\_ifx \_the\_font \_tenit \_additcorr \_rm  \_else
+   \_ea\_ifx \_the\_font \_tenbf \_bi\_aftergroup\_afteritcorr\_else
+   \_ea\_ifx \_the\_font \_tenbi \_additcorr \_bf  \_else
+   \_it \_aftergroup\_afteritcorr\_fi\_fi\_fi
+}
+\_def\_additcorr{\_ifdim\_lastskip>0pt 
+   \_skip0=\_lastskip \_unskip\_italcorr \_hskip\_skip0 \_else\_italcorr \_fi}
+\_def\_afteritcorr{\_futurelet\_next\_afteritcorrA}
+\_def\_afteritcorrA{\_ifx\_next.\_else\_ifx\_next,\_else \_italcorr \_fi\_fi}
+\_let\_italcorr=\/
+
+\_protected\_def \_boldify {%
+   \_let\it =\_bi \_let\rm =\_bf \_let\normalmath =\_boldmath
+   \_let\_it=\_bi \_let\_rm=\_bf \_let\_normalmath=\_boldmath \_rm
+}
+\_public \typosize \typoscale \thefontsize \thefontscale \em \boldify 
+   \scalemain \mainfosize \mainbaselineskip ;
+
+\_endcode % -------------------------------------
+
+
+\sec Font size settings in general (high-level macros)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The commands for font size setting described here have local validity. If
+you put them into a group, the described features are selected locally. Don't use
+dimension unit in parameters in these commands. The dimension unit is
+`\ptunit` which is set by `1pt` by default. If you set this register to
+another value at begining of your document, all fonts and `\baselineskip` 
+will be set to different sizes.
+
+The command `\typosize[<fontsize>/<baselineskip>]` sets the font size of text and
+math fonts and baselineskip. If one of these two parameters is empty, the
+corresponding feature stays unchanged. Examples:
+
+\begtt
+   \typosize[10/12]   % default in plainTeX and OpTeX
+   \typosize[11/12.5] % font 11pt, baseline 12.5pt
+   \typosize[8/]      % font 8pt, baseline unchanged
+\endtt
+
+The command `\typoscale[<font-factor>/<baselineskip-factor>]` sets the text
+and math fonts size and baselineskip as a multiple of the current fonts size
+and baselineskip. The factor is written in `scaled`-like way, it means that
+1000 means factor one. The empty parameter is equal to the parameter 1000,
+i.e. the value stays unchanged. Examples:
+
+\begtt
+   \typoscale[800/800]    % fonts and baselineskip re-size to 80 %
+   \typoscale[\magstep2/] % fonts bigger 1,44times
+\endtt
+
+First usage of `\typosize` or `\typoscale` macro in your document sets "main
+values", i.e. main font size and main baselineskip. They are saved in registers 
+`\mainfosize` and `\mainbaselineskip`. 
+
+The `\typoscale` comand does scaling in respect to current values. If you
+want to do it in respect to main values, type `\scalemain` immediately
+before `\typoscale` command.
+
+\begtt
+   \typosize[12/14.4] % first usage in document, sets main values internally
+   \typosize[15/18    bigger font
+   \scalemain \typoscale[800/800] % reduces from main values, no from current values.
+\endtt
+
+The size of the current text font can be changed by the command
+"\thefontsize[<font-size>]" or can be rescaled by
+"\thefontscale[<factor>]". These macros don't change math fonts sizes nor
+baselineskip.
+
+When you need titles in bold, you can use the `\boldify` macro with
+co-operation with `\typosize` or `\typoscale` command. The `\boldify` command
+sets `\rm` as `\bf`, `\it` as `\bi` a and math formulae are bolder too.
+Example:
+
+\begtt
+    \def\titlefont{\boldify\typosize[15/18]}
+    {\titlefont Here is big bold {\it italics is bold-italics} and
+                math $a+b^2$ is bolder too.\par}
+\endtt
+ 
+The `\em` macro acts as `\it` if the current font is `\rm`, acts as `\rm` if
+the current font is `\it`, acts as `\bi` if the current font is `\bf` and
+acts as `\bf` if the current font is `\bi`. The "\/" spaces are inserted
+automatically. Example:
+
+\begtt
+   This is {\em important} text.     % = This is {\it important\/} text.
+   \it This is {\em important} text. % = This is\/ {\rm important} text.
+   \bf This is {\em important} text. % = This is {\bi important\/} text.
+   \bi This is {\em important} text. % = This is\/ {\bf important} text.
+\endtt
+
+If you are interesting in font selection system used in \OpTeX/ then see
+`fonts-select.opm` file. If you are interesting in font size settings in
+detail, see `font-resize.opm` file.

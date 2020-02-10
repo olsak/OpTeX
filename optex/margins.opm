@@ -1,0 +1,135 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \margins {Macros for margins setting <2019-05-21>}
+
+\_newdimen\_pgwidth  \_newdimen\_pgheight  \_pgwidth=0pt
+\_newdimen\_shiftoffset
+
+\_def\_margins/#1 #2 (#3,#4,#5,#6)#7 {\_def\_tmp{#7}%
+   \_ifx\_tmp\_empty
+      \_opwarning{\_string\_margins: missing unit, mm inserted}\_def\_tmp{mm}\_fi
+   \_setpagedimens #2 % setting \_pgwidth, \_pgheight
+   \_ifdim\_pgwidth=0pt \_else
+      \_hoffset=0pt \_voffset=0pt
+      \_if$#3$\_if$#4$\_hoffset =\_dimexpr (\_pgwidth -\_hsize)/2 \_relax
+              \_else  \_hoffset =\_dimexpr \_pgwidth -\_hsize - #4\_tmp \_relax % only right margin
+              \_fi
+      \_else  \_if$#4$\_hoffset = #3\_tmp \_relax  % only left margin
+              \_else  \_hsize =\_dimexpr \_pgwidth - #3\_tmp - #4\_tmp \_relax % left+right margin
+                      \_hoffset = #3\_tmp \_relax
+      \_fi\_fi
+      \_if$#5$\_if$#6$\_voffset =\_dimexpr (\_pgheight -\_vsize)/2 \_relax
+              \_else  \_voffset =\_dimexpr \_pgheight -\_vsize - #6\_tmp \_relax % only bottom margin
+              \_fi
+      \_else  \_if$#6$\_voffset = #5\_tmp \_relax  % only top margin
+              \_else  \_vsize=\_dimexpr \_pgheight - #5\_tmp - #6\_tmp \_relax % top+bottom margin
+                      \_voffset = #5\_tmp \_relax
+      \_fi\_fi
+      \_if 1#1\_shiftoffset=0pt \_def\_prepoffsets{}\_else \_if 2#1% double-page layout
+         \_shiftoffset = \_dimexpr \_pgwidth -\_hsize -2\_hoffset \_relax
+         \_def\_prepoffsets{\_ifodd\_pageno \_else \_advance\_hoffset \_shiftoffset \_fi}%
+      \_else \_opwarning{use \_string\_margins/1 or \_string\_margins/2}%
+   \_fi\_fi\_fi
+}
+\_def\_setpagedimens{\_isnextchar({\_setpagedimensB}{\_setpagedimensA}}
+\_def\_setpagedimensA#1 {\_ifcsname _pgs:#1\_endcsname
+   \_ea\_ea\_ea\_setpagedimensB \_csname _pgs:#1\_ea\_endcsname\_space
+   \_else \_opwarning{page specification "#1" is undefined}\_fi}
+\_def\_setpagedimensB (#1,#2)#3 {\_setpagedimensC\_pgwidth=#1:#3 
+                                 \_setpagedimensC\_pgheight=#2:#3
+        \_pdfpagewidth=\_pgwidth \_pdfpageheight=\_pgheight
+}
+\_def\_setpagedimensC #1=#2:#3 {#1=#2\_ifx^#3^\_tmp\_else#3\_fi\_relax\_truedimen#1}
+
+\_sdef{_pgs:a3}{(297,420)mm}  \_sdef{_pgs:a4}{(210,297)mm}  \_sdef{_pgs:a5}{(148,210)mm}
+\_sdef{_pgs:a3l}{(420,297)mm} \_sdef{_pgs:a4l}{(297,210)mm} \_sdef{_pgs:a5l}{(210,148)mm}
+\_sdef{_pgs:b5}{(176,250)mm}  \_sdef{_pgs:letter}{(8.5,11)in}
+
+\_def\_trueunit{}
+\_def\_magscale[#1]{\_mag=#1\_def\_trueunit{true}%
+   \_ifdim\_pgwidth=0pt \_else \_truedimen\_pgwidth \_truedimen\_pgheight \_fi
+   \_truedimen\_pdfpagewidth \_truedimen\_pdfpageheight 
+}
+\_def\_truedimen#1{\_ifx\_trueunit\_empty \_else#1=\_ea\_ignorept\_the#1truept \_fi}
+
+\_public
+   \margins \magscale ;
+
+\_endcode % -----------------------------------------
+
+
+\sec Setting the margins
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+OPmac declares paper formats a4, a4l (landscape~a4), a5, a5l, b5, letter and
+user can declare another own format by "\sdef":
+
+\begtt
+\sdef{pgs:b5l}{(250,176)mm} 
+\sdef{pgs:letterl}{(11,8.5)in}
+\endtt
+
+The "\margins" command declares margins of the document. This command have
+the following parameters:
+
+\begtt
+\margins/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>
+  example:
+\margins/1 a4 (2.5,2.5,2,2)cm
+\endtt
+
+Parameters are:
+
+\begitems
+* <pg> \dots\ "1" or "2" specifies one-page or two-pages design.
+* <fmt> \dots\ paper format (a4, a4l, a5, letter, etc. or user defined).
+* <left>, <right>, <top>, <bot> \dots\ gives the amount of left, right,
+      top and bottom margins.
+* <unit> \dots\ unit used for values <left>, <right>, <top>, <bot>.
+\enditems
+
+Each of the parameters <left>, <right>, <top>, <bot> can be empty.
+If both <left> and <right> are nonempty then "\hsize" is set. Else "\hsize"
+is unchanged. If both <left> and <right> are empty then typesetting area is
+centered in the paper format. The analogical rule works when <top> or <bot>
+parameter is empty ("\vsize" instead "\hsize" is used). Examples:
+
+\begtt
+\margins/1 a4 (,,,)mm   % \hsize, \vsize untouched, 
+                        % typesetting area centered
+\margins/1 a4 (,2,,)cm  % right margin set to 2cm
+                        % \hsize, \vsize untouched, vertically centered
+\endtt
+
+If "<pg>=1" then all pages have the same margins. If "<pg>=2" then the
+declared margins are true for odd pages. The margins at the even pages are
+mirrored in such case, it means that <left> is replaced by <right> and vice
+versa.
+
+The "<fmt>" can be in the form "(<width>,<height>)<unit>" where "<unit>" is
+optional. If it is missing then "<unit>" after margins specification is
+used. For example:
+
+\begtt
+\margins/1 (100,200) (7,7,7,7)mm
+\endtt
+%
+declares the paper 100$\times$200\,mm with all four margins 7\,mm. The spaces
+before and after "<fmt>" parameter are necessery.
+
+The command "\magscale[<factor>]" scales the whole typesetting area. The
+fixed point of such scaling is the so called the ``Knuth's point'': 1in
+below and 1in right of paper sides. Typesetting (breakpoints etc.) is
+unchanged. All units are relative after such scaling. Only paper formats
+dimensions stays unscaled. Example:
+
+\begtt
+\margins/2 a5 (22,17,19,21)mm
+\magscale[1414] \margins/1 a4 (,,,)mm
+\endtt
+%
+The first line sets the "\hsize" and "\vsize" and margins for final
+printing at a5 format. The setting on the second line centers the scaled 
+typesetting area to the true a4 paper while breaking points for paragraphs
+and pages are unchanged. It may be usable for 
+review printing. After review is done, the second line can be commented out.

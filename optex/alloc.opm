@@ -1,0 +1,116 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \newdimen {Allocators for registers <2020-01-23>}
+
+\_chardef\_maicount = 65535    % Max Allocation Index for counts registers in LuaTeX
+\_let\_maidimen  = \_maicount
+\_let\_maiskip   = \_maicount
+\_let\_maimuskip = \_maicount
+\_let\_maibox    = \_maicount
+\_let\_maitoks   = \_maicount
+\_chardef\_mairead  = 15
+\_chardef\_maiwrite = 15
+\_chardef\_maifam   = 255
+
+\_countdef\_countalloc=10  \_countalloc=255
+\_countdef\_dimenalloc=11  \_dimenalloc=255
+\_countdef\_skipalloc=12   \_skipalloc=255
+\_countdef\_muskipalloc=13 \_muskipalloc=255
+\_countdef\_boxalloc=14    \_boxalloc=255
+\_countdef\_toksalloc=15   \_toksalloc=255
+\_countdef\_readalloc=16   \_readalloc=-1
+\_countdef\_writealloc=17  \_writealloc=-1
+\_countdef\_mathalloc=18   \_mathalloc=3
+
+\_def\_allocator #1#2#3{%
+   \_global\_advance\_cs{_#2alloc}by1
+   \_ifnum\_cs{_#2alloc}>\_cs{_mai#2}%
+      \errmessage{No room for a new \_ea\_string\_csname #2\_endcsname}%
+   \_else
+      \_global#3#1=\_cs{_#2alloc}%
+      \_wlog{\_string#1=\_ea\_string\_csname #2\_endcsname\_the\_cs{_#2alloc}}%
+   \fi
+}
+
+\_def\_newcount #1{\_allocator #1{count}\_countdef}
+\_def\_newdimen #1{\_allocator #1{dimen}\_dimendef}
+\_def\_newskip #1{\_allocator #1{skip}\_skipdef}
+\_def\_newmuskip #1{\_allocator #1{muskip}\_muskipdef}
+\_def\_newbox #1{\_allocator #1{box}\_chardef}
+\_def\_newtoks #1{\_allocator #1{toks}\_toksdef}
+\_def\_newread #1{\_allocator #1{read}\_chardef}
+\_def\_newwrite #1{\_allocator #1{write}\_chardef}
+\_def\_newmath #1{\_allocator #1{fam}\_chardef}
+
+\_newcount\_insertalloc   \_insertalloc=255
+\_chardef\_insertmin = 201 
+
+\_def\_newinsert #1{%
+   \_advance\_insertalloc by-1
+   \_ifnum\_insertalloc <\_insertmin
+      \_errmessage {No room for a new \_string\insert}%
+   \_else
+      \_global\_chardef#1=\_insertalloc
+      \_wlog {\_string#1=\_string\_insert\_the\_insertalloc}%
+   \_fi
+}
+
+\_newcount \tmpnum  \_newcount \_tmpnum
+\_newdimen \tmpdim  \_newdimen \_tmpdim
+
+\_newdimen\_maxdimen \_maxdimen=16383.99999pt % the largest legal <dimen>
+\_newskip\_hideskip \_hideskip=-1000pt plus 1fill % negative but can grow
+\_newskip\_centering \_centering=0pt plus 1000pt minus 1000pt
+\_newskip\_zoskip \_zoskip=0pt plus0pt minus0pt
+\_newbox\_voidbox % permanently void box register
+
+\_public
+   \maicount \maidimen \maiskip \maimuskip \maibox \maitoks \mairead \maiwrite \maimath
+   \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newmath
+   \insertmin \newinsert 
+   \maxdimen \hideskip \centering \zoskip \voidbox ;
+
+\_endcode %---------------------------------------------------
+
+Like plain\TeX, the allocators `\newcount`, `\newwrite`, etc. are defined. 
+The registers are allocated from 256 to `\mai<type>` which is 65535 in
+LuaTeX.
+
+Unlike in Plain\TeX/, the mentioned allocators are not `\outer`.
+
+User can use `\dimen0` to `\dimen200` and similarly for `\skip`,
+`\muskip`, `\box` and `\toks` directly. User can use 
+`\count20` to `\count200` directly too. This is the same
+philosophy like in old plain\TeX/, but the range of directly used registers
+is wider.
+
+Inserts are allocated form 254 to 201 using `\newinsert`.
+
+You can define your own allocation concept (for example for allocation of
+arrays) from top of registers array. For example for counts:
+
+\begtt
+\newcount \_maicount    % redefine maximal allocation index as variable
+\_maicount = \maicount  % first value is top of the array
+
+\def\newcountarray #1[#2]{% \newcountarray \foo[100]
+    \advance\_maicount by -#2\relax
+    \ifnum \_countalloc > \_maicount
+        \errmessage{No room for a new array of \string\count}%
+    \else
+        \chardef#1=\_maicount
+    \fi
+}
+\def\usecount #1[#2]{%  \usecount \foo[2]
+    \count\numexpr#1+#2\relax
+}
+\endtt
+
+The `\tmpnum` and `\tmpdim` are allocated, individual instance for internal 
+macros and for user's macros.
+
+A few registers are initialized like in plain\TeX/. Note that `\z@` and `\z@skip` from
+plain\TeX/ is `\zo` and `\zoskip` because we don't support the `@` category dance.
+Note that `\p@` is not defined because we can write 1pt which is more
+legible.
+

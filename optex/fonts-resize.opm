@@ -1,0 +1,214 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \setfontsize {Font resizing macros <2020-01-23>}
+
+%% resizefont variant-name \fontswitch, for example \resizefont{bf}\_tenbf
+
+\_def\_resizefont#1#2{%
+    \_edef\_whatresize{#1}%
+    \_ifx \_fontselector \_undefined \_doresizefont#2%
+    \_else \_ea \_doresizefont \_fontselector \_fi
+    \_slet{_tryload#1}{_relax}%
+}
+\_def\_doresizefont#1{\_logfont{#1}%
+   \_ea\_font\_ea#1\_ea\_rfontskipat 
+      \_fontname \_cs{_ten\_whatresize} \_relax\_space \_sizespec \_relax
+}
+\_def\_logfont#1{} % default is no logging of used fonts 
+
+\_def\_rfontskipat#1{\_ifx#1"\_ea\_rfskipatX \_else\_ea\_rfskipatN\_ea#1\_fi}
+\_def\_rfskipatX #1" #2\_relax{"\_whichtfm{#1}"} 
+\_def\_rfskipatN #1 #2\_relax{\_whichtfm{#1}}
+
+%% \setfontsize{at<size>} or \setfontsize{scaled<size>}
+
+\_newdimen \_optsize         \_optsize=10pt
+\_newdimen \_defaultoptsize  \_defaultoptsize=10pt
+
+\_def\_setfontsize #1{%
+   \_edef\_sizespec{#1}%
+   \_ea \_setoptsize \_sizespec\_relax
+   \_reloading
+}
+\_def\_reloading{\_loadf{rm}\_tenrm \_loadf{bf}\_tenbf
+   \_loadf{it}\_tenit \_loadf{bi}\_tenbi
+}
+\_def\_loadf#1#2{\sdef{_tryload#1}{\_resizefont{#1}#2}}
+\_def\_tryloadtt{\fontlet\_tentt=\_tentt \_sizespec\_relax}
+
+\_def\_setoptsize {\_isnextchar a{\_setoptsizeA}
+                                 {\_isnextchar m{\_setoptsizeC}{\_setoptsizeB}}}
+\_def\_setoptsizeA at#1\_relax{\_optsize=#1\_relax}   % at<dimen>
+\_def\_setoptsizeB #1\_relax{\_optsize=\_defaultoptsize\_relax} % scaled<scalenum>
+\_def\_setoptsizeC mag#1\_relax{%
+   \_optsize=\_pdffontsize\_font \_optsize=#1\_optsize \_edef\_sizespec{at\_the\_optsize}}
+
+\_setfontsize{at10pt} % default size
+\_let\_tryloadrm=\_relax
+\_let\_tryloadbf=\_relax
+\_let\_tryloadit=\_relax
+\_let\_tryloadbi=\_relax
+
+\_def\_regtfm #1 0 #2 *{\_ea\_def \_csname _#1:reg\_endcsname{#2 16380 \_relax}%
+  \_def\_tmpa{#1}\_reversetfm #2 * %
+}
+\_def\_reversetfm #1 #2 {% we need this data for \_setmathfamily 
+   \_ea\_let\_csname _#1:reg\_ea\_endcsname
+   \_csname _\_tmpa:reg\_endcsname
+   \_if*#2\_else \_ea\_reversetfm \_fi
+}
+\_def\_whichtfm #1{%
+   \_ifcsname _#1:reg\_endcsname
+      \_ea\_ea\_ea \_dowhichtfm
+      \_csname _#1:reg\_ea\_endcsname
+   \_else
+      #1%
+   \_fi
+}
+\_def\_dowhichtfm #1 #2 {%
+   \_ifdim\_optsize<#2pt #1\_ea\_ignoretfm\_else \_ea\_dowhichtfm
+\_fi
+}
+\_def\_ignoretfm #1\_relax{}
+
+% \fontdef \new {\<modifiers>\<var-selector>}
+\_def \_fontdef #1#2{\_begingroup
+   \_ifx\_fontselector\_undefined \_def\_fontselector{#1}\_fi
+   #2%
+   \_ea \_keepmeaning \_fontselector \_endgroup
+}
+\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else
+  \_ea\_font\_ea#1\_ea\_rfontskipat\_fontname#2 \_relax\_space \_fi
+}
+\_def \_keepmeaning #1#2{\_global\_let\_keepmeaningdata=#1%
+   #2\_let#1=\_keepmeaningdata \_global\_let\_keepmeaningdata=\_undefined
+}
+\_protected \_def \_currvar{\_cs{_currvar:\_ea \_xstring \_the\_font}}
+\_sdef{_currvar:_tenrm}{\_rm}
+\_sdef{_currvar:_tenbf}{\_bf}
+\_sdef{_currvar:_tenit}{\_it}
+\_sdef{_currvar:_tenbi}{\_bi}
+\_sdef{_currvar:_tentt}{\_tt}
+
+\_def \_newcurrfontsize #1{% \newcurrfontsize{at25pt}
+   \_edef\_tmp{\_ea\_xstring \_the\_font}%
+   \_ea \_fontlet \_csname \_tmp\_ea\_endcsname \_the\_font \_space #1\_relax
+   \_csname \_tmp\_endcsname
+}
+
+\_def \_truetenrm {% used in default \footline
+   \_fontdef\_truetenrm{\_setfontsize{at10pt}\rm}%
+   \_global\_let\_truetenrm=\_truetenrm % next use will be font switch only
+   \_truetenrm 
+}
+
+%% Optical sizes data for preloaded Latin Modern fonts:
+
+\_regtfm lmr  0 ec-lmr5 5.5 ec-lmr6 6.5 ec-lmr7 7.5 ec-lmr8 8.5 ec-lmr9 9.5
+                ec-lmr10 11.1 ec-lmr12 15 ec-lmr17 *
+\_regtfm lmbx 0 ec-lmbx5 5.5 ec-lmbx6 6.5 ec-lmbx7 7.5 ec-lmbx8 8.5 ec-lmbx9 9.5 
+                ec-lmbx10 11.1 ec-lmbx12 *
+\_regtfm lmri 0 ec-lmri7 7.5 ec-lmri8 8.5 ec-lmri9 9.5 ec-lmri10 11.1 ec-lmri12 *
+\_regtfm lmtt 0 ec-lmtt10 11.1 ec-lmtt12 *
+
+\_public 
+   \setfontsize \newcurrfontsize \fontdef \fontlet \currvar \defaultoptsize ;
+
+\_endcode %---------------------------------------------------
+
+This code is inspired from csfontsm.tex file.
+
+\sec Scaling fonts to diferent sizes in text mode (low-level macros)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+There are four basic font-variant selectors `\rm`, `\bf`, `\it`, `\bi`.
+Once a font family is loaded (for example fonts decalred in the format in
+the `fonts-preloaded.opm` or loaded by `\fontfam`) then you can resize these
+fonts using `\setfontsize{<sizespec>}`, for example `\setfontsize{at12pt}`
+or `\setfontsize{scaled1300}`. Note that the word `at` or `scaled` must be
+present here. This command itself does not rescaling, this is done at the
+first moment you use next `\rm`, `\bf`, `\it` or `\bi` selectors. 
+Example. Assume that we are printing at 10pt and we use:
+
+\begtt
+  \setfontsize{at15pt} ...still at 10pt... \rm ...now the text is at15pt...
+  \bf bold is at 15pt too ...
+\endtt
+
+More meaningful is to use first variant selector immediatelly after
+`\setfontsize` command. There is a special "variant selector" `\currvar`
+which reloads the font from current variant, for example
+
+\begtt
+   \it italics at10pt \setfontsize{at7pt}\currvar italics at 7pt.
+\endtt
+
+If you are using font families by `\fontfam` then you can use more "font
+modifiers". The `\setfontsize` command is only one of such font modifier. All font
+modifiers does not actual change of fonts but first usage of a variant selector
+takes this setting. See `fonts-select.opm` for more information about it.
+
+You can declare `\<newfont>` which behaves as natural font switch declared
+by `\font`:
+
+\begtt
+  \fontdef \<newfont> {<modifiers> \<variant-selector>}
+  example:
+  \fontdef \bigfont {\setfontsize{at15pt}\bf}
+\endtt
+
+This command runs `<modifiers> \<variant-selector>` in a group and sets the
+resulting current font as `\<newfont>`. 
+
+The parameter of the `\fontdef` macro needs to be finalized by one of the
+four standard variant selectors (or `\currvar`). 
+
+We have another command for scaling: `\fontlet` which is able to resize
+arbitrary font. The font must be presented by \<fontswhitch>, i.e. by
+`\_tenrm`, `\_tenbf` etc. or arbitrary font switch you declared it by
+`\font` primitive or `\fontdef` macro. The usage is:
+
+\begtt
+  \fontlet \<newfont> = \<fontswitch> <sizespec>
+  example:
+  \fontlet \bigfont = \_tenbf at15pt
+\endtt
+
+The resulted `\bigfont` is the same as in previous example where `\fontdef`
+was used. The advantage of `\fontdef` macro will be more clear when you load
+font families by `\fontfam` and you are using more font modifiers declared
+in such families.
+
+The `\newcurrfontsize{<sizespec>}` resizes immediatelly current font.
+No others fonts are resized. 
+
+The parameter of `\setfontsize` should be in the format `at<dimen>` or
+`scaled<scalenum>` or `mag<coefficient>`. The first two are know from
+classical \TeX/. The third sets new font size to <coefficient> multiplied by
+current font size (declared by at<dimen> or mag<coefficient>). For example
+if we have do `\setfontsize{at12pt}` and next we write
+`\setfontsize{mag1.5}\rm` then the current font size is `at19pt`. You can
+define a funny macro `\bigger`:
+
+\begtt
+   \def\bigger {\setfontsize{mag1.3}\currvar}
+   text \bigger text \bigger text \bigger text... 
+\endtt
+
+\secc Optical sizes
+
+There are font families with more font files where almost the same font is
+implemented in various design sizes: `cmr5`, `cmr6`, `cmr7`, `cmr8`, `cmr9`,
+`cmr10`, `cmr12`, `cmr17` for example. This feature is called "optical
+sizes". \OpTeX/ chooses a font with an optical size closest to desired size
+specified by `\setfontsize`, when `at<dimen>` or `mag<coefficient>` is used.
+When `scaled<scalenum>` is used then optical size is choosen using the value
+of the `\defaultoptsize` register and such font is scaled by the specified
+<scalenum>. There is `\defaultoptsize=10pt` by default.
+
+
+\secc Implementation notes
+
+... to do ...
+
+

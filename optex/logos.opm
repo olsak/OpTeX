@@ -1,0 +1,41 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \TeX {Logos TeX, LuaTeX, etc. <2019-05-21>}
+
+\_protected\_def \_TeX {T\_kern-.1667em\_lower.5ex\_hbox{E}\_kern-.125emX\_ignoreslash}
+\_protected\_def \_OpTeX {Op\kern-.1em\_TeX}
+\_protected\_def \_LuaTeX {Lua\_TeX}
+\_protected\_def \XeTeX {X\_kern-.125em\_phantom E%
+   \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
+\_def\_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
+  \_raise \_tmpdim \_hbox{\_thefontscale[710]A}%
+  \_kern-.15em \_kern-\_slantcorr \_TeX}
+\_def\_slantcorr{\_ea\_ignorept \_the\_fontdimen1\_the\_font\_tmpdim}
+
+\_def\_ignoreslash {\_futurelet\_next \_ignoreslashA}
+\_def\_ignoreslashA {\_ifx\_next/\_ea\_ignoreit\_fi}
+\_def\_ignoreit#1{}
+{\_lccode`\?=`\p \_lccode`\!=`\t  \_lowercase{\_gdef\_ignorept#1?!{#1}}}
+
+\_def\_OPmac{\_leavevmode
+   \_lower.2ex\_hbox{\_thefontscale[1400]O}\_kern-.86em P{\_em mac}\_ignoreslash}
+\_def\_CS{$\_cal C$\_kern-.1667em\_lower.5ex\_hbox{$\_cal S$}\_ignoreslash}
+\_def\_csplain{\_CS plain}
+
+
+\_public
+   \TeX \OpTeX \LuaTeX \XeTeX \LaTeX \OPmac \CS \csplain
+   \ignoreslash \ignoreit \ignorept ;
+
+\_endcode
+
+We define common logos used in \TeX. Despite plain \TeX/ each such macro 
+ends by `\ignoreslash`. This macro ignores next slash if it is present. 
+You can `use \TeX/ like this` for protecting the space following the logo. 
+
+The `\ignoreit` macro ignores next token. The \ignorept macro used ike this:
+\begtt
+\ea\ignorept \the\dimen...
+\endtt
+consumes the "pt" phrase appended to dimen value by `\the`.
+

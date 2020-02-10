@@ -1,0 +1,132 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famtext {Special name for printing a catalogue:}
+
+\_faminfo [Catalogue] {Catalogue of all registered font families} {fonts-catalog} {}
+\_famalias [Catalog]
+
+\_famtext {Computer Modern like family:}
+
+\_faminfo [Latin Modern] {TeX Gyre fonts based on Coputer Modern} {f-lmfonts}
+   { -,\nbold,\sans,\sans\nbold,\slant,\ttset,\ttset\slant,\ttset\caps,%
+       \ttprop,\ttprop\bolder,\quotset: {\rm\bf\it\bi}
+       \ttlight,\ttcond,\dunhill: {\rm\it} \upital: {\rm} }
+\_famalias [LMfonts] \_famalias [Latin Modern Fonts]
+
+\_famtext {TeX Gyre fonts based o Adobe 35:}
+
+\_faminfo [Termes] {TeX Gyre Termes fonts based on Times} {f-termes}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_faminfo [Heros] {TeX Gyre Heros fonts based on Helvetica} {f-heros}
+   { -,\caps,\cond,\caps\cond: {\rm\bf\it\bi} }
+
+\_faminfo [Adventor] {TeX Gyre Adventor based on Avantgarde Book} {f-adventor}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_faminfo [Bonum] {TeX Gyre Bonum fonts based on Bookman} {f-bonum}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_faminfo [Pagella] {TeX Gyre Pagella fonts based on Palatino} {f-pagella}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_faminfo [Schola] {TeX Gyre Schola fonts based on New Century} {f-schola}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_faminfo [Cursor] {TeX Gyre Cursor fonts based on Courier} {f-cursor}
+   { -,\caps: {\rm\bf\it\bi} }
+
+\_famtext {Other fonts:}
+
+\_faminfo [Linux Libertine] {Free fonts typicaly instaled in systems} {f-libertine}
+   { -: {\rm\bf\it\bi} \semi: {\rm\it} 
+     \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
+\_famalias [Libertine] \_famalias [LinLibertine]
+
+\_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
+   { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi} 
+    \medium,\cond\medium, \light, \cond\light:{\rm\it} }
+\_famalias [Antt]
+
+\_faminfo [Baskerville] {Free vaiants of classical Baskerville} {f-baskerville}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [BaskevilleF]
+
+\_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 
+   { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
+\_famalias [CTU Technika]
+
+\_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
+   { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
+
+\_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
+   { -: {\rm\bf\it\bi} }
+
+\_endcode
+
+\sec How to register your own family
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Read comments in `f-heros.opm` file if you want to prepare a font-macro-file for
+your font family. 
+
+Once you have prepared such file with the name f-famname.opm and \TeX/ is
+able to see it in your filesystem then you can type \fontfam[famname] and
+the file is read, so the information about font family is loaded. The name
+"famname" must be lowercase and without spaces. On the other hand the
+`\fontfam` command gives more tolerance: you can write uppercase letters and
+spaces here. The spaces are ignored and letters are converted to lowercase.
+For example \fontfam [LM Fonts] is equivalent to \fontfam [LMfonts] and both
+commands load the file `f-lmfonts.opm`.
+
+You can use your font-macro-file in sense of previous paragraph without
+registering it. But problem is that such families are not listed when
+`\fontfam[?]` is used and it is not included in font catalogue when
+`\fontfam[catalog]` is printed. The list of families taken in the catalogue and
+listed on the terminal is declared in two files: `fams-ini.opm` and
+`fams-user.opm`. The second file is optional. User can create it and write to
+it the information about user-defined families using the same syntax as in
+existed file `fams-ini.opm`.
+
+The `\_faminfo` has the following syntax:
+
+\begtt
+   \_faminfo [Name Of Family] {Comments} {file-name}
+     { <mod-plus-vars> }
+\endtt
+
+The <mod-plus-vars> data is used when printing catalogue. It consists with
+one or more pairs `<mods>: {<vars>} <mods>: {<vars>}` etc.
+For each pair: each modifiers (separated by comma) are applied to each <vars>
+and prepared sample is printed. The `-` character means no modifiers 
+should be applied.
+
+The `\_famalias` declares an alias to the last
+declared family. 
+
+The `\_famtext` writes a line to the terminal and to the log file when all
+families are listed.
+
+For modifiers and variants declared by `\_faminfo` the sample of letters 
+and other characters from is printed from `\catalogsample` register. 
+You can redeclare the printed sample by:
+
+\begtt
+   \catalogsample={Hello world!}
+\endtt
+
+You can restrict the families to be printed in catalogue by:
+
+\begtt
+   \catalogonly={Termes, Latin Modern, Heros}
+\endtt
+
+If `\catalogonly` is empty (this is default value) then all families are
+printed but no families listed in `\catalogexclude`, for example
+
+\begtt
+   \catalogexclude={Latin Modern, XCharter}
+\endtt
+
+The `\cataogexclude` is empty by default.
+
