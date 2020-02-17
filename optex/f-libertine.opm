@@ -1,7 +1,7 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_fontdecl [Linux Libertine] \Libertine {Free Linux Libertine fonts}
-        {\sans \mono \caps \semi} {\rm \bf \it \bi \initials \displ \keybr} {TX}
+        {\sans \mono \caps \semi} {\rm \bf \it \bi \initials \displ \keybr} {Libertinus}
         "[LinLibertine_R]"
 
 \_wlog{\_detokenize{%
@@ -33,6 +33,8 @@ Special variants:^^J
 \_famvardef \keybr    {\_fsetV subfam=Biolinum  \_fvars K . . . \rm}
 
 \_initfontfamily % new font family must be initialized
+
+\_loadmath {[LibertinusMath-Regular]}
 
 \_endcode
 

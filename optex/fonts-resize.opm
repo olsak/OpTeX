@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2020-01-23>}
+\_codedecl \setfontsize {Font resizing macros <2020-02-14>}
 
 %% resizefont variant-name \fontswitch, for example \resizefont{bf}\_tenbf
 
@@ -33,7 +33,7 @@
 \_def\_reloading{\_loadf{rm}\_tenrm \_loadf{bf}\_tenbf
    \_loadf{it}\_tenit \_loadf{bi}\_tenbi
 }
-\_def\_loadf#1#2{\sdef{_tryload#1}{\_resizefont{#1}#2}}
+\_def\_loadf#1#2{\sdef{_tryload#1}{\_ifmmode \_else \_resizefont{#1}#2\_fi}}
 \_def\_tryloadtt{\fontlet\_tentt=\_tentt \_sizespec\_relax}
 
 \_def\_setoptsize {\_isnextchar a{\_setoptsizeA}
@@ -83,7 +83,7 @@
 \_def \_keepmeaning #1#2{\_global\_let\_keepmeaningdata=#1%
    #2\_let#1=\_keepmeaningdata \_global\_let\_keepmeaningdata=\_undefined
 }
-\_protected \_def \_currvar{\_cs{_currvar:\_ea \_xstring \_the\_font}}
+\_protected \_def \_currvar{\_cs{_currvar:\_ea \_csstring \_the\_font}}
 \_sdef{_currvar:_tenrm}{\_rm}
 \_sdef{_currvar:_tenbf}{\_bf}
 \_sdef{_currvar:_tenit}{\_it}
@@ -91,7 +91,7 @@
 \_sdef{_currvar:_tentt}{\_tt}
 
 \_def \_newcurrfontsize #1{% \newcurrfontsize{at25pt}
-   \_edef\_tmp{\_ea\_xstring \_the\_font}%
+   \_edef\_tmp{\_ea\_csstring \_the\_font}%
    \_ea \_fontlet \_csname \_tmp\_ea\_endcsname \_the\_font \_space #1\_relax
    \_csname \_tmp\_endcsname
 }

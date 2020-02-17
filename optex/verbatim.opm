@@ -1,0 +1,189 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \begtt {Verbatim <2020-02-14>}
+
+\_newdimen\_ttindent \_ttindent=\_parindent
+   % indentation in \begtt...\endtt and \verbinput
+\_def\_ttskip{\medskip}       % space above and below \begtt, \verbinput
+\_mathchardef\_ttpenalty=100  % penalty between lines in \begtt, \verbinput
+
+\_def\_code#1{\_unexpanded\_ea{\_csname _code \_endcsname{#1}}}
+\_protected\_sdef{_code }#1{{\_escapechar=-1 \_ea}%
+   \_ea\_printinverbatim\_ea{\_detokenize{#1}}}
+\_def\_printinverbatim#1{\_leavevmode\_hbox{\_tt \_the\_intthook\_relax #1}}
+
+\_public \code ;
+
+\_newcount\_ttline    \_ttline=-1
+\_newcount\_viline
+\_newread\_vifile
+
+\_newcatcodetable \_verbatimcatcodes
+\_def\_setverb{\_begingroup
+   \_def\do##1{\_catcode`##1=12 }
+   \_dospecials   
+   \_savecatcodetable\_verbatimcatcodes % all characters are normal
+   \_endgroup
+}
+\_setverb
+\_def\_setverb{\_catcodetable\_verbatimcatcodes }%
+
+% \begtt ... \endtt
+
+\_eoldef \_begtt #1{%
+   \_par \_vskip\_parskip \_ttskip \_bgroup \_wipeepar
+   \_setverb \_adef{ }{\ }%
+   \_parindent=\_ttindent \_parskip=0pt
+   \_the\_tthook #1%
+   \_ifnum\_ttline<0 \_else
+     \_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font
+     \_toksapp\_everypar{\_global\_advance\_ttline by1 \_printttline}\_fi
+     \_def\par##1{\_endgraf\_ifx##1\_egroup\_else\_penalty\_ttpenalty\_leavevmode\_fi ##1}%
+   \_obeylines \_startverb}
+
+\_catcode`\|=0 \_catcode`\\=12
+  |_def|_startverb#1\endtt{|_tt|_the|_ptthook#1|_endtt}
+|_normalcatcodes
+
+\def\_endtt{\_egroup\_par\_ttskip\_testparA}
+\_def\_testparA{\_ea\_testparB\_romannumeral-`\.}
+\_def\_testparB{\_futurelet\_tmpa\_testparC}
+\_def\_testparC{\_ifx\_tmpa\_par\_else\afternoindent\_fi}
+
+\_def\_printttline{\_llap{\_sevenrm\_the\_ttline\_kern.9em}}
+
+\_newtoks\_tthook
+\_newtoks\_ptthook
+\_newtoks\_intthook
+
+\_def\_activettchar#1{%
+   \_ifx\_savedttchar\_undefined\_else \_catcode\_savedttchar=\_savedttcharc \_fi
+   \_chardef\_savedttchar=`#1%
+   \_chardef\_savedttcharc=\_catcode`#1%
+   \_adef{#1}{{\_setverb\_adef{ }{\ }\_catcode`#1=13 \_ea}\_readverb}%
+   \_bgroup\_lccode`\~=`#1\_lowercase{\_egroup\_def\_readverb ##1~}{\_printinverbatim{##1}}%
+   \_catcode`#1=13
+}
+
+\_newcount\_viline
+\_newread\_vifile
+
+\_def\_verbinput (#1) #2 {\_par \_def\_tmpa{#2}%
+   \_ifx\_vifilename\_tmpa \_else
+      \_openin\_vifile=#2
+      \_global\_viline=0 \_global\_let\_vifilename=\_tmpa
+      \_ifeof\_vifile
+         \_opwarning{\_noexpand\verbinput - file "#2" is unable to reading}
+         \_ea\_ea\_ea\_skiptorelax
+      \_fi
+   \_fi
+   \_viscanparameter #1+\_relax
+}
+\_def\_skiptorelax#1\_relax{}
+
+\_def \_viscanparameter #1+#2\_relax{%
+   \_if$#2$\_viscanminus(#1)\_else \_viscanplus(#1+#2)\_fi
+}
+\_def\_viscanplus(#1+#2+){%
+   \_if$#1$\_tmpnum=\_viline
+   \_else \_ifnum#1<0 \_tmpnum=\_viline \_advance\_tmpnum by-#1
+       \_else \_tmpnum=#1
+             \_advance\_tmpnum by-1
+             \_ifnum\_tmpnum<0 \_tmpnum=0 \_fi % (0+13) = (1+13)
+   \_fi \_fi
+   \_edef\_vinolines{\_the\_tmpnum}%
+   \_if$#2$\_def\_vidolines{0}\_else\_edef\_vidolines{#2}\_fi
+   \_doverbinput
+}
+\_def\_viscanminus(#1-#2){%
+   \_if$#1$\_tmpnum=0
+      \_else \_tmpnum=#1 \_advance\_tmpnum by-1 \_fi
+   \_ifnum\_tmpnum<0 \_tmpnum=0 \_fi  % (0-13) = (1-13)
+   \_edef\_vinolines{\_the\_tmpnum}%
+   \_if$#2$\_tmpnum=0
+      \_else \_tmpnum=#2 \_advance\_tmpnum by-\_vinolines \_fi
+   \_edef\_vidolines{\_the\_tmpnum}%
+   \_doverbinput
+}
+\_def\_doverbinput{%
+   \_tmpnum=\_vinolines
+   \_advance\_tmpnum by-\_viline
+   \_ifnum\_tmpnum<0
+      \_openin\_vifile=\_vifilename\_space
+      \_global\_viline=0
+   \_else
+      \_edef\_vinolines{\_the\_tmpnum}%
+   \_fi
+   \_vskip\_parskip \_ttskip \_bgroup \_wipeepar
+   \_setverb \_adef{ }{\ }%
+   \_ifx\_savedttchar\_undefined \_else \_catcode\_savedttchar=12 \_fi
+   \_parindent=\_ttindent \_parskip=0pt
+   \_the\_tthook\_relax
+   \_ifnum\_ttline<-1 \_else
+     \_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font
+     \_everypar\_ea{\_the\_everypar \_glob\_advance\_ttline by1 \_printttline}\_fi
+   \_def\par##1{\_endgraf\_ifx##1\_egroup\_else\_penalty\_ttpenalty\_leavevmode\_fi ##1}%
+   \_obeylines \_tmpnum=0 \_lccode`\~=`\^^M \_lowercase{\_def\_tmpb{~}}%
+   \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
+         \_ifnum\_tmpnum<\_vinolines\_space
+         \_vireadline \_advance\_tmpnum by1 \_repeat      %% skip line
+   \_ifnum\_ttline=-1 \_ttline=\_viline \_let\_glob=\_relax \_else\_let\_glob=\_global \_fi
+   \_tmpnum=0 \_ifnum\_vidolines=0 \_tmpnum=-1 \_fi
+   \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_fi
+   \_loop \_ifnum\_tmpnum<\_vidolines\_space
+            \_vireadline 
+            \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_else \_viprintline \_fi %% print line
+            \_ifnum\_vidolines=0 \_else\_advance\_tmpnum by1 \_fi 
+            \_repeat
+   \_tt\_ea\_the\_ea\_ptthook\_tmpb\_egroup\_par\_ttskip\_testparA
+}
+\_def\_vireadline{\_read\_vifile to \_tmp \_global\_advance\_viline by1 }
+\_def\_viprintline{\_ea\_addto\_ea\_tmpb\_ea{\_tmp}}
+
+\_public 
+   \begtt \activettchar \tthook \ptthook \intthook \verbinput ;
+
+
+
+\_endcode %---------------------------------------
+
+`\code{text}` is a macro which writes verbatim-like inline text and it is
+robust to use it in parameters of macros or section names etc. User have to
+escape the following characters: percent, hash mark, escape, space (if there
+are more than one consecutive spaces) and  `{`, `}` (if these braces are
+unbalanced in the `\code` parameter). For example
+
+\begtt
+   \code{\\text, \%\#}  ... \text, %#
+   \code{@{..}*&^$ $}   ... prints the same without escaping, but you can
+                            escape these characters too, if you want.
+   \code{a \ b}         ... two spaces between a b, the second one must be escaped
+   \code{xy\{z}         ... unbalanced brace must be escaped
+\endtt
+
+If you set a character as `\activettchar` then it can be used as boundary
+character of inline code. The text betweent these boundary characters are
+printed without any change. For example
+\code{\`}`\print %  whatever #&`\code{\`} does `\print %  whatever #&`
+if `\activettchar`\code{\`} was declared.
+
+But this in/line verbatim text cannot be used inside parameters of
+macros, for example inside section names. Use `\code` in such situation. 
+
+
+\secc Implementation notes
+
+If the code is used in non-detokenized `\write` parameter, we must to
+`detokenize` its parameter and write `\code` as prefix again. The second
+(internal) `\code` is a macro with the name followed by a space. So
+
+\begtt
+   \code{\\aha\%}  ... writes: \code  {\\aha\%} into workong file.
+\endtt
+
+This can be read again without any chnge of meaning of the parameter (the
+second space after `\code` sequence will be ingnored).
+
+If the `\code` is used in normal horizontal mode, then escape characters are
+ignored using `\ecsapechar=-1 \detokenize`.
+

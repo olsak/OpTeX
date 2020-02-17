@@ -1,26 +1,29 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2020-01-23>}
+\_codedecl \public {Prefixing and code syntax <2020-02-14>}
 
 % all TeX82 primitives have alternative control sequence \_hbox \_string, ...
 
 \let\_directlua = \directlua
 
 \_directlua {
-   tex.enableprimitives('_', tex.extraprimitives('tex'))
+    % enable all primitives with _ prefix
+    tex.enableprimitives('_', tex.extraprimitives('tex'))
+    % enable all primitives without prefixing
+    tex.enableprimitives('', tex.extraprimitives())
+    % enable all primitives with _ prefix
+    tex.enableprimitives('_', tex.extraprimitives())
 }
 
 \_let\_ea =\_expandafter  % usefull shortcut
 
 \_long\_def \_xargs #1#2{\_ifx #2;\_else \_ea#1\_ea#2\_ea\_xargs \_ea #1\_fi}
-\_long\_def \_xstring #1{\_ea\_xstringA \_string#1^}
-\_def \_xstringA #1#2^{#2}
 
 \_def \_public {\_xargs \_publicA}
-\_def \_publicA #1{\_ea\_let \_ea#1\_csname _\_xstring #1\_endcsname} 
+\_def \_publicA #1{\_ea\_let \_ea#1\_csname _\_csstring #1\_endcsname} 
 
 \_def \_private {\_xargs \_privateA}
-\_def \_privateA #1{\_ea\_let \_csname _\_xstring #1\_endcsname =#1} 
+\_def \_privateA #1{\_ea\_let \_csname _\_csstring #1\_endcsname =#1} 
 
 \_def \_codedecl #1#2{%
    \_ifx #1\_undefined \_wterm{#2}%
@@ -28,7 +31,7 @@
 }
 \_def \_wterm {\_immediate \_write16 }
 
-\_public \public \private \xargs \xstring \ea \wterm ;
+\_public \public \private \xargs \ea \wterm ;
 
 \_endcode %----------------------------------------------------
 

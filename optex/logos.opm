@@ -5,7 +5,7 @@
 \_protected\_def \_TeX {T\_kern-.1667em\_lower.5ex\_hbox{E}\_kern-.125emX\_ignoreslash}
 \_protected\_def \_OpTeX {Op\kern-.1em\_TeX}
 \_protected\_def \_LuaTeX {Lua\_TeX}
-\_protected\_def \XeTeX {X\_kern-.125em\_phantom E%
+\_protected\_def \_XeTeX {X\_kern-.125em\_phantom E%
    \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
 \_def\_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
   \_raise \_tmpdim \_hbox{\_thefontscale[710]A}%
@@ -20,8 +20,15 @@
 \_def\_OPmac{\_leavevmode
    \_lower.2ex\_hbox{\_thefontscale[1400]O}\_kern-.86em P{\_em mac}\_ignoreslash}
 \_def\_CS{$\_cal C$\_kern-.1667em\_lower.5ex\_hbox{$\_cal S$}\_ignoreslash}
-\_def\_csplain{\_CS plain}
+\_def\_csplain{\_CS plain\_ignoreslash}
+\_def\_ignslash#1{\_ifx/#1\_else #1\_fi}
 
+\_toksapp \_pdfstringout {% conversion for PDF outlines
+   \_def\TeX{TeX\_ignslash}\_def\OpTeX{OpTeX\_ignslash}%
+   \_def\LuaTeX{LuaTeX\_ignslash}\_def\XeTeX{XeTeX\_ignslash}%
+   \_def\LaTeX{LaTeX\_ignslash}\_def\OPmac{OPmac\_ignslash}%
+   \_def\CS{CS}\_def\csplain{csplain\_ignslash}%
+}
 
 \_public
    \TeX \OpTeX \LuaTeX \XeTeX \LaTeX \OPmac \CS \csplain

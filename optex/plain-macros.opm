@@ -1,11 +1,13 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2019-05-21>}
+\_codedecl \magstep {Macros from plain TeX <2019-02-14>}
+
+\_chardef\_active = 13
 
 \_def\_dospecials {\do\ \do\\\do\{\do\}\do\$\do\&%
   \do\#\do\^\do\^^K\do\^^A\do\%\do\~}
 \_public 
-   \dospecials ;
+   \dospecials \active ;
 
 \_def \_magstephalf{1095 }
 \_def \_magstep#1{\_ifcase#1 1000\_or 1200\_or 1440\_or 1728\_or 2074\_or 2488\_fi\_space}
@@ -181,15 +183,15 @@
    \oalign \ooalign \d \b \c \dots ;
 
 \def \_oldaccents {%
-   \_def\`##1{{\_accent\_grave  ##1}}%
-   \_def\'##1{{\_accent\_acute  ##1}}%
+   \_def\`##1{{\_accent\_tgrave  ##1}}%
+   \_def\'##1{{\_accent\_tacute  ##1}}%
    \_def\v##1{{\_accent\_caron  ##1}}%
-   \_def\u##1{{\_accent\_breve  ##1}}%
+   \_def\u##1{{\_accent\_tbreve  ##1}}%
    \_def\=##1{{\_accent\_macron ##1}}%
    \_def\^##1{{\_accent\_circumflex ##1}}%
    \_def\.##1{{\_accent\_dotaccent ##1}}%
    \_def\H##1{{\_accent\_hungarumlaut ##1}}%
-   \_def\~##1{{\_accent\_tilde  ##1}}%
+   \_def\~##1{{\_accent\_ttilde  ##1}}%
    \_def\"##1{{\_accent\_dieresis ##1}}%
    \_def\r##1{{\_accent\_ring   ##1}}%
 }
@@ -197,29 +199,29 @@
    \oldaccents ;
 
 % ec-lmr encoding (will be changed after \fontfam macro):
-\_chardef\_grave=0
-\_chardef\_acute=1
+\_chardef\_tgrave=0
+\_chardef\_tacute=1
 \_chardef\_circumflex=2
-\_chardef\_tilde=3
+\_chardef\_ttilde=3
 \_chardef\_dieresis=4
 \_chardef\_hungarumlaut=5
 \_chardef\_ring=6
 \_chardef\_caron=7
-\_chardef\_breve=8
+\_chardef\_tbreve=8
 \_chardef\_macron=9
 \_chardef\_dotaccent=10
 \_chardef\_cedilla=11
 
 \_def \_uniaccents {% accents with Unicode
-   \_chardef\_grave="0060
-   \_chardef\_acute="00B4
+   \_chardef\_tgrave="0060
+   \_chardef\_tacute="00B4
    \_chardef\_circumflex="005E
-   \_chardef\_tilde="02DC
+   \_chardef\_ttilde="02DC
    \_chardef\_dieresis="00A8
    \_chardef\_hungarumlaut="02DD
    \_chardef\_ring="02DA
    \_chardef\_caron="02C7
-   \_chardef\_breve="02D8
+   \_chardef\_tbreve="02D8
    \_chardef\_macron="00AF
    \_chardef\_dotaccent="02D9
    \_chardef\_cedilla="00B8

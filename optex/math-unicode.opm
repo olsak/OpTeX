@@ -1,0 +1,155 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \loadmath {Unicode Math fonts <2020-02-14>}
+
+\_newifi \_ifmathloading   \_mathloadingtrue
+
+\_def\_noloadmath{\_mathloadingfalse}
+\_def\_doloadmath{\_mathloadingtrue}
+
+\_def\_loadmath#1{%
+   \_ifmathloading
+   \_initunifonts
+   \_isfont"#1"\_iffalse
+      \_opwarning{Math font "#1" not found, skipped...}%
+   \_else
+      \_def\_unimathfont{#1}%
+      \_def\_normalmath{%
+         \_loadumathfamily 1 {\_unimathfont}{} % Base font
+         \_loadmathfamily  4 rsfs              % script
+         \_setmathdimens
+       }%
+       \_let\_boldmath=\_normalmath
+       \_addto\_boldmath{\_pdfliteral direct {2 Tr .3 w}\_aftergroup\_noboldmath}%
+       \_def\_noboldmath{\_pdfliteral direct {0 Tr 0 w}}% faked bold only :-(
+       \_normalmath
+       \_wterm {MATH-FONT: "#1" -- unicode math prepared.}%
+       \_setctable\_optexcatcodes \_input unimath-codes.opm \_restorectable 
+       \_mathloadingfalse
+   \_fi\_fi}
+
+\_def\_loadboldmath#1#2\to #3{%
+   \_def\_tmp{#3}\_ifx\_unimathfont\_tmp % do work only if #3 is loaded as normal Math
+   \_isfont"#1"\_iffalse
+      \_opwarning{Bold-Math font "#1" not found, skipped...}   
+   \_else
+      \_def\_unimathboldfont{#1}%
+      \_def\_boldmath{%
+          \_loadumathfamily 1 {\_unimathboldfont}{} % Base font
+          \_loadmathfamily  4 rsfs                  % script
+          \_setmathdimens
+      }%
+      \_wterm {MATH-FONT: "#1" -- unicode math bold prepared.}%
+   \_fi\_fi}
+
+\_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
+\_def\_mfontfeatures{mode=base;script=math;} 
+
+\_def\_loadumathfamily #1 #2#3 {%
+  \_edef\_optsizesave{\_the\_optsize}%
+  \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{#3} at\_optsize \_textfont#1=\_mF
+  \_ifnum#1=1 \_textfont2=\_mF \_textfont3=\_mF \_fi
+  \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{+ssty=0;#3} at\_optsize \_scriptfont#1=\_mF
+  \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
+  \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{+ssty=1;#3} at\_optsize \_scriptscriptfont#1=\_mF
+  \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi  
+  \_optsize=\_optsizesave \_relax
+}
+
+\_newcount\umathnumA  \_newcount\umathnumB
+
+\def\umathcorr#1#2{\expandafter#1\expandafter{\the#2}}
+\def\umathprepare#1{\def\umathscanholes##1[#1]##2##3\relax{##2}}
+\def\umathvalue#1{\expandafter\umathscanholes\umathcharholes[#1]{#1}\relax}
+
+\def\umathcharholes{% holes in math alphabets:
+   [119893]{"210E}[119965]{"212C}[119968]{"2130}[119969]{"2131}%
+   [119971]{"210B}[119972]{"2110}[119975]{"2112}[119976]{"2133}[119981]{"211B}%
+   [119994]{"212F}[119996]{"210A}[120004]{"2134}%
+   [120070]{"212D}[120075]{"210C}[120076]{"2111}[120085]{"211C}[120093]{"2128}%
+   [120122]{"2102}[120127]{"210D}[120133]{"2115}[120135]{"2119}
+   [120136]{"211A}[120137]{"211D}[120145]{"2124}%
+}
+\def\umathrange#1#2{\umathnumB=#2\relax \umathrangeA#1}
+\def\umathrangeA#1-#2{\umathnumA=`#1\relax
+   \loop
+      \umathcorr\umathprepare\umathnumB
+      \Umathcode \umathnumA = 7 1 \umathcorr\umathvalue{\umathnumB}
+      \ifnum\umathnumA<`#2\relax
+         \advance\umathnumA by1 \advance\umathnumB by1
+   \repeat
+}
+\def\umathrangeGREEK{\begingroup
+   \lccode`A="0391 \lccode`Z="03A9
+   \lowercase{\endgroup\umathrange{A-Z}}}
+\def\umathrangegreek{\begingroup
+   \lccode`A="03B1 \lccode`Z="03D6
+   \lowercase{\endgroup\umathrange{A-Z}}}
+\def\greekdef#1{\ifx#1\relax \else
+   \begingroup \lccode`X=\umathnumB \lowercase{\endgroup \def#1{X}}%
+   \advance\umathnumB by 1
+   \expandafter\greekdef \fi
+}
+
+\_public
+   \loadmath \loadboldmath \noloadmath \doloadmath ;
+
+\_endcode
+
+--------------------------------------------
+
+The `\loadmath` macro loads math fonts and sets math-codes using \input
+unimath-codes.opm. If UnicodeMath font is loaded then `\_mathloadingfalse`
+is set, so new UnicodeMath font isn't loaded until `\domathload` is used.
+
+`\loadadboldmath{<bold-font>} \to {<normal-font>}` loads bold variant only
+if <normal-font> was sucessully loaded. For example:
+
+\begtt
+\loadmath     {[xitsmath-regular]}
+\loadboldmath {[xitsmath-bold]} \to {[xitsmath-regular]}
+\endtt
+
+You can combine more fonts, if you register them to another
+math families (5, 6, 7, etc.) in \normalmath macro.
+
+The default value of \normalmath shows a combination of base Unicode Math
+font with 8bit Math font at family 4. See definition of \script macro where
+\fam4 is used. Of course, we need to set \rmvariables too, because 8bit font
+accepts only codes less than 255.
+
+See http://tex.stackexchange.com/questions/308749/ for more technical details.
+
+The poor bold is used for complete bold vaiant of the font. If the selected
+font has its bold vaiant (like xits-math), you can re-define \boldmath macro
+by:
+
+\def\boldmath{%
+   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
+   \loadmathfamily  4 rsfs                % script
+   \setmathdimens
+}
+
+XITSmath-bold needs correction: the norm symbol ||x|| is missing here. So, you
+can define: 
+
+\def\boldmath{%
+   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
+   \loadmathfamily  4 rsfs                % script
+   \loadumathfamily 5 {[xitsmath-regular]}{}
+   \def\|{\Udelimiter 0 5 "02016 }%       % norm delimiter from family 5
+   \setmathdimens
+}
+
+--------------------
+
+\loadmath{[XITSMath-Regular]} ... XITS MATH^^J
+\loadmath{[latinmodern-math]} ... Latin Modern Math^^J
+\loadmath{[texgyretermes-math]} ... TeXGyre Termes Math^^J 
+\loadmath{[texgyrebonum-math]} ... TeXGyre Bonum Math^^J 
+\loadmath{[texgyrepagella-math]} ... TeXGyre Pagella Math^^J 
+\loadmath{[texgyreschola-math]} ... TeXGyre Schola Math^^J 
+\loadmath{[texgyredejavu-math]} ... TeXGyre DeJaVu Math^^J 
+\loadmath{[LibertinusMath-Regular]} ... Libertinus Math^^J 
+\loadmath{[FiraMath-Regular]} ... Fira Math^^J 
+\loadmath{[Asana-Math]} ... Asana Math^^J

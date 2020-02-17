@@ -1,7 +1,7 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_fontdecl [Pagella] \Pagella {TeX Gyre Pagella fonts based on Palatino}
-        {\caps} {\rm \bf \it \bi} {TX}
+        {\caps} {\rm \bf \it \bi} {Pagella}
         "[texgyrepagella-regular]"
 
 \_wlog{\_detokenize{%
@@ -18,6 +18,8 @@ Modifier:^^J
 \_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 
 \_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyrepagella-math]}
 
 \_endcode
 

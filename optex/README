@@ -1,1 +1,19 @@
+OpTeX: the LuaTeX format based on Plain TeX and OPmac
+
+Author: Petr Olsak, <petr@olsak.net>
+
+This software is in public domain.
+
 See http://petr.olsak.net/optex
+
+History:
+
+<0.03> optex-doc optex.1 included,
+       verbatim.opm re-implmented,
+       math-unicode implemented,
+       usebib.opm + bib-style.opm included
+       \catcodetable stack implemented
+       bugfixing of macros.
+       catcodes.opl: removed, one can use \catcodetable, ... primitives,
+       pdfuni-string: lua code for lua5.3 fixed.
+<0.02> Released.

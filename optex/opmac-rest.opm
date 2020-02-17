@@ -17,8 +17,6 @@
 \newcount\tmpnum % auxiliary count
 \newdimen\tmpdim % auxiliary dimen
 
-\def\opwarning#1{\immediate\write16{l.\the\inputlineno\space OPmac WARNING: #1.}}
-
 \long\def\addto#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
 
 \def\protectlist{}
@@ -54,10 +52,6 @@
 }
 \def\isnextcharA{\the\toks\ifx\tmp\next0\else1\fi\space}
 
-\def\eoldef#1{\def#1{\begingroup \catcode`\^^M=12 \eoldefA#1}%
-   \expandafter\def\csname\string#1:M\endcsname}
-{\catcode`\^^M=12 \gdef\eoldefA#1#2^^M{\endgroup\csname\string#1:M\endcsname{#2}}}
-
 \def\maybebreak{\afterassignment\maybebreakA\tmpdim=}
 \def\maybebreakA{\ifvmode \vskip0pt plus\tmpdim \penalty-130 \vskip0pt plus-\tmpdim 
     \else \hskip0pt plus\tmpdim \penalty-130 \hskip0pt plus-\tmpdim \fi \relax
@@ -87,14 +81,6 @@
 
 \newdimen\iindent  \iindent=\parindent
    % indentation of items, TOC, captions, list of bib. references
-\newdimen\ttindent \ttindent=\parindent
-   % indentation in \begtt...\endtt and \verbinput
-
-\def\ttskip{\medskip}       % space above and below \begtt, \verbinput
-\mathchardef\ttpenalty=100  % penalty between lines in \begtt, \verbinput
-\def\tthook{}               % hook in \begtt, \verbinput
-\def\intthook{}             % hook in in-text verbatim
-\def\ptthook{}              % hook in \begtt, \verbinput for post-processing 
 
 \def\iiskip{\medskip}     % space above and below \begitems...\enditems
 \def\itemhook{}           % hook in \startitem
@@ -134,12 +120,14 @@
 
 %%%%%%%%%%%%%% Multilingual support, sec. 3.5 in opmac-d.pdf
 
-\def\mtext#1{\csname mt:#1:\csname _lan:\the\language\endcsname\endcsname}
-
-\sdef{mt:chap:en}{Chapter}  \sdef{mt:chap:cs}{Kapitola}  \sdef{mt:chap:sk}{Kapitola}
-\sdef{mt:t:en}{Table}       \sdef{mt:t:cs}{Tabulka}      \sdef{mt:t:sk}{Tabu\v lka}
-\sdef{mt:f:en}{Figure}      \sdef{mt:f:cs}{Obr\'azek}    \sdef{mt:f:sk}{Obr\'azok}
-\sdef{mt:subj:en}{Subject}  \sdef{mt:subj:cs}{V\v{e}c}   \sdef{mt:subj:sk}{Vec}
+\def\mtext#1{\_ifcsname _mt:#1:\csname _lan:\_the\_language\_endcsname\_endcsname
+   \_csname _mt:#1:\_csname _lan:\_the\_language\_endcsname\_endcsname
+   \_else \_csname _mt:#1:en\_endcsname \_fi
+}
+\sdef{_mt:chap:en}{Chapter} \sdef{_mt:chap:cs}{Kapitola} \sdef{_mt:chap:sk}{Kapitola}
+\sdef{_mt:t:en}{Table}      \sdef{_mt:t:cs}{Tabulka}     \sdef{_mt:t:sk}{Tabuľka}
+\sdef{_mt:f:en}{Figure}     \sdef{_mt:f:cs}{Obrázek}     \sdef{_mt:f:sk}{Obrázok}
+\sdef{_mt:subj:en}{Subject} \sdef{_mt:subj:cs}{Věc}      \sdef{_mt:subj:sk}{Vec}
 
 %%%%%%%%%%%%%% REF file, sec 3.6 in opmac-d.pdf
 
@@ -217,7 +205,7 @@
    \titfont \noindent #1\par}%
    \nobreak\bigskip
 }
-\def\titfont{\scalemain\boldify\typoscale[\magstep4/\magstep4]}
+\def\titfont{\scalemain\boldify\typoscale[\magstep4/\magstep5]}
 \def\chapfont{\scalemain\boldify\typoscale[\magstep3/\magstep3]}
 \def\secfont{\scalemain\boldify\typoscale[\magstep2/\magstep2]}
 \def\seccfont{\scalemain\boldify\typoscale[\magstep1/\magstep1]}
@@ -279,8 +267,8 @@
 \def\othe#1.{\ifnum#1>0 \the#1.\fi}
 \def\thechapnum{} \def\thesecnum{} \def\theseccnum{}
 
-\def\afternoindent{\global\everypar={\wipeepar\setbox7=\lastbox}}
-\def\wipeepar{\global\everypar={}}
+\def\afternoindent{\global\everypar={\_wipeepar\setbox7=\lastbox}}
+\def\_wipeepar{\global\everypar={}}
 \let\firstnoindent=\afternoindent
 \def\nbpar{{\interlinepenalty=10000\endgraf}}
 \def\nl{\hfil\break}
@@ -644,7 +632,7 @@
 \def\corrsize #1{%% #1 := #1 + \splittopskip - \topskip
    \advance #1 by \splittopskip \advance #1 by-\topskip
 }
-\def\begmulti #1 {\par\bgroup\wipeepar\multiskip\penalty0 \def\Ncols{#1}
+\def\begmulti #1 {\par\bgroup\_wipeepar\multiskip\penalty0 \def\Ncols{#1}
    \setbox6=\vbox\bgroup\penalty0
    %% \hsize := Sirka sloupce = (\hsize+\colsep) / n - \colsep
    \advance\hsize by\colsep
@@ -855,112 +843,6 @@
 %%%%%%%%%%%%%% Outlines -- sec. 3.17 in opmac-d.pdf
 
 %%%%%%%%%%%%%% Verbatim, \begtt, \endtt -- sec. 3.18 in opmac-d.pdf
-
-\newcount\ttline    \ttline=-1
-\newcount\viline
-\newread\vifile
-
-\def\setverb{\frenchspacing\def\do##1{\catcode`##1=12}\dospecials \catcode`\*=12 }
-\def\begtt{\par \vskip\parskip \ttskip \bgroup \wipeepar
-   \setverb \adef{ }{\ }%
-   \ifx\savedttchar\undefined \else \catcode\savedttchar=12 \fi
-   \parindent=\ttindent \parskip=0pt
-   \tthook\relax
-   \ifnum\ttline<0 \else
-     \_tenrm \thefontscale[700]\ea\let\ea\sevenrm\the\font
-     \everypar\expandafter{\the\everypar \global\advance\ttline by1 \printttline}\fi
-   \def\par##1{\endgraf\ifx##1\egroup\else\penalty\ttpenalty\leavevmode\fi ##1}%
-   \obeylines \startverb}
-{\catcode`\|=0 \catcode`\\=12
-|gdef|startverb#1\endtt{|tt|ptthook#1|egroup|par|ttskip|testparA}}
-\def\testparA{\expandafter\testparB\romannumeral-`\.}
-\def\testparB{\futurelet\tmpa\testparC}
-\def\testparC{\ifx\tmpa\par\else\afternoindent\fi}
-
-\def\printttline{\llap{\sevenrm\the\ttline\kern.9em}}
-
-\def\activettchar#1{%
-   \ifx\savedttchar\undefined\else \catcode\savedttchar=\savedttcharc \fi
-   \chardef\savedttchar=`#1%
-   \chardef\savedttcharc=\catcode`#1%
-   \bgroup\lccode`\~=`#1%
-   \lowercase {\egroup\def~}{\leavevmode\hbox\bgroup\setverb\adef{ }{\ }%
-                      \intthook\tt\readverb}%
-   \bgroup\lccode`\~=`#1\lowercase{\egroup\def\readverb ##1~}{##1\egroup}%
-   \catcode`#1=13
-}
-
-\def\verbinput (#1) #2 {\par \def\tmpa{#2}%
-   \ifx\vifilename\tmpa \else
-      \openin\vifile=#2
-      \global\viline=0 \global\let\vifilename=\tmpa
-      \ifeof\vifile
-         \opwarning{\noexpand\verbinput - file "#2" is unable to reading}
-         \expandafter\expandafter\expandafter\skiptorelax
-      \fi
-   \fi
-   \viscanparameter #1+\relax
-}
-\def\skiptorelax#1\relax{}
-
-\def \viscanparameter #1+#2\relax{%
-   \if$#2$\viscanminus(#1)\else \viscanplus(#1+#2)\fi
-}
-\def\viscanplus(#1+#2+){%
-   \if$#1$\tmpnum=\viline
-   \else \ifnum#1<0 \tmpnum=\viline \advance\tmpnum by-#1
-       \else \tmpnum=#1
-             \advance\tmpnum by-1
-             \ifnum\tmpnum<0 \tmpnum=0 \fi % (0+13) = (1+13)
-   \fi \fi
-   \edef\vinolines{\the\tmpnum}%
-   \if$#2$\def\vidolines{0}\else\edef\vidolines{#2}\fi
-   \doverbinput
-}
-\def\viscanminus(#1-#2){%
-   \if$#1$\tmpnum=0
-      \else \tmpnum=#1 \advance\tmpnum by-1 \fi
-   \ifnum\tmpnum<0 \tmpnum=0 \fi  % (0-13) = (1-13)
-   \edef\vinolines{\the\tmpnum}%
-   \if$#2$\tmpnum=0
-      \else \tmpnum=#2 \advance\tmpnum by-\vinolines \fi
-   \edef\vidolines{\the\tmpnum}%
-   \doverbinput
-}
-\def\doverbinput{%
-   \tmpnum=\vinolines
-   \advance\tmpnum by-\viline
-   \ifnum\tmpnum<0
-      \openin\vifile=\vifilename\space
-      \global\viline=0
-   \else
-      \edef\vinolines{\the\tmpnum}%
-   \fi
-   \vskip\parskip \ttskip \bgroup \wipeepar
-   \setverb \adef{ }{\ }%
-   \ifx\savedttchar\undefined \else \catcode\savedttchar=12 \fi
-   \parindent=\ttindent \parskip=0pt
-   \tthook\relax
-   \ifnum\ttline<-1 \else
-     \_tenrm \thefontscale[700]\ea\let\ea\sevenrm\the\font
-     \everypar\expandafter{\the\everypar \glob\advance\ttline by1 \printttline}\fi
-   \def\par##1{\endgraf\ifx##1\egroup\else\penalty\ttpenalty\leavevmode\fi ##1}%
-   \obeylines \tmpnum=0 \lccode`\~=`\^^M \lowercase{\def\tmpb{~}}%
-   \loop \ifeof\vifile \tmpnum=\vinolines\space \fi
-         \ifnum\tmpnum<\vinolines\space
-         \vireadline \advance\tmpnum by1 \repeat      %% skip line
-   \ifnum\ttline=-1 \ttline=\viline \let\glob=\relax \else\let\glob=\global \fi
-   \tmpnum=0 \ifnum\vidolines=0 \tmpnum=-1 \fi
-   \ifeof\vifile \tmpnum=\vidolines\space \fi
-   \loop \ifnum\tmpnum<\vidolines\space
-            \vireadline 
-            \ifeof\vifile \tmpnum=\vidolines\space \else \viprintline \fi %% print line
-            \ifnum\vidolines=0 \else\advance\tmpnum by1 \fi 
-            \repeat
-   \tt\expandafter\ptthook\tmpb\egroup\par\ttskip\testparA
-}
-\def\vireadline{\read\vifile to \tmp \global\advance\viline by1 }
-\def\viprintline{\expandafter\addto\expandafter\tmpb\expandafter{\tmp}}
 
 %%%%%%%%%%%%%% \table -- sec. 3.19 in opmac-d.pdf
 
@@ -1365,7 +1247,9 @@
 }
 \def\Xcite#1{\addto\citelistB{\citeI[#1]}}
 
-\def\usebib{\par \input opmac-bib \usebib}
+\newcatcodetable\savedcatcodes
+
+\def\usebib{\par \_opinput {usebib.opm} \usebib}
 
 %%%%%%%%%%%%%% output -- sec. 3.24 in opmac-d.pdf
 
@@ -1403,7 +1287,7 @@
    \eoldef\author##1{\removelastskip\bigskip
       {\leftskip=0pt plus1fill \rightskip=\leftskip \it \noindent ##1\par}\nobreak\bigskip
    }
-   \parindent=1.2em \iindent=\parindent \ttindent=\parindent
+   \parindent=1.2em \iindent=\parindent \_ttindent=\parindent
    \footline={\global\footline={\hss\_tenrm\thefontsize[10]\folio\hss}}
    \runningfnotes
 }

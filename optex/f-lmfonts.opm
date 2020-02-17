@@ -2,7 +2,7 @@
 
 \_fontdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
         {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital 
-         \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {CM+AMS}
+         \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {LM}
         "[lmroman10-regular]"
 
 \_wlog{\_detokenize{%
@@ -113,6 +113,8 @@ Submodifiers (setlects special variants of given subfamily):^^J
 \_private \LMfonts \ttset ; % \tt variant selector re-defined
 
 \_initfontfamily % new font family must be initialized
+
+\_loadmath {[latinmodern-math]}
 
 \_endcode
 

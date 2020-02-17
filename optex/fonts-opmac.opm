@@ -132,7 +132,7 @@ before `\typoscale` command.
 
 \begtt
    \typosize[12/14.4] % first usage in document, sets main values internally
-   \typosize[15/18    bigger font
+   \typosize[15/18]   % bigger font
    \scalemain \typoscale[800/800] % reduces from main values, no from current values.
 \endtt
 

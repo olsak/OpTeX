@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2020-01-23>}
+\_codedecl \fontfam {Fonts selection system <2020-02-14>}
 
 \_def\_initunifonts {%
    \_ea\_newcount \_csname e@alloc@attribute@count\_endcsname
@@ -12,8 +12,9 @@
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
    \_gdef\_doresizefont ##1{\_logfont{##1}%
       \_font##1=\_fontnamegen\_space \_sizespec \_relax}%
-   \_def \_fontnamegen{lmr10}%
+   \_def \_fontnamegen{ec-lmr10}%
    \_global\_let\_initunifonts=\_relax % we need not to do this work twice
+   \_global\_let\initunifonts=\_relax
 }
 \_def\_fontdecl [#1]#2#3#4#5#6#7"#8"{%
    \_initunifonts \_uniaccents
@@ -21,7 +22,7 @@
       \_isfont"#8"\_iffalse
          \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
          \_def\_textfamily{#1}%
-         \_edef\_currfamily {\_xstring #2}%
+         \_edef\_currfamily {\_csstring #2}%
          \_def\_mainfamcommand{#2}%
          \_wterm {FONT: [#1] -- \string#2 \_detokenize{(#3)^^J mods:{#4} vars:{#5} math:{#6}}}%
       \_fi 
@@ -71,7 +72,7 @@
     \_edef\_act{\_noexpand\_isinlist{,#2,}{,\_cs{_#1V},}}\_act
     \_iftrue #3\_fi
 }
-\_def \_moddef #1#2{\_edef\_tmp{\_xstring#1}\_remfirstunderscore\_tmp
+\_def \_moddef #1#2{\_edef\_tmp{\_csstring#1}\_remfirstunderscore\_tmp
    \_sdef{_f:\_currfamily:\_tmp}{#2\_reloading}%
    \_protected \_edef #1{\noexpand\_famdepend\noexpand#1{_f:\noexpand\_currfamily:\_tmp}}%
    \_ea \_ifx \_csname\_tmp\_endcsname #1\_else
@@ -82,7 +83,7 @@
 \_def\_famdepend#1#2{\_ifcsname#2\_endcsname \_csname#2\_ea\_endcsname \_else
    \_opwarning{\string#1 is undeclared in current family "\_currfamily", ignored}\_fi
 }
-\_def\_famvardef#1{\_edef\_tmp{\_xstring#1}\_remfirstunderscore\_tmp
+\_def\_famvardef#1{\_edef\_tmp{\_csstring#1}\_remfirstunderscore\_tmp
    \_ea\_famvardefA \_ea#1\_csname _ten\_tmp\_ea\_endcsname
       \_csname _tryload\_tmp\_ea\_endcsname \_csname \_tmp\_endcsname
 }
@@ -95,7 +96,7 @@
       \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
       \_def#3{\_fontdef#2{\_reloading#5}}%
       \_ifx#1\tt \addto#1{\_fam\_ttfam}\fi
-      \_sdef{_currvar:\xstring#2}{#1}%
+      \_sdef{_currvar:\csstring#2}{#1}%
       \_ifx#1#4\_else \_public#4;\_fi
    \_fi
 }
@@ -108,11 +109,11 @@
    \_else \_edef\_famfile{f-\_famname}\_fi
    \_ifx \_famfile\_empty \_listfamnames \_fi
    \_isfile {f-\_famname.opm}\_iftrue
-      \_input "f-\_famname.opm"%
-   \_else \_isfile {fams-user.opm}\_iftrue \_input fams-user.opm \_fi
+      \_opinput {f-\_famname.opm}
+   \_else \_isfile {fams-user.opm}\_iftrue \_opinput {fams-user.opm} \_fi
       \_ifcsname _famf:\_famname\_endcsname \_edef\_famfile{\_cs{_famf:\_famname}}%
       \_else \_edef\_famfile{f-\_famname}\_fi
-      \_isfile {\_famfile.opm}\_iftrue \_input "\_famfile.opm"%
+      \_isfile {\_famfile.opm}\_iftrue \_opinput {\_famfile.opm}
       \_else \_opwarning{Family [#1] undeclared, "\_famfile.opm" not found}%
    \_fi \_fi \_relax
 }
@@ -122,10 +123,10 @@
    \_begingroup
        \_let\_famtext=\_wterm
        \_def\_faminfo [##1]##2##3##4{%
-           \_wterm{ \_space\_noexpand\_fontfam [##1] -- ##2}%
+           \_wterm{ \_space\_noexpand\fontfam [##1] -- ##2}%
        \_let\_famalias=\_famaliasA}%
-       \_input fams-ini.opm
-       \_isfile {fams-declared.opm}\_iftrue \_input fams-declared.opm \_fi
+       \_opinput {fams-ini.opm}
+       \_isfile {fams-user.opm}\_iftrue \_opinput {fams-user.opm} \_fi
        \_message{^^J}%
    \_endgroup
 }
@@ -149,7 +150,8 @@
 \_catalogsample={ABCDabcd Qsty fi fl áéíóúüů řžč ÁÉÍÓÚ ŘŽČ 0123456789}
 
 \_public
-   \fontfam \isfont \famvardef \moddef \catalogonly \catalogexclude \catalogsample ;
+   \fontfam \initunifonts \isfont \famvardef \moddef 
+   \catalogonly \catalogexclude \catalogsample ;
 
 \_endcode %---------------------------------------------------
 
@@ -268,6 +270,19 @@ font family using different internal definitions.
 
 Maybe, one needs a context switching between `\rm`<-->`\bf` and
 `\it`<-->`\bi`. This is done by `\em` macro, see opmac-fonts.ofm. 
+
+
+\secc Math Fonts
+%---------------
+
+First usage of `\fontfam` loads UnicodeMath fonts too if the specified font
+family is configured with an UnicodeMath font. If you neeed not this feature
+(because preloaded 8bit math fonts seem to be sufficient for you) then write
+`\noloadmath` before first `\fontfam`. 
+
+If you want to use your specially selected UnicodeMath font then use
+`\loadmath{[<font_file>]}` or `\loadmath{<font_name>}` before first
+`\fontfam` is used.
 
 
 \secc Defining a font commands

@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-01-23>}
+\_codedecl \sin {Math macros plus mathchardefs <2020-02-14>}
 
 %% The character _ as subscript prefix:
 
@@ -274,8 +274,8 @@
 \_protected\_def\lg {\_mathop{\_rm lg}\_nolimits}
 \_protected\_def\ln {\_mathop{\_rm ln}\_nolimits}
 \_protected\_def\lim {\_mathop{\_rm lim}}
-\_protected\_def\limsup {\_mathop{\_rm lim\_,sup}}
-\_protected\_def\liminf {\_mathop{\_rm lim\_,inf}}
+\_protected\_def\limsup {\_mathop{\_rm lim\_thinsk sup}}
+\_protected\_def\liminf {\_mathop{\_rm lim\_thinsk inf}}
 \_protected\_def\sin {\_mathop{\_rm sin}\_nolimits}
 \_protected\_def\arcsin {\_mathop{\_rm arcsin}\_nolimits}
 \_protected\_def\sinh {\_mathop{\_rm sinh}\_nolimits}
@@ -495,7 +495,7 @@
 
 \_protected\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
     \_ialign{$##\_hfil$&\_quad##\_hfil\_crcr#1\_crcr}}\_right.}
-\_protected\_def\_matrix#1{\_null\_,\_vcenter{\_normalbaselines\_math
+\_protected\_def\_matrix#1{\_null\_thinsk\_vcenter{\_normalbaselines\_math
     \_ialign{\_hfil$##$\_hfil&&\_quad\_hfil$##$\_hfil\_crcr
       \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
       #1\_crcr\_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}}}\_thinsk}
@@ -521,7 +521,7 @@
 \_def\_openupA{\_advance\_lineskip by\_dimen0
   \_advance\_baselineskip by\_dimen0
   \_advance\_lineskiplimit by\_dimen0 }
-\_def\_eqalign#1{\_null\_,\_vcenter{\_openup\_jot\_math
+\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_openup\_jot\_math
   \_ialign{\_strut\_hfil$\_displaystyle{##}$&$\_displaystyle{{}##}$\_hfil
       \_crcr#1\_crcr}}\_thinsk}
 \_newifi\_ifdtop
@@ -796,7 +796,7 @@
 \_protected\_def \_not#1{%
   \_ifx #1<\_nless \_else
   \_ifx #1>\_ngtr \_else
-  \_edef\_tmpn{\_xstring#1}%
+  \_edef\_tmpn{\_csstring#1}%
   \_ifcsname _not\tmpn\_endcsname \_csname _not\tmpn\_endcsname
   \_else \_ifcsname _n\tmpn\_endcsname \_csname _n\tmpn\_endcsname
   \_else \_mathrel{\_mathord{\_notchar}\_mathord{#1}}%

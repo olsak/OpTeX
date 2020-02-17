@@ -1,0 +1,304 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+% This file is read when \loadmath is used.
+
+\_ifx \ncharrmA\undefined \_else \_endinput \_fi
+
+\umathnumB="0391
+\greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa
+   \Lambda \Mu \Nu \Xi \Omicron \Pi \Rho \varTheta \Sigma \Tau \Upsilon \Phi
+   \Chi \Psi \Omega \relax
+
+\umathnumB="03B1
+\greekdef \alpha \beta \gamma \delta \epsilon \zeta \eta \theta \iota \kappa
+   \lambda \mu \nu \xi \omicron \pi \rho \varsigma \sigma \tau \upsilon
+   \varphi \chi \psi \omega \varbeta \vartheta \phi \varpi \relax
+
+\chardef\ncharrmA=`A       \chardef\ncharrma=`a
+\chardef\ncharbfA="1D400   \chardef\ncharbfa="1D41A
+\chardef\ncharitA="1D434   \chardef\ncharita="1D44E
+\chardef\ncharbiA="1D468   \chardef\ncharbia="1D482
+\chardef\ncharclA="1D49C   \chardef\ncharcla="1D4B6
+\chardef\ncharbcA="1D4D0   \chardef\ncharbca="1D4EA
+\chardef\ncharfrA="1D504   \chardef\ncharfra="1D51E
+\chardef\ncharbrA="1D56C   \chardef\ncharbra="1D586
+\chardef\ncharbbA="1D538   \chardef\ncharbba="1D552
+\chardef\ncharsnA="1D5A0   \chardef\ncharsna="1D5BA
+\chardef\ncharbsA="1D5D4   \chardef\ncharbsa="1D5EE
+\chardef\ncharsiA="1D608   \chardef\ncharsia="1D622
+\chardef\ncharsxA="1D63C   \chardef\ncharsxa="1D656
+\chardef\ncharttA="1D670   \chardef\nchartta="1D68A
+
+\protected\def\rmvariables     {\umathrange{A-Z}\ncharrmA \umathrange{a-z}\ncharrma}
+\protected\def\bfvariables     {\umathrange{A-Z}\ncharbfA \umathrange{a-z}\ncharbfa}
+\protected\def\nitvariables    {\umathrange{A-Z}\ncharitA \umathrange{a-z}\ncharita}
+\protected\def\bivariables     {\umathrange{A-Z}\ncharbiA \umathrange{a-z}\ncharbia}
+\protected\def\calvariables    {\umathrange{A-Z}\ncharclA \umathrange{a-z}\ncharcla}
+\protected\def\bcalvariables   {\umathrange{A-Z}\ncharbcA \umathrange{a-z}\ncharbca}
+\protected\def\frakvariables   {\umathrange{A-Z}\ncharfrA \umathrange{a-z}\ncharfra}
+\protected\def\bfrakvariables  {\umathrange{A-Z}\ncharbrA \umathrange{a-z}\ncharbra}
+\protected\def\bbvariables     {\umathrange{A-Z}\ncharbbA \umathrange{a-z}\ncharbba}
+\protected\def\sansvariables   {\umathrange{A-Z}\ncharsnA \umathrange{a-z}\ncharsna}
+\protected\def\bsansvariables  {\umathrange{A-Z}\ncharbsA \umathrange{a-z}\ncharbsa}
+\protected\def\isansvariables  {\umathrange{A-Z}\ncharsiA \umathrange{a-z}\ncharsia}
+\protected\def\bisansvariables {\umathrange{A-Z}\ncharsxA \umathrange{a-z}\ncharsxa}
+\protected\def\ttvariables     {\umathrange{A-Z}\ncharttA \umathrange{a-z}\nchartta}
+
+\chardef\greekrmA="0391   \chardef\greekrma="03B1
+\chardef\greekbfA="1D6A8  \chardef\greekbfa="1D6C2
+\chardef\greekitA="1D6E2  \chardef\greekita="1D6FC
+\chardef\greekbiA="1D71C  \chardef\greekbia="1D736
+\chardef\greeksnA="1D756  \chardef\greeksna="1D770
+\chardef\greeksiA="1D790  \chardef\greeksia="1D7AA
+
+\protected\def\nitgreek   {\umathrangeGREEK\greekrmA \umathrangegreek\greekita}
+\protected\def\rmgreek    {\umathrangeGREEK\greekrmA \umathrangegreek\greekrma}
+\protected\def\bfgreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbfa}
+\protected\def\bigreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbia}
+\protected\def\sansgreek  {\umathrangeGREEK\greeksnA \umathrangegreek\greeksna}
+\protected\def\isansgreek {\umathrangeGREEK\greeksnA \umathrangegreek\greeksia}
+
+% Another possibility (slanted capitals in \nitgreek, \bigreek, \isansgreek):
+%\protected\def\nitgreek   {\umathrangeGREEK\greekitA \umathrangegreek\greekita}
+%\protected\def\rmgreek    {\umathrangeGREEK\greekrmA \umathrangegreek\greekrma}
+%\protected\def\bfgreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbfa}
+%\protected\def\bigreek    {\umathrangeGREEK\greekbiA \umathrangegreek\greekbia}
+%\protected\def\sansgreek  {\umathrangeGREEK\greeksnA \umathrangegreek\greeksna}
+%\protected\def\isansgreek {\umathrangeGREEK\greeksiA \umathrangegreek\greeksia}
+
+\chardef\digitrmO=`0
+\chardef\digitbfO="1D7CE
+\chardef\digitbbO="1D7D8
+\chardef\digitsnO="1D7E2
+\chardef\digitbsO="1D7EC
+\chardef\digitttO="1D7F6
+
+\protected\def\rmdigits    {\umathrange{0-9}\digitrmO}
+\protected\def\bfdigits    {\umathrange{0-9}\digitbfO}
+\protected\def\bbdigits    {\umathrange{0-9}\digitbbO}
+\protected\def\sansdigits  {\umathrange{0-9}\digitsnO}
+\protected\def\bsansdigits {\umathrange{0-9}\digitbsO}
+\protected\def\ttdigits    {\umathrange{0-9}\digitttO}
+
+\protected\def\inmath#1{\relax \ifmmode#1\fi} % to keep off \loop processing in text mode
+
+% You can redefine these macros to follow your wishes.
+% For example you need upgright lowercase greek letters, you don't need
+% \bf and \bi behaves as sans serif in math, ...
+
+\protected\def\rm {\_tryloadrm \_tenrm \inmath{\rmvariables \rmdigits}}
+\protected\def\it {\_tryloadit \_tenit \inmath{\nitvariables}}
+\protected\def\bf {\_tryloadbf \_tenbf \inmath{\bsansvariables \sansgreek \bsansdigits}}
+\protected\def\bi {\_tryloadbi \_tenbi \inmath{\bisansvariables \isansgreek \bsansdigits}}
+\protected\def\tt {\_tryloadtt \_tentt \inmath{\ttvariables \ttdigits}}
+\protected\def\bbchar  {\bbvariables \bbdigits}
+\protected\def\cal     {\calvariables}
+\protected\def\frak    {\frakvariables}
+\protected\def\misans  {\isansvariables \isansgreek \sansdigits}
+\protected\def\mbisans {\bisansvariables \isansgreek \bsansdigits}
+\protected\def\script  {\rmvariables \fam4 }
+
+% Math codes: 
+
+\begingroup  % \input mathclass.opm  (which is a copy of MathClass.txt):
+   \def\p#1;#2{\edef\tmp{\pB#2}\ifx\tmp\empty \else\pA#1....\end#2\fi}
+   \def\pA#1..#2..#3\end#4{%
+      \ifx\relax#2\relax \pset{"#1}{#4}\else
+         \umathnumA="#1
+         \loop
+            \pset{\umathnumA}{#4}%
+            \ifnum\umathnumA<"#2 \advance\umathnumA by1
+         \repeat 
+      \fi
+   }
+   \def\pB#1{\if#1L1\fi \if#1B2\fi \if#1V2\fi \if#1R3\fi \if#1N0\fi \if#1U0\fi
+             \if#1F0\fi \if#1O4\fi \if#1C5\fi \if#1P6\fi \if#1A7\fi}
+   \def\pset#1#2{\global\Umathcode#1=\tmp\space 1 #1\relax
+      \if#2O\global\Udelcode#1=1 #1\relax\fi
+      \if#2C\global\Udelcode#1=1 #1\relax\fi
+      \if#2F\global\Udelcode#1=1 #1\relax\fi
+   }
+   \catcode`#=14
+   \everypar={\setbox0=\lastbox \par \p}
+   \input mathclass.opm
+\endgroup
+
+\begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
+   \def\UnicodeMathSymbol #1#2#3#4{%
+      \global\Umathcharnumdef#2=\Umathcodenum#1\relax
+      \ifx#3\mathopen   \gdef#2{\Udelimiter 4 1 #1 }\fi
+      \ifx#3\mathclose  \gdef#2{\Udelimiter 5 1 #1 }\fi
+      \ifx#3\mathaccent \gdef#2{\Umathaccent fixed 7 1 #1 }\fi
+   }
+   \input unimath-table.opm
+\endgroup
+
+\nitgreek \nitvariables \rmdigits   % default setting
+
+\Umathcode `- = 2 1 "2212
+\let\{=\lbrace \let\}=\rbrace
+
+\def\sqrt       {\Uradical 1 "0221A }
+\def\cuberoot   {\Uradical 1 "0221B }
+\def\fourthroot {\Uradical 1 "0221C }
+
+\def\intwithnolimits#1{\ifx#1\relax \escapechar=`\\ \else \escapechar=-1
+   \expandafter\let\csname\string#1op\endcsname=#1%
+   \expandafter\def\expandafter#1\expandafter{\csname\string#1op\endcsname \nolimits}%
+   \expandafter \intwithnolimits \fi
+}
+\intwithnolimits \int \iint \iiint \oint \oiint \oiiint \intclockwise
+   \varointclockwise \ointctrclockwise \sumint \iiiint \intbar \intBar \fint
+   \pointint \sqint \intlarhk \intx \intcap \intcup \upint \lowint \relax
+
+\def\vert  {\Udelimiter 0 1 "07C }
+\def\Vert  {\Udelimiter 0 1 "02016 }
+\def\Vvert {\Udelimiter 0 1 "02980 }
+
+\def\overbrace    #1{\mathop {\Umathaccent  7 1 "023DE{#1}}\limits}
+\def\underbrace   #1{\mathop {\Umathaccent bottom 7 1 "023DF{#1}}\limits}
+\def\overparen    #1{\mathop {\Umathaccent  7 1 "023DC{#1}}\limits}
+\def\underparen   #1{\mathop {\Umathaccent bottom 7 1 "023DD{#1}}\limits}
+\def\overbracket  #1{\mathop {\Umathaccent  7 1 "023B4{#1}}\limits}
+\def\underbracket #1{\mathop {\Umathaccent bottom 7 1 "023B5{#1}}\limits}
+
+\def\widehat            {\Umathaccent 7 1 "00302 }
+\def\widetilde          {\Umathaccent 7 1 "00303 }
+\def\overleftharpoon    {\Umathaccent 7 1 "020D0 }
+\def\overrightharpoon   {\Umathaccent 7 1 "020D1 }
+\def\overleftarrow      {\Umathaccent 7 1 "020D6 }
+\def\overrightarrow     {\Umathaccent 7 1 "020D7 }
+\def\overleftrightarrow {\Umathaccent 7 1 "020E1 }
+
+% corrections:
+
+\mathchardef\ldotp="612E
+\let\|=\Vert
+
+\let\setminus=\smallsetminus
+\let\diamond=\smwhtdiamond
+\let\bullet=\smblkcircle
+\let\circ=\vysmwhtcircle
+\let\bigcirc=\mdlgwhtcircle
+\let\to=\rightarrow
+\let\le=\leq
+\let\ge=\geq
+\let\neq=\ne
+\protected\def\triangle{\mathord{\bigtriangleup}}
+\let\emptyset=\varnothing
+\let\hbar=\hslash
+\let\land=\wedge
+\let\lor=\vee
+\let\owns=\ni
+\let\gets=\leftarrow
+\let\mathring=\ocirc
+\let\lnot=\neg
+\let\longdivision=\longdivisionsign
+\let\backepsilon=\upbackepsilon
+\let\eth=\matheth
+\let\dbkarow=\dbkarrow
+\let\drbkarow=\drbkarrow
+\let\hksearow=\hksearrow
+\let\hkswarow=\hkswarrow
+
+\let\varepsilon=\epsilon
+\let\upalpha=\mupalpha         
+\let\upbeta=\mupbeta          
+\let\upgamma=\mupgamma         
+\let\updelta=\mupdelta         
+\let\upepsilon=\mupvarepsilon        
+\let\upvarepsilon=\mupvarepsilon
+\let\upzeta=\mupzeta          
+\let\upeta=\mupeta           
+\let\uptheta=\muptheta        
+\let\upiota=\mupiota          
+\let\upkappa=\mupkappa         
+\let\uplambda=\muplambda        
+\let\upmu=\mupmu            
+\let\upnu=\mupnu            
+\let\upxi=\mupxi            
+\let\upomicron=\mupomicron       
+\let\uppi=\muppi            
+\let\uprho=\muprho
+\let\upvarrho=\mupvarrho           
+\let\upvarsigma=\mupvarsigma      
+\let\upsigma=\mupsigma         
+\let\uptau=\muptau           
+\let\upupsilon=\mupupsilon       
+\let\upvarphi=\mupvarphi        
+\let\upchi=\mupchi           
+\let\uppsi=\muppsi           
+\let\upomega=\mupomega         
+\let\upvartheta=\mupvartheta      
+\let\upphi=\mupphi           
+\let\upvarpi=\mupvarpi         
+
+\protected\def\not#1{%
+  \expandafter\ifx \csname not!\string#1\endcsname \relax
+      \mathrel{\mathord{\rlap{\kern1pt/}}\mathord{#1}}%
+  \else \csname not!\string#1\endcsname 
+  \fi
+}
+\def\negationof#1#2{\expandafter\let \csname not!\string#1\endcsname =#2}
+\negationof =         \neq   
+\negationof <         \nless 
+\negationof >         \ngtr
+\negationof \gets     \nleftarrow
+\negationof \simeq    \nsime
+\negationof \equal    \ne   
+\negationof \le       \nleq 
+\negationof \ge       \ngeq 
+\negationof \greater  \ngtr 
+\negationof \forksnot \forks
+\negationof \in       \notin
+
+% we need no more 8bit math fonts
+
+\mathcode`\_="8000
+\mathcode`\∫="8000
+{\catcode`\∫=13 \_ea}\_ea \_let \_noexpand ∫ = \int
+
+\_private
+   \ldotp \cdotp \triangleleft \trianglerigt \mapstochar \rightarrow \prime
+   \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
+   \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
+   \longrightarrow \Longleftrightarrow \vdots \ddots ;
+
+
+\def\boldmath{\pdfliteral direct {2 Tr .3 w}\aftergroup\noboldmath}
+\def\noboldmath{\pdfliteral direct {0 Tr 0 w}} % faked bold only :-(
+
+\_endcode
+
+--------------------------------------------
+
+You can combine more fonts, if you register them to another
+math families (5, 6, 7, etc.) in \normalmath macro.
+
+The default value of \normalmath shows a combination of base Unicode Math
+font with 8bit Math font at family 4. See definition of \script macro where
+\fam4 is used. Of course, we need to set \rmvariables too, because 8bit font
+accepts only codes less than 255.
+
+See http://tex.stackexchange.com/questions/308749/ for more technical details.
+
+The poor bold is used for complete bold vaiant of the font. If the selected
+font has its bold vaiant (like xits-math), you can re-define \boldmath macro
+by:
+
+\def\boldmath{%
+   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
+   \loadmathfamily  4 rsfs                % script
+   \setmathdimens
+}
+
+XITSmath-bold needs correction: the norm symbol ||x|| is missing here. So, you
+can define: 
+
+\def\boldmath{%
+   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
+   \loadmathfamily  4 rsfs                % script
+   \loadumathfamily 5 {[xitsmath-regular]}{}
+   \def\|{\Udelimiter 0 5 "02016 }%       % norm delimiter from family 5
+   \setmathdimens
+}

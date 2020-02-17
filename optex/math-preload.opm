@@ -130,9 +130,12 @@
 \_newdimen\_ptunit   \_ptunit=1pt
 \_newdimen\_ptmunit  \_ptmunit=1\_ptunit
 
+\_suppressfontnotfounderror=1
 \_setmathsizes[10/7/5]\_normalmath
+\_suppressfontnotfounderror=0
 
-\_public \normalmath \boldmath \setmathsizes
+\_public 
+   \normalmath \boldmath \setmathsizes
    \bf \it \bi \tt \mit \cal \bbchar \frak \script \ptunit ;
 
 \_endcode %---------------------------------------------------

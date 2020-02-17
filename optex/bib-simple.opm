@@ -1,0 +1,183 @@
+% opmac-bib-simple ... the OPmac bib style for reading .bib databases
+% Petr Olsak, version Apr. 2015 (beta)
+% See the end of the file opmac-bib.tex for more information.
+% You can compare this file with the old Forth-like BibTeX .bst files. 
+% What seems to be more understandable?
+
+\ifx\opmacbibstyle\undefined \errmessage
+   {This file can be read by ``\string\usebib/? (simple) bibfiles'' command only}
+   \endinput \fi
+
+% misc:
+
+\def\maybedot{\ifnum\spacefactor=\sfcode`\.\relax\else.\fi}
+\tmpnum=\sfcode`\. \advance\tmpnum by-2 \sfcode`\.=\tmpnum 
+\sfcode`\?=\tmpnum \sfcode`\!=\tmpnum
+\let\.=\maybedot  % prevents from double periods
+
+% Formating of Author/Editor lists:
+
+\def\authorname{%
+  \ifnum\NameCount>1
+     \ifnum0\namecount=\NameCount \mtext{bib.and}\else , \fi
+  \else
+     \ifx\dobibmark\undefined \edef\dobibmark{\Lastname}\fi
+  \fi
+  \bprintc\Firstname{* }\bprintc\Von{* }\Lastname\bprintc\Junior{, *}%
+}
+\let\editorname=\authorname
+
+% Preparing bib-mark (used when \nonumcitations is set):
+
+\def\setbibmark{%  
+   \ifx\dobibmark\undefined \def\dobibmark{}\fi
+   \RetrieveFieldIn{bibmark}\tmp      
+   \ifx\tmp\empty \RetrieveFieldIn{year}\tmp \edef\tmp{\dobibmark, \tmp}\fi                
+   \bibmark=\expandafter{\tmp}%
+}
+
+% Multilinguals:      English     Czech     Slovak
+
+\mtdef{bib.and}       {, and }    { a }     {}
+\mtdef{bib.edition}   {edition}   {vydání}  {vydanie}
+\mtdef{bib.masterthesis} {Master's Thesis}   {Diplomová práce}   {Diplomová práca}
+\mtdef{bib.phdthesis} {Ph.D. Thesis}   {Disertační práce}  {Dizertačná práca}
+
+
+\def\preurl{\hfil\break} 
+
+% Non-standard fieldnames:
+
+\CreateField {isbn}
+\CreateField {doi}
+\CreateField {url}
+\CreateField {bibmark}
+
+% Sorting:
+
+\SortingOrder{name,year}{lfvj}
+\SpecialSort {key}
+
+% Entry types:
+
+\sdef{print:END}{%
+   \bprinta [note]       {*.}{}%
+   \setbibmark
+}  
+\sdef{print:book}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}.\ }{\bibwarning}%
+   \bprinta [edition]    {*~\mtext{bib.edition}.\ }{}%
+   \bprinta [address]    {*: }{\bibwarning}%
+   \bprinta [publisher]  {*, }{\bibwarning}%
+   \bprinta [year]       {*.\ }{\bibwarning}%
+   \bprinta [isbn]       {ISBN~*.\ }{\bibwarning}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:article}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprinta [title]      {*.\ }{\bibwarning}%
+   \bprintb [journal]    {{\em##1}.\ }{\bibwarning}%
+   \bprinta [year]       {*, }{}%
+   \bprinta [volume]     {* }{}%
+   \bprinta [number]     {(*), }{}%
+   \bprinta [pages]      {*.\ }{}%
+   \bprintb [doi]        {DOI~\ulink[http://dx.doi.org/##1]{##1}.\ }{}%
+}
+\sdef{print:inbook}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1.}\ }{\bibwarning}%
+                         In:~%
+   \bprinta [!editor]    {*,~eds.\ }{}%
+   \bprintb [booktitle]  {{\em##1}.\ }{\bibwarning}% 
+   \bprinta [address]    {*: }{\bibwarning}%
+   \bprinta [publisher]  {*, }{\bibwarning}%
+   \bprinta [year]       {*.\ }{\bibwarning}%
+   \bprinta [chapter]    {*.\ }{%
+                         \bprinta [pages]      {*.\ }{}}%
+   \bprinta [isbn]       {ISBN~*.\ }{\bibwarning}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\slet{print:inproceedings}{print:inbook}
+
+\sdef{print:incolection}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}.\ }{\bibwarning}%
+   \bprinta [crossreff]  {In~\cite[*]. }{%
+                         \bprinta [booktitle]  {*. }{\bibwarning}%
+                         \bprinta [!editor]    {*,~eds.\ }{\bibwarning}%
+                         \bprinta [edition]    {*~\mtext{bib.edition}.\ }{\bibwarning}%
+                         \bprinta [address]    {*: }{\bibwarning}%
+                         \bprinta [publisher]  {*, }{\bibwarning}%
+                         \bprinta [year]       {*.\ }{\bibwarning}%
+                         \bprinta [pages]      {*.\ }{}%   
+                         \bprintb [url]        {\preurl\url{####1}. }{}}%
+}
+\sdef{print:conference}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+   \bprinta [edition]    {*~\mtext{bib.edition}.\ }{}%
+   \bprinta [address]    {*: }{\bibwarning}%
+   \bprinta [publisher]  {*, }{\bibwarning}%
+   \bprinta [year]       {*.\ }{\bibwarning}%
+   \bprinta [isbn]       {ISBN~*.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:phdthesis}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+                         \mtext{bib.phdthesis}, %
+   \bprinta [school]     {*.\ }{}%
+   \bprinta [address]    {*, }{}%
+   \bprinta [year]       {*.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:mastersthesis}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+                         \mtext{bib.masterthesis}, %
+   \bprinta [school]     {*.\ }{}%
+   \bprinta [address]    {*, }{}%
+   \bprinta [year]       {*.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:proceedings}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+   \bprinta [publisher]  {*.\ }{%
+                         \bprinta [organization] {*.\ }{\bibwarning}}%
+}   
+\sdef{print:techreport}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+                         \mtext{bib.techreport}.
+   \bprinta [institution] {*.\ }{}%
+}
+\sdef{print:booklet}{%
+   \bprinta [!author]    {*\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+   \bprinta [howpublished] {*.\ }{\bibwarning}%
+}
+\sdef{print:manual}{%
+   \bprinta [!author]    {*\.\ }{}%
+   \bprintb [title]      {{\em##1}\.\ }{\bibwarning}%
+   \bprinta [year]       {*.\ }{}%
+   \bprinta [institution] {*.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:misc}{%
+   \bprinta [!author]    {*\.\ }{}%
+   \bprintb [title]      {{\em##1}\.\ }{}%
+   \bprinta [howpublished] {*.\ }{}%
+   \bprinta [institution] {*.\ }{}%
+   \bprinta [series]     {*.\ }{}%
+   \bprinta [year]       {*.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+
+%%% end of the style file
+
+\endinput
+
+You can copy this file to opmac-bib-yourname.tex and modify it by your
+needs...

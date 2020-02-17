@@ -1,0 +1,922 @@
+% opmac-bib-iso690 ... the OPmac bib style for reading .bib databases
+% Petr Olsak, Apr. 2015 (beta)
+%
+% The bibliography printing from .bib files by ISO 690 standard is defied here.
+% See the end of this file and the file opmac-bib.tex for more information.
+
+\ifx\opmacbibstyle\undefined \errmessage
+   {This file can be read by ``\string\usebib/? (simple) bibfiles'' command only}
+   \endinput \fi
+
+% misc:
+
+\def\maybedot{\ifnum\spacefactor=\sfcode`\.\relax\else.\fi}
+\tmpnum=\sfcode`\. \advance\tmpnum by-2 \sfcode`\.=\tmpnum \sfcode`\?=\tmpnum \sfcode`\!=\tmpnum
+\let\.=\maybedot  % prevents from double periods
+
+\CreateField {option}
+\def\isbiboption#1#2{\edef\tmp{\noexpand\isbiboptionA{#1}}\tmp}
+\def\isbiboptionA#1{\def\tmp##1 #1 ##2\relax{%
+      \if^##2^\csname iffalse\expandafter\endcsname \else\csname iftrue\expandafter\endcsname \fi}% 
+   \expandafter\tmp\biboptionsi #1 \relax}
+\def\bibopt[#1]#2#3{\isbiboption{#1}\iftrue\def\tmp{#2}\else\def\tmp{#3}\fi\tmp}
+\def\biboptionvalue#1#2{\def\tmp##1 #1:##2 ##3\relax{\def#2{##2}}%
+   \expandafter\tmp\biboptionsi #1: \relax}
+
+\def\readbiboptions{%
+   \RetrieveFieldIn{option}\biboptionsi
+   \toks1=\expandafter{\biboptionsi}%
+   \ifx\biboptions\undefined \toks2={}\else \toks2=\expandafter{\biboptions}\fi 
+   \edef\biboptionsi{\space \the\toks1 \space \the\toks2 \space}%
+}
+
+% Formating of Author/Editor lists:
+
+\def\firstauthorformat{%
+   \upper{\Lastname}\bprintc\Firstname{, *}\bprintc\Von{ *}\bprintc\Junior{, *}%
+}
+\def\otherauthorformat{%
+   \bprintc\Firstname{* }\bprintc\Von{* }\upper{\Lastname}\bprintc\Junior{, *}%
+}
+\def\commonname{%
+  \ifnum\NameCount=1 
+     \firstauthorformat
+     \ifx\dobibmark\undefined \edef\dobibmark{\Lastname}\fi
+  \else
+     \ifnum0\namecount=\NameCount
+        \ifx\maybeetal\empty \bibconjunctionand\else , \fi
+     \else , \fi
+     \otherauthorformat
+  \fi  
+}
+\def\authorname{%
+   \ifnum\NameCount>0\namecount\relax\else \commonname \fi
+   \ifnum\NameCount=0\namecount\relax \maybeetal \fi
+}
+\let\editorname=\authorname
+
+\def\prepareauedoptions#1{%
+   \def\mabyetal{}\csname lb@abbreviatefalse\endcsname
+   \biboptionvalue{#1max}\authormax  
+   \biboptionvalue{#1min}\authormin  
+   \biboptionvalue{#1pre}\authorpre  
+   \biboptionvalue{#1print}\authorprint
+   \isbiboption{#1etal}\iftrue \def\maybeetal{\Mtext{bib.etal}}\fi
+   \biboptionvalue{#1trim}\autrim 
+   \let\namecountraw=\namecount
+   \ifx\authormax\empty \else
+      \ifnum 0\authormax<0\namecount
+         \edef\namecount{\ifx\authormin\empty\authormax\else\authormin\fi}%
+         \def\maybeetal{\Mtext{bib.etal}}%
+   \fi\fi
+   \ifx\autrim\empty \def\autrim{10000}\fi 
+   \ifnum\autrim=0 \def\autrim{10000}\fi   
+   \ifnum 0\namecount<\autrim\relax \else \AbbreviateFirstname \fi
+}
+\def\maybeetal{}
+
+\ifx\upper\undefined 
+   \ifx\sc\undefined \def\upper{\uppercase\expandafter}\else \def\upper#1{{\sc#1}}\fi
+\fi
+
+% Preparing bib-mark (used when \nonumcitations is set):
+
+\def\setbibmark{%  
+   \ifx\dobibmark\undefined \def\dobibmark{}\fi
+   \RetrieveFieldIn{bibmark}\tmp
+   \ifx\tmp\empty \RetrieveFieldIn{year}\tmp \edef\tmp{\dobibmark, \tmp}\fi
+   \bibmark=\expandafter{\tmp}%
+}
+
+% Multilinguals:           English                Czech               Slovak
+
+\mtdef{bib.and}            {, and }               { a }               {}
+\mtdef{bib.etal}           { et al.}              { a~kol.}           {}
+\mtdef{bib.edition}        { ed.}                 { vyd.}             {}
+\mtdef{bib.bachthesis}     {Bachelor's Thesis}    {Bakalářská práce}  {Bakalárska práca}
+\mtdef{bib.masthesis}      {Master's Thesis}      {Diplomová práce}   {Diplomová práca}
+\mtdef{bib.phdthesis}      {Ph.D. Thesis}         {Disertační práce}  {Dizertačná práca}
+\mtdef{bib.available}      {Available from }      {Dostupné na }      {}
+\mtdef{bib.availablealso}  {Available also from } {Dostupné též na }  {Dotupné tiež na }
+\mtdef{bib.citedate}       {cit.~}                {vid.~}             {}
+\mtdef{bib.volume}         {Vol.~}                {ročník~}           {}
+\mtdef{bib.number}         {No.~}                 {č.~}               {}
+\mtdef{bib.prepages}       {pp.~}                 {s.~}               {}
+\mtdef{bib.postpages}      {~p.}                  {~s.}               {}
+\mtdef{bib.editor}         {,~ed.}                {,~editor}          {}
+\mtdef{bib.editors}        {,~eds.}               {,~editoři}         {,~editori}
+
+
+\def\bibconjunctionand{\Mtext{bib.and}}
+\def\preurl{\Mtext{bib.available}}
+\let\predoi=\preurl
+\def\postedition{\mtext{bib.edition}}
+\def\Inclause{In:~}
+\def\prevolume{\mtext{bib.volume}}
+\def\prenumber{\mtext{bib.number}}
+\def\prepages{\mtext{bib.prepages}}
+\def\posteditor{\ifnum0\namecountraw>1 \Mtext{bib.editors}\else\Mtext{bib.editor}\fi}
+
+
+\chardef\documentlanguage=\language
+\def\Mtext#1{\csname _mt:#1:\csname lan:\the\documentlanguage\endcsname\endcsname}
+
+\CreateField {lang}
+\def\setlang#1{\ifx#1\empty \else 
+      \expandafter \ifx \csname #1Patt\endcsname \relax
+         \opwarning{The language "#1" used in .bib file is unknown}
+      \else \language=\csname #1Patt\endcsname
+   \fi\fi
+}
+\ifx\USenglish\undefined  \chardef\USenglish=0 \fi
+\let\enPatt=\USenglish  \let\usPatt=\USenglish
+\ifx\csPatt \undefined \let\csPatt=\czPatt \else \let\czPatt=\csPatt \fi
+
+% Non-standard fieldnames:
+
+\CreateField {ednote}
+\CreateField {citedate}
+\CreateField {numbering}
+\CreateField {isbn}
+\CreateField {issn}
+\CreateField {doi}
+\CreateField {url}
+\CreateField {bibmark}
+
+% Sorting:
+
+\SortingOrder{name,year}{lfvj}
+\SpecialSort {key}
+
+% Misc:
+
+\def\bibwarninga{\bibwarning}
+\def\bibwarningb{\bibwarning}
+
+\def\docitedate #1/#2/#3/#4\relax{[\Mtext{bib.citedate}%
+   \if^#2^#1\else
+      \if^#3^#1/#2\else
+        \docitedateA{#1}{#2}{#3}%
+   \fi\fi ]%
+}
+\def\docitedateA#1#2#3{%
+   \ifx\csPatt\undefined \mathchardef\csPatt=10000 \fi
+   \ifx\skPatt\undefined \mathchardef\skPatt=10000 \fi
+   \ifnum\documentlanguage=\csPatt \docitedateCS{#1}{#2}{#3}%
+   \else \ifnum\documentlanguage=\skPatt \docitedateSK{#1}{#2}{#3}%
+         \else \docitedateEN{#1}{#2}{#3}%
+   \fi\fi
+}
+\def\docitedateEN#1#2#3{#1-#2-#3}
+\def\docitedateCS#1#2#3{\hbox{\tmpnum=#3 \the\tmpnum. \tmpnum=#2 \the\tmpnum. #1}} 
+\let\docitedateSK=\docitedateCS
+
+\def\doyear#1{
+   \biboptionvalue{yearprint}\yearprint
+   \ifx\yearprint\empty#1\else\def\YEAR{#1}\yearprint\fi
+}
+\def\preparenumbering{%
+   \def\VOL{\RetrieveField{volume}}%
+   \def\NO{\RetrieveField{number}}%
+   \def\PP{\RetrieveField{pages}}%
+}
+\def\prepareednote{%
+   \def\EDN{\RetrieveField{edition}}%
+   \def\ADDR{\RetrieveField{address}}%
+   \def\PUBL{\RetrieveField{publisher}}%
+   \def\YEAR{\RetrieveField{year}}%
+   \def\AU{\bprintb[!author]{\doauthor0{####1}}{}}%
+   \def\ED{\bprintb[!editor]{\doeditor0{####1}}{}}%
+   \preparenumbering
+}
+\def\doedition#1{%
+   \biboptionvalue{editionprint}\editionprint
+   \ifx\editionprint\empty#1\postedition\else\def\ED{#1}\editionprint\fi
+}
+\def\doauthor#1#2{\prepareauedoptions{au}\let\iseditorlist=\undefined
+   \if1#1\def\AU{#2}\else\let\authorprint=\empty\fi
+   \ifx\authorprint\empty #2\else \authorprint\fi
+}
+\def\doeditor#1#2{\prepareauedoptions{ed}\let\firstauthorformat=\otherauthorformat
+   \if1#1\def\ED{#2}\else\let\authorprint=\empty\fi
+   \ifx\authorprint\empty #2\posteditor\else \authorprint\fi
+}
+
+% Entry types:
+
+\sdef{print:BEGIN}{%
+   \readbiboptions
+   \biboptionvalue{titlepost}\titlepost
+   \isbiboption{unpublished}\iftrue \let\bibwarninga=\relax \let\bibwarningb=\relax \fi
+   \isbiboption{nowarn}\iftrue \let\bibwarning=\relax \fi
+   \isbiboption{urlalso}\iftrue \def\preurl{\Mtext{bib.availablealso}}\fi
+   \RetrieveFieldIn{lang}\langentry \setlang\langentry 
+}
+\sdef{print:END}{%
+   \bprinta [note]       {*.}{}%
+   \setbibmark
+}
+\def\bookgeneric#1{%
+   \bprinta [howpublished]  {[*].\ }{}%
+   \bprintb [edition]    {\doedition{##1}\.\ }{}%
+   \bprinta [ednote]     {*.\ }{}%
+   \bprinta [address]    {*\bprintv[publisher]{:}{\bprintv[year]{,}{.}}\ }{\bibwarninga}%
+   \bprinta [publisher]  {*\bprintv[year]{,}{.}\ }{\bibwarninga}%
+   \bprintb [year]       {\doyear{##1}\bprintv[citedate]{\bprintv[numbering]{.}{}}{.}\ }{\bibwarning}%
+   \bprinta [numbering]  {\preparenumbering*\bprintv[citedate]{}{\.}\ }{}%
+   \bprinta [citedate]   {\docitedate*///\relax.\ }{}%
+   #1%
+   \bprinta [series]     {*.\ }{}%
+   \bprinta [isbn]       {ISBN~*.\ }{\bibwarningb}%
+   \bprinta [issn]       {ISSN~*.\ }{}%
+   \bprintb [doi]        {\predoi DOI \ulink[http://dx.doi.org/##1]{##1}.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:book}{%
+   \bprintb [!author]    {\doauthor1{##1}\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\bprintc\titlepost{\.\ *}\bprintv[howpublished]{}{\.}\ }{\bibwarning}%
+   \bookgeneric{}%
+}
+\sdef{print:article}{%
+   \biboptionvalue{journalpost}\journalpost
+   \bprintb [!author]   {\doauthor1{##1}\.\ }{\bibwarning}%
+   \bprinta [title]     {*.\ \bprintc\titlepost{*.\ }}{\bibwarning}%
+   \bprintb [journal]   {{\em##1}\bprintc\journalpost{\.\ *}\bprintv[howpublished]{}{\.}\ }{\bibwarninga}%   
+   \bprinta [howpublished]  {[*].\ }{}%
+   \bprinta [address]   {*\bprintb[publisher]{:}{,}\ }{}%
+   \bprinta [publisher] {*, }{}%
+   \bprinta [month]     {*, }{}%
+   \bprintb [year]      {\doyear{##1}\bprintv[volume,number,pages]{,}{\.}\ }{}%
+   \bprinta [numbering] {\preparenumbering*\bprintv[citedate]{}{\.}\ }
+                        {\bprinta [volume] {\prevolume*\bprintv[number,pages]{,}{\.}\ }{}%
+                         \bprinta [number] {\prenumber*\bprintv[pages]{,}{\.}\ }{}%
+                         \bprintb [pages]  {\prepages\hbox{##1}\bprintv[citedate]{}{\.}\ }{\bibwarninga}}%
+   \bprinta [citedate]  {\docitedate*///\relax.\ }{}%
+   \bprinta [issn]      {ISSN~*.\ }{}%
+   \bprintb [doi]       {\predoi DOI \ulink[http://dx.doi.org/##1]{##1}.\ }{}%
+   \bprintb [url]       {\preurl\url{##1}. }{}%
+}
+\sdef{print:inbook}{%
+   \let\bibwarningb=\relax
+   \bprintb [!author]   {\doauthor1{##1}\.\ }{\bibwarning}%
+   \bprinta [title]     {*.\ }{\bibwarning}%
+                        \Inclause
+   \bprintb [!editor]   {\doeditor1{##1}\.\ }{}%
+   \bprintb [booktitle] {{\em##1}\bprintc\titlepost{\.\ *}\bprintv[howpublished]{}{\.}\ }{\bibwarning}%
+   \bookgeneric{\bprintb [pages]  {\prepages\hbox{##1}. }{}}%
+}
+\slet{print:inproceedings}{print:inbook}
+\slet{print:conference}{print:inbook}
+
+\sdef{print:thesis}{%
+   \bprintb [!author]    {\doauthor1{##1}\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\bprintc\titlepost{\.\ *}\bprintv[howpublished]{}{\.}\ }{\bibwarning}%
+   \bprinta [howpublished]  {[*].\ }{}%
+   \bprinta [address]    {*\bprintv[school]{:}{\bprintv[year]{,}{.}}\ }{\bibwarning}%
+   \bprinta [school]     {*\bprintv[year]{,}{.}\ }{\bibwarning}%
+   \bprinta [month]      {*, }{}%
+   \bprintb [year]       {\doyear{##1}\bprintv[citedate]{}{.}\ }{\bibwarninga}%
+   \bprinta [citedate]   {\docitedate*///\relax.\ }{}%
+   \bprinta [type]       {*\bprintv[ednote]{,}{.}\ }%
+                         {\ifx\thesistype\undefined\bibwarning\else\thesistype\bprintv[ednote]{,}{.}\ \fi}%
+   \bprinta [ednote]     {*.\ }{}%
+   \bprintb [doi]        {\predoi DOI \ulink[http://dx.doi.org/##1]{##1}.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\sdef{print:phdthesis}{\def\thesistype{\Mtext{bib.phdthesis}}\csname print:thesis\endcsname}
+\sdef{print:mastershesis}{\def\thesistype{\Mtext{bib.masthesis}}\csname print:thesis\endcsname}
+\sdef{print:bachelorsthesis}{\def\thesistype{\Mtext{bib.bachthesis}}\csname print:thesis\endcsname}
+
+\sdef{print:generic}{%
+   \bprintb [!author]    {\doauthor1{##1}\.\ }{\bibwarning}%
+   \bprintb [title]      {{\em##1}\bprintc\titlepost{\.\ *}\bprintv[howpublished]{}{\.}\ }{\bibwarning}%
+   \bprinta [howpublished]  {[*].\ }{}%
+   \bprinta [ednote]     {\prepareednote*\bprintv[citedate]{}{.}\ }{\bibwarning}%
+   \bprinta [year]       {}{\bibwarning}%
+   \bprinta [citedate]   {\docitedate*///\relax.\ }{}%
+   \bprintb [doi]        {\predoi DOI \ulink[http://dx.doi.org/##1]{##1}.\ }{}%
+   \bprintb [url]        {\preurl\url{##1}. }{}%
+}
+\slet{print:booklet}{print:generic}
+\slet{print:incolleciton}{print:generic}
+\slet{print:manual}{print:generic}
+\slet{print:proceedings}{print:generic}
+\slet{print:techreport}{print:generic}
+\slet{print:unpublished}{print:generic}
+
+\sdef{print:misc}{\let\bibwarning=\relax \csname print:generic\endcsname}
+
+\endinput
+
+
+opmac-bib-iso690.tex
+====================
+
+This is the iso690 bibliographic style used by opmac-bib.tex package.
+
+See op-example.bib for an example of the .bib input. You can try it by:
+
+\input opmac-bib
+\nocite[*]
+\usebib/s (iso690) op-example
+\end
+
+
+Common rules in .bib files:
+--------------------------
+
+There are entries of type @FOO{...} in the .bib file. Each entry consists of
+fields in the form name = "value", or name = {value}. No matter which form is
+used. If the value is pure numeric then you can say simply name = value.
+Warning: the comma after each field value is mandatory! If it is missing then the
+next field is ignored or bad interpreted.
+
+The entry names and field names are case insensitive. If there exist a data
+field no mentioned here then it is simply ignored. You can use it to store
+more information (abstract, for example).
+
+There are ``standard fields'' used in ancient bibTeX (author, title, editor, edition,
+etc., see http://en.wikipedia.org/wiki/BibTeX). The iso690 style introduces
+several ``non-standard'' fields: ednote, numbering, isbn, issn, doi, url, 
+citedate, key, bibmark. They are documented here.
+
+Moreover, there are two optional special fields:
+
+lang     = language of the entry. The hyphenation plus autogenerated phrases and
+           abbreviations will be typeset by this language.
+option   = options by which you can control special printing of vairous fields.
+
+There can be only one option field per each entry with (may be) more options
+separated by spaces. You can declare the global option(s) in your document
+applied for each entry by \def\biboptions{...}.
+
+
+The author field
+----------------
+
+All names in the author list have to be separated by " and ". Each author
+can be written by various formats (the ``von'' part is typically missing):
+
+  Firstname(s) von Lastname
+  or
+  von Lastname, Firstname(s)
+  or
+  von Lastname, After, Firstname(s)
+
+Only the Lastname part is mandatory. Examples:
+
+  Petr Olšák
+  or
+  Olšák, Petr
+
+  Leonardo Piero da Vinci
+  or
+  da Vinci, Leonardo Piero
+  or
+  da Vinci, painter, Leonardo Piero
+
+The separator " and " between authors will be converted to comma during
+printing, but between semifinal and final author the word "and" (or something
+different depending on current language) is printed.
+
+The first author is printed in reverse order: ``LASTNAME, Firstname(s) von,
+After'' and the others author are printed in normal order: ``Firstname(s)
+von LASTNAME, After''. This feature follows the ISO 690 norm. The Lastname
+is capitalised using uppercase letters, but if the \sc command is defined,
+then it is used as an font switcher in the form {\sc Lastname}. You can
+declare the ``Caps and small caps'' font here.
+
+You can specify the option "aumax:<number>". The <number> denotes the
+maximum authors to be printed. The rest of authors are ignored and the
+"et~al." is appended to the list of printed authors. This text is
+printed only if the "aumax" value is less than the real number of authors. 
+If you have the same number of authors in the .bib file as you need to print
+but you want to append "et~al." then you can use "auetal" option.
+
+There is a "aumin:<number>" option which denotes the definitive number of 
+printed authors if the author list is not fully printed due to "aumax".
+If "aumin" is unused then "aumax" authors is printed in such case.
+
+All authors are printed if "aumax:<number>" option isn't given. 
+There is no internal limit. But you can set the global options in 
+your document by setting the \biboptions macro. For example:
+
+   \def\biboptions {aumax:7 aumin:1}  
+   % if there is 8 or more authors then only first author is printed.
+
+Examples:
+
+   author = "John Green and Bob Brown and Alice Black",
+
+output:    GREEN, John, Bob BROWN, and Alice BLACK.
+
+   author = "John Green and Bob Brown and Alice Black",
+   option = "aumax:1",
+
+output:    GREEN, John~et~al.
+
+   author = "John Green and Bob Brown and Alice Black",
+   option = "aumax:2",
+
+output:    GREEN, John, Bob BROWN~et~al.
+
+   author = "John Green and Bob Brown and Alice Black",
+   option = "aumax:3",
+
+output:    GREEN, John, Bob BROWN, and Alice BLACK.
+
+   author = "John Green and Bob Brown and Alice Black",
+   option = "auetal",
+   
+output:    GREEN, John, Bob BROWN, Alice BLACK~et~al.
+
+If you need to add a text before or after authors list, you can use
+the "auprint:{<value>}" option. The <value> will be printed instead of the
+authors list. The <value> can include \AU macro which expands to the authors
+list. Example:
+
+   author = "Robert Calbraith",
+   option = "auprint:{\AU\space [pseudonym of J. K. Rowling]}",
+
+output:    CALBRAITH Robert [pseudonym of J. K. Rowling].
+
+You can use the "autrim:<number>" option. All Firstnames of all authors
+are trimmed (i. e. reduced to initials) iff the number of authors in the 
+author field is greater than or equal to <number>. There is an exception:
+"autrim:0" means that no Firstnames are trimmed. This is default behavior.
+Another example: "autrim:1" means that all Firstnames are trimmed.
+
+   author = "John Green and Bob Brown and Alice Black",
+   option = "auetal autrim:1",
+
+output:    GREEN, J., B. BROWN, A. BLACK~et~al.
+
+If you need to write a team name or institution instead authors, replace all
+spaces by \<space> in this name. Such text is interpreted as Lastname. You
+can add the secondary name (interpreted as Firstname) after comma. Example:
+
+   author = "Czech\ Technical\ University\ in\ Prague, Faculty\ of\ Electrical\ Engeneering",
+
+output:  CZECH TECHNICAL UNIVERSITY IN PRAGUE, Faculty of Electrical Engeneering.
+
+
+The editor field
+----------------
+
+The editor field is used for list of the authors of the collection. The
+analogous rules as in author field are used here. It means that the
+authors are separated by " and ", the Firstnames, Lastnames etc. are
+interpreted and you can use the options "edmax:<number>", "edmin:<number>", 
+"edetal", "edtrim:<number>" and "edprint:<value>" (with \ED macro).
+Example:
+
+    editor = "Jan Tomek and Petr Karas",
+    option = "edprint:{\ED, editors.} edtrim:1",
+
+Output:   J. TOMEK and P. KARAS, editors.
+
+If edprint option is not set then {\ED, eds.} or {\ED, ed.} is used
+depending on the entry language and on the singular or plural of 
+the editor(s).
+
+
+The ednote field
+----------------
+
+The ednote is used as the secondary authors and more editional info. The
+value is read as raw data without any interpretation of Lastname, Firstname
+etc.
+
+    ednote = "Illustrations by Robert \upper{Agarwal}, edited by Tom \upper{Nowak}",
+
+output:   Illustrations by Robert AGARWAL, edited by Tom NOWAK.
+
+The \upper command have to be used for Lastnames in ednote field.
+
+
+The title field
+---------------
+
+This is the title of the work. It will be printed (in common entry types) by
+italics. The ISO 690 norm declares, that the title plus optional subtitle
+are in italics and they are separated by colon. Next, the optional secondary
+title have to be printed in upright font. This can be added by
+"titlepost:{<value>}". Example:
+
+   title = "The Simple Title of The Work",
+or
+   title = "Main Title: Subtitle",
+or
+   title  = "Main Title: Subtitle",
+   option = "titlepost:{Secondary title}",
+
+The output of the last example:
+
+{\it Main Title: Subtitle}. Secondary title.
+
+
+The edition field
+-----------------
+
+This field is used only for second or more edition of cited work. Write
+only the number without the word "edition". The shortcut "ed." (or something
+else depending on current language) is added automatically. Examples:
+
+   edition = "Second",
+   edition = "2nd",
+   edition = "2$^{\rm nd}$",
+   edition = "2.",
+
+Output of the last example:   2. ed.
+
+   edition = "2."
+   lang    = "cs",
+
+Output:   2. vyd.
+
+Note, that the example edition = "Second" may cause problems. If you are
+using language "cs" then the output is bad:   Second vyd.  So, you need to
+say:
+
+   edition = "Second",
+   lang    = "en",
+
+You can use "ednprint:{<value>}" option. The the <value> is printed
+instead of edition field and shortcut. The edition field must be set. Example:
+
+   edition = "whatever",
+   option  = "ednprint:{Second full revised edition}",
+
+Output:   Second full revised edition.
+
+You can use \EDN macro in "ednprint" value. This macro is expanded 
+to the edition value. Example:
+
+   edition = "Second",
+   option  = "ednprint:{\EDN\space full revised edition}",
+
+or
+
+   edition = "Second full revised edition",
+   option  = "ednprint:{\EDN}",
+
+
+The address, publisher, year fields
+-----------------------------------
+
+This is an anachronism from ancient BibTeX (unfortunately no exclusive) that
+the address field includes only the city of the publisher residence. No more
+data are here. The publisher field includes the name of the publisher.
+
+   address = "Berlin",
+   publisher = "Springer Verlag",
+   year = 2012,
+
+Output:   Berlin: Springer Verlag, 2012.
+
+Note, that the year needn't to be inserted into quotes because it is pure
+numeric. 
+
+The letter a, b etc. are appended to the year automatically, if two or more
+subsequent entries in the bibliography list are not distinct by the first
+author and year fields. If you needn't this feature, you can use the
+"noautoletters" option.
+
+You can use "yearprint:{<value>}" option. If it is set then the <value>
+is used for printing year instead the real field value. The reason: year is
+sort sensitive, may be you need to print something else than sorting key.
+Example:
+
+   year   = 2000,
+   option = "yearpint:{\copyright 2000}",
+
+Output:  \copyright 2000,  sorted by:  2000.
+
+   year   = "2012a",
+   option = "yearprint:{2012}",
+
+Output:  2012,   sorted by:  2012a.
+
+The address, publisher and year are typically mandatory fields. If they are
+missing then the OPmac warning occurs. But you can set "unpublished"
+option. Then this warning is suppressed. There is no difference in the
+printed output.
+
+
+The url field
+-------------
+
+Use it without \url macro, but with http:// prefix. Example:
+
+    url = "http://petr.olsak.net/opmac.html",
+
+The ISO 690 norm recommends to add the text ``Available from'' (or
+something else if different current language is used) before URL. 
+It means, that the output of previous example is:
+
+Available from \url{http://petr.olsak.net/opmac.html}.
+
+If the "cs" language is the current one than the output is:
+
+Dostupné z: \url{http://petr.olsak.net/opmac.html}.
+
+If the "urlalso" option is used, then the added text has the form
+``Available also from'' or ``Dostupné také z:'' (if "cs" language is
+current).
+
+
+The citedate field
+------------------
+
+This is the citation date. The field must be in the form year/month/day. It
+means, that the two slashes must be written here. The output depends on the
+current language. Example:
+
+    citedate = "2004/05/21",
+
+Output when "en" is current:    [cit. 2004-05-21].
+Output when "cs" is current:    [vid. 21.~5.~2004].
+
+
+The howpublished field
+----------------------
+
+This declares the available medium for cited document if it is not in printed
+form. Alternatives: online, CD, DVD, etc. Example:
+
+    howpublished = "online",
+
+Output:   [online].
+ 
+
+The volume, number, pages and numbering fields
+----------------------------------------------
+
+The volume is the ``big mark'' of the journal issue and the number is the
+``small mark'' of the journal issue and pages includes the page range of 
+the cited article in the journal. The volume is prefixed by Vol.~,
+the number by No.~ and the pages by pp.~. But these prefixes depends on the
+language of the entry.
+
+Example:
+
+    volume = 31,
+    number = 3,
+    pages  = "37--42",
+
+Output:   Vol.~31, No.~3, pp.~37--42.
+
+    volume = 31,
+    number = 3, 
+    pages  = "37--42",
+    lang   = "cs",
+
+Output:   ročník~31, č.~3, s.~37--42.
+
+If you disagree with the default prefixes, you can use the numbering field.
+When it is set then it is is used instead of volume, number, pages fields 
+and instead of any mentioned prefixes. The numbering can include macros  \VOL, 
+\NO, \PP, which are expanded to the respective values of fields. Example:
+
+    volume    = 31,
+    number    = 3,
+    pages     = "37--42"
+    numbering = "Issue~\VOL/\NO, pages~\PP",
+
+Output:   Issue~31/3, pages~37--42
+
+Note: The volume, numbers and pages fields are printed without numbering
+filed only in the @ARTICLE entry. It means, that if you need to visible them
+in the @INBOOK, @INPROCEEDINGS etc. fields, then you must to use numbering field.
+
+
+Common notes about entries
+--------------------------
+
+The order of the fields in the entry is irrelevant. We use the printed order
+in this manual. The exclamation mark (!) denotes the mandatory field. If
+such field is missing then the warning occurs during processing.
+
+If the "unpublished" option is set then the fields address, publisher, year,
+isbn and pages are not mandatory. If the "nowarn" option is set then no
+warnings about missing mandatory fields occurs.
+
+If the field is used but not mentioned in the entry documentation below then
+it is silently ignored.
+
+The @BOOK entry
+---------------
+
+This is used for book-like entries. 
+
+Fields: author(!), title(!), howpublished, edition, ednote, address(!), 
+publisher(!), year(!), citedate, series, isbn(!), doi, url, note. 
+
+The ednote field here means the secondary authors (illustrator, cover design
+etc.).
+
+
+The @ARTICLE entry
+------------------
+
+This is used for articles published in a journal. 
+
+Fields: author(!), title(!), journal(!), howpublished, address, publisher,
+month, year, [numbering or volume, number, pages(!)], citedate, issn,
+doi, url, note. 
+
+If the numbering is used then it is used instead volume, number, pages.
+
+
+The @INBOOK entry
+-----------------
+
+This is used for the part of a book. 
+
+Fields: author(!), title(!), booktitle(!), howpublished, edition, ednote,
+address(!), publisher(!), year(!), numbering, citedate, series, isbn or
+issn, doi, url, note.
+
+The author field is used for author(s) of the part, the editor field
+includes author(s) or editor(s) of whole document. The pages field specifies
+the page range of the part. The series field can include more information
+about the part (chapter numbers etc.).
+
+The @INPROCEEDINGS and @CONFERENCE entries are equivalent to @INBOOK entry.
+
+
+The @THESIS entry
+-----------------
+
+This is used for student's thesis. 
+
+Fields: author(!), title(!), howpublished, address(!), school(!), 
+month, year(!), citedate, type(!), ednote, doi, url, note. 
+
+The type field must include the text "Master's Thesis" or something 
+similar (depending on the language of the outer document).
+
+There are nearly equivalent entries: @BACHELORSTHESIS, @MASTERSTHESIS and
+@PHDTHESIS. These entries sets the type field to an appropriate value
+automatically. The type field is optional in such case. If it is used then
+it has a precedence before default setting.
+
+
+The @MISC entry
+---------------
+
+It is intended for various usage. 
+
+Fields: author, title, howpublished, ednote, citedate, doi, url, note. 
+
+You can use \AU, \ED, \EDN, \VOL, \NO, \PP, \ADDR, \PUBL, \YEAR
+macros in ednote field. These macros print authors list, editors list,
+edition, volume, number, pages, address, publisher and year field values
+respecitively. If they are are missing then the appropriate macro is empty.
+
+The reason of this entry is to give to you the possibility to set the format of
+entry by your own decision. The most of data are concentrated in ednote
+field.
+
+
+The @BOOKLET, @INCOLLECION, @MANUAL, @PROCEEDINGS, @TECHREPORT, @UNPUBLISHED entries
+-------------------------------------------------------------------------------------
+
+These entries are equivalent to @MICS entry because we need to save the
+simplicity. They are implemented only for (almost) backward compatibility
+with the ancient BibTeX. But the ednote is mandatory field here, so you
+cannot use these entries from the old databases without warnings and without 
+some additional work in the .bib file.
+
+
+The cite-marks (bibmark) used when \nonumcitations is set
+---------------------------------------------------------
+
+When \nonumcitations is set then \cite prints the cite-marks (called
+bibmark) instead numbers. This style file autogenerates these marks in the
+form "Lastname of the first author, comma, space, the year" if bibmark field
+isn't declared. If you need to set an exception from this common format,
+then you can use bibmark field.
+
+The OPmac trick http://petr.olsak.net/opmac-tricks-e.html#bibmark
+describes how to redefine the algorithm for bibmark auto-generating when you
+need the short form of the type [Au13].
+
+
+Sorting
+-------
+
+If \usebib/c is used then entries are sorted by citation order in the text.
+If \usebib/s is used then entries are sorted by ``Lastname, Firstname(s)'' of
+the first author and if more entries have this value equal, then the year is
+used (from older to newer). This feature follows the recommendation of the
+ISO 690 norm.
+
+If you have the same authors and the same year, you can control the sorting
+by setting years as 2013, 2013a, 2013b, etc. You can print something
+different to the list using "yearprint{<value>}" option, see the section about
+address, publisher and year above. The real value of year field (ie. not
+yearprint value) is also used in citations when \nonumcitations is set.
+
+If you have some problems with name sorting, you can use the hidden field
+"key", which is used for sorting instead of the ``Lastname Firstname(s)''
+of authors. If the "key" field is unset then the ``Lastname Firstname(s)'' 
+is used for sorting normally. Example:
+
+  author    = "Světla Čmejrková",
+  key       = "Czzmejrkova Svetla",
+
+This entry is now sorted between C and D. 
+
+The norm recommends to place the autocitations to the top of the list of
+references. You can do this by setting  key = "@", to each entry with your
+name because the "@" character is sorted before A.
+
+
+Languages
+---------
+
+There is the language of the outer document and the languages of each entry.
+The ISO 690 norm recommends that the technical notes (the prefix before URL,
+the media type, the ``and'' conjunction between semifinal and final author)
+may be printed in the language of the outer document. The data of the entry
+have to be printed in the entry language (edition ed./vyd., Vol./ročník,
+No./č. etc.). Finally there are the phrases independent on the language
+(for example In:). Unfortunately, the bibTeX supposes that the entry data
+are not fully included in value parts of the fields (see edition, volume
+etc. fields) so the automaton have to add some text during processing.
+But what language have to be chosen?
+
+The current value of the \language register at the start of the .bib
+processing is decided as the language of the outer document. This language
+is used for technical notes regardless of the entry language. Each entry can
+have the lang field with the two-letter mark of the entry language. This
+language is used for ed./vyd., vol./ročník etc. and it is used for
+hyphenation too. If the entry language is not set then the outer document
+language is used.
+
+If the outer document language is know before creating of the .bib file, you
+can store some language-dependent phrases into it. On the other hand, if the
+main document language is unknown, you can use the \Mtext macro to
+create the text multilingual. Example:
+
+   howpublished = "\Mtext{bue-ray}"
+
+Now, you can set the variants of blue-ray into your macros:
+
+   \mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
+
+
+Tips for using more languages
+-----------------------------
+
+OPmac prefers English, Czech and Slovak languages. However, you can add
+more languages. If you are using csplain, you can download the
+hyphen-patterns for many languages, see the hyphen.lan file. For example,
+you have had \dePatt and \plPatt downloaded (for German and Polish
+languages). Now, you can do
+
+\sdef{lan:21}{de}  \sdef{lan:121}{de} 
+\sdef{lan:23}{pl}  \sdef{lan:123}{pl}
+\def\mtdefx#1#2#3{\sdef{_mt:#1:de}{#2}\sdef{_mt:#1:pl}{#3}}
+
+                          % German              % Polish
+\mtdefx {bib.and}         { und }               { a }
+\mtdefx {bib.phdthesis}   {Ph.D. Dissertation}  {Praca doktorska}
+...
+
+
+Summary of non-standard fields
+------------------------------
+
+This style uses the following fields unkown by bibTeX:
+
+option    ... options separated by spaces
+lang      ... the language two-letter code of one entry
+ednote    ... editional info (secondary authors etc.) or
+              global data in @MISC-like entries
+citedate  ... the date of the citation in year/month/day format
+numbering ... format for volume, number, pages
+isbn      ... ISBN
+issn      ... ISSN
+doi       ... DOI
+url       ... URL
+
+
+Summary of options
+------------------
+
+aumax:<number>       ... maximum number of printed authors
+aumin:<number>       ... number of printed authors if aumax exceedes
+autrim:<number>      ... full Firstnames iff number of authors are less than this
+auprint:{<value>}    ... text instead auhors list (\AU macro may be used)
+edmax, edmin, edtrim ... similar as above for editors list
+edprint:{<value>}    ... text instead editors list (\ED macro may be used)
+titlepost:{<value>}  ... text after title
+yearprint:{<value>}  ... text instead real year (\YEAR macro may be used)
+ednprint:{<value>}   ... text instead real edition (\EDN macro may be used)
+urlalso      ... the ``available also from'' is used instead ``available from''
+unpublished  ... the publisher etc. fields are not mandatory
+nowarn       ... no mandatory fields
+
+Another options in the option field are silently ignored.

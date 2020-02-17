@@ -2,13 +2,6 @@
 
 \_codedecl \pdfprimitive {LuaTeX initialization code <2020-01-23>}
 
-\_directlua {
-    % enable all primitives without prefixing
-    tex.enableprimitives('', tex.extraprimitives())
-    % enable all primitives with _ prefix
-    tex.enableprimitives('_', tex.extraprimitives())
-}
-
 \_let\_pdfpagewidth        \pagewidth
 \_let\_pdfpageheight       \pageheight
 \_let\_pdfadjustspacing    \adjustspacing

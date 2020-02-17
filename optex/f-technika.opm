@@ -1,7 +1,7 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_fontdecl [Technika] \Technika {Fonts from visual style of CTU in Prague}
-        {\caps \light} {\rm \bf \it \bi \stencil} {TX}
+        {\caps \light} {\rm \bf \it \bi \stencil} {}
         "[Technika-Regular]"
 
 \_wlog{\_detokenize{%

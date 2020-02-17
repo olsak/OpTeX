@@ -108,25 +108,5 @@ The `\_famtext` writes a line to the terminal and to the log file when all
 families are listed.
 
 For modifiers and variants declared by `\_faminfo` the sample of letters 
-and other characters from is printed from `\catalogsample` register. 
-You can redeclare the printed sample by:
-
-\begtt
-   \catalogsample={Hello world!}
-\endtt
-
-You can restrict the families to be printed in catalogue by:
-
-\begtt
-   \catalogonly={Termes, Latin Modern, Heros}
-\endtt
-
-If `\catalogonly` is empty (this is default value) then all families are
-printed but no families listed in `\catalogexclude`, for example
-
-\begtt
-   \catalogexclude={Latin Modern, XCharter}
-\endtt
-
-The `\cataogexclude` is empty by default.
+and other characters is printed. from `\catalogsample` register. 
 

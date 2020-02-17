@@ -19,9 +19,11 @@
 
 % \loop like in plain\TeX/:
 
-\_def \_loop #1\repeat{\_def\_body{#1}\_iterate}
+\_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
+\_def \loop #1\repeat{\_def\_body{#1}\_iterate}
+\_let \_repeat=\_fi % this makes \loop...\if...\repeat skippable
+\_let \repeat=\_fi
 \_def \_iterate {\_body \_ea \_iterate \_fi}
-\_let \repeat=\fi % this makes \loop...\if...\repeat skippable
 
 % \isempty{text}\iftrue,  \isempty{text}\iffalse:
 
@@ -37,6 +39,15 @@
    \_long\_def\_tmp##1#2##2\_end/_{\_endgroup\_isnoempty{##2}}%
    \_ea\_tmp#1\_endlistsep#2\_end/_%
 }
+
+% \isequal{text}{text}\iftrue ...
+
+\_def\_isequal#1#2#3{\_directlua{%
+   if "\_luaescapestring{#1}"=="\_luaescapestring{#2}" then else tex.print("\_nbb unless") end}#3}
+
+% \ismacro\macro{text}\iftrue ...
+
+\_def\_ismacro#1{\_ea\_isequal\_ea{#1}}
 
 % \isnextchar <char>{exec if true}{exec if false}
 
@@ -62,8 +73,8 @@
 
 
 \_public
-   \newif \loop \repeat \isempty \istoksempty \isinlist \isnextchar 
-   \isfile \removespaces ;
+   \newif \isempty \istoksempty \isinlist \isnextchar 
+   \isfile \ismacro \isequal \removespaces ;
 
 \_endcode %---------------------------------------------------------
 

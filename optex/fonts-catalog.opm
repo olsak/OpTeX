@@ -3,6 +3,7 @@
 \_initunifonts  
 \_begingroup
 
+\_noloadmath
 \_let\_ttfixed=\_tentt
 \_suppressfontnotfounderror=1
 
@@ -63,8 +64,41 @@
 \_input fams-ini.opm
 \_isfile {fams-user.opm}\_iftrue \_input fams-user.opm \_fi
 
-\_vfil\_break
 \_endgroup
+
+\parindent=0pt
+
+\nonum\sec Customization of the catalogue
+
+
+You can redeclare the printed sample of each font by:
+
+\begtt
+\catalogsample={Hello world!}
+\endtt
+
+before \code{\\fontfam[catalog]} command is used.
+You can restrict the families to be printed in catalogue by:
+
+\begtt
+\catalogonly={Termes, Latin Modern, Heros}
+\endtt
+
+If the \code{\\catalogonly} is empty (this is default value) then all families are
+printed but families listed in the \code{\\catalogexclude} are excluded. For example
+
+\begtt
+\catalogexclude={Latin Modern, XCharter}
+\endtt
+
+The \code{\\cataogexclude} is empty by default.
+
+\bigskip The font families printed in the catalogue must be declared by the
+\code{\\_faminfo} command in the file \code{fams-ini.opm} (declarations used
+as default for \OpTeX/) or in the file \code{fams-user.opm}. The second file
+does not exist by default but user can create it. The syntax rules are
+described in the \code{fams-ini.opm} file.
+
 
 \_endcode % -------------------------------------
 

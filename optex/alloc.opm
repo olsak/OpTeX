@@ -55,6 +55,14 @@
    \_fi
 }
 
+\_newcount \_attributealloc  \_attributealloc=0 
+\_chardef\_maiattribute=\_maicount
+\_def\_newattribute #1{\_allocator #1{attribute}\_attributedef}
+
+\_newcount \_catcodetablealloc  \_catcodetablealloc=10
+\_chardef\_maicatcodetable=32767
+\_def\_newcatcodetable #1{\_allocator #1{catcodetable}\_chardef}
+
 \_newcount \tmpnum  \_newcount \_tmpnum
 \_newdimen \tmpdim  \_newdimen \_tmpdim
 
@@ -65,8 +73,8 @@
 \_newbox\_voidbox % permanently void box register
 
 \_public
-   \maicount \maidimen \maiskip \maimuskip \maibox \maitoks \mairead \maiwrite \maimath
    \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newmath
+   \newattribute \newcatcodetable   
    \insertmin \newinsert 
    \maxdimen \hideskip \centering \zoskip \voidbox ;
 

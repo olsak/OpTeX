@@ -1,20 +1,20 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2019-05-21>}
+\_codedecl \pdfunidef {PDFunicode strings for outlines <2020-02-14>}
 
 \_edef\_octalprint#1#2{\_noexpand\_directlua{% #1=character-code #2=character
     if ('#2'>='A' and '#2'<='Z') or ('#2'>='a' and '#2'<='z') then
       tex.print(string.format('000\_pcent s',"#2"))
     else
-      tex.print(string.format('\_pcent 03o\_nbb\_pcent03o',#1/256,#1\_pcent256))
+      local num=#1\_pcent256
+      tex.print(string.format('\_pcent 03o\_nbb\_pcent03o',(#1-num)/256,num))
     end
 }}
 \_def\_pdfunidef#1#2{%
    \_begingroup
       \_catcode`\\=12 \_let\\=\_nbackslash
-      \_ea\_def\_ea#1\_ea{\_detokenize\_ea{#2}}%
-      \_ea\_replstring\_ea#1\_ea{\\}{\_pdfunidefA}%
-      \_edef#1{#1 ^}\_replstring#1{ ^}{}%           \TeX /u -> \TeX/u
+      \_the\_pdfstringout % extra defnitions of logos etc.
+      \_edef#1{#2}%
       \_replstring#1{ }{{ }}%  text text -> text{ }text
       \_edef\_out{\\376\\377}%
       \_ea\_pdfunidefB#1^%  text -> \_out in octal
@@ -22,7 +22,6 @@
    \_endgroup
    \_ea\_def\_ea#1\_ea{\_out}
 }
-\_def\_pdfunidefA #1 #2{\\#1\_ifx/#2/\_else\_space \_ea#2\_fi}
 \_def\_pdfunidefB#1{%
    \_ifx^#1\_else 
       \_tmpnum=`#1
@@ -31,7 +30,9 @@
 } 
 \_def\_pdfunidefC #1{\_edef\_out{\_out \\\_ea\_octalprint\_ea{\_the\_tmpnum}{#1}}}
 
-\public \pdfunidef ;
+\_newtoks \_pdfstringout
+
+\public \pdfunidef \pdfstringout ;
 
 \_endcode % --------------------------------
 
