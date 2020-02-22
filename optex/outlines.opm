@@ -2,23 +2,25 @@
 
 \_codedecl \pdfunidef {PDFunicode strings for outlines <2019-05-21>}
 
-\_def\_outlines#1{\_pdfcatalog{/PageMode/UseOutlines}\openref
+\_def\_outlines#1{\_pdfcatalog{/PageMode/UseOutlines}\_openref
    \_ifx\_toclist\_empty
      \_opwarning{\noexpand\outlines -- data unavailable. TeX me again}%
    \_else
-     \_ifx\_urlcolor\_empty 
+     \_ifx\_dest\_destactive \_else
         \opwarning{\_noexpand\outlines doesn't work when \_noexpand\hyperlinks isn't declared}\_fi
      {\_let\_tocline=\_outlinesA
-      \_count0=0 \_count1=0 \_toclist % calculate numbers o childs
+      \_count0=0 \_count1=0 \_count2=0 \_count3=0 \_toclist % calculate numbers o childs
       \_def\_outlinelevel{#1}\_let\_tocline=\_outlinesB
-      \_count0=0 \_count1=0 \_toclist}% create outlines
+      \_tocrefnum=0 \_count0=0 \_count1=0 \_count2=0 \_count3=0 \_toclist}% create outlines
    \_fi
 }
-\_def\_outlinesA#1#2#3#4#5{%
+\_def\_outlinesA#1#2#3#4#5#6{%
    \_advance\_count#1 by1
    \_ifcase#1\_or
-     \_addoneol{_ol:\_the\_count0}\_or
-     \_addoneol{_ol:\_the\_count0:\_the\_count1}\_fi
+      \_addoneol{_ol:\_the\_count0}\_or
+      \_addoneol{_ol:\_the\_count0:\_the\_count1}\_or
+      \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2}\_or
+      \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}\_fi
 }
 \_def\_addoneol#1{%
    \_ifcsname #1\_endcsname
@@ -27,21 +29,24 @@
    \_else \_sxdef{#1}{1}%
    \_fi
 }
-\_def\_outlinesB#1#2#3#4#5{%
+\_def\_outlinesB#1#2#3#4#5#6{%
    \_advance\_count#1 by1
-   \_ifcase#1\_tmpnum=\_csifdefined{_ol:\_the\_count0}{0}\_relax\_or
-             \_tmpnum=\_csifdefined{_ol:\_the\_count0:\_the\_count1}{0}\_relax\_or
-             \_tmpnum = 0\_relax\_fi
+   \_ifcase#1%
+      \_tmpnum=\_trycs{_ol:\_the\_count0}{0}\_or
+      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1}{0}\_relax\_or
+      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2}{0}\_relax\_or
+      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}{0}\_relax\_or
+      \_tmpnum = 0\_relax\_fi
    \_pdfunidef\_tmp{#4}%
-   \_outlinesC{#1}{toc:\tocilabel.#3}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
+   \_outlinesC{#1}{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
+   \_advance\_tocrefnum by1
 }
-\_def\_csifdefined#1#2{\_ifcsname #1\_endcsname \_csname#1\_endcsname \_else #2\_fi}
 \_def\_outlinesC#1#2#3#4#5{\_pdfoutline goto name{#2} count #3#4{#5}\_relax}
 
 \_newcount\_oulnum
 \_def\_insertoutline#1{\_global\_advance\_oulnum by1
-   \_pdfdest name{oul:\_the\_oulnum} xyz\_relax
-   \_pdfoutline goto name{oul:\_the\_oulnum} count0 {#1}\_relax
+   \_pdfdest name{_oul:\_the\_oulnum} xyz\_relax
+   \_pdfoutline goto name{_oul:\_the\_oulnum} count0 {#1}\_relax
 }
 
 \_public
@@ -49,14 +54,44 @@
 
 \_endcode % ----------------------------
 
-The PDF format provides ``outlines'' which are notes placed in the special frame of
-the PDF viewer. These notes can be managed as structured and hyperlinked
-table of contents of the document. The command "\outlines{<level>}" creates
-such outlines from data used for table of contents in the document. The
-"<level>" parameter gives the level of opened sub-outlines
-in the default view. The deeper levels can be open by mouse click on the
-triangle symbol after that.
+The problem is that PDF format needs to know the number of direct
+descendants of each outline if we need to create the tree of structured
+outlines. But we know only the level of each outline. The required data
+should be calculated from TOC data. We use two steps over TOC data saved in
+the `\_toclist` where each record is represented by one `\_tocline`.
 
-The command "\insertoutline{<text>}" inserts next entry into PDF outlines at
-the main level~0. This entry can be placed before table of contents (created
-by "\outlines") or after it.
+First step, the `\outline` macro sets `\_tocline` to `\_outlineA` and
+calculates the number of direct descendants of each record. Second step, 
+the `\outline` macro sets `\_tocline` to `\_codlineB` and it uses prepared 
+data and crete outlines.
+
+Each ouline is mapped to the control sequence of the type
+`\_ol:<num>` or `\_ol:<num>:<num>` or `\_ol:<num>:<num>:<num>` or etc.
+The first one is reserved for level 0, the second one for level 1 (chapters), third
+one for level 2 (sections) etc. The number of direct descentants will be stored
+in these macros after first step i finished. Each new outline of given level
+incerases the <num> at given level. When the first step is processed then
+(above that) the `\_ol:..` sequence of the parent inceases its value too. The
+`_ol:...` sequences are implemented by `\_ol:\_count0:\_count1:\count2` etc.
+For example, when section (level 2) is processed in the fisrst step then we do:
+
+\begtt
+   \advance \count2 by 1  
+                    % incerases the mapping pointer of the type 
+                    % \_ol:<\_count0:\_count1:\_count2> of this section
+   \advance \<_ol:\_count0:\_count1> by 1  
+                    % incerases the number of descendants connected 
+                    % to the parent of this section.
+\endtt
+
+When second step is processed, then we only read the stored data about the
+number of descentants. Ad we use it in `count` parameter of `\_pdfoutline`
+primitive.
+
+For linking we use the same links as in TOC, i.e. the `_toc:\_the\_tocrefnum` 
+labels are used.
+
+`\insertoutline {<text>}` inserts one outline with zero direct descendants.
+It creates link destination of the type `_oul:<num>` into the document
+(where `\isertoutline` is used) and the link itself is created too in the
+outline.

@@ -2,7 +2,7 @@
 
 \_fontdecl [Cursor] \Cursor {TeX Gyre Cursor fonts based on Courier}
         {\caps} {\rm \bf \it \bi} {}
-        "[texgyrecursor-regular]"
+        {[texgyrecursor-regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Cursor {%
    \_def \_currfamily {Cursor}%
-   \_def \_fontnamegen {"[texgyrecursor-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[texgyrecursor-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }

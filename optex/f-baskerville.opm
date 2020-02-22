@@ -2,7 +2,7 @@
 
 \_fontdecl [Baskerville] \Baskerville {Free vaiants of classical Baskerville}
         {\caps} {\rm \bf \it \bi} {}
-        "[BaskervilleF-Regular]"
+        {[BaskervilleF-Regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Baskerville {%
    \_def \_currfamily {Baskerville}%
-   \_def \_fontnamegen {"[BaskervilleF-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[BaskervilleF-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }

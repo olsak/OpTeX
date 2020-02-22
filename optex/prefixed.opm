@@ -7,7 +7,7 @@
 \let\_directlua = \directlua
 
 \_directlua {
-    % enable all primitives with _ prefix
+    % enable all TeX primitives with _ prefix
     tex.enableprimitives('_', tex.extraprimitives('tex'))
     % enable all primitives without prefixing
     tex.enableprimitives('', tex.extraprimitives())

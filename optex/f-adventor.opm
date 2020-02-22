@@ -2,7 +2,7 @@
 
 \_fontdecl [Adventor] \Adventor {TeX Gyre Adventor based on Avantgarde Book}
         {\caps} {\rm \bf \it \bi} {}
-        "[texgyreadventor-regular]"
+        {[texgyreadventor-regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\_def \Adventor {%
    \_def \_currfamily {Adventor}%
-   \_def \_fontnamegen {"[texgyreadventor-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[texgyreadventor-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }

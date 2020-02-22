@@ -10,9 +10,9 @@
   \_shipout\_vbox{%
      \_istoksempty \_pgbackground 
         \_iffalse \_backgroundbox {\_the\_pgbackground}\_nointerlineskip \_fi
-     \_istoksempty \_headline \_iffalse \_ensureblack{\_makeheadline}\_fi
+     \_ensureblack{\_makeheadline}%
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}%
-     \_istoksempty \_footline \_iffalse \_ensureblack{\_makefootline}\_fi }%
+     \_ensureblack{\_makefootline}}%
   \_advancepageno
   \_ifnum\_outputpenalty>-20000 \_else\_dosupereject\_fi
 }
@@ -21,10 +21,16 @@
 \_def \_prepoffsets {} % will be re-defined by margins macros
 \_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to0pt{\_kern-\voffset #1\_vss}}
 
-\_def\_makeheadline {\_vbox to0pt{\_vskip-\_headlinedist
-   \_line{\_copy\_strutbox \_the\_headline}\_vss}\_nointerlineskip}
-\_def\_makefootline{\_baselineskip=\_footlinedist 
-   \_lineskiplimit=-\maxdimen \_line{\_the\_footline}}
+\_def\_makeheadline {\_istoksempty \_headline \_iffalse 
+   \_vbox to0pt{\_vskip-\_headlinedist
+   \_line{\_copy\_strutbox \_the\_headline}\_vss}\_nointerlineskip 
+   \_fi
+}
+\_def\_makefootline{\_istoksempty \_footline \_iffalse 
+   \_baselineskip=\_footlinedist 
+   \_lineskiplimit=-\maxdimen \_line{\_the\_footline}
+   \_fi
+}
 \_def\_pagecontents{\_pagedest % destination of the page 
   \_ifvoid\_topins \_else \_ensureblack{\_unvbox\_topins}\_fi
   \_dimen0=\dp255 \_unvbox255 % open up \box255
@@ -48,8 +54,9 @@
 \_countdef\_pageno=0 \_pageno=1 % first page is number 1
 \_def \_folio {\_ifnum\_pageno<0 \_romannumeral-\_pageno \_else \_number\_pageno \_fi}
 \_def \_nopagenumbers {\_footline={}}
-\_def \_advancepageno {\_ifnum\_pageno<0 \_global\_advance\_pageno by-1
-   \_else \_global \_advance\_pageno by1 \_fi } % increase |pageno|
+\_def \_advancepageno {%
+   \_ifnum\_pageno<0 \_global\_advance\_pageno by-1 \_else \_incr\_pageno \_fi 
+} % increase |pageno|
 \_newifi\_ifraggedbottom
 \_def \_raggedbottom {\_topskip=10pt plus60pt \_raggedbottomtrue}
 \_def \_normalbottom {\_topskip=10pt \_raggedbottomfalse} % undoes \raggedbottom
@@ -60,12 +67,13 @@
 \_def \_footnote #1{\_let\_osf=\_empty % parameter #2 (the text) is read later
    \_ifhmode \_edef\_osf{\_spacefactor\_the\_spacefactor}\/\_fi
   #1\_osf\_vfootnote{#1}}
-\_def \_vfootnote #1{\_insert\_footins\_bgroup
+\_def\_vfootnote#1{\_opfootnote{}{#1}}
+\_def \_opfootnote #1#2{\_insert\_footins\_bgroup
   \_interlinepenalty=\_interfootnotelinepenalty
   \_splittopskip=\_ht\_strutbox % top baseline for broken footnotes
   \_splitmaxdepth=\_dp\_strutbox \_floatingpenalty=20000
-  \_leftskip=0pt \_rightskip=0pt \_spaceskip=0pt \_xspaceskip=0pt \_relax
-  \_textindent{#1}\_footstrut
+  \_leftskip=0pt \_rightskip=0pt \_spaceskip=0pt \_xspaceskip=0pt \_relax 
+  #1\_textindent{#2}\_footstrut
   \_isnextchar \_bgroup {\_bgroup \_aftergroup\_vfootA \_let\_next=}{\_vfootB}%
 }
 \_def\_vfootA{\_strut\_egroup}
@@ -97,6 +105,7 @@
     \_ifupage \_dimen0=\_dp0
     \_vbox to\_vsize {\_unvbox0 \_kern-\_dimen0}% depth is zero
     \_else \_box0 \_nobreak \_bigskip \_fi}\_fi\_endgroup}
+
 \_public
     \topins \topinsert \midinsert \pageinsert \endinsert ;
 

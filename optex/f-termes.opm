@@ -2,7 +2,7 @@
 
 \_fontdecl [Termes] \Termes {TeX Gyre Termes fonts based on Times}
         {\caps} {\rm \bf \it \bi} {Termes}
-        "[texgyretermes-regular]"
+        {[texgyretermes-regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Termes {%
    \_def \_currfamily {Termes}%
-   \_def \_fontnamegen {"[texgyretermes-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[texgyretermes-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }

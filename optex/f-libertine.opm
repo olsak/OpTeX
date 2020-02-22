@@ -2,7 +2,7 @@
 
 \_fontdecl [Linux Libertine] \Libertine {Free Linux Libertine fonts}
         {\sans \mono \caps \semi} {\rm \bf \it \bi \initials \displ \keybr} {Libertinus}
-        "[LinLibertine_R]"
+        {[LinLibertine_R]}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
@@ -18,7 +18,7 @@ Special variants:^^J
 
 \_protected\_def \Libertine {%
    \_def \_currfamily {Libertine}%
-   \_def\_fontnamegen {"[Lin\_subfamV _\_currV]:\_capsV\_fontfeatures"}%
+   \_def\_fontnamegen {[Lin\_subfamV _\_currV]:\_capsV\_fontfeatures}%
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV subfam=Libertine,caps={} \_fvars R RB RI RBI }

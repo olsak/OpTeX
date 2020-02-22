@@ -2,261 +2,271 @@
 
 % This file is read when \loadmath is used.
 
-\_ifx \ncharrmA\undefined \_else \_endinput \_fi
+\_ifx \_ncharrmA\_undefined \_else \_endinput \_fi
 
-\umathnumB="0391
-\greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa
+\_umathnumB="0391
+\_greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa
    \Lambda \Mu \Nu \Xi \Omicron \Pi \Rho \varTheta \Sigma \Tau \Upsilon \Phi
-   \Chi \Psi \Omega \relax
+   \Chi \Psi \Omega \_relax
 
-\umathnumB="03B1
-\greekdef \alpha \beta \gamma \delta \epsilon \zeta \eta \theta \iota \kappa
+\_umathnumB="03B1
+\_greekdef \alpha \beta \gamma \delta \epsilon \zeta \eta \theta \iota \kappa
    \lambda \mu \nu \xi \omicron \pi \rho \varsigma \sigma \tau \upsilon
-   \varphi \chi \psi \omega \varbeta \vartheta \phi \varpi \relax
+   \varphi \chi \psi \omega \varbeta \vartheta \phi \varpi \_relax
 
-\chardef\ncharrmA=`A       \chardef\ncharrma=`a
-\chardef\ncharbfA="1D400   \chardef\ncharbfa="1D41A
-\chardef\ncharitA="1D434   \chardef\ncharita="1D44E
-\chardef\ncharbiA="1D468   \chardef\ncharbia="1D482
-\chardef\ncharclA="1D49C   \chardef\ncharcla="1D4B6
-\chardef\ncharbcA="1D4D0   \chardef\ncharbca="1D4EA
-\chardef\ncharfrA="1D504   \chardef\ncharfra="1D51E
-\chardef\ncharbrA="1D56C   \chardef\ncharbra="1D586
-\chardef\ncharbbA="1D538   \chardef\ncharbba="1D552
-\chardef\ncharsnA="1D5A0   \chardef\ncharsna="1D5BA
-\chardef\ncharbsA="1D5D4   \chardef\ncharbsa="1D5EE
-\chardef\ncharsiA="1D608   \chardef\ncharsia="1D622
-\chardef\ncharsxA="1D63C   \chardef\ncharsxa="1D656
-\chardef\ncharttA="1D670   \chardef\nchartta="1D68A
+\_chardef\_ncharrmA=`A       \_chardef\_ncharrma=`a
+\_chardef\_ncharbfA="1D400   \_chardef\_ncharbfa="1D41A
+\_chardef\_ncharitA="1D434   \_chardef\_ncharita="1D44E
+\_chardef\_ncharbiA="1D468   \_chardef\_ncharbia="1D482
+\_chardef\_ncharclA="1D49C   \_chardef\_ncharcla="1D4B6
+\_chardef\_ncharbcA="1D4D0   \_chardef\_ncharbca="1D4EA
+\_chardef\_ncharfrA="1D504   \_chardef\_ncharfra="1D51E
+\_chardef\_ncharbrA="1D56C   \_chardef\_ncharbra="1D586
+\_chardef\_ncharbbA="1D538   \_chardef\_ncharbba="1D552
+\_chardef\_ncharsnA="1D5A0   \_chardef\_ncharsna="1D5BA
+\_chardef\_ncharbsA="1D5D4   \_chardef\_ncharbsa="1D5EE
+\_chardef\_ncharsiA="1D608   \_chardef\_ncharsia="1D622
+\_chardef\_ncharsxA="1D63C   \_chardef\_ncharsxa="1D656
+\_chardef\_ncharttA="1D670   \_chardef\_nchartta="1D68A
 
-\protected\def\rmvariables     {\umathrange{A-Z}\ncharrmA \umathrange{a-z}\ncharrma}
-\protected\def\bfvariables     {\umathrange{A-Z}\ncharbfA \umathrange{a-z}\ncharbfa}
-\protected\def\nitvariables    {\umathrange{A-Z}\ncharitA \umathrange{a-z}\ncharita}
-\protected\def\bivariables     {\umathrange{A-Z}\ncharbiA \umathrange{a-z}\ncharbia}
-\protected\def\calvariables    {\umathrange{A-Z}\ncharclA \umathrange{a-z}\ncharcla}
-\protected\def\bcalvariables   {\umathrange{A-Z}\ncharbcA \umathrange{a-z}\ncharbca}
-\protected\def\frakvariables   {\umathrange{A-Z}\ncharfrA \umathrange{a-z}\ncharfra}
-\protected\def\bfrakvariables  {\umathrange{A-Z}\ncharbrA \umathrange{a-z}\ncharbra}
-\protected\def\bbvariables     {\umathrange{A-Z}\ncharbbA \umathrange{a-z}\ncharbba}
-\protected\def\sansvariables   {\umathrange{A-Z}\ncharsnA \umathrange{a-z}\ncharsna}
-\protected\def\bsansvariables  {\umathrange{A-Z}\ncharbsA \umathrange{a-z}\ncharbsa}
-\protected\def\isansvariables  {\umathrange{A-Z}\ncharsiA \umathrange{a-z}\ncharsia}
-\protected\def\bisansvariables {\umathrange{A-Z}\ncharsxA \umathrange{a-z}\ncharsxa}
-\protected\def\ttvariables     {\umathrange{A-Z}\ncharttA \umathrange{a-z}\nchartta}
+\_protected\_def\_rmvariables     {\_umathrange{A-Z}\_ncharrmA \_umathrange{a-z}\_ncharrma}
+\_protected\_def\_bfvariables     {\_umathrange{A-Z}\_ncharbfA \_umathrange{a-z}\_ncharbfa}
+\_protected\_def\_nitvariables    {\_umathrange{A-Z}\_ncharitA \_umathrange{a-z}\_ncharita}
+\_protected\_def\_bivariables     {\_umathrange{A-Z}\_ncharbiA \_umathrange{a-z}\_ncharbia}
+\_protected\_def\_calvariables    {\_umathrange{A-Z}\_ncharclA \_umathrange{a-z}\_ncharcla}
+\_protected\_def\_bcalvariables   {\_umathrange{A-Z}\_ncharbcA \_umathrange{a-z}\_ncharbca}
+\_protected\_def\_frakvariables   {\_umathrange{A-Z}\_ncharfrA \_umathrange{a-z}\_ncharfra}
+\_protected\_def\_bfrakvariables  {\_umathrange{A-Z}\_ncharbrA \_umathrange{a-z}\_ncharbra}
+\_protected\_def\_bbvariables     {\_umathrange{A-Z}\_ncharbbA \_umathrange{a-z}\_ncharbba}
+\_protected\_def\_sansvariables   {\_umathrange{A-Z}\_ncharsnA \_umathrange{a-z}\_ncharsna}
+\_protected\_def\_bsansvariables  {\_umathrange{A-Z}\_ncharbsA \_umathrange{a-z}\_ncharbsa}
+\_protected\_def\_isansvariables  {\_umathrange{A-Z}\_ncharsiA \_umathrange{a-z}\_ncharsia}
+\_protected\_def\_bisansvariables {\_umathrange{A-Z}\_ncharsxA \_umathrange{a-z}\_ncharsxa}
+\_protected\_def\_ttvariables     {\_umathrange{A-Z}\_ncharttA \_umathrange{a-z}\_nchartta}
 
-\chardef\greekrmA="0391   \chardef\greekrma="03B1
-\chardef\greekbfA="1D6A8  \chardef\greekbfa="1D6C2
-\chardef\greekitA="1D6E2  \chardef\greekita="1D6FC
-\chardef\greekbiA="1D71C  \chardef\greekbia="1D736
-\chardef\greeksnA="1D756  \chardef\greeksna="1D770
-\chardef\greeksiA="1D790  \chardef\greeksia="1D7AA
+\_chardef\_greekrmA="0391   \_chardef\_greekrma="03B1
+\_chardef\_greekbfA="1D6A8  \_chardef\_greekbfa="1D6C2
+\_chardef\_greekitA="1D6E2  \_chardef\_greekita="1D6FC
+\_chardef\_greekbiA="1D71C  \_chardef\_greekbia="1D736
+\_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
+\_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\protected\def\nitgreek   {\umathrangeGREEK\greekrmA \umathrangegreek\greekita}
-\protected\def\rmgreek    {\umathrangeGREEK\greekrmA \umathrangegreek\greekrma}
-\protected\def\bfgreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbfa}
-\protected\def\bigreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbia}
-\protected\def\sansgreek  {\umathrangeGREEK\greeksnA \umathrangegreek\greeksna}
-\protected\def\isansgreek {\umathrangeGREEK\greeksnA \umathrangegreek\greeksia}
+\_protected\_def\_nitgreek   {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekrma}
+\_protected\_def\_bfgreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbia}
+\_protected\_def\_sansgreek  {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksna}
+\_protected\_def\_isansgreek {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksia}
 
-% Another possibility (slanted capitals in \nitgreek, \bigreek, \isansgreek):
-%\protected\def\nitgreek   {\umathrangeGREEK\greekitA \umathrangegreek\greekita}
-%\protected\def\rmgreek    {\umathrangeGREEK\greekrmA \umathrangegreek\greekrma}
-%\protected\def\bfgreek    {\umathrangeGREEK\greekbfA \umathrangegreek\greekbfa}
-%\protected\def\bigreek    {\umathrangeGREEK\greekbiA \umathrangegreek\greekbia}
-%\protected\def\sansgreek  {\umathrangeGREEK\greeksnA \umathrangegreek\greeksna}
-%\protected\def\isansgreek {\umathrangeGREEK\greeksiA \umathrangegreek\greeksia}
+% Another possibility (slanted capitals in \_nitgreek, \_bigreek, \_isansgreek):
+%\_protected\_def\_nitgreek   {\_umathrangeGREEK\_greekitA \_umathrangegreek\_greekita}
+%\_protected\_def\_rmgreek    {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekrma}
+%\_protected\_def\_bfgreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbfa}
+%\_protected\_def\_bigreek    {\_umathrangeGREEK\_greekbiA \_umathrangegreek\_greekbia}
+%\_protected\_def\_sansgreek  {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksna}
+%\_protected\_def\_isansgreek {\_umathrangeGREEK\_greeksiA \_umathrangegreek\_greeksia}
 
-\chardef\digitrmO=`0
-\chardef\digitbfO="1D7CE
-\chardef\digitbbO="1D7D8
-\chardef\digitsnO="1D7E2
-\chardef\digitbsO="1D7EC
-\chardef\digitttO="1D7F6
+\_chardef\_digitrmO=`0
+\_chardef\_digitbfO="1D7CE
+\_chardef\_digitbbO="1D7D8
+\_chardef\_digitsnO="1D7E2
+\_chardef\_digitbsO="1D7EC
+\_chardef\_digitttO="1D7F6
 
-\protected\def\rmdigits    {\umathrange{0-9}\digitrmO}
-\protected\def\bfdigits    {\umathrange{0-9}\digitbfO}
-\protected\def\bbdigits    {\umathrange{0-9}\digitbbO}
-\protected\def\sansdigits  {\umathrange{0-9}\digitsnO}
-\protected\def\bsansdigits {\umathrange{0-9}\digitbsO}
-\protected\def\ttdigits    {\umathrange{0-9}\digitttO}
+\_protected\_def\_rmdigits    {\_umathrange{0-9}\_digitrmO}
+\_protected\_def\_bfdigits    {\_umathrange{0-9}\_digitbfO}
+\_protected\_def\_bbdigits    {\_umathrange{0-9}\_digitbbO}
+\_protected\_def\_sansdigits  {\_umathrange{0-9}\_digitsnO}
+\_protected\_def\_bsansdigits {\_umathrange{0-9}\_digitbsO}
+\_protected\_def\_ttdigits    {\_umathrange{0-9}\_digitttO}
 
-\protected\def\inmath#1{\relax \ifmmode#1\fi} % to keep off \loop processing in text mode
+\_protected\_def\_inmath#1{\_relax \_ifmmode#1\_fi} % to keep off \loop processing in text mode
 
 % You can redefine these macros to follow your wishes.
 % For example you need upgright lowercase greek letters, you don't need
 % \bf and \bi behaves as sans serif in math, ...
 
-\protected\def\rm {\_tryloadrm \_tenrm \inmath{\rmvariables \rmdigits}}
-\protected\def\it {\_tryloadit \_tenit \inmath{\nitvariables}}
-\protected\def\bf {\_tryloadbf \_tenbf \inmath{\bsansvariables \sansgreek \bsansdigits}}
-\protected\def\bi {\_tryloadbi \_tenbi \inmath{\bisansvariables \isansgreek \bsansdigits}}
-\protected\def\tt {\_tryloadtt \_tentt \inmath{\ttvariables \ttdigits}}
-\protected\def\bbchar  {\bbvariables \bbdigits}
-\protected\def\cal     {\calvariables}
-\protected\def\frak    {\frakvariables}
-\protected\def\misans  {\isansvariables \isansgreek \sansdigits}
-\protected\def\mbisans {\bisansvariables \isansgreek \bsansdigits}
-\protected\def\script  {\rmvariables \fam4 }
+\_protected\_def\_rm {\_tryloadrm \_tenrm \_inmath{\_rmvariables \_rmdigits}}
+\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_nitvariables}}
+\_protected\_def\_bf {\_tryloadbf \_tenbf \_inmath{\_bsansvariables \_sansgreek \_bsansdigits}}
+\_protected\_def\_bi {\_tryloadbi \_tenbi \_inmath{\_bisansvariables \_isansgreek \_bsansdigits}}
+\_protected\_def\_tt {\_tryloadtt \_tentt \_inmath{\_ttvariables \_ttdigits}}
+\_protected\_def\_bbchar  {\_bbvariables \_bbdigits}
+\_protected\_def\_cal     {\_calvariables}
+\_protected\_def\_frak    {\_frakvariables}
+\_protected\_def\_misans  {\_isansvariables \_isansgreek \_sansdigits}
+\_protected\_def\_mbisans {\_bisansvariables \_isansgreek \_bsansdigits}
+\_protected\_def\_script  {\_rmvariables \_fam4 }
+
+\_public
+   \rm \it \bf \bi \tt \bbchar \cal \frak \misans \mbisans \script ;
 
 % Math codes: 
 
-\begingroup  % \input mathclass.opm  (which is a copy of MathClass.txt):
-   \def\p#1;#2{\edef\tmp{\pB#2}\ifx\tmp\empty \else\pA#1....\end#2\fi}
-   \def\pA#1..#2..#3\end#4{%
-      \ifx\relax#2\relax \pset{"#1}{#4}\else
-         \umathnumA="#1
-         \loop
-            \pset{\umathnumA}{#4}%
-            \ifnum\umathnumA<"#2 \advance\umathnumA by1
-         \repeat 
-      \fi
+\_begingroup  % \input mathclass.opm  (which is a copy of MathClass.txt):
+   \_def\_p#1;#2{\_edef\_tmp{\_pB#2}\_ifx\_tmp\_empty \_else\_pA#1....\_end#2\_fi}
+   \_def\_pA#1..#2..#3\_end#4{%
+      \_ifx\_relax#2\_relax \_pset{"#1}{#4}\_else
+         \_umathnumA="#1
+         \_loop
+            \_pset{\_umathnumA}{#4}%
+            \_ifnum\_umathnumA<"#2 \_advance\_umathnumA by1
+         \_repeat 
+      \_fi
    }
-   \def\pB#1{\if#1L1\fi \if#1B2\fi \if#1V2\fi \if#1R3\fi \if#1N0\fi \if#1U0\fi
-             \if#1F0\fi \if#1O4\fi \if#1C5\fi \if#1P6\fi \if#1A7\fi}
-   \def\pset#1#2{\global\Umathcode#1=\tmp\space 1 #1\relax
-      \if#2O\global\Udelcode#1=1 #1\relax\fi
-      \if#2C\global\Udelcode#1=1 #1\relax\fi
-      \if#2F\global\Udelcode#1=1 #1\relax\fi
+   \_def\_pB#1{\_if#1L1\_fi \_if#1B2\_fi \_if#1V2\_fi \_if#1R3\_fi \_if#1N0\_fi \_if#1U0\_fi
+             \_if#1F0\_fi \_if#1O4\_fi \_if#1C5\_fi \_if#1P6\_fi \_if#1A7\_fi}
+   \_def\_pset#1#2{\_global\_Umathcode#1=\_tmp\_space 1 #1\_relax
+      \_if#2O\_global\_Udelcode#1=1 #1\_relax\_fi
+      \_if#2C\_global\_Udelcode#1=1 #1\_relax\_fi
+      \_if#2F\_global\_Udelcode#1=1 #1\_relax\_fi
    }
-   \catcode`#=14
-   \everypar={\setbox0=\lastbox \par \p}
-   \input mathclass.opm
-\endgroup
+   \_catcode`#=14
+   \_everypar={\_setbox0=\_lastbox \_par \_p}
+   \_input mathclass.opm
+\_endgroup
 
-\begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
-   \def\UnicodeMathSymbol #1#2#3#4{%
-      \global\Umathcharnumdef#2=\Umathcodenum#1\relax
-      \ifx#3\mathopen   \gdef#2{\Udelimiter 4 1 #1 }\fi
-      \ifx#3\mathclose  \gdef#2{\Udelimiter 5 1 #1 }\fi
-      \ifx#3\mathaccent \gdef#2{\Umathaccent fixed 7 1 #1 }\fi
+\_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
+   \_def\UnicodeMathSymbol #1#2#3#4{%
+      \_global\_Umathcharnumdef#2=\_Umathcodenum#1\_relax
+      \_ifx#3\_mathopen   \_gdef#2{\_Udelimiter 4 1 #1 }\_fi
+      \_ifx#3\_mathclose  \_gdef#2{\_Udelimiter 5 1 #1 }\_fi
+      \_ifx#3\_mathaccent \_gdef#2{\_Umathaccent fixed 7 1 #1 }\_fi
    }
-   \input unimath-table.opm
-\endgroup
+   \_input unimath-table.opm
+\_endgroup
 
-\nitgreek \nitvariables \rmdigits   % default setting
+\_nitgreek \_nitvariables \_rmdigits   % default setting
 
-\Umathcode `- = 2 1 "2212
-\let\{=\lbrace \let\}=\rbrace
+\_Umathcode `- = 2 1 "2212
+\_let\{=\lbrace \_let\}=\rbrace
 
-\def\sqrt       {\Uradical 1 "0221A }
-\def\cuberoot   {\Uradical 1 "0221B }
-\def\fourthroot {\Uradical 1 "0221C }
+\_protected\_def \_sqrt       {\_Uradical 1 "0221A }
+\_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
+\_protected\_def \_fourthroot {\_Uradical 1 "0221C }
 
-\def\intwithnolimits#1{\ifx#1\relax \escapechar=`\\ \else \escapechar=-1
-   \expandafter\let\csname\string#1op\endcsname=#1%
-   \expandafter\def\expandafter#1\expandafter{\csname\string#1op\endcsname \nolimits}%
-   \expandafter \intwithnolimits \fi
+\_public \sqrt \cuberoot \fourthroot ;
+
+\_def\_intwithnolimits#1#2 {\_ifx#1\_relax \_else
+   \_ea\_let\_csname\_csstring#1op\_endcsname=#1%
+   \_ea\_def\_ea #1\_ea{\_csname\_csstring#1op\_endcsname \_nolimits}%
+   \_bgroup \_lccode`\~=#2 \_lowercase{\_egroup \_mathcode`~="8000 \_let ~=#1}%       
+   \_ea \_intwithnolimits \_fi
 }
-\intwithnolimits \int \iint \iiint \oint \oiint \oiiint \intclockwise
-   \varointclockwise \ointctrclockwise \sumint \iiiint \intbar \intBar \fint
-   \pointint \sqint \intlarhk \intx \intcap \intcup \upint \lowint \relax
+\_intwithnolimits \int "0222B \iint "0222C \iiint "0222D 
+   \oint "0222E \oiint "0222F \oiiint "02230 
+   \intclockwise "02231 \varointclockwise "02232 \ointctrclockwise "02233 
+   \sumint "02A0B \iiiint "02A0C \intbar "02A0D \intBar "02A0E \fint "02A0F
+   \pointint "02A15 \sqint "02A16 \intlarhk "02A17 \intx "02A18 
+   \intcap "02A19 \intcup "02A1A \upint "02A1B \lowint "02A1C \_relax "0
 
-\def\vert  {\Udelimiter 0 1 "07C }
-\def\Vert  {\Udelimiter 0 1 "02016 }
-\def\Vvert {\Udelimiter 0 1 "02980 }
+\_protected\_def \vert  {\_Udelimiter 0 1 "07C }
+\_protected\_def \Vert  {\_Udelimiter 0 1 "02016 }
+\_protected\_def \Vvert {\_Udelimiter 0 1 "02980 }
 
-\def\overbrace    #1{\mathop {\Umathaccent  7 1 "023DE{#1}}\limits}
-\def\underbrace   #1{\mathop {\Umathaccent bottom 7 1 "023DF{#1}}\limits}
-\def\overparen    #1{\mathop {\Umathaccent  7 1 "023DC{#1}}\limits}
-\def\underparen   #1{\mathop {\Umathaccent bottom 7 1 "023DD{#1}}\limits}
-\def\overbracket  #1{\mathop {\Umathaccent  7 1 "023B4{#1}}\limits}
-\def\underbracket #1{\mathop {\Umathaccent bottom 7 1 "023B5{#1}}\limits}
+\_protected\_def \_overbrace    #1{\mathop {\Umathaccent  7 1 "023DE{#1}}\limits}
+\_protected\_def \_underbrace   #1{\mathop {\Umathaccent bottom 7 1 "023DF{#1}}\limits}
+\_protected\_def \_overparen    #1{\mathop {\Umathaccent  7 1 "023DC{#1}}\limits}
+\_protected\_def \_underparen   #1{\mathop {\Umathaccent bottom 7 1 "023DD{#1}}\limits}
+\_protected\_def \_overbracket  #1{\mathop {\Umathaccent  7 1 "023B4{#1}}\limits}
+\_protected\_def \_underbracket #1{\mathop {\Umathaccent bottom 7 1 "023B5{#1}}\limits}
 
-\def\widehat            {\Umathaccent 7 1 "00302 }
-\def\widetilde          {\Umathaccent 7 1 "00303 }
-\def\overleftharpoon    {\Umathaccent 7 1 "020D0 }
-\def\overrightharpoon   {\Umathaccent 7 1 "020D1 }
-\def\overleftarrow      {\Umathaccent 7 1 "020D6 }
-\def\overrightarrow     {\Umathaccent 7 1 "020D7 }
-\def\overleftrightarrow {\Umathaccent 7 1 "020E1 }
+\_public \overbrace \underbrace \overparen \underparen \overbracket \underbracket ;
+
+\_protected\def \widehat            {\Umathaccent 7 1 "00302 }
+\_protected\def \widetilde          {\Umathaccent 7 1 "00303 }
+\_protected\def \overleftharpoon    {\Umathaccent 7 1 "020D0 }
+\_protected\def \overrightharpoon   {\Umathaccent 7 1 "020D1 }
+\_protected\def \overleftarrow      {\Umathaccent 7 1 "020D6 }
+\_protected\def \overrightarrow     {\Umathaccent 7 1 "020D7 }
+\_protected\def \overleftrightarrow {\Umathaccent 7 1 "020E1 }
 
 % corrections:
 
-\mathchardef\ldotp="612E
-\let\|=\Vert
+\_mathchardef\ldotp="612E
+\_let\|=\Vert
 
-\let\setminus=\smallsetminus
-\let\diamond=\smwhtdiamond
-\let\bullet=\smblkcircle
-\let\circ=\vysmwhtcircle
-\let\bigcirc=\mdlgwhtcircle
-\let\to=\rightarrow
-\let\le=\leq
-\let\ge=\geq
-\let\neq=\ne
-\protected\def\triangle{\mathord{\bigtriangleup}}
-\let\emptyset=\varnothing
-\let\hbar=\hslash
-\let\land=\wedge
-\let\lor=\vee
-\let\owns=\ni
-\let\gets=\leftarrow
-\let\mathring=\ocirc
-\let\lnot=\neg
-\let\longdivision=\longdivisionsign
-\let\backepsilon=\upbackepsilon
-\let\eth=\matheth
-\let\dbkarow=\dbkarrow
-\let\drbkarow=\drbkarrow
-\let\hksearow=\hksearrow
-\let\hkswarow=\hkswarrow
+\_let \setminus=\smallsetminus
+\_let \diamond=\smwhtdiamond
+\_let \bullet=\smblkcircle
+\_let \circ=\vysmwhtcircle
+\_let \bigcirc=\mdlgwhtcircle
+\_let \to=\rightarrow
+\_let \le=\leq
+\_let \ge=\geq
+\_let \neq=\ne
+\_protected\_def \triangle {\mathord{\bigtriangleup}}
+\_let \emptyset=\varnothing
+\_let \hbar=\hslash
+\_let \land=\wedge
+\_let \lor=\vee
+\_let \owns=\ni
+\_let \gets=\leftarrow
+\_let \mathring=\ocirc
+\_let \lnot=\neg
+\_let \longdivision=\longdivisionsign
+\_let \backepsilon=\upbackepsilon
+\_let \eth=\matheth
+\_let \dbkarow=\dbkarrow
+\_let \drbkarow=\drbkarrow
+\_let \hksearow=\hksearrow
+\_let \hkswarow=\hkswarrow
 
-\let\varepsilon=\epsilon
-\let\upalpha=\mupalpha         
-\let\upbeta=\mupbeta          
-\let\upgamma=\mupgamma         
-\let\updelta=\mupdelta         
-\let\upepsilon=\mupvarepsilon        
-\let\upvarepsilon=\mupvarepsilon
-\let\upzeta=\mupzeta          
-\let\upeta=\mupeta           
-\let\uptheta=\muptheta        
-\let\upiota=\mupiota          
-\let\upkappa=\mupkappa         
-\let\uplambda=\muplambda        
-\let\upmu=\mupmu            
-\let\upnu=\mupnu            
-\let\upxi=\mupxi            
-\let\upomicron=\mupomicron       
-\let\uppi=\muppi            
-\let\uprho=\muprho
-\let\upvarrho=\mupvarrho           
-\let\upvarsigma=\mupvarsigma      
-\let\upsigma=\mupsigma         
-\let\uptau=\muptau           
-\let\upupsilon=\mupupsilon       
-\let\upvarphi=\mupvarphi        
-\let\upchi=\mupchi           
-\let\uppsi=\muppsi           
-\let\upomega=\mupomega         
-\let\upvartheta=\mupvartheta      
-\let\upphi=\mupphi           
-\let\upvarpi=\mupvarpi         
+\_let \varepsilon=\epsilon
+\_let \upalpha=\mupalpha         
+\_let \upbeta=\mupbeta          
+\_let \upgamma=\mupgamma         
+\_let \updelta=\mupdelta         
+\_let \upepsilon=\mupvarepsilon        
+\_let \upvarepsilon=\mupvarepsilon
+\_let \upzeta=\mupzeta          
+\_let \upeta=\mupeta           
+\_let \uptheta=\muptheta        
+\_let \upiota=\mupiota          
+\_let \upkappa=\mupkappa         
+\_let \uplambda=\muplambda        
+\_let \upmu=\mupmu            
+\_let \upnu=\mupnu            
+\_let \upxi=\mupxi            
+\_let \upomicron=\mupomicron       
+\_let \uppi=\muppi            
+\_let \uprho=\muprho
+\_let \upvarrho=\mupvarrho           
+\_let \upvarsigma=\mupvarsigma      
+\_let \upsigma=\mupsigma         
+\_let \uptau=\muptau           
+\_let \upupsilon=\mupupsilon       
+\_let \upvarphi=\mupvarphi        
+\_let \upchi=\mupchi           
+\_let \uppsi=\muppsi           
+\_let \upomega=\mupomega         
+\_let \upvartheta=\mupvartheta      
+\_let \upphi=\mupphi           
+\_let \upvarpi=\mupvarpi         
 
-\protected\def\not#1{%
-  \expandafter\ifx \csname not!\string#1\endcsname \relax
-      \mathrel{\mathord{\rlap{\kern1pt/}}\mathord{#1}}%
-  \else \csname not!\string#1\endcsname 
-  \fi
+\_protected\_def\_not#1{%
+  \_ifcsname _not!\_csstring#1\_endcsname \_csname _not!\_csstring#1\_endcsname
+  \_else \_mathrel{\_mathord{\_rlap{\_kern1pt/}}\_mathord{#1}}%
+  \_fi
 }
-\def\negationof#1#2{\expandafter\let \csname not!\string#1\endcsname =#2}
-\negationof =         \neq   
-\negationof <         \nless 
-\negationof >         \ngtr
-\negationof \gets     \nleftarrow
-\negationof \simeq    \nsime
-\negationof \equal    \ne   
-\negationof \le       \nleq 
-\negationof \ge       \ngeq 
-\negationof \greater  \ngtr 
-\negationof \forksnot \forks
-\negationof \in       \notin
+\_def\_negationof #1#2{\_ea\_let \_csname _not!\_csstring#1\_endcsname =#2}
+\_negationof =         \neq   
+\_negationof <         \nless 
+\_negationof >         \ngtr
+\_negationof \gets     \nleftarrow
+\_negationof \simeq    \nsime
+\_negationof \equal    \ne   
+\_negationof \le       \nleq 
+\_negationof \ge       \ngeq 
+\_negationof \greater  \ngtr 
+\_negationof \forksnot \forks
+\_negationof \in       \notin
+
+\_public \not ;
 
 % we need no more 8bit math fonts
 
 \mathcode`\_="8000
-\mathcode`\∫="8000
-{\catcode`\∫=13 \_ea}\_ea \_let \_noexpand ∫ = \int
 
 \_private
    \ldotp \cdotp \triangleleft \trianglerigt \mapstochar \rightarrow \prime
@@ -264,9 +274,6 @@
    \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
    \longrightarrow \Longleftrightarrow \vdots \ddots ;
 
-
-\def\boldmath{\pdfliteral direct {2 Tr .3 w}\aftergroup\noboldmath}
-\def\noboldmath{\pdfliteral direct {0 Tr 0 w}} % faked bold only :-(
 
 \_endcode
 

@@ -375,45 +375,46 @@
 \_mathchardef\_colon="603A % colon as a punctuation mark
 \_public \ldotp \cdotp \colon ;
 
-\_newdimen \_pt
-\_def\_setpt{\_pt=.1\_fontdimen6\_textfont1 }
 \_protected\_def\_ldots{\_mathinner{\_ldotp\_ldotp\_ldotp}}
 \_protected\_def\_cdots{\_mathinner{\_cdotp\_cdotp\_cdotp}}
-\_protected\_def\_vdots{\_setpt \_vbox{\_baselineskip=4\_pt \_lineskiplimit=0pt
-    \_kern6\_pt \_hbox{.}\_hbox{.}\_hbox{.}}}
-\_protected\_def\_ddots{\_mathinner{\_setpt 
-    \_mkern1mu\_raise7\_pt\_vbox{\_kern7\_pt\_hbox{.}}\_mkern2mu
-    \_raise4\_pt\_hbox{.}\_mkern2mu\_raise1\_pt\_hbox{.}\_mkern1mu}}
+\_protected\_def\_vdots{\_vbox{\_baselineskip=.4em \_lineskiplimit=0pt
+    \_kern.6em \_hbox{.}\_hbox{.}\_hbox{.}}}
+\_protected\_def\_ddots{\_mathinner{% 
+    \_mkern1mu\_raise.7em\_vbox{\_kern.7em\_hbox{.}}\_mkern2mu
+    \_raise.4em\_hbox{.}\_mkern2mu\_raise.1em\_hbox{.}\_mkern1mu}}
+
 \_public \ldots \cdots \vdots \ddots ;
 
-\_protected\_def\_acute{\_mathaccent"7013 }
-\_protected\_def\_grave{\_mathaccent"7012 }
-\_protected\_def\_ddot{\_mathaccent"707F }
-\_protected\_def\_tilde{\_mathaccent"707E }
-\_protected\_def\_bar{\_mathaccent"7016 }
-\_protected\_def\_breve{\_mathaccent"7015 }
-\_protected\_def\_check{\_mathaccent"7014 }
-\_protected\_def\_hat{\_mathaccent"705E }
-\_protected\_def\_vec{\_mathaccent"017E }
-\_protected\_def\_dot{\_mathaccent"705F }
-\_protected\_def\_widetilde{\_mathaccent"0365 }
-\_protected\_def\_widehat{\_mathaccent"0362 }
+\_protected\_def\acute{\_mathaccent"7013 }
+\_protected\_def\grave{\_mathaccent"7012 }
+\_protected\_def\ddot{\_mathaccent"707F }
+\_protected\_def\tilde{\_mathaccent"707E }
+\_protected\_def\bar{\_mathaccent"7016 }
+\_protected\_def\breve{\_mathaccent"7015 }
+\_protected\_def\check{\_mathaccent"7014 }
+\_protected\_def\hat{\_mathaccent"705E }
+\_protected\_def\vec{\_mathaccent"017E }
+\_protected\_def\dot{\_mathaccent"705F }
+\_protected\_def\widetilde{\_mathaccent"0365 }
+\_protected\_def\widehat{\_mathaccent"0362 }
 
 \_def\_math{\_mathsurround0pt }
-\_protected\_def\_overrightarrow #1{\_vbox{\_setpt\_math\_ialign{##\_crcr
-      \_rightarrowfill\_crcr\_noalign{\_kern-\_pt\_nointerlineskip}
+\_protected\_def\_overrightarrow #1{\_vbox{\_math\_ialign{##\_crcr
+      \_rightarrowfill\_crcr\_noalign{\_kern-.1em \_nointerlineskip}
       $\_hfil\_displaystyle{#1}\_hfil$\_crcr}}}
-\_protected\_def\_overleftarrow #1{\_vbox{\_setpt\_math\_ialign{##\_crcr
-      \_leftarrowfill\_crcr\_noalign{\_kern-\_pt\_nointerlineskip}
+\_protected\_def\_overleftarrow #1{\_vbox{\_math\_ialign{##\_crcr
+      \_leftarrowfill\_crcr\_noalign{\_kern-.1em \_nointerlineskip}
       $\_hfil\_displaystyle{#1}\_hfil$\_crcr}}}
-\_protected\_def\_overbrace #1{\_mathop{\_vbox{\_setpt\_math\_ialign{##\_crcr\_noalign{\_kern3\_pt}
-      \_downbracefill\_crcr\_noalign{\_kern3\_pt\_nointerlineskip}
+\_protected\_def\_overbrace #1{\_mathop{%
+      \_vbox{\_math\_ialign{##\_crcr\_noalign{\_kern.3em}
+      \_downbracefill\_crcr\_noalign{\_kern.3em \_nointerlineskip}
       $\_hfil\_displaystyle{#1}\_hfil$\_crcr}}}\_limits}
-\_protected\_def\_underbrace #1{\_mathop{\_vtop{\_setpt\_math\_ialign{##\_crcr
-      $\_hfil\_displaystyle{#1}\_hfil$\_crcr\_noalign{\_kern3\_pt\_nointerlineskip}
-      \_upbracefill\_crcr\_noalign{\_kern3\_pt}}}}\_limits}
+\_protected\_def\_underbrace #1{\_mathop{\_vtop{\_math\_ialign{##\_crcr
+      $\_hfil\_displaystyle{#1}\_hfil$\_crcr\_noalign{\_kern.3em \_nointerlineskip}
+      \_upbracefill\_crcr\_noalign{\_kern.3em}}}}\_limits}
 \_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0=by2 \_mkern\_muskip0
     #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
+
 \_public \overrightarrow \overleftarrow \overbrace \underbrace \skew ;
 
 \_protected\_def\lmoustache{\_delimiter"437A340 } % top from (, bottom from )
@@ -476,12 +477,12 @@
 \_public \mathpalette \vphantom \hphantom \phantom \mathstrut \smash ;
 
 \_protected\_def\_cong{\_mathrel{\_mathpalette\_overeq\_sim}} % congruence sign
-\_def\_overeq#1#2{\_setpt\_lower.5\_pt\_vbox{\_lineskiplimit\_maxdimen\_lineskip=-.5\_pt
+\_def\_overeq#1#2{\_lower.05em\_vbox{\_lineskiplimit\_maxdimen\_lineskip=-.05em
     \_ialign{$\_math#1\_hfil##\_hfil$\_crcr#2\_crcr=\_crcr}}}
 \_protected\_def\_notin{\_mathrel{\_mathpalette\_cancel\_in}}
 \_def\_cancel#1#2{\_math\_ooalign{$\_hfil#1\_mkern1mu/\_hfil$\_crcr$#1#2$}}
 \_protected\_def\_rightleftharpoons{\_mathrel{\_mathpalette\_rlhp{}}}
-\_def\_rlhp#1{\_vcenter{\_setpt\_math\_hbox{\_ooalign{\_raise2\_pt
+\_def\_rlhp#1{\_vcenter{\_math\_hbox{\_ooalign{\_raise.2em
           \_hbox{$#1\_rightharpoonup$}\_crcr
         $#1\_leftharpoondown$}}}}
 \_protected\_def\_buildrel#1\over#2{\_mathrel{\_mathop{\_kern0pt #2}\_limits^{#1}}}
@@ -502,17 +503,16 @@
 \_protected\_def\_pmatrix#1{\_left(\_matrix{#1}\_right)}
 \_newdimen\_ptrenwd
 \_ptrenwd=0.875\fontdimen6\textfont1 % width of the big left (
-\_protected\_def\_bordermatrix#1{\_begingroup \_math\_setpt
-  \_setbox0=\_vbox{\_setpt
-    \_def\_cr{\_crcr\_noalign{\_kern2\_pt\_global\_let\_cr\_endline}}%
-    \_ialign{$##$\_hfil\_kern2\_pt\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
+\_protected\_def\_bordermatrix#1{\_begingroup \_math
+  \_setbox0=\_vbox{\_def\_cr{\_crcr\_noalign{\_kern.2em\_global\_let\_cr\_endline}}%
+    \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
       &&\_quad\_hfil$##$\_hfil\_crcr
       \_omit\_strut\_hfil\_crcr\_noalign{\_kern-\_baselineskip}%
       #1\_crcr\_omit\_strut\_cr}}%
   \_setbox2=\_vbox{\_unvcopy0 \_global\_setbox1=\_lastbox}%
   \_setbox2=\_hbox{\_unhbox1 \_unskip\_global\_setbox1=\_lastbox}%
   \_setbox2=\_hbox{$\_kern\_wd1 \_kern-\_ptrenwd\_left(\_kern-\_wd1
-    \_global\_setbox1=\_vbox{\_box1 \_kern2\_pt}%
+    \_global\_setbox1=\_vbox{\_box1 \_kern.2em}%
     \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right)$}%
   \_null\_thicksk\_vbox{\_kern\_ht1 \_box2}\_endgroup}
 \_public \cases \matrix \pmatrix \bordermatrix ;
@@ -797,8 +797,8 @@
   \_ifx #1<\_nless \_else
   \_ifx #1>\_ngtr \_else
   \_edef\_tmpn{\_csstring#1}%
-  \_ifcsname _not\tmpn\_endcsname \_csname _not\tmpn\_endcsname
-  \_else \_ifcsname _n\tmpn\_endcsname \_csname _n\tmpn\_endcsname
+  \_ifcsname _not\_tmpn\_endcsname \_csname _not\_tmpn\_endcsname
+  \_else \_ifcsname _n\_tmpn\_endcsname \_csname _n\_tmpn\_endcsname
   \_else \_mathrel{\_mathord{\_notchar}\_mathord{#1}}%
   \_fi \_fi \_fi \_fi}
 \_private 
@@ -857,9 +857,7 @@ plain\TeX/, but they are `\protected`.
 
 These macros are defined similarly as in plain\TeX. Only internal macro 
 names from plain\TeX/ with `@` character are we-written in more readable
-form. The macro `\_setpt` is introduced. This sets `\_pt` dimen to 1 pt if
-10 point font is used. In another cases the appropriate scaling is applied. 
-
+form. 
 
 \secc Matchchardefs from AMS fonts
 %---------------------------------

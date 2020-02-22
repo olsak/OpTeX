@@ -8,6 +8,12 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.04> references.opl, hyperlinks.opl re-implemented.  
+       \fontfam, f-* rewritten: no usage of boundary "..." in \_fontnamegen
+       \fnote{...} corrected: (parameter is not really parameter)
+       verbatim.opl re-implemented + doc added
+       file-ref.opl implemented (new \_Xrefversion{3})
+       bugfixing
 <0.03> optex-doc optex.1 included,
        verbatim.opm re-implmented,
        math-unicode implemented,

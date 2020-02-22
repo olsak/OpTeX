@@ -2,7 +2,7 @@
 
 \_fontdecl [GFS Bodoni] \GFSBodoni {Based on Bodoni with greek letters}
         {} {\rm \bf \it \bi} {}
-        "[GFSBodoni]"
+        {[GFSBodoni]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \GFSBodoni {%
    \_def \_currfamily {GFSBodoni}%
-   \_def \_fontnamegen {"[GFSBodoni\_currV]:\_fontfeatures"}% 
+   \_def \_fontnamegen {[GFSBodoni\_currV]:\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fvars {} Bold It BoldIt }

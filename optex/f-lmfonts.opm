@@ -3,7 +3,7 @@
 \_fontdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
         {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital 
          \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {LM}
-        "[lmroman10-regular]"
+        {[lmroman10-regular]}
 
 \_wlog{\_detokenize{%
 Modifiers (selects subfamily):^^J

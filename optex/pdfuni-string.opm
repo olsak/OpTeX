@@ -12,9 +12,13 @@
 }}
 \_def\_pdfunidef#1#2{%
    \_begingroup
-      \_catcode`\\=12 \_let\\=\_nbackslash
+      \_catcode`\\=12 \_let\\=\_bslash
+      \_escapechar=-1
       \_the\_pdfstringout % extra defnitions of logos etc.
       \_edef#1{#2}%
+      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_end$}%  $x$ -> x
+      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_end}}%  {x} -> x
+      \_edef#1{\_detokenize\_ea{#1}}%
       \_replstring#1{ }{{ }}%  text text -> text{ }text
       \_edef\_out{\\376\\377}%
       \_ea\_pdfunidefB#1^%  text -> \_out in octal
@@ -25,12 +29,21 @@
 \_def\_pdfunidefB#1{%
    \_ifx^#1\_else 
       \_tmpnum=`#1
-      \_ea\_ifx\_nbackslash#1\_pdfunidefC{#1#1}\_else\_pdfunidefC{#1}\_fi
+      \_pdfunidefC{\_luaescapestring{#1}}%
    \_ea\_pdfunidefB \_fi
 } 
 \_def\_pdfunidefC #1{\_edef\_out{\_out \\\_ea\_octalprint\_ea{\_the\_tmpnum}{#1}}}
 
+\_def\_removeoutbraces #1#{#1\_removeoutbracesA}
+\_def\_removeoutbracesA #1{\_ifx\_end#1\_else #1\_ea\_removeoutbraces\_fi}
+\_def\_removeoutmath #1$#2${#1\_ifx\_end#2\_else #2\_ea\_removeoutmath\_fi}
+
 \_newtoks \_pdfstringout
+
+\_pdfstringout={\_let\em=\_empty \_let\rm=\_empty \_let\bf=\_empty
+    \_let\it=\_empty \_let\bi=\_empty \_let\tt=\_empty \_let\/=\_empty
+    \_let~=\_space \let\nl=\_space
+}
 
 \public \pdfunidef \pdfstringout ;
 

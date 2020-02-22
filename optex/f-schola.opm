@@ -2,7 +2,7 @@
 
 \_fontdecl [Schola] \Schola {TeX Gyre Schola fonts based on New Century}
         {\caps} {\rm \bf \it \bi} {Schola}
-        "[texgyreschola-regular]"
+        {[texgyreschola-regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Schola {%
    \_def \_currfamily {Schola}%
-   \_def\_fontnamegen {"[texgyreschola-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def\_fontnamegen {[texgyreschola-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }

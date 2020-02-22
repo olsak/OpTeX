@@ -11,15 +11,15 @@
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
    \_gdef\_doresizefont ##1{\_logfont{##1}%
-      \_font##1=\_fontnamegen\_space \_sizespec \_relax}%
+      \_font##1={\_fontnamegen} \_sizespec \_relax}%
    \_def \_fontnamegen{ec-lmr10}%
    \_global\_let\_initunifonts=\_relax % we need not to do this work twice
    \_global\_let\initunifonts=\_relax
 }
-\_def\_fontdecl [#1]#2#3#4#5#6#7"#8"{%
+\_def\_fontdecl [#1]#2#3#4#5#6#7{%
    \_initunifonts \_uniaccents
    \_ifx #2\_undefined 
-      \_isfont"#8"\_iffalse
+      \_isfont{#7}\_iffalse
          \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
          \_def\_textfamily{#1}%
          \_edef\_currfamily {\_csstring #2}%
@@ -43,10 +43,10 @@
 \_def\_afterfifi #1\_fi\_fi{\_fi\_fi #1}
 
 \_newifi \_ifexistfam
-\_def\_isfont"#1"#2{%
+\_def\_isfont#1#2{%
    \_begingroup
        \_suppressfontnotfounderror=1
-       \_font\_testfont="#1"\_relax
+       \_font\_testfont={#1}\_relax
        \_ifx\_testfont\_nullfont \_def\_tmp{\_existfamfalse \_unless}
        \else \_def\_tmp{\_existfamtrue}\_fi
    \_ea \_endgroup \_tmp #2%
@@ -336,7 +336,7 @@ applies variant selector (loads the font now), closes the group but keeps
 the selected font and use it. Moreover, such `\selector` is declared as
 family-dependent in the same sense as font modifiers.
 
-You can use `\isfont "<fontname>"\iftrue` or `\isfont "<fontname>"\iffalse`
+You can use `\isfont {<fontname>}\iftrue` or `\isfont {<fontname>}\iffalse`
 to test if the specified font is present in your system.
 
 

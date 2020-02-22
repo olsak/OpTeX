@@ -22,13 +22,12 @@
 \tit \OpTeX/\nl Format Based on Plain \TeX/ and OPmac\fnotemark1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\hfill Version Alpha 0.03
+\hfill Version Alpha 0.04
 
 \centerline{\it Petr Olšák, 2020}
 
 \bigskip
 \centerline{\url{http://petr.olsak.net/optex}}
-
 
 \fnotetext {The OPmac package is a set of simple additional macros to plain\TeX{}. It
 enables users to take advantage of basic \LaTeX/ functionality but keeps
@@ -53,8 +52,7 @@ is supported. The main goal of \OpTeX/ is:
 * \OpTeX/ provides a powerful font selection system (for Unicode font
   families, of course).
 * \OpTeX/ supports hyphenations of all languages installed in your \TeX/ system.
-* All features from OPmac macros are copied (for example, you can see
-  opmac-prospectus.pdf)
+* All features from OPmac macros are copied.
 * Macros are documented in the same place where code is (macros for printing
   this documentation will come in the future).
 * User name space of control sequences is separated from internal name space
@@ -172,7 +170,7 @@ but at top left paper corner exactly. For example, `\hoffset` includes directly 
 margin.
 
 
-\sec Selection of font family
+\sec Font families and fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 You can select the font family by `\fontfam[<Family_name>]`.
@@ -203,12 +201,21 @@ There is one special variant selector `\currvar` which does not change the
 selected variant but reloads the font in respect of tne (maybe newly
 specified) font slector(s).
 
-\new Most declared font families are configured with recommended Unicode
+\new 
+Most declared font families are configured with recommended Unicode
 Math font. This font is automaticlally loaded unless you specify
 `\noloadmath` before first `\fontfam` command. See log file for more
 information about loading Text font family and UnicodeMath fonts. If you
 prefer another Unicode Math font, specify it by `\loadmath{[<font_file>]}`
 or `\loadmath{font_name}` before first `\loadfam` command.
+
+\new
+The macro `\initunifonts` should be used before usage of first `\font` primitive
+when you need to lodad Unicode fonts directly wihout support of the `\fontfam` or
+`\loadmath` \"high level" macros\fnote
+{The `\initunifonts` macro initializes an extension features of the
+\code{\\font} primitive using Lua code. Without this only 8\,bit fonts can be
+loaded.}.
 
 The `\em` macro acts as `\it` if the current font is `\rm`, acts as `\rm` if
 the current font is `\it`, acts as `\bi` if the current font is `\bf` and
@@ -223,11 +230,6 @@ This is {\em important} text.     % = This is {\it important\/} text.
 \endtt
 
 \new
-More about the \OpTeX/ font selection system is written the file
-`fonts-select.opm`. You can mix more font families in your document, you can
-declare your variant selectors o modifiers etc.
-
-\new
 The `\boldify` macro can be used for titles. It sets `\it` to `\bi` and
 `\rm` to `\bf`. It means that user can write `{\it something}` in the title
 and the result is the same as `{\bi something}`. Math formulae are in bold 
@@ -237,6 +239,11 @@ modifiers. Example:
 \begtt
 {\boldify\typosize[14/16] Title in {\it bold}\par}
 \endtt
+
+\new
+More about the \OpTeX/ font selection system is written the file
+`fonts-select.opm`. You can mix more font families in your document, you can
+declare your variant selectors o modifiers etc.
 
 
 \sec Font sizes
@@ -456,6 +463,34 @@ The item style can be chosen by `\style` parameter written after `\begitems`:
 \style x % small rectangle
 \style X % big rectangle
 \endtt
+
+For example:
+
+\begtt
+\begitems
+* First idea
+* Second idea in subitems:
+  \begitems \style i
+  * First sub-idea
+  * Second sub-idea
+  * Last sub-idea
+  \enditems
+* Finito
+\enditems
+\endtt
+
+produces:
+
+\begitems
+* First idea
+* Second idea in subitems:
+  \begitems \style i
+   * First sub-idea
+   * Second sub-idea
+   * Last sub-idea
+  \enditems
+* Finito
+\enditems
 
 Another style can be defined by the command `\sdef{_item:<style>}{<text>}`.
 Default item can be redefined by `\def\normalitem{<text>}`.
@@ -695,11 +730,12 @@ color. Example:
 
 By default these macros are not defined. It means that no frames are created.
 
-There are {\em low level} commands to create the links. You can specify the
+There are \"low level" commands to create the links. You can specify the
 destination of the internal link by `\dest[<type>:<label>]`. The
 active text linked to the `\dest` can be created by
-`\link[<type>:<label>]{<color>}{<text>}`. The `<type>` parameter is one of
+`\ilink[<type>:<label>]{<text>}`. The `<type>` parameter is one of
 the `toc`, `pg`, `cite`, `ref` or another special for your purpose. 
+These commands create internal links only when `\hyperlinks` is decared.
 
 The `\url` macro prints its parameter in `\tt` font and creates a potential
 breakpoints in it (after slash or dot, for example). If `\hyperlinks`
@@ -1035,7 +1071,7 @@ third: \pdfsave \pdfrotate{-15.3}\pdfsetmatrix{2 0 1.5 2}\rlap{text3}\pdfrestore
 The plain \TeX/'s macro `\footnote` can be used as usual. But a new macro 
 `\fnote{<text>}` is defined. The footnote mark is added automatically and it
 is numbered on each page from one\fnote
-{This behavior is changed if \code{\\runningfnotes} is used: 
+{This behavior is changed if `\runningfnotes` is used: 
 the footnotes are numbered from one in whole document in such case.
 Alternatives are possible, see OPmac tricks.}. 
 The <text> is scaled by
@@ -1200,7 +1236,7 @@ Another examples can be found on the
 You can use them in any size and in the `\boldmath` variant.
 
 Hundreds math symbols and operators like in AMS\TeX/ are accesible. 
-For example  `\alpha` $\alpha$, `\geq` $\geq$, `\sum` $\sum$, 
+For example  `\alpha` $\alpha$, `\geq`~$\geq$, `\sum` $\sum$, 
 `\sphericalangle` $\sphericalangle$, `\bumpeq`, $\bumpeq$. See AMS\TeX/
 manual for complete list of symbols.
 
@@ -1354,7 +1390,7 @@ For compatibility with e-plain macros, there is the command
 language name, i.e.\ `\uselanguage{Czech}` does the same work as `\cslang`.
 The `\uselanguage` parameter is case insensitive.
 
-For compatibility with \csplain/ these are macros `\ehyph`, `\chyph`,
+For compatibility with \csplain/ there are macros `\ehyph`, `\chyph`,
 `\shyph` which are equivalent to `\enlang`, `\cslang` and `\sklang`.
 
 You can switch between language patterns by `\<iso-code>lang` commands mentioned

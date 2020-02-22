@@ -2,7 +2,7 @@
 
 \_fontdecl [Technika] \Technika {Fonts from visual style of CTU in Prague}
         {\caps \light} {\rm \bf \it \bi \stencil} {}
-        "[Technika-Regular]"
+        {[Technika-Regular]}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
@@ -15,7 +15,7 @@ Special variant:^^J
 
 \_protected\def \Technika {%
    \_def \_currfamily {Technika}%
-   \_def \_fontnamegen {"[Technika\_stencilV-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[Technika\_stencilV-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV stencil={},caps={} \_fvars Regular Bold Italic BoldItalic }

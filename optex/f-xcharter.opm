@@ -2,7 +2,7 @@
 
 \_fontdecl [XCharter] \XCharter {An extension of Bitstream Charter}
         {\caps \slant} {\rm \bf \it \bi} {}
-        "[XCharter-Roman]"
+        {[XCharter-Roman]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \XCharter {%
    \_def \_currfamily {XCharter}%
-   \_def \_fontnamegen {"[XCharter-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[XCharter-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars Roman Bold Italic BoldItalic }

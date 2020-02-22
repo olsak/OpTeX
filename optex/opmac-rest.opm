@@ -10,14 +10,12 @@
 
 \ifx\OPmacversion\undefined \else \endinput \fi
 \def\OPmacversion{Jul. 2019}  
-\immediate\write16{This is OPmac (Olsak's Plain macros), version <\OPmacversion>}
+\immediate\write16{This is OPmac-rest, version <\OPmacversion>}
 
 %%%%%%%%%%%%%% Basic macros, sec. 3.1 in opmac-d.pdf
 
 \newcount\tmpnum % auxiliary count
 \newdimen\tmpdim % auxiliary dimen
-
-\long\def\addto#1#2{\expandafter\def\expandafter#1\expandafter{#1#2}}
 
 \def\protectlist{}
 \def\addprotect#1{\addto\protectlist{\doprotect#1}}
@@ -27,41 +25,14 @@
    \let\pdfoutput=\outputmode \def\pdfcolorstackinit{\pdffeedback colorstackinit}\fi
 
 \newif\ifpdftex  \pdftextrue
-\ifx\pdfoutput\undefined \pdftexfalse \else \ifnum\pdfoutput=0 \pdftexfalse \fi \fi
-\ifx\XeTeXversion\undefined \else \pdftextrue \fi
-
-\def\sdef#1{\expandafter\def\csname#1\endcsname}
-\def\sxdef#1{\expandafter\xdef\csname#1\endcsname}
-\def\slet#1#2{\expandafter\let\csname#1\expandafter\endcsname\csname#2\endcsname}
-
-\def\adef#1{\catcode`#1=13 \begingroup \lccode`\~=`#1\lowercase{\endgroup\def~}}
-
-\def\isdefined #1#2{\expandafter\ifx \csname#1\endcsname \relax
-     \csname iffalse\expandafter\endcsname
-   \else
-     \csname iftrue\expandafter\endcsname
-   \fi
-}
-\long\def\isinlist#1#2#3{\begingroup \long\def\tmp##1#2##2\end{\def\tmp{##2}%
-   \ifx\tmp\empty \endgroup \csname iffalse\expandafter\endcsname \else
-                  \endgroup \csname iftrue\expandafter\endcsname \fi}% end of \def\tmp
-   \expandafter\tmp#1\endlistsep#2\end
-}
-\long\def\isnextchar#1#2#3{\begingroup\toks0={\endgroup#2}\toks1={\endgroup#3}%
-   \let\tmp=#1\futurelet\next\isnextcharA
-}
-\def\isnextcharA{\the\toks\ifx\tmp\next0\else1\fi\space}
 
 \def\maybebreak{\afterassignment\maybebreakA\tmpdim=}
 \def\maybebreakA{\ifvmode \vskip0pt plus\tmpdim \penalty-130 \vskip0pt plus-\tmpdim 
     \else \hskip0pt plus\tmpdim \penalty-130 \hskip0pt plus-\tmpdim \fi \relax
 }
-%\long\def\uv#1{\clqq#1\crqq}
 \let\\=\undefined
-{\lccode`\?=`\%  \lowercase{\gdef\percent{?}}}
-{\lccode`\?=`\\  \lowercase{\gdef\bslash{?}}}
 \def\,{\relax\ifmmode \mskip\thinmuskip \else \thinspace \fi}
-\addprotect\percent \addprotect\bslash \addprotect\, \addprotect\exfont
+\addprotect\, \addprotect\exfont
 
 \bgroup \catcode`!=3 \catcode`?=3
 \gdef\replacestrings#1#2{\long\def\replacestringsA##1#1{\def\tmpb{##1}\replacestringsB}%
@@ -79,8 +50,9 @@
 \showboxdepth=7
 \showboxbreadth=30
 
-\newdimen\iindent  \iindent=\parindent
+\newdimen\_iindent  \_iindent=\parindent
    % indentation of items, TOC, captions, list of bib. references
+\_public \iindent ;
 
 \def\iiskip{\medskip}     % space above and below \begitems...\enditems
 \def\itemhook{}           % hook in \startitem
@@ -120,10 +92,8 @@
 
 %%%%%%%%%%%%%% Multilingual support, sec. 3.5 in opmac-d.pdf
 
-\def\mtext#1{\_ifcsname _mt:#1:\csname _lan:\_the\_language\_endcsname\_endcsname
-   \_csname _mt:#1:\_csname _lan:\_the\_language\_endcsname\_endcsname
-   \_else \_csname _mt:#1:en\_endcsname \_fi
-}
+\def\mtext#1{\_csname _mt:#1:\_trycs{_lan:\_the\_language}{en}\_endcsname}
+
 \sdef{_mt:chap:en}{Chapter} \sdef{_mt:chap:cs}{Kapitola} \sdef{_mt:chap:sk}{Kapitola}
 \sdef{_mt:t:en}{Table}      \sdef{_mt:t:cs}{Tabulka}     \sdef{_mt:t:sk}{Tabuľka}
 \sdef{_mt:f:en}{Figure}     \sdef{_mt:f:cs}{Obrázek}     \sdef{_mt:f:sk}{Obrázok}
@@ -131,59 +101,9 @@
 
 %%%%%%%%%%%%%% REF file, sec 3.6 in opmac-d.pdf
 
-\newwrite\reffile
-\newread\testin
-
-\def\wrefrelax#1#2{}
-\let\wref=\wrefrelax
-
-\def\inputref{
-  \openin\testin=\jobname.ref
-  \ifeof\testin \else
-    \closein\testin
-    \input \jobname.ref
-    \fnotenum=0 \mnotenum=0
-    \openrefA{\string\inputref}%
-  \fi
-}
-\def\openref{%
-  \ifx\wref\wrefrelax \openrefA{\string\openref}\fi
-  \gdef\openref{}%
-}
-\def\openrefA#1{%
-   \immediate\openout\reffile=\jobname.ref
-   \gdef\wref##1##2{\write\reffile{\string##1##2}}%
-   \immediate\write\reffile {\percent\percent\space OPmac - REF file (#1)}%
-   \immediate\wref\Xrefversion{{\REFversion}}%
-}
-\def\REFversion{2}
-\def\Xrefversion#1{\ifnum#1=\REFversion\relax \else \endinput \fi}
 
 %%%%%%%%%%%%%% \label, \ref, \pgref, sec. 3.7 in opmac-d.pdf
 
-\def\label[#1]{\isdefined{l0:#1}%
-  \iftrue \opwarning{duplicated label [#1], ignored}\else \xdef\lastlabel{#1}\fi
-  \ignorespaces}
-
-\def\wlabel#1{%
-  \ifx\lastlabel\undefined \else
-     \dest[ref:\lastlabel]%
-     {\protectlist\edef\tmp{\wref\Xlabel{{\lastlabel}{#1}}}\expandafter}\tmp
-     \sxdef{lab:\lastlabel}{#1}\sxdef{l0:\lastlabel}{}%
-     \global\let\lastlabel=\undefined
-  \fi
-}
-\def\ref[#1]{\isdefined{lab:#1}%
-  \iftrue \reflink[#1]{\csname lab:#1\endcsname}%
-  \else ??\opwarning{label [#1] unknown. Try to TeX me again}\openref
-  \fi
-}
-\def\pgref[#1]{\isdefined{pgref:#1}%
-  \iftrue \pglink{\csname pgref:#1\endcsname}%
-  \else ??\opwarning{pg-label [#1] unknown. Try to TeX me again}\openref
-  \fi
-}
-\def\Xlabel#1#2{\sdef{lab:#1}{#2}\sxdef{pgref:#1}{\the\lastpage}}
 
 %%%%%%%%%%%%%% Chapters, sections, subsections -- sec. 3.8 in opmac-d.pdf
 
@@ -216,39 +136,45 @@
 
 \eoldef\chap#1{\ifnonum\else \global\advance\chapnum by1 \fi
   \chaphook {\globaldefs=1 \secnum=0 \seccnum=0 \tnum=0 \fnum=0 \dnum=0}\relax
-  \edef\thechapnum{\the\chapnum}\let\thetocnum=\thechapnum 
+  \edef\thechapnum{\ifnonum\space\else\the\chapnum\fi}\let\thetocnum=\thechapnum 
   \edef\thesecnum{\othe\chapnum.\the\secnum}%
-  \def\dotocnumafter{\wtotoc0\bfshape{#1}}%
+  \def\dotocnumafter{\ea\wtotoc\ea{\thechapnum}1{chap}{#1}}%
   \printchap{#1}\resetnonumnotoc
 }
 \eoldef\sec#1{\ifnonum\else \global\advance\secnum by1 \fi
   \sechook {\globaldefs=1 \seccnum=0 \tnum=0 \fnum=0 \dnum=0}\relax
-  \edef\thesecnum{\othe\chapnum.\the\secnum}\let\thetocnum=\thesecnum 
-  \def\dotocnumafter{\wtotoc1\rm{#1}}% 
+  \edef\thesecnum{\ifnonum\space\else\othe\chapnum.\the\secnum\fi}\let\thetocnum=\thesecnum 
+  \def\dotocnumafter{\ea\wtotoc\ea{\thesecnum}2{sec}{#1}}% 
   \printsec{#1}\resetnonumnotoc
 }
 \eoldef\secc#1{\ifnonum\else \global\advance\seccnum by1 \fi
   \secchook {}\relax
-  \edef\theseccnum{\othe\chapnum.\the\secnum.\the\seccnum}\let\thetocnum=\theseccnum
-  \def\dotocnumafter{\wtotoc2\rm{#1}}%
+  \edef\theseccnum{\ifnonum\space\else\othe\chapnum.\the\secnum.\the\seccnum\fi}\let\thetocnum=\theseccnum
+  \def\dotocnumafter{\ea\wtotoc\ea{\theseccnum}3{secc}{#1}}%
   \printsecc{#1}\resetnonumnotoc
 }
-\def\wtotoc#1#2#3{% #1 = level, #2 = info, #3 = titletext
+
+\def\wtotoc#1#2#3#4{% #1 = number, #2 = level, #3 = info, #4 = text
   \ifnotoc\else
-      \def\act{\wref{\Xtoc{#1}{\noexpand#2}}}%
-      \expandafter\act\expandafter{\expandafter{\thetocnum}{#3}{\the\pageno}}%
+      \_wref\_Xtoc{{#2}{#3}{#1}{\detokenize{#4}}}%
+      \_incr\_tocrefnum
   \fi
 }
+\_def\_incr#1{\_global\_advance#1by1 }
+
+\_newcount\_tocrefnum
+
 \def\wcontents#1#2{% #1 = sequence to REF, #2 = titletext
   \ifnotoc\else
-      \expandafter\wref\expandafter#1\expandafter
+      \expandafter\_wref\expandafter#1\expandafter
         {\expandafter{\thetocnum}{#2}{\the\pageno}}%
   \fi
 }
 \def\dotocnum#1{%
   \leavevmode 
      {\ifnonum \global\advance\nonumnum by1 \edef\thetocnum{!\the\nonumnum}\fi
-      \wlabel\thetocnum \dest[toc:\tocilabel.\thetocnum]%
+      \wlabel\thetocnum 
+      \ifnotoc \else \_dest[toc:\_the\_tocrefnum]\fi
       \dotocnumafter}\ifnonum\else#1\fi
   \global\let\dotocnumafter=\relax
 }
@@ -272,6 +198,9 @@
 \let\firstnoindent=\afternoindent
 \def\nbpar{{\interlinepenalty=10000\endgraf}}
 \def\nl{\hfil\break}
+\addto\_begoutput{\_def\nl{\_unskip\_space}}
+\addto\_pretocline{\_def\nl{\_unskip\_space}}
+
 
 %%%%%%%%%%%%%% Captions, equations -- sec. 3.9 in opmac-d.pdf
 
@@ -286,8 +215,8 @@
    \else   \opwarning{Unknown caption /#1}%
    \fi
    \bgroup
-      \leftskip=\iindent plus1fil
-      \rightskip=\iindent plus-1fil
+      \leftskip=\_iindent plus1fil
+      \rightskip=\_iindent plus-1fil
       \parfillskip=0pt plus2fil
       \def\par{\nbpar\egroup}%
       \captionhook{#1}\noindent 
@@ -309,7 +238,7 @@
 
 \def\begitems{\par\iiskip\bgroup
   \itemnum=0 \adef*{\startitem}
-  \advance\leftskip by\iindent
+  \advance\leftskip by\_iindent
   \let\printitem=\normalitem
 }
 \def\enditems{\par\egroup\iiskip}
@@ -340,27 +269,10 @@
 
 %%%%%%%%%%%%%% TOC -- sec. 3.11 in opmac-d.pdf
 
-\def\_toclist{} \newif\ifischap \ischapfalse
-
-\def\Xtoc#1#2#3#4#5{\ifnum#1=0 \ischaptrue\fi \addto\_toclist{\_tocline{#1}{#2}{#3}{#4}{#5}}}
-\def\Xchap{\Xtoc0\bfshape} \def\Xsec{\Xtoc1\rm} \def\Xsecc{\Xtoc2\rm}
-
-\def\_tocline#1#2#3#4#5{{\leftskip=#1\iindent \rightskip=2\iindent
-   \ifischap\advance\leftskip by\iindent\fi
-   \ifnum#1>1 \advance\leftskip by\iindent\fi
-   \toclinehook \noindent\llap{#2\toclink{#3}\enspace}%
-         {#2#4}\nobreak\tocdotfill\pglink{#5}\nobreak\hskip-2\iindent\null\par}}
-\def\tocdotfill{\leaders\hbox to.8em{\hss.\hss}\hskip 1em plus1fill\relax}
-
-\def\maketoc{\par \ifx\_toclist\empty
-      \opwarning{\noexpand\maketoc -- data unavailable, TeX me again}\openref
-   \else \_toclist \fi}
-
-\def\toclinkA#1{\def\tmp##1!##2\end{\if^##1^\kern.8em \else##1\fi}\tmp#1!\end}
 
 %%%%%%%%%%%%%% Index -- sec. 3.12 on opmac-d.pdf
 
-\def\iindex#1{\openref\wref\Xindex{{#1}{\the\pageno}}}
+\def\iindex#1{\_openref\_wref\_Xindex{{#1}{\the\pageno}}}
 
 \def\ii #1 {\leavevmode\def\tmp{#1}\iiA #1,,}
 
@@ -375,15 +287,15 @@
 \def\iid #1 {\leavevmode\iindex{#1}#1\futurelet\tmp\iiD}
 \def\iiD{\ifx\tmp,\else\ifx\tmp.\else\space\fi\fi}
 
-\def\Xindex{\Xindexg,}
-\def\Xindexg#1#2#3{\bgroup \def~{ }% #1=prefix, #2=index-item, #3=pageno
+\def\_Xindex{\_Xindexg,}
+\def\_Xindexg#1#2#3{\bgroup \def~{ }% #1=prefix, #2=index-item, #3=pageno
    \isdefined{#1#2}\iftrue
       \ifx^#3^\else
-         \expandafter\firstdata \csname#1#2\endcsname \XindexA
+         \expandafter\firstdata \csname#1#2\endcsname \_XindexA
          \ifnum#3=\tmpa % \ii on the same page
          \else
             \tmpnum=#3 \advance\tmpnum by\pgfolioB-1
-            \expandafter\seconddata \csname#1#2\endcsname \XindexB
+            \expandafter\seconddata \csname#1#2\endcsname \_XindexB
             \ifx\tmp\empty
                \sxdef{#1#2}{{#3/+}{\pgfolioA{#3}}} % previous item: empty page 
             \else
@@ -417,8 +329,8 @@
 \def\seconddata#1#2{\expandafter\expandafter\expandafter #2\expandafter\seconddataA#1}
 \def\seconddataA#1#2{#2&}
 
-\def\XindexA#1/#2&{\def\tmpa{#1}\let\tmpb=#2}
-\def\XindexB#1&{\def\tmp{#1}}
+\def\_XindexA#1/#2&{\def\tmpa{#1}\let\tmpb=#2}
+\def\_XindexB#1&{\def\tmp{#1}}
 
 \def\pgfolioA#1{\ifnum#1<0 \romannumeral-\fi#1}
 \def\pgfolioB{\ifnum\tmpnum<0-\fi}
@@ -429,7 +341,7 @@
     \bgroup
        \setprimarysorting
        \def\act##1{\ifx##1\relax \else
-          \firstdata##1\XindexA \seconddata##1\XindexB
+          \firstdata##1\_XindexA \seconddata##1\_XindexB
           \if\tmpb+%
              \preparesorting##1% converted item by sorting data in \tmpb
              \xdef##1{{\tmpb}{\tmp}}
@@ -442,7 +354,7 @@
     \egroup
     \dosorting  % sorting is in progress
     \bgroup
-       \rightskip=0pt plus1fil \exhyphenpenalty=10000 \leftskip=\iindent
+       \rightskip=0pt plus1fil \exhyphenpenalty=10000 \leftskip=\_iindent
        \def\act##1{\ifx##1\relax \else \prepii##1%
                 \seconddata##1\printiipages \expandafter\act \fi}
        \expandafter \act \iilist \relax
@@ -466,7 +378,7 @@
 \def\iispeclist{}
 
 \def\printii #1&{\gdef\currii{#1}\noindent\everyii
-   \hskip-\iindent \ignorespaces\printiiA#1//}
+   \hskip-\_iindent \ignorespaces\printiiA#1//}
 \def\printiiA #1/{\if^#1^\let\previi=\currii \else
    \expandafter\scanprevii\previi/&\def\tmpb{#1}\edef\tmpb{\meaning\tmpb}%
    \ifx\tmpa\tmpb \iiemdash \else#1 \gdef\previi{}\fi
@@ -706,6 +618,8 @@
 
 \newif\iflocalcolor \localcolorfalse  
 \let\localcolor=\localcolortrue  
+\let\_localcolor=\localcolortrue  
+
 
 % for backward compatibility:
 \let\longlocalcolor=\localcolor  \let\locpgcolor=\relax
@@ -768,77 +682,6 @@
 \fi
 
 %%%%%%%%%%%%%% Hyperrefs -- sec. 3.16 in opmac-d.pdf
-
-\def\destheight{1.4em}
-\def\destactive[#1:#2]{\if$#2$\else\ifvmode
-      \tmpdim=\prevdepth \prevdepth=-1000pt
-      \destbox[#1:#2]\prevdepth=\tmpdim
-   \else \destbox[#1:#2]%
-   \fi\fi
-}
-\def\destbox[#1]{\vbox to0pt{\kern-\destheight \pdfdest name{#1} xyz\vss}}
-\def\dest[#1]{}
-
-\def\linkactive[#1:#2]#3#4{\leavevmode\pdfstartlink height.9em depth.3em
-      \pdfborder{#1} goto name{#1:#2}\relax {#3#4}\pdfendlink
-}
-\def\link[#1]#2#3{\leavevmode{#3}}
-
-\def\urllink[#1:#2]#3{{\let~=\relax \let\\=\relax \let\{=\relax \let\}=\relax
-   \leavevmode\pdfstartlink height.9em depth.3em
-   \pdfborder{#1}user{/Subtype/Link/A <</Type/Action/S/URI/URI(#2)>>}\relax
-   {\def~{\nobreak\space}\_urlcolor#3}\pdfendlink}%
-}
-\def\toclink#1{\toclinkA{#1}}
-\def\pglink#1{\leavevmode{\pgfolioA{#1}}}
-\def\citelink#1#2{\leavevmode{#2}}
-\def\reflink[#1]#2{\leavevmode{#2}}
-\def\ulink[#1]#2{\leavevmode{#2}}
-\def\_urlcolor{}
-
-\def\hyperlinks#1#2{%
-   \let\dest=\destactive \let\link=\linkactive
-   \def\toclink##1{\link[toc:\tocilabel.##1]{\localcolor#1}{\toclinkA{##1}}}%
-   \def\pglink##1{\link[pg:\pgilabel.##1]{\localcolor#1}{\pgfolioA{##1}}}%
-   \def\citelink##1##2{\link[cite:##1]{\localcolor#1}{##2}}%
-   \def\reflink[##1]##2{\link[ref:##1]{\localcolor#1}{##2}}%
-   \def\ulink[##1]##2{\urllink[url:##1]{##2}}%
-   \def\_urlcolor{\localcolor#2}%
-}
-\def\tocilabel{} \def\pgilabel{}
-
-\def\pdfborder#1{\if^#1^\else \isdefined{#1border}\iftrue
-   \if^\csname#1border\endcsname^\else attr{/C[\csname#1border\endcsname] /Border[0 0 .6]}\fi
-   \else attr{/Border[0 0 0]}\fi\fi
-}
-
-\ifpdftex \else
-  \def\link[#1]#2#3{#3}
-  \def\urllink[#1]#2{#2}
-  \def\hyperlinks#1#2{\opwarning{No pdfTeX detected, \noexpand\hyperlinks ignored}}
-\fi
-
-\def\url#1{{\def\tmpb{#1}%
-   \replacestrings{//}{{\urlskip\urlslashslash\urlbskip}}%
-   \replacestrings{/}{{\urlskip/\urlbskip}}%
-   \replacestrings{.}{{\urlskip.\urlbskip}}%
-   \replacestrings{?}{{\urlskip?\urlbskip}}%
-   \replacestrings{=}{{\urlskip=\urlbskip}}%
-   \replacestrings{~}{{\char`\~}}%
-   \replacestrings{_}{{\char`\_}}%
-   \replacestrings{^}{{\char`\^}}%
-   \replacestrings{\\}{\bslash}%
-   \replacestrings{\{}{{\char`\{}}%
-   \replacestrings{\}}{{\char`\}}}%
-   \replacestrings{&}{{\urlbskip\char`\& \urlskip}}%
-   \def\|{}\ulink[#1]{\urlfont\tmpb\null}%
-}}
-\def\urlfont{\tt \let\|=\urlspecchar}
-\def\urlspecchar{\penalty10 }
-\def\urlskip{\null\nobreak\hskip0pt plus0.05em\relax}
-\def\urlbskip{\penalty100 \hskip0pt plus0.05em\relax}
-\def\urlslashslash{/\urlskip/}
-\addprotect\url
 
 %%%%%%%%%%%%%% Outlines -- sec. 3.17 in opmac-d.pdf
 
@@ -996,43 +839,44 @@
 
 %%%%%%%%%%%%%% \fnote, \mnote -- sec 3.22 in opmac-d.pdf
 
-\newcount\fnotenum \fnotenum=0
-\newcount\fnotenumlocal
+\newcount\_fnotenum \_fnotenum=0
+\newcount\_fnotenumlocal
 \newif\iflocfnum \locfnumtrue
 
-\long\def\fnoteG#1#2{\global\advance \fnotenum by1
+\long\def\fnoteG#1{\global\advance \_fnotenum by1
    \ifx\relax#1\relax\else\leavevmode\fi
-   \iflocfnum \openref\wref\Xfnote{}%
-      \isdefined{fn:\the\fnotenum}\iftrue
+   \iflocfnum \_openref\_wref\_Xfnote{}%
+      \isdefined{fn:\the\_fnotenum}\iftrue
       \else\opwarning{unknown \noexpand\fnote mark. TeX me again}\fi\fi
-   #1{\everypar={}\fnotehook\scalemain\typoscale[800/800]\vfootnote\fnmarkx{#2}}%
+   #1\_opfootnote\fnset\fnmarkx
 }
+\def\fnset{\everypar={}\fnotehook\scalemain\typoscale[800/800]}
 \def\fnote{\fnoteG\fnmarkx}
 \def\fnotetext{\fnoteG{}}
 
-\def\fnotemark#1{{\advance\fnotenum by#1\relax \fnmarkx}}
-\def\fnmarkx{\isdefined{fn:\the\fnotenum}\iftrue\thefnote\else$^?$\fi}
+\def\fnotemark#1{{\advance\_fnotenum by#1\relax \fnmarkx}}
+\def\fnmarkx{\isdefined{fn:\the\_fnotenum}\iftrue\thefnote\else$^?$\fi}
 \def\thefnote{$^{\locfnum}$}
-\def\locfnum{\csname fn:\the\fnotenum\endcsname}
+\def\locfnum{\csname fn:\the\_fnotenum\endcsname}
 
-\def\Xfnote{\advance\fnotenumlocal by1 \advance\fnotenum by1
-   \sxdef{fn:\the\fnotenum}{\the\fnotenumlocal}}
+\def\_Xfnote{\advance\_fnotenumlocal by1 \advance\_fnotenum by1
+   \sxdef{fn:\the\_fnotenum}{\the\_fnotenumlocal}}
 
-\def\runningfnotes{\locfnumfalse\def\locfnum{\the\fnotenum}\def\fnmarkx{\thefnote}}
+\def\runningfnotes{\locfnumfalse\def\locfnum{\the\_fnotenum}\def\fnmarkx{\thefnote}}
 
-\newcount\mnotenum    \mnotenum=0       % global counter of mnotes
+\newcount\_mnotenum    \_mnotenum=0       % global counter of mnotes
 \newdimen\mnoteskip   \mnoteskip=0pt
 
 \long\def\mnote#1{\ifvmode \hbox{\vbox to\ht\strutbox{}\mnoteA{#1}}\nobreak\vskip-\baselineskip
    \else \strut\vadjust{\kern-\dp\strutbox \mnoteA{#1}\kern\dp\strutbox}%
    \fi
 }
-\long\def\mnoteA#1{\global\advance \mnotenum by1
+\long\def\mnoteA#1{\global\advance \_mnotenum by1
    \ifx\mnotesfixed\undefined
-      \isdefined{mn:\the\mnotenum}\iftrue
+      \isdefined{mn:\the\_mnotenum}\iftrue
       \else\opwarning{unknown \noexpand\mnote side. TeX me again}\fi
-      \edef\tmp{\csname mn:\the\mnotenum\endcsname}%
-      \openref\wref\Xmnote{}\ifvmode\nobreak\fi
+      \edef\tmp{\csname mn:\the\_mnotenum\endcsname}%
+      \_openref\_wref\_Xmnote{}\ifvmode\nobreak\fi
    \else \let\tmp=\mnotesfixed \fi
    \expandafter\ifx\tmp \left
       \hbox to0pt{\kern-\mnotesize \kern-\mnoteindent
@@ -1046,10 +890,13 @@
           \dp0=0pt \box0 \kern\mnoteskip \global\mnoteskip=0pt}\hss}%
    \fi
 }
-\def\Xmnote{\advance\mnotenum by1
-   \sxdef{mn:\the\mnotenum}{\ifodd\lastpage \right \else \left \fi}}
+\def\_Xmnote{\advance\_mnotenum by1
+   \sxdef{mn:\the\_mnotenum}{\ifodd\lastpage \right \else \left \fi}}
 
 \def\fixmnotes#1{\def\mnotesfixed{#1}}
+
+\_addto\_begoutput{\def\fnote##1{}\def\fnotemark##1{}}
+\_addto\_pretocline{\def\fnote##1{}\def\fnotemark##1{}}
 
 %%%%%%%%%%%%%% \cite, \bib, \usebibtex, \usebbl -- sec. 3.23 in opmac-d.pdf
 
@@ -1067,7 +914,7 @@
    \if *#1\addcitelist{*}\expandafter \skiptorelax \fi
    \isdefined{bib:#1#2}\iftrue \else
       \addcitelist{#1#2}%
-      \opwarning{The cite [#1#2] unknown. Try to TeX me again}\openref
+      \opwarning{The cite [#1#2] unknown. Try to TeX me again}\_openref
       \addto\savedcites{?,}\def\sortcitesA{}\lastcitenum=0
       \expandafter\gdef\csname bib:#1#2\endcsname {}%
       \expandafter \skiptorelax \fi
@@ -1128,8 +975,8 @@
 }
 \def\shortcitations{\lastcitenum=1 }
 
-\def\printcite#1{\citesep\citelink{#1}{\citelinkA{#1}}\def\citesep{,\hskip.2em\relax}}
-\def\printdashcite#1{\ifmmode-\else\hbox{--}\fi\citelink{#1}{\citelinkA{#1}}}
+\def\printcite#1{\citesep\_ilink[cite:#1]{\citelinkA{#1}}\def\citesep{,\hskip.2em\relax}}
+\def\printdashcite#1{\ifmmode-\else\hbox{--}\fi\_ilink[cite:#1]{\citelinkA{#1}}}
 \def\citesep{}
 
 \def\nonumcitations{\lastcitenum=0\def\sortcitesA{}\def\etalchar##1{$^{##1}$}%
@@ -1139,7 +986,7 @@
 \def\citelinkA{}
 
 \def\ecite[#1]{\bgroup\citeA#1,,,\expandafter\eciteB\savedcites;}
-\def\eciteB#1,#2;#3{\if?#1\relax #3\else \citelink{#1}{#3}\fi\egroup}
+\def\eciteB#1,#2;#3{\if?#1\relax #3\else \_ilink[cite:#1]{#3}\fi\egroup}
 
 \def\bib[#1]{\def\tmp{\isnextchar={\bibA[#1]}{\bibmark={}\bibB[#1]}}%
    \expandafter\tmp\romannumeral-`\.} % ignore optional space
@@ -1149,23 +996,23 @@
    \noindent \def\tmpb{#1}\wbib{#1}{\the\bibnum}{\the\bibmark}%
    \printbib \ignorespaces
 }
-\def\wbib#1#2#3{\dest[cite:\the\bibnum]%
-   \ifx\wref\wrefrelax\else \immediate\wref\Xbib{{#1}{#2}{#3}}\fi}
+\def\wbib#1#2#3{\_dest[cite:\the\bibnum]%
+   \ifx\_wref\wrefrelax\else \immediate\_wref\_Xbib{{#1}{#2}{#3}}\fi}
 
-\def\Xbib#1#2#3{\sdef{bib:#1}{\bibnn{#2}&}\if^#3^\else\sdef{bim:#2}{#3}\fi\def\lastbibnum{#2}}
+\def\_Xbib#1#2#3{\sdef{bib:#1}{\bibnn{#2}&}\if^#3^\else\sdef{bim:#2}{#3}\fi\def\lastbibnum{#2}}
 
-\def\printbib{\hangindent=\iindent
-   \ifx\citelinkA\empty \noindent\hskip\iindent \llap{[\the\bibnum] }%
+\def\printbib{\hangindent=\_iindent
+   \ifx\citelinkA\empty \noindent\hskip\_iindent \llap{[\the\bibnum] }%
    \else \noindent \fi
 }
 
 \def\addcitelist#1{\global\addto\citelist{\citeI[#1]}}
 \def\writeaux#1{\immediate\write\auxfile{\string\citation{#1}}}
-\def\writeXcite#1{\openref\immediate\wref\Xcite{{#1}}}
+\def\writeXcite#1{\_openref\immediate\_wref\_Xcite{{#1}}}
 \def\citelist{} \def\citelistB{}
 
 \def\usebibtex#1#2{%
-   \openref \openauxfile{#1}{#2}%
+   \_openref \openauxfile{#1}{#2}%
    \def\citeI[##1]{\writeaux{##1}}\citelist
    \global\let\addcitelist=\writeaux
    \bgroup \readbblfile{\jobname}\egroup
@@ -1173,7 +1020,7 @@
 \def\openauxfile#1#2{%
    \immediate\openout\auxfile=\jobname.aux
    \immediate\write\auxfile
-      {\percent\percent\space Opmac: AUX file reserved for bibtex only}%
+      {\_pcent\_pcent\space Opmac: AUX file reserved for bibtex only}%
    \immediate\write\auxfile{\string\bibdata{#1}}%
    \immediate\write\auxfile{\string\bibstyle{#2}}%
 }
@@ -1188,7 +1035,7 @@
     \def\httpAddr##1{\url{http:##1}}\def\\{\hfill\break}%
     \def\newblock{\hskip .11em plus.33em minus.07em}%
     \def\mbox{\leavevmode\hbox}\def\emph##1{{\it##1}}%
-    \parindent=\iindent \bibtexhook\relax
+    \parindent=\_iindent \bibtexhook\relax
     \input #1.bbl
     \par
   \fi
@@ -1204,7 +1051,7 @@
 \def\genbbl#1#2{\openauxfile{#1}{#2}%
    \immediate\write\auxfile{\string\citation{*}}%
    \bgroup
-     \iindent=4em
+     \_iindent=4em
      \def\bibitemC##1{\par\ifnum\bibnum>0 \bibskip \fi
         \advance\bibnum by1
         \noindent \hangindent=\parindent 
@@ -1245,7 +1092,7 @@
      \global\let\addcitelist=\writeXcite
   \egroup
 }
-\def\Xcite#1{\addto\citelistB{\citeI[#1]}}
+\def\_Xcite#1{\addto\citelistB{\citeI[#1]}}
 
 \newcatcodetable\savedcatcodes
 
@@ -1253,18 +1100,11 @@
 
 %%%%%%%%%%%%%% output -- sec. 3.24 in opmac-d.pdf
 
-\addto\_begoutput{%
-   \immediate\wref\Xpage{{\the\pageno}}%
-   \def\nl{ }\def\fnote##1{}\def\fnotemark##1{}%
-}
 
 \def\doprotect#1{\let#1=\relax}
-\def\_pagedest{\def\destheight{25pt}\dest[pg:\pgilabel.\the\pageno]}
+\def\_pagedest{\def\destheight{25pt}\_dest[pg:\_the\_gpageno]}
 
 %\footline={\hss\_tenrm\thefontsize[10]\folio\hss}
-
-\newcount\lastpage  \lastpage=0  % the last page of the document
-\def\Xpage#1{\lastpage=#1 \fnotenumlocal=0 }
 
 %%%%%%%%%%%%%% margins -- sec. 3.25 in opmac-d.pdf
 
@@ -1287,7 +1127,7 @@
    \eoldef\author##1{\removelastskip\bigskip
       {\leftskip=0pt plus1fill \rightskip=\leftskip \it \noindent ##1\par}\nobreak\bigskip
    }
-   \parindent=1.2em \iindent=\parindent \_ttindent=\parindent
+   \parindent=1.2em \_iindent=\parindent \_ttindent=\parindent
    \footline={\global\footline={\hss\_tenrm\thefontsize[10]\folio\hss}}
    \runningfnotes
 }

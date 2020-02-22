@@ -2,7 +2,7 @@
 
 \_fontdecl [Heros] \Heros {TeX Gyre Heros fonts based on Helvetica}
         {\caps \cond} {\rm \bf \it \bi} {FiraMath}
-        "[texgyreheros-regular]"
+        {[texgyreheros-regular]}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
@@ -12,7 +12,7 @@ Modifiers:^^J
 
 \_protected\_def \Heros {%
    \_def \_currfamily {Heros}%
-   \_def \_fontnamegen {"[texgyreheros\_condV-\_currV]:\_capsV\_fontfeatures"}%
+   \_def \_fontnamegen {[texgyreheros\_condV-\_currV]:\_capsV\_fontfeatures}%
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={},cond={} \_fvars regular bold italic bolditalic }
@@ -45,7 +45,7 @@ rules.
 \begtt
 \_fontdecl [<Name of family>] \<Main-command> {<comments>}
      {<modifiers>} {<variant selectors>} {<comments about math fonts>}
-     "<font-for-testing>"
+     {<font-for-testing>}
 \endtt
   as first command in this file. This writes information about font family at
   terminal and prevents loading such file twice. Moreover, it probes
@@ -84,26 +84,25 @@ name) and to optional fontfeatures appended. The font selection
 system uses this macro at primitive level in the following sense:
 
 \begtt
-   \font \_fontnamegen \space \_sizespec
+   \font {\_fontnamegen} \_sizespec
 \endtt
 
 For example, using macros from `f-heros.opm` the `\font` command expands its
 parameters to:
 
 \begtt
-   \font "[texgyreheros-regular]:+tlig;" at10pt
+   \font {[texgyreheros-regular]:+tlig;} at10pt
 \endtt
 
 if the `\rm` variant is processed and if no additional font modifiers are
 activated. Of course, you need to know something about fontname syntax for
-extended `\font` primitive used with OTF fonts. The `"` characters are at
-outside boundary of font name. The `[` `]` brackets tell us that the file
-name (no font name) is specified inside such brackets. This file (with
-additional `.otf` extension) must be accessible in your filesystem. Without
-spaces, there are font features appended to file name (or font name) divided 
-by semicolon. The `+tlig` font feature means that TeX like ligatures 
-(minus minus = endash, for example) are active. Normal ligatures are active 
-by default. You can list font features of given font by 
+extended `\font` primitive used with OTF fonts. The `[` `]` brackets tell us
+that the file name (no font name) is specified inside such brackets. This
+file (with additional `.otf` extension) must be accessible in your
+filesystem. Without spaces, there are font features appended to file name
+(or font name) divided by semicolon. The `+tlig` font feature means that TeX
+like ligatures (minus minus = endash, for example) are active. Normal
+ligatures are active by default. You can list font features of given font by
 `otfinfo -f fontfile.otf`.
 
 You can use any expandable macros or expandable primitives in `\fontnamegen`
@@ -136,7 +135,7 @@ Example: if both modifiers `\caps` and `\cond` were applied from this family
 Heros and `\bf` variant is needed at 11pt then
 
 \begtt
-  \font "[texgyreheroscn-bold]:+smcp;+tlig;" at11pt
+  \font {[texgyreheroscn-bold]:+smcp;+tlig;} at11pt
 \endtt
 
 is processed. We assume that a font file texgyreheroscn-bold.otf is present

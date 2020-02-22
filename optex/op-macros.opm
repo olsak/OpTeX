@@ -44,7 +44,6 @@
 
 \_newtoks\_opt
 
-
 % \eoldef \foo #1{thex to end of line is: #1}
 
 \_def\_eoldef #1{\_def #1{\_begingroup \_catcode`\^^M=12 \_eoldefA #1}%
@@ -84,11 +83,23 @@
 
 \_def\_enquotes{\_chardef\"="201C } % use \"text" for English quotes
 
+%> \removespaces text with spaces {} -> textwithspaces
+
+\_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
+
+%> \trycs{<csname>}{<text>}
+
+\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_endcsname \_else #2\_fi}
+
 \public
    \setctable \restorectable
    \normalcatodes \opt \optdef \eoldef \replstring
-   \keepinputnames \lastinputname \enquotes ;
+   \keepinputnames \lastinputname \enquotes \removespaces \trycs ;
 
 
 \_endcode % -------------------------------------
 
+
+\%> \trycs
+
+`\trycs{<csname>}{<text>} expands to \<csname> if it is defined else to <text>.

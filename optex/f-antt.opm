@@ -2,7 +2,7 @@
 
 \_fontdecl [Antykwa Torunska] \Antt {Traditional Polish font family}
         {\cond \medium \light \caps} {\rm \bf \it \bi} {Pagella}
-        "[AntykwaTorunska-Regular]"
+        {[AntykwaTorunska-Regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Antt {%
    \_def \_currfamily {Antt}%
-   \_def \_fontnamegen {"[AntykwaTorunska\_sfamxV\_sfamyV-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def \_fontnamegen {[AntykwaTorunska\_sfamxV\_sfamyV-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV sfamx={},sfamy={},caps={} \_fvars Regular Bold Italic BoldItalic }

@@ -2,7 +2,7 @@
 
 \_fontdecl [Pagella] \Pagella {TeX Gyre Pagella fonts based on Palatino}
         {\caps} {\rm \bf \it \bi} {Pagella}
-        "[texgyrepagella-regular]"
+        {[texgyrepagella-regular]}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
@@ -11,7 +11,7 @@ Modifier:^^J
 
 \_protected\def \Pagella {%
    \_def \_currfamily {Pagella}%
-   \_def\_fontnamegen {"[texgyrepagella-\_currV]:\_capsV\_fontfeatures"}% 
+   \_def\_fontnamegen {[texgyrepagella-\_currV]:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }

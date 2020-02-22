@@ -1,8 +1,8 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_fontdecl [Linux Libertine] \libertine {Free Linux Libertine fonts}
+\_fontdecl [Linux Libertine] \Libertine {Free Linux Libertine fonts}
         {\sans \mono \caps} {\rm \bf \it \bi \initials \displ \keybr} {}
-        "Linux Libertine O"
+        {Linux Libertine O}
 
 \_wlog{\_detokenize{%
 Modifiers^^J
@@ -15,9 +15,9 @@ Special variants:^^J
  \keybr ..... keyboard, emulates keyboard buttons^^J
 }}
 
-\_protected\_def \_libertine {%
-   \_def \_currfamily {libertine}%
-   \_def\_fontnamegen {"Linux \_mainfamV\_V\_subfamV O/\_currV:\_capsV\_fontfeatures"}% 
+\_protected\_def \Libertine {%
+   \_def \_currfamily {Libertine}%
+   \_def\_fontnamegen {Linux \_mainfamV\_V\_subfamV O/\_currV:\_capsV\_fontfeatures}% 
    \_resetmod
 }
 

@@ -133,6 +133,4 @@
 
 \_endcode
 
-Non-TeX82 primitives are initialized here in non-prefix and _prefixed form.
-Macros for emulation of pdfTeX primitives are set here too.
-
+Common pdf\TeX/ primitives equivalnets are declared here. Initial values is set.
