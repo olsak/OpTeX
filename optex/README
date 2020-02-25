@@ -8,6 +8,9 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.05> \boldmath reimplemented
+       \fontcolor, \letterspacing implemented
+       font catalogue improved
 <0.04> references.opl, hyperlinks.opl re-implemented.  
        \fontfam, f-* rewritten: no usage of boundary "..." in \_fontnamegen
        \fnote{...} corrected: (parameter is not really parameter)

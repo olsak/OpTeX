@@ -38,7 +38,7 @@
 
 \_famtext {Other fonts:}
 
-\_faminfo [Linux Libertine] {Free fonts typicaly instaled in systems} {f-libertine}
+\_faminfo [Linux Libertine] {Free fonts typicaly installed in systems} {f-libertine}
    { -: {\rm\bf\it\bi} \semi: {\rm\it} 
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
@@ -84,7 +84,7 @@ registering it. But problem is that such families are not listed when
 `\fontfam[?]` is used and it is not included in font catalogue when
 `\fontfam[catalog]` is printed. The list of families taken in the catalogue and
 listed on the terminal is declared in two files: `fams-ini.opm` and
-`fams-user.opm`. The second file is optional. User can create it and write to
+`fams-local.opm`. The second file is optional. User can create it and write to
 it the information about user-defined families using the same syntax as in
 existed file `fams-ini.opm`.
 

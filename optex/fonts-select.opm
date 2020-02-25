@@ -11,8 +11,9 @@
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
    \_gdef\_doresizefont ##1{\_logfont{##1}%
-      \_font##1={\_fontnamegen} \_sizespec \_relax}%
-   \_def \_fontnamegen{ec-lmr10}%
+      \_ifx\_fontnamegen\_undefined \_doresizetfmfont##1\_else
+         \_font##1={\_fontnamegen} \_sizespec \_relax \_setwsp##1\_relax 
+      \_fi}%
    \_global\_let\_initunifonts=\_relax % we need not to do this work twice
    \_global\_let\initunifonts=\_relax
 }
@@ -23,10 +24,10 @@
          \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
          \_def\_textfamily{#1}%
          \_edef\_currfamily {\_csstring #2}%
-         \_def\_mainfamcommand{#2}%
+         \_def\_mainfamcommand{#2}\_def\_mathfaminfo{#6}%
          \_wterm {FONT: [#1] -- \string#2 \_detokenize{(#3)^^J mods:{#4} vars:{#5} math:{#6}}}%
       \_fi 
-   \_else \_ea \_endinput \_fi
+   \_else \_ea #2\_ea\_endinput \_fi
 }
 \_def\_regoptsizes #1 #2?#3 #4*{\_sdef{_optsizes:#1}{#2?#3 #4* }}
 \_def\_optfontalias #1#2{\_slet{_optsizes:#1}{_optsizes:#2}}
@@ -52,7 +53,19 @@
    \_ea \_endgroup \_tmp #2%
 }
 
-\_def\_fontfeatures{+tlig;}
+\_def \_defaultfontfeatures {+tlig;}
+\_def \_setff #1{%
+   \_ifx^#1^\_let \_fontfeatures=\_defaultfontfeatures
+   \_else \_edef\_fontfeatures{\_fontfeatures #1;}\_fi
+   \_reloading
+}
+\_setff {} % default font features: +tlig;
+\_def\_removefeature #1{%
+    \_isinlist\_fontfeatures{#1}\_iftrue
+        \_def\_tmp ##1#1##2;##3\_relax{\_def\_fontfeatures{##1##3}}%
+        \_ea \_tmp \_fontfeatures \_relax 
+    \_fi
+}
 \_def\_fvars #1 #2 #3 #4 {%
    \_sdef{_fvar:rm}{#1}%
    \_sdef{_fvar:bf}{#2}%
@@ -110,7 +123,7 @@
    \_ifx \_famfile\_empty \_listfamnames \_fi
    \_isfile {f-\_famname.opm}\_iftrue
       \_opinput {f-\_famname.opm}
-   \_else \_isfile {fams-user.opm}\_iftrue \_opinput {fams-user.opm} \_fi
+   \_else \_isfile {fams-local.opm}\_iftrue \_opinput {fams-local.opm} \_fi
       \_ifcsname _famf:\_famname\_endcsname \_edef\_famfile{\_cs{_famf:\_famname}}%
       \_else \_edef\_famfile{f-\_famname}\_fi
       \_isfile {\_famfile.opm}\_iftrue \_opinput {\_famfile.opm}
@@ -126,7 +139,7 @@
            \_wterm{ \_space\_noexpand\fontfam [##1] -- ##2}%
        \_let\_famalias=\_famaliasA}%
        \_opinput {fams-ini.opm}
-       \_isfile {fams-user.opm}\_iftrue \_opinput {fams-user.opm} \_fi
+       \_isfile {fams-local.opm}\_iftrue \_opinput {fams-local.opm} \_fi
        \_message{^^J}%
    \_endgroup
 }
@@ -135,8 +148,8 @@
 
 \_def\_famtext #1{}
 \_def\_faminfo [#1]#2#3#4{%
-   \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
-   \_sdef{_famf:\_famname}{#3}%
+   \_lowercase{\_edef\_tmp{\_ea\_removespaces #1 {} }}%
+   \_sdef{_famf:\_tmp}{#3}%
    \_def\_famfile{#3}%
 }
 \_def\_famalias [#1]{%
@@ -144,14 +157,45 @@
    \_sdef{_famf:\_famname\_ea}\_ea{\_famfile}%
 }   
 \_input fams-ini.opm
-\_newtoks \_catalogsample 
+\_let\_famfile=\_undefined
+\_newtoks \_catalogsample
+\_newtoks \_catalogmathsample 
 \_newtoks \_catalogonly 
 \_newtoks \_catalogexclude
 \_catalogsample={ABCDabcd Qsty fi fl áéíóúüů řžč ÁÉÍÓÚ ŘŽČ 0123456789}
 
+\_def\_savedfontcolor{}
+\_def\_savedletterspace{}
+\_def\_savedwsp{}
+
+\_def \_setfontcolor #1{\_removefeature{color=}%
+    \_edef\_tmp{\_calculatefontcolor{#1}}%
+    \_ifx\_tmp\_empty \_else \_edef\_fontfeatures{\_fontfeatures color=\_tmp;}\_fi
+    \_reloading
+}
+\_def \_setletterspace #1{\_removefeature{letterspace=}%
+    \_if^#1^\_else \_edef\_fontfeatures{\_fontfeatures letterspace=#1;}\_fi
+    \_reloading
+}
+\_def \_setwordspace #1{%
+   \_if^#1^\_def\_setwsp##1{}\_removefeature{+Ws}% 
+   \_else \def\_setwsp{\_setwspA{#1}}\_setff{+Ws}\_fi
+   \_reloading
+}
+\_def\_setwsp #1{}
+\_def\_setwspA #1#2{\_fontdimen2#2=#1\_fontdimen2#2%
+   \_fontdimen3#2=#1\_fontdimen3#2\_fontdimen4#2=#1\_fontdimen4#2}
+
+\_def\_calculatefontcolor#1{\_trycs{_fc:#1}{#1}} % you can define more smart macro ...
+\_sdef{_fc:red}{FF0000FF}    \_sdef{_fc:green}{00FF00FF} \_sdef{_fc:blue}{0000FFFF}
+\_sdef{_fc:yellow}{FFFF00FF} \_sdef{_fc:cyan}{00FFFFFF}  \_sdef{_fc:magenta}{FF00FFFF}
+\_sdef{_fc:white}{FFFFFFFF}  \_sdef{_fc:grey}{00000080}  \_sdef{_fc:lgrey}{00000025}
+\_sdef{_fc:black}{} % ... you can declare more colors...
+
 \_public
-   \fontfam \initunifonts \isfont \famvardef \moddef 
-   \catalogonly \catalogexclude \catalogsample ;
+   \fontfam \initunifonts \isfont 
+   \setff \setfontcolor \setletterspace \setwordspace \famvardef \moddef 
+   \catalogonly \catalogexclude \catalogsample \catalogmathsample ;
 
 \_endcode %---------------------------------------------------
 
@@ -161,7 +205,7 @@
 
 Try to write `\fontfam[?]`. All font families registered in \OpTeX/
 font selection system are listed on the terminal and in the log file.
-You can choose one of them and use for example `\fontfam[Termes]` or
+You can choose one of them and use it, for example `\fontfam[Termes]` or
 `\fontfam[LM Fonts]`. Then you can use four basic variant selectors `\rm` or
 or `\bf` or `\it` or `\bi` and desired fonts are printed.
 
@@ -172,31 +216,25 @@ The fonts registered in \OpTeX/ have their macros in "font files", each family
 in one font file with the name `f-famname.opm`. All families are collected
 in `fams-ini.opm`. You can read the documentation in the file `fams-ini.opm`
 and in the files `f-heros.opm`, `f-lmfonts.opm` for more information how
-to install and to register your own font family. Note that all families
+to install and how to register your own font family. Note that all families
 registered in such files are Unicode fonts. Non-Unicode fonts are not
 preferred in \OpTeX/ but you can use them using classical `\font` primitive,
 of course.
-
-Each font family is connected with a preferred unicode-math font. This
-unicode-math is activated when font family is loaded. If you don't prefer
-this and you are satisfied with 8bit math CM+AMS fonts preloaded in the
-\OpTeX/ format then you can use command `\noloadmath` before you load a first
-font family. 
 
 There are two equal possibilities how to load a font family: `\fontfam[Family]`
 or `\input f-fontfamily.opm`.
 
 There are "main family command", "font modifiers" and "variant selectors" in
-each family. Each family provides four variant selectors mentioned above
-(may be, in few cases a missing variant is substituded by `\rm` or
-`\it`). A few families provides more than these four variant selectors.
+each family. Each family provides four default variant selectors mentioned above
+(may be, in few cases a missing variants are substituded)
+A few families provides more than these four variant selectors.
 
 Mostly all families provides "font modifiers" like `\caps`, `\light`,
-`\cond`. Which font modifiers are provided is listed in terminal or in the
+`\cond`. Supported font modifiers are listed in terminal or in the
 catalogue. A font modifier does nothing with current font, but the next
 variant selectors select a modified font. You can combine more than one
 font modifiers followed by a variant selector. The font is reloaded at the
-moment when variant selector is in its process. The following example
+moment when variant selector is processed. The following example
 supposes that we are working with a font family where `\caps` and `\cond`
 font modifiers are provided.
 
@@ -217,9 +255,9 @@ independent, so there are four variants: normal, condensed, caps and
 caps-condensed, all these variants are present in four standard 
 variants: regular, bold, italics, bold-italics.
 
-There is one special command `\currvar` which respects the current 
-variant and the font of such variant is reloaded with respect to previously
-given font modifiers. 
+There is one special command `\currvar` which acts as variant selector. 
+It keeps the current variant and the font of such variant is 
+reloaded with respect to previously given font modifiers. 
 
 You can use the `\setfontsize{<sizespec>}` command in the same sense as
 other font modifiers. It means that the command itself does nothing with the
@@ -234,7 +272,7 @@ in 14pt size too \bf bold too.
 Note that much more comfortable is to resize fonts using OPmac-like command
 `\typosize`, `\typoscale`. These commands prepare the right sizes for math
 fonts too and re-calculates many internal parameters like `\baselineskip`. See
-`opmac-fonts.opm` file for more information.
+the section \ref[typosize] for more information.
 
 
 \secc More than one font families loaded
@@ -249,7 +287,7 @@ family comand. For example, when Heros and Termes are loaded then:
 \Heros \rm here is Heros font \it italics is in Heros too.
 \endtt
 
-Summary: To select a font you can use (in this order):
+To select a font you can use (in this order):
 
 \begtt
 \<main-family-command> \<font-modifiers> \<variant-selector-or-currvar>
@@ -269,16 +307,18 @@ modifiers are working in context of current used family. For example
 font family using different internal definitions.
 
 Maybe, one needs a context switching between `\rm`<-->`\bf` and
-`\it`<-->`\bi`. This is done by `\em` macro, see opmac-fonts.ofm. 
+`\it`<-->`\bi`. This is done by `\em` and `\boldify` macros, see 
+section \ref[fonts].
 
 
 \secc Math Fonts
 %---------------
 
-First usage of `\fontfam` loads UnicodeMath fonts too if the specified font
-family is configured with an UnicodeMath font. If you neeed not this feature
-(because preloaded 8bit math fonts seem to be sufficient for you) then write
-`\noloadmath` before first `\fontfam`. 
+Most font families are connected with a preferred unicode-math font. This
+unicode-math is activated when the font family is loaded. If you don't prefer
+this and you are satisfied with 8bit math CM+AMS fonts preloaded in the
+\OpTeX/ format then you can use command `\noloadmath` before you load a first
+font family. 
 
 If you want to use your specially selected UnicodeMath font then use
 `\loadmath{[<font_file>]}` or `\loadmath{<font_name>}` before first
@@ -287,9 +327,6 @@ If you want to use your specially selected UnicodeMath font then use
 
 \secc Defining a font commands
 %-----------------------------
-
-You can define your own font selectors as a combination of font modifiers
-followed by a font selector or by `\currvar` command.
 
 You can declare a "font switch" like `\font` primitive does it, 
 but you need not to know nothing about names of font files:
@@ -336,37 +373,89 @@ applies variant selector (loads the font now), closes the group but keeps
 the selected font and use it. Moreover, such `\selector` is declared as
 family-dependent in the same sense as font modifiers.
 
-You can use `\isfont {<fontname>}\iftrue` or `\isfont {<fontname>}\iffalse`
-to test if the specified font is present in your system.
-
 
 \secc Example of modifying font features
 %---------------------------------------
 
-Each OTF fionts provides "font features". You can list these font features
+Each OTF font provides "font features". You can list these font features
 by `otfinfo -f font.otf`. For example LinLibertine fonts provide `frac` font
 feature. If it is active then fractions like 1/2 are printed in a special
-fonrm.
+form.
 
-If you need to activate or deactivate a font feature then you must to
-re-load the font with new collection of features. Actual collection of
-features are stored in `\_fontfeatures` macro. The features are separated by
-semicolon and prefixed by `+` (to activate it) or `-` (to deactivate it).
-If you want to print fractions in LinLibertine create a font modifier using
-`\moddef` of variant selector using `\famvardef`:
+The macro `\setff{<feature>}` acts like family independent font modifier and
+prepares a new <feature>. You must use a variant selector in order to
+reinitialize the font with the new font feature. For example
+`\setff{+frac}\rm` or `\setff{+frac}\currvar`. You can declare a new variant
+selector too:
 
 \begtt
    \fontfam[LinLibertine]
-   \moddef \fracmod {\addto\_fontfeatures{+frac;}}
-   {Compare 1/2 or 1/10 \fracmod\currvar to 1/2 or 1/10.}
-   or:
-   \famvardef \fraclig {\addto\_fontfeatures{+frac;}\currvar}
-   {Compare 1/2 or 1/10 \fraclig to 1/2 or 1/10.}
+   \famvardef \fraclig {\setff{+frac}\currvar}
+   Compare 1/2 or 1/10 \fraclig to 1/2 or 1/10.
 \endtt
+
+If the used font does not supports given font feature then font is realoaded
+without warning nor error. Silently: font feature is not activated.
 
 The `onum` font feature (old style digits) is connected to `\caps` macro for
 Caps+SmallCaps variant in \OpTeX/ font-definition-files. So you need not to
 create a new modifier, just use `{\caps\currvar 012345}`.
+
+
+\secc Special font modifiers
+%---------------------------
+
+Despite the font modifiers declared in the font-file (and dependent on 
+the font family), we have following font modifiers:
+
+\begtt
+\setfontsize{<sizespec>}   % sets the font size
+\setff{<font_feature>}     % adds the font feature
+\setfontcolor{<color>}     % sets font color
+\setletterspace{<number>}  % sets letter spacing
+\setwordspace{<scaling>}   % modifies word spacing
+\endtt
+
+The `\setfontsize` command is described in section \ref[fontsize].
+The `\setff` command was described in previous subsection.
+
+`\setfontcolor{<color>}` specifies the color and the opacity of the text.
+The <color> parameter should be in hexadecimal format of four bytes
+`<red><green><blue><opacity>`, for example `FF0080FF` means full red, zero
+green, half blue and full opacity. You can use names `red`, `green`, `blue`,
+`yellow`, `cyan`, `magenta`, `white`, `grey`, `lgrey` instead of the hexadecimal
+specification. The emtpy parameter <color> means default black color.
+
+That colors of fonts are implemented using \LuaTeX/ internal font feature. This
+is different approach than using colors in section \ref[colors].
+
+`\setletterspace{<number>}` specifies letter spacing of the font. The
+<number> is decimal number without unit. The unit is supposed as 1/100 of
+the font size. I.e. `2.5` means 0.25 pt when the font is at 10 pt size. The
+empty parameter <num> means no letter spacing which is default.
+
+`\setwordspace{<scaling>}` scale the default interword space (defined in the
+font) and its stretching and shrinking parameters by given <scaling>
+factor. For example `\setwordspace{2.5}` multiplies interword space by 2.5.
+
+If you need another font transformations, you can use `\setff` 
+with following font features provided by Lua\TeX/:
+
+\begtt
+   \setff{embolden=1.5}\rm % font is bolder because outline has nonzero width
+   \setff{slant=0.2}\rm    % font is slanted by a linear transformation
+   \setff{extend=1.2}\rm   % font is extended by a linear transformation.
+\endtt
+
+Use font transformations mentioned above and `\setletterspace`,
+`\setwordspace` with care. The best setting of these values is default
+setting in every font, of course. If you really needs to set a different
+letter spacing then it is strongly reccomended to add `\setff{-liga}` in
+order to disable ligatures. And setting a positive letter spacing probably
+needs to scale interword spacing too.
+
+All mentioned font modifiers (with the exception of `\setfontsize`) work only
+with Unicode fonts loaded by `\fontfam`.
 
 
 \secc Example of usage more vaiants
@@ -384,7 +473,7 @@ Then you can define:
 
 Now, you can select between eight variants. But the context between similar
 variants like `\bf`--`\bfcond` is lost. Maybe you will find more usefull to
-create only a two cond--nocond swithers which respect the current variant.
+create only a two cond--nocond simple macros which respect the current variant.
 And use only four standard variant selectors:
 
 \begtt
@@ -393,6 +482,9 @@ And use only four standard variant selectors:
   here is rm-normal \bf here is bold-normal \useCond here is bold-condensed
   \it here is italics-condensed \useNormal here is italics-normal.
 \endtt
+
+Another example of decalaration of `\mr` (medium-regular) and `\mi`
+(medium-italics) variant selectors is in the file f-lido.opm.
 
 
 \secc Example of usage more than one family
@@ -405,7 +497,7 @@ Supose we have load Termes and Heros families. Then you can define
    \def\useHeros  {\Heros\currvar}  % switch to Heros with respect curent variant
 \endtt
 
-Or you can declare fonts-like macros:
+Or you can declare font selectors:
 
 \begtt
    \fontdef \titlefont {\setfontsize{at14pt}\Heros\bf}
@@ -415,7 +507,7 @@ Or you can declare fonts-like macros:
 
 If you are mixing fonts from various font families then the ex height can
 be different and optical unfit. You can compensate exheight of such fonts 
-for example by:
+by `mag` keyword in the `\setfontsize` macro. For example by:
 
 \begtt
    \Termes
@@ -424,15 +516,15 @@ for example by:
 \endtt
 
 
-\secc Fontfam processing in detail
-%-----------------------/---------
+\secc \code{\\fontfam} processing in detail
+%------------------------------------------
 
 The `\fontfam` macro lists all declared families if parameter is empty or
 `?`. If not, then `\fontfam` transforms the given parameter to lowercase and
 without spaces. If exists the file `f-<parameter>.opm` then it is read. If
 does not exists such file then `\fontfam` internally lists the families
 declared by `\_faminfo` and `\_famalias`, firstly from `fams-ini.opm` file
-and secondly from `fams-user.opm` (if such file exists). The last
+and secondly from `fams-local.opm` (if such file exists). The last
 declaration from this internal list (which mathes the given <parameter>)
 wins. If the parameter does not match then font-macro-file is not found and 
 the warning is printed and no new family is loaded.
@@ -441,9 +533,33 @@ When the font-macro-file is found, then `\fontfam` tries an existence of fonts i
 system. If they does not exist, a warning on the terminal is printed and no
 family is loaded.
 
-Note, that `fams-user.opm` has higher precedence that internal
+Note, that `fams-local.opm` has higher precedence that internal
 `fams-ini.file`. You can declare families with the same name as internal
 names and your declaration wins.
+
+
+\secc Others
+
+You can use `\isfont {<fontname>}\iftrue` or `\isfont {<fontname>}\iffalse`
+to test if the specified font is present in your system.
+
+The macro `\initunifonts` should be used before usage of first `\font` primitive
+when you need to lodad Unicode fonts directly wihout support of the `\fontfam` or
+`\loadmath` \"high level" macros\fnote
+{The `\initunifonts` macro initializes an extension features of the
+\code{\\font} primitive using Lua code. Without this only 8\,bit fonts can be
+loaded.}.
+
+The `\boldify` macro can be used for titles. It sets `\it` to `\bi` and
+`\rm` to `\bf`. It means that user can write `{\it something}` in the title
+and the result is the same as `{\bi something}`. Math formulae are in bold 
+variant too. The `\boldify` macro has local validity like others font 
+modifiers. Example:
+
+\begtt
+{\boldify\typosize[14/16] Title in {\it bold}\par}
+\endtt
+
 
 
 \secc Implementation notes

@@ -5,8 +5,12 @@
         {[AntykwaTorunska-Regular]}
 
 \_wlog{\_detokenize{%
-Modifier:^^J
+Modifiers:^^J
  \caps ...... caps & small caps^^J
+ \cond ...... condensed^^J
+ \medium .... medium weight^^J
+ \light ..... light weight^^J
+ \cond ...... condensed^^J
 }}
 
 \_protected\def \Antt {%

@@ -19,10 +19,11 @@
 \insertoutline{CONTENTS} \outlines{0} 
 
 
+
 \tit \OpTeX/\nl Format Based on Plain \TeX/ and OPmac\fnotemark1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\hfill Version Alpha 0.04
+\hfill Version Alpha 0.05
 
 \centerline{\it Petr Olšák, 2020}
 
@@ -60,17 +61,28 @@ is supported. The main goal of \OpTeX/ is:
 \enditems
 
 \OpTeX/ should be a modern plain \TeX/ with power from OPmac (fonts selection
-system, colors, external graphics, references, hyperlinks...) with unicode
-fonts.
+system, colors, external graphics, references, hyperlinks, indexing,
+bibliography, ...) with preferred Unicode fonts.
 
-\OpTeX/ (like OPmac) offers a markup language for authors of texts (like \LaTeX),
+If you need to customize your document or you need to use something
+very specific, then you can copy relevant parts of \OpTeX/ macros into your macro
+file and do changes of these macros here. This is significant difference from
+\LaTeX/ or ConTeXt, which are an attempt to create a new user level with a
+plenty of non-primitive parameters and syntax hidding \TeX/ internals.
+The macros from \OpTeX/ are simple and straightforward because they solves only
+what is excplicitly needed, they does not create a new user level over \TeX/.
+And you can use them, understand them an modify them.
+
+\OpTeX/ offers a markup language for authors of texts (like \LaTeX),
 i.e. the fixed set of tags to define the structure of the document. This
 markup is different from the \LaTeX{} markup. It may offer to write the
 source text of the document somewhat clearer and more attractive. 
 
-\new
-{\bf Disclaimer:} This software is under construction.
-It is possible that some features documented here will be changed in future.
+\new 
+{\bf Disclaimer:} This software is under construction. It is possible
+that some features documented here will be changed in future. There exists a
+large part of original OPmac macros included in \OpTeX/ which waits to its
+re-implementation at current state of development.
 
 
 \sec Using \OpTeX/
@@ -84,7 +96,7 @@ It is possible that some features documented here will be changed in future.
 optex document
 \endtt
 %
-You can try to process `optex demo` or `optex optex-doc`.
+You can try to process `optex op-demo` or `optex optex-doc`.
 
 If there is no `optex` command, see more information about installation
 \OpTeX/ at \url{http://petr.olsak.net/optex}. 
@@ -100,15 +112,15 @@ The first line `\fontfam[LMfonts]` tells that Unicode Latin Modern
 fonts (derived from Computer Modern) are used. If you omit this line then
 preloaded Latin Modern fonts are used but preloaded fonts cannot be in
 Unicode\fnote
-{This is technical limitations of \LuaTeX/ for fonts in formats:
+{This is technical limitations of \LuaTeX/ for fonts downloaded in formats:
 only 8bit fonts can be preloaded.}.
 So the sentence `Hello World` will be OK without the first line, but you 
-cannot print such sentence in another languges (like `Ahoj světe!`) 
+cannot print such sentence in another languages (for example `Ahoj světe!`) 
 where Unicode fonts are needed
 because of the characters like `ě` are not mapped correctly in preloaded
-font.
+fonts.
 
-A somewhat larger example with common settings shoud be:
+A somewhat larger example with common settings should be:
 
 \begtt
 \fontfam[Termes]   % selecting Unicode font family Termes
@@ -120,7 +132,7 @@ Tady je text.
 \bye
 \endtt
 %
-You can look at `demo.tex` file for more examples.
+You can look at `op-demo.tex` file for more examples.
 
 
 \sec Compatibility with Plain \TeX/
@@ -134,8 +146,8 @@ prefixed by `_` (like `\_this`). All primitives and common macros have two
 control sequences in prefixed and unprefixed form with the same
 meaning. For example `\hbox` is equal to `\_hbox`. 
 Internal macros of \OpTeX/ have and use only prefixed form. User should use
-unprefixed forms, but prefixed forms are accessibe too, bacause the `_` is
-set as a letter globally (in macro files and in users document too). User
+unprefixed forms, but prefixed forms are accessible too, because the `_` is
+set as a letter category code globally (in macro files and in users document too). User
 should re-define unprefixed forms of control sequences with no worries that
 something internal will be broken (only the sequence `\par` cannot be
 re-defined without internal change of \TeX/ behavior because it is
@@ -155,14 +167,14 @@ internal point of view.
 
 \new
 The accents macros like `\'`, `\v` are undefined in \OpTeX/. Use real
-letters like ř, ž in your soucre document instead these old accents macros.
+letters like á, ř, ž in your source document instead these old accents macros.
 If you really want to use them, you can initialize them by `\oldaccents`
 command.
 
 \new
 The paper size is not set as letter with 1\,in margins but as a4 with 2\,cm
-marins. You can change it by `\margins/1 letter (1,1,1,1)in` (this example 
-sets the classical plainTeX parameters).
+margins. You can change it by `\margins/1 letter (1,1,1,1)in` (this example 
+sets the classical plain TeX parameters).
 
 \new
 The origin for typographical area is not at top left 1\,in 1\,in coordinates
@@ -173,8 +185,8 @@ margin.
 \sec Font families and fonts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-You can select the font family by `\fontfam[<Family_name>]`.
-The argument <Family_Name> is case insensitive and spaces are ignored. So,
+You can select the font family by `\fontfam[<Family-name>]`.
+The argument <Family-name> is case insensitive and spaces are ignored. So,
 `\fontfam[LM Fonts]` is equal to `\fontfam[LMfonts]` and it is equal
 to `\fontfam[lmfonts]`. Several aliases are prepared, thus 
 `\fontfam[Latin Modern]` can be used for loading Latin Modern family too.
@@ -182,45 +194,30 @@ to `\fontfam[lmfonts]`. Several aliases are prepared, thus
 If you write `\fontfam[?]` then all font families registered in \OpTeX/ 
 are listed on the terminal and in the log file.
 
-If you write `\fontfam[catalog]` then a catalogue of all fonts registered in
+If you write `\fontfam[catalog]` then a catalog of all fonts registered in
 \OpTeX/ and available in your \TeX/ system is printed. And the instructions
-how to register your own font family is appedned in such catalogue.
+how to register your own font family is appended in such catalog.
 
 If the family is loaded then {\em font modifiers} applicable in such font family
 are listed on the terminal: (`\caps`, `\cond` for example).
-And there are four basic {\em varinat selectors} (`\rm`, `\bf`, `\it`, `\bi`).
-The font modifiers of basic variants (`\caps`, `\cond` for example) can
+And there are four basic {\em variant selectors} (`\rm`, `\bf`, `\it`, `\bi`).
+The font modifiers (`\caps`, `\cond` for example) can
 be used immediately before a basic variant selector and they
 can be (independently) combined: `\caps\it` or `\cond\caps\bf`. The
 modifiers keeps their internal setting until group ends or until another
 modifier which negates the previous feature is used. So
-`\caps \rm... \it...`  uses normal and italics in Caps and SmallCaps.
+`\caps \rm text \it text`  uses normal and italics in Caps and SmallCaps.
 
 \new
 There is one special variant selector `\currvar` which does not change the
-selected variant but reloads the font in respect of tne (maybe newly
-specified) font slector(s).
+selected variant but reloads the font in respect of the (maybe newly
+specified) font modifiers(s).
 
-\new 
-Most declared font families are configured with recommended Unicode
-Math font. This font is automaticlally loaded unless you specify
-`\noloadmath` before first `\fontfam` command. See log file for more
-information about loading Text font family and UnicodeMath fonts. If you
-prefer another Unicode Math font, specify it by `\loadmath{[<font_file>]}`
-or `\loadmath{font_name}` before first `\loadfam` command.
-
-\new
-The macro `\initunifonts` should be used before usage of first `\font` primitive
-when you need to lodad Unicode fonts directly wihout support of the `\fontfam` or
-`\loadmath` \"high level" macros\fnote
-{The `\initunifonts` macro initializes an extension features of the
-\code{\\font} primitive using Lua code. Without this only 8\,bit fonts can be
-loaded.}.
-
-The `\em` macro acts as `\it` if the current font is `\rm`, acts as `\rm` if
-the current font is `\it`, acts as `\bi` if the current font is `\bf` and
-acts as `\bf` if the current font is `\bi`. The `\/` spaces are inserted
-automatically. Example:
+The context between variants `\rm`--`\it` and `\bf`--`\bi` is kept by the `\em`
+macro (emphasize text).  
+It switches from current `\rm` to `\it`, from current `\it` to `\rm`, from
+current `\bf` to `\bi` and from current `\bi` to `\bf`.
+The needed italics correction `\/` is inserted automatically. Example:
 
 \begtt
 This is {\em important} text.     % = This is {\it important\/} text.
@@ -230,35 +227,20 @@ This is {\em important} text.     % = This is {\it important\/} text.
 \endtt
 
 \new
-The `\boldify` macro can be used for titles. It sets `\it` to `\bi` and
-`\rm` to `\bf`. It means that user can write `{\it something}` in the title
-and the result is the same as `{\bi something}`. Math formulae are in bold 
-variant too. The `\boldify` macro has local validity like others font 
-modifiers. Example:
-
-\begtt
-{\boldify\typosize[14/16] Title in {\it bold}\par}
-\endtt
-
-\new
 More about the \OpTeX/ font selection system is written the file
 `fonts-select.opm`. You can mix more font families in your document, you can
-declare your variant selectors o modifiers etc.
+declare your variant selectors or modifiers etc.
 
 
 \sec Font sizes
 %%%%%%%%%%%%%%%
-
-The commands for font size setting described below, for variant selectors and
-modifiers desribed above have local validity. If you put them into a group, 
-the font features are selected locally.
 
 The command `\typosize[<fontsize>/<baselineskip>]` sets the font size of text and
 math fonts and baselineskip. If one of these two parameters is empty, the
 corresponding feature stays unchanged. Don't write the unit of these
 parameters. The unit is internally set to `\ptunit` which is 1pt by default.
 You can change the unit by the command `\ptunit=<something-else>`, 
-for instance `\ptunit=1mm` enlages all font sizes declared by `\typosize`.
+for instance `\ptunit=1mm` enlarges all font sizes declared by `\typosize`.
 Examples:
 
 \begtt
@@ -266,6 +248,14 @@ Examples:
 \typosize[11/12.5] % font 11pt, baseline 12.5pt
 \typosize[8/]      % font 8pt, baseline unchanged
 \endtt
+
+The commands for font size setting described in this section
+have local validity. If you put them into a group, 
+the settings are lost when the group is finished. If you set 
+something relevant with paragraph shape (baselineskip given by 
+`\typosize` for example) then you must first finalize the 
+paragraph and second to close the group: 
+`{\typosize[12/14] ...<text of paragraph>... \par}`. 
 
 The command
 `\typoscale[<font-factor>/<baselineskip-factor>]`
@@ -281,7 +271,7 @@ i.e. the value stays unchanged. Examples:
 \endtt
 
 First usage of `\typosize` or `\typoscale` macro in your document sets so
-called {\em main values}, i.\ e. main font size and main baselineskip. They are internally 
+called {\em main values}, i.~e. main font size and main baselineskip. They are internally 
 saved in registers `\mainfosize` and `\mainbaselineskip`. 
 
 \new
@@ -301,8 +291,9 @@ The size of the current font can be changed by the command
 baselineskip.
 
 \new
-There is `\setfontsize{<size_spec>}` command which behaves like other
-font modifiers. For example `\setfontsize{at15pt}\currvar`.
+There is `\setfontsize{<size-spec>}` command which behaves like
+font modifiers and sets given font size o fonts loaded by next variant selectors. 
+For example `\setfontsize{at15pt}\currvar`.
 
 More information about resizing of fonts is documented in `fonts-resize.opm`
 file. 
@@ -312,7 +303,7 @@ file.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 The document can be divided into chapters, sections and subsections and titled
-by `\tit` command. The parameters are separed by the end of current line (no
+by `\tit` command. The parameters are separated by the end of current line (no
 braces are used):
 
 \begtt
@@ -435,8 +426,8 @@ is an interesting Table~\ref[comp-dependence].
 \endtt
 
 If there are forward referenced objects then user have to run \TeX{} twice.
-During each pass, the working `*.ref` file (with refereces data) is created
-and this file is used (if it exists) at the begin of the document.
+During each pass, the working `*.ref` file (with references data) is created
+and this file is used (if it exists) at the beginning of the document.
 
 You can create a reference to whatever else by commands
 `\label[<label>]\wlabel{<text>}`. The connection between <label> and
@@ -500,6 +491,7 @@ The vertical space at begin and end of the environment is inserted by the
 macro `\iiskip`.
 
 
+\label[toc]
 \sec Table of contents
 %%%%%%%%%%%%%%%%%%%%%%
 
@@ -515,6 +507,24 @@ title of the section by the code:
 
 \begtt
 \nonum\notoc\sec Table of Contents
+\endtt
+
+\new
+If you are using a special macro in section titles or chapter titles 
+and you need different behavior of such macro in other cases then use 
+`\regmacro{<case-toc>}{<case-mark>}{<case-outline>}`.
+The parameters are applied locally in given cases. The `\regmacro` can be
+used repeatedly: the parameters are accumulated (for more macros). 
+If a parameter is empty then original definition is used in given case.
+For example:
+
+\begtt
+% default value of \mylogo macro used in text and in the titles:
+\def\mylogo{\leavevmode\hbox{\Red{\it My}\Black{\setfontsize{mag1.5}\rm Lo}Go}}
+% another variants:
+\regmacro {\def\mylogo{\hbox{\Red My\Black LoGo}}} % used in TOC
+          {\def\mylogo{\hbox{{\it My}\/LoGo}}}     % used in running heads
+          {\def\mylogo{MyLoGo}}                    % used in outlines
 \endtt
 
 
@@ -741,8 +751,8 @@ The `\url` macro prints its parameter in `\tt` font and creates a potential
 breakpoints in it (after slash or dot, for example). If `\hyperlinks`
 declaration is used then the parameter of `\url` is treated as an external URL link.
 An example: `\url{http://www.olsak.net}` creates \url{http://www.olsak.net}.
-The charecters \code{\%}, `\`, `#`, `{` and `}` have to be protected by
-backslash in the `\url` argument, the other special charecters `~`,
+The characters \code{\%}, `\`, `#`, `{` and `}` have to be protected by
+backslash in the `\url` argument, the other special characters `~`,
 `^`, `&` can be written as single character\fnote
 {More exactly, there is the same rules as for \code{\\code} command, see
 section~\ref[verbatim].}.
@@ -751,10 +761,7 @@ in the `\url` argument as a potential breakpoint.
 
 If the linked text have to be different than the URL, you can use
 `\ulink[<url>]{text}` macro. For example:
-
-\begtt
-\ulink[http://petr.olsak.net/optex]{\OpTeX/ page}
-\endtt
+`\ulink[http://petr.olsak.net/optex]{\OpTeX/ page}`
 creates
 \ulink[http://petr.olsak.net/optex]{\OpTeX/ page}.
 
@@ -765,6 +772,12 @@ such outlines from data used for table of contents in the document. The
 <level> parameter gives the level of opened sub-outlines
 in the default view. The deeper levels can be open by mouse click on the
 triangle symbol after that.
+
+\new
+If you are using a special macro in section titles then `\outlines` macro
+may crash. You must declare variant of the macro for outlines case which is
+expandable using `\regmacro`. See section \ref[toc] for more information
+about `\regmacro`.
 
 The command `\insertoutline{<text>}` inserts next entry into PDF outlines at
 the main level~0. This entry can be placed before table of contents (created
@@ -822,7 +835,7 @@ decared in a group). There are tips for such global `\tthook` definitions here:
 \begtt
 \tthook={\typosize[9/11]}      % setting font size for verbatim
 \tthook={\ttline=0}            % each listing will be numbered from one
-\tthook={\adef{ }{\char9251 }} % visualisation of spaces (unicode fonts)
+\tthook={\adef{ }{\char9251 }} % visualization of spaces (Unicode fonts)
 \endtt
 
 \new
@@ -841,7 +854,7 @@ parameter of macros and macro definitions, especially in titles declared by
 `\chap`, `\sec` etc. 
 \new
 You ca use more robust command `\code{<text>}` in such
-situations, but you must escape following charaters in the <text>:
+situations, but you must escape following characters in the <text>:
 `\`, `#`, `%`, braces (if the braces are unmatched in the <text>), 
 and space or `^` (if there are more than one subsequent spaces or `^` in 
 the <text>). Examples:
@@ -911,9 +924,9 @@ generates the following result:
 \bigskip
 
 Apart from `l`, `r`, `c` declarators, you can use the `p{<size>}` declarator
-which declares the column of given width. More preciselly, a long text in
+which declares the column of given width. More precisely, a long text in
 the table cell is printed as an paragraph with given width.
-To avoid the problems with narrow left-right aligned paragraphs you can write
+To avoid problems with narrow left-right aligned paragraphs you can write
 `p{<size>\raggedright}`, then the paragraph will be only left aligned.
 
 You can use `(<text>)` in the <declaration>. Then this text is applied in
@@ -962,7 +975,7 @@ If there is an item which spans to more than one column in the table then
 `\mspan<number>[<declaration>]{<text>}`
 which spans <number> columns and formats the <text> by the
 <declaration>. The <declaration> must include a declaration of right one column
-with the same syntax as comon `\table` <declaration>.
+with the same syntax as common `\table` <declaration>.
 If your table includes vertical rules and you want to
 create continuous vertical rules by `\mspan`, then use rules
 only after `c`, `l` or `r` letter in `\mspan` <declaration>. The
@@ -1030,7 +1043,7 @@ storing and restoring the current transformation matrix and current point.
 The possition of current point have to be the same from \TeX{}'s point of
 view as from transformation point of view when `\pdfrestore` is processed.
 Due to this fact the `\pdfsave\rlap{<transformed text>}\pdfrestore` 
-or something similar is recomeded.
+or something similar is recommeded.
 
 \OpTeX/ provides the macros 
 
@@ -1042,8 +1055,8 @@ or something similar is recomeded.
 These macros simply calls the
 properly `\pdfsetmatrix` primitive command.
 
-It is known that the comosition of transformations is not commutative. It
-means that the order is important. You have to read the tranformation
+It is known that the composition of transformations is not commutative. It
+means that the order is important. You have to read the transformation
 matrices from right to left. Example:
 
 \begtt
@@ -1232,8 +1245,16 @@ Another examples can be found on the
 \sec Typesetting math
 %%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ preloads a collection of 7bit Computer modern and AMS fonts.
-You can use them in any size and in the `\boldmath` variant.
+\OpTeX/ preloads a collection of 7bit Computer Modern and AMS fonts.
+You can use them in any size and in the `\boldmath` variant. 
+%
+\new 
+Most declared font families are configured with recommended Unicode
+math font. This font is automaticlally loaded unless you specify
+`\noloadmath` before first `\fontfam` command. See log file for more
+information about loading text font family and Unicode math fonts. If you
+prefer another Unicode math font, specify it by `\loadmath{[<font-file>]}`
+or `\loadmath{font-name}` before first `\loadfam` command.
 
 Hundreds math symbols and operators like in AMS\TeX/ are accesible. 
 For example  `\alpha` $\alpha$, `\geq`~$\geq$, `\sum` $\sum$, 
@@ -1256,13 +1277,6 @@ The following math alphabets are available:
 
 The last two selectors `\bf` and `\bi` select the sans serif fonts regardless
 current text font family. 
-
-You can use `\noloadmath` before first `\fontfam` command in your document.
-Then `\fontfam` loads only text fonts. On the other case, by default, first
-`\fontfam` command loads Unicode-math fonts related to given text font
-family and Computer Modern nor AMS fonts are not used in math formulae.
-(note, that in version Feb 2020, the Unicode math fonts are in TODO list,
-`\fontfam` commands loads only text fonts now).
 
 The math fonts can be scaled by `\typosize` and `\typoscale` macros.
 Two math fonts collections are prepared: `\normalmath` for normal weight
@@ -1326,7 +1340,7 @@ used. For example:
 \endtt
 %
 declares the paper 100$\times$200\,mm with all four margins 7\,mm. The spaces
-before and after <fmt> parameter are necessery.
+before and after <fmt> parameter are necessary.
 
 The command `\magscale[<factor>]` scales the whole typesetting area. 
 \new The fixed point of such scaling is the upper left corner of the paper sheet. 
@@ -1354,7 +1368,7 @@ file is open. This file isn't open for every documents; only for those
 where the forward references are printed or table of contents is created.
 If the `*.ref` file isn't open for your document and you need to use the
 `\lastpage` register then you have to write the command `\openref`. This command opens
-the `*.ref` file immediatelly.
+the `*.ref` file immediately.
 
 There is an example for footlines in the format \"current page / last page": 
 
@@ -1366,11 +1380,11 @@ There is an example for footlines in the format \"current page / last page":
 \sec Using more languages
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ prepares hyphenation patterns for all languafes if such patterns are
+\OpTeX/ prepares hyphenation patterns for all languages if such patterns are
 available in your \TeX/ system. 
 \new
 Only USenglish patterns (original from Plain \TeX/) are preloaded.
-Hyphenation patterns of all aother languages are loaded on demand when you first use
+Hyphenation patterns of all another languages are loaded on demand when you first use
 the `\<iso-code>lang` command in your document. 
 For example `\delang` for German, `\cslang` for
 Czech, `\pllang` for Polish. The <iso-code> is a shortcut 
@@ -1396,8 +1410,8 @@ For compatibility with \csplain/ there are macros `\ehyph`, `\chyph`,
 You can switch between language patterns by `\<iso-code>lang` commands mentioned
 above.
 
-\OpTeX/ needs to know three words for catpions and titles in technical
-articles: \"Chapter", \"Table" and \"Figure". THese words needs to be know
+\OpTeX/ needs to know three words for captpions and titles in technical
+articles: \"Chapter", \"Table" and \"Figure". These words needs to be know
 in used language. \OpTeX/ declares these words only for few languages:
 Czech, Slovak, English. If you need to use these words in another languages,
 you can declare them by `\sdef` command 
@@ -1517,7 +1531,7 @@ document. Or you can use `<prefixed text>\address...` to put
 `<prefixed text>` before first line of the address.
 
 Analogical declaration macros `\book` or `\slides` are not prepared. Each
-book needs an individual typographical care so you need to cerate specific
+book needs an individual typographical care so you need to create specific
 macros for design. And you can find an inspiration of slides in OPmac tricks
 \ulink[http://petr.olsak.net/opmac-tricks-e.html\#slidy]{0017 and 0022}.
 
@@ -1529,7 +1543,7 @@ macros for design. And you can find an inspiration of slides in OPmac tricks
 \tit Title (terminated by end of line)
 \chap Chapter Title (terminated by end of line)
 \sec Section Title (terminated by end of line)
-\secc Subsection Title (terminanted by end of line)
+\secc Subsection Title (terminated by end of line)
 
 \maketoc         % table of contents generation
 \ii item1,item2  % insertion the items to the index
@@ -1548,7 +1562,7 @@ macros for design. And you can find an inspiration of slides in OPmac tricks
 \begtt          % start verbatim text
 !          % end verbatim text
 \activettchar X % initialization character X for in-text verbatim
-\code           % another alternative for in-text vrbatim
+\code           % another alternative for in-text verbatim
 \verbinput      % verbatim extract from the external file
 \begmulti num   % start multicolumn text (num columns)
 \endmulti       % end multicolumn text

@@ -289,20 +289,12 @@ accepts only codes less than 255.
 
 See http://tex.stackexchange.com/questions/308749/ for more technical details.
 
-The poor bold is used for complete bold vaiant of the font. If the selected
-font has its bold vaiant (like xits-math), you can re-define \boldmath macro
-by:
-
-\def\boldmath{%
-   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
-   \loadmathfamily  4 rsfs                % script
-   \setmathdimens
-}
+-----
 
 XITSmath-bold needs correction: the norm symbol ||x|| is missing here. So, you
 can define: 
 
-\def\boldmath{%
+\def\_boldmath{%
    \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
    \loadmathfamily  4 rsfs                % script
    \loadumathfamily 5 {[xitsmath-regular]}{}

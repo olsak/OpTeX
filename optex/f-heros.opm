@@ -98,12 +98,17 @@ if the `\rm` variant is processed and if no additional font modifiers are
 activated. Of course, you need to know something about fontname syntax for
 extended `\font` primitive used with OTF fonts. The `[` `]` brackets tell us
 that the file name (no font name) is specified inside such brackets. This
-file (with additional `.otf` extension) must be accessible in your
-filesystem. Without spaces, there are font features appended to file name
-(or font name) divided by semicolon. The `+tlig` font feature means that TeX
-like ligatures (minus minus = endash, for example) are active. Normal
-ligatures are active by default. You can list font features of given font by
-`otfinfo -f fontfile.otf`.
+file (with additional `.otf` or `.ttf` extension) must be accessible by
+Lua\TeX/ in your filesystem. Without spaces, there are font features
+appended to file name (or font name) divided by semicolon. The `+tlig` font
+feature means that TeX like ligatures (minus minus = endash, for example)
+are active. Normal ligatures are active by default. You can list font
+features of given font by `otfinfo -f fontfile.otf`.
+
+The `\_fontnamegen` macro must include colon followed by family dependent
+font features (optional) and followed by `\_fontfeatures` (required). 
+If this is not true then font modifiers `\setff`, `\setfontcolor`, 
+`\setletterspace` and `\setwordspace` don't work.
 
 You can use any expandable macros or expandable primitives in `\fontnamegen`
 macro. The simple macros in it with names `\_<word>V` are preferred. They

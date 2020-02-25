@@ -135,8 +135,9 @@
 \_suppressfontnotfounderror=0
 
 \_public 
-   \normalmath \boldmath \setmathsizes
-   \bf \it \bi \tt \mit \cal \bbchar \frak \script \ptunit ;
+   \setmathsizes \bf \it \bi \tt \mit \cal \bbchar \frak \script \ptunit ;
+
+\_def \normalmath {\_normalmath}  \_def\boldmath {\_boldmath}
 
 \_endcode %---------------------------------------------------
 

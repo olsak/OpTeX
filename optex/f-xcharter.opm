@@ -5,8 +5,9 @@
         {[XCharter-Roman]}
 
 \_wlog{\_detokenize{%
-Modifier:^^J
+Modifiers:^^J
  \caps ...... caps & small caps^^J
+ \slant ..... slanted variants used in \it, \bi^^J
 }}
 
 \_protected\def \XCharter {%

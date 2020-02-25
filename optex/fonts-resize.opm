@@ -10,10 +10,11 @@
     \_else \_ea \_doresizefont \_fontselector \_fi
     \_slet{_tryload#1}{_relax}%
 }
-\_def\_doresizefont#1{\_logfont{#1}%
+\_def\_doresizetfmfont#1{\_logfont{#1}%
    \_ea\_font\_ea#1\_ea\_rfontskipat 
       \_fontname \_cs{_ten\_whatresize} \_relax\_space \_sizespec \_relax
 }
+\_let\_doresizefont=\_doresizetfmfont
 \_def\_logfont#1{} % default is no logging of used fonts 
 
 \_def\_rfontskipat#1{\_ifx#1"\_ea\_rfskipatX \_else\_ea\_rfskipatN\_ea#1\_fi}

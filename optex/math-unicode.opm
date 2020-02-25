@@ -14,20 +14,11 @@
       \_opwarning{Math font "#1" not found, skipped...}%
    \_else
       \_def\_unimathfont{#1}%
-      \_def\_normalmath{%
-         \_loadumathfamily 1 {\_unimathfont}{} % Base font
-         \_loadmathfamily  4 rsfs              % script
-         \_setmathdimens
-       }%
-       \_let\_boldmath=\_normalmath
-       \_addto\_boldmath{\_ifmmode \_tmpdim=\_sizemtext \_tmpdim=0.025\_tmpdim
-           \_pdfliteral direct {2 Tr \_ea\_ignorept\_the\_tmpdim\_space w}%
-           \_aftergroup\_noboldmath \_fi}%
-       \_def\_noboldmath{\_pdfliteral direct {0 Tr 0 w}}% faked bold only :-(
-       \_normalmath
-       \_wterm {MATH-FONT: "#1" -- unicode math prepared.}%
-       \_setctable\_optexcatcodes \_input unimath-codes.opm \_restorectable 
-       \_mathloadingfalse
+      \_let\_normalmath = \_normalunimath  \_let\_boldmath = \_boldunimath 
+      \_normalmath
+      \_wterm {MATH-FONT: "#1" -- unicode math prepared.}%
+      \_setctable\_optexcatcodes \_input unimath-codes.opm \_restorectable 
+      \_mathloadingfalse
    \_fi\_fi}
 
 \_def\_loadboldmath#1#2\to #3{%
@@ -36,13 +27,24 @@
       \_opwarning{Bold-Math font "#1" not found, skipped...}   
    \_else
       \_def\_unimathboldfont{#1}%
-      \_def\_boldmath{%
-          \_loadumathfamily 1 {\_unimathboldfont}{} % Base font
-          \_loadmathfamily  4 rsfs                  % script
-          \_setmathdimens
-      }%
       \_wterm {MATH-FONT: "#1" -- unicode math bold prepared.}%
    \_fi\_fi}
+
+\_def\_normalunimath{%
+    \_loadumathfamily 1 {\_unimathfont}{} % Base font
+    \_loadmathfamily  4 rsfs              % script
+    \_setmathdimens
+}%
+\_def\_boldunimath{%
+    \_ifx\_unimathboldfont \_undefined 
+       \_loadumathfamily 1 {\_unimathfont}{embolden=1.7;} % Base faked bold
+    \_else
+       \_loadumathfamily 1 {\_unimathboldfont}{} % Base real bold font
+    \_fi
+    \_loadmathfamily  4 rsfs              % script
+    \_setmathdimens
+}%
+
 
 \_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
 \_def\_mfontfeatures{mode=base;script=math;} 
@@ -121,27 +123,6 @@ font with 8bit Math font at family 4. See definition of \script macro where
 accepts only codes less than 255.
 
 See http://tex.stackexchange.com/questions/308749/ for more technical details.
-
-The poor bold is used for complete bold vaiant of the font. If the selected
-font has its bold vaiant (like xits-math), you can re-define \boldmath macro
-by:
-
-\def\boldmath{%
-   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
-   \loadmathfamily  4 rsfs                % script
-   \setmathdimens
-}
-
-XITSmath-bold needs correction: the norm symbol ||x|| is missing here. So, you
-can define: 
-
-\def\boldmath{%
-   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
-   \loadmathfamily  4 rsfs                % script
-   \loadumathfamily 5 {[xitsmath-regular]}{}
-   \def\|{\Udelimiter 0 5 "02016 }%       % norm delimiter from family 5
-   \setmathdimens
-}
 
 --------------------
 

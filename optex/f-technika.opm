@@ -6,11 +6,11 @@
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
- \light ..... ligher variants: \rm\bf=light \bf\bi=normal
- \book  ..... semi-ligher variants: \rm\bf=book \bf\bi=bold
+ \light ..... ligher variants: \rm\bf=light \bf\bi=normal^^J
+ \book ...... semi-ligher variants: \rm\bf=book \bf\bi=bold^^J
  \caps ...... caps & small caps^^J
 Special variant:^^J
- \stencil ... dashed leters (only uppercase)^J
+ \stencil ... dashed leters (only uppercase)^^J
 }}
 
 \_protected\def \Technika {%

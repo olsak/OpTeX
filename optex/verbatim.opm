@@ -23,7 +23,8 @@
    \_ea\_printinverbatim\_ea{\_detokenize{#1}}}}
 \_def\_printinverbatim#1{\_leavevmode\_hbox{#1}}
 
-\_toksapp \_pdfstringout{\_let\code=\_detokenize \_let\_code=\_detokenize}
+\_regmacro {}{}{\_let\code=\_detokenize \_let\_code=\_detokenize}
+
 \_public \code ;
 
 %> \_setverb
@@ -184,7 +185,7 @@ will be never broken. But you can re-define this macro.
 
 When `\code` occurs in PDF outlines then it does the same as `\detokenize`.
 The macro for preparing outlines sets `\escapechar` to $-1$ and uses
-\_pdftringout` token list before `\edef`.
+\_regoul` token list before `\edef`.
 
 The `\code` is not `\_proteced` because we want that it expands to
 `\_unexpanded{\code<space>{<text>}` in `\write` parameters. This protect the 

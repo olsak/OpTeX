@@ -3,7 +3,7 @@
 \_codedecl \nopagenumbers {Output routine <2019-05-21>}
 
 \_output={\_begoutput \_optexoutput \_endoutput}
-\_def \_begoutput{\_prepoffsets} % 
+\_def \_begoutput{\_prepoffsets \_the\_regmark} % 
 \_def \_endoutput{} 
 
 \_def\_optexoutput{%

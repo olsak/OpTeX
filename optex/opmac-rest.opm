@@ -198,8 +198,7 @@
 \let\firstnoindent=\afternoindent
 \def\nbpar{{\interlinepenalty=10000\endgraf}}
 \def\nl{\hfil\break}
-\addto\_begoutput{\_def\nl{\_unskip\_space}}
-\addto\_pretocline{\_def\nl{\_unskip\_space}}
+\_regmacro {\_def\nl{\_unskip\_space}}{\_def\nl{\_unskip\_space}}{\_def\nl{ }}
 
 
 %%%%%%%%%%%%%% Captions, equations -- sec. 3.9 in opmac-d.pdf
@@ -895,8 +894,8 @@
 
 \def\fixmnotes#1{\def\mnotesfixed{#1}}
 
-\_addto\_begoutput{\def\fnote##1{}\def\fnotemark##1{}}
-\_addto\_pretocline{\def\fnote##1{}\def\fnotemark##1{}}
+\_regmacro {\_def\fnote#1{}} {\_def\fnote#1{}} {\_def\fnote#1{}}
+\_regmacro {\_def\fnotemark#1{}} {\_def\fnotemark#1{}} {\_def\fnotemark#1{}}
 
 %%%%%%%%%%%%%% \cite, \bib, \usebibtex, \usebbl -- sec. 3.23 in opmac-d.pdf
 

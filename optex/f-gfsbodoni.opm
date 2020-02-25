@@ -6,7 +6,7 @@
 
 \_wlog{\_detokenize{%
 Modifier:^^J
- \caps ...... doesn't work even though otfinfo -f lists cmcp^^J
+ \caps ...... doesn't work even though otfinfo -f lists smcp^^J
 }}
 
 \_protected\def \GFSBodoni {%

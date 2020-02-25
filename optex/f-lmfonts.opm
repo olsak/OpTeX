@@ -19,7 +19,7 @@ Modifiers (selects subfamily):^^J
 Submodifiers (setlects special variants of given subfamily):^^J
  \caps ...... caps & small caps (available only at limited shapes)^^J
  \slant ..... slanted (default in some subfamilies)^^J
- \nbold ..... normal bold (\roman gives extended bold by default)^^J
+ \nbold ..... normal bold (extended bold is default)^^J
  \bolder .... extended bold^^J
 }}
 

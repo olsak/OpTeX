@@ -23,13 +23,12 @@
 \_def\_csplain{\_CS plain\_ignoreslash}
 \_def\_ignslash#1{\_ifx/#1\_else #1\_fi}
 
-\_toksapp \_pdfstringout {% conversion for PDF outlines
+\_regmacro {}{}{% conversion for PDF outlines
    \_def\TeX{TeX\_ignslash}\_def\OpTeX{OpTeX\_ignslash}%
    \_def\LuaTeX{LuaTeX\_ignslash}\_def\XeTeX{XeTeX\_ignslash}%
    \_def\LaTeX{LaTeX\_ignslash}\_def\OPmac{OPmac\_ignslash}%
    \_def\CS{CS}\_def\csplain{csplain\_ignslash}%
 }
-
 \_public
    \TeX \OpTeX \LuaTeX \XeTeX \LaTeX \OPmac \CS \csplain
    \ignoreslash \ignoreit \ignorept ;
