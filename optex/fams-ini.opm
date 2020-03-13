@@ -10,6 +10,7 @@
 \_faminfo [Latin Modern] {TeX Gyre fonts based on Coputer Modern} {f-lmfonts}
    { -,\nbold,\sans,\sans\nbold,\slant,\ttset,\ttset\slant,\ttset\caps,%
        \ttprop,\ttprop\bolder,\quotset: {\rm\bf\it\bi}
+       \caps: {\rm\it}
        \ttlight,\ttcond,\dunhill: {\rm\it} \upital: {\rm} }
 \_famalias [LMfonts] \_famalias [Latin Modern Fonts]
 

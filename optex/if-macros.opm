@@ -2,7 +2,15 @@
 
 \_codedecl \newif {Special if-macros, is-macros and loops <2020-01-23>}
 
-%> \newif
+   \_doc ----------------------------
+   The `\newif` macro works like in plain \TeX. It means that
+   after `\newif\ifxxx` you can use `\xxxtrue` or
+   `\xxxfalse` to set the boolean value and use `\ifxxx true\else false\fi`
+   to test this value. The defalut value is false.
+
+   The macro `\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
+   `\_xxxfalse`. This means that it is usable for _prefixed macros.
+   \_cod ----------------------------
 
 \_def\_newif #1{\_ea\_newifA \_string #1\_relax#1}
 \_ea\_def \_ea\_newifA \_string\if #1\_relax#2{%
@@ -17,7 +25,15 @@
    \_let#2=\_iffalse
 }
 
-%> \loop
+   \_doc ----------------------------
+   The `\loop <codeA> \ifsomething <codeB> \repeat` loops `<codeA> <codeB>`
+   until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
+   finished. This works like in plain \TeX, but implementation is soewhat
+   better (you can use `\else` clause after the `\ifsomething`).
+
+   There are public version `\loop...\repeat` and private version
+   `\_loop...\_repeat`. You canot mix both versions in one loop. 
+   \_cod ----------------------------
 
 \_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
 \_def \loop #1\repeat{\_def\_body{#1}\_iterate}
@@ -25,14 +41,31 @@
 \_let \repeat=\_fi
 \_def \_iterate {\_body \_ea \_iterate \_fi}
 
-%> \isnextchar <char>{exec if true}{exec if false}
+   \_doc ----------------------------
+   The macro `\isnextchar <char>{<codeA>}{<codeB>}` executes `<codeA>` if next
+   character is equal to <char>. Else the `<codeB>` is executed. The macro is
+   not expandable.
+   \_cod ----------------------------
 
 \_long\_def\_isnextchar#1#2#3{\_begingroup\_toks0={\_endgroup#2}\_toks1={\_endgroup#3}%
    \_let\_tmp=#1\_futurelet\_next\_isnextcharA
 }
 \_def\_isnextcharA{\_the\_toks\_ifx\_tmp\_next0\_else1\_fi\_space}
 
-%> \isempty{text}\iftrue,  \isempty{text}\iffalse:
+   \_doc ----------------------------
+   The macro `\isempty{<text>}\iftrue <codeA>\else <codeB>\fi` executes <codeA>
+   if <text> is empty and <codeB> if it is non-empty. You can use
+   `\isempty{<text>}\iffalse <codeB>\else <codeA>\fi` too. This macro is
+   expandable. 
+
+   There are a collection of macros with commnon syntax:
+   `\issomething<params>\iftrue` or `\issomething<params>\iffalse`.
+   The `\iftrue` or `\iffalse` is a part of this syntax because we need to keep
+   skippable nested `\if` conditions.
+
+   We read this `\iftrue` or `\iffalse` into unseparated parameter and repeat
+   it because we need to remove an optional space before this command.
+   \_cod ----------------------------
 
 \_def \_isempty #1#2{\_ea\_ifx\_ea\_relax\_detokenize{#1}\_relax 
     \_else \_ea\_unless \_fi #2}
@@ -40,28 +73,44 @@
     \_ea\_unless \_fi #2}
 \_def \_istoksempty #1{\_ea\_isempty\_ea{\_the#1}}
 
-%> \isequal{text}{text}\iftrue ...
+   \_doc ----------------------------
+   `\isequal{<textA>}{<textB>}\iftrue` is true if the <textA> and <textB> are
+   equal, only from strings point of view, category codes are ignored.
+   The macro is expandable.
+   \_cod ----------------------------
 
 \_def\_isequal#1#2#3{\_directlua{%
    if "\_luaescapestring{\_detokenize{#1}}"=="\_luaescapestring{\_detokenize{#2}}" 
    then else tex.print("\_nbb unless") end}#3}
 
-%> \ismacro\macro{text}\iftrue ...
+   \_doc ----------------------------
+   `\ismacro\macro{text}\iftrue` is true if macro is defined as {<text>}.
+   Category codes are ignored in this testing. The macro is expandable.
+   \_cod ----------------------------
 
 \_def\_ismacro#1{\_ea\_isequal\_ea{#1}}
 
-%> \isdefined{csname}\iftrue
+   \_doc ----------------------------
+   `\isinlist\list{<text>}\iftrue` is true if the
+   `<text>` is included the macro body of the `\list`. 
+   The catogory code are relevant here. THe macro is not expandable.
+   \_cod ----------------------------
 
 \_def\_isdefined #1#2{\_ifcsname #1\_endcsname \_else \_ea\_unless \_fi #2}
 
-%> \isinlist\list{text}\iftrue ...
+   \_doc ----------------------------
+   `\isdefined{<csname>}\iftrue` is true if `\<csname>` is defined.
+   \_cod ----------------------------
 
 \_long\_def\_isinlist#1#2{\_begingroup 
    \_long\_def\_tmp##1#2##2\_end/_{\_endgroup\_isnoempty{##2}}%
    \_ea\_tmp#1\_endlistsep#2\_end/_%
 }
 
-%> \isfile{name}\iftrue ...
+   \_doc ----------------------------
+   `\isfile{<filename>}\iftrue` is true if the file <filename> exists and are
+   readable by \TeX.
+   \_cod \_fin ----------------------
 
 \_newread \_testin
 
@@ -75,72 +124,5 @@
 \_public
    \newif \isnextchar \isempty \isequal \ismacro \isdefined \isinlist \isfile ;
 
-\_endcode %---------------------------------------------------------
-
-\%> \newif
-
-The `\newif` macro works like in plain \TeX. It means that
-after `\newif\ifxxx` you can use `\xxxtrue` or
-`\xxxfalse` to set the boolean value and use `\ifxxx true\else false\fi`
-to test this value. The defalut value is false.
-
-The macro `\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
-`\_xxxfalse`. This means that it is usable for _prefixed macros.
-
-\%> \loop
-
-The `\loop <codeA> \ifsomething <codeB> \repeat` loops `<codeA> <codeB>`
-until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
-finished. This works like in plain \TeX, but implementation is soewhat
-better (you can use `\else` clause after the `\ifsomething`).
-
-There are public version `\loop...\repeat` and private version
-`\_loop...\_repeat`. You canot mix both versions in one loop. 
-
-\%> \isnextchar
-
-The macro `\isnextchar <char>{<codeA>}{<codeB>}` executes `<codeA>` if next
-character is equal to <char>. Else the `<codeB>` is executed. The macro is
-not expandable.
-
-\%> \isempty
-
-The macro `\isempty{<text>}\iftrue <codeA>\else <codeB>\fi` executes <codeA>
-if <text> is empty and <codeB> if it is non-empty. You can use
-`\isempty{<text>}\iffalse <codeB>\else <codeA>\fi` too. This macro is
-expandable. 
-
-There are a collection of macros with commnon syntax:
-`\issomething<params>\iftrue` or `\issomething<params>\iffalse`.
-The `\iftrue` or `\iffalse` is a part of this syntax because we need to keep
-skippable nested `\if` conditions.
-
-We read this `\iftrue` or `\iffalse` into unseparated parameter and repeat
-it because we need to remove an optional space before this command.
-
-\%> \isequal
-
-`\isequal{<textA>}{<textB>}\iftrue` is true if the <textA> and <textB> are
-equal, only from strings point of view, category codes are ignored.
-The macro is expandable.
-
-\%> \ismacro
-
-`\ismacro\macro{text}\iftrue` is true if macro is defined as {<text>}.
-Category codes are ignored in this testing. The macro is expandable.
-
-\%> \isdefined
-
-`\isdefined{<csname>}\iftrue` is true if `\<csname>` is defined.
-
-\%> \isinlist
-
-`\isinlist\list{<text>}\iftrue` is true if the
-`<text>` is included the macro body of the `\list`. 
-The catogory code are relevant here. THe macro is not expandable.
-
-\%> \isfile
-
-`\isfile{<filename>}\iftrue` is true if the file <filename> exists and are
-readable by \TeX.
+\_endcode 
 

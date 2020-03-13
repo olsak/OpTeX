@@ -8,6 +8,7 @@
     \_edef\_whatresize{#1}%
     \_ifx \_fontselector \_undefined \_doresizefont#2%
     \_else \_ea \_doresizefont \_fontselector \_fi
+    \_lastmagsize=0pt
     \_slet{_tryload#1}{_relax}%
 }
 \_def\_doresizetfmfont#1{\_logfont{#1}%
@@ -35,14 +36,19 @@
    \_loadf{it}\_tenit \_loadf{bi}\_tenbi
 }
 \_def\_loadf#1#2{\sdef{_tryload#1}{\_ifmmode \_else \_resizefont{#1}#2\_fi}}
-\_def\_tryloadtt{\fontlet\_tentt=\_tentt \_sizespec\_relax}
+\_def\_tryloadtt{\_resizefont{tt}\_tentt}
 
 \_def\_setoptsize {\_isnextchar a{\_setoptsizeA}
                                  {\_isnextchar m{\_setoptsizeC}{\_setoptsizeB}}}
-\_def\_setoptsizeA at#1\_relax{\_optsize=#1\_relax}   % at<dimen>
-\_def\_setoptsizeB #1\_relax{\_optsize=\_defaultoptsize\_relax} % scaled<scalenum>
+\_def\_setoptsizeA at#1\_relax{\_optsize=#1\_relax\_lastmagsize=\_optsize}   % at<dimen>
+\_def\_setoptsizeB scaled#1\_relax{\_optsize=\_defaultoptsize\_relax} % scaled<scalenum>
 \_def\_setoptsizeC mag#1\_relax{%
-   \_optsize=\_pdffontsize\_font \_optsize=#1\_optsize \_edef\_sizespec{at\_the\_optsize}}
+   \_ifdim\_lastmagsize>0pt \_optsize=\_lastmagsize \_else \_optsize=\_pdffontsize\_font \_fi
+   \_optsize=#1\_optsize 
+   \_lastmagsize=\_optsize
+   \_edef\_sizespec{at\_the\_optsize}}
+
+\_newdimen\_lastmagsize
 
 \_setfontsize{at10pt} % default size
 \_let\_tryloadrm=\_relax
@@ -97,11 +103,14 @@
    \_csname \_tmp\_endcsname
 }
 
-\_def \_truetenrm {% used in default \footline
-   \_fontdef\_truetenrm{\_setfontsize{at10pt}\rm}%
-   \_global\_let\_truetenrm=\_truetenrm % next use will be font switch only
-   \_truetenrm 
+\_def \_rmfixed {% used in default \footline
+   {\_ifdim\_mainfosize=0pt \_mainfosize=10pt \_fi
+    \_fontdef\_rmfixed{\_setfontsize{at\mainfosize}\_resetmod\_rm}%
+    \_global\_let\_rmfixed=\_rmfixed} % next use will be font switch only
+   \_rmfixed 
 }
+\_let \rmfixed = \_tenrm % user can redefine it
+
 
 %% Optical sizes data for preloaded Latin Modern fonts:
 

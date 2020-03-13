@@ -5,7 +5,7 @@
 \parindent=10pt                % typesetting parameters
 \hyperlinks \Blue\Blue         % active hyperlinks
 \activettchar`                 % in-text verbatim by `...`
-\intthook={\localcolor\Red}    % in-text verbatim Red
+\everyintt={\Red}              % in-text verbatim Red
 \enquotes                      % use \"text" for English quotation  
 
 \tit Demonstration
@@ -56,18 +56,16 @@ an active link if the `\hyperlinks` sequence
 is used at the beginning of the document.
 Internal links are activated too.
 
-\label[tab-sec]
-\sec Tables
+\sec[tab-sec] Tables 
 
 The `\table` sequence can be used 
 instead of \"low level" `\halign`.
 The following table is framed by `\frame` sequence 
 in order to get a double frame.
 
-\label[my-tab]
 \bigskip
-\caption/t  Testing table.
-\smallskip\nobreak
+\caption/t [my-tab]  Testing table.
+\cskip
 \centerline{%
    \frame{\table{|r|c|l|}{\crl
            \bf Title A & \bf Title B & \bf Title C \crll
@@ -77,12 +75,12 @@ in order to get a double frame.
 \sec Images
 
 The images (PDF, JPG, PNG, TIFF) can be inserted 
-by `\inspic` sequence. The `\label` and `\caption/f` 
+by `\inspic` sequence. The `\caption` 
 can be added if you need to refer to a figure.
 
-\centerline {\picwidth=2.7cm \inspic op-ring.png }
 \label[my-pic]
-\nobreak
+\centerline {\picwidth=2.7cm \inspic{op-ring.png}}
+\cskip
 \caption/f The nonempty ideal of a simple ring --
            the ring itself.
 
@@ -97,7 +95,7 @@ This is verbatim.
 \endtt
 or it can be included by `\verbinput` from external file.
 
-\verbinput (98-100) op-demo.tex
+\verbinput (96-98) op-demo.tex
 
 \sec Math
 

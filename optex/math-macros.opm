@@ -176,19 +176,19 @@
 \_mathchardef\bigcap="1354
 \_mathchardef\bigcup="1353
 \_mathchardef\intop="1352  
-\_protected\_def \int{\_intop\_nolimits}  \private \intop;
+\_protected\_def \int{\_intop\_nolimits}  \_private \intop;
 \_mathchardef\prod="1351
 \_mathchardef\sum="1350
 \_mathchardef\bigotimes="134E
 \_mathchardef\bigoplus="134C
 \_mathchardef\bigodot="134A
 \_mathchardef\ointop="1348
-\_protected\_def\_oint {\_ointop\_nolimits}  \private \ointop;
+\_protected\_def\_oint {\_ointop\_nolimits}  \_private \ointop;
 \_mathchardef\bigsqcup="1346
 \_mathchardef\smallint="1273
 
-\_mathchardef\_triangleleft="212F   \public\triangleleft;
-\_mathchardef\_triangleright="212E  \public\trianglerigt;
+\_mathchardef\triangleleft="212F   \_private \triangleleft;
+\_mathchardef\triangleright="212E  \_private \trianglerigt;
 \_mathchardef\bigtriangleup="2234
 \_mathchardef\bigtriangledown="2235
 \_mathchardef\wedge="225E \let\land=\wedge
@@ -202,7 +202,7 @@
 \_mathchardef\uplus="225D
 \_mathchardef\amalg="2271
 \_mathchardef\diamond="2205
-\_mathchardef\bullet="220F
+\_mathchardef\bullet="220F   \_private \bullet;
 \_mathchardef\wr="226F
 \_mathchardef\div="2204
 \_mathchardef\odot="220C
@@ -308,7 +308,8 @@
 \_let\_sp=^ \public \sp ;
 % \sb=_ , defined at beginning of this file
 
-\_protected\_def\,{\_mskip\_thinmuskip}   \let\_thinsk  = \,
+\_def\_thinsk {\_mskip\_thinmuskip} 
+\_protected\_def\,{\_relax\_ifmmode \_thinsk \_else \_thinspace \_fi}
 \_protected\_def\>{\_mskip\_medmuskip}    \let\_medsk   = \>
 \_protected\_def\;{\_mskip\_thickmuskip}  \let\_thicksk = \;
 \_protected\_def\!{\_mskip-\_thinmuskip}  \let\_thinneg = \!
@@ -809,6 +810,11 @@
   \ntriangleright \nleftarrow \nrightarrow \nLeftarrow \nRightarrow
   \nLeftrightarrow \nleftrightarrow \nexists ;
 \_public \not ;
+
+\_def\_mathbox#1{{\_mathchoice{\_mathboxA\_displaystyle[]{#1}}{\_mathboxA\_textstyle[]{#1}} 
+    {\_mathboxA\_textstyle[700]{#1}}{\_mathboxA\_textstyle[500]{#1}}}} 
+\_def\_mathboxA#1[#2]#3{\_hbox{\_everymath={#1}\_if^#2^\_else\_typoscale[#2/]\_relax\_fi #3}} 
+\_public \mathbox ;
 
 \_endcode %---------------------------------------------------
 

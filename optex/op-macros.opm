@@ -47,12 +47,19 @@
 % \eoldef \foo #1{thex to end of line is: #1}
 
 \_def\_eoldef #1{\_def #1{\_begingroup \_catcode`\^^M=12 \_eoldefA #1}%
-   \_ea\_def\_csname _\_string #1:M\_endcsname}
+   \_ea\_def\_csname _\_csstring #1:M\_endcsname}
 \_catcode`\^^M=12 %
-\_def\_eoldefA #1#2^^M{\_endgroup\_csname _\_string #1:M\_endcsname{#2}}%
+\_def\_eoldefA #1#2^^M{\_endgroup\_csname _\_csstring #1:M\_endcsname{#2}}%
 \_normalcatcodes %
+\_eoldef\_skiptoeol#1{}
 
-\_public \opt \optdef \eoldef ;
+\_def\_bracedparam#1{\_ifcsname _\_csstring #1:M\_endcsname
+    \_csname _\_csstring #1:M\_ea \_endcsname
+    \_else \_csname __in\_csstring #1:M\_ea \_endcsname \_fi
+} 
+
+
+\_public \opt \optdef \eoldef \skiptoeol ;
 
 \_catcode`!=3 \_catcode`?=3
 \_def\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
@@ -83,23 +90,51 @@
 
 \_def\_enquotes{\_chardef\"="201C } % use \"text" for English quotes
 
-%> \removespaces text with spaces {} -> textwithspaces
+% \removespaces text with spaces {} -> textwithspaces
 
 \_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
 
-%> \trycs{<csname>}{<text>}
+   \_doc ----------------------------
+   `\trycs{<csname>}{<text>} expands to \<csname> if it is defined else to <text>.
+   \_cod ----------------------------
 
 \_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_endcsname \_else #2\_fi}
 
+   \_doc ------------------
+   The pair {`\_doc ... \cod`} is used for documenting macros and to
+   printing the third part of main \OpTeX/ documentation: The
+   implementation. The syntax is:
+   {\begtt
+   \_doc <ignored text>
+   <documentation>
+   \_cod <ignored text>
+   \endtt}
+   The last {\_cod} in the file must be followed by `\_fin`. This is a
+   signal, that the following code does not ends by next `\_doc` but by
+   {`\_endcode`} command. The {`\_doc...\cod`} is redefined in macros used
+   for documentation printing.
+
+   The <documentation> (and <ignored text> too) must be <balanced text>. 
+   It means that you canot document only `{` but you must document `}` too.
+   \_cod ------------------
+
+\_long\_def\_doc #1\_cod {\_skiptoeol}
+
+\_ea \_def \_ea\_ignorept \_ea#\_ea1\detokenize{pt}{#1}
+\_def\_ignoreit#1{}
+
 \public
    \setctable \restorectable
-   \normalcatodes \opt \optdef \eoldef \replstring
-   \keepinputnames \lastinputname \enquotes \removespaces \trycs ;
-
+   \normalcatodes \opt \optdef \eoldef \bracedparam \replstring
+   \keepinputnames \lastinputname \enquotes \removespaces \trycs 
+   \ignorept \ignoreit ;
 
 \_endcode % -------------------------------------
 
 
-\%> \trycs
 
-`\trycs{<csname>}{<text>} expands to \<csname> if it is defined else to <text>.
+The `\ignoreit` macro ignores next token. The \ignorept macro used ike this:
+\begtt
+\ea\ignorept \the\dimen...
+\endtt
+consumes the "pt" phrase appended to dimen value by `\the`.

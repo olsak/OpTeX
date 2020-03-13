@@ -2,26 +2,42 @@
 
 \_codedecl \TeX {Logos TeX, LuaTeX, etc. <2019-05-21>}
 
+   \_doc ----------------------------
+   Despite plain \TeX/ each macro for logos ends by `\ignoreslash`. 
+   This macro ignores next slash if it is present. 
+   You can `use \TeX/ like this` for protecting the space following the logo. 
+   This is visually more comfortable.
+   \_cod ----------------------------
+
 \_protected\_def \_TeX {T\_kern-.1667em\_lower.5ex\_hbox{E}\_kern-.125emX\_ignoreslash}
 \_protected\_def \_OpTeX {Op\kern-.1em\_TeX}
 \_protected\_def \_LuaTeX {Lua\_TeX}
 \_protected\_def \_XeTeX {X\_kern-.125em\_phantom E%
    \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
-\_def\_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
+
+   \_doc------------------------------
+   The `\_slantcorr` macro expands to slant-correction of current font. It is
+   used to shifting A if `\LaTeX` is in itallic. 
+   \_cod -----------------------------
+
+\_protected\_def \_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
   \_raise \_tmpdim \_hbox{\_thefontscale[710]A}%
   \_kern-.15em \_kern-\_slantcorr \_TeX}
-\_def\_slantcorr{\_ea\_ignorept \_the\_fontdimen1\_the\_font\_tmpdim}
+\_def\_slantcorr{\_ea\_ignorept \_the\_fontdimen1\_font\_tmpdim}
 
 \_def\_ignoreslash {\_futurelet\_next \_ignoreslashA}
 \_def\_ignoreslashA {\_ifx\_next/\_ea\_ignoreit\_fi}
-\_def\_ignoreit#1{}
-{\_lccode`\?=`\p \_lccode`\!=`\t  \_lowercase{\_gdef\_ignorept#1?!{#1}}}
 
 \_def\_OPmac{\_leavevmode
    \_lower.2ex\_hbox{\_thefontscale[1400]O}\_kern-.86em P{\_em mac}\_ignoreslash}
 \_def\_CS{$\_cal C$\_kern-.1667em\_lower.5ex\_hbox{$\_cal S$}\_ignoreslash}
 \_def\_csplain{\_CS plain\_ignoreslash}
 \_def\_ignslash#1{\_ifx/#1\_else #1\_fi}
+
+   \_doc ----------------------------
+   The expandable versions of logos used in Outlines needs the expandablle
+   `\_ingnslash` (instead of `\_ignoreslash`).
+   \_cod \_fin ----------------------
 
 \_regmacro {}{}{% conversion for PDF outlines
    \_def\TeX{TeX\_ignslash}\_def\OpTeX{OpTeX\_ignslash}%
@@ -34,14 +50,4 @@
    \ignoreslash \ignoreit \ignorept ;
 
 \_endcode
-
-We define common logos used in \TeX. Despite plain \TeX/ each such macro 
-ends by `\ignoreslash`. This macro ignores next slash if it is present. 
-You can `use \TeX/ like this` for protecting the space following the logo. 
-
-The `\ignoreit` macro ignores next token. The \ignorept macro used ike this:
-\begtt
-\ea\ignorept \the\dimen...
-\endtt
-consumes the "pt" phrase appended to dimen value by `\the`.
 

@@ -1,0 +1,79 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \begitems {Lists: begitems, enditems <2020-03-14>}
+
+   \_doc -----------------------------
+   `\aboveliskip` is used above the list of items, 
+   `\belowliskip` is used below the list of items and 
+   `\interliskip` is used between items.
+   \_cod -----------------------------
+
+\_def\_aboveliskip {\_removelastskip \_penalty-100 \_medskip}
+\_def\_belowliskip {\_penalty-200 \_medskip}
+\_def\_interliskip {}
+
+   \_doc -----------------------------
+   The `\itemnum` is localy reset to zero in each group declared by
+   `\begitems`. So nested lists are numbered independently. User can set
+   initial value of `\itemnum` to another value after `\beitems` if he/she want.
+
+   Each level of nested lists is indented by new `\iindent` from left.
+   Default item mark is `\_printitem`.
+
+   The `\begitems` runs `\_aboveliskip` only if we are not near below a title, 
+   where a vertical skip is placed already and where the `\penalty` 11333 is.
+   \_cod -----------------------------
+
+\_newcount\_itemnum  \_itemnum=0
+\_newtoks\_printitem
+
+\_def\_begitems{\_par \_ifnum\_lastpenalty<10000 \_aboveliskip \_fi
+  \_bgroup
+  \_itemnum=0 \_adef*{\_startitem}
+  \_advance\_leftskip by\_iindent
+  \_printitem=\_defaultitem
+}
+\_def\_enditems{\_par\_egroup\_belowliskip}
+
+\_def\_startitem{\_par \_ifnum\_itemnum>0 \_interliskip \_fi
+   \_advance\_itemnum by1
+   \_the\_everyitem \_noindent\_llap{\_the\_printitem}\_ignorespaces
+}
+
+   \_doc -----------------------------
+   Various item marks are saved in `\_item:<letter>` macros.
+   You ca re-define then or define more such macros.
+   The `\style <letter>` does `\_printitem={\_item:<letter>}`.
+   \_cod -----------------------------
+
+\_def\_style#1{%
+   \_ifcsname _item:#1\_endcsname \_printitem=\ea{\_csname _item:#1\_endcsname}%
+   \_else \_printitem=\_defaultitem \_fi
+}
+\_sdef{_item:o}{\_raise.4ex\_hbox{$\_scriptscriptstyle\_bullet$} }
+\_sdef{_item:-}{- }
+\_sdef{_item:n}{\_the\_itemnum. }
+\_sdef{_item:N}{\_the\_itemnum) }
+\_sdef{_item:i}{(\_romannumeral\_itemnum) }
+\_sdef{_item:I}{\_uppercase\_ea{\_romannumeral\_itemnum}\_kern.5em}
+\_sdef{_item:a}{\_athe\_itemnum) }
+\_sdef{_item:A}{\_uppercase\_ea{\_athe\_itemnum}) }
+\_sdef{_item:x}{\_raise.3ex\_fullrectangle{.6ex} }
+\_sdef{_item:X}{\_raise.2ex\_fullrectangle{1ex}\_kern.5em}
+
+   \_doc -----------------------------
+   `\_athe{<num>}` returns the <num>s lowercase letter from the alphabet.
+   `\_fullrectangle{<dimen>}` prints full rectangle with given <dimen>.  
+   \_cod ----------------------------- 
+
+\_def\_fullrectangle#1{\_hbox{\_vrule height#1 width#1}}
+
+\_def\_athe#1{\_ifcase#1?\_or a\_or b\_or c\_or d\_or e\_or f\_or g\_or h\_or 
+   i\_or j\_or k\_or l\_or m\_or n\_or o\_or p\_or q\_or r\_or s\_or t\_or 
+   u\_or v\_or w\_or x\_or y\_or z\_else ?\_fi
+}
+\_public \begitems \enditems \style \itemnum ;
+
+\_endcode % -------------------------------------
+
+

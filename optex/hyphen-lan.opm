@@ -2,27 +2,71 @@
 
 \_codedecl \langlist {Initialization of hypenation patterns <2019-05-21>}
 
+   \_doc -----------------------------
+   The <iso-code> means a shortcut of language name (mostly by ISO 639-1).
+   The following control sequences are used for language swithing:
+   \begitems
+   * `\_lan:<number>` expands to <iso-code> of the language.
+     The number is internal number of languages used as a value of
+     `\language` register.
+   * `\_ulan:<long-lang>` expands to <iso-code> too. This is transormation
+     from long name of language (lowercase letters) to <iso-code>.
+   * `\_<iso-code>Patt` is the language <number> declared by `\chardef`.
+   * `\_<iso-code>lang` is language selector. It exists in two states
+     \begitems
+     * Initialization state: when `\_<iso-code>lang` is used first then it
+       must load the patterns into memory using Lua code. If it is done then 
+       the `\_<iso-code>lang` re-defines itself to processing state.
+     * Processing state: it only sets `\language=\_<iso-code>Patt`, i.e it
+       selects the hyphenation patterns. It does a little more
+       language-dependent work, as mentioned below.
+     \enditems
+   * `\_langspecific:<isocode>` is processed by `\_<iso-code>lang` and it
+     should include language-specific macros declared by user or macro designer.
+   \enditems
+   The USenglish patters are preloaded first: 
+   \_cod -----------------------------
+
 \_chardef\_enPatt=0
 \_def\_pattlist{\_enPatt=0}
 \_def\_langlist{en(USenglish)}
 \_sdef{_lan:0}{en}
 \_sdef{_ulan:usenglish}{en}
 \_def\enlang{\_uselang{en}\_enPatt23} % \lefthyph=2 \righthyph=3
-\_sdef{langspecific:en}{\_nonfrenchspacing}
+\_sdef{_langspecific:en}{\_nonfrenchspacing}
 
 \_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks
 \_input hyphen  % en(USenglish) patterns from TeX82
 
+   \_doc -----------------------------
+   `\preplang <iso-code> <long-lang> <number-cs> <number> <pre-hyph><post-hyph>
+   prepares the `\_<iso-code>lang` to its initialization state. Rougly
+   speaking, it does:
+   \begtt
+   \chardef\_<iso-code>Patt = <number>
+   \def\_lan:<number> {<iso-code>}
+   \def\_ulan:<long-lang> {<iso-code>}
+   \def\_<iso-code>lang {%
+      \_loadpattrs <long-lang> <number> % loads patterns using Lua code
+      \gdef\_<iso-code>lang {\_uselang{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>}
+      \_<iso-code>lang                  % runs itself in processing state
+   }
+   \def\<iso-code>lang {\_<iso-code>lang} % public version \<iso-code>lang
+   \endtt
+   You can see that `\_<iso-code>lang` runs `\_uselang` in processing state.
+   \_cod -----------------------------
+
 \_def\_preplang #1 #2 #3#4 #5 {%
    \_chardef#3=#4
    \_sdef{_lan:#4}{#1}\_lowercase{\_sdef{_ulan:#2}}{#1}%  
-   \_def\_next{\_expandafter\_noexpand\_csname #1lang\_endcsname}
-   \_ea\_edef \_csname #1lang\_endcsname {%
-      \_lowercase{\_noexpand\_loadpattrs #2} #4 
-      \_gdef\_next{\_noexpand\_uselang{#1}#3#5}%
-      \_next
+   \_def\_next{\_ea\_noexpand\_csname _#1lang\_endcsname}
+   \_ea\_edef \_csname _#1lang\_endcsname {%
+      \_lowercase{\_noexpand\_loadpattrs #2} #4 % loads patterns
+      \_gdef\_next{\_noexpand\_uselang{#1}#3#5}%  re-defines itself
+      \_next                                   %  runs itself in processing state
    }
    \_addto\_langlist{ #1(#2)}%
+   \_sdef{#1lang}{\_csname _#1lang\_endcsname}% unprefixed \<isocode>lang
 }
 \_def\_loadpattrs#1 #2 {%
    \_directlua{
@@ -30,11 +74,33 @@
       luatexhyphen.loadlanguage("#1",#2)
    }%
 }
+
+   \_doc -----------------------------
+   `\_uselang{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>` 
+   sets `\language`, `\lefthyphenmin`, `\righthyphenmin` and runs
+   `\frenchspacing`. This default language-dependent settings
+   should be re-declared by `\_langspecific:<iso-code>` which is run
+   finally (it is `\relax` by default, only `\_langspecific:en` runs
+   `\nonfrenchspacing`).
+   \_cod -----------------------------
+
 \_def\_uselang#1#2#3#4{\_language=#2\_lefthyphenmin=#3\_righthyphenmin=#4\_relax
-   \_frenchspacing  % \nonfrenchspacing can be set in \cs{langspecific:lan}
-   \_cs{langspecific:#1}%
+   \_frenchspacing  % \nonfrenchspacing can be set in \cs{_langspecific:lan}
+   \_cs{_langspecific:#1}%
 }
-\_def\_uselanguage#1{\_lowercase{\_cs{\_cs{_ulan:#1}lang}}}
+   \_doc -----------------------------
+   The `\_uselanguage` is defined here (for compatibility with e-plain users).
+   \_cod -----------------------------
+
+\_def\_uselanguage#1{\_lowercase{\_cs{_\_cs{_ulan:#1}lang}}}
+
+   \_doc -----------------------------
+   The numbers for languages are declared as fixed contants (no
+   auto-generated). This concept is inspired from CSplain. 
+   There are typical numbers of languages in CSplain: 5=Czech in IL2,
+   15=Czech in T1 nad 115=Czech in Unicode. We keep these constants
+   but we load only Unicode patterns (greater than 100), of course.
+   \_cod -----------------------------
 
 \_preplang enus USenglishmax \_enusPatt 100 23
 \_preplang engb UKenglish    \_engbPatt 101 23
@@ -95,6 +161,13 @@
 \_preplang ta   Tamil      \_taPatt 221 11
 \_preplang te   Telugu     \_tePatt 222 11
 
+   \_doc -----------------------------
+   The `\_langlist` includes names of all languages which are ready to load
+   and use their hyphenation patterns. This list is printed to terminal and
+   to log at ini\TeX/ state here. User can print `\_langlist` in the
+   document too.
+   \_cod -----------------------------
+
 \message{Language hyph.patterns ready to load: \_langlist.
    Use \string\<shortname>lang to initialize language,
    \string\cslang\space for example}
@@ -105,3 +178,22 @@
 \_endcode % ---------------------------------------------
 
 
+Maybe, you need to do more language specific actions than only to swich
+hyphenation patterns. For example you need to load a specific font with a
+specific script used in selected language, you can define a macros for
+quotation marks depending on the language etc.
+
+The example shows how to declare such language specific things.
+
+\begtt
+\def\langset #1 #2{\sdef{_langspecific:#1}{#2}}
+
+\langset fr {... declare French quotation marks}
+\langset de {... declare German quotation marks}
+\langset gr {... switch to Greek fonts family}
+... etc. 
+\endtt
+
+Note that you need not to set language specific words (like `\today`) 
+by this code. Another concept is used for such tasks. See `languages.opm`
+for more details.

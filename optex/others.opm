@@ -1,0 +1,73 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \uv {Miscenaleous <2020-01-23>}
+
+% You can write \useOpTeX at begining of your document
+
+\_let \useOpTeX = \_relax   \_let \useoptex = \_relax
+
+% lastpage/totalpages
+
+\_def\_totalpages {\_openref\_ea\_lastpageA\_currpage}
+\_def\_lastpage   {\_openref\_ea\_lastpageB\_currpage}
+\_def\_lastpageA #1#2{#1}
+\_def\_lastpageB #1#2{#2}
+\_def\_currpage {{0}{?}}
+\_public \lastpage \totalpages ;
+
+% for compatibility with csplain:
+
+\_chardef\clqq=8222  \_chardef\crqq=8220
+\_chardef\flqq=171   \_chardef\frqq=187
+\_chardef\promile=8240
+
+\_def\uv#1{\clqq#1\crqq}
+
+\_let\uslang=\enlang  \_let\ehyph=\enlang  
+\_let\chyph=\cslang   \_let\shyph=\sklang
+\_let\csUnicode=\csPatt \_let\czUnicode=\csPatt \_let\skUnicode=\skPatt
+
+\_let \letfont = \_fontlet
+\_let \tenrm = \_tenrm  \_let \tenbf = \_tenbf
+\_let \tenit = \_tenit  \_let \tenbi = \_tenbi
+\_let \tentt = \_tentt 
+
+
+% TikZ needs these control sequences:
+
+\ea\toksdef \csname toks@\endcsname=0
+\ea\let     \csname voidb@x\endcsname=\_voidbox
+
+% another \tmpnum and \tmpdim are declared for user macros, no the same as private:
+
+\newcount\tmpnum % auxiliary count
+\newdimen\tmpdim % auxiliary dimen
+
+% We don't want to read opmac.tex unless \input opmac is specified:
+
+\def\OPmacversion{OpTeX}  
+
+% Lorem ipsum. Usage \lipsum[3] or \lipsum[112-121], max=150
+
+\_def \_lipsum {%
+   {\_long\_def\ProvidesFile##1[##2]##3{\_ifx\_par##3\_relax\_else \_ea##3\_fi}\_tmpnum=0
+    \_def\NewLipsumPar{\_advance\_tmpnum by1 
+       \_afterassignment\_negativermnm \_sxdef{lips:\_the\_tmpnum}}%
+    \_opinput {lipsum.ltd.tex}%
+    \_global\_let \_lipsum=\_reallipsum
+   }\_lipsum
+}
+\_def\_negativermnm{\_romannumeral-`\.} 
+\_def\_reallipsum[#1]{\_lipsumA #1\_empty-\_empty\_end} 
+\_def\_lipsumA #1-#2\_empty#3\_end{\_tmpnum=#1 \_edef\_tmp{\_ifx^#2^#1\_else#2\_fi}% 
+   \_loop \_csname lips:\_the\_tmpnum\_endcsname \_par 
+         \_ifnum\_tmpnum<\_tmp \_advance\_tmpnum by1 \_repeat 
+}
+\def\lipsum {\_lipsum}
+\def\lorem  {\_lipsum}
+
+\_endcode
+
+These codes are usable only after Unicode font is loaded using \fontfam.
+If you don't use Unicode fonts then more characters from Czech language stay
+unavailable (ř, ů, for example). See the notice in `fonts-preoad.opm`.

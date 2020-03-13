@@ -15,7 +15,7 @@ Modifiers (selects subfamily):^^J
  \ttlight ... light typewriter subfamily^^J
  \ttcond .... condensed typewriter subfamily^^J
  \upital .... upright italic (only \rm)^^J
- \dunhill ... dunhill roman subfamily (only \rm, \it)^^J
+ \dunhill ... dunhill roman subfamily (only \rm, \it)^^J%
 Submodifiers (setlects special variants of given subfamily):^^J
  \caps ...... caps & small caps (available only at limited shapes)^^J
  \slant ..... slanted (default in some subfamilies)^^J

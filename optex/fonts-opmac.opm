@@ -87,8 +87,8 @@
 
 \_protected\_def \_boldify {%
    \_let \_setmainvalues=\_setmainvaluesL   
-   \_let\it =\_bi \_let\rm =\_bf \_let\normalmath =\_boldmath
-   \_let\_it=\_bi \_let\_rm=\_bf \_let\_normalmath=\_boldmath \_rm
+   \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath
+   \_let\_it=\_bi \_let\_rm=\_bf \_rm
 }
 \_public \typosize \typoscale \thefontsize \thefontscale \em \boldify 
    \scalemain \mainfosize \mainbaselineskip ;

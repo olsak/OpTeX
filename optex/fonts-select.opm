@@ -92,25 +92,25 @@
       \_ea \_public \_csname\_tmp\_endcsname ;\_fi
 }
 \_protected \_def\_resetmod {\_cs{_f:\_currfamily:resetmod}} % private variant of \resetmod
+\_def\_currfamily{} % default current family is empty
 
 \_def\_famdepend#1#2{\_ifcsname#2\_endcsname \_csname#2\_ea\_endcsname \_else
    \_opwarning{\string#1 is undeclared in current family "\_currfamily", ignored}\_fi
 }
 \_def\_famvardef#1{\_edef\_tmp{\_csstring#1}\_remfirstunderscore\_tmp
    \_ea\_famvardefA \_ea#1\_csname _ten\_tmp\_ea\_endcsname
-      \_csname _tryload\_tmp\_ea\_endcsname \_csname \_tmp\_endcsname
+      \_csname _tryload:\_tmp\_endcsname
 }
-\_def\_famvardefA #1#2#3#4#5{% #1=\_XX #2=\_tenXX #3=\_tryloadXX #4=\XX #5=data
-   \_isinlist{.\rm\bf\it\bi\currvar}#4\iftrue
+\_def\_famvardefA #1#2#3#4{% #1=\_XX #2=\_tenXX #3=\_tryloadXX #4=data
+   \_isinlist{.\_rm\_bf\_it\_bi\currvar\_currvar}#1\iftrue
       \_opwarning{\string\famvardef: 
-          You cannot re-declare standard variant selector \string#4}%
+          You cannot re-declare private standard variant selector \string#1}%
    \_else
       \_protected\_edef #1{\noexpand\_famdepend\noexpand#1{_f:\noexpand\_currfamily:\_tmp}}%
       \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
-      \_def#3{\_fontdef#2{\_reloading#5}}%
+      \_def#3{\_fontdef#2{\_reloading#4}}%
       \_ifx#1\tt \addto#1{\_fam\_ttfam}\fi
       \_sdef{_currvar:\csstring#2}{#1}%
-      \_ifx#1#4\_else \_public#4;\_fi
    \_fi
 }
 \_def\_initfontfamily{%

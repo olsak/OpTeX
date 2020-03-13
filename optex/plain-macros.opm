@@ -157,7 +157,8 @@
 \def\_{\_ifmmode \_kern.06em \_vbox{\hrule width.3em}\_else _\fi} % obsolete
 \_def\dag{\_errmessage{\_usedirectly †}} 
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
-\_def\copyright{\_errmessage{\_usedirectly ©}}
+%\_def\copyright{\_errmessage{\_usedirectly ©}}
+\_def\copyright{©}
 %\_def\Orb{\_mathhexbox20D} % obsolete (part of Copyright)
 %\_def\P{\_mathhexbox27B}   % obsolete
 
@@ -262,8 +263,7 @@
   \_pretolerance=-1 \tolerance=-1 \hbadness=0 \showboxdepth=0 \ #1}}
 
 \_def \_bye {\_par \_vfill \_supereject \_end}
-\_public
-   \bye ;
+\_public \bye ;
 
 
 \_endcode % -------------------------------------

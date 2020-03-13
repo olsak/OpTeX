@@ -8,6 +8,11 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.06> tables re-implemented, opmac-rest removed.
+       footnotes, marginal notes reimplemented.
+       sections.opm, graphics.opm, colors.opm, languages re-implemented
+       Cite-bib re-implemented.
+       Index, sorting re-implemented.
 <0.05> \boldmath reimplemented
        \fontcolor, \letterspacing implemented
        font catalogue improved

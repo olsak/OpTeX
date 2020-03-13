@@ -269,8 +269,8 @@
 \mathcode`\_="8000
 
 \_private
-   \ldotp \cdotp \triangleleft \trianglerigt \mapstochar \rightarrow \prime
-   \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
+   \ldotp \cdotp \bullet \triangleleft \trianglerigt \mapstochar \rightarrow 
+   \prime \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
    \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
    \longrightarrow \Longleftrightarrow \vdots \ddots ;
 

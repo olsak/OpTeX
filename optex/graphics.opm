@@ -1,0 +1,49 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \inspic {Graphics <2020-02-29>}
+
+   \_doc -----------------------------
+   `\inspic` accepts old syntax `\inspic <filename><space>`
+   or new syntax `\inspic{<filename>}`. So, we need to define
+   two auxiliary macros `\_inspicA` and `\_inspicB`.
+
+   You can include more `\pdfximage` parameters (like `page=`)
+   in the `\_picparams` macro.
+
+   All `\inspic` macros are surrounded in `\hbox` in order user can
+   write `\moveright\inspic ...` or something similar.
+   \_cod \_fin -----------------------
+
+\_def\_inspic{\hbox\bgroup\_isnextchar\_bgroup\_inspicB\_inspicA}
+\_def\_inspicA #1 {\_inspicB {#1}}
+\_def\_inspicB #1{%
+   \_pdfximage \_ifdim\_picwidth=0pt  \_else width\_picwidth\_fi 
+               \_ifdim\_picheight=0pt \_else height\_picheight\_fi 
+               \_picparams {\_the\_picdir#1}%
+   \_pdfrefximage\_pdflastximage\egroup}
+
+\_def\_picparams{}
+
+\_public \inspic ;
+
+   \_doc ----------------------------
+   `\pdfscale` and `\pdfrotate` macros are implemented by `\pdfsetmatrix`
+   primitive. or rotating we need to knos values of sin, cos function.
+   We use Lua code for this.
+   \_cod ----------------------------
+
+\_def\_pdfscale#1#2{\_pdfsetmatrix{#1 0 0 #2}}
+
+\_def\_gonfunc#1#2{%
+   \_directlua{tex.print(string.format('\_pcent.4f',math.#1(3.14159265*(#2)/180)))}%
+}
+\_def\_sin{\_gonfunc{sin}}
+\_def\_cos{\_gonfunc{cos}}
+
+\_def\_pdfrotate#1{\_pdfsetmatrix{\_cos{#1} \_sin{#1} \_sin{(#1)-180} \_cos{#1}}}
+
+\_public \pdfscale \pdfrotate ;
+
+\_endcode % -------------------------------------
+
+

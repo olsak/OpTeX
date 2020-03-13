@@ -13,7 +13,7 @@
 \_def\_pdfunidef#1#2{%
    \_begingroup
       \_catcode`\\=12 \_let\\=\_bslash
-      \_the\_regoul % \regmacro alternatives
+      \_the\_regoul \_relax % \_regmacro alternatives of logos etc.
       \_edef#1{#2}%
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_end$}%  $x$ -> x
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_end}}%  {x} -> x
@@ -40,10 +40,10 @@
 
 \_regmacro {}{}{\_let\em=\_empty \_let\rm=\_empty \_let\bf=\_empty
     \_let\it=\_empty \_let\bi=\_empty \_let\tt=\_empty \_let\/=\_empty
-    \_let~=\_space \let\nl=\_space
+    \_let~=\_space
 }
 
-\public \pdfunidef \outlineshook ;
+\public \pdfunidef ;
 
 \_endcode % --------------------------------
 

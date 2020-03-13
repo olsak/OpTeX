@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2019-05-21>}
+\_codedecl \pdfunidef {PDF outlines <2019-05-21>}
 
 \_def\_outlines#1{\_pdfcatalog{/PageMode/UseOutlines}\_openref
    \_ifx\_toclist\_empty
@@ -11,7 +11,8 @@
      {\_let\_tocline=\_outlinesA
       \_count0=0 \_count1=0 \_count2=0 \_count3=0 \_toclist % calculate numbers o childs
       \_def\_outlinelevel{#1}\_let\_tocline=\_outlinesB
-      \_tocrefnum=0 \_count0=0 \_count1=0 \_count2=0 \_count3=0 \_toclist}% create outlines
+      \_tocrefnum=0 \_count0=0 \_count1=0 \_count2=0 \_count3=0 
+      \_toclist}% create outlines
    \_fi
 }
 \_def\_outlinesA#1#2#3#4#5#6{%
@@ -38,15 +39,16 @@
       \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}{0}\_relax\_or
       \_tmpnum = 0\_relax\_fi
    \_pdfunidef\_tmp{#4}%
-   \_outlinesC{#1}{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
    \_advance\_tocrefnum by1
+   \_outlinesC{#1}{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
 }
 \_def\_outlinesC#1#2#3#4#5{\_pdfoutline goto name{#2} count #3#4{#5}\_relax}
 
 \_newcount\_oulnum
 \_def\_insertoutline#1{\_global\_advance\_oulnum by1
-   \_pdfdest name{_oul:\_the\_oulnum} xyz\_relax
-   \_pdfoutline goto name{_oul:\_the\_oulnum} count0 {#1}\_relax
+   \_pdfdest name{oul:\_the\_oulnum} xyz\_relax
+   \_pdfunidef\_tmp{#1}%
+   \_pdfoutline goto name{oul:\_the\_oulnum} count0 {\_tmp}\_relax
 }
 
 \_public
@@ -88,10 +90,10 @@ When second step is processed, then we only read the stored data about the
 number of descentants. Ad we use it in `count` parameter of `\_pdfoutline`
 primitive.
 
-For linking we use the same links as in TOC, i.e. the `_toc:\_the\_tocrefnum` 
+For linking we use the same links as in TOC, i.e. the `toc:\_the\_tocrefnum` 
 labels are used.
 
 `\insertoutline {<text>}` inserts one outline with zero direct descendants.
-It creates link destination of the type `_oul:<num>` into the document
+It creates link destination of the type `oul:<num>` into the document
 (where `\isertoutline` is used) and the link itself is created too in the
 outline.

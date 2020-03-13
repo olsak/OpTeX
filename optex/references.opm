@@ -1,23 +1,32 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ref {references <2020-02-22>}
+\_codedecl \ref {References <2020-02-22>}
 
-%> \_Xpage
+   \_doc ----------------------------
+   `\_Xpage {<gpageno>}{<pageno>}` saves the patameter pair into `\_currpage`
+   and actualizes `\lastpage`. Resets `\_lfnotenum` used if footnotes are
+   numbered from one at each page.
+   \_cod ----------------------------
 
-\_newcount\_lastpage  \_lastpage=0  % the last page of the document
-\_newcount\_fnotenumlocal
-\_def\_Xpage#1#2{\_def\_currpage{{#1}{#2}}\_lastpage=#2 \_fnotenumlocal=0 }
+\_def\_Xpage#1#2{\_def\_currpage{{#1}{#2}}\_lfnotenum=0 }
 
-%> \_Xlabel
+   \_doc ----------------------------
+   `\_Xlabel {<label>}{<text>}` saves <text> to `\_lab:<label>` and saves
+   `[<gpageno>]{<pageno>}` to `\_pgref:<label>`.
+   \_cod ----------------------------
 
 \_def\_Xlabel#1#2{\_sdef{_lab:#1}{#2}\_sxdef{_pgref:#1}{\_ea\_bracketspg\_currpage}}
 \_def\_bracketspg#1#2{[pg:#1]{#2}}
 
-%> \label \wlabel
+   \_doc ----------------------------
+   `\label[<label>]` saves decalred labet to `\_lastlabel` and `\wlabel{<text>}` 
+   uses `\lastlabel` and activates `\wref\_Xlabel{<label>}{<text>}`.
+   \_cod ----------------------------
 
-\_def\_label[#1]{\_isdefined{l0:#1}%
-  \_iftrue \_opwarning{duplicated label [#1], ignored}\_else \_xdef\_lastlabel{#1}\_fi
-  \_ignorespaces
+\_def\_label[#1]{\_isempty{#1}\_iftrue \_global\_let \_lastlabel=\_undefined 
+  \_else \_isdefined{l0:#1}%
+     \_iftrue \_opwarning{duplicated label [#1], ignored}\_else \_xdef\_lastlabel{#1}\_fi
+  \_fi \_ignorespaces
 }
 \_def\_wlabel#1{%
   \_ifx\_lastlabel\_undefined \_else
@@ -29,7 +38,16 @@
   \_fi
 }
 
-%> \ref \pgref
+   \_doc ----------------------------
+   `\ref[<label>]` uses saved `\_lab:<label>` and prints (linked) <text>.
+   If the reference is backwarded then we know `\lab:<label>` without any need
+   to read REF file. On the other hand, if the reference is forwarded, then we
+   doesn't know `\_lab:<label>` in first run of \TeX/ and we print warning and
+   do `\_openref`.
+
+   `\pgref[<label>]` uses `{<gpageno>}{<pageno>}` from `\_pgref:<label>` and
+   prints (linked) <pageno> using `\_ilink` macro.
+   \_cod ----------------------------
 
 \_def\_ref[#1]{\_isdefined{_lab:#1}%
   \_iftrue \_ilink[ref:#1]{\_csname _lab:#1\_endcsname}%
@@ -41,73 +59,14 @@
   \_else ??\_opwarning{pg-label [#1] unknown. Try to TeX me again}\_openref
   \_fi
 }
-
-%> \begoutput
-
-\addto\_begoutput{%
-   \_incr \_gpageno  % global pageno from one independent on pagination
-   \immediate\_wref\_Xpage{{\the\gpageno}{\_the\_pageno}}%
-}
-
-\_newcount\_gpageno
-
 \_public
-   \label \wlabel \ref \pgref \gpageno ;
+   \label \wlabel \ref \pgref ;
+
+\_endcode %------------------------------------------
 
 
-\_endcode % -------------------------------------
-
-The REF file looks like:
-
-\begtt
-\_Xpage{<gpageno>}{<pageno>}
-\_Xlabel{<label>}{<text>}
-\_Xlabel{<label>}{<text>}
-\_Xlabel{<label>}{<text>}
-...
-\_Xpage{<gpageno>}{<pageno>}
-\_Xlabel{<label>}{<text>}
-...
-\endtt
-
-where <gpageno> is internal page number numbered from one and <pageno> is
-a page number used in pagination. Each page begins with `\_Xpage`.
-The <label> is <label> used by user in `\label[<label>]` and <text> is a
-<text> which shoul be referenced (the number of section or table, for
-example).
-
-The REF file is scanned at the begining of the document using `\inputref`
-invoked by `\everyjob`. 
-
-\%> \_Xpage
-
-`\_Xpage {<gpageno>}{<pageno>}` saves the patameter pair into `\_currpage`
-and actualizes `\lastpage`. Resets `\_fnotenumlocal` used if footnotes are
-numbered from one at each page.
-
-\%> \_Xlabel
-
-`\_Xlabel {<label>}{<text>}` saves <text> to `\_lab:<label>` nad saves
-`[<gpageno>]{<pageno>}` to `\_pgref:<label>`.
-
-\%> \label \wlabel
-
-`\label[<label>]` saves decalred labet to `\_lastlabel` and `\wlabel{<text>}` 
-uses `\lastlabel` and activetes `\wref\_Xlabel{<label>}{<text>}`.
-
-\%> \ref \pgref
-
-`\ref[<label>]` uses saved `\_lab:<label>` and prints (linked) <text>.
-If the reference is backwarded then we know `\lab:<label>` without any need
-to read REF file. On the other hand, if the reference is forwarded, then we
-doesn't know `\_lab:<label>` in first run of \TeX/ and we print warning and
-do `\_openref`.
-
-`\pgref[<label>]` uses `{<gpageno>}{<pageno>}` from `\_pgref:<label>` and
-prints (linked) <pageno> using `\_ilink` macro.
-
-\%> \begoutput
-
-We add to `\_begoutput` incrementing `<gpageno>` and writting 
-`\_Xpage {<gpageno>}{<pageno>}`.
+If the references are \"forward" (i.~e. the `\ref` is used first, the destination
+is created later), or if the reference text is page number, we must read
+`.ref` file first in order to get appropriate information.
+See section \ref[ref-file] for more information about `.ref` file concept.
 

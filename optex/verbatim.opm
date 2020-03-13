@@ -2,24 +2,36 @@
 
 \_codedecl \begtt {Verbatim <2020-02-14>}
 
-%> parameters
+   \_doc ----------------------------
+   The internal parameters for verbatim macros are set. 
+   \_cod ----------------------------
 
-\_newdimen\_ttindent \_ttindent=\_parindent % indentation in \begtt...\endtt and \verbinput
 \_def\_ttskip{\_medskip}           % space above and below \begtt, \verbinput
 \_mathchardef\_ttpenalty=100       % penalty between lines in \begtt, \verbinput
-
-\_newcount\_ttline    \_ttline=-1  % last line number in \begtt...\endtt
 \_newcount\_viline                 % last line number in \verbinput
 \_newread\_vifile                  % file fgiven by \verinput
-\_newtoks\_tthook                  % tokens procesed in \begtt...\endtt
-\_newtoks\_intthook                % toens procesed in \code or in `...`
 
-\_public \ttline \tthook \intthook ;
+   \_doc ----------------------------
+   `\code{<text>}` expands to `\detokenize{<text>}` when `\escapechar=-1`. In
+   order to do it more robust when it is used in `\write` then it expands as
+   noexpanded `\code<space>` (followed by space in its csname). This macro
+   does the real work.
 
-%> \code
+   The `\_printinverbatim{<text>}` macro is used for `\code{<text>}` printing and for
+   \code{`}<text>\code{`} printing. It is defined as `\_hbox`, so the in-verbatim <text> 
+   will be never broken. But you can re-define this macro.
+
+   When `\code` occurs in PDF outlines then it does the same as `\detokenize`.
+   The macro for preparing outlines sets `\escapechar` to $-1$ and uses
+   `\_regoul` token list before `\edef`.
+
+   The `\code` is not `\_proteced` because we want that it expands to
+   `\_unexpanded{\code<space>{<text>}}` in `\write` parameters. This protect the 
+   expansions of the `\code` parameter (like `\\`, `\^` etc.).
+   \_cod ----------------------------
 
 \_def\_code#1{\_unexpanded\_ea{\_csname _code \_endcsname{#1}}}
-\_protected\_sdef{_code }#1{{\_escapechar=-1 \_tt \_the\_intthook \_relax 
+\_protected\_sdef{_code }#1{{\_escapechar=-1 \_tt \_the\_everyintt \_relax 
    \_ea\_printinverbatim\_ea{\_detokenize{#1}}}}
 \_def\_printinverbatim#1{\_leavevmode\_hbox{#1}}
 
@@ -27,7 +39,12 @@
 
 \_public \code ;
 
-%> \_setverb
+   \_doc ----------------------------
+   The `\_setverb` macro sets all catcodes to \"verbatim mode". It should be used only 
+   in a group, so we prepare a new catcode table with \"verbatim" catcodes and we define
+   it as `\_catcodetable\_verbatimcatcodes`. After the group is finished then
+   original catcode table is restored.
+   \_cod ----------------------------
 
 \_newcatcodetable \_verbatimcatcodes
 \_def\_setverb{\_begingroup
@@ -39,18 +56,69 @@
 \_setverb
 \_def\_setverb{\_catcodetable\_verbatimcatcodes }%
 
-%> \activettchar
+   \_doc ----------------------------
+   `\activettchar<char>` saves original catcode of previously declared <char> (if
+   such character was declared) from `\_savedttchar` and `\_savedttcharc`
+   values. Then new such values are stored. The declared charater is activated
+   by `\_adef` as a macro (active character) which opens a group, 
+   does `\_setverb` and other settings and reads its parameter until second the same 
+   character. This is done by `\_readverb` macro. Finally it prints scanned
+   <text> by `\_printinverbatim` and closes group. Suppose that `\activettchar"` is
+   used. Then the following work is schematically done:
+   \begtt
+   \_def "{\_begingroup \_setverb ... \_readverb}
+   \_def \_readverb #1"{\_printinverbatim{#1}\_endgroup}
+   \endtt
+   Note that the second occurence of `"` is not active because `\_setverb`
+   deactivates it.
+   \_cod ----------------------------
 
 \_def\_activettchar#1{%
    \_ifx\_savedttchar\_undefined\_else \_catcode\_savedttchar=\_savedttcharc \_fi
    \_chardef\_savedttchar=`#1
    \_chardef\_savedttcharc=\_catcode`#1
-   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\ }\_tt \_the\_intthook\_relax \_readverb}%
+   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\ }\_tt \_the\_everyintt\_relax \_readverb}%
    \_def\_readverb ##1#1{\_printinverbatim{##1}\_endgroup}%
 }
 \_public \activettchar ;
 
-%> \begtt ... \endtt
+   \_doc ----------------------------
+   `\begtt` id defined only as public. We don't need private `\_begtt` variant.
+   This macro os defined by `\eoldef`, so user can put an parameter at the
+   same line where `\begtt` is. This `#1` parameter is used after `\_everytt`
+   parameters settings, so user can change it locally.
+
+   The `\begtt` macro opens group, does `\_setverb` and another preprocessing, sets
+   `\endlinechar` to `^^J` and reads the following text in verbatim mode 
+   until `\endtt` occurs. This scanning is done by `\_startverb` macro which is
+   defined as:
+   \begtt
+   \_def\_startverb #1\endtt #2^^J{...}
+   \endtt
+   We must to ensure that the backslash in `\endtt` has category 12 (this is a
+   reason of the `\ea` chain in real code).
+   The `#2` is something between `\endtt` and end of line and it is simply
+   ignored.
+
+   The `\startverb` puts the scanned data to `\_prepareverbdata`. It sets the data
+   to `\_tmpb` without changes by default, but you should re-define it in order
+   to does s special changes (for example colorization of the code), if you
+   want. The scanned data have `^^J` at each end of line and all spaces are
+   active characters. Other characters have nomal category 11 or 12.  
+
+   When `\prepareverbdata` finishes then `\startverb` runs `\_printverb` loop
+   over aech line of the data and does a final work: last skip plus `\noindent`
+   without first indentation box. This trick keeps horizontal mode without
+   indentation when the empty line after `\endtt` does not exists. But it stops
+   horizontal mode without any new box in outer vertical mode if `\par` is
+   processed immediately after `\endtt`.
+
+   The `\_printverb` macro calls `\_printverbline{<line>}` to each scanned line of
+   verbatim text. This macro expect that it strarts in vertical mode ant it must
+   do `\par` in order to return the vertical mode. The `\_printverblinenum`
+   is used here: it does nothing when `\_ttline<0` else it prints the line
+   number using `\_llap`.
+   \_cod ----------------------------
 
 \_eoldef \begtt#1{\_par \_wipeepar 
    \_begingroup
@@ -58,7 +126,7 @@
    \_setverb 
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
-   \_the\_tthook #1\_relax \_tt
+   \_the\_everytt \_relax #1\_relax \_tt
    \_endlinechar=`^^J
    \_startverb
 }
@@ -81,7 +149,19 @@
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
 \_def\_printverblinenum{\_global\_advance\_ttline by1 \_llap{\_sevenrm \_the\_ttline\_kern.9em}}
 
-%> \verbinput
+   \_doc ----------------------------
+   Macro `\verbinput` uses a file read perviously or opens the given file. Then
+   it runss the parameter scanning by `\_viscanparameter` and `\_viscanminus`.
+   Finally the `\_doverbinput` is run. At begining of `\_doverbinput` we have
+   `\_viline`= number of lines already read using previous `\verbinput`,
+   `\_vinolines`= the number of lines we need to skip and `\_vidolnes`= the
+   number of lines we need to print.
+   After group is opened then similar preparation is done as in `\begtt`. Then
+   we skip `\_nolines` lines in a loop a and we read `\_dolines` lines. The
+   read data is accumulated into `\_tmpb` macro. The next steps are equal to
+   the steps done in `\_startverb` macro: data are processed via
+   `\_prepareverbdata` and printed via `\_printverb` loop.
+   \_cod \_fin ----------------------
 
 \_def\_verbinput (#1) #2 {\_par \_def\_tmpa{#2}%
    \_ifx\_vifilename\_tmpa \_else
@@ -133,7 +213,7 @@
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_setverb \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
-   \_the\_tthook\_relax \_tt
+   \_the\_everytt\_relax \_tt
    \_endlinechar=`^^J \_tmpnum=0
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
          \_ifnum\_tmpnum<\_vinolines\_space
@@ -161,113 +241,5 @@
 \_public 
    \verbinput ;
 
-
-\_endcode %---------------------------------------
-
-\secc Implementation notes
-
-\%> parameters
-
-The parameters for verbatim macros are set. `\ttline` is set to $-1$ by
-default, so `\begtt...\endtt` are not numbered but `\verbinput` are with
-numbers. 
-
-\%> \code
-
-`\code{<text>}` expands to `\detokenize{<text>}` when `\escapechar=-1`. In
-order to do it more robust when it is used in `\write` then it expands as
-noexpanded `\code<space>` (followed by space in its csname). This macro doew
-really the work.
-
-The `\_printinverbatim{<text>}` macro is used for `\code{<text>}` printing and for
-\code{`}<text>\code{`} printing. It is defined as `\_hbox`, so the in-verbatim <text> 
-will be never broken. But you can re-define this macro.
-
-When `\code` occurs in PDF outlines then it does the same as `\detokenize`.
-The macro for preparing outlines sets `\escapechar` to $-1$ and uses
-\_regoul` token list before `\edef`.
-
-The `\code` is not `\_proteced` because we want that it expands to
-`\_unexpanded{\code<space>{<text>}` in `\write` parameters. This protect the 
-expansions of the `\code` parameter (like `\\`, `\^` etc.).
-
-\%> \_setverb
-
-The `\_setverb` macro sets all catcodes to \"verbatim mode". It should be used only 
-in a group, so we prepare a new catcode table with \"verbatim" catcodes and we define
-it as `\_catcodetable\_verbatimcatcodes`. After the group is finished then
-original catcode table is restored.
-
-\%> \activettchar
-
-This macro saves original catcode of previously declared `\catcodettchar` (if
-such character was decalred) from `\_savedttchar` and `\_savedttcharc`
-values. Then new such values are stored. The declared charater is activated
-by `\_adef` as a macro (active character) which opens a group, 
-does `\_setverb` and other settings and reads its parameter until second the same 
-character. This is done by `\_readverb` macro. Finally it prints scanned
-<text> by `\_printinverbatim` and closes group. Suppose that `\activettchar"` is
-used. Then the following work is schematically done:
-
-\begtt
-\_def "{\_begingroup \_setverb ... \_readverb}
-\_def \_readverb #1"{\_printinverbatim{#1}\_endgroup}
-\endtt
-%
-Note that the second occurence of `"` is not active because `\_setverb`
-deactivates it.
-
-\%> \begtt ... \endtt
-
-`\begtt` id defined only as public. We don't need private `\_begtt` variant.
-This macro os defined by `\eoldef`, sot user can put an parameter at the
-same line where `\begtt` is. This `#1` parameter is used after globap
-parameters settings, so user can change it locally.
-
-The `\begtt` macro opens group, does `\_setverb` and another preprocessing, sets
-`\endlinechar` to `^^J` and reads the following text in verbatim mode 
-until `\endtt` occurs. This scanning is done by `\_startverb` macro which is
-edfined as:
-
-\begtt
-\_def\_startverb #1\endtt #2^^J{...}
-\endtt
-%
-We must to ensure that the backslash in `\endtt` has category 12 (this is a
-reason of the `\ea` chain in real code).
-The `#2` is something between `\endtt` and end of line and it is simply
-ignored.
-
-The `\startverb` puts the scanned data to `\_prepareverbdata`. It sets the data
-to `\_tmpb` without changes by default, but you should re-define it in order
-to does s special changes (for example colorization of the code), if you
-want. The scanned data have `^^J` at each end of line and all spaces are
-active characters. Other characters have nomal category 11 or 12.  
-
-When `\prepareverbdata` finishes then `\startverb` runs `\_printverb` loop
-over aech line of the data and does a final work: last skip plus `\noindent`
-without first indentation box. This trick keeps horizontal mode without
-indentation when the empty line after `\endtt` does not exists. But it stops
-horizontal mode without any new box in outer vertical mode if `\par` is
-processed immediately after `\endtt`.
-
-The `\_printverb` macro calls `\_printverbline{<line>}` to each scanned line of
-verbatim text. This macro expect that it strarts in vertical mode ant it must
-do `\par` in order to return the vertical mode. The `\_printverblinenum`
-is used here: it does nothing when `\_ttline<0` else it prints the line
-number using `\_llap`.
-
-\%> \verbinput
-
-Macro `\verbinput` uses a file read perviously or opens the given file. Then
-it runss the parameter scanning by `\_viscanparameter` and `\_viscanminus`.
-Finally the `\_doverbinput` is run. At begining of `\_doverbinput` we have
-`\_viline`= number of lines already read using previous `\verbinput`,
-`\_vinolines`= the number of lines we need to skip and `\_vidolnes`= the
-number of lines we need to print.
-After group is opened then similar preparation is done as in `\begtt`. Then
-we skip `\_nolines` lines in a loop a and we read `\_dolines` lines. The
-read data is accumulated into `\_tmpb` macro. The next steps are equal to
-the steps done in `\_startverb` macro: data are processed via
-`\_prepareverbdata` and printed via `\_printverb` loop.
+\_endcode 
 
