@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begitems {Lists: begitems, enditems <2020-03-14>}
+\_codedecl \begitems {Lists: begitems, enditems <2020-03-18>} % preloaded in format
 
    \_doc -----------------------------
    `\aboveliskip` is used above the list of items, 
@@ -32,6 +32,7 @@
   \_itemnum=0 \_adef*{\_startitem}
   \_advance\_leftskip by\_iindent
   \_printitem=\_defaultitem
+  \_the\_everybegitems
 }
 \_def\_enditems{\_par\_egroup\_belowliskip}
 
@@ -58,7 +59,7 @@
 \_sdef{_item:I}{\_uppercase\_ea{\_romannumeral\_itemnum}\_kern.5em}
 \_sdef{_item:a}{\_athe\_itemnum) }
 \_sdef{_item:A}{\_uppercase\_ea{\_athe\_itemnum}) }
-\_sdef{_item:x}{\_raise.3ex\_fullrectangle{.6ex} }
+\_sdef{_item:x}{\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
 \_sdef{_item:X}{\_raise.2ex\_fullrectangle{1ex}\_kern.5em}
 
    \_doc -----------------------------

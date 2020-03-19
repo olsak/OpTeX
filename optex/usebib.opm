@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_ifx\MakeReference\_udefined \_else \_endinput \_fi
+\_codedecl \MakeReference {Reading bib databases <2020-03-13>} % loaded on demand by \usebib
 
 % we needn't \errmessage when bad TeX engnine is detected during \input librarian:
 
@@ -113,7 +113,8 @@
      \_bibmark=\_ea{\_tmpb}%
   \_else \_bibmark={}\_fi
   \_edef\_tmpb{\EntryKey}%
-  \_noindent \_dest[cite:\_the\_bibnum]\_printbib 
+  \_noindent \_dest[cite:\_the\_bibnum]\_printlabel\EntryKey 
+  \_printbib 
   {%  
      \_RetrieveFieldIn{entrytype}\_entrytype
      \_csname _print:BEGIN\_endcsname

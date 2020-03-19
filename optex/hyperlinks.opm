@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2020-02-22>}
+\_codedecl \ulink {Hyperlinks <2020-03-15>} % preloaded in format 
 
 \_newcount \_tocrefnum
 
@@ -73,8 +73,8 @@
    \_cod ----------------------------
 
 \_def\_pdfborder#1{\_if^#1^\_else \_isdefined{#1border}\_iftrue
-   \_if^\_csname#1border\_endcsname^\_else 
-      attr{/C[\_csname#1border\_endcsname] /Border[0 0 .6]}\_fi
+   \_if^\_csname #1border\_endcsname^\_else 
+      attr{/C[\_csname #1border\_endcsname] /Border[0 0 .6]}\_fi
    \_else attr{/Border[0 0 0]}\_fi\_fi
 }
 

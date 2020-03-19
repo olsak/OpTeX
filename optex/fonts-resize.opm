@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2020-02-14>}
+\_codedecl \setfontsize {Font resizing macros <2020-03-17>} % preloaded in format 
 
 %% resizefont variant-name \fontswitch, for example \resizefont{bf}\_tenbf
 
@@ -81,7 +81,7 @@
 % \fontdef \new {\<modifiers>\<var-selector>}
 \_def \_fontdef #1#2{\_begingroup
    \_ifx\_fontselector\_undefined \_def\_fontselector{#1}\_fi
-   #2%
+   \_reloading #2%
    \_ea \_keepmeaning \_fontselector \_endgroup
 }
 \_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else

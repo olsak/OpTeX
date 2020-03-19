@@ -1,11 +1,10 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ref {References <2020-02-22>}
+\_codedecl \ref {References <2020-03-03>} % preloaded in format
 
    \_doc ----------------------------
-   `\_Xpage {<gpageno>}{<pageno>}` saves the patameter pair into `\_currpage`
-   and actualizes `\lastpage`. Resets `\_lfnotenum` used if footnotes are
-   numbered from one at each page.
+   `\_Xpage {<gpageno>}{<pageno>}` saves the patameter pair into `\_currpage`. 
+   Resets `\_lfnotenum`, it is used if footnotes are numbered from one at each page.
    \_cod ----------------------------
 
 \_def\_Xpage#1#2{\_def\_currpage{{#1}{#2}}\_lfnotenum=0 }
@@ -31,6 +30,7 @@
 \_def\_wlabel#1{%
   \_ifx\_lastlabel\_undefined \_else
      \_dest[ref:\_lastlabel]%
+     \_printlabel\_lastlabel
      \_edef\_tmp{{\_lastlabel}{#1}}%
      \_ea\_wref \_ea\_Xlabel \_ea{\_tmp}%
      \_sxdef{_lab:\_lastlabel}{#1}\_sxdef{l0:\_lastlabel}{}%
@@ -61,6 +61,19 @@
 }
 \_public
    \label \wlabel \ref \pgref ;
+
+   \_doc -----------------------------
+   Default `\_printlabel` is empty (labes are not printed).
+   The `\showlabels` redefines it as box with zero dimensions and
+   with left lapped `[<label>]` in blue 10pt `\tt` font shifted up by 1.7ex.
+   \_cod -----------------------------
+
+\_def\_printlabel#1{}
+\_def\_showlabels {%
+   \_def\_printlabel##1{\_vbox to0pt{\_vss\_llap{\_labelfont[##1]}\_kern1.7ex}}%
+   \_fontdef\_labelfont{\_setfontsize{at10pt}\setfontcolor{blue}\_tt}
+}
+\_public \showlabels ;
 
 \_endcode %------------------------------------------
 

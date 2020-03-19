@@ -1,8 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-% This file is read when \loadmath is used.
-
-\_ifx \_ncharrmA\_undefined \_else \_endinput \_fi
+\_codedecl \_ncharrmA {Uni math codes <2020-03-14>} % preloaded on demand by \loadmath
 
 \_umathnumB="0391
 \_greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa

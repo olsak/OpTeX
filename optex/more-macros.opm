@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macos <2020-02-14>}
+\_codedecl \eoldef {OpTeX useful macos <2020-03-15>} % preloaded in format
 
 \_newcatcodetable \_optexcatcodes
 \_savecatcodetable\_optexcatcodes
@@ -88,8 +88,6 @@
 
 \def\catcode{\_catcode\_string} % more robust in cases \catcode` or \catcode"
 
-\_def\_enquotes{\_chardef\"="201C } % use \"text" for English quotes
-
 % \removespaces text with spaces {} -> textwithspaces
 
 \_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
@@ -126,7 +124,7 @@
 \public
    \setctable \restorectable
    \normalcatodes \opt \optdef \eoldef \bracedparam \replstring
-   \keepinputnames \lastinputname \enquotes \removespaces \trycs 
+   \keepinputnames \lastinputname \removespaces \trycs 
    \ignorept \ignoreit ;
 
 \_endcode % -------------------------------------

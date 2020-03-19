@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2019-05-21>}
+\_codedecl \nopagenumbers {Output routine <2020-03-15>} % preloaded in format
 
    \_doc -----------------------------
    `\_optexouput` is default output routine. You can create another...
@@ -180,20 +180,17 @@
    water color marks.
    \_cod -----------------------------
 
-\_def\_draft{\_pgbackground={\_setdraftfont \_draftbox{\_draftfont DRAFT}}}
-
-\_def\_draftbox#1{\_setbox0=\_hbox{#1}%
+\_def \_draft {\_pgbackground={\_draftbox{\_draftfont DRAFT}}%
+   \_fontdef\_draftfont{\_setfontsize{at10pt}\_bf}%
+   \_global\_let\_draftfont=\_draftfont
+}
+\_def \_draftbox #1{\_setbox0=\_hbox{#1}%
    \_kern.5\_vsize \_kern4.5\_wd0 
    \_hbox to0pt{\_kern.5\_hsize \_kern-1\_wd0
    \_pdfsave \_pdfrotate{55}\_pdfscale{10}{10}%
    \_hbox to0pt{\_localcolor\LightGrey \_box0\_hss}%
    \_pdfrestore
-   \_hss}}
-\_def\_setdraftfont {%
-   \_ifx \_draftfont\_undefined 
-       \_fontdef\_draftfont{\_setfontsize{at10pt}\_bf}%
-       \_global\_let\_draftfont=\_draftfont
-   \_fi
+   \_hss}%
 }
 \_public \draft ;
 

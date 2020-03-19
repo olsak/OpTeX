@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-11>}
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-19>} % loaded in format
 
    \_doc -----------------------------
    \begitems
@@ -36,9 +36,20 @@
    \endtt
    This code gives footnotes* and ** and*** and† etc. 
    and it supposes that there are no more than 6 footnotes at one page.
+
+   If you want to distinguish between footnote marks in the text and in the front of
+   footnote itself, then you can define `\_printfnotemarkA` and `\_printfnotemarkB`.
+   The following example shows an implementation of hyperlinked footnotes
+   (from text to footnote and bacward):
+   \begtt
+   \def\_printfnotemarkA{\ilink[fnB:\the\gfnotenum]{\_printfnotemark}\dest[fnA::\the\gfnotenum]}
+   \def\_printfnotemarkB{\ilink[fnA:\the\gfnotenum]{\_printfnotemark}\dest[fnB::\the\gfnotenum]}
+   \endtt
    \_cod -----------------------------
 
-\_def \_printfnotemark {$^{\_fnotenum}$}  % default fnote mark
+\_def \_printfnotemark  {$^{\_fnotenum}$}   % default footnote mark
+\_def \_printfnotemarkA {\_printfnotemark}  % footnote marks used in text
+\_def \_printfnotemarkB {\_printfnotemark}  % footnote marks used in front of footnotes
 
    \_doc ----------------------------
    Each footnote saves the `\_Xfnote` (without parameter) to the `.ref` 
@@ -55,7 +66,7 @@
    \_cod ----------------------------
 
 \_def\_fnote{\_fnotemark1\_fnotetext}
-\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\relax \_printfnotemark}}
+\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\relax \_printfnotemarkA}}
 
    \_doc ----------------------------
    The `\_fnotetext` calls `\_opfootnote` which is equivalent to plain \TeX/
@@ -76,7 +87,7 @@
    \_ifpgfnote \_ifcsname _fn:\_the\_gfnotenum \_endcsname \_else
        \_opwarning{unknown \_noexpand\fnote mark. TeX me again}
    \_fi\_fi
-   \_opfootnote\_fnset\_printfnotemark
+   \_opfootnote\_fnset\_printfnotemarkB
 }
 \_def\_fnset{\_everypar={}\_the\_everyfnote \_scalemain \_typoscale[800/800]}
 

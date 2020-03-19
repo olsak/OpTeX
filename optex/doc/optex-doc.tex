@@ -8,7 +8,7 @@
 \def<#1>{\hbox{$\langle$\it#1\/$\rangle$}}
 \everyintt={\catcode`\<=13}
 \everytt=\everyintt
-\chardef\"="201C
+\enquotes
 
 \def\new{\mnote{\Red$\blacktriangleleft$}}
 \fixmnotes\right
@@ -22,16 +22,16 @@
 \tit \OpTeX/\nl Format Based on Plain \TeX/ and OPmac\fnotemark1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\hfill Version 0.06
+\hfill Version 0.07
 
 \centerline{\it Petr Olšák, 2020}
 
 \bigskip
 \centerline{\url{http://petr.olsak.net/optex}}
 
-\fnotetext {The OPmac package is a set of simple additional macros to plain\TeX{}. It
+\fnotetext {The OPmac package is a set of simple additional macros to Plain \TeX{}. It
 enables users to take advantage of basic \LaTeX/ functionality but keeps
-plain \TeX/ simplicity. See
+Plain \TeX/ simplicity. See
 \url{http://petr.olsak.net/opmac-e.html} for more information about it.
 For OPmac users: the red triangle {\Red$\blacktriangleleft$} in the right margin
 means that there is a difference from standard OPmac features.}
@@ -42,11 +42,11 @@ means that there is a difference from standard OPmac features.}
 \nonum \sec Introduction
 %%%%%%%%%%%%
 
-\OpTeX/ is \LuaTeX/ format with plain \TeX/ and OPmac. Only \LuaTeX/ engine
+\OpTeX/ is \LuaTeX/ format with Plain \TeX/ and OPmac. Only \LuaTeX/ engine
 is supported. The main goal of \OpTeX/ is:
 
 \begitems
-* \OpTeX/ keeps the simplicity (like in plain \TeX/ and OPmac macros).
+* \OpTeX/ keeps the simplicity (like in Plain \TeX/ and OPmac macros).
 * There is no old obscurities concerning with various 8-bit encodings and
   various engines.
 * \OpTeX/ provides a powerful font selection system (for Unicode font
@@ -54,12 +54,12 @@ is supported. The main goal of \OpTeX/ is:
 * \OpTeX/ supports hyphenations of all languages installed in your \TeX/ system.
 * All features from OPmac macros are copied.
 * Macros are documented in the same place where code is (macros for printing
-  this documentation will come in the future).
+  such documentation will come in the future).
 * User name space of control sequences is separated from internal name space
-  of OpTeX and primitives (`\foo` versus `\_foo`).
+  of \OpTeX/ and primitives (`\foo` versus `\_foo`).
 \enditems
 
-\OpTeX/ should be a modern plain \TeX/ with power from OPmac (fonts selection
+\OpTeX/ should be a modern Plain \TeX/ with power from OPmac (fonts selection
 system, colors, external graphics, references, hyperlinks, indexing,
 bibliography, ...) with preferred Unicode fonts.
 
@@ -67,21 +67,25 @@ If you need to customize your document or you need to use something
 very specific, then you can copy relevant parts of \OpTeX/ macros into your macro
 file and do changes of these macros here. This is significant difference from
 \LaTeX/ or ConTeXt, which are an attempt to create a new user level with a
-plenty of non-primitive parameters and syntax hidding \TeX/ internals.
-The macros from \OpTeX/ are simple and straightforward because they solves only
-what is excplicitly needed, they does not create a new user level over \TeX/.
-And you can use them, understand them an modify them.
+plenty of non-primitive parameters and syntax hiding \TeX/ internals.
+The macros from \OpTeX/ are simple and straightforward because they solve only
+what is explicitly needed, they does not create a new user level for
+controlling your document over \TeX/.
+And you can use \OpTeX/ macros, understand them an modify them.
 
 \OpTeX/ offers a markup language for authors of texts (like \LaTeX),
-i.e. the fixed set of tags to define the structure of the document. This
+i.\,e.\ the fixed set of tags to define the structure of the document. This
 markup is different from the \LaTeX{} markup. It may offer to write the
 source text of the document somewhat clearer and more attractive. 
 
 \new 
 {\bf Disclaimer:} This software is under construction. It is possible
-that some features documented here will be changed in future. There exists a
-large part of original OPmac macros included in \OpTeX/ which waits to its
-re-implementation at current state of development.
+that some features documented here will be changed in future. 
+
+This manual desribes \OpTeX/ features only. We suppose that user knows \TeX/
+basic principles. They are described in many books. You can see a short
+document \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]
+{\TeX/ in nutshell} too.
 
 
 \sec Starting with \OpTeX/
@@ -111,7 +115,7 @@ The first line `\fontfam[LMfonts]` tells that Unicode Latin Modern
 fonts (derived from Computer Modern) are used. If you omit this line then
 preloaded Latin Modern fonts are used but preloaded fonts cannot be in
 Unicode\fnote
-{This is technical limitations of \LuaTeX/ for fonts downloaded in formats:
+{This is a technical limitation of \LuaTeX/ for fonts downloaded in formats:
 only 8bit fonts can be preloaded.}.
 So the sentence `Hello World` will be OK without the first line, but you 
 cannot print such sentence in another languages (for example `Ahoj světe!`) 
@@ -121,11 +125,11 @@ fonts.
 
 A somewhat larger example with common settings should be:
 
-\begtt
-\fontfam[Termes]   % selecting Unicode font family Termes
-\typosize[11/13]   % setting the basic font size and the baselineskip
-\margins/1 a4 (1,1,1,1)in   % setting 1in margins for A4 paper
-\cslang            % Czech hyphenation patterns
+\begtt \catcode`!=0
+\fontfam[Termes]   % selecting Unicode font family Termes (section !ref[fontfam])
+\typosize[11/13]   % setting the basic font size and the baselineskip (sec. !ref[sizes])
+\margins/1 a4 (1,1,1,1)in   % setting 1in margins for A4 paper (section !ref[marg])
+\cslang            % Czech hyphenation patterns (section !ref[lang])
 
 Tady je text.
 \bye
@@ -137,15 +141,15 @@ You can look at `op-demo.tex` file for more examples.
 \sec Page layout
 %%%%%%%%%%%%%%%%
 
-\secc Setting the margins
-%%%%%%%%%%%%%%%%%%%%%%%%
+\secc[marg] Setting the margins
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \OpTeX/ declares paper formats a4, a4l (landscape~a4), a5, a5l, b5, letter and
 user can declare another own format by `\sdef`:
 
 \begtt
-\sdef{pgs:b5l}{(250,176)mm} 
-\sdef{pgs:letterl}{(11,8.5)in}
+\sdef{_pgs:b5l}{(250,176)mm} 
+\sdef{_pgs:letterl}{(11,8.5)in}
 \endtt
 
 The `\margins` command declares margins of the document. This command have
@@ -182,10 +186,10 @@ parameter is empty (`\vsize` instead `\hsize` is used). Examples:
 
 If `<pg>=1` then all pages have the same margins. If `<pg>=2` then the
 declared margins are true for odd pages. The margins at the even pages are
-mirrored in such case, it means that <left> is replaced by <right> and vice
-versa.
+automaticaly mirrored in such case, it means that <left> is replaced by 
+<right> and vice versa.
 
-The `<fmt>` can be in the form `(<width>,<height>)<unit>` where `<unit>` is
+The `<fmt>` can be also in the form `(<width>,<height>)<unit>` where `<unit>` is
 optional. If it is missing then `<unit>` after margins specification is
 used. For example:
 
@@ -215,32 +219,34 @@ review printing. After review is done, the second line can be commented out.
 \secc Concept of default page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ uses for page design very similar \"output routine" like plain
+\OpTeX/ uses for page design very similar \"output routine" like Plain
 \TeX/. There is `\headline` followed by \"page body" followed by
 `\footline`. The `\headline` is empty by default and it can be used
 for running headers repeated on each page. The `\footline` prints
-page number in the center by default. You can set the `\footline` to empty
+centered page number by default. You can set the `\footline` to empty
 using `\nopagenumbers` macro.
 
-The margins declared by `\margins` macro is concerned to the page body,
-i.e.\ the `\headline` and `\fooline` are placed to the top and bottom
+The margins declared by `\margins` macro (documented in the previous
+section~\ref[marg]) is concerned to the page body,
+i.e.\ the `\headline` and `\footline` are placed to the top and bottom
 margins.
 
-The distance between `\headline` and the top of page body is given by
-`\hedalinedist` register. The distance between bottom of page body and `\footline` is
-given by `\footlinedist`. The default values are:
+The distance between the `\headline` and the top of the page body is given by
+`\headlinedist` register. The distance between bottom of the page body and 
+the `\footline` is given by `\footlinedist`. The default values are:
 
 \begtt
 \headline = {}
 \footline = {\_hss\_rmfixed \_folio \_hss} % \folio expands to page number
-\headlinedist = 14pt % from baseline of \hedaline to top of page body 
+\headlinedist = 14pt % from baseline of \headline to top of page body 
 \footlinedist = 24pt % from last line in pagebody to baseline of footline
 \endtt
 
 The page body should be divided to top insertions (floating tables and
-figures), real text and footnotes. Typicaly only real text is here. 
+figures) followed by a real text and followed by footnotes. 
+Typically, only real text is here. 
 
-The `\pgbackground` tokens list is empty by default but it ca be used for
+The `\pgbackground` tokens list is empty by default but it can be used for
 creating background of each page (colors, picture, watermark for example).
 The macro `\draft` uses this register and puts big text DRAFT as watermark
 to each page. You can try it.
@@ -251,7 +257,7 @@ More about the page layout is documented in files `parameters.opm` and
 \secc Footnotes and marginal notes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The plain \TeX/'s macro `\footnote` can be used as usual. But a new macro 
+The Plain \TeX/'s macro `\footnote` can be used as usual. But a new macro 
 `\fnote{<text>}` is defined. The footnote mark is added automatically and it
 is numbered 
 \new
@@ -259,44 +265,54 @@ on each chapter from one\fnote
 {You can declare `\fnotenumglobal` if you want footnotes numbered in whole
 document from one or `\fnotenumpages` if you want footnotes numbered at each
 page from one. Default setting is `\fnotenumchapters`}.
-The <text> is scaled by `\typoscale[800]`. 
-User can redefine fotnote mark or scaling, as shown in the file
+The <text> is scaled to 80 \%. 
+User can redefine footnote mark or scaling, as shown in the file
 `fnotes.opm`.
 
 The `\fnote` macro is fully applicable only in \"normal outer" paragraph.
 It doesn't work inside boxes (tables for example). If you are solving such
-case you can use `\fnotemark<number>` inside the box (only the footnote mark is
-generated). When the box is finished you can use `\fnotetext{<text>}`. This
-macro puts the <text> to the footnote. The <number> after `\fnotemark`
-have to be "1" if only one such command is in the box. Second `\fnotemark`
-inside the same box have to have the parameter `2` etc. 
+case you can use `\fnotemark<numeric-label>` inside the box: only the 
+footnote mark is generated here. When the box is finished you can use 
+`\fnotetext{<text>}`. This macro puts the <text> to the footnote. 
+The <numeric-label> have to be `1` if only one such command is in the box. 
+Second `\fnotemark` inside the same box have to have the parameter `2` etc. 
 The same number of `\fnotetext`s have to be written 
 after the box as the number of `\fnotemark`s inserted inside the box.
+Example:
+
+\begtt
+Text in a paragraph\fnote{First notice}...    % a "normal" footnote
+\table{...}{...\fnotemark1...\fnotemark2...}  % two footnotes in a box
+\fnotetext{Second notice}   
+\fnotetext{Third notice}
+...
+\table{...}{...\fnotemark1...}                % one footnote in a box
+\fnotetext{Fourth notice}
+\endtt
 
 The marginal note can be printed by the `\mnote{<text>}` macro. The <text>
 is placed to the right margin on the odd pages and it is placed to the left
 margin on the even pages. This is done after second \TeX{} run because the
-relevant information is stored in an external file. If you need to place the
-notes only to the fixed margin write `\fixmnotes\right` or
-`\fixmnotes\left`.
+relevant information is stored in an external file and read from it again. 
+If you need to place the notes only to the fixed margin write 
+`\fixmnotes\right` or `\fixmnotes\left`.
 
 The <text> is formatted as a little paragraph with the maximal width
 `\mnotesize` ragged left on the left margins or ragged right on the right
-margins. The first line of this little paragraph is at the same height as
-the invisible mark created by `\mnote` in the current paragraph. The
-exceptions are possible by `\mnoteskip` register. You can implement such
-exceptions to each `\mnote` manually in final printing in order to margin
-notes do not overlap. The positive value of `\mnoteskip` shifts the note up
-and negative value shifts it down. For example
-`\mnoteskip=2\baselineskip \mnote{<text>}` shifts this (and only this) note 
-two lines up.
+margins. The first line of this little paragraph has its vertical position
+given by the position of `\mnote` in the text. The exceptions are possible
+by setting the `\mnoteskip` register. You can implement such exceptions to
+each `\mnote` manually in final printing in order to margin notes do not
+overlap. The positive value of `\mnoteskip` shifts the note up and negative
+value shifts it down. For example `\mnoteskip=2\baselineskip \mnote{<text>}`
+shifts this (and only this) note two lines up.
 
 
 \sec Fonts
 %%%%%%%%%%
 
-\secc Font families
-%%%%%%%%%%%%%%%%%%%
+\secc[fontfam] Font families
+%%%%%%%%%%%%%%%%%%%%%%%
 
 You can select the font family by `\fontfam[<Family-name>]`.
 The argument <Family-name> is case insensitive and spaces are ignored. So,
@@ -306,16 +322,18 @@ to `\fontfam[lmfonts]`. Several aliases are prepared, thus
 
 If you write `\fontfam[?]` then all font families registered in \OpTeX/ 
 are listed on the terminal and in the log file.
-
 If you write `\fontfam[catalog]` then a catalog of all fonts registered in
-\OpTeX/ and available in your \TeX/ system is printed. And the instructions
+\OpTeX/ and available in your \TeX/ system is printed. The instructions
 how to register your own font family is appended in such catalog.
 
 If the family is loaded then {\em font modifiers} applicable in such font family
 are listed on the terminal: (`\caps`, `\cond` for example).
 And there are four basic {\em variant selectors} (`\rm`, `\bf`, `\it`, `\bi`).
+The usage of variant selectors is the same as in Plain \TeX: 
+`{\it italics text}`, `{\bf bold text}` etc.
+
 The font modifiers (`\caps`, `\cond` for example) can
-be used immediately before a basic variant selector and they
+be used before a basic variant selector and they
 can be (independently) combined: `\caps\it` or `\cond\caps\bf`. The
 modifiers keeps their internal setting until group ends or until another
 modifier which negates the previous feature is used. So
@@ -323,14 +341,14 @@ modifier which negates the previous feature is used. So
 
 \new
 There is one special variant selector `\currvar` which does not change the
-selected variant but reloads the font in respect of the (maybe newly
-specified) font modifiers(s).
+selected variant but reloads the font due to the (maybe newly
+specified) font modifier(s).
 
 The context between variants `\rm`--`\it` and `\bf`--`\bi` is kept by the `\em`
 macro (emphasize text).  
 It switches from current `\rm` to `\it`, from current `\it` to `\rm`, from
 current `\bf` to `\bi` and from current `\bi` to `\bf`.
-The needed italics correction `\/` is inserted automatically. Example:
+The italics correction `\/` is inserted automatically. Example:
 
 \begtt
 This is {\em important} text.     % = This is {\it important\/} text.
@@ -342,10 +360,10 @@ This is {\em important} text.     % = This is {\it important\/} text.
 \new
 More about the \OpTeX/ font selection system is written the file
 `fonts-select.opm`. You can mix more font families in your document, you can
-declare your variant selectors or modifiers etc.
+declare your own variant selectors or modifiers etc.
 
-\secc Font sizes
-%%%%%%%%%%%%%%%
+\secc[sizes] Font sizes
+%%%%%%%%%%%%%%%%%%%%%
 
 The command `\typosize[<fontsize>/<baselineskip>]` sets the font size of text and
 math fonts and baselineskip. If one of these two parameters is empty, the
@@ -356,7 +374,7 @@ for instance `\ptunit=1mm` enlarges all font sizes declared by `\typosize`.
 Examples:
 
 \begtt
-\typosize[10/12]   % default of plainTeX
+\typosize[10/12]   % default of Plain TeX
 \typosize[11/12.5] % font 11pt, baseline 12.5pt
 \typosize[8/]      % font 8pt, baseline unchanged
 \endtt
@@ -379,15 +397,15 @@ i.e. the value stays unchanged. Examples:
 
 \begtt
 \typoscale[800/800]    % fonts and baselineskip re-size to 80 %
-\typoscale[\magstep2/] % fonts bigger 1,44times
+\typoscale[\magstep2/] % fonts bigger 1,44times (\magstep2 expands to 1440)
 \endtt
 
 First usage of `\typosize` or `\typoscale` macro in your document sets so
-called {\em main values}, i.~e. main font size and main baselineskip. They are internally 
+called {\em main values}, i.\,e.\ main font size and main baselineskip. They are internally 
 saved in registers `\mainfosize` and `\mainbaselineskip`. 
 
 \new
-The `\typoscale` comand does scaling in respect to current values by default. 
+The `\typoscale` command does scaling in respect to current values by default. 
 If you want to do it in respect to main values, type `\scalemain` immediately
 before `\typoscale` command.
 
@@ -403,9 +421,14 @@ The size of the current font can be changed by the command
 baselineskip.
 
 \new
-There is `\setfontsize{<size-spec>}` command which behaves like
-font modifiers and sets given font size o fonts loaded by next variant selectors. 
-For example `\setfontsize{at15pt}\currvar`.
+There is \"low level" `\setfontsize{<size-spec>}` command which behaves like
+a font modifier and sets given font size used by next variant selectors. 
+For example `\setfontsize{at15pt}\currvar` sets current variant to 15pt.
+
+If you are using a font family with \"optical sizes feature" (i.\,e.\ there
+are more recommended sizes of the same font which are not scaled
+linearly; good example is Computer Modern aka Latin Modern fonts) 
+then the recommended size is selected by all mentioned commands automatically. 
 
 More information about resizing of fonts is documented in `fonts-resize.opm`
 file. 
@@ -413,18 +436,20 @@ file.
 \secc Typesetting math
 %%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ preloads a collection of 7bit Computer Modern and AMS fonts.
-You can use them in any size and in the `\boldmath` variant. 
+\OpTeX/ preloads a collection of 7bit Computer Modern math fonts 
+and AMS fonts in its format. You can use them in any size and in the 
+`\boldmath` variant. 
 %
 \new 
-Most declared font families are configured with recommended Unicode
-math font. This font is automaticlally loaded unless you specify
+Most declared text font families (see `\fontfam` in the section~\ref[fontfam]) 
+are configured with recommended Unicode
+math font. This font is automaticlaly loaded unless you specify
 `\noloadmath` before first `\fontfam` command. See log file for more
 information about loading text font family and Unicode math fonts. If you
 prefer another Unicode math font, specify it by `\loadmath{[<font-file>]}`
 or `\loadmath{font-name}` before first `\loadfam` command.
 
-Hundreds math symbols and operators like in AMS\TeX/ are accesible. 
+Hundreds math symbols and operators like in AMS\TeX/ are accessible. 
 For example  `\alpha` $\alpha$, `\geq`~$\geq$, `\sum` $\sum$, 
 `\sphericalangle` $\sphericalangle$, `\bumpeq`, $\bumpeq$. See AMS\TeX/
 manual for complete list of symbols.
@@ -443,8 +468,10 @@ The following math alphabets are available:
 \bi      % sans serif bold slanted   $/bi abc-xyz,ABC-XYZ$
 \endtt
 
-The last two selectors `\bf` and `\bi` select the sans serif fonts regardless
-current text font family. 
+The last two selectors `\bf` and `\bi` select the sans serif fonts in math regardless
+the current text font family. This is common notation for vectors and
+matrices. You can re-declare it, see the file `unimath-codes.opm` where math
+variants of `\bf` and `\bi` selectors are defined.
 
 The math fonts can be scaled by `\typosize` and `\typoscale` macros.
 Two math fonts collections are prepared: `\normalmath` for normal weight
@@ -474,16 +501,20 @@ braces are used):
 \secc Subsection title <end of line>
 \endtt
 
-The chapters are numbered by one number, sections by two numbers
+If you want to write a title to more lines in your source file then you can
+use percent character before <end of line>. Such <end of line> is not
+scanned and reading of the title continues at next line.
+
+The chapters are automatically numbered by one number, sections by two numbers
 (chapter.section) and subsections by three numbers. If there are no chapters
 then section have only one number and subsection two.
 
 The implicit design of the titles of chapter etc.\ are implemented in the
-macros `\printchap`, `\printsec` and `\printsecc`. User can simply change
+macros `\_printchap`, `\_printsec` and `\_printsecc`. A designer can simply change
 these macros if he/she needs another behavior.
 
 The first paragraph after the title of chapter, section and subsection is
-not indented but you can type `\let\firstnoindent=\relax` if you need all
+not indented but you can type `\let\_firstnoindent=\relax` if you need all
 paragraphs indented.
 
 If a title is so long then it breaks to more lines. It is better to hint the
@@ -501,9 +532,9 @@ Apart from chapters, sections and subsections, there are another
 automatically numbered objects: equations and captions for tables and
 figures.
 
-If user write the `\eqmark` as the last element of the display mode then
-this equation is numbered. The format is one number in brackets. This number
-is reset in each section. 
+If user writes the `\eqmark` as the last element of the display mode then
+this equation is numbered. The equation number is printed in brackets. This number
+resets in each section by default.
 
 If the `\eqalignno` is used, then user can put `\eqmark` to the last column
 before `\cr`. For example:
@@ -514,11 +545,12 @@ before `\cr`. For example:
           c &= \sqrt{a^2+b^2} & \eqmark \cr}
 \endtt
 
-The next numbered object is caption which is tagged by `\caption/t` for
+The next automatically numbered objects are captions which is tagged by `\caption/t` for
 tables and `\caption/f` for figures. 
 The caption text follows.
 The `\cskip` can be used between `\caption` text and the real object (table
-or figure). It is irrelevant, if caption or object is first.
+or figure). You can use two orders: `<caption>\cskip <object>` or 
+`<object>\cskip <caption>`.
 The `\cskip` creates appropriate vertical space between them. Example:
 
 \begtt
@@ -556,12 +588,19 @@ The caption text is centered. If it occupies more lines then the
 last line is centered.
 
 The macro `\caption/f` behaves like `\caption/t` but it is intended for
-figure captions.
+figure captions with independent numbering.
 The word (Table, Figure) depends on the actual selected language (see
 section~\ref[lang] about languages). 
 
 If you wish to make the table or figure as floating object, you need to use
-plain \TeX/ macros `\midinsert` or `\topinsert` terminated by `\endinsert`.
+Plain \TeX/ macros `\midinsert` or `\topinsert` terminated by `\endinsert`.
+Example:
+
+\begtt
+\topinsert  % table and its caption is printed at the top of the current page
+   <caption and table>
+\endinsert
+\endtt
 
 \secc References
 %%%%%%%%%%%%%%%
@@ -573,7 +612,7 @@ if optional parameter
 `[<label>]` is appended to `\chap`, `\sec`,
 `\secc`, `\caption/t`, `\caption/f` or `\eqmark`. The alternative syntax is
 to use `\label[<label>]` before mentioned commands (not necessarily directly
-before). The reference is realized by `\ref[<label>]` or `\pgref[label]`.
+before). The reference is realized by `\ref[<label>]` or `\pgref[<label>]`.
 Example:
 
 \begtt
@@ -587,7 +626,7 @@ Example:
 $$ a^2 + b^2 = c^2 \eqmark $$
 
 Now we can point to the section~\ref[beatle] on the page~\pgref[beatle] 
-or write about the equation~\ref[pythagoras]. Finally there 
+or write something about the equation~\ref[pythagoras]. Finally there 
 is an interesting Table~\ref[comp-depend].
 \endtt
 
@@ -599,17 +638,21 @@ You can create a reference to whatever else by commands
 `\label[<label>]\wlabel{<text>}`. The connection between <label> and
 <text> is established. The `\ref[<label>]` will print <text>.
 
+By default, labels are not printed, of course. But if you are preparing a
+draft version of document, you can declare `\showlabels`. The labels 
+are printed at their destination places after such declaration.
+
 \secc Hyperlinks, outlines
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-If the command `\hyperlinks{<color-in>}{<color-out>}` is used at the beginning of
-the file, then the following objects are hyperlinked when PDF output is used:
+If the command `\hyperlinks <color-in> <color-out>` is used at the beginning of
+the document, then the following objects are hyperlinked in the PDF output:
 
 \begitems
 * numbers generated by `\ref` or `\pgref`,
 * numbers of chapters, sections and subsections in the table of contents,
 * numbers or marks generated by `\cite` command (bibliography references),
-* texts printed by `\url` command.
+* texts printed by `\url` or `\ulink` commands.
 \enditems
 
 The last object is an external link and it is colored by
@@ -648,7 +691,7 @@ An example: `\url{http://www.olsak.net}` creates \url{http://www.olsak.net}.
 The characters \code{\%}, `\`, `#`, `{` and `}` have to be protected by
 backslash in the `\url` argument, the other special characters `~`,
 `^`, `&` can be written as single character\fnote
-{More exactly, there is the same rules as for \code{\\code} command, see
+{More exactly, there are the same rules as for \code{\\code} command, see
 section~\ref[verbatim].}.
 You can insert the `\|` command 
 in the `\url` argument as a potential breakpoint.
@@ -670,12 +713,13 @@ triangle symbol after that.
 \new
 If you are using a special macro in section titles then `\outlines` macro
 may crash. You must declare variant of the macro for outlines case which is
-expandable using `\regmacro`. See section \ref[toc] for more information
+expandable. Use `\regmacro` in such case. See the section \ref[toc] for more information
 about `\regmacro`.
 
 The command `\insertoutline{<text>}` inserts next entry into PDF outlines at
-the main level~0. This entry can be placed before table of contents (created
-by `\outlines`) or after it.
+the main level~0. These entries can be placed before table of contents (created
+by `\outlines`) or after it. Theirs hyperlink destination is in the place
+where  `\insertoutline` macro is used.
 
 \secc Lists 
 %%%%%%%%%%
@@ -712,7 +756,7 @@ For example:
 * Finito
 \enditems
 \endtt
-
+%
 produces:
 
 \begitems
@@ -727,23 +771,22 @@ produces:
 \enditems
 
 Another style can be defined by the command `\sdef{_item:<style>}{<text>}`.
-Default item can be redefined by `\def\normalitem{<text>}`.
+Default item can be set by `\defaultitem={<text>}`.
 The list environments can be nested. Each new level of item is indented by
 next multiple of `\iindent` which is set to `\parindent` by default.
-The vertical space at begin and end of the environment is inserted by the
-macro `\iiskip`.
+More information about design of lists of items are in the `lists.opm` file.
 
 \secc Tables
 %%%%%%%%%%%
 
 The macro `\table{<declaration>}{<data>}` provides similar <declaration>
-as in \LaTeX: you can use letters `l`, `r`, `c`, each letter declares 
+of tables as in \LaTeX: you can use letters `l`, `r`, `c`, each letter declares 
 one column (aligned to left, right, center respectively). 
 These letters can be combined by the `|` character (vertical line). Example
 
 \begtt
 \table{||lc|r||}{                  \crl
-   Month    & commodity & price    \crli \tskip2pt
+   Month    & commodity  & price   \crli \tskip2pt
    January  & notebook   & \$ 700  \cr
    February & skateboard & \$ 100  \cr
    July     & yacht      & k\$ 170 \crl}
@@ -753,7 +796,7 @@ generates the following result:
 
 \bigskip
 \hfil\table{||lc|r||}{             \crl
-   Month    & commodity & price    \crli \tskip2pt
+   Month    & commodity  & price   \crli \tskip2pt
    January  & notebook   &  \$ 700 \cr
    February & skateboard &  \$ 100 \cr
    July     & yacht      & k\$ 170 \crl}
@@ -774,8 +817,8 @@ prefixed. For example `3c` means `ccc` or `c 3{|c}` means
 `c|c|c|c`. Note that spaces in the <declaration> are ignored and you 
 can use them in order to more legibility.
  
-The command `\cr` used in the <data> part of the table (the end row
-separator) is generally known. It marks end row of the table. 
+The command `\cr` used in the <data> part of the table 
+is generally known. It marks end row of the table. 
 Moreover \OpTeX/ defines following similar commands:
 
 \begitems
@@ -803,21 +846,21 @@ too.
 \tabitemr={\enspace} % right material in each column
 \tabstrut={\strut}   % strut which declares lines distance in the table
 \tablinespace=2pt    % additional vertical space before/after horizontal lines
-\vvkern=1pt          % space between double vertical line
-\hhkern=1pt          % space between double horizontal line
+\vvkern=1pt          % space between lines in double vertical line
+\hhkern=1pt          % space between lines in double horizontal line
 \endtt
 
-If you do `\tabiteml={$\enspace}\tabitemr={\enspace$}` then
+Example: if you do `\tabiteml={$\enspace}\tabitemr={\enspace$}` then
 the `\table` acts like \LaTeX's array environment.
 
 If there is an item which spans to more than one column in the table then
-`\multispan{<number>}` macro from plain \TeX{} can help you or, you can use
+`\multispan{<number>}` macro from Plain \TeX{} can help you or, you can use
 `\mspan<number>[<declaration>]{<text>}`
 which spans <number> columns and formats the <text> by the
-<declaration>. The <declaration> must include a declaration of right one column
+<declaration>. The <declaration> must include a declaration of only one column
 with the same syntax as common `\table` <declaration>.
 If your table includes vertical rules and you want to
-create continuous vertical rules by `\mspan`, then use rules
+create continuous vertical rules by `\mspan`, then use rule declarators `|`
 only after `c`, `l` or `r` letter in `\mspan` <declaration>. The
 exception is only in the case when `\mspan` includes first
 column and the table have rules on the left side. The example of `\mspan` usage is below.
@@ -834,18 +877,17 @@ into `\frame` if you need double-ruled border of the table. Example:
 %
 creates the following result:
 
-%\bigskip
 \hfil\frame{\table{|c||l||r|}{\crl
   \mspan3[|c|]{\bf Title} \crl   \noalign{\kern\hhkern}\crli
   first & second & third  \crlli
   seven & eight  & nine   \crli}}
 \bigskip
 
-The `c`, `l`, `r` and `p` are default \"<declaration> letters" but you can define
+The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
 more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. More about
 it is in technical documentation in the file `table.opm`.
 
-The rule width of tables (and implicit width of all `\vrule`s and `\hrule`s)
+The rule width of tables and implicit width of all `\vrule`s and `\hrule`s
 can be set by the command `\rulewidth=<dimen>`. The default value given 
 by \TeX/ is 0.4\,pt.
 
@@ -880,8 +922,8 @@ User can change values of the `\parindent` and `\ttindent` independently.
 
 The `\begtt` command starts internal group in which the catcodes are changed. 
 \new
-Then the `\everytt` string reister is run. It is empty by default and user can
-control fine behavior by it. For example the cactodes can be reset here. If
+Then the `\everytt` tokens register is run. It is empty by default and user can
+control fine behavior by it. For example the catcodes can be reseted here. If
 you need to define active character in the `\everytt`, use `\adef` as in the
 following example:
 
@@ -892,10 +934,14 @@ Each occurrence of the exclamation mark will be changed to
 the question mark and vice versa. Really? You can try it! 
 @
 \endtt
-
+%
 The `\adef` command sets its parameter as active {\it after\/}
-the body of `\everytt` is read. So you can't worry about active
+the value of `\everytt` is read. So you don't have to worry about active
 categories. 
+
+There is an alternative to `\everytt` named `\everyintt` which is used for
+in-line verbatim surrounded by an `\activettchar` or processed by the `\code`
+command.
 
 The `\everytt` is applied to all `\begtt...\endtt` environments (if it is not
 decared in a group). There are tips for such global `\everytt` definitions here:
@@ -907,7 +953,7 @@ decared in a group). There are tips for such global `\everytt` definitions here:
 \endtt
 
 \new
-If you want to apply a `\everytt` material only for one `\begtt...\endtt`
+If you want to apply a special code only for one `\begtt...\endtt`
 environment then don't set any `\everytt` but put desired material at the 
 same line where `\begtt` is. For example:
 
@@ -921,7 +967,7 @@ The in-line verbatim surrounded by an `\activettchar` doesn't work in
 parameter of macros and macro definitions, especially in titles declared by
 `\chap`, `\sec` etc. 
 \new
-You ca use more robust command `\code{<text>}` in such
+You can use more robust command `\code{<text>}` in such
 situations, but you must escape following characters in the <text>:
 `\`, `#`, `%`, braces (if the braces are unmatched in the <text>), 
 and space or `^` (if there are more than one subsequent spaces or `^` in 
@@ -936,10 +982,6 @@ the <text>). Examples:
 \code{^\^M}         ... prints ^^M, the second ^ must be escaped
 \endtt
 
-There is an alternative to `\everytt` named `\everyintt` which is used for
-in-line verbatim surrounded by an `\activettchar` or processed by the `\code`
-command.
-
 You can print verbatim listing from external files by `\verbinput` command. 
 Examples:
 
@@ -950,7 +992,7 @@ Examples:
 \verbinput (-) program.c      % whole file is printed
 \verbinput (70+10) program.c  % from line 70, only 10 lines printed
 \verbinput (+10) program.c    % from the last line read, print 10 lines 
-\vebrinput (-5+7) program.c   % from the last line read, skip 5, print 7
+\verbinput (-5+7) program.c   % from the last line read, skip 5, print 7
 \verbinput (+) program.c      % from the last line read to the end
 \endtt
 
@@ -1045,7 +1087,7 @@ linear~dependency  11, 40--50
 
 \medskip
 
-To do this you have to declare the parts of the words by the `/` separator.
+To do this you have to declare the parts of the index entries by the `/` separator.
 Example:
 
 \begtt
@@ -1072,10 +1114,11 @@ If you really need to insert the space into the index entry, write `~`.
 
 If the `\ii` or `\iid` command is preceded by `\iitype <letter>`, then such
 reference (or more references generated by one `\ii`) has specified type.
-They should have different format in the index. \OpTeX/ implements 
-`\iitype b` and `\iitype i`. This prints the page number in bold or in
-italics in the index. Default is empty index type, which prints page numbers
-in normal font. See \TeX/book index as an example.
+The page numbers of such references should be formatted
+specially in the index. \OpTeX/ implements only `\iitype b`, `\iitype i` and
+`\iitype u`. The page number in bold or in italics or underlined is printed
+in the index when these types are used. Default index type is empty, which
+prints page numbers in normal font. See \TeX/book index as an example.
 
 The `\makeindex` creates the list of alphabetically sorted index entries
 without the title of the section and without creating more columns. \OpTeX/
@@ -1107,29 +1150,28 @@ If the \ii relax `\relax` command is used then \TeX/ is relaxing.
 ...
 \iis chiquadrat {$\chi$-quadrat}
 \iis relax {\code{\\relax}}
-...
 \endtt
-
-The `\iis <equivalent> {<text>}` creates one entry in the {\em dictionary 
-of the exceptions}. The sorting is done by the <equivalent> but the
+%
+The `\iis <equivalent> {<text>}` creates one entry in the \"dictionary 
+of the exceptions". The sorting is done by the <equivalent> but the
 <text> is printed in the index entry list.
 
 The sorting rules when `\makeindex` runs depends on the current language. 
-See section~\ref[lang] about lanuages selection.
+See section~\ref[lang] about languages selection.
 
 \secc Bib\TeX/ing
 %%%%%%%%%%%%%%%%
 
-The command `\cite[<label>]` or its variants of the type
-\hbox{`\cite[<label-1>,<label-2>,...,<label-n>]`}
-create the citations in the form [42] or [15,~19,~26]. 
+The command `\cite[<label>]` (or its variants of the type
+\hbox{`\cite[<label-1>,<label-2>,...,<label-n>]`})
+creates the citation in the form [42] (or [15,~19,~26]). 
 If `\shortcitations` is declared at the beginning of the document then 
 continuous sequences of numbers are re-printed like this: 
 \hbox{[3--5,~7,~9--11]}. If
 `\sortcitations` is declared then numbers generated by one `\cite` command
 are sorted upward.
 
-If `\nonumcitations` is used then the marks instead numbers are generated
+If `\nonumcitations` is declared then the marks instead numbers are generated
 depending on the used bib-style. For example the citations look like
 [Now08] or [Nowak, 2008].
 
@@ -1154,14 +1196,14 @@ references list:
 
 \begitems
 * Manually using `\bib[<label>]` commands.
-* By `\usebib/<type> (<style>) <bbl-base>` command which reads `*.bib`
-  databases directly. 
+* By `\usebib/<type> (<style>) <bib-base>` command which reads `*.bib`
+  files directly. 
 \enditems
 
 \new
 Note that another two possibilities documented in OPmac (using external
 Bib\TeX/ program) isn't supported because Bib\TeX/ is old program which does not
-supports Unicode. And Biber seems to be not compliant with Plain \TeX.
+support Unicode. And Biber seems to be not compliant with Plain \TeX.
 
 \medskip\noindent
 {\bf References created manually using `\bib[<label>]` command.}
@@ -1184,8 +1226,8 @@ equal sign are mandatory. Example:
 
 \noindent
 {\bf Direct reading of `.bib` files} is possible by `\usebib` macro.
-This macro reads macro package `opmac-bib.tex` (on demand) which uses the external 
-package `librarian.tex` by Paul Isambert. The usage is:
+This macro reads and uses macro package `librarian.tex` by Paul Isambert. 
+The usage is:
 
 \begtt
 \usebib/c (<style>) <bib-base> % sorted by \cite-order (c=cite),
@@ -1197,35 +1239,15 @@ package `librarian.tex` by Paul Isambert. The usage is:
 The <bib-base> is one or more `*.bib` database source files (separated by
 spaces and without extension) and the <style> is the part of the filename
 `bib-<style>.opm` where the formatting of the references list is
-defined. Possible styles are `simple` or `iso690`. The behavior of
-`opmac-bib.tex` and `opmac-bib-iso690.tex` is full documented in these files
-(after `\endinput` command).
+defined. \OpTeX/ supports `simple` or `iso690` styles. The behavior of
+`\usebib` is documented in `usebib.opm` and `bib-iso690.opm` files in detail.
 
-The command `\usebib` select from database files only such bib-records which
-were used in `\cite` or `\nocite` commands in your document. It means, not
-all records are printed. The `\nocite` behaves as `\cite` but prints
-nothing. It only tels that mentioned bib-record should be printed in  
-the reference list. If `\notcite[*]` is used then all records from <bib-base>
+Not all records are printed from <bib-base> files: the command `\usebib`
+selects only such bib-records which were used in `\cite` or `\nocite`
+commands in your document. The `\nocite` behaves as `\cite` but prints
+nothing. It only tels that mentioned bib-record should be printed in the
+reference list. If `\notcite[*]` is used then all records from <bib-base>
 are printed.
-
-\medskip\noindent
-{\bf Formatting of the references list} is controlled by the `\printb` macro.
-It is called at the begin of each entry. The default `\printb` macro prints
-the number of the entry in square brackets. If the `\nonumcitations` is set
-then no numbers are printed, only all lines (but no first one) are indented.
-The `\printb` macro can use the following values: `\the\bibnum` (the number
-of the entry) and `\the\bibmark` (the mark of the entry used when
-`\nonumcitations` is set). Examples:
-
-\begtt
-% The numbers are without square brackets:
-\def\printbib{\hangindent=\parindent \indent \llap{\the\bibnum. }}
-% Printing of <marks> when \nonumcitations is set:
-\def\printbib{\hangindent=\parindent \noindent [\the\bibmark]\quad}
-\endtt 
-
-Another examples can be found on the 
-\ulink[http://petr.olsak.net/opmac-tricks-e.html]{OPmac tricks WWW page}.
 
 
 \sec Graphics
@@ -1246,27 +1268,39 @@ Another examples can be found on the
 {\Grey `\Grey`}, 
 {\LightGrey `\LightGrey`} and
 `\Black`. User can define more
-such selectors by setting the CMYK components. For example
+such selectors by setting four CMYK components 
+\new
+or three RGB components. For example
 
 \begtt
 \def \Orange {\setcmykcolor{0 0.5 1 0}}
+\def \Purple {\setrgbcolor{1 0 1}}
 \endtt
 
 \new
 The command `\morecolors` reads more definitions of color selectors 
 from \LaTeX/ file `x11nam.def`. There is about 300 color names like 
 `\DeepPink`, `\Chocolate` etc. If there are numbered variants of the same
-name, then you can apend letters B, C, etc. to the name in \OpTeX/. For example 
-`\Chocolate` is Chocolate1, `\ChocolateB` is Cocolate2 etc.
+name, then you can append letters B, C, etc. to the name in \OpTeX/. For example 
+`\Chocolate` is Chocolate1, `\ChocolateB` is Chocolate2 etc.
 
 \new
-The color selectors work locally in groups by default but with limitiations. See 
+The color selectors work locally in groups by default but with limitations. See 
 the file `colors.opm` for more information.
 
-Default colors are defined by four CMYK components using `\setcmykcolor` like in
-the example above. But you can define a color with three RGB components too by
-`\setrgbcolor`, for example `\def\Orange{\setrgbcolor{1 0.5 0}}`. All colors
-defined by `\morecolors` are in RGB.
+The colors `\Blue`, `\Cyan` etc. are defined with CMYK components using `\setcmykcolor`.
+But you can define a color with three RGB components too and `\morecolors`
+defines such RGB colors. By default, the color model isn't converted but only stored to
+PDF output for each used color by default. Thus, there may be a mix of color
+models in the PDF output which is not good idea. You can overcome this
+problem by declaration `\onlyrgb` or `\onlycmyk`. Then only selected color
+model is used for PDF output and if an used color is declared by another color
+model then it is converted.
+The `\onlyrgb` creates colors more bright (usable for computer
+presentations). On the other hand CMYK makes colors more true\fnote
+{Printed output is more equal to the monitor preview especialy if you are
+using ICC profile for your printer.} 
+for printing.
 
 \new
 You can define your color by a linear combination of previously defined colors using
@@ -1279,18 +1313,13 @@ You can define your color by a linear combination of previously defined colors u
 \colordef \MyColor {.3\Orange+.5\Green+.2\Yellow}
 \endtt
 %
+The linear combination is done in CMYK substractive color space by default 
+(RGB colors used in `\colordef` argument are converted first). 
+If the resulting component is greater than 1 then it is truncated to 1.
 If a convex linear combination (as in the last example above) is used then it
-emulates color behavior on a painter's palette. 
-
-Only `\setcmykcolor` is used in default colors in \OpTeX/ and `\colordef`
-creates also a colors defined by `\setcmykcolor`. If you define your own
-colors by `\setrgbcolor` or you use `\morecolors` then a mix of color spaces
-should be in the PDF output. The `\onlyrgb` or `\onlycmyk` commands solves
-this problem: only specified color space is used in the
-PDF output and if a color is specified in another color space then it is
-converted. The `\onlyrgb` creates colors more bright (usable for computer
-presentations). On the other hand CMYK makes colors more true when 
-they are printing.
+emulates color behavior on a painter's palette.
+You can use `\rgbcolordef` instead `\colordef` if you want to mix colors 
+in additive RGB color space.
 
 More about colors, about CMYK versus RGB and
 about the `\colordef` command is written in the `colors.opm` file.
@@ -1313,34 +1342,42 @@ The `\coloron` can be defined as follows:
 \coloron\Yellow\Brown{The brown text on the yellow backround}
 \endtt
 
-{\bf The watermark} is grey text on the backround of the page. \OpTeX/ offers
-an example: the macro `\draft` which creates grey scaled and rotated text
-DRAFT on the background of every page.
-
 \secc Images
 %%%%%%%%%%%
 
-The `\inspic <filename>.<extension><space>` or
-`\inspic {<filename>.<extension>}`
+The `\inspic {<filename>.<extension>}` or
+`\inspic <filename>.<extension><space>`
 inserts the picture stored in
-the graphics file  with the name `<filename>.<extension>`. 
+the graphics file with the name `<filename>.<extension>` to the document. 
 You can set the picture width by `\picw=<dimen>`
 before `\inspic` command which declares the width of the picture 
 The image files can be in the PNG, JPG, JBIG2 or PDF format. 
 
-The `\picwidth` is an equivalent the register to `\picw`. Moreover there is an
+The `\picwidth` is an equivalent register to `\picw`. Moreover there is an
 `\picheight` register which denotes the height of the picture. If both
 registers are set then the picture will be (probably) deformed. 
 
-The image files are searched in `\picdir`. This token string is empty 
+The image files are searched in `\picdir`. This token list is empty 
 by default, this means that the image files are searched in the 
-current directory.
+current directory. Example: `\picdir={img/}` supposes that image files are
+in `img` subdirectory. Note: the directory name must end by `/` in `\picdir`
+declaration.
+
+Inkscape\fnote
+{A powerfull and free wysiwyg editor for creating vector graphics.} 
+is able to save a picture to PDF and labels of the picture to another
+file\fnote
+{Chose \"Omit text in PDF and create LaTeX file" option.}. 
+This second file should be read by \TeX/ in order to print labels
+in the same font as document font. \OpTeX/ supports this feature by
+`\inkinspic {<filename>.pdf}` command. It reads and displays both: PDF image
+and labes generated by Inkscape.
 
 If you want to create a vector graphics (diagrams, schema, geometry
-skicing) then you can do it in Wysiwyg graphics editor (Inkscape for
+skicing) then you can do it in Wysiwyg graphics editor (Inkscape, Geogebra for
 example), export the result to PDF and include it by `\inspic`.
-If you want to \"proramm" such pictures then Tikz package is recommended.
-It works in plain \TeX. 
+If you want to \"programm" such pictures then Tikz package is recommended.
+It works in Plain \TeX. 
 
 \secc PDF transformations
 %%%%%%%%%%%%%%%%%%%%%%%%
@@ -1352,8 +1389,8 @@ with the current matrix so linear transformations can be composed.
 One linear transformation given by the `\pdfsetmatrix` above transforms
 the vector $[0,1]$ to $[<a>,<b>]$ and $[1,0]$ to $[<c>,<d>]$.
 The stack-oriented commands `\pdfsave` and `\pdfrestore` gives a possibility of
-storing and restoring the current transformation matrix and current point.
-The possition of current point have to be the same from \TeX{}'s point of
+storing and restoring the current transformation matrix and the current point.
+The position of the current point have to be the same from \TeX{}'s point of
 view as from transformation point of view when `\pdfrestore` is processed.
 Due to this fact the `\pdfsave\rlap{<transformed text>}\pdfrestore` 
 or something similar is recommended.
@@ -1365,8 +1402,7 @@ or something similar is recommended.
 \pdfrotate{<angle-in-degrees>}
 \endtt 
 
-These macros simply calls the
-properly `\pdfsetmatrix` primitive command.
+These macros simply calls the properly `\pdfsetmatrix` command.
 
 It is known that the composition of transformations is not commutative. It
 means that the order is important. You have to read the transformation
@@ -1388,7 +1424,21 @@ This gives the following result.
 First: \pdfsave \pdfrotate{30}\pdfscale{-2}{2}\rlap{text1}\pdfrestore
 second: \pdfsave \pdfscale{-2}{2}\pdfrotate{30}\rlap{text2}\pdfrestore
 third: \pdfsave \pdfrotate{-15.3}\pdfsetmatrix{2 0 1.5 2}\rlap{text3}\pdfrestore
-\bigskip\bigskip
+\par\nobreak\bigskip\penalty0%\bigskip
+
+You can see that \TeX/ knows nothing about dimensions of transfomed material,
+it treats it as with a zero dimension object. 
+This problem is solved by the `\transformbox{<transformation>}{<text>}` 
+macro which puts the transformed
+material to a box with relevant dimension. The <transfromation> parameter
+includes one or more transfromation commands `\pdfsetmatrix`, `\pdfscale`,
+`\pdfrotate` with their parameters. The <text> is transformed text.
+
+Example: `\frame{\transformbox{\pdfscale{1}{1.5}\pdfrotate{-10}}{moj}}`
+creates \frame{\transformbox{\pdfscale{1}{1.5}\pdfrotate{-10}}{moj}}.
+
+The `\rotbox{<deg>}{<text>}` is a shortcut for 
+`\transformbox{\pdfrotate{<deg>}}{<text>}`.
 
 
 \sec Others
@@ -1418,92 +1468,62 @@ macro. This macro prints now:
 \new
 For compatibility with e-plain macros, there is the command
 `\uselanguege{<language>}`. The parameter <language> is long form of
-language name, i.e.\ `\uselanguage{Czech}` does the same work as `\cslang`.
+language name, i.e.\ `\uselanguage{Czech}` works the same as `\cslang`.
 The `\uselanguage` parameter is case insensitive.
 
-For compatibility with \csplain/ there are macros `\ehyph`, `\chyph`,
+For compatibility with \csplain/, there are macros `\ehyph`, `\chyph`,
 `\shyph` which are equivalent to `\enlang`, `\cslang` and `\sklang`.
 
 You can switch between language patterns by `\<iso-code>lang` commands mentioned
-above. Defalut is `\enlang`.
+above. Default is `\enlang`.
 
 \OpTeX/ generates three words used for captions and titles in technical
-articles or books: \"Chapter", \"Table" and \"Figure". These words need to be know
-in used language and it depends on the previsously used language selectors
+articles or books: \"Chapter", \"Table" and \"Figure". These words need to be known
+in used language and it depends on the previously used language selectors
 `\<iso-code>lang`. \OpTeX/ declares these words only for few languages:
 \new
 Czech, German, Spanish, French, Greek, Italian, Polish, Russian, Slovak and 
 English, If you need to use these words in another languages or you want to
 auto-generate more words in your macros, then you can declare it by 
-`\sdef` commands as shown in the file `languages.opm`.
+`\sdef` or `\_langw` commands as shown in the file `languages.opm`.
 
 The `\makeindex` command needs to know the sorting rules used in your language.
 \OpTeX/ defines only few language rules for sorting: Czech,
 Slovak and English. How to declare sorting rules for more languages are
 described in the file `makeindex.opm`.
 
-\iffalse
-And you can optionally
-define the `\specsortingdata<iso-code>` macro. Example:
-%{\emergencystretch=2em\par}
-
-\begtt
-\def\sortingdataes {aAäÄáÁ,bB,cCçÇ,^^P^^Q^^R,dD,...,zZ,.}
-\def\specsortingdataes {ch:^^P Ch:^^Q CH:^^R}
-\endtt
-
-There are groups of letters separated by comma and ended by comma-dot in
-the parameter of the macro `\sortingdata<iso-code>`. (In the example above, three dots must
-be replaced by real data by the user.) All letters in one group are not
-distinguished during first step of sorting (primary sorting). If some items
-are equal from this point of view then the secondary sorting is processed
-for such items where all mentioned letters are distinguished in the order
-given in the macro. 
-
-Sorting algorithm can treat couple of letters (like Dz, Ch etc.) as one letter 
-if the parameter of the macro `\specsortingdata<iso-code>` is defined. There is
-a space separated list of items in the form `<couple>:<one-token>`. The
-replacing from <couple> to <one-token> is done before sorting, so you can
-use `<one-token>` in the `\sortingdata<iso-code>` macro. The `<one-token>`
-must be something special not used as the letter of the alphabet. The usage of
-`^^A`, `^^B` etc. is recommended but you must avoid the `^^I` and `^^M` because
-these characters have special catcode.
-
-The macros `\sortingdata<iso-code>` and `\specsortingdata<iso-code>` are
-active when the language selector `\<iso-code>lang` is used.
-
-The list of ignored characters for sorting point of view is defined in the
-`\setignoredchars` macro. \OpTeX/ defines this macro like:
-
-{\catcode`\<=12
-\begtt
-\def\setignoredchars{\setlccodes ,.;.?.!.:.'.".|.(.).[.].<.>.=.+.{}{}}
-\endtt
-}%
-It means that comma, semicolon, question mark, \dots, plus mark are treated
-as dot and dot is ignored by sorting algorithm. You can redefine this macro,
-but you must keep the format, keep `\setlccodes` in the front and `{}{}` in
-the end.
-\fi
+If you declare `\<iso-code>quotes`, then the control sequences `\"` and `\'`
+should be used like this: `\"<quoted text>"` or `\'<quoted text>'` 
+(note that the terminating character is the same but it isn't escaped).
+This prints language dependent normal or alternative quotes around 
+<quoted text>. The language is specified by <iso-code>. \OpTeX/ declares
+quotes only for Czech, German, Spanish, French, Greek, Italian, Polish, 
+Russian, Slovak and English (`\csquotes`, `\dequotes`, \dots, `\enquotes`). 
+You can simply define your own quotes as shown in `languages.opm` file.
+The `\"` is used for quotes visualy more similar to the `"` character which
+can be primary quotes or secondary quotes depending on the language rules.
+May be you want to alternate meaning of these two types of quotes. Use
+`\<isocode>quotes\atlquotes` in such case.
 
 \secc Pre-defined styles
 %%%%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ defines two style-declaration macros `\report` and `\letter` 
-You can use them at the beginning of your document if you are
+\OpTeX/ defines three style-declaration macros `\report`, `\letter` and
+`\slides`. You can use them at the beginning of your document if you are
 preparing these types of document and you don't need to create your own
 macros.
 
 The `\report` declaration is intended to create reports. It 
 sets default font size to 11\,pt and `\parindent` (paragraph indentation) to 1.2\,em.
-The `\tit` macro uses smaller font because we assume that \"chapter" level
+The `\tit` macro uses smaller font because we assume that \"chapter level"
 will be not used in reports. The first page has no page number, but next pages
 are numbered (from number~2). Footnotes are numbered from one in whole
 document. The macro `\author <authors><end-line>` can be used when 
 `\report` is declared. It prints `<authors>` in italics at center of the
 line. You can separate authors by `\nl` to more lines.
 
-The `\letter` declaration is intended to create letters. It sets default
+The `\letter` declaration is intended to create letters. See an example in
+the file `op-letter.tex`. The `\letter` style sets default
 font size to 11\,pt and `\parindent` to 0\,pt. It sets half-line space
 between paragraphs. The page numbers are not printed. The `\subject` macro
 can be used, it prints the word \"Subject:" or \"Věc" (or something else
@@ -1527,10 +1547,13 @@ of lines in the source file are the same as in printed output. The
 document. Or you can use `<prefixed text>\address...` to put 
 `<prefixed text>` before first line of the address.
 
-Analogical declaration macros `\book` or `\slides` are not prepared. Each
-book needs an individual typographical care so you need to create specific
-macros for design. And you can find an inspiration of slides in OPmac tricks
-\ulink[http://petr.olsak.net/opmac-tricks-e.html\#slidy]{0017 and 0022}.
+The `\slides` style ceates a simple presentation slides. See an example
+in the file `op-slides.tex`. Run `optex op-slides.tex` and see the usage of
+`\slides` style in the file `op-slides.pdf`. 
+
+Analogical declaration macros `\book` is not prepared. Each book needs an
+individual typographical care so you need to create specific macros for
+design. 
 
 \secc Lorem ipsum dolor sit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1544,6 +1567,17 @@ text. The numbers <number> or <from>, <to> must be in the range 1 to 150
 because there are 150 paragraphs with neutral text prepared for you.
 The `\lipsum` macro is equivalent to `\lorem`. Example `\lipsum[1-150]`
 prints all prepared paragraphs.
+
+\secc Logos
+%%%%%%%%%%
+
+\new
+The control sequences for typical logos can be terminated by optional `/`
+which is ignored when printing. This makes logos more legible in source file:
+
+\begtt
+We are using \TeX/ because it is cool. \OpTeX/ is better than \LaTeX.
+\endtt
 
 \secc The last page
 %%%%%%%%%%%%%%%%%%%
@@ -1570,13 +1604,12 @@ zero (in first \TeX/ run) or to the number of all pages in the document
 
 \new
 The command `\useOpTeX` (or `\useoptex`) does nothing in \OpTeX/ but it causes 
-an error (undefined control sequence) when another format is used. You can use it as
-the first command in your document:
+an error (undefined control sequence) when another format is used. You can
+put it as the first command in your document:
 
 \begtt
-\useOpTeX % we are using OpTeX format, no LaTeX 
+\useOpTeX % we are using OpTeX format, no LaTeX :) 
 \endtt
-
 
 \sec Summary
 %%%%%%%%%%%%
@@ -1623,8 +1656,8 @@ the first command in your document:
 \inspic file.ext    % insert a picture, extensions: jpg, png, pdf
 \table {rule}{data} % simple macro for the tables like in LaTeX
 
-\fnote    % footnote (local numbering on each page)
-\mnote    % note in the margin (left or right by page number)
+\fnote {text}   % footnote (local numbering on each page)
+\mnote {text}   % note in the margin (left or right by page number)
 
 \hyperlinks {color-in}{color-out} % PDF links activate as clickable
 \outlines {level}   % PDF will have a table of contents in the left tab
@@ -1632,20 +1665,20 @@ the first command in your document:
 \magscale[factor]  % resize typesetting, line/page breaking unchanged
 \margins/pg format (left, right, top, bottom)unit % margins setting
 
-\report \letter    % style declaration macros
+\report \letter \slides  % style declaration macros
 \endtt
 
 
 \sec Compatibility with Plain \TeX/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All macros of plain \TeX/ are re-written in \OpTeX/. Common macros should be
-work in the same sense as in original plain \TeX. Internal control sequences
+All macros of Plain \TeX/ are re-written in \OpTeX/. Common macros should
+work in the same sense as in original Plain \TeX. Internal control sequences
 \new 
 like `\p@` or `\f@@t` are removed and mostly replaced by control sequences
 prefixed by `_` (like `\_this`). All primitives and common macros have two
-control sequences in prefixed and unprefixed form with the same
-meaning. For example `\hbox` is equal to `\_hbox`. 
+control sequences with the same meaning: in prefixed and unprefixed form.
+For example `\hbox` is equal to `\_hbox`. 
 Internal macros of \OpTeX/ have and use only prefixed form. User should use
 unprefixed forms, but prefixed forms are accessible too, because the `_` is
 set as a letter category code globally (in macro files and in users document too). User
@@ -1661,15 +1694,17 @@ use after the command `\fontfam[LMfonts]` which reads the fonts in OTF
 format.
 
 \new
-The accents macros like `\'`, `\v` are undefined in \OpTeX/. Use real
+The text accents macros like `\'`, `\v`, `\"` are undefined\fnote 
+{The math accents macros like `\acute`, `\bar`, `\dot`, `\hat` still work.}
+in \OpTeX/. Use real
 letters like á, ř, ž in your source document instead these old accents macros.
 If you really want to use them, you can initialize them by `\oldaccents`
 command. But we don't recommend it.
 
 \new
-The default paper size is not set as letter with 1\,in margins but as a4 with
+The default paper size is not set as letter with 1\,in margins but as A4 with
 2.5\,cm margins. You can change it, for example by 
-`\margins/1 letter (1,1,1,1)in`. This example sets the classical plain TeX
+`\margins/1 letter (1,1,1,1)in`. This example sets the classical Plain \TeX/
 page layout.
 
 \new

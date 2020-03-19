@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2020-02-14>} % loaded in format
+\_codedecl \makeindex {Makeindex and sorting <2020-03-16>} % loaded in format
 
    \_doc -----------------------------
    `\makeindex` implements sorting algorithm at \TeX/ macrolanguage level.
@@ -104,9 +104,12 @@
    \_ea\_let \_ea\_sortingdata \_csname _sortingdata\_sortinglang\endcsname
    \_ea\_let \_ea\_compoundchars \_csname _compoundchars\_sortinglang\endcsname
    \_ea\_let \_ea\_ignoredchars \_csname _ignoredchars\_sortinglang\endcsname
-   \_ifx \_sortingdata\_relax \_let \_sortingdata = \_sortingdataen \fi
-   \_ifx \_compoundchars\_relax \_let \_compoundchars = \_compoundcharsen \fi
-   \_ifx \_ignoredchars\_relax \_let \_ignoredchars = \_ignoredcharsen \fi
+   \_ifx \_sortingdata\_relax \_addto\_nold{ sortingdata}%
+       \_let \_sortingdata = \_sortingdataen \fi
+   \_ifx \_compoundchars\_relax \_addto\_nold{ compoundchars}%
+       \_let \_compoundchars = \_compoundcharsen \fi
+   \_ifx \_ignoredchars\_relax \_addto\_nold{ ignoredchars}%
+       \_let \_ignoredchars = \_ignoredcharsen \fi
    \_ifx \_compoundchars\_empty \_else
       \_edef \_compoundchars {\_detokenize\_ea{\_compoundchars} }\_fi % all must be catcode 12
    \_def \_act ##1{\_ifx##1\_relax \_else
@@ -247,7 +250,8 @@
 \_newifi \_ifasciisorting  \_asciisortingfalse
 \_def\_dosorting #1{%
    \begingroup
-      \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
+     \_def\_nold{}% 
+     \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
       \_ifasciisorting
           \_edef\_sortinglang{ASCII}%
           \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignorefirst\_csstring##1}}%
@@ -256,6 +260,7 @@
          \_setprimarysorting
       \_fi        
       \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
+      \_ifx\_nold\_empty\_else \_opwarning{Missing\_nold\_space for language (\_sortinglang)}\_fi
       \_def \_act##1{\_preparesorting ##1\_edef##1{\_tmpb}}%
       \_ea\_xargs \_ea\_act #1;%
       \_def \_act##1{\_addto #1{##1,}}%
@@ -268,7 +273,7 @@
    \_doc -----------------------------
    The `\makeindex` prints the index. First, it sorts the `\_iilist`
    second, it prints the sorted `\_iilist`, each item is printed 
-   using `\_printiitem`.
+   using `\_printindexitem`.
    \_cod -----------------------------
 
 \_def\_makeindex{\_par
@@ -295,7 +300,7 @@
    \_ifcsname _\_csstring #1\_endcsname
       \_ea\_ea\_ea \_printii \_csname _\_csstring #1\_endcsname &%
    \_else
-      \_ea\_printii \_ea\_ignorefirst \_csstring #1&%
+      \_ea\_ea\_ea\_printii \_ea\_ignorefirst \_csstring #1&%
    \_fi   
    \_ea\_printiipages #1&
 }
@@ -305,16 +310,27 @@
     words in the form `<main-word>/<sub-word>/<sub-sub-word>`.
     The `\everyii` tokens register is applied before `\noindent`. User can
     declare something special here.
+
+   The `\_newiiletter{<letter>}` macro is empty by default. It is invoked if first
+   letter of index entries is changed. You can declare a design between
+   index entries here. You can try, for example:
+   \begtt
+   \def\_newiiletter#1#2{\bigskip\hbox{\setfontsize{at15pt}\bf\uppercase{#1}}\medskip}
+   \endtt
    \_cod -----------------------------
 
-\_def\_printii #1&{\_gdef\_currii{#1}\_the\_everyii\_noindent
-   \_hskip-\_iindent \_ignorespaces\_printiiA#1//}
+\_def\_printii #1#2&{%
+   \_ismacro\_lastii{#1}\_iffalse \_newiiletter{#1}{#2}\_def\_lastii{#1}\_fi
+   \_gdef\_currii{#1#2}\_the\_everyii\_noindent
+   \_hskip-\_iindent \_ignorespaces\_printiiA#1#2//}
 \_def\_printiiA #1/{\_if^#1^\_let\_previi=\_currii \_else
    \_ea\_scanprevii\_previi/&\_edef\_tmpb{\_detokenize{#1}}%
    \_ifx\_tmpa\_tmpb \_iiemdash \_else#1 \_gdef\_previi{}\_fi
    \_expandafter\_printiiA\_fi
 }
 \_def\_iiemdash{\_kern.1em---\_space}
+\_def\_lastii{}
+\_def\_newiiletter#1#2{}
 
 \_def\_scanprevii#1/#2&{\_def\_previi{#2}\_edef\_tmpa{\_detokenize{#1}}}
 \_def\_previi{} % previous index item
@@ -362,12 +378,14 @@
    \_cod -----------------------------
 
 \_def\_pgprint #1:#2{%
-   \_ifx,#2,\_pgprintA{#1}\_returnfi \_fi
+   \_ifx ,#2,\_pgprintA{#1}\_returnfi \_fi
    \_ifx b#2{\_bf \_pgprintA{#1}}\_returnfi \_fi   
-   \_ifx i#2{\_it \_pfprintA{#1}}\_returnfi \_fi   
+   \_ifx i#2{\_it \_pgprintA{#1}}\_returnfi \_fi   
+   \_ifx u#2\_pgu{\_pgprintA{#1}}\_returnfi \_fi   
   \_pgprintA{#1}\_relax
 }
 \_def\_pgprintA #1{\_ilink[pg:#1]{\_cs{_pgi:#1}}} % \ilink[pg:<gpageno>]{<pageno>}
+\_def\_pgu#1{\_leavevmode\_vtop{\_hbox{#1}\kern.3ex\_hrule}}
 
    \_doc -----------------------------
    The `\iindex{<word>}` puts one <word> to the index. It writes

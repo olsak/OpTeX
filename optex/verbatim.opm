@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2020-02-14>}
+\_codedecl \begtt {Verbatim <2020-03-18>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters for verbatim macros are set. 
@@ -10,6 +10,7 @@
 \_mathchardef\_ttpenalty=100       % penalty between lines in \begtt, \verbinput
 \_newcount\_viline                 % last line number in \verbinput
 \_newread\_vifile                  % file fgiven by \verinput
+\_def\_ttfont{\_tt}                % default tt font
 
    \_doc ----------------------------
    `\code{<text>}` expands to `\detokenize{<text>}` when `\escapechar=-1`. In
@@ -31,7 +32,7 @@
    \_cod ----------------------------
 
 \_def\_code#1{\_unexpanded\_ea{\_csname _code \_endcsname{#1}}}
-\_protected\_sdef{_code }#1{{\_escapechar=-1 \_tt \_the\_everyintt \_relax 
+\_protected\_sdef{_code }#1{{\_escapechar=-1 \_ttfont \_the\_everyintt \_relax 
    \_ea\_printinverbatim\_ea{\_detokenize{#1}}}}
 \_def\_printinverbatim#1{\_leavevmode\_hbox{#1}}
 
@@ -77,7 +78,7 @@
    \_ifx\_savedttchar\_undefined\_else \_catcode\_savedttchar=\_savedttcharc \_fi
    \_chardef\_savedttchar=`#1
    \_chardef\_savedttcharc=\_catcode`#1
-   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\ }\_tt \_the\_everyintt\_relax \_readverb}%
+   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\ }\_ttfont \_the\_everyintt\_relax \_readverb}%
    \_def\_readverb ##1#1{\_printinverbatim{##1}\_endgroup}%
 }
 \_public \activettchar ;
@@ -126,7 +127,7 @@
    \_setverb 
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
-   \_the\_everytt \_relax #1\_relax \_tt
+   \_the\_everytt \_relax #1\_relax \_ttfont
    \_endlinechar=`^^J
    \_startverb
 }
@@ -135,7 +136,7 @@
    \_ea\_printverb \_tmpb\_end
    \_par\_ttskip
    \_endgroup
-   \_noindent \_setbox0=\_lastbox
+   \_isnextchar\_par{}{\_noindent}%
 }
 \_def\_printverb #1^^J#2{\_ifx\_end#2
       \_bgroup \_adef{ }{}\_if\_relax#1\_relax\_egroup \_else\_egroup \_printverbline{#1}\_fi
@@ -213,7 +214,7 @@
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_setverb \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
-   \_the\_everytt\_relax \_tt
+   \_the\_everytt\_relax \_ttfont
    \_endlinechar=`^^J \_tmpnum=0
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
          \_ifnum\_tmpnum<\_vinolines\_space

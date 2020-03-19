@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2020-01-23>}
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-02-27>} % preloaded in format
 
    \_doc ----------------------------
    The `\newif` macro works like in plain \TeX. It means that

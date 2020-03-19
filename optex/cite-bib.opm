@@ -187,6 +187,7 @@
 \_def\_bibB[#1]{\_par \_bibskip
    \_advance\_bibnum by1
    \_noindent \_def\_tmpb{#1}\_wbib{#1}{\_the\_bibnum}{\_the\_bibmark}%
+   \_printlabel{#1}%
    \_printbib \_ignorespaces
 }
 \_def\_wbib#1#2#3{\_dest[cite:\_the\_bibnum]%

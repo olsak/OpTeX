@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalbaselineskip {Parameter settings <2020-01-23>}
+\_codedecl \normalbaselineskip {Parameter settings <2020-03-17>} % preloaded in format 
 
    \_doc -----------------------------
    The primitive registers with the same default value as in plain \TeX/ follow:
@@ -241,12 +241,15 @@
    \_doc -----------------------------
    The default item mark used between `\bgitems` and `\enditems` is bullet.
    The `\everyitem` token list is applied in vertical mode
-   at the start of each item.
+   at the start of each item. 
+   The `\everybegitems` token list is applied after group is openem by
+   `\begitems`.
    \_cod -----------------------------
 
 \_newtoks\_defaultitem  \_defaultitem={$\_bullet$\_enspace}
 \_newtoks\_everyitem
-\_public \defaultitem \everyitem ;
+\_newtoks\_everybegitems
+\_public \defaultitem \everyitem \everybegitems ;
 
    \_doc -----------------------------
    The `\tit` macro includes `\vglue\titskip` above the title of the document.

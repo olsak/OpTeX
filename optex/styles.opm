@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \report {Basic styles of OpTeX <2020-03-12>}
+\_codedecl \report {Basic styles of OpTeX <2020-03-18>} % preloaded in format
 
    \_doc -----------------------------
    The `{\boxlines <line-1><eol><line-2><eol>...<line-n><eol>}`
@@ -46,7 +46,12 @@
    \_parskip=\_medskipamount
    \_nopagenumbers
 }
-\_public \boxlines \letter \report ;
+
+\_def\_slides{\_par
+  \_input slides.opm
+}
+
+\_public \boxlines \letter \report \slides ;
 
 \_endcode % -------------------------------------
 

@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2020-02-14>}
+\_codedecl \fontfam {Fonts selection system <2020-03-18>} % preloaded in format
 
 \_def\_initunifonts {%
    \_ea\_newcount \_csname e@alloc@attribute@count\_endcsname
@@ -10,12 +10,15 @@
       require('luaotfload-main') local _void = luaotfload.main ()
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
-   \_gdef\_doresizefont ##1{\_logfont{##1}%
-      \_ifx\_fontnamegen\_undefined \_doresizetfmfont##1\_else
-         \_font##1={\_fontnamegen} \_sizespec \_relax \_setwsp##1\_relax 
-      \_fi}%
-   \_global\_let\_initunifonts=\_relax % we need not to do this work twice
-   \_global\_let\initunifonts=\_relax
+   \_global\_let \_doresizefont=\_doresizeunifont
+   \_gdef\_tryloadtt {\_fontdef\_tentt{\def\_fontnamegen{[lmmono10-regular]}\_rm}}% 
+   \_global\_let \_initunifonts=\_relax % we need not to do this work twice
+   \_global\_let \initunifonts=\_relax
+}
+\_gdef\_doresizeunifont #1{\_logfont{#1}%
+   \_ifx\_fontnamegen\_undefined \_doresizetfmfont#1\_else
+       \_font#1={\_fontnamegen} \_sizespec \_relax \_setwsp#1\_relax
+   \_fi
 }
 \_def\_fontdecl [#1]#2#3#4#5#6#7{%
    \_initunifonts \_uniaccents
@@ -108,7 +111,7 @@
    \_else
       \_protected\_edef #1{\noexpand\_famdepend\noexpand#1{_f:\noexpand\_currfamily:\_tmp}}%
       \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
-      \_def#3{\_fontdef#2{\_reloading#4}}%
+      \_def#3{\_fontdef#2{#4}}%
       \_ifx#1\tt \addto#1{\_fam\_ttfam}\fi
       \_sdef{_currvar:\csstring#2}{#1}%
    \_fi
