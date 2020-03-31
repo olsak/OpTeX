@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-19>} % loaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-20>} % loaded in format
 
    \_doc -----------------------------
    \begitems
@@ -41,15 +41,19 @@
    footnote itself, then you can define `\_printfnotemarkA` and `\_printfnotemarkB`.
    The following example shows an implementation of hyperlinked footnotes
    (from text to footnote and bacward):
-   \begtt
-   \def\_printfnotemarkA{\ilink[fnB:\the\gfnotenum]{\_printfnotemark}\dest[fnA::\the\gfnotenum]}
-   \def\_printfnotemarkB{\ilink[fnA:\the\gfnotenum]{\_printfnotemark}\dest[fnB::\the\gfnotenum]}
-   \endtt
    \_cod -----------------------------
 
 \_def \_printfnotemark  {$^{\_fnotenum}$}   % default footnote mark
 \_def \_printfnotemarkA {\_printfnotemark}  % footnote marks used in text
 \_def \_printfnotemarkB {\_printfnotemark}  % footnote marks used in front of footnotes
+
+\_def \_fnotelinks#1#2{% <inText color> <inFootnote color> 
+   \_def\_printfnotemarkA{\_link[fnt:\the\_gfnotenum]{\_localcolor#1}{\_printfnotemark}%
+                          \_dest[fnf:\the\_gfnotenum]}%
+   \_def\_printfnotemarkB{\_link[fnf:\the\_gfnotenum]{\_localcolor#2}{\_printfnotemark}%
+                          \_dest[fnt:\the\_gfnotenum]}%
+}
+\public \fnotelinks ;
 
    \_doc ----------------------------
    Each footnote saves the `\_Xfnote` (without parameter) to the `.ref` 

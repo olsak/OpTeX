@@ -37,9 +37,9 @@
 \_def\_setcmykcolor#1{\_setcolor{\_formatcmyk{#1}}}
 \_def\_setrgbcolor#1{\_setcolor{\_formatrgb{#1}}}
 \_def\_setgreycolor#1{\_setcolor{\_formatgrey{#1}}}
-\_def\_formatcmyk#1{#1 k #1 K}
-\_def\_formatrgb#1{#1 rg #1 RG}
-\_def\_formatgrey#1{#1 g #1 G}
+\_def\_formatcmyk#1{\_fillstroke{#1 k}{#1 K}}
+\_def\_formatrgb#1{\_fillstroke{#1 rg}{#1 RG}}
+\_def\_formatgrey#1{\_fillstroke{#1 g}{#1 G}}
 \_public \setcmykcolor \setrgbcolor \setgreycolor ;
 
    \_doc -----------------------------
@@ -50,15 +50,19 @@
    The `\onlycmyk` macro does a similar work, it re-defines `\_formatrgb`
    macro. The Grey color space is unnchanged and works in both main
    settings (RGB or CMYK) without collisions.
+   The `\_fillstroke` uses the same color for fills and strokes.
+   If only fills are needed to declare do `\def\_fillstroke#1#2{#1}`.
+   If only strokes are needed to declare do `\def\_fillstroke#1#2{#2}`.
    \_cod -----------------------------
 
+\_def\_fillstroke#1#2{#1 #2}
 \_def\_onlyrgb{\_def\Red{\_setrgbcolor{1 0 0}}%
    \_def\Green{\_setrgbcolor{0 1 0}}\_def\Blue{\_setrgbcolor{0 0 1}}%   
    \_let\_colordef=\_rgbcolordef 
-   \_def\_formatrgb##1{##1 rg ##1 RG}%
-   \_def\_formatcmyk##1{\_cmyktorgb ##1 ; rg \_cmyktorgb ##1 ; RG}}
-\_def\_onlycmyk{\_def\_formatcmyk##1{##1 k ##1 K}%
-   \_def\_formatrgb##1{\_rgbtocmyk ##1 ; k \_rgbtocmyk ##1 ; K}}
+   \_def\_formatrgb##1{\_fillstroke{##1 rg}{##1 RG}}%
+   \_def\_formatcmyk##1{\_fillstroke{\_cmyktorgb ##1 ; rg}{\_cmyktorgb ##1 ; RG}}}
+\_def\_onlycmyk{\_def\_formatcmyk##1{\_fillstroke{##1 k}{##1 K}}%
+   \_def\_formatrgb##1{\_fillstroke{\_rgbtocmyk ##1 ; k}{\_rgbtocmyk ##1 ; K}}}
 \_public \onlyrgb \onlycmyk ;
 
    \_doc -----------------------------
@@ -81,7 +85,8 @@
 }
 \_def\_pdfblackcolor{0 g 0 G}
 \_edef\_currentcolor{\_pdfblackcolor}
-\_def\_ensureblackA#1{\_colorstackpush\_pdfblackcolor #1\_colorstackpop}
+\_def\_ensureblackA#1{\_global\_let\_openfnotestack=\_openfnotestackA
+   \_colorstackpush\_pdfblackcolor #1\_colorstackpop}
 
    \_doc -----------------------------
    The colorstack is initialized here and basic macros 
@@ -93,6 +98,16 @@
 \_def\_colorstackpush#1{\_pdfcolorstack\_colorstackcnt push{#1}}
 \_def\_colorstackpop{\_pdfcolorstack\_colorstackcnt pop}
 \_def\_colorstackset#1{\_pdfcolorstack\_colorstackcnt set{#1}}
+
+   \_doc -----------------------------
+   We need to open a special color stack for footnotes, because footnotes
+   can follow on next pages and their colors are independent on colors
+   used in man page-body.
+   \_cod -----------------------------
+
+%\_mathchardef\_fnotestack=\_pdfcolorstackinit page {0 g 0 G}
+% must be in \everyjob^^^
+\_def \_openfnotestackA {\_pdfcolorstack\_fnotestack current}
 
    \_doc -----------------------------
    We use lua codes for RGB to CMYK or CMYK to RGB conversions and for

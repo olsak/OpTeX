@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2020-03-16>} % loaded in format
+\_codedecl \makeindex {Makeindex and sorting <2020-04-26>} % loaded in format
 
    \_doc -----------------------------
    `\makeindex` implements sorting algorithm at \TeX/ macrolanguage level.
@@ -67,8 +67,10 @@
    these declared characters are used.
 
    The characters declared in `\_ignoredchars` are ignored in first pass
-   without additional condidion. They are ignored in second pass only if
-   they are not mentioned in the `\_sortingdata<iso-code>` macro.
+   without additional condidion. All characters are taken into acount in
+   second pass: ASCII characters with code $<65$ are sorted first if they
+   are not mentioned in the `\_sortingdata<iso-code>` macro. 
+   Others not mentioned characters have undefined behavior during sorting.
    \_cod -----------------------------   
 
 \_def \_ignoredcharscs  {.,;?!:'"|()[]<>=+}
@@ -116,7 +118,7 @@
       \_ifx##1,\_advance\_tmpnum by1
       \_else \_lccode`##1=\_tmpnum \_fi
       \_ea\_act \_fi}%
-   \_tmpnum=60 \_ea\_act \_sortingdata \_relax
+   \_tmpnum=65 \_ea\_act \_sortingdata \_relax
    \_def \_act ##1{\_ifx##1\_relax \_else
       \_lccode`##1=`\^^I
       \_ea\_act \_fi}% 
@@ -131,7 +133,7 @@
    \_def \_act ##1{\_ifx##1\_relax \_else
       \_ifx##1,\_else \_advance\_tmpnum by1 \_lccode`##1=\_tmpnum \_fi
       \_ea\_act \_fi}%
-  \_tmpnum=60 \_ea\_act \_sortingdata \_relax 
+  \_tmpnum=65 \_ea\_act \_sortingdata \_relax 
 }
 
    \_doc -----------------------------

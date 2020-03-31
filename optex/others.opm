@@ -27,11 +27,16 @@
 \_let\chyph=\cslang   \_let\shyph=\sklang
 \_let\csUnicode=\csPatt \_let\czUnicode=\csPatt \_let\skUnicode=\skPatt
 
+% classical \ten* macros (keeps only preloaded fonts!)
+
 \_let \letfont = \_fontlet
 \_let \tenrm = \_tenrm  \_let \tenbf = \_tenbf
 \_let \tenit = \_tenit  \_let \tenbi = \_tenbi
 \_let \tentt = \_tentt 
 
+% non breaking space in Unicode
+
+\let ^^a0=~
 
 % TikZ needs these control sequences:
 

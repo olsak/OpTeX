@@ -8,6 +8,12 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.08> \numberedpar implmented. \emergencystretch=20pt added as default. 
+       \inoval, \incircle, \clipinoval, \clipincircle imlemented. 
+       \puttext, \putpic x,y instead -y,x (incompatible change!) 
+       footnotes have separated color stack now. 
+       \fnotelinks implemented.
+       Lists by \begitems...\enditems improved (\novspaces \_vspacehalf, \ilevel).
 <0.07> demos: op-letter.tex and op-slides.tex added.
        \inkinspic, \transformbox, \slides added.
        documentation improved and updated.

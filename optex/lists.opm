@@ -6,11 +6,20 @@
    `\aboveliskip` is used above the list of items, 
    `\belowliskip` is used below the list of items and 
    `\interliskip` is used between items.
+   `\listskipA` is used as `\listskipamount` at level 1 of items.
+   `\listskipB` is used as `\listskipamount` at other levels. 
    \_cod -----------------------------
 
-\_def\_aboveliskip {\_removelastskip \_penalty-100 \_medskip}
-\_def\_belowliskip {\_penalty-200 \_medskip}
+\_def\_aboveliskip {\_removelastskip \_penalty-100 \_vskip\_listskipamount}
+\_def\_belowliskip {\_penalty-200 \_vskip\_listskipamount}
 \_def\_interliskip {}
+\_def\_listskipA {\_medskipamount}
+\_def\_listskipB {0pt plus.5\smallskipamount}
+
+\_def\_setlistskip {%
+   \_ifnum \_ilevel = 1 \_listskipamount = \_listskipA \_relax
+   \_else  \_listskipamount = \_listskipB \_relax 
+   \_fi}
 
    \_doc -----------------------------
    The `\itemnum` is localy reset to zero in each group declared by
@@ -27,19 +36,29 @@
 \_newcount\_itemnum  \_itemnum=0
 \_newtoks\_printitem
 
-\_def\_begitems{\_par \_ifnum\_lastpenalty<10000 \_aboveliskip \_fi
+\_def\_begitems{\_par 
   \_bgroup
+  \_advance \_ilevel by1
+  \_setlistskip
+  \_ifnum\_lastpenalty<10000 \_aboveliskip \_fi
   \_itemnum=0 \_adef*{\_startitem}
   \_advance\_leftskip by\_iindent
   \_printitem=\_defaultitem
-  \_the\_everybegitems
+  \_the\_everylist \_relax
 }
-\_def\_enditems{\_par\_egroup\_belowliskip}
+\_def\_enditems{\_par\_belowliskip\_egroup}
 
 \_def\_startitem{\_par \_ifnum\_itemnum>0 \_interliskip \_fi
    \_advance\_itemnum by1
    \_the\_everyitem \_noindent\_llap{\_the\_printitem}\_ignorespaces
 }
+
+   \_doc ----------------------------
+   `\novspaces` sets `\listsipamount` to 0pt.
+   \_cod ----------------------------
+
+\_def\_novspaces {\_removelastskip \_listskipamount=0pt \_relax}
+\_public \novspaces ;
 
    \_doc -----------------------------
    Various item marks are saved in `\_item:<letter>` macros.

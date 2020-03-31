@@ -22,7 +22,7 @@
 \tit \OpTeX/\nl Format Based on Plain \TeX/ and OPmac\fnotemark1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\hfill Version 0.07
+\hfill Version 0.08
 
 \centerline{\it Petr Olšák, 2020}
 
@@ -529,10 +529,10 @@ contents if `\notoc` precedes.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Apart from chapters, sections and subsections, there are another
-automatically numbered objects: equations and captions for tables and
-figures.
+automatically numbered objects: equations, captions for tables and
+figures. The user can declare more numbered object.
 
-If user writes the `\eqmark` as the last element of the display mode then
+If the user writes the `\eqmark` as the last element of the display mode then
 this equation is numbered. The equation number is printed in brackets. This number
 resets in each section by default.
 
@@ -556,7 +556,7 @@ The `\cskip` creates appropriate vertical space between them. Example:
 \begtt
 \caption/t The dependency of the computer-dependency on the age.
 \cskip
-\hfil\table{rl}{
+\noindent\hfil\table{rl}{
     age   & value \crl\noalign{\smallskip}
     0--1  & unmeasured \cr 
     1--6  & observable \cr
@@ -572,7 +572,8 @@ This example produces:
 \medskip
 \caption/t The dependency of the computer-dependency on the age.
 \cskip
-\hfil\table{rl}{age   & value \crl\noalign{\smallskip}
+\noindent\hfil\table{rl}{
+                age   & value \crl\noalign{\smallskip}
                 0--1  & unmeasured \cr 
                 1--6  & observable \cr
                 6--12 & significant \cr
@@ -602,6 +603,28 @@ Example:
 \endinsert
 \endtt
 
+\new
+There are five prepared counters `A`, `B`, `C`, `D` and `E`.
+They are reset in each chapter and section\fnote
+{This feature can be changed, see the `sections.opm` in the technical documentation.}.
+They can be used in context of `\numberedpar <letter>{<text>}` 
+macro. For example:
+\begtt
+\def\theorem    {\numberedpar A{Theorem}}
+\def\corollary  {\numberedpar A{Corollary}}
+\def\definition {\numberedpar B{Definition}}
+\def\example    {\numberedpar C{Example}}
+\endtt
+%
+Three independent numbers are used in this example. One for Theorems and Corollaries
+second for Definitions and third for Examples. The user can write
+`\theorem Let $M$ be...` and the new paragraph is started with the text:
+{\bf Theorem 2.3.1.} Let $M$ be... 
+You can add an optional parameter in brackets. For example, 
+`\theorem [(L'Hôpital's rule)] Let $f$, $g$ be...` 
+is printed like {\bf Theorem 2.4.2 (L'Hôpital's rule).} Let $f$, $g$ be...
+
+
 \secc References
 %%%%%%%%%%%%%%%
 
@@ -618,7 +641,7 @@ Example:
 \begtt
 \sec[beatle] About Beatles
 
-\hfil\table{rl}{...} % the table
+\noindent\hfil\table{rl}{...} % the table
 \cskip
 \caption/t [comp-depend] The dependency of the computer-dependency on the age.
 
@@ -634,6 +657,11 @@ If there are forward referenced objects then user have to run \TeX{} twice.
 During each pass, the working `*.ref` file (with references data) is created
 and this file is used (if it exists) at the beginning of the document.
 
+You can use `\label[<label>]` before `\theorem`, `\definition` (macros defined by
+`\numberedpar`) if you want to reference these numbered objects. 
+You can't use `\theorem[<label>]` because the optional parameter 
+is reserved to another purpose.
+
 You can create a reference to whatever else by commands
 `\label[<label>]\wlabel{<text>}`. The connection between <label> and
 <text> is established. The `\ref[<label>]` will print <text>.
@@ -641,6 +669,7 @@ You can create a reference to whatever else by commands
 By default, labels are not printed, of course. But if you are preparing a
 draft version of document, you can declare `\showlabels`. The labels 
 are printed at their destination places after such declaration.
+
 
 \secc Hyperlinks, outlines
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -676,6 +705,11 @@ color. Example:
 \endtt
 
 By default these macros are not defined. It means that no frames are created.
+
+The hyperlinked footnotes can be activated by `\fnotelinks <color-fnt> <color-fnf>`
+where footnote marks in text have `<color-fnt>` and the same footnote marks
+in footnotes have <color-fnf>. You can define relevant borders
+`\fntborder` and `\fnfborder` analogically as `\pgboreder` (for example).
 
 There are \"low level" commands to create the links. You can specify the
 destination of the internal link by `\dest[<type>:<label>]`. The
@@ -774,7 +808,16 @@ Another style can be defined by the command `\sdef{_item:<style>}{<text>}`.
 Default item can be set by `\defaultitem={<text>}`.
 The list environments can be nested. Each new level of item is indented by
 next multiple of `\iindent` which is set to `\parindent` by default.
-More information about design of lists of items are in the `lists.opm` file.
+The `\ilevel` register says what level of items is currently processed.
+Each `\begitems` starts `\everylist` tokens register. You can set, for
+example:
+\begtt
+\everylist={\ifcase\ilevel\or \style X \or \style x \else \style - \fi}
+\endtt
+
+You can say `\begitems \novspaces` if you don't want vertical spaces above
+and below the list.
+More information about design of lists of items should be found in the `lists.opm` file.
 
 \secc Tables
 %%%%%%%%%%%
@@ -795,7 +838,7 @@ These letters can be combined by the `|` character (vertical line). Example
 generates the following result:
 
 \bigskip
-\hfil\table{||lc|r||}{             \crl
+\noindent\hfil\table{||lc|r||}{    \crl
    Month    & commodity  & price   \crli \tskip2pt
    January  & notebook   &  \$ 700 \cr
    February & skateboard &  \$ 100 \cr
@@ -1428,6 +1471,7 @@ third: \pdfsave \pdfrotate{-15.3}\pdfsetmatrix{2 0 1.5 2}\rlap{text3}\pdfrestore
 
 You can see that \TeX/ knows nothing about dimensions of transfomed material,
 it treats it as with a zero dimension object. 
+\new
 This problem is solved by the `\transformbox{<transformation>}{<text>}` 
 macro which puts the transformed
 material to a box with relevant dimension. The <transfromation> parameter
@@ -1440,6 +1484,70 @@ creates \frame{\transformbox{\pdfscale{1}{1.5}\pdfrotate{-10}}{moj}}.
 The `\rotbox{<deg>}{<text>}` is a shortcut for 
 `\transformbox{\pdfrotate{<deg>}}{<text>}`.
 
+\secc Ovals, circles
+%%%%%%%%%%%%%%%%%%%%
+
+\new
+The `\inoval{<text>}` creates a box like this: \inoval{text}. 
+Multiline text can be put in an oval by the command `\inoval{\vbox{<text>}}`.
+Local settings can be set by
+`\inoval[<settings>]{<text>}` or you can re-declare global settings by
+`\ovalparams={<settings>}`. The default settings are:
+
+\begtt
+\ovalparams={\roudness=2pt            % diameter of circles in the corners
+             \fcolor=\Yellow          % color used for filling oval
+             \lcolor=\Red             % line color used in the border
+             \lwidth=0.5bp            % line width in the border
+             \shadow=N                % use a shadow effect
+             \overlapmargins=N        % ignore margins by surrounding text
+             \hhkern=0pt \vvkern=0pt} % left-righ margin, top-bottom margin
+\endtt
+The total distance from text to oval boundary is `\hhkern+\roudness` at the left and right 
+sides and
+`\vvkern+\roundness` at the top and bottom sides of the text.
+
+If you need a setting for the `<text>` (color, size, font etc.), use
+`\oval{<text settings><text>}`.
+
+\new
+The `\incircle[\ratio=1.8]{<text>}` creates a box like this \incircle[\ratio=1.8]{text}.
+The `\ratio` is width/height. The usage is analogical like for oval. 
+The default settings of parameters are
+
+\begtt
+\circleparams={\ratio=1 \fcolor=\Yellow \lcolor=\Red \lwidth=0.5bp 
+               \shadow=N \ignoremargins=N \hhkern=2pt \vvkern=2pt}
+\endtt
+
+\new
+The macros `\clipinoval <x> <y> <width> <height> {<text>}`
+and `\clipincircle` (with the same parameters)
+print the `<text>` when a clipping path (oval or cirle) with given
+`<with>` and `<height>` shifted its center by `<x>` to right and by `<y>` to up
+is used. 
+The `\roundness=5mm` is default for `\clipingoval` and user can change it.
+Example:
+
+\begtt 
+\clipingcircle 3cm 3.5cm 6cm 7cm {\picw=6cm \inspic{myphoto.jpg}} 
+\endtt
+
+\secc Putting images and texts wherever
+
+\new
+The `\puttext <x> <y> {<text>}` puts the `<text>` shifted by `<x>` right and by
+`<y>` up from current point of typesetting and does'n not change the
+position of the current point. Assume coordinate system with origin in the
+current point. Then `\puttext <x> <y> {<text>}` puts the text at the
+coordinates `<x>`, `<y>`. More exactly the left edge of its baseline is at that
+position. 
+
+\new
+The `\putpic <x> <y> <width> <height> {<image>}` puts the `<image>` of given 
+`<width>` and `<height>` at given position (its left-bottom corner).
+You can write `\nospec` instead `<width>` or `<height>` if this parameter is
+not given.
 
 \sec Others
 %%%%%%%%%%%
@@ -1503,7 +1611,7 @@ You can simply define your own quotes as shown in `languages.opm` file.
 The `\"` is used for quotes visualy more similar to the `"` character which
 can be primary quotes or secondary quotes depending on the language rules.
 May be you want to alternate meaning of these two types of quotes. Use
-`\<isocode>quotes\atlquotes` in such case.
+`\<isocode>quotes\altquotes` in such case.
 
 \secc Pre-defined styles
 %%%%%%%%%%%%%%%%%%%%%%%

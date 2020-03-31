@@ -128,9 +128,12 @@
 \_newcount \_fnum     % figure numbers
 \_newcount \_dnum     % numbered display maths
 
-\_def \_chapx {\_incr\_chapnum \_secnum=0 \_seccnum=0 \_tnum=0 \_fnum=0 \_dnum=0 \_lfnotenum=0 }
-\_def \_secx  {\_incr\_secnum             \_seccnum=0 \_tnum=0 \_fnum=0 \_dnum=0 }
+\_def \_chapx {\_incr\_chapnum \_secnum=0 \_seccnum=0 \_resetcountchap \_lfnotenum=0 }
+\_def \_secx  {\_incr\_secnum             \_seccnum=0 \_resetcountsec }
 \_def \_seccx {\_incr\_seccnum } 
+
+\_def \_resetcountchap {\_tnum=0 \_fnum=0 \_dnum=0 }
+\_def \_resetcountsec  {\_tnum=0 \_fnum=0 }
 
 \_def \_thechapnum {\_the\_chapnum}
 \_def \_thesecnum  {\_othe\_chapnum.\_the\_secnum}
@@ -350,6 +353,55 @@
 }
 \_public \eqmark ;
 
-\_endcode % -------------------------------------
+   \_doc -----------------------------
+   The `\numberedpar <letter>{<name>}` is implemented here.
+   You can say `\let\resetcountsec=\relax` if you don't want to reset
+   counters A, B, C, D, E nor `\fnum` nor `\tnum` in sections, but only in
+   chapters. Or you can define you own concept of `\_chapx` and `\_secx`
+   macros (see above). Then you will want to re-define `\_theAnum`, `\_thefnum` 
+   etc. macros. 
+   \_cod -----------------------------
 
+\_newcount\_counterA \_newcount\_counterB \_newcount\_counterC 
+\_newcount\_counterD \_newcount\_counterE
+
+\_def\_resetcounters{\_counterA=0 \_counterB=0 \_counterC=0 \_counterD=0 \_counterE=0 }
+\_addto \_resetcountchap {\_resetcounters}
+\_addto \_resetcountsec {\_resetcounters}
+
+\_def \_theAnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterA}
+\_def \_theBnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterB}
+\_def \_theCnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterC}
+\_def \_theDnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterD}
+\_def \_theEnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterE}
+
+\_def\_numberedpar#1#2{\_ea \_incr \_csname _counter#1\_endcsname
+   \_def\_tmpa{#1}\_def\_tmpb{#2}\_numberedparparam}
+\_optdef\_numberedparparam[]{%
+   \_ea \_printnumberedpar \_csname _the\_tmpa num\_ea\_endcsname\_ea{\_tmpb}}
+
+   \_doc -----------------------------
+   The `\_printnumberedpar \theXnum {<name>}` opens numbered paragraph and
+   prints it. The optional parameter is in `\_the\_opt`. You can re-define
+   it if you need another design.
+
+   `\_printnumberedpar` need not to be re-define if you only need to print
+   Theorems in italic and to insert vertical skips (for example). You can do this 
+   by the following:
+   \_begtt
+   \def\theorem    {\medskip\bgroup\it \numberedpar A{Theorem}}
+   \def\endtheorem {\par\egroup\medskip}
+   \_endtt
+   \theorem Let $M$ be... \endtheorem
+   \_cod -----------------------------
+
+\_def \_printnumberedpar #1#2{\_par
+   \_noindent\_wlabel #1%
+   {\bf #2 #1\_istoksempty\_opt\_iffalse \_space \_the\_opt \_fi.}\_space
+   \_ignorespaces
+}
+\_public \numberedpar ;
+
+
+\_endcode % -------------------------------------
 

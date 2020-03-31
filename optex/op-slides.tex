@@ -167,32 +167,32 @@ The previous page was created by:
 
 \pg; %------------------------------------------------------------------
 
-\sec Putting images and text wherever
+\sec Putting images and texts wherever
 
-* `\puttext <down> <right> {<text>}` puts a <text> to the desired place:
-  It moves the current point <down> and <right>, puts the <text> and returns
+* `\puttext <right> <up> {<text>}` puts a <text> to the desired place:
+  It moves the current point <right> and <up>, puts the <text> and returns
   back, so the typesetting continues from previous position. The parameters
-  <down> and <right> are dimensions. For example
+  <right> and <up> are dimensions. For example
 
 \begtt
-\puttext -50mm 0mm {\Red HELLO}
+\puttext 0mm 50mm {\Red HELLO}
 \endtt
 
-  \puttext -50mm 0mm {\Red HELLO}
+  \puttext 0mm 50mm {\Red HELLO}
   prints red HELLO, as shown here.\pg+
 
-* `\putpic <down> <right> <width> <height> {<image-file>}`
+* `\putpic <right> <up> <width> <height> {<image-file>}`
   puts the image with desired <width> and <height> at the position like 
   `\puttext` puts the text.
 
-  \putpic -20mm .8\hsize 30mm \nospec {op-ring.png}
+  \putpic .8\hsize 20mm 30mm \nospec {op-ring.png}
 * The ring above is the result of 
 
 \begtt
-\putpic -20mm .8\hsize 30mm \nospec {op-ring.png} 
+\putpic .8\hsize 20mm 30mm \nospec {op-ring.png} 
 \endtt
   %
-  used ad beginning of this paragraph.\pg+
+  used at beginning of this paragraph.\pg+
 * Use `\nospec` for <width> or <height> of the image if you don't want to specify both
   dimensions (because you don't want to change the image aspect ratio).
 

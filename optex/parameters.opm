@@ -97,6 +97,9 @@
    and set default page dimensions as A4, no letter.
    \_cod -----------------------------
 
+\_emergencystretch=20pt % we want to use third pass of aparagraph building algoritmh
+                        % we need not to keep the compatibility with old documents
+
 \_clubpenalty=10000    % after first line of paragraph
 \_widowpenalty=10000   % before last line of paragraph
 
@@ -121,6 +124,7 @@
    \_cod -----------------------------
 
 \_def\_plaintexsetting{%
+   \_emergencystretch=0pt
    \_clubpenalty=150 
    \_widowpenalty=150
    \_pdfvorigin=1in
@@ -242,14 +246,16 @@
    The default item mark used between `\bgitems` and `\enditems` is bullet.
    The `\everyitem` token list is applied in vertical mode
    at the start of each item. 
-   The `\everybegitems` token list is applied after group is openem by
+   The `\everylist` token list is applied after group is openem by
    `\begitems`.
    \_cod -----------------------------
 
 \_newtoks\_defaultitem  \_defaultitem={$\_bullet$\_enspace}
 \_newtoks\_everyitem
-\_newtoks\_everybegitems
-\_public \defaultitem \everyitem \everybegitems ;
+\_newtoks\_everylist
+\_newskip \_listskipamount  \_listskipamount=\_medskipamount
+\_newcount \_ilevel
+\_public \defaultitem \everyitem \everylist \listskipamount \ilevel ;
 
    \_doc -----------------------------
    The `\tit` macro includes `\vglue\titskip` above the title of the document.
@@ -416,6 +422,23 @@
 
 \_newtoks \_pgbackground   \_pgbackground={} % for page background
 \_public \pgbackground  ;
+
+   \_doc -----------------------------
+   The parameters used in `\inoval` and `\incircle` macros.
+   The default values (documented in user manual) are set in the macros.
+   User can re-set thse values using tokens \ovalparams, \circleparams. 
+   \_cod -----------------------------
+
+\_newtoks \_ovalparams
+\_newtoks \_circleparams
+%\_ovalparams={\_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+%              \_shadow=N \_overlapmargins=N \_hhkern=0pt \_vvkern=0pt }
+%\_circleparams={\_ratio=1 \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+%                \_shadow=N \_overlapmargins=N \_hhkern=3pt \_vvkern=3pt}
+
+\_newdimen \_roundness    \_roundness=5mm % used in \clippingoval macro
+
+\_public \ovalparams \circleparams \roundness ;
 
 
 \_endcode %----------------------------------------------------

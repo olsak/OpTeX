@@ -69,15 +69,15 @@
    the next text after `\pg+`. 
    \_cod -----------------------------
 
-\_newcount\_ilevel  \_newcount\_gilevel
+\_newcount\_gilevel
 \_def\*{*}
 \_adef*{\_startitem}
 \_sdef{_item:X}{\Blue\_raise.2ex\_fullrectangle{.8ex}\_kern.5em}
 \_sdef{_item:x}{\Blue\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
 \_style X
-\_addto\_begitems{\_style x }\public \begitems ;
 \_def\_egroups{\_par\_global\_gilevel=\_ilevel \_egroup}
-\_everybegitems={\_advance\_ilevel by1 \_addto\_egroups{\_egroup}}
+\_everylist={\_novspaces \_ifcase\_ilevel \_or \_style x \_else \_style - \_fi
+   \_addto\_egroups{\_egroup}}
 
    \_doc -----------------------------
    The default values of `\pg;`, `\pg+` and `\pg.` are very simple.

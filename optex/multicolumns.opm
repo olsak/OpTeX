@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begmulti {Balanced columns <2020-03-08>} % preloaded in format
+\_codedecl \begmulti {Balanced columns <2020-03-26>} % preloaded in format
 
    \_doc -----------------------------
    This code is documented in detail in the \"\TeX/book naruby", pages 244--246,
@@ -33,7 +33,7 @@
    \_def\par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
 }
 \_def\_endmulti{\_vskip-\_prevdepth\_vfil
-   \_expandafter\_egroup\_expandafter\_baselineskip\_the\_baselineskip\_relax 
+   \_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax 
    \_dimen0=.8\_maxdimen \_tmpnum=\_dimen0 \_divide\_tmpnum by\_baselineskip 
    \_splittopskip=\_baselineskip
    \_setbox1=\_vsplit6 to0pt
@@ -68,10 +68,10 @@
    \_divide\_dimen0 by\_Ncols \_relax
    \_ifx\_balancecolumns\_flushcolumns \_advance\_dimen0 by-.5\_vsize \_fi
    \_dimen1=\_vsize \_corrsize{\_dimen1}\_dimen2=\_dimen1
-   \_advance\_dimen2 by-\_Ncols\_baselineskip
+   \_advance\_dimen2 by-\_baselineskip
    %% split the material to more pages?
    \_ifvoid6 \_else
-      \_ifdim \_dimen0>\_dimen2 \_expandafter\_expandafter\_expandafter \_splitpart
+      \_ifdim \_dimen0>\_dimen2 \_ea\_ea\_ea \_splitpart
       \_else \_balancecolumns % last balancing
    \_fi \_fi
 }
@@ -88,7 +88,7 @@
    \_ifvoid6 \_else
       \_advance \_dimen0 by.2\_baselineskip
       \_setbox6=\_copy7
-      \_expandafter \_tmp \_fi}\_tmp
+      \_ea \_tmp \_fi}\_tmp
    \_hbox{}\_nobreak\_vskip-\_splittopskip \_nointerlineskip
    \_hbox to\_hsize{\_unhbox1\_unskip}%
    \_egroup

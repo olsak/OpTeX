@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2020-03-15>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2020-03-28>} % preloaded in format
 
    \_doc -----------------------------
    `\_optexouput` is default output routine. You can create another...
@@ -59,6 +59,7 @@
      \_ensureblack{\_makefootline}}%
 }
 \_def \_ensureblack #1{#1} % will be re-defined by color macros
+\_let \_openfnotestack = \_relax % will be re-defined by color macros
 \_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to0pt{\_kern-\voffset #1\_vss}}
 
    \_doc -----------------------------
@@ -94,7 +95,7 @@
   \_dimen0=\dp255 \_unvbox255 % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
     \_vskip\_skip\_footins
-    \_ensureblack{\_footnoterule \_unvbox\_footins}\fi
+    \_ensureblack{\_footnoterule \_openfnotestack \_unvbox\_footins}\fi
   \_ifraggedbottom \kern-\_dimen0 \_vfil \_fi
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}
@@ -132,14 +133,18 @@
 \_def \_opfootnote #1#2{\_insert\_footins\_bgroup
   \_interlinepenalty=\_interfootnotelinepenalty
   \_leftskip=0pt \_rightskip=0pt \_spaceskip=0pt \_xspaceskip=0pt \_relax 
+  \_let\_colorstackcnt=\_fnotestack % special color stack for footnotes
   #1\_relax % local settings used by \fnote macro
   \_splittopskip=\_ht\_strutbox % top baseline for broken footnotes
   \_splitmaxdepth=\_dp\_strutbox \_floatingpenalty=20000
   \_textindent{#2}\_footstrut
-  \_isnextchar \_bgroup {\_bgroup \_aftergroup\_vfootA \_let\_next=}{\_vfootB}%
+  \_isnextchar \_bgroup 
+     {\_bgroup \_aftergroup\_vfootA \_afterassignment\_ignorespaces \_let\_next=}{\_vfootB}%
 }
-\_def\_vfootA{\_strut\_egroup}
-\_def\_vfootB #1{#1\_vfootA}
+\_def\_vfootA{\_unskip\_strut\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
+\_def\_vfootB #1{#1\_uskip\_strut\_vfootF}
+\_def\_vfootF{\_egroup} % close \_insert\_footins\_bgroup
+\_def\_closefncolor#1{#1\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
 \_def \_footstrut {\_vbox to\_splittopskip{}}
 \_skip\_footins=\_bigskipamount % space added when footnote is present
 \_count\_footins=1000 % footnote magnification factor (1 to 1)

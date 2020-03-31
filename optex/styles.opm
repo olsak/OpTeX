@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \report {Basic styles of OpTeX <2020-03-18>} % preloaded in format
+\_codedecl \report {Basic styles of OpTeX <2020-03-28>} % preloaded in format
 
    \_doc -----------------------------
    The `{\boxlines <line-1><eol><line-2><eol>...<line-n><eol>}`
@@ -28,6 +28,7 @@
 
 \_def\_report{
    \_typosize[11/13.2]
+   \_vsize=\_dimexpr \_topskip + 52\_baselineskip \_relax % added 2020-03-28
    \_let\_titfont=\_chapfont
    \_titskip=3ex
    \_eoldef\_author##1{\_removelastskip\_bigskip
@@ -42,6 +43,7 @@
    \_def\_subject{{\_bf \_mtext{subj}: }}
    \_public \address \subject ;
    \_typosize[11/14]
+   \_vsize=\_dimexpr \_topskip + 49\_baselineskip \_relax % added 2020-03-28
    \_parindent=0pt
    \_parskip=\_medskipamount
    \_nopagenumbers
