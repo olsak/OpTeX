@@ -134,6 +134,9 @@
    \_input unimath-table.opm
 \_endgroup
 
+\_global\_Udelcode`<=1 "027E8 % these characters have different meaning
+\_global\_Udelcode`>=1 "027E9 % as normal and as delimeter
+
 \_nitgreek \_nitvariables \_rmdigits   % default setting
 
 \_Umathcode `- = 2 1 "2212
@@ -299,3 +302,9 @@ can define:
    \def\|{\Udelimiter 0 5 "02016 }%       % norm delimiter from family 5
    \setmathdimens
 }
+
+\_endinput
+
+History:
+2020-04-09  Bug fix: \Udelcode`<, \Udelcode`> added
+ 

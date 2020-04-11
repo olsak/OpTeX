@@ -243,6 +243,29 @@
 \_public \ttindent \iindent ;
 
    \_doc -----------------------------
+   The tabelator `^^I` has its categry code like space: it behaves as a
+   space in normal text. But in multilinee verbatim environment it
+   is active and expands to the `\hskip<dimen>` where `<dimen>`
+   is the width of `\tabspaces` spaces. Default `\tabspaces=3` means
+   that tabelator behaves like three spaces in multiline verbatim.
+   \_cod -----------------------------
+
+\_newcount \_tabspaces   \_tabspaces=3
+\_public \tabspaces ;
+
+   \_doc -----------------------------
+   If `\hicolors` is non-empty then its contents is used instead
+   `\_hicolors<name>` declared in `hisyntax-<name>.opm` file
+   when `\hisyntax{<name>}` is used first.
+   The user can give his/her preferences about colors for
+   syntax highlighting by this toknes list.
+   All color set must be declared here.
+   \_cod -----------------------------
+
+\_newtoks\_hicolors  
+\_public \hicolors ;
+
+   \_doc -----------------------------
    The default item mark used between `\bgitems` and `\enditems` is bullet.
    The `\everyitem` token list is applied in vertical mode
    at the start of each item. 
@@ -471,3 +494,8 @@ changes wich cannot be controlled by parameters listed here then you can copy th
 appropriate \OpTeX/ macro to your macro file and you can completely re-define it.
 
 
+\_endinput
+
+History:
+2020-04-04 ... \tabspaces added
+2020-04-03 ... \hicolors added

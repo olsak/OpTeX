@@ -1,0 +1,214 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \hisyntax {Syntax highlithing of verbatim listings <2020-04-04>} % preloaded in format
+
+   \_doc -----------------------------
+   The following macros `\replfromto` and `\replthis` manipulete with the 
+   verbatim text which has been read already and stored in the `\_tmpb` macro.
+ 
+   The `\replfromto {<from>}{<to>}{<what>}` finds first `<from>` then the
+   first `<to>` following by `<from>` pattern and the 
+   `<text>` between them is packed to `#1`.
+   Then `<from><text><to>` is replaced by `<what>`. The `<what>` parameter
+   can use `#1` which is replaced by the `<text>`.
+
+   The `\replfromto` continues by finding next `<from>`, then, next `<to>`
+   repeatedly over the whole verbatim text. If the verbatim text is ended by 
+   opened `<from>` but not closing by `<to>` then `<to>` is appended to the 
+   verbatim text automatically and the last part of verbatim text is replaced too.
+
+   First two parameters are expanded before usage of `\replfromto`. You can
+   use `\csstring\%` or something else here. 
+   \_cod -----------------------------
+
+\_def\_replfromto #1#2{\_edef\_tmpa{{#1}{#2}}\_ea\_replfromtoE\_tmpa}
+\_def\_replfromtoE#1#2#3{% #1=from #2=to #3=what to replace
+   \_def\_replfrom##1#1##2{\_addto\_tmpb{##1}%
+      \_ifx\_end##2\_ea\_replstop \_else \_afterfi{\_replto##2}\_fi}%
+   \_def\_replto##1#2##2{%
+      \_ifx\_end##2\_afterfi{\_replfin##1}\_else 
+        \_addto\_tmpb{#3}%
+        \_afterfi{\_replfrom##2}\_fi}%
+   \_def\_replfin##1#1\_end{\_addto\_tmpb{#3}\_replstop}%   
+   \_edef\_tmpb{\_ea}\_ea\_replfrom\_tmpb#1\_end#2\_end\_end\_relax
+}
+\_def\_replstop#1\_end\_relax{}
+\_def\_finrepl{}
+
+   \_doc -----------------------------
+   The `\replthis {<pattern>}{<what>}` replaces each `<pattern>` by `<what>`.
+   Both parameters are expanded befora usage, so you can use `\csstring\#`
+   for normal `#` for example.
+   \_cod -----------------------------
+
+\_def\_replthis#1#2{\_edef\_tmpa{{#1}{#2}}\_ea\_replstring\_ea\_tmpb \_tmpa}
+
+\_public \replfromto \replthis ;
+
+   \_doc -----------------------------
+   The patterns `<from>`, `<to>` and `<pattern>` are not found when they are
+   hidden in braces `{...}`. Example:
+   \begtt
+   \replfromto{/*}{*/}{\x C{/*#1/*}}
+   \endtt
+   replaces all C comments by `x C{...}`. The patterns inside `{...}` are
+   not used by next usage of `\replfromto` or `\replthis` macros.
+
+   The `\_xscan` macro does replacing `\x` by `\y` in the post-processing
+   phase. The `\x <letter>{<text>}` expands to `\_xscan {<letter>}<text>^^J^`.
+   If `#3` is `\_end` then it signals that something wrong happens, the 
+   `<from>` was not termineted by legal `<to>` when `\replfromto` did work.
+   We must to fix it by the `\_xscanR` macro.
+   \_cod -----------------------------
+
+\_def\_xscan#1#2^^J#3{\_ifx\_end#3 \_ea\_xscanR\_fi
+   \z{#1}{#2}%
+   \_ifx^#3\_else ^^J\_afterfi{\_xscan{#1}#3}\_fi}
+\_def\_xscanR#1\_fi#2^{^^J}
+
+   \_doc -----------------------------
+   The `\hicolor <letter> <color>` defines `\_z<letter>{<text>}`
+   as `{<color><text>}`. It shoul be used in context of 
+   `\x <letter>{<text>}` macros.
+   \_cod -----------------------------
+
+\_def\_hicolor #1#2{\_sdef{_z:#1}##1{{#2##1}}}
+
+   \_doc -----------------------------
+   The `\hisyntax{<name>}` re-defines default `\prepareverbdata<macro><verbtext>`
+   in order to it does more things:
+   It saves `<verbtext>` to `\_tmpb`, appends `\n` around spaces and 
+   `^^J` characters in pre-processing phase, it opens `hisyntax-<name>.opm` 
+   file if `\_hisyntax<name>` is not defined. Then `\_the\_isyntax<name>` 
+   is processed. Finally, the post-processing phase is realized by setting
+   appropriate values to `\x` and `\y` macros and doing
+   `\_edef\_tmpb{\_tmpb}`.
+   \_cod -----------------------------
+
+\_def\_hisyntax#1{\_def\_prepareverbdata##1##2{%
+   \_let\n=\relax \_def\t{\n\noexpand\t\n}\_let\_start=\_relax
+   \_adef{ }{\n\ \n}\_edef\_tmpb{\_start^^J##2\_end}%
+   \_replthis{^^J}{\n^^J\n}\_replthis{\n\_end}{\_end}%
+   \_let\x=\_relax  \_let\y=\_relax \_let\z=\_relax \_let\t=\_relax
+   \_endlinechar=`\^^M
+   \_lowercase{\_def\_tmpa{#1}}%
+   \_ifcsname _hialias:\_tmpa\_endcsname \_edef\_tmpa{\_cs{_hialias:\_tmpa}}\_fi
+   \_ifx\_tmpa\_empty \_else
+      \_unless \_ifcsname _hisyntax\_tmpa\_endcsname
+          \_isfile{hisyntax-\_tmpa.opm}\_iftrue \_opinput {hisyntax-\_tmpa.opm} \_fi\_fi
+      \_ifcsname _hisyntax\_tmpa\_endcsname
+          \_ifcsname hicolors\_tmpa\endcsname
+              \_cs{_hicolors\_tmpa}=\_cs{hicolors\_tmpa}%
+          \_else
+              \_if^\_the\_hicolors^\_else
+                  \_ifcsname _hicolors\_tmpa\_endcsname
+                      \_global\_cs{_hicolors\_tmpa}=\_hicolors \_global\_hicolors={}%
+          \_fi\_fi\_fi
+          \_ea\_the \_csname _hisyntax\_tmpa\_endcsname % \_the\_hisyntax<name>
+      \_else\_opwarning{Syntax highlighting "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
+   \_fi\_fi
+   \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
+   \_def\n{}%
+   \_def\x####1####2{\_xscan{####1}####2^^J^}%
+   \_def\y####1{\_ea \_noexpand \_csname ####1\_endcsname}%
+   \_edef\_tmpb{\_tmpb}%
+   \_def\z####1{\_cs{_z:####1}}%
+   \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
+   \_localcolor
+}}
+\_public \hisyntax \hicolor ;
+
+   \_doc -----------------------------
+   Aliases for languages can be declared like this.
+   When `\hisyntax{xml}` is used then this is the same as `\hisyntax{html}`.
+   \_cod -----------------------------
+
+\_sdef{_hialias:xml}{html}
+
+\_endcode % -------------------------------------------
+
+The user can write
+
+\begtt \adef/{\_csstring\\}
+\begtt \hisytnax{C}
+...
+/endtt
+\endtt
+
+and the code is colorized by C syntax.
+The user can write `\everytt={\hisyntax{C}}` and all verbatim listings are
+colorized.
+
+User can re-declare colors by `\hicolors={...}` This value has precedence
+before `\_hicolors<name>` values declared in the `hicolors-<name>.opm` file.
+First usage of `\hicolors{<name>}` resets this value globally and 
+sets `\hicolors={}`. What exactly to do: copy `\_hicolors<name>={...}`
+from `hicolors-<name>.opm` to your document (copy all mentioned colors), 
+rename it as `\hicolors={...}` and do you own colors modifications. 
+
+Another way to set non-default colors is to declate
+`\newtoks\hicolors<name>` (without the `_` prefix) and set the colors pallete here.
+It has precedence before `\_hcolors<name>` (with the `_` prefix) declared in
+the `hicolors-<name>.opm` file.
+This is useful when there are more hisyntax languages used in one document.
+
+If the file `hisyntax-<name>.opm` exists then the `\hisyntax{<name>}`
+reads the syntax declaration from such file. See files `hisyntax-c.opm`,
+`hisyntax-tex.opm` or `hisyntax-html.opm`.
+The argument of `\hisyntax` is case insensitive and file names ans names of
+token lists must be in lowercase.
+
+The `hisyntax-<name>.opm` file must define `\_hisyntax<name>` tokens string
+where the action over verbatim text is declared by `\replfromto` or
+`\remplthis` macros. 
+
+The verbatim text is preprared by pre-processing phase, then the 
+`\_hisyntax<name>` is applied and then pos-processing phase does final
+corrections. Finally, the verbatim text is printed line by line.
+
+The pre-processing phase does:
+
+\begitems
+* Each space is replaced by `\n\ \n`, so `\n<word>\n` should be a pattern to
+  finding whole words (no subwords). The `\n` control sewunece is removed in
+  the post-processing phase.
+* Each end of line is repersented by `\n^^J\n`.
+* The `\_start` cntrlo sequence is addede before the verbatim text and `\_end` control
+  sequence is appended to the end of the verbatim text. These control
+  sequences are removed in post-processing phase.
+\enditems 
+
+There are special macros working only in a group when processing the verbatim
+text.
+
+\begitems
+* `\n` means noting but it should be used as a boundary of words as mentioned above.
+* `\t` means a tabelator. It is prepared as `\n\t\n` because it can be at
+  the boundary of a word.
+* `\x <letter>{<text>}` can be used as replacing text. Suppose the example
+  \begtt
+  \replfromto{/*}{*/}{\x C{/*#1*/}}
+  \endtt
+  This replaces all C comments `/*...*/` by `\x C{/*...*/}`. But the
+  C comments may span more lines, i.e. the `^^J` should be inside it.
+
+  The macro `\x <letter>{<text>}` is replaced by one or more
+  `\z <letter>{<text>}` in post-processing phase where each `\y` parameter 
+  keeps inside one line. Inside-line parameters are represented
+  by `\x C{<text>}` and they are replaced to `\z C{<text>}` without any change.
+  But:
+  \begtt
+  \x C{<text1>^^J<text3>^^J<text3>} 
+  is replaced by
+  \z C{<text1>}^^J\z C{<text2>}^^J\z C{<text3>}
+  \endtt
+  The `\z <letter>{<text>}` is expanded to `\_z:<letter>{<text>}` and if
+  `\hicolor <letter> <color>` is declared then 
+  `\_z:<letter>{<text>}` expands to `{<color><text>}`. So, reuired color is
+  activated at all lines (separetelly) where C comment spans.
+* `\y {<text>}` is replaced by `\<text>` in post processing phase. It should
+  be used for macros without a paremater. You cannot use unprotected macros
+  as replacement text before pos-tprcessing phase, because the post-processing
+  phase is based on expansion whole verbatim text.
+\enditems
+

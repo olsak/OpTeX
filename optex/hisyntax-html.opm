@@ -1,0 +1,31 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl\_hisyntaxhtml {Syntax highlighting for html or xml sources <2020-04-03>} 
+
+\_newtoks\_hisyntaxhtml  \_newtoks\_hicolorshtml
+
+\_global\_hicolorshtml={%  colors in html codes 
+   \_hicolor A \Cyan    % <, > and parameters 
+   \_hicolor T \Red     % tag names
+   \_hicolor C \Green   % comments
+   \_hicolor E \Blue    % HTML entities
+   \_hicolor S \Magenta % strings in parameters
+}
+\_global\_hisyntaxhtml={
+   \_the\_hicolorshtml
+   \_replfromto{<!--}{-->}{\x C{<!--#1-->}}
+   \_replthis{<}{\y{_hitaghtml}}
+   \_replthis{\_string&}{\y{_hientityhtml}}
+}
+\_gdef\_hitaghtml#1>{\_hitaghtmlA#1\ >}
+\_gdef\_hitaghtmlA#1\ #2>{\z A{<}\z T{#1}\_def\_tmpb{#2^}%
+  \_if^\_tmpb 
+  \_else \_space 
+      \_replthis{\ ^}{}\_replfromto{"}{"}{\_histringhtml{"##1"}}\z A{\_tmpb}\_fi
+  \z A{>}%
+}
+\_gdef\_histringhtml#1{\_visiblesp \z S{#1}}
+\_gdef\_hientityhtml#1;{\z E{\&#1;}}
+
+\_endcode %------------------------------------------------
+

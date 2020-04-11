@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2020-03-21>} % preloaded in format
+\_codedecl \begtt {Verbatim <2020-04-03>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters for verbatim macros are set. 
@@ -122,11 +122,12 @@
    \_cod ----------------------------
 
 \_eoldef \begtt#1{\_par \_wipeepar 
-   \_begingroup
    \_vskip\_parskip \_ttskip
+   \_begingroup
    \_setverb 
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
+   \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt \_relax #1\_relax \_ttfont
    \_endlinechar=`^^J
    \_startverb
@@ -134,12 +135,13 @@
 \_ea\_def\_ea\_startverb \_ea#\ea1\_csstring\\endtt#2^^J{%
    \_prepareverbdata\_tmpb{#1^^J}%
    \_ea\_printverb \_tmpb\_end
-   \_par\_ttskip
-   \_endgroup
+   \_par
+   \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
 \_def\_printverb #1^^J#2{\_ifx\_end#2
-      \_bgroup \_adef{ }{}\_if\_relax#1\_relax\_egroup \_else\_egroup \_printverbline{#1}\_fi
+      \_bgroup \_adef{ }{}\_def\t{}%
+          \_if\_relax#1\_relax\_egroup \_else\_egroup \_printverbline{#1}\_fi
    \_else
       \_printverbline{#1}%
       \_ea \_printverb \_ea #2%
@@ -164,16 +166,17 @@
    `\_prepareverbdata` and printed via `\_printverb` loop.
    \_cod \_fin ----------------------
 
-\_def\_verbinput (#1) #2 {\_par \_def\_tmpa{#2}%
+\_def\_verbinput #1(#2) #3 {\_par \_def\_tmpa{#3}%
+   \_def\_tmpb{#1}%  cmds used in local group
    \_ifx\_vifilename\_tmpa \_else
-      \_openin\_vifile=#2
+      \_openin\_vifile={#3}%
       \_global\_viline=0 \_global\_let\_vifilename=\_tmpa
       \_ifeof\_vifile
-         \_opwarning{\_noexpand\verbinput - file "#2" is unable to reading}
+         \_opwarning{\_noexpand\verbinput - file "#3" is unable to reading}
          \_ea\_ea\_ea\_skiptorelax
       \_fi
    \_fi
-   \_viscanparameter #1+\_relax
+   \_viscanparameter #2+\_relax
 }
 \_def\_skiptorelax#1\_relax{}
 
@@ -213,8 +216,9 @@
    \_vskip\_parskip \_ttskip \_wipeepar
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_setverb \_adef{ }{\ }\_parindent=\_ttindent \_parskip=0pt
-   \_the\_everytt\_relax \_ttfont
+   \_setverb \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
+   \_the\_everytt\_relax \_tmpb\_relax \_ttfont
    \_endlinechar=`^^J \_tmpnum=0
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
          \_ifnum\_tmpnum<\_vinolines\_space
@@ -232,9 +236,10 @@
    \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb^^J}%
    \_ea\_printverb \_tmpb\_end
    \_global\_ttlinesave
-   \_par\_ttskip
+   \_par
    \_endgroup
-   \_noindent \_setbox0=\_lastbox
+   \_ttskip
+   \_isnextchar\_par{}{\_noindent}%
 }
 \_def\_vireadline{\_read\_vifile to \_tmp \_global\_advance\_viline by1 }
 \_def\_visaveline{\_ea\_addto\_ea\_tmpb\_ea{\_tmp}}
@@ -242,5 +247,21 @@
 \_public 
    \verbinput ;
 
+   \_doc -----------------------------
+   The `\visiblesp` sets spaces as visible characters \char9251.
+   It redefines `\ ` primitive, so it is useful for verbatim modes only.
+   \_cod -----------------------------
+
+\_def \_visiblesp{\_ifx\_initunifonts\_relax \_def\ {\_char9251 }%
+                  \_else \_def\ {\_char32 }\_fi}
+
+\_public \visiblesp ;
+
 \_endcode 
 
+\_endinput
+
+History:
+2020-04-06 ... \visiblesp added
+2020-04-04 ... ^^I activated as \t for multiline verbatim
+               \verbinput <cmds> (...) <filename>, <cmds> added.

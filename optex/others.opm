@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2020-03-14>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2020-04-02>} % preloaded in format
 
 % You can write \useOpTeX at begining of your document
 
@@ -65,7 +65,7 @@
 \_def\_negativermnm{\_romannumeral-`\.} 
 \_def\_reallipsum[#1]{\_lipsumA #1\_empty-\_empty\_end} 
 \_def\_lipsumA #1-#2\_empty#3\_end{\_tmpnum=#1 \_edef\_tmp{\_ifx^#2^#1\_else#2\_fi}% 
-   \_loop \_csname lips:\_the\_tmpnum\_endcsname \_par 
+   \_loop \_csname lips:\_the\_tmpnum\_endcsname \par % \par is better here
          \_ifnum\_tmpnum<\_tmp \_advance\_tmpnum by1 \_repeat 
 }
 \def\lipsum {\_lipsum}

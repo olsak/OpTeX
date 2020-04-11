@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2020-02-27>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-04-01>} % preloaded in format
 
    \_doc ----------------------------
    The `\newif` macro works like in plain \TeX. It means that
@@ -35,11 +35,46 @@
    `\_loop...\_repeat`. You canot mix both versions in one loop. 
    \_cod ----------------------------
 
-\_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
+\_long\_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
 \_def \loop #1\repeat{\_def\_body{#1}\_iterate}
 \_let \_repeat=\_fi % this makes \loop...\if...\repeat skippable
 \_let \repeat=\_fi
 \_def \_iterate {\_body \_ea \_iterate \_fi}
+
+
+   \_doc -----------------------------
+   `\foreach <list> \do {<what>}` repeats `<what>` for each element of the
+   `<list>`. The `<what>` can include `#1` which is substuted by each
+   element of the `<list>`. The macro is expandable.
+
+   `\fornum <from>..<to> \do {<what>}` or `\fornum <from>..<to> \step <num> \do {<what>}`
+   repeats `<what>` for each number from `<from>` to `<to>` (with step `<num>`
+   or with step one). The `<what>` can include `#1` which is substituted by
+   current number. The sequence `<from>..<to>` can be decreasing too.
+   The macro is expandable.
+   \_cod -----------------------------
+
+\_def\_foreach #1\_do#2{\_immediateassignment\_def\_body##1{#2}\_foreachA #1\_do}
+\_def\_foreachA #1{\_ifx\_do#1\_else\_body{#1}\_ea\_foreachA\_fi}
+\_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
+
+\_def\_fornum #1\_do#2{\_immediateassignment\_def\_body##1{#2}%
+   \_immediateassignment\_def\_fornumsgn{}\_immediateassignment\_def\_fornumrel{<}%
+   \_fornumA #1\_relax\step1\_relax\_end}
+\_def\_fornumA #1..#2\step#3\_relax#4\_end{%
+   \_immediateassignment\_tmpnum=\_numexpr#1\_relax 
+   \_ifnum\_numexpr#2<\_tmpnum \_immediateassignment\_def\_fornumrel{>}\_fi %decreasing
+   \_ifnum\_numexpr#3\_fornumrel0 \_immediateassignment\_def\_fornumsgn{-}\_fi
+   \_fornumB{#2}{#3}}
+\_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_tmpnum \_else 
+   \_ea\_body\_ea{\_the\_tmpnum}%
+   \_immediateassignment\_advance\_tmpnum by\_numexpr\_fornumsgn#2\_relax 
+   \_afterfi{\_fornumB{#1}{#2}}\_fi}
+\_def\_afterfi#1#2\_fi{\_fi#1}
+
+\_def\foreach #1\do{\_foreach #1\_do}
+\_def\fornum #1\do{\_fornum #1\_do}
+
 
    \_doc ----------------------------
    The macro `\isnextchar <char>{<codeA>}{<codeB>}` executes `<codeA>` if next
@@ -93,7 +128,7 @@
    \_doc ----------------------------
    `\isinlist\list{<text>}\iftrue` is true if the
    `<text>` is included the macro body of the `\list`. 
-   The catogory code are relevant here. THe macro is not expandable.
+   The category code are relevant here. The macro is not expandable.
    \_cod ----------------------------
 
 \_def\_isdefined #1#2{\_ifcsname #1\_endcsname \_else \_ea\_unless \_fi #2}
@@ -107,10 +142,10 @@
    \_ea\_tmp#1\_endlistsep#2\_end/_%
 }
 
-   \_doc ----------------------------
+   \_doc -----------------------------
    `\isfile{<filename>}\iftrue` is true if the file <filename> exists and are
    readable by \TeX.
-   \_cod \_fin ----------------------
+   \_cod -----------------------------
 
 \_newread \_testin
 
@@ -120,7 +155,6 @@
    \_else \_closein\_testin
    \_fi
 }
-
 \_public
    \newif \isnextchar \isempty \isequal \ismacro \isdefined \isinlist \isfile ;
 

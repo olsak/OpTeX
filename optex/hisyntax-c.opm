@@ -1,0 +1,66 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \_hisyntaxc {Syntax highlighting for C sources <2020-04-03>} 
+
+\_newtoks \_hisyntaxc  \_newtoks \_hicolorsc
+
+\_global\_hicolorsc={%     colors for C language
+   \_hicolor K \Red      % Keywords 
+   \_hicolor S \Magenta  % Strings
+   \_hicolor C \Green    % Comments
+   \_hicolor N \Cyan     % Numbers
+   \_hicolor P \Blue     % Preprocessor
+   \_hicolor O \Blue     % Non-letters
+}
+\_global\_hisyntaxc={%
+   \_the\_hicolorsc
+   \_let\c=\_relax \_let\e=\_relax \let\o=\_relax
+   \_replfromto {/*}{*/}         {\x C{/*#1*/}}%   /*...*/
+   \_replfromto {//}{^^J}        {\z C{//#1}^^J}%  //...
+   \_replfromto {\_string#}{^^J} {\z P{\##1}^^J}%  #include ...
+   \_replthis   {\_string\"}     {{\_string\"}}%   \" protected inside strings
+   \_replfromto {"}{"}           {\x S{"#1"}}%     "..."
+   %
+   \_edef\_tmpa {()\_string{\_string}+-*/=[]<>,:;\_pcent\_string&\_string^|!?}% non-letters
+   \ea \_foreach \_tmpa
+      \_do {\replthis{#1}{\n\o#1\n}}
+   \_foreach                                                              % keywords
+      {auto}{break}{case}{char}{continue}{default}{do}{double}% 
+      {else}{entry}{enum}{extern}{float}{for}{goto}{if}{int}{long}{register}% 
+      {return}{short}{sizeof}{static}{struct}{switch}{typedef}{union}% 
+      {unsigned}{void}{while}
+      \_do {\replthis{\n#1\n}{\z K{#1}}}
+   \_replthis{.}{\n.\n}                                                   % numbers
+   \_foreach 0123456789 
+      \_do {\replfromto{\n#1}{\n}{\c#1##1\e}}
+   \_replthis{\e.\c}{.}
+   \_replthis{\e.\n}{.\e}
+   \_replthis{\n.\c}{\c.}
+   \_replthis{e\e\o+\c}{e+}\_replthis{e\e\o-\c}{e-}   
+   \_replthis{E\e\o+\c}{E+}\_replthis{E\e\o-\c}{E-}   
+   \def\o#1{\z O{#1}}
+   \def\c#1\e{\z N{#1}}
+}
+
+\_endcode %------------------------------------------------
+
+
+Each `hisyntax-<name>.opm` file must declare the token list
+`\_hisyntax<name>` using `\newtoks` and must ceclare the syntax declaration
+in it. The second cotken list `\_hicolors<name>` is optional but recommended.
+User can re-declare his/her own colors by `\hicolors` which has precedence
+before `\_hicolors<name>`.
+
+The public variants can be deacred if you want to give these token lists to
+the user name space. But it is not explicitly needed.
+
+All settings must be global here, because the file is typically read inside
+a group and we need not to read it repeatedly in before each code chunk
+again and again.
+
+Note that `\foreach` is used to each non-letters (expanded via \string
+because we needn't to treate with active or special TeX characters). The
+keyword are applied in the `\foreach` loop too.
+
+See `hi-sytax.opm` for more information about `\hicolor`, `\replfromto` and
+`\replthis` macros.

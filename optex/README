@@ -8,6 +8,7 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.09> Syntax highlighting implemented.
 <0.08> \numberedpar implmented. \emergencystretch=20pt added as default. 
        \inoval, \incircle, \clipinoval, \clipincircle imlemented. 
        \puttext, \putpic x,y instead -y,x (incompatible change!) 

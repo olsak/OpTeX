@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2020-03-13>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2020-04-10>} % preloaded in format
 
    \_doc -----------------------------
    The result of `\table` is inserted into `\_tablebox`. You can change
@@ -95,14 +95,16 @@
    You can define more such leeters by `\def\_tabdeclare<letter>{...}` for a non-parametric 
    letter and by `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.
+   All items are put in group because of `\aftergroup` can be used (from
+   `\localcolors` for example).
    \_cod -----------------------------
 
-\_def\_tabdeclarec{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}
-\_def\_tabdeclarel{\_the\_tabiteml##\_unsskip\_hfil\_the\_tabitemr}
-\_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
-\_def\_paramtabdeclarep#1{\_the\_tabiteml
+\_def\_tabdeclarec{{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}}
+\_def\_tabdeclarel{{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}}
+\_def\_tabdeclarer{{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}}
+\_def\_paramtabdeclarep#1{{\_the\_tabiteml
    \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip 
-   \_lineskiplimit=0pt \_noindent##\_unsskip \_lower\_dp\_tstrutbox\hbox{}}\_the\_tabitemr}
+   \_lineskiplimit=0pt \_noindent##\_unsskip\_lower\_dp\_tstrutbox\hbox{}}\_the\_tabitemr}}
 
    \_doc -----------------------------
    User puts optional spaces around the table item typically, i.e. he/she writes
@@ -160,7 +162,7 @@
 \_def\_mspan{\_omit \_tabdata={\_tabstrutA}\_let\_tmpa=\_relax \_afterassignment\_mspanA \_mscount=}
 \_def\_mspanA[#1]#2{\_loop \_ifnum\_mscount>1 \_cs{_span}\_omit \_advance\_mscount-1 \_repeat
    \_colnum=0 \_def\_tmpa{}\_tabdata={}\_scantabdata#1\_relax
-   \_setbox0=\_vbox{\_halign\_expandafter{\_the\_tabdata\_cr#2\_crcr}\_global\_setbox8=\_lastbox}%
+   \_setbox0=\_vbox{\_halign\_expandafter{\_the\_tabdata\_cr#2\_cr}\_global\_setbox8=\_lastbox}%
    \_setbox0=\_hbox{\_unhbox8 \_unskip \_global\_setbox8=\_lastbox}%
    \_unhbox8 \_ignorespaces}
 \_public \mspan ;
@@ -198,4 +200,4 @@
 
 \_endcode % -------------------------------------
 
-
+2020-04-10 second group for items in order to \localcolors

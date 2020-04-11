@@ -1,0 +1,82 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \_hisyntaxpython {Syntax highlighting for Python sources <2020-04-04>} 
+
+\_newtoks \_hisyntaxpython  \_newtoks \_hicolorspython
+
+\_global\_hicolorspython={% colors for Python language
+   \_hicolor M \Orange    % Multi line strings
+   \_hicolor S {\_visiblesp \Grey} % Single line strings
+   \_hicolor C \Green     % Comments
+   \_hicolor K \LightBlue % Keywords
+   \_hicolor O \Blue      % Operators
+   \_hicolor N \Red       % Numbers
+   \_hicolor D \Magenta   % def names
+   \_hicolor L \Black     % class names
+   \_hicolor R \Magenta   % Decorators
+}
+\_global\_hisyntaxpython={%
+   \_the\_hicolorspython
+   \_let\s=\_relax  \_let\c=\_relax \_let\e=\_relax \let\o=\_relax
+   \_replthis{\_string\"}{{\_string\"}}     % protect \", \'
+   \_replthis{\_string\'}{{\_string\'}}
+   %
+   \_replfromto{\string#}{^^J}{\z C{\##1}^^J} % comments
+   %
+   \_replthis{'''}{\_noexpand\_hipystr0{'''}M} % search string marks
+   \_replthis{"""}{\_noexpand\_hipystr1{"""}M}
+   \_replthis{"}{\_noexpand\_hipystr2{"}S}
+   \_replthis{'}{\_noexpand\_hipystr3{'}S}
+   \_edef\_tmpb{\_tmpb}                       % realize string marks
+   %
+   \_foreach {br}{Br}{bR}{BR}{rb}{rB}{Rb}{RB}uUrRbB  % string prefixes
+       \_do {\_replthis{#1\s}{\_noexpand\_hipystrpre#1}}
+   \_def\s{}
+   \_edef\_tmpb{\_tmpb}
+   %
+   \_edef \_tmpa {+-*./=<>()[]:,;!|\_pcent   % operators
+        \_string{\_string}@\_string&\_string~\_string^}
+   \_ea\_foreach \_tmpa 
+       \_do {\_replthis{#1}{\n\o#1\n}}
+   %
+   \_foreach                                 % keywords
+      {and}{as}{assert}{async}{await}{break}{continue}{del}{elif}{else}{except}%
+      {exec}{False}{finally}{for}{from}{global}{if}{import}{in}{is}{lambda}{None}% 	
+      {nonlocal}{not}{or}{pass}{print}{raise}{return}{True}{try}{while}{with}{yield}%
+      \_do {\replthis{\n#1\n}{\z K{#1}}}
+   \_replfromto{\n def\n}{\n\o(\n}{\z K{def}\x D{#1}\n\o(\n}
+   \_replfromto{\n class\n}{\n\o(\n}{\z K{class}\x L{#1}\n\o(\n}
+   %
+   \_foreach 0123456789                       % numbers            
+       \_do {\_replfromto{\n#1}{\n}{\c#1##1\e}}
+   %
+   \_replthis{\e\o.\c}{.}
+   \_replthis{\e\o.\n}{.\e}
+   \_replthis{\n\o.\c}{\c.}
+   \_replthis{e\e\o+\c}{e+}\_replthis{e\e\o-\c}{e-}   
+   \_replthis{E\e\o+\c}{E+}\_replthis{E\e\o-\c}{E-}   
+   \_replthis{\e j}{j\e}
+   %
+   \_replfromto{\n\o@\n}{^^J}{\z R{#1}^^J}    % decorators
+   %
+   \def\o#1{\z O{#1}}
+   \def\c#1\e{\z N{#1}}
+}
+
+\_gdef\_hipystr#1#2#3#4\_hipystr#5#6#7{%
+   \_ifx#1#5\s\x#3{#2#4#2}%
+   \_else \_afterfi{\_hipystr#1{#2}#3#4#6}\_fi
+}
+\_gdef\_hipystrpre#1\x#2{\x#2{#1}\x#2}
+
+\_ifx\LightBlue\_undefined \_gdef\LightBlue {\_setcmykcolor{1 0.43 0 0}}\_fi 
+\_ifx\Orange\_undefine     \_gdef\Orange    {\setcmykcolor{0 0.64 1 0}}\_fi 
+
+\_endcode %------------------------------------------------
+
+This code was greatly inspired by the OPMac hisyntax macros for Python:
+
+   https://gitlab.fit.cvut.cz/krajnpet/PySyntax
+
+created by Petr Krajnik.
+
