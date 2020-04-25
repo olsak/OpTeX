@@ -3,70 +3,84 @@
 \_codedecl \sdef {Basic macros for OpTeX <2020-02-14>} % loaded in format
 
    \_doc ------------------------------
-   `\bgroup`, `\egroup`, `\empty`, `\space`, `\null` and `\wlog` are classical
-   macros from plain \TeX/. 
+   \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog` 
+   are classical macros from plain \TeX/. 
    \_cod ------------------------------
 
-\let\_bgroup={  \let\_egroup=}
+\_let\_bgroup={  \_let\_egroup=}
 \_def \_empty {}
 \_def \_space { }
 \_def \_null {\_hbox{}}
 \_def \_wlog {\_immediate\_write-1 } % write on log file (only)
 
+\_public \bgroup \egroup \empty \space \null \wlog ;
+
    \_doc ------------------------------
-   `\bslash` is \"normal backslash" with category code 12. 
-   `\nbb` and `\pcent` are double backslash and normal `%`, they should 
-   be used in lua codes, for example.
+   \`\bslash` is \"normal backslash" with category code 12. 
+   \`\nbb` and \`\pcent` are double backslash and normal~`%`, 
+   they should be used in lua codes, for example.
    \_cod ------------------------------
 
-\_edef\_bslash {\_csstring\\}
+\_edef \_bslash {\_csstring\\}
 \_edef \_nbb {\_bslash\_bslash}
 \_edef \_pcent{\_csstring\%}
 
+\_public \bslash \nbb \pcent ;
+
    \_doc ------------------------------
-   `\sdef{<text>}` is equivalent to `\def\<text>`, where `\<text>` is a control
+   \`\sdef` `{<text>}` is equivalent to `\def\<text>`, where `\<text>` is a control
    sequence. You can use arbitrary parameter mask after `\sdef{<text>}`, don't
    put the (unwanted) space immediately after closing brace \code{\}}.
-
-   `\sxdef{<text>}` is equivalent to `\xdef\<text>`.
-
-   `\slet{<textA>}{<textB>}` is equivalent to `\let \<textA> = \<textB>`.
+   \nl
+   \`\sxdef` `{<text>}` is equivalent to `\xdef\<text>`.
+   \nl
+   \`\slet` `{<textA>}{<textB>}` is equivalent to `\let \<textA> = \<textB>`.
    \_cod ------------------------------
 
 \_def \_sdef #1{\_ea\_def \_csname#1\_endcsname}
 \_def \_sxdef #1{\_ea\_xdef \_csname#1\_endcsname}
 \_def \_slet #1#2{\_ea\_let \_csname#1\_ea\_endcsname \_csname#2\_endcsname}
 
+\_public \sdef \sxdef \slet ;
+
    \_doc ------------------------------
-   `\adef{<char>}{<body>}` puts the <char> as active character and defines it
-   as {<body>}. You can use parameter mask too, for example 
-   `\adef @#1{...$1...}`
+   \`\adef` `{<char>}{<body>}` puts the <char> as active character and defines it
+   as `{<body>}`. You can declare a macro with parameters too. For example 
+   `\adef @#1{...$1...}`.
    \_cod ------------------------------
 
-\_def \_adef #1{\_catcode`#1=13 \_begingroup 
-   \_lccode`\~=`#1\_lowercase{\_endgroup\_def~}}
+\_def \_adef #1{\_catcode`#1=13 \_begingroup \_lccode`\~=`#1\_lowercase{\_endgroup\_def~}}
+\_public \adef ;
 
    \_doc ------------------------------
-   `\cs{<text>}` is only a shortcut to `\csname <text>\endcsname`, but you need
-   one more `\ea` if you need to get the real control sequence `\<text>`.
+   \`\cs` `{<text>}` is only a shortcut to `\csname <text>\endcsname`, but you need
+   one more `\_ea` if you need to get the real control sequence `\<text>`.
+   \nl
+   \`\trycs` `{<csname>}{<text>}` expands to `\<csname>` 
+   if it is defined else to the `<text>`.
    \_cod ------------------------------
 
 \_def \_cs #1{\_csname#1\_endcsname}
+\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_endcsname \_else #2\_fi}
+\_public \cs \trycs ;
 
    \_doc ------------------------------
-   `\addto\macro{<text>}` adds <text> to your `\macro`, which must be defined.
+   \`\addto` `\macro{<text>}` adds `<text>` to your `\macro`, which must be defined.
    \_cod ------------------------------
 
 \_long\_def \_addto #1#2{\_ea\_def\_ea#1\_ea{#1#2}}
+\_public \addto ;
 
    \_doc ------------------------------
-   `\opwarning{<text>}` prints warning on the terminal and to the log file.
+   \`\opwarning` `{<text>}` prints warning on the terminal and to the log file.
    \_cod ------------------------------
 
 \_def \_opwarning #1{\_wterm{WARNING: #1.}}
+\_public \opwarning ;
 
    \_doc ------------------------------
-   `\loggingall` and `\tracingall` is similar as in plain \TeX/, but prints
+   \`\loggingall` and \`\tracingall` are defined similarly as in 
+   plain \TeX/, but they print
    more logging information to the log file and to the terminal. 
    \_cod ------------------------------
 
@@ -76,12 +90,7 @@
   \_tracingifs=1 \_tracinggroups=1 \_tracingassigns=1 }
 \_def\_tracingall{\_tracingonline=1 \_loggingall}
 
-\_public
-   \bgroup \egroup \empty \space \null \wlog 
-   \bslash \nbb \pcent
-   \sdef \sxdef \slet \cs \adef
-   \addto \wlog \opwarning 
-   \loggingall \tracingall ; 
+\_public \loggingall \tracingall ; 
 
 \_endcode % -------------------------------------
 

@@ -3,7 +3,9 @@
 \_codedecl \chap {Titles, chapters, sections, subsections <2020-03-14>} % preloaded in format
 
    \_doc ---------------------------
-   We are using scaled fonts for titles. They are scaled from main fonts size
+   We are using scaled fonts for titles
+   \`\_titfont`, \`\_chapfont`, \`\_secfont` and \`\_seccfont`.
+   They are scaled from main fonts size
    of the document, which is declared by first `\typosize[<fo-size>/<b-size>]`
    command. 
    \_cod ---------------------------
@@ -14,7 +16,7 @@
 \_def \_seccfont {\_scalemain\_boldify\_typoscale[\_magstep1/\_magstep1]}
 
    \_doc ---------------------------
-   The `\tit` macro is defined by `\eoldef`, it means that the parameter is
+   The \`\tit` macro is defined by `\eoldef`, it means that the parameter is
    separated by end of line. The macros `\chap`, `\sec` and `\secc` use
    `\eoldef` too.
    \_cod ---------------------------
@@ -27,38 +29,40 @@
 \_public \tit ;
 
    \_doc ---------------------------
-   You can re-define `\_printchap`, `\_printsec` or `\_printsecc` macros if 
-   another design of section titles is needed. These macros gets the <title>
-   text in its parameter. The common recommendations for these macros are:
+   You can re-define \`\_printchap`, \`\_printsec` or \`\_printsecc` macros if 
+   another design of section titles is needed. These macros gets the
+   `<title>` text in its parameter. The common recommendations for these macros are:
    \begitems
-   * Use `\_abovetitle{<penaltyA>}{<skipA>}` and `\_belowtitle{<skipB>}
+   * Use \^`\_abovetitle``{<penaltyA>}{<skipA>}` and \^`\_belowtitle``{<skipB>}`
      for inserting vertical material above and below the section title.
-     The arguments of these macros are normally used, i.e. \_abovetitle`
-     inserts <penaltyA><skipA> and `\_belowtitle` inserts <skipB>. 
+     The arguments of these macros are normally used, i.\,e.\ \^`\_abovetitle`
+     inserts `<penaltyA><skipA>` and \^`\_belowtitle` inserts `<skipB>`. 
      But there is an
-     exception: if `\_belowtitle{<skip>}` is immediately followed by next
-     `\_abovetitle{<penalty>}` (for example section title is immediately followed by
-     subsection title), then only <skipA> is generated, i.e.
-     <skipB><penaltyA><skipA> is reduced only to <skipA>
+     exception: if \^`\_belowtitle``{<skipB>}` is immediately followed by
+     \^`\_abovetitle``{<penaltyA>}{<skipA>}` (for example section title is 
+     immediately followed by subsection title), then only `<skipA>` is generated, 
+     i.\,e.\ `<skipB><penaltyA><skipA>` is reduced only to `<skipA>`.
      The reason of such behavior: we don't want to duplicate vertical skip 
      and we don't want to use negative penalty in such cases.
-     Moreower, `\_abovetitle{<penaltyA>}{<skipA>}` takes previous whatever
+     Moreover, \^`\_abovetitle``{<penaltyA>}{<skipA>}` takes previous whatever
      vertical skip (other than from `\_belowtitle`) and generates only 
-     greater from this pair of skips. I.e.  <whatever-skip><penaltyA><skipA> 
-     is reduced to $<penaltyA>\max(<whatever-skip><skipA>)$. 
+     greater from this pair of skips. It means that `<whatever-skip><penaltyA><skipA>` 
+     is transformed to `<penaltyA>`max(`<whatever-skip><skipA>`). 
      The reason of such behavior: we don't want to
      duplicate vertical skips (from `\_belowlistskip`, for example) above the title.
-   * Use `\_printrefnum[<pre>@<post>]` in horizontal mode. It prints 
-     <pre><ref-num><post>. The <ref-num> is `\thechapnum` or `\thesecnum`
-     or `\theseccnum` depending on what type o title is processed.
-     If `\nonum` prefix is used then `\_printrefnum` prints nothing. 
-     The macro `\_printrefnum` does more work: it creates destination of hyperlinks 
-     (if `\hyperlinks{}{}` is used) and saves references from label (if
-     `\label[<label>]` precedes) and saves references for table of contents
-     (if `\maketoc` is used).
-   * Use `\nbpar` for closing the paragraph for printing title. This
+   * Use \^`\_printrefnum``[<pre>@<post>]` in horizontal mode. It prints 
+     `<pre><ref-num><post>`. The `<ref-num>` is \^`\_thechapnum` or \^`\_thesecnum`
+     or \^`\_theseccnum` depending on what type o title is processed.
+     If \^`\nonum` prefix is used then \^`\_printrefnum` prints nothing. 
+     The macro \^`\_printrefnum` does more work: it creates destination of hyperlinks 
+     (if \^`\hyperlinks``{}{}` is used) and saves references from label (if
+     \^`\label``[<label>]` precedes) and saves references for table of contents
+     (if \^`\maketoc` is used).
+   * Use \^`\nbpar` for closing the paragraph for printing title. This
      command inserts `\_nobreak` between each line of such paragraph, so
      the title cannot be broken to more pages. 
+   * You can use \^`\_firstnoindent` in order to the first paragraph after
+     the title is not indented.
    \enditems
    \_cod ---------------------------
 
@@ -66,7 +70,7 @@
    {\_chapfont \_noindent \_mtext{chap} \_printrefnum[@]\_par
     \_nobreak\_smallskip
     \_noindent \_raggedright #1\_nbpar}\_mark{}%
-   \_nobreak \_belowtitle{\_medskip}% 
+   \_nobreak \_belowtitle{\_bigskip}% 
    \_firstnoindent
 }
 \_def\_printsec#1{\_par 
@@ -83,7 +87,7 @@
 }
 
    \_doc --------------------------
-   The `\_sectionlevel` is the level of the printed section:
+   The \`\_sectionlevel` is the level of the printed section:
    \begitems
    * `\_sectionlevel=0` -- reserved for parts of the book (unused by default)
    * `\_sectionlevel=1` -- chapters (used in `\chap`)
@@ -99,26 +103,30 @@
 }
 
    \_doc --------------------------
-   The `\_chapx` initializes counters used in chapters, 
-   the `\_secx` initializes counters in sections
-   and `\_seccx` initializes counters in subsections.
-   If you have another concept of numbering objects used in your 
+   The \`\_chapx` initializes counters used in chapters, 
+   the \`\_secx` initializes counters in sections
+   and \`\_seccx` initializes counters in subsections.
+   If you have more types of numbered objects in your document then you can
+   declare appropriate counters and do `\addto\_chapx{\yourcounter=0 }` 
+   for example. If you have another concept of numbering objects used in your 
    document, you can re-define these macros. All settings here are global
    because it is used by `{\_globaldefs=1 \_chapx}`.
 
    Default concept: Tables, figuers and display maths are numbered
    from one in each section -- subsetions doesn't reset these counters.
+   Footnotes declared by \^`\fnotenumchapters` are numbered in each chapter
+   from one.
 
-   The `\_the*` macros includes the format of numbers used when the object
+   The `\_the*` macros 
+   \`\_thechapnum`, \`\_thesecnum`, \`\_theseccnum`, 
+   \`\_thetnum`, \`\_thefnum` and \`\_thednum`
+   include the format of numbers used when the object
    is printing. If chapter is never used in the document then `\_chapnum=0`
-   and `\_othe\_chapnum.` expands to empty. Sections have numbers <num> and
+   and \`\_othe``\_chapnum.` expands to empty. Sections have numbers <num> and
    subsections <num>.<num>. On the other hand, if chapter is used in the
-   document then `\_chapnum>0` and sections have numbers <num>.<num> 
-   and subsections have numbers <num>.<num>.<num>. 
+   document then `\_chapnum>0` and sections have numbers` <num>.<num>` 
+   and subsections have numbers `<num>.<num>.<num>`. 
 
-   If you have more types of numbered objects in your document then you can
-   declare appropriate counters and do `\addto\_chapx{\yourcounter=0 }` 
-   for example.
    \_cod --------------------------
 
 \_newcount \_chapnum  % chapters 
@@ -128,12 +136,9 @@
 \_newcount \_fnum     % figure numbers
 \_newcount \_dnum     % numbered display maths
 
-\_def \_chapx {\_incr\_chapnum \_secnum=0 \_seccnum=0 \_resetcountchap \_lfnotenum=0 }
-\_def \_secx  {\_incr\_secnum             \_seccnum=0 \_resetcountsec }
-\_def \_seccx {\_incr\_seccnum } 
-
-\_def \_resetcountchap {\_tnum=0 \_fnum=0 \_dnum=0 }
-\_def \_resetcountsec  {\_tnum=0 \_fnum=0 }
+\_def \_chapx {\_secx  \_secnum=0  \_lfnotenum=0 }
+\_def \_secx  {\_seccx \_seccnum=0 \_tnum=0 \_fnum=0 \_dnum=0 \_resetABCDE }
+\_def \_seccx {} 
 
 \_def \_thechapnum {\_the\_chapnum}
 \_def \_thesecnum  {\_othe\_chapnum.\_the\_secnum}
@@ -146,8 +151,9 @@
 \_def\_incr #1{\_global\_advance#1by1 }
 
    \_doc ----------------------------
-   The `\notoc` and `\nonum` prefixes are implemented by
-   internal `\_ifnotoc` and `\_ifnonum`.
+   The \`\notoc` and \`\nonum` prefixes are implemented by
+   internal `\_ifnotoc` and `\_ifnonum`. They are reset
+   after each chapter/section/subsection by the \`\_resetnonumnotoc` macro.
    \_cod ----------------------------
 
 \_newifi \_ifnotoc  \_notocfalse  \_def\_notoc {\_global\_notoctrue}
@@ -156,8 +162,8 @@
 \_public \notoc \nonum ;
 
    \_doc ----------------------------
-   The `\chap`, `\sec` and `\secc` macros are implemnted here.
-   The `\_inchap`, `\_insec` and `\_insecc` macros does the real work,
+   The \`\chap`, \`\sec` and \`\secc` macros are implemented here.
+   The \`\_inchap`, \`\_insec` and \`\_insecc` macros does the real work,
    First, we read the optional parameter `[<label>]`, if it exists.
    \_cod ----------------------------
 
@@ -168,21 +174,21 @@
 
 \_eoldef\_inchap #1{\_par \_sectionlevel=1
    \_def \_savedtitle {#1}% saved to .ref file
-   \_ifnonum \_else {\_globaldefs=1 \_chapx}\_fi
+   \_ifnonum \_else {\_globaldefs=1 \_incr\_chapnum \_chapx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_thechapnum \_fi}%
    \_printchap{#1}%
    \_resetnonumnotoc
 }
 \_eoldef\_insec #1{\_par \_sectionlevel=2
    \_def \_savedtitle {#1}% saved to .ref file
-   \_ifnonum \_else {\_globaldefs=1 \_secx}\_fi
+   \_ifnonum \_else {\_globaldefs=1 \_incr\_secnum \_secx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_thesecnum \_fi}%
    \_printsec{#1}%
    \_resetnonumnotoc
 }
 \_eoldef\_insecc #1{\_par \_sectionlevel=3
    \_def \_savedtitle {#1}% saved to .ref file
-   \_ifnonum \_else {\_globaldefs=1 \_seccx}\_fi
+   \_ifnonum \_else {\_globaldefs=1 \_incr\_seccnum \_seccx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_theseccnum \_fi}%
    \_printsecc{#1}%
    \_resetnonumnotoc
@@ -190,12 +196,13 @@
 \_public \chap \sec \secc ;
 
    \_doc ----------------------------
-   The `\_printrefnum[<pre>@<post>]` macro is used in `\_print*` macros.
-   The `\_wtotoc {<level>}{<info>}{<ref-num>}{<title-text>}`
-   macro expands its parameters and does `\_wref`.
+   The \`\_printrefnum``[<pre>@<post>]` macro is used in `\_print*` macros.
+   \nl
+   The \`\_wtotoc` `{<level>}{<info>}{<ref-num>}{<title-text>}`
+   macro expands its parameters and does \^`\_wref`.
 
-   Note that the <tite-text> is `\detokenize`d before `\wref`, so the 
-   problem of \"fragile macros" from old \LaTeX/ never occurrs. 
+   Note that the `<tite-text>` is `\detokenize`d before `\_wref`, so the 
+   problem of \"fragile macros" from old \LaTeX/ never occurs. 
    \_cod ----------------------------
 
 \_def \_printrefnum [#1@#2]{\_leavevmode % we must be in horizontal mode
@@ -211,17 +218,17 @@
 \_def \_wtotocA #1#2#3#4{\_wref\_Xtoc{{#1}{#2}{#3}{#4}}}
 
    \_doc -----------------------------
-   The `\_abovetitle{<penaltyA>}{<skipA>}` and `\_belowtitle{<skipB>}` pair 
+   The \`\_abovetitle``{<penaltyA>}{<skipA>}` and \`\_belowtitle``{<skipB>}` pair 
    communicates using a special penalty 11333 in vertical mode. 
    The `\_belowtitle` puts the vertical skip (its value is saved in 
    `\_savedtitleskip`) followed by this special penalty.
    The `\_abovetitle` reads `\lastpenalty` and if it has this special value
-   then it removes the skip used before and dont use the parameter.
-   The `\abovetitle` creates <skipA> only if whatever previous skip is less
-   or equal than <skipA>. We must save <whatever-skip>, remove it,
-   create <penaltyA> (if belowtitle does not preceded) and create
-   <whatever-skip> or <skipA> depending on what is greater.
-   The amount of <skipA> is measured using `\setbox0=\vbox`.
+   then it removes the skip used before and don't use the parameter.
+   The `\abovetitle` creates `<skipA>` only if whatever previous skip is less
+   or equal than `<skipA>`. We must save `<whatever-skip>`, remove it,
+   create `<penaltyA>` (if `\_belowtitle` does not preceded) and create
+   <whatever-skip> or `<skipA>` depending on what is greater.
+   The amount of `<skipA>` is measured using `\setbox0=\vbox`.
    \_cod -----------------------------
 
 \_newskip \_savedtitleskip  
@@ -236,8 +243,8 @@
 \_def\_belowtitle #1{#1\_global\_savedtitleskip=\_lastskip \_penalty11333 }
 
    \_doc -----------------------------
-   `\nbpar` sets `\interlinepenaty` value.
-   `\nl` is \"new line" in text (or titles), but space in toc or healdlines or outlines.
+   \`\nbpar` sets `\interlinepenaty` value.
+   \`\nl` is \"new line" in text (or titles), but space in toc or headlines or outlines.
    \_cod -----------------------------
 
 \_def\_nbpar{{\_interlinepenalty=10000\_endgraf}}
@@ -249,24 +256,23 @@
 \_public \nbpar \nl ;
 
    \_doc -----------------------------
-   `\_firstnoindent` puts a material to `\everypar` in order to next
+   \`\_firstnoindent` puts a material to `\everypar` in order to next
    paragraph will be without indentation. It is useful after titles.
    If you dislike this feature then you can say `\let\_firtnoindent=\relax`.
-   The `\_wipeepar` removes the material from `\everypar`.
+   The \`\_wipeepar` removes the material from `\everypar`.
    \_cod -----------------------------
 
-\_def \_afternoindent {\_global\_everypar={\_wipeepar \_setbox7=\_lastbox}}
+\_def \_firstnoindent {\_global\_everypar={\_wipeepar \_setbox7=\_lastbox}}
 \_def \_wipeepar {\_global\_everypar={}}
-\_let \_firstnoindent=\_afternoindent
 
    \_doc ----------------------------- 
    The `\mark` (for running heads) is used in `\_printsection` only. We
    suppose that chapters will be printed after `\vfil\break`, so user can
    implement chapter titles for running headers directly by macros, no
-   `\mark` machanism is needed. But sections need `\mark`s. And they can be
+   `\mark` mechanism is needed. But sections need `\mark`s. And they can be
    mixed with chapter's running heads, of course. 
 
-   The `\_insermark{<title text>}` saves `\mark` in the format
+   The \`\_insermark``{<title text>}` saves `\mark` in the format
    `{<title-num>} {<title-text>}`, so it can be printed \"as is" in
    `\headline` (see the space between them), or you can define a formating
    macro with two parameters for processing these data, if you need it.   
@@ -275,10 +281,10 @@
 \_def\_insertmark#1{\_mark{{\_ifnonum\_else\_therefnum\_fi} {\_unexpanded{#1}}}}
 
    \_doc -----------------------------
-   \OpTeX/ sets `\headline={}` by default, so no running heads are printed.
-   You can activate the running heads by following code, for example:
+   \OpTeX/ sets `\headline={}` by default, so no running headings are printed.
+   You can activate the running headings by following code, for example:
    \begtt
-   \addto \_chapx {\_edef\_runningchap {\_thechapnum: \_unexpanded\_ea{\_savedtitle}}}
+   \addto\_chapx {\_edef\_runningchap {\_thechapnum: \_unexpanded\_ea{\_savedtitle}}}
    \def \formathead #1#2{\isempty{#1}\iffalse #1: #2\fi}
    \headline = {%
       \ifodd \pageno
@@ -288,12 +294,13 @@
       \fi 
    }
    \endtt
-
-   The `\caption/<letter>` uses `\_<letter>num` counter. 
-   The group opened by `\caption` is finalized by first \par from
+   The \`\caption``/<letter>` uses `\_<letter>num` counter. 
+   The group opened by `\caption` is finalized by first `\par` from
    empty line or from `\vskip` or from `\endinsert`.
    The `\_printcaption<letter>` is called, it starts with
-   printing of the caption.
+   printing of the caption.\nl
+   The \`\cskip` macro inserts nobreakable vertical space between caption and
+   the object. 
    \_cod -----------------------------
 
 \_def\_caption/#1{\_def\_tmpa{#1}\_nospaceafter \_capA}
@@ -308,15 +315,18 @@
    \_def\_par{\_nbpar\_egroup}\_let\par=\_par
    \_cs{_printcaption\_tmpa}%
 }
+\_def \_cskip {\_par\_nobreak\_medskip} % space between caption and the object
+
+\_public \caption \cskip ;
 
    \_doc -----------------------------
-   The `\_printcaption<letter>` macro starts in vertical mode. It must
-   switch to horizontal mode, it must use `\_wlabel\_thecapnum` (in order to
-   make reference and hyperlink destination) a it can use:
+   The \`\_printcaptiont` and \`\_printcaptionf` macros start in vertical mode.
+   They switch to horizontal mode and use `\_wlabel\_thecapnum` (in order to
+   make reference and hyperlink destination) a they can use:
    \begitems
    * `\_thecaptitle` ... expands to the word Table or Figure (depending on
                          the current language).
-   * `\_thecapnum` ... expands to `\the<letter>num` (caption number).
+   * `\_thecapnum` ...   expands to `\the<letter>num` (caption number).
    \enditems
    \_cod -----------------------------
 
@@ -325,14 +335,11 @@
    \_narrowlastlinecentered\_iindent
 }
 \_let \_printcaptionf = \_printcaptiont % caption of figures = caption of tables
-\_def \_cskip {\_par\_nobreak\_medskip} % space between caption and the object
-
-\_public \caption \cskip ;
 
    \_doc -----------------------------
    The default format of `\caption` text is paragraph in block narrower by 
    `\_iindent` and with the last line is centered. This setting is done by 
-   `\_narrowlastlinecentered` macro. 
+   the \`\_narrowlastlinecentered` macro. 
    \_cod -----------------------------
 
 \_def\_narrowlastlinecentered#1{%
@@ -342,7 +349,7 @@
 }
 
    \_doc -----------------------------
-   `\eqmark` is processed in display mode (we add `\eqno` primitive)
+   \`\eqmark` is processed in display mode (we add `\eqno` primitive)
    or in internal mode when `\eqaligno` is used (we don't add `\eqno`). 
    \_cod -----------------------------
 
@@ -354,20 +361,13 @@
 \_public \eqmark ;
 
    \_doc -----------------------------
-   The `\numberedpar <letter>{<name>}` is implemented here.
-   You can say `\let\resetcountsec=\relax` if you don't want to reset
-   counters A, B, C, D, E nor `\fnum` nor `\tnum` in sections, but only in
-   chapters. Or you can define you own concept of `\_chapx` and `\_secx`
-   macros (see above). Then you will want to re-define `\_theAnum`, `\_thefnum` 
-   etc. macros. 
+   The \`\numberedpar` `<letter>{<name>}` is implemented here.
    \_cod -----------------------------
 
 \_newcount\_counterA \_newcount\_counterB \_newcount\_counterC 
 \_newcount\_counterD \_newcount\_counterE
 
-\_def\_resetcounters{\_counterA=0 \_counterB=0 \_counterC=0 \_counterD=0 \_counterE=0 }
-\_addto \_resetcountchap {\_resetcounters}
-\_addto \_resetcountsec {\_resetcounters}
+\_def\_resetABCDE {\_counterA=0 \_counterB=0 \_counterC=0 \_counterD=0 \_counterE=0 }
 
 \_def \_theAnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterA}
 \_def \_theBnum {\_othe\_chapnum.\_othe\_secnum.\_the\_counterB}
@@ -380,19 +380,22 @@
 \_optdef\_numberedparparam[]{%
    \_ea \_printnumberedpar \_csname _the\_tmpa num\_ea\_endcsname\_ea{\_tmpb}}
 
+\_public \numberedpar ;
+
    \_doc -----------------------------
-   The `\_printnumberedpar \theXnum {<name>}` opens numbered paragraph and
+   The \`\_printnumberedpar` `\theXnum {<name>}` opens numbered paragraph and
    prints it. The optional parameter is in `\_the\_opt`. You can re-define
    it if you need another design.
 
-   `\_printnumberedpar` need not to be re-define if you only need to print
+   `\_printnumberedpar` needs not to be re-defined if you only want to print
    Theorems in italic and to insert vertical skips (for example). You can do this 
-   by the following:
-   \_begtt
+   by the following code:
+   \begtt
    \def\theorem    {\medskip\bgroup\it \numberedpar A{Theorem}}
    \def\endtheorem {\par\egroup\medskip}
-   \_endtt
+
    \theorem Let $M$ be... \endtheorem
+   \endtt
    \_cod -----------------------------
 
 \_def \_printnumberedpar #1#2{\_par
@@ -400,8 +403,8 @@
    {\bf #2 #1\_istoksempty\_opt\_iffalse \_space \_the\_opt \_fi.}\_space
    \_ignorespaces
 }
-\_public \numberedpar ;
-
 
 \_endcode % -------------------------------------
 
+2020-04-22 \_chapx, \_secx, \_seccx rewritten
+2020-03-14 introduced

@@ -15926,3 +15926,19 @@ E01EF .
 \_tmp 1E9B 1E60
 \_tmp 1FBE 0399
 % end of file
+\_endcode
+
+All codes in unicode table keep information about pairs lowecase-uppercase
+letters or single letter. We need to read such information and set
+appropriate `\lccode` and `\uccode`. The `\catcode` above the code 127
+is not set, i.\,e.\ the `\catocde`=12 for all codes above 127.
+
+The file `uni-lcuc.opm` does this work. It is not much intereting file, only
+first few lines from 15928 lines in total is shown here.
+
+{\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}\ttline=-1
+\def\docfile{uni-lcuc.opm}
+\verbinput (3-30) uni-lcuc.opm
+\vskip-\medskipamount
+\noindent\typosize[8/]\dots etc. (see {\tt\Brown\docfile})
+}

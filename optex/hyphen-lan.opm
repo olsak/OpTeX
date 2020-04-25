@@ -4,24 +4,26 @@
 
    \_doc -----------------------------
    The <iso-code> means a shortcut of language name (mostly by ISO 639-1).
-   The following control sequences are used for language swithing:
+   The following control sequences are used for language switching:
    \begitems
-   * `\_lan:<number>` expands to <iso-code> of the language.
+   * `\_lan:<number>` expands to `<iso-code>` of the language.
      The number is internal number of languages used as a value of
      `\language` register.
-   * `\_ulan:<long-lang>` expands to <iso-code> too. This is transormation
+   * `\_ulan:<long-lang>` expands to `<iso-code>` too. This is transformation
      from long name of language (lowercase letters) to <iso-code>.
-   * `\_<iso-code>Patt` is the language <number> declared by `\chardef`.
-   * `\_<iso-code>lang` is language selector. It exists in two states
+   * `\_<iso-code>Patt` (for example `\_csPatt`) is the language `<number>` declared by `\chardef`.
+   * `\<iso-code>lang` 
+     (for example \`\enlang`, \`\cslang`, \`\sklang`, \`\delang`, \`\pllang`) 
+     is language selector.  It exists in two states
      \begitems
-     * Initialization state: when `\_<iso-code>lang` is used first then it
+     * Initialization state: when `\<iso-code>lang` is used first then it
        must load the patterns into memory using Lua code. If it is done then 
-       the `\_<iso-code>lang` re-defines itself to processing state.
+       the `\<iso-code>lang` re-defines itself to processing state.
      * Processing state: it only sets `\language=\_<iso-code>Patt`, i.e it
        selects the hyphenation patterns. It does a little more
        language-dependent work, as mentioned below.
      \enditems
-   * `\_langspecific:<isocode>` is processed by `\_<iso-code>lang` and it
+   * `\_langspecific:<isocode>` is processed by `\<iso-code>lang` and it
      should include language-specific macros declared by user or macro designer.
    \enditems
    The USenglish patters are preloaded first: 
@@ -39,10 +41,10 @@
 \_input hyphen  % en(USenglish) patterns from TeX82
 
    \_doc -----------------------------
-   `\preplang <iso-code> <long-lang> <number-cs> <number> <pre-hyph><post-hyph>
-   prepares the `\_<iso-code>lang` to its initialization state. Rougly
+   \`\preplang` `<iso-code> <long-lang> <number-cs> <number> <pre-hyph><post-hyph>`
+   prepares the\nl `\<iso-code>lang` to its initialization state. Roughly
    speaking, it does:
-   \begtt
+   \begtt \catcode`\<=13
    \chardef\_<iso-code>Patt = <number>
    \def\_lan:<number> {<iso-code>}
    \def\_ulan:<long-lang> {<iso-code>}
@@ -53,7 +55,8 @@
    }
    \def\<iso-code>lang {\_<iso-code>lang} % public version \<iso-code>lang
    \endtt
-   You can see that `\_<iso-code>lang` runs `\_uselang` in processing state.
+   You can see that `\<iso-code>lang` runs \`\_loadpattrs` `<long-lang> <iso-code>`
+   in initialization state and \^`\_uselang` in processing state.
    \_cod -----------------------------
 
 \_def\_preplang #1 #2 #3#4 #5 {%
@@ -76,12 +79,12 @@
 }
 
    \_doc -----------------------------
-   `\_uselang{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>` 
+   \`\_uselang``{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>`\nl 
    sets `\language`, `\lefthyphenmin`, `\righthyphenmin` and runs
    `\frenchspacing`. This default language-dependent settings
    should be re-declared by `\_langspecific:<iso-code>` which is run
    finally (it is `\relax` by default, only `\_langspecific:en` runs
-   `\nonfrenchspacing`).
+   \^`\nonfrenchspacing`).
    \_cod -----------------------------
 
 \_def\_uselang#1#2#3#4{\_language=#2\_lefthyphenmin=#3\_righthyphenmin=#4\_relax
@@ -89,16 +92,18 @@
    \_cs{_langspecific:#1}%
 }
    \_doc -----------------------------
-   The `\_uselanguage` is defined here (for compatibility with e-plain users).
+   The \`\uselanguage` `{<long-lang>}` is defined here 
+   (for compatibility with e-plain users).
    \_cod -----------------------------
 
 \_def\_uselanguage#1{\_lowercase{\_cs{_\_cs{_ulan:#1}lang}}}
+\_public \uselanguage ; 
 
    \_doc -----------------------------
-   The numbers for languages are declared as fixed contants (no
+   The numbers for languages are declared as fixed constants (no
    auto-generated). This concept is inspired from CSplain. 
    There are typical numbers of languages in CSplain: 5=Czech in IL2,
-   15=Czech in T1 nad 115=Czech in Unicode. We keep these constants
+   15=Czech in T1 and 115=Czech in Unicode. We keep these constants
    but we load only Unicode patterns (greater than 100), of course.
    \_cod -----------------------------
 
@@ -162,18 +167,16 @@
 \_preplang te   Telugu     \_tePatt 222 11
 
    \_doc -----------------------------
-   The `\_langlist` includes names of all languages which are ready to load
+   The \`\langlist` includes names of all languages which are ready to load
    and use their hyphenation patterns. This list is printed to terminal and
-   to log at ini\TeX/ state here. User can print `\_langlist` in the
-   document too.
+   to log at ini\TeX/ state here. It can be used when processing document too.
    \_cod -----------------------------
 
 \message{Language hyph.patterns ready to load: \_langlist.
    Use \string\<shortname>lang to initialize language,
    \string\cslang\space for example}
 
-\_public
-   \uselanguage \langlist ;
+\_public \langlist ;
 
 \_endcode % ---------------------------------------------
 
@@ -194,6 +197,6 @@ The example shows how to declare such language specific things.
 ... etc. 
 \endtt
 
-Note that you need not to set language specific words (like `\today`) 
-by this code. Another concept is used for such tasks. See `languages.opm`
-for more details.
+Note that you need not to set language specific phrases (like `\today`) 
+by this code. Another concept is used for such tasks. See the 
+section~\ref[langphrases] for more details.

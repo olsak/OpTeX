@@ -6,12 +6,18 @@
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
    \_endinput \_fi
 
-% misc:
+   \_doc -----------------------------
+   \`\_maybetod` (alias `\.` in the style file group) does not put second dot.
+   \_cod -----------------------------
 
 \_def\_maybedot{\_ifnum\_spacefactor=\_sfcode`\.\_relax\_else.\_fi}
 \_tmpnum=\_sfcode`\. \_advance\_tmpnum by-2 \_sfcode`\.=\_tmpnum 
 \_sfcode`\?=\_tmpnum \_sfcode`\!=\_tmpnum
 \_let\.=\_maybedot  % prevents from double periods
+
+   \_doc -----------------------------
+   Option field.
+   \_cod -----------------------------
 
 \_CreateField {option}
 \_def\_isbiboption#1#2{\_edef\_tmp{\_noexpand\_isbiboptionA{#1}}\_tmp}
@@ -30,7 +36,9 @@
 \_newtoks\_biboptions
 \_public \biboptions ;
 
-% Formating of Author/Editor lists:
+   \_doc -----------------------------
+   Formating of Author/Editor lists.
+   \_cod -----------------------------
 
 \_def\_firstauthorformat{%
    \_upper{\_Lastname}\_bprintc\_Firstname{, *}\_bprintc\_Von{ *}\_bprintc\_Junior{, *}%
@@ -81,7 +89,9 @@
 \_fi
 \_let\_upper=\upper
 
-% Preparing bib-mark (used when \nonumcitations is set):
+   \_doc -----------------------------
+   Preparing bib-mark (used when `\nonumcitations` is set).
+   \_cod -----------------------------
 
 \_def\_setbibmark{%  
    \_ifx\_dobibmark\_undefined \_def\_dobibmark{}\_fi
@@ -89,7 +99,6 @@
    \_ifx\_tmp\_empty \_RetrieveFieldIn{year}\_tmp \_edef\_tmp{\_dobibmark, \_tmp}\_fi
    \_bibmark=\_ea{\_tmp}%
 }
-
 % Multilinguals:           English                Czech               Slovak
 
 \_mtdef{bib.and}           {, and }               { a }               {}
@@ -129,7 +138,9 @@
    \_fi\_fi
 }
 
-% Non-standard fieldnames:
+   \_doc -----------------------------
+   Non-standard fieldnames.
+   \_cod -----------------------------
 
 \_CreateField {ednote}
 \_CreateField {citedate}
@@ -140,20 +151,23 @@
 \_CreateField {url}
 \_CreateField {bibmark}
 
-% Sorting:
+   \_doc -----------------------------
+   Sorting.
+   \_cod -----------------------------
 
 \_SortingOrder{name,year}{lfvj}
 \_SpecialSort {key}
 
-% Misc:
+   \_doc -----------------------------
+   Supporting macros.
+   \_cod -----------------------------
 
 \_def\_bibwarninga{\_bibwarning}
 \_def\_bibwarningb{\_bibwarning}
 
 \_def\_docitedate #1/#2/#3/#4\_relax{[\_Mtext{bib.citedate}%
    \_if^#2^#1\_else
-      \_if^#3^#1/#2\_else
-        \_docitedateA{#1}{#2}{#3}%
+      \_if^#3^#1/#2\_else \_docitedateA{#1}{#2}{#3}%
    \_fi\_fi ]%
 }
 \_def\_docitedateA#1#2#3{%
@@ -197,7 +211,9 @@
    \_ifx\_authorprint\_empty #2\_posteditor\_else \_authorprint\_fi
 }
 
-% Entry types:
+   \_doc -----------------------------
+   Entry types.
+   \_cod -----------------------------
 
 \_sdef{_print:BEGIN}{%
    \_readbiboptions
@@ -217,7 +233,8 @@
    \_bprinta [ednote]     {*.\ }{}%
    \_bprinta [address]    {*\_bprintv[publisher]{:}{\_bprintv[year]{,}{.}}\ }{\_bibwarninga}%
    \_bprinta [publisher]  {*\_bprintv[year]{,}{.}\ }{\_bibwarninga}%
-   \_bprintb [year]       {\_doyear{##1}\_bprintv[citedate]{\_bprintv[numbering]{.}{}}{.}\ }{\_bibwarning}%
+   \_bprintb [year]       {\_doyear{##1}\_bprintv[citedate]{\_bprintv[numbering]{.}{}}{.}\ }%
+                                                                                     {\_bibwarning}%
    \_bprinta [numbering]  {\_preparenumbering*\_bprintv[citedate]{}{\.}\ }{}%
    \_bprinta [citedate]   {\_docitedate*///\_relax.\ }{}%
    #1%
@@ -229,14 +246,16 @@
 }
 \_sdef{_print:book}{%
    \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+                                                                                     {\_bibwarning}%
    \_bookgeneric{}%
 }
 \_sdef{_print:article}{%
    \_biboptionvalue{journalpost}\_journalpost
    \_bprintb [!author]   {\_doauthor1{##1}\.\ }{\_bibwarning}%
    \_bprinta [title]     {*.\ \_bprintc\_titlepost{*.\ }}{\_bibwarning}%
-   \_bprintb [journal]   {{\_em##1}\_bprintc\_journalpost{\.\ *}\_bprintv[howpublished]{}{\.}\ }{\_bibwarninga}%   
+   \_bprintb [journal]   {{\_em##1}\_bprintc\_journalpost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+                                                                                     {\_bibwarninga}%   
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [address]   {*\_bprintb[publisher]{:}{,}\ }{}%
    \_bprinta [publisher] {*, }{}%
@@ -245,7 +264,8 @@
    \_bprinta [numbering] {\_preparenumbering*\_bprintv[citedate]{}{\.}\ }
                         {\_bprinta [volume] {\_prevolume*\_bprintv[number,pages]{,}{\.}\ }{}%
                          \_bprinta [number] {\_prenumber*\_bprintv[pages]{,}{\.}\ }{}%
-                         \_bprintb [pages]  {\_prepages\_hbox{##1}\_bprintv[citedate]{}{\.}\ }{\_bibwarninga}}%
+                         \_bprintb [pages]  {\_prepages\_hbox{##1}\_bprintv[citedate]{}{\.}\ }%
+                                                                                     {\_bibwarninga}}%
    \_bprinta [citedate]  {\_docitedate*///\_relax.\ }{}%
    \_bprinta [issn]      {ISSN~*.\ }{}%
    \_bprintb [doi]       {\_predoi DOI \_ulink[http://dx.doi.org/##1]{##1}.\ }{}%
@@ -257,7 +277,8 @@
    \_bprinta [title]     {*.\ }{\_bibwarning}%
                         \_Inclause
    \_bprintb [!editor]   {\_doeditor1{##1}\.\ }{}%
-   \_bprintb [booktitle] {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }{\_bibwarning}%
+   \_bprintb [booktitle] {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+                                                                                     {\_bibwarning}%
    \_bookgeneric{\_bprintb [pages]  {\_prepages\_hbox{##1}. }{}}%
 }
 \_slet{_print:inproceedings}{_print:inbook}
@@ -265,7 +286,8 @@
 
 \_sdef{_print:thesis}{%
    \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+                                                                                     {\_bibwarning}%
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [address]    {*\_bprintv[school]{:}{\_bprintv[year]{,}{.}}\ }{\_bibwarning}%
    \_bprinta [school]     {*\_bprintv[year]{,}{.}\ }{\_bibwarning}%
@@ -273,7 +295,8 @@
    \_bprintb [year]       {\_doyear{##1}\_bprintv[citedate]{}{.}\ }{\_bibwarninga}%
    \_bprinta [citedate]   {\_docitedate*///\_relax.\ }{}%
    \_bprinta [type]       {*\_bprintv[ednote]{,}{.}\ }%
-                         {\_ifx\_thesistype\_undefined\_bibwarning\_else\_thesistype\_bprintv[ednote]{,}{.}\ \_fi}%
+                         {\_ifx\_thesistype\_undefined\_bibwarning
+                          \_else\_thesistype\_bprintv[ednote]{,}{.}\ \_fi}%
    \_bprinta [ednote]     {*.\ }{}%
    \_bprintb [doi]        {\_predoi DOI \_ulink[http://dx.doi.org/##1]{##1}.\ }{}%
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
@@ -284,7 +307,8 @@
 
 \_sdef{_print:generic}{%
    \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+                                                                                     {\_bibwarning}%
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [ednote]     {\_prepareednote*\_bprintv[citedate]{}{.}\ }{\_bibwarning}%
    \_bprinta [year]       {}{\_bibwarning}%
@@ -315,7 +339,7 @@ See `op-example.bib` for an example of the `.bib` input. You can try it by:
 \end
 \endtt
 
-\secc Common rules in .bib files
+\seccc Common rules in \code{.bib} files
 
 There are entries of type `@FOO{...}` in the `.bib` file. Each entry consists of
 fields in the form `name = "value"`, or `name = {value}`. No matter which form is
@@ -345,44 +369,42 @@ separated by spaces. You can declare the global option(s) in your document
 applied for each entry by `\biboptions={...}`.
 
 
-\secc The author field
+\seccc The author field
 
-All names in the author list have to be separated by \"` and `". Each author
-can be written by various formats (the `von` part is typically missing):
+All names in the author list have to be separated by \"\code{ and }". 
+Each author can be written by various formats (the `von` part is typically missing):
 
 \begtt
-  Firstname(s) von Lastname
-  or
-  von Lastname, Firstname(s)
-  or
-  von Lastname, After, Firstname(s)
+Firstname(s) von Lastname
+or
+von Lastname, Firstname(s)
+or
+von Lastname, After, Firstname(s)
 \endtt
-
 Only the Lastname part is mandatory. Examples:
-
 \begtt
-  Petr Olšák
-  or
-  Olšák, Petr
+Petr Olšák
+or
+Olšák, Petr
 
-  Leonardo Piero da Vinci
-  or
-  da Vinci, Leonardo Piero
-  or
-  da Vinci, painter, Leonardo Piero
+Leonardo Piero da Vinci
+or
+da Vinci, Leonardo Piero
+or
+da Vinci, painter, Leonardo Piero
 \endtt
-
-The separator \"` and `" between authors will be converted to comma during
+The separator \"\code{ and }" between authors 
+will be converted to comma during
 printing, but between semifinal and final author the word \"and" (or something
 different depending on current language) is printed.
 
 The first author is printed in reverse order: \"LASTNAME, Firstname(s) von,
 After" and the others author are printed in normal order: \"Firstname(s)
 von LASTNAME, After". This feature follows the ISO 690 norm. The Lastname
-is capitalised using uppercase letters, but if the \caps font modifier is defined,
+is capitalized using uppercase letters. But if the `\caps` font modifier is defined,
 then it is used and printed `{\caps\_rm Lastname}`.
 
-You can specify the option `aumax:<number>`. The <number> denotes the
+You can specify the option `aumax:<number>`. The `<number>` denotes the
 maximum authors to be printed. The rest of authors are ignored and the
 `et~al.` is appended to the list of printed authors. This text is
 printed only if the `aumax` value is less than the real number of authors. 
@@ -398,44 +420,38 @@ There is no internal limit. But you can set the global options in
 your document by setting the `\biboptions` tokens list. For example:
 
 \begtt
-   \biboptions={aumax:7 aumin:1}  
-   % if there is 8 or more authors then only first author is printed.
+\biboptions={aumax:7 aumin:1}  
+% if there is 8 or more authors then only first author is printed.
 \entdd
 
 Examples:
-
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
+author = "John Green and Bob Brown and Alice Black",
 \endtt
-
 output:    GREEN, John, Bob BROWN, and Alice BLACK.
 
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
-   option = "aumax:1",
+author = "John Green and Bob Brown and Alice Black",
+option = "aumax:1",
 \endtt
-
 output:    GREEN, John~et~al.
 
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
-   option = "aumax:2",
+author = "John Green and Bob Brown and Alice Black",
+option = "aumax:2",
 \endtt
-
 output:    GREEN, John, Bob BROWN~et~al.
 
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
-   option = "aumax:3",
+author = "John Green and Bob Brown and Alice Black",
+option = "aumax:3",
 \endtt
-
 output:    GREEN, John, Bob BROWN, and Alice BLACK.
 
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
-   option = "auetal",
+author = "John Green and Bob Brown and Alice Black",
+option = "auetal",
 \endtt   
-
 output:    GREEN, John, Bob BROWN, Alice BLACK~et~al.
 
 If you need to add a text before or after authors list, you can use
@@ -444,50 +460,46 @@ authors list. The <value> can include `\AU` macro which expands to the authors
 list. Example:
 
 \begtt
-   author = "Robert Calbraith",
-   option = "auprint:{\AU\space [pseudonym of J. K. Rowling]}",
+author = "Robert Calbraith",
+option = "auprint:{\AU\space [pseudonym of J. K. Rowling]}",
 \endtt
-
 output:    CALBRAITH Robert [pseudonym of J. K. Rowling].
 
 You can use the `autrim:<number>` option. All Firstnames of all authors
 are trimmed (i. e. reduced to initials) iff the number of authors in the 
-author field is greater than or equal to <number>. There is an exception:
+author field is greater than or equal to `<number>`. There is an exception:
 `autrim:0` means that no Firstnames are trimmed. This is default behavior.
 Another example: `autrim:1` means that all Firstnames are trimmed.
 
 \begtt
-   author = "John Green and Bob Brown and Alice Black",
-   option = "auetal autrim:1",
+author = "John Green and Bob Brown and Alice Black",
+option = "auetal autrim:1",
 \endtt
-
 output:    GREEN, J., B. BROWN, A. BLACK~et~al.
 
 If you need to write a team name or institution instead authors, replace all
-spaces by \<space> in this name. Such text is interpreted as Lastname. You
+spaces by `\ ` in this name. Such text is interpreted as Lastname. You
 can add the secondary name (interpreted as Firstname) after comma. Example:
 
 \begtt
-   author = "Czech\ Technical\ University\ in\ Prague, Faculty\ of\ Electrical\ Engeneering",
+   author = "Czech\ Technical\ University\ in\ Prague, 
+             Faculty\ of\ Electrical\ Engeneering",
 \endtt
-
 output:  CZECH TECHNICAL UNIVERSITY IN PRAGUE, Faculty of Electrical Engeneering.
 
 
-\secc The editor field
+\seccc The editor field
 
 The editor field is used for list of the authors of the collection. The
 analogous rules as in author field are used here. It means that the
-authors are separated by \"` and `", the Firstnames, Lastnames etc. are
+authors are separated by \"\code{ and }", the Firstnames, Lastnames etc. are
 interpreted and you can use the options `edmax:<number>`, `edmin:<number>`, 
 `edetal`, `edtrim:<number>` and `edprint:{<value>}` (with `\ED` macro).
 Example:
-
 \begtt
-   editor = "Jan Tomek and Petr Karas",
-   option = "edprint:{\ED, editors.} edtrim:1",
+editor = "Jan Tomek and Petr Karas",
+option = "edprint:{\ED, editors.} edtrim:1",
 \endtt
-
 Output:   J. TOMEK and P. KARAS, editors.
 
 If `edprint` option is not set then `{\ED, eds.}` or `{\ED, ed.}` is used
@@ -495,22 +507,20 @@ depending on the entry language and on the singular or plural of
 the editor(s).
 
 
-\secc The ednote field
+\seccc The ednote field
 
 The ednote field is used as the secondary authors and more editional info. The
 value is read as raw data without any interpretation of Lastname, Firstname
 etc.
-
 \begtt
-   ednote = "Illustrations by Robert \upper{Agarwal}, edited by Tom \upper{Nowak}",
+ednote = "Illustrations by Robert \upper{Agarwal}, edited by Tom \upper{Nowak}",
 \endtt
-
 output:   Illustrations by Robert AGARWAL, edited by Tom NOWAK.
 
-The \upper command have to be used for Lastnames in ednote field.
+The `\upper` command have to be used for Lastnames in ednote field.
 
 
-\secc The title field
+\seccc The title field
 
 This is the title of the work. It will be printed (in common entry types) by
 italics. The ISO 690 norm declares, that the title plus optional subtitle
@@ -519,38 +529,35 @@ title have to be printed in upright font. This can be added by
 `titlepost:{<value>}`. Example:
 
 \begtt
-   title = "The Simple Title of The Work",
+title = "The Simple Title of The Work",
 or
-   title = "Main Title: Subtitle",
+title = "Main Title: Subtitle",
 or
-   title  = "Main Title: Subtitle",
-   option = "titlepost:{Secondary title}",
+title  = "Main Title: Subtitle",
+option = "titlepost:{Secondary title}",
 \endtt
-
 The output of the last example:
 {\it Main Title: Subtitle}. Secondary title.
 
 
-\secc The edition field
+\seccc The edition field
 
 This field is used only for second or more edition of cited work. Write
 only the number without the word "edition". The shortcut "ed." (or something
 else depending on current language) is added automatically. Examples:
 
 \begtt
-   edition = "Second",
-   edition = "2nd",
-   edition = "2$^{\rm nd}$",
-   edition = "2.",
+edition = "Second",
+edition = "2nd",
+edition = "2$^{\rm nd}$",
+edition = "2.",
 \endtt
-
 Output of the last example:   2. ed.
 
 \begtt
-   edition = "2."
-   lang    = "cs",
+edition = "2."
+lang    = "cs",
 \endtt
-
 Output:   2. vyd.
 
 Note, that the example `edition = "Second"` may cause problems. If you are
@@ -559,36 +566,34 @@ But you can use `editionprint:{<value>}` option. The the <value> is printed
 instead of edition field and shortcut. The edition field must be set. Example:
 
 \begtt
-   edition = "whatever",
-   option  = "editionprint:{Second full revised edition}",
+edition = "whatever",
+option  = "editionprint:{Second full revised edition}",
 \endtt
-
 Output:   Second full revised edition.
 
 You can use `\EDN` macro in `editionprint` value. This macro is expanded 
 to the edition value. Example:
 
 \begtt
-   edition = "Second",
-   option  = "editionprint:{\EDN\space full revised edition}",
+edition = "Second",
+option  = "editionprint:{\EDN\space full revised edition}",
 or
-   edition = "Second full revised edition",
-   option  = "editionprint:{\EDN}",
+edition = "Second full revised edition",
+option  = "editionprint:{\EDN}",
 \endtt
 
 
-\secc The address, publisher, year fields
+\seccc The address, publisher, year fields
 
 This is an anachronism from ancient Bib\TeX/ (unfortunately no exclusive) that
 the address field includes only the city of the publisher residence. No more
 data are here. The publisher field includes the name of the publisher.
 
 \begtt
-   address = "Berlin",
-   publisher = "Springer Verlag",
-   year = 2012,
+address = "Berlin",
+publisher = "Springer Verlag",
+year = 2012,
 \endtt
-
 Output:   Berlin: Springer Verlag, 2012.
 
 Note, that the year needn't to be inserted into quotes because it is pure
@@ -605,17 +610,15 @@ sort sensitive, may be you need to print something else than only sorting key.
 Example:
 
 \begtt
-   year   = 2000,
-   option = "yearpint:{© 2000}",
+year   = 2000,
+option = "yearpint:{© 2000}",
 \endtt
-
 Output:  © 2000,  sorted by:  2000.
 
 \begtt
-   year   = "2012a",
-   option = "yearprint:{2012}",
+year   = "2012a",
+option = "yearprint:{2012}",
 \endtt
-
 Output:  2012,   sorted by:  2012a.
 
 The address, publisher and year are typically mandatory fields. If they are
@@ -624,12 +627,12 @@ option. Then this warning is suppressed. There is no difference in the
 printed output.
 
 
-\secc The url field
+\seccc The url field
 
 Use it without `\url` macro, but with `http://` prefix. Example:
 
 \begtt
-   url = "http://petr.olsak.net/opmac.html",
+url = "http://petr.olsak.net/opmac.html",
 \endtt
 
 The ISO 690 norm recommends to add the text \"Available from" (or
@@ -647,33 +650,31 @@ If the `urlalso` option is used, then the added text has the form
 current).
 
 
-\secc The citedate field
+\seccc The citedate field
 
 This is the citation date. The field must be in the form year/month/day. It
 means, that the two slashes must be written here. The output depends on the
 current language. Example:
 
 \begtt
-   citedate = "2004/05/21",
+citedate = "2004/05/21",
 \endtt
-
-Output when `en` is current:    [cit. 2004-05-21].
+Output when `en` is current:    [cit. 2004-05-21].\nl
 Output when `cs` is current:    [vid. 21.~5.~2004].
 
 
-\secc The howpublished field
+\seccc The howpublished field
 
 This declares the available medium for cited document if it is not in printed
 form. Alternatives: online, CD, DVD, etc. Example:
 
 \begtt
-   howpublished = "online",
+howpublished = "online",
 \endtt
-
 Output:   [online].
  
 
-\secc The volume, number, pages and numbering fields
+\seccc The volume, number, pages and numbering fields
 
 The volume is the \"big mark" of the journal issue and the number is the
 \"small mark" of the journal issue and pages includes the page range of 
@@ -684,20 +685,18 @@ language of the entry.
 Example:
 
 \begtt
-   volume = 31,
-   number = 3,
-   pages  = "37--42",
+volume = 31,
+number = 3,
+pages  = "37--42",
 \endtt
-
 Output:   Vol.~31, No.~3, pp.~37--42.
 
 \begtt
-   volume = 31,
-   number = 3, 
-   pages  = "37--42",
-   lang   = "cs",
+volume = 31,
+number = 3, 
+pages  = "37--42",
+lang   = "cs",
 \endtt
-
 Output:   ročník~31, č.~3, s.~37--42.
 
 If you disagree with the default prefixes, you can use the numbering field.
@@ -706,12 +705,11 @@ and instead of any mentioned prefixes. The numbering can include macros
 `\VOL`, `\NO`, `\PP`, which are expanded to the respective values of fields. Example:
 
 \begtt
-   volume    = 31,
-   number    = 3,
-   pages     = "37--42"
-   numbering = "Issue~\VOL/\NO, pages~\PP",
+volume    = 31,
+number    = 3,
+pages     = "37--42"
+numbering = "Issue~\VOL/\NO, pages~\PP",
 \endtt
-
 Output:   Issue~31/3, pages~37--42
 
 Note: The volume, numbers and pages fields are printed without numbering
@@ -719,7 +717,7 @@ filed only in the `@ARTICLE` entry. It means, that if you need to visible them
 in the `@INBOOK`, `@INPROCEEDINGS` etc. entries, then you must to use numbering field.
 
 
-\secc Common notes about entries
+\seccc Common notes about entries
 
 The order of the fields in the entry is irrelevant. We use the printed order
 in this manual. The exclamation mark (!) denotes the mandatory field. If
@@ -732,7 +730,7 @@ warnings about missing mandatory fields occurs.
 If the field is used but not mentioned in the entry documentation below then
 it is silently ignored.
 
-\p The `@BOOK` entry
+\secccc The `@BOOK` entry
 
 This is used for book-like entries. 
 
@@ -742,7 +740,7 @@ publisher(!), year(!), citedate, series, isbn(!), doi, url, note.
 The ednote field here means the secondary authors (illustrator, cover design
 etc.).
 
-\p The `@ARTICLE` entry
+\secccc The `@ARTICLE` entry
 
 This is used for articles published in a journal. 
 
@@ -753,7 +751,7 @@ doi, url, note.
 If the numbering is used then it is used instead volume, number, pages.
 
 
-\p The `@INBOOK` entry
+\secccc The `@INBOOK` entry
 
 This is used for the part of a book. 
 
@@ -768,7 +766,7 @@ about the part (chapter numbers etc.).
 
 The `@INPROCEEDINGS` and `@CONFERENCE` entries are equivalent to `@INBOOK` entry.
 
-\p The `@THESIS` entry
+\secccc The `@THESIS` entry
 
 This is used for student's thesis. 
 
@@ -783,7 +781,7 @@ There are nearly equivalent entries: `@BACHELORSTHESIS`, `@MASTERSTHESIS` and
 automatically. The type field is optional in such case. If it is used then
 it has a precedence before default setting.
 
-\p The @MISC entry
+\secccc The @MISC entry
 
 It is intended for various usage. 
 
@@ -792,13 +790,13 @@ Fields: author, title, howpublished, ednote, citedate, doi, url, note.
 You can use `\AU`, `\ED`, `\EDN`, `\VOL`, `\NO`, `\PP`, `\ADDR`, `\PUBL`,
 `\YEAR` macros in ednote field. These macros print authors list, editors list,
 edition, volume, number, pages, address, publisher and year field values
-respecitively.
+respectively.
 
 The reason of this entry is to give to you the possibility to set the format of
 entry by your own decision. The most of data are concentrated in ednote
 field.
 
-\p The `@BOOKLET`, `@INCOLLECION`, `@MANUAL`, `@PROCEEDINGS`, `@TECHREPORT`, `@UNPUBLISHED` entries
+\secccc The `@BOOKLET`, `@INCOLLECION`, `@MANUAL`, `@PROCEEDINGS`, `@TECHREPORT`, `@UNPUBLISHED` entries
 
 These entries are equivalent to `@MICS` entry because we need to save the
 simplicity. They are implemented only for (almost) backward compatibility
@@ -806,7 +804,7 @@ with the ancient Bib\TeX/. But the ednote is mandatory field here, so you
 cannot use these entries from the old databases without warnings and without 
 some additional work with the `.bib` file.
 
-\secc The cite-marks (bibmark) used when \code{\\nonumcitations} is set
+\seccc The cite-marks (bibmark) used when \code{\\nonumcitations} is set
 
 When `\nonumcitations` is set then `\cite` prints text orientes 
 bib-marks instead numbers. This style file autogenerates these marks in the
@@ -814,12 +812,12 @@ form \"Lastname of the first author, comma, space, the year" if bibmark field
 isn't declared. If you need to set an exception from this common format,
 then you can use bibmark field.
 
-The OPmac trick \url{http://petr.olsak.net/opmac-tricks-e.html#bibmark}
+The OPmac trick \url{http://petr.olsak.net/opmac-tricks-e.html\#bibmark}
 describes how to redefine the algorithm for bibmark auto-generating when you
 need the short form of the type [Au13].
 
 
-\secc Sorting
+\seccc Sorting
 
 If `\usebib/c` is used then entries are sorted by citation order in the text.
 If `\usebib/s` is used then entries are sorted by \"Lastname, Firstname(s)" of
@@ -840,8 +838,8 @@ of authors. If the `key` field is unset then the \"Lastname Firstname(s)"
 is used for sorting normally. Example:
 
 \begtt
-   author    = "Světla Čmejrková",
-   key       = "Czzmejrkova Svetla",
+author    = "Světla Čmejrková",
+key       = "Czzmejrkova Svetla",
 \endtt
 
 This entry is now sorted between C and D. 
@@ -851,7 +849,7 @@ references. You can do this by setting  `key = "@"`, to each entry with your
 name because the `@` character is sorted before `A`.
 
 
-\secc Languages
+\seccc Languages
 
 There is the language of the outer document and the languages of each entry.
 The ISO 690 norm recommends that the technical notes (the prefix before URL,
@@ -874,72 +872,69 @@ language is used.
 
 If the outer document language is known before creating of the `.bib` file, you
 can store some language-dependent phrases into it. On the other hand, if the
-main document language is unknown, you can use the \Mtext macro to
+main document language is unknown, you can use the `\Mtext` macro to
 create the text multilingual. Example:
 
 \begtt
-   howpublished = "\Mtext{blue-ray}"
+howpublished = "\Mtext{blue-ray}"
 \endtt
 
 Now, you can set the variants of blue-ray into your macros:
 
 \begtt
-   \mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
+\mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
 \endtt
 
 
-\secc Tips for using more languages
+\seccc Tips for using more languages
 
 This style prefers English, Czech and Slovak languages. However, you can add
-more languages. You can see the avalable languages by expansion of \langlist
-macro. And you can use the shortcuts of language names (`de` and `pl` in the
-example below and you can define all phrases for your language:
-
+more languages. Use the shortcuts of language names (`de` and `pl` in the
+example below). You can define all phrases for your language:
 \begtt
-   \def\mtdefx#1#2#3{\sdef{_mt:#1:de}{#2}\sdef{_mt:#1:pl}{#3}}
+\def\mtdefx#1#2#3{\sdef{_mt:#1:de}{#2}\sdef{_mt:#1:pl}{#3}}
 
-                             % German              % Polish
-   \mtdefx {bib.and}         { und }               { a }
-   \mtdefx {bib.phdthesis}   {Ph.D. Dissertation}  {Praca doktorska}
-   ...
+                          % German              % Polish
+\mtdefx {bib.and}         { und }               { a }
+\mtdefx {bib.phdthesis}   {Ph.D. Dissertation}  {Praca doktorska}
+...
 \endtt
+See more about language phrases in the \ref[langphrases] section.
 
-See more about language phrases in the \ref[languages] section.
 
-
-\secc Summary of non-standard fields
+\seccc Summary of non-standard fields
 
 This style uses the following fields unkown by bib\TeX/:
 
 \begtt
-   option    ... options separated by spaces
-   lang      ... the language two-letter code of one entry
-   ednote    ... editional info (secondary authors etc.) or
-                 global data in @MISC-like entries
-   citedate  ... the date of the citation in year/month/day format
-   numbering ... format for volume, number, pages
-   isbn      ... ISBN
-   issn      ... ISSN
-   doi       ... DOI
-   url       ... URL
+option    ... options separated by spaces
+lang      ... the language two-letter code of one entry
+ednote    ... editional info (secondary authors etc.) or
+              global data in @MISC-like entries
+citedate  ... the date of the citation in year/month/day format
+numbering ... format for volume, number, pages
+isbn      ... ISBN
+issn      ... ISSN
+doi       ... DOI
+url       ... URL
 \endtt
 
 
-\secc Summary of options
+\seccc Summary of options
 
 \begtt
-   aumax:<number>       ... maximum number of printed authors
-   aumin:<number>       ... number of printed authors if aumax exceedes
-   autrim:<number>      ... full Firstnames iff number of authors are less than this
-   auprint:{<value>}    ... text instead auhors list (\AU macro may be used)
-   edmax, edmin, edtrim ... similar as above for editors list
-   edprint:{<value>}    ... text instead editors list (\ED macro may be used)
-   titlepost:{<value>}  ... text after title
-   yearprint:{<value>}  ... text instead real year (\YEAR macro may be used)
-   editionprint:{<value>} . text instead real edition (\EDN macro may be used)
-   urlalso      ... the ``available also from'' is used instead ``available from''
-   unpublished  ... the publisher etc. fields are not mandatory
-   nowarn       ... no mandatory fields
+aumax:<number>       ... maximum number of printed authors
+aumin:<number>       ... number of printed authors if aumax exceedes
+autrim:<number>      ... full Firstnames iff number of authors are less than this
+auprint:{<value>}    ... text instead authors list (\AU macro may be used)
+edmax, edmin, edtrim ... similar as above for editors list
+edprint:{<value>}    ... text instead editors list (\ED macro may be used)
+titlepost:{<value>}  ... text after title
+yearprint:{<value>}  ... text instead real year (\YEAR macro may be used)
+editionprint:{<value>} . text instead real edition (\EDN macro may be used)
+urlalso      ... the ``available also from'' is used instead ``available from''
+unpublished  ... the publisher etc. fields are not mandatory
+nowarn       ... no mandatory fields
 \endtt
 
 Another options in the option field are silently ignored.

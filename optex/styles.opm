@@ -3,12 +3,14 @@
 \_codedecl \report {Basic styles of OpTeX <2020-03-28>} % preloaded in format
 
    \_doc -----------------------------
-   The `{\boxlines <line-1><eol><line-2><eol>...<line-n><eol>}`
-   returns to the outer vertical mode a box with <line-1>, next box with
-   <line-2> etc. Each box has its natural width. This is reaon why we cannot
+   We define auxiliary macro first (used by the \^`\address` macro)
+   \nl
+   The `{`\`\boxlines` `<line-1><eol><line-2><eol>...<line-n><eol>}`
+   returns to the outer vertical mode a box with `<line-1>`, next box with
+   `<line-2>` etc. Each box has its natural width. This is reason why we cannot
    use paragraph mode where each resulting box has the width `\hsize`.
-   The <eol> is set active and `\everypar` starts `\hbox{` and acive <eol>
-   closes this `\hbox` by `}`. 
+   The `<eol>` is set active and `\everypar` starts `\hbox{` and acive <eol>
+   closes this `\hbox` by `}`.
    \_cod -----------------------------
 
 \_def\_boxlines{%
@@ -21,9 +23,12 @@
 \_def\_boxlinesC{\_futurelet\_next\_boxlinesD}
 \_def\_boxlinesD{\_ifx\_next\_empty\_else\_ea\_egroup\_fi}
 
+\_public \boxlines ;
+
    \_doc -----------------------------
-   The `\report` and `\letter` style initialization macos are defined here.
-   Their behavior is documented in user part of the manual in the section \ref[styles].
+   The \`\report` and \`\letter` style initialization macros are defined here.
+   \nl
+   The `\letter` defines \`\address` and \`\subject` macros.
    \_cod ----------------------------- 
 
 \_def\_report{
@@ -48,12 +53,17 @@
    \_parskip=\_medskipamount
    \_nopagenumbers
 }
+\_public \letter \report ;
+
+   \_doc -----------------------------
+   The \`\slides` macro reads macro file `slides.opm`, see the section~\ref[slides].
+   \_cod -----------------------------
 
 \_def\_slides{\_par
   \_input slides.opm
 }
+\_public \slides ;
 
-\_public \boxlines \letter \report \slides ;
 
 \_endcode % -------------------------------------
 

@@ -3,15 +3,17 @@
 \_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-20>} % loaded in format
 
    \_doc -----------------------------
-   \begitems
-   * `\_gfnotenum` is conter which counts footnotes globaly in the document.
-                  whole document, chapters, pages.
-   * `\_lfnotenum` is counter which counts footnotes at each chapter from one.
-                  It is used for local page footnote counters too.   
-   * `\_ifpgfnote` says that footnote numbers are counted on each page from
-                   one. We need to run `\openref` in such case.
-   * `\fnotenum` is a macro which expands to footnote number counted in declared part.
-   \enditems
+   \`\_gfnotenum` is conter which counts footnotes globally in the document.
+                  whole document, chapters, pages.\nl
+   \`\_lfnotenum` is counter which counts footnotes at each chapter from one.
+                  It is used for local page footnote counters too.\nl   
+   \`\_ifpgfnote` says that footnote numbers are counted on each page from
+                   one. We need to run `\openref` in such case.\nl
+   \`\fnotenum` is a macro which expands to footnote number counted in declared part.\nl
+   \`\fnotenumchapters` declares footnotes numbered in each chapter from one
+   (default), \`\fnotenumglobal` declares footnotes numbered in whole
+   document from one and \`\fnotenumpages` declares footnotes numbered 
+   at each page from one. 
    \_cod -----------------------------
 
 \_newcount\_gfnotenum \_gfnotenum=0
@@ -27,20 +29,21 @@
 \_let \runningfnotes = \fnotenumglobal % for backward compatibility
 
    \_doc -----------------------------
-   The `\_printfnotemark` prints the footnote mark. You can re-define this
+   The \`\_printfnotemark` prints the footnote mark. You can re-define this
    macro if you want another design of footnotes. For example
    \begtt
    \fnotenumpages 
    \def \_printfnotemark {\ifcase 0\fnotenum\or 
       *\or**\or***\or$^\mathbox{†}$\or$^\mathbox{‡}$\or$^\mathbox{††}$\fi}
    \endtt
-   This code gives footnotes* and ** and*** and† etc. 
+   This code gives footnotes* and ** and*** and$^\mathbox{†}$ etc.\ 
    and it supposes that there are no more than 6 footnotes at one page.
 
    If you want to distinguish between footnote marks in the text and in the front of
    footnote itself, then you can define `\_printfnotemarkA` and `\_printfnotemarkB`.
-   The following example shows an implementation of hyperlinked footnotes
-   (from text to footnote and bacward):
+
+   The \`\fnotelinks``<colorA><colorB>` implements the hyperlinked footnotes
+   (from text to footnote and backward).
    \_cod -----------------------------
 
 \_def \_printfnotemark  {$^{\_fnotenum}$}   % default footnote mark
@@ -56,16 +59,17 @@
 \public \fnotelinks ;
 
    \_doc ----------------------------
-   Each footnote saves the `\_Xfnote` (without parameter) to the `.ref` 
-   file (if `\openref`). We can create the mapping from <gfnotenum> to <pgfnotenum>
-   in the macro `\_fn:<fnotenum>`. Each `\_Xpage` macro sets the `\_pgfnote` to zero.
+   Each footnote saves the \`\_Xfnote` (without parameter) to the `.ref` 
+   file (if `\openref`). We can create the mapping from `<gfnotenum>` to`<pgfnotenum>`
+   in the macro `\_fn:<fnotenum>`. Each \^`\_Xpage` macro sets the
+   `\_lfnotenum` to zero.
    \_cod ----------------------------
 
 \_def \_Xfnote {\_incr\_lfnotenum \_incr\_gfnotenum
    \_sxdef{_fn:\_the\_gfnotenum}{\_the\_lfnotenum}}
 
    \_doc ----------------------------
-   The `\fnote {<text>}` macro is simple, but `\fnotemark`, `\fnotetext`
+   The \`\fnote` `{<text>}` macro is simple, \`\fnotemark` and \^`\fnotetext`
    does the real work.  
    \_cod ----------------------------
 
@@ -73,16 +77,15 @@
 \_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\relax \_printfnotemarkA}}
 
    \_doc ----------------------------
-   The `\_fnotetext` calls `\_opfootnote` which is equivalent to plain \TeX/
-   `\vfootnote`. It creates new data to Insert `\_footins`. The only
-   difference is that we are able to propagate a macro into Insert group
+   The \`\fnotetext` calls \^`\_opfootnote` which is equivalent to plain \TeX/
+   \^`\vfootnote`. It creates new data to Insert \^`\footins`. The only
+   difference is that we are able to propagate a macro parameter into Insert group
    before the text is printed (see section \ref[output]). 
-   This propageted macro is `\_fnset` which applies the `\everyfonte` and sets 
-   smaller fonts.
+   This propagated macro is \`\_fnset` which sets smaller fonts.
 
-   Note that `\vfootnote` and `\_opfootnote` does't read the text as a
+   Note that \^`\vfootnote` and \^`\_opfootnote` does't read the text as a
    parameter but during normal horizontal mode. This is reason why catcode
-   changes (for example in-line verbaptim) can be used here. 
+   changes (for example in-line verbatim) can be used here. 
    \_cod ----------------------------
 
 \_def\_fnotetext{\_incr\_gfnotenum \_incr\_lfnotenum % global increment
@@ -93,18 +96,18 @@
    \_fi\_fi
    \_opfootnote\_fnset\_printfnotemarkB
 }
-\_def\_fnset{\_everypar={}\_the\_everyfnote \_scalemain \_typoscale[800/800]}
+\_def\_fnset{\_everypar={}\_scalemain \_typoscale[800/800]}
 
 \_public \fnote \fnotemark \fnotetext ;
 
    \_doc -----------------------------
-   By default `\mnote` are in right margin at odd pages and they are in left
+   By default \`\mnote``{<text>}` are in right margin at odd pages and they are in left
    margin at even pages. The `\mnote` macro saves its position to `.ref`
-   file as `\_Xmnote` without parameter. We define `\_mn:<mnotenum>` as
+   file as \`\_Xmnote` without parameter. We define `\_mn:<mnotenum>` as
    `\right` or `\left` when the `.ref` file is read.
-   The `\ifnum 0`$\le$`0#2` trick teturs true if <pageno> has numeric type and false 
-   if it is non-numeric type (romannnumeral, for example). We prefer to use
-   <pageno>, but only if it has numeric type. We use <gpageno> in other cases.
+   The `\ifnum 0`$\le$`0#2` trick returns true if `<pageno>` has numeric type and false 
+   if it is non-numeric type (Roman numeral, for example). We prefer to use
+   `<pageno>`, but only if it has numeric type. We use `<gpageno>` in other cases.
    \_cod -----------------------------
 
 \_newcount\_mnotenum    \_mnotenum=0       % global counter of mnotes
@@ -114,8 +117,8 @@
 \_def \_numtype #1#2{\_ifnum 0<0#1 #1\_else #2\_fi}
 
    \_doc -----------------------------
-   User can declare `\fixmnotes\left` or `\fixmnotes\right`. It defines
-   `\_mnotesfixed` as `\_left` or `\_right` which declares the placement 
+   User can declare \`\fixmnotes``\left` or \^`\fixmnotes``\right`. It defines
+   \`\_mnotesfixed` as `\_left` or `\_right` which declares the placement 
    of all marginal notes and such declaration has a precedence. 
    \_cod -----------------------------
 
@@ -135,8 +138,8 @@
 \_public \mnote ;
 
    \_doc -----------------------------
-   The `\_mnoteA` macro does the real work. The `\_lrmnote{<left>}{<right>}`
-   uses only first or only second parameter dependng on the left or right
+   The \`\_mnoteA` macro does the real work. The \`\_lrmnote``{<left>}{<right>}`
+   uses only first or only second parameter depending on the left or right
    marginal note.
    \_cod -----------------------------
 

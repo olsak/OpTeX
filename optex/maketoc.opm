@@ -1,24 +1,22 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \maketoc {Macros for maketoc <2020-03-12>} % preloaded in format
 
    \_doc ------------------------------------
-   `\_Xtoc{<level>}{<type>}{<number>}{<text>}` (in `.ref` file) reads the 
-   specified data and saves it to the `\_toclist` as:
-
-   \begtt
-   \_tocline{<level>}{<type>}{<number>}{<text>}{<gpageno>}{<pageno>}
+   \`\_Xtoc` `{<level>}{<type>}{<number>}{<title>}` (in `.ref` file) reads the 
+   specified data and appends them to the \`\_toclist` as
+   \^`\_tocline``{<level>}{<type>}{<number>}{<title>}{<gpageno>}{<pageno>}`
    where:
-   <level>:   0 reserved, 1: chapter, 2: section, 3: subsection
-   <type>:    the type of the level, i.e. chap, sec, secc
-   <number>:  the number of the chapter/section/subsection in the format 1.2.3
-   <text>:    the title text
-   <gpageno>: the page number numbered from 1 independently of pagination 
-   <pageno>:  the page number used in the pagination
-   \endtt
-
+   \begitems
+   * `<level>`:   0 reserved, 1: chapter, 2: section, 3: subsection
+   * `<type>`:    the type of the level, i.e. chap, sec, secc
+   * `<number>`:  the number of the chapter/section/subsection in the format 1.2.3
+   * `<title>`:   the title text
+   * `<gpageno>`: the page number numbered from 1 independently of pagination 
+   * `<pageno>`:  the page number used in the pagination
+   \enditems
    The last two parameters are restored from previous
-   `\_Xpage{<pageno>}{<gpageno>}`, data are saved in the `\_currpage` macro.
+   \^`\_Xpage``{<pageno>}{<gpageno>}`, data were saved in the \^`\_currpage` macro.
    \_cod ------------------------------------
 
 \_def\_toclist{} 
@@ -30,56 +28,62 @@
 }
 
    \_doc ------------------------------------
-   `\_tocline{<level>}{<type>}{<number>}{<text>}{<gpageno>}{<pageno>}` prints
+   \`\_tocline``{<level>}{<type>}{<number>}{<title>}{<gpageno>}{<pageno>}` prints
    the record to the table of contents. It opens group, reduces `\_leftskip`,
-   `\_rightskip`, runs the `\everytocline` (user can customise the design of TOC
-   here) and runs `\_tocl:<level> {<number>}{<text>}{<page>}` macro. 
+   `\_rightskip`, runs the \^`\everytocline` (user can customise the design of TOC
+   here) and runs `\_tocl:<level> {<number>}{<title>}{<pageno>}` macro. 
    This macro starts with vertical mode,
-   inserts one record with given <level> and ends in horizontal mode. Then
-   `\_tocline` appends `\_nobreak \_hskip-2\_iindent\_null \_par`. This causes
+   inserts one record with given `<level>` and it should end by \^`\_tocpar`
+   which returns to hrizontal mode. The `\_tocpar`
+   appends `\_nobreak \_hskip-2\_iindent\_null \_par`. This causes
    that the last line of the record is shifted outside the margin given by
-   `\_rightskip`. A typical record (with long <text>) looks like:
+   `\_rightskip`. A typical record (with long `<title>`) looks like:
    \begtt
-                   |                       |
+                  |                        |
    \llap{<number>} text text text text text
                    text text text text text
                    text text .................... <pageno>
    \endtt
-
    Margins given by `\leftskip` and `\rightskip` are denoted by `|` in the
    examle above. 
+   \nl
+   \`\tocrefnum` is global counter of all TOC records (used by hyperlinks).
    \_cod ------------------------------------
 
-\def\_tocline#1#2#3#4#5#6{%
+\_newcount \_tocrefnum
+\_def\_tocline#1#2#3#4#5#6{%
    \_advance\_tocrefnum by1
    \_bgroup
       \_leftskip=\_iindent \_rightskip=2\_iindent
       \_ifischap \_advance\_leftskip by \_iindent \_fi
-      \_def\_pg{\_ilink[pg:#5]}%
+      \_def\_pgn{\_ilink[pg:#5]}%
       \_the\_everytocline
       \_ifcsname _tocl:#1\_endcsname 
-         \_cs{_tocl:#1}{#3}{#4}{#6}\_nobreak \_hskip-2\_iindent\_null \_par
+         \_cs{_tocl:#1}{#3}{#4}{#6}\_par
       \_fi
    \_egroup
 }
+\_public \tocrefnum ;
 
    \_doc -----------------------------------
-   You can re-define default macros for each level of tocline if you want:
+   You can re-define default macros for each level of tocline if you want.\nl
+   Parameters are `{<number>}{<title>}{<pageno>}`.
    \_cod -----------------------------------
 
-\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip \_bf\_llaptoclink{#1}{#2}\_hfill \_pg{#3}}
-\_sdef{_tocl:2}#1#2#3{\_llaptoclink{#1}{#2}\_tocdotfill \_pg{#3}}
+\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip \_bf\_llaptoclink{#1}{#2}\_hfill \_pgn{#3}\_tocpar}
+\_sdef{_tocl:2}#1#2#3{\_llaptoclink{#1}{#2}\_tocdotfill \_pgn{#3}\_tocpar}
 \_sdef{_tocl:3}#1#2#3{\_advance\_leftskip by\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
 
    \_doc -----------------------------------
    The auxiliary macros are:
    \begitems
-   * `\_llaptoclink<text>` does `\_noindent\_llap{<linked text>}`.
-   * `\_tocdotfill` creates dots in the TOC.
-   * `\_nofirst\macro` applies the `\macro` only if we don't print the first
+   * \`\_llaptoclink``<text>` does `\_noindent\_llap{<linked text>}`.
+   * \`\_tocdotfill` creates dots in the TOC.
+   * \`\_nofirst``\macro` applies the `\macro` only if we don't print the first
      record of the TOC.
-   * `\_pg{<pageno>}` creates <pageno> as link to real <gpage> saved in `#6`
-     of `\tocline`.
+   * \`\_tocpar` finalizes one TOC recors whith rlapped `<pageno>`.
+   * \`\_pgn``{<pageno>}` creates <pageno> as link to real `<gpage>` saved in `#6`
+     of \^`\_tocline`. This is temporarily defined in the \^`\_tocline`.
    \enditems
    \_cod ----------------------------------
 
@@ -87,10 +91,11 @@
    \_llap{\_ilink[toc:\_the\_tocrefnum]{\_enspace#1\_kern.4em}\kern.1em}}
 \_def\_tocdotfill{\_nobreak\_leaders\_hbox to.8em{\_hss.\_hss}\_hskip 1em plus1fill\_relax}
 \_def\_nofirst #1{\_ifnum \_lastpenalty=11333 \_else #1\_fi}
+\_def\_tocpar{\_nobreak \_hskip-2\_iindent\_null \_par}
 
    \_doc -----------------------------------
-   `\maketoc` prints warning if TOC data is empty, lse it creates TOC by
-   running `\_toclist` 
+   \`\maketoc` prints warning if TOC data is empty, else it creates TOC by
+   running \^`\_toclist` 
    \_cod ----------------------------------
 
 \_def\_maketoc{\_par \_ifx\_toclist\_empty
@@ -102,9 +107,9 @@
 }
 
    \_doc -----------------------------------
-   `\regmacro` appends its parameters to `\_regtoc`, `\_regmark` and
-   `\_regoul`. These token lists are used in `\maketoc`, `\_begoutput` and
-   `\pdfunidef`.
+   \`\regmacro` appends its parameters to \`\_regtoc`, \`\_regmark` and
+   \`\_regoul`. These token lists are used in \^`\maketoc`, \^`\_begoutput` and
+   \^`\pdfunidef`.
    \_cod \_fin -----------------------------
 
 \_newtoks \_regtoc  \_newtoks \_regmark  \_newtoks \_regoul  
@@ -112,8 +117,10 @@
 \_def\_regmacro #1#2#3{%
    \_toksapp\_regtoc{#1}\_toksapp\_regmark{#2}\_toksapp\_regoul{#3}%
 }
-
 \_public \maketoc \regmacro ;
 
 \_endcode 
 
+2020-04-23 \_tocpar introduced (incompatible change)
+2020-04-22 \_pg -> \_pgn (incompatible change)
+2020-03-12 introduced

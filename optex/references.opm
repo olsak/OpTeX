@@ -3,23 +3,24 @@
 \_codedecl \ref {References <2020-03-03>} % preloaded in format
 
    \_doc ----------------------------
-   `\_Xpage {<gpageno>}{<pageno>}` saves the patameter pair into `\_currpage`. 
-   Resets `\_lfnotenum`, it is used if footnotes are numbered from one at each page.
+   \`\_Xpage` `{<gpageno>}{<pageno>}` saves the parameter pair into \`\_currpage`. 
+   Resets `\_lfnotenum`; it is used if footnotes are numbered from one at each page.
    \_cod ----------------------------
 
 \_def\_Xpage#1#2{\_def\_currpage{{#1}{#2}}\_lfnotenum=0 }
 
    \_doc ----------------------------
-   `\_Xlabel {<label>}{<text>}` saves <text> to `\_lab:<label>` and saves
-   `[<gpageno>]{<pageno>}` to `\_pgref:<label>`.
+   \`\_Xlabel` `{<label>}{<text>}` saves the <text> to `\_lab:<label>` and saves
+   `[pg:<gpageno>]{<pageno>}` to `\_pgref:<label>`.
    \_cod ----------------------------
 
 \_def\_Xlabel#1#2{\_sdef{_lab:#1}{#2}\_sxdef{_pgref:#1}{\_ea\_bracketspg\_currpage}}
 \_def\_bracketspg#1#2{[pg:#1]{#2}}
 
    \_doc ----------------------------
-   `\label[<label>]` saves decalred labet to `\_lastlabel` and `\wlabel{<text>}` 
-   uses `\lastlabel` and activates `\wref\_Xlabel{<label>}{<text>}`.
+   \`\label``[<label>]` saves the decalred label to `\_lastlabel` and 
+   \`\wlabel``{<text>}` uses the `\_lastlabel` and activates 
+   `\wref\_Xlabel{<label>}{<text>}`.
    \_cod ----------------------------
 
 \_def\_label[#1]{\_isempty{#1}\_iftrue \_global\_let \_lastlabel=\_undefined 
@@ -37,16 +38,17 @@
      \_global\_let\_lastlabel=\_undefined
   \_fi
 }
+\_public \label \wlabel ;
 
    \_doc ----------------------------
-   `\ref[<label>]` uses saved `\_lab:<label>` and prints (linked) <text>.
+   \`\ref``[<label>]` uses saved `\_lab:<label>` and prints (linked) `<text>`.
    If the reference is backwarded then we know `\lab:<label>` without any need
    to read REF file. On the other hand, if the reference is forwarded, then we
    doesn't know `\_lab:<label>` in first run of \TeX/ and we print warning and
    do `\_openref`.
-
-   `\pgref[<label>]` uses `{<gpageno>}{<pageno>}` from `\_pgref:<label>` and
-   prints (linked) <pageno> using `\_ilink` macro.
+   \nl
+   \`\pgref``[<label>]` uses `{<gpageno>}{<pageno>}` from `\_pgref:<label>` and
+   prints (linked) `<pageno>` using `\_ilink` macro.
    \_cod ----------------------------
 
 \_def\_ref[#1]{\_isdefined{_lab:#1}%
@@ -59,12 +61,11 @@
   \_else ??\_opwarning{pg-label [#1] unknown. Try to TeX me again}\_openref
   \_fi
 }
-\_public
-   \label \wlabel \ref \pgref ;
+\_public \ref \pgref ;
 
    \_doc -----------------------------
-   Default `\_printlabel` is empty (labes are not printed).
-   The `\showlabels` redefines it as box with zero dimensions and
+   Default \`\_printlabel` is empty macro (labels are not printed).
+   The \`\showlabels` redefines it as box with zero dimensions and
    with left lapped `[<label>]` in blue 10pt `\tt` font shifted up by 1.7ex.
    \_cod -----------------------------
 
@@ -79,7 +80,7 @@
 
 
 If the references are \"forward" (i.~e. the `\ref` is used first, the destination
-is created later), or if the reference text is page number, we must read
+is created later) or if the reference text is page number then we must read
 `.ref` file first in order to get appropriate information.
 See section \ref[ref-file] for more information about `.ref` file concept.
 

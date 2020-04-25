@@ -2,6 +2,14 @@
 
 \_codedecl \margins {Macros for margins setting <2020-03-14>} % preloaded in format
 
+    \_doc ----------------------------
+    \`\margins``/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>`
+    takes its parameters, does calculation and sets `\hoffset`, `\voffset`,
+    `\hsize` and `\vsize` registers. Note that \OpTeX/ sets the page origin at
+    the top left corner of the paper, no at the obscure position 1\,in, 1\,in.
+    It is much more comfortable for macro writers.
+    \_cod ----------------------------
+
 \_newdimen\_pgwidth  \_newdimen\_pgheight  \_pgwidth=0pt
 \_newdimen\_shiftoffset
 
@@ -41,9 +49,20 @@
 }
 \_def\_setpagedimensC #1=#2:#3 {#1=#2\_ifx^#3^\_tmp\_else#3\_fi\_relax\_truedimen#1}
 
+\_public \margins ;
+
+    \_doc ----------------------------
+    The common page dimensions are defined here.
+    \_cod ----------------------------
+
 \_sdef{_pgs:a3}{(297,420)mm}  \_sdef{_pgs:a4}{(210,297)mm}  \_sdef{_pgs:a5}{(148,210)mm}
 \_sdef{_pgs:a3l}{(420,297)mm} \_sdef{_pgs:a4l}{(297,210)mm} \_sdef{_pgs:a5l}{(210,148)mm}
 \_sdef{_pgs:b5}{(176,250)mm}  \_sdef{_pgs:letter}{(8.5,11)in}
+
+    \_doc ----------------------------
+    \`\magscale` `[<factor>]` does `\mag=<factor>` and recalculates page
+    dimensions to their true values.
+    \_cod ----------------------------
 
 \_def\_trueunit{}
 \_def\_magscale[#1]{\_mag=#1\_def\_trueunit{true}%
@@ -52,84 +71,8 @@
 }
 \_def\_truedimen#1{\_ifx\_trueunit\_empty \_else#1=\_ea\_ignorept\_the#1truept \_fi}
 
-\_public
-   \margins \magscale ;
+\_public \magscale ;
 
 \_endcode % -----------------------------------------
 
 
-\sec Setting the margins
-%%%%%%%%%%%%%%%%%%%%%%%%
-
-OPmac declares paper formats a4, a4l (landscape~a4), a5, a5l, b5, letter and
-user can declare another own format by "\sdef":
-
-\begtt
-\sdef{_pgs:b5l}{(250,176)mm} 
-\sdef{_pgs:letterl}{(11,8.5)in}
-\endtt
-
-The "\margins" command declares margins of the document. This command have
-the following parameters:
-
-\begtt
-\margins/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>
-  example:
-\margins/1 a4 (2.5,2.5,2,2)cm
-\endtt
-
-Parameters are:
-
-\begitems
-* <pg> \dots\ "1" or "2" specifies one-page or two-pages design.
-* <fmt> \dots\ paper format (a4, a4l, a5, letter, etc. or user defined).
-* <left>, <right>, <top>, <bot> \dots\ gives the amount of left, right,
-      top and bottom margins.
-* <unit> \dots\ unit used for values <left>, <right>, <top>, <bot>.
-\enditems
-
-Each of the parameters <left>, <right>, <top>, <bot> can be empty.
-If both <left> and <right> are nonempty then "\hsize" is set. Else "\hsize"
-is unchanged. If both <left> and <right> are empty then typesetting area is
-centered in the paper format. The analogical rule works when <top> or <bot>
-parameter is empty ("\vsize" instead "\hsize" is used). Examples:
-
-\begtt
-\margins/1 a4 (,,,)mm   % \hsize, \vsize untouched, 
-                        % typesetting area centered
-\margins/1 a4 (,2,,)cm  % right margin set to 2cm
-                        % \hsize, \vsize untouched, vertically centered
-\endtt
-
-If "<pg>=1" then all pages have the same margins. If "<pg>=2" then the
-declared margins are true for odd pages. The margins at the even pages are
-mirrored in such case, it means that <left> is replaced by <right> and vice
-versa.
-
-The "<fmt>" can be in the form "(<width>,<height>)<unit>" where "<unit>" is
-optional. If it is missing then "<unit>" after margins specification is
-used. For example:
-
-\begtt
-\margins/1 (100,200) (7,7,7,7)mm
-\endtt
-%
-declares the paper 100$\times$200\,mm with all four margins 7\,mm. The spaces
-before and after "<fmt>" parameter are necessery.
-
-The command "\magscale[<factor>]" scales the whole typesetting area. The
-fixed point of such scaling is the so called the ``Knuth's point'': 1in
-below and 1in right of paper sides. Typesetting (breakpoints etc.) is
-unchanged. All units are relative after such scaling. Only paper formats
-dimensions stays unscaled. Example:
-
-\begtt
-\margins/2 a5 (22,17,19,21)mm
-\magscale[1414] \margins/1 a4 (,,,)mm
-\endtt
-%
-The first line sets the "\hsize" and "\vsize" and margins for final
-printing at a5 format. The setting on the second line centers the scaled 
-typesetting area to the true a4 paper while breaking points for paragraphs
-and pages are unchanged. It may be usable for 
-review printing. After review is done, the second line can be commented out.

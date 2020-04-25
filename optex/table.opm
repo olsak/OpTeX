@@ -3,14 +3,15 @@
 \_codedecl \table {Basic macros for OpTeX <2020-04-10>} % preloaded in format
 
    \_doc -----------------------------
-   The result of `\table` is inserted into `\_tablebox`. You can change
-   default value if you want `\let\_tablebox=\vtop` or `\let\_tablebox=\relax`.
+   The result of the \`\table``{<declaration>}{<data>}` macro is inserted into 
+   `\_tablebox`. You can change default value if you want by 
+   `\let\_tablebox=\vtop` or `\let\_tablebox=\relax`.
    \_cod -----------------------------
 
 \_let\_tablebox=\_vbox
 
    \_doc -----------------------------
-   Categories )for example of `|` character) have to be normal when reading 
+   Categories (for example of `|` character) have to be normal when reading 
    `\table` parameters.
    \_cod -----------------------------
 
@@ -18,10 +19,10 @@
 \_public \table ;
 
    \_doc -----------------------------
-   The `\_tablinspace` is implemented by enlarging given `\tabstrut`
+   The \^`\tablinespace` is implemented by enlarging given \^`\tabstrut`
    by desired dimension (height and depth too) and by setting
-   `\_lineskip=-2\_tablinspace`. So, normal table rows where no `\hrule` is
-   between them have normal baseline distance.
+   `\_lineskip=-2\_tablinespace`. Normal table rows (where no `\hrule` is
+   between them) have normal baseline distance.
    \_cod -----------------------------
 
 \_def\_tableA#1{%
@@ -43,18 +44,21 @@
 \_newcount\_colnum   % number of columns
 
    \_doc -----------------------------
-   The `\_scantabdata` converts `\table` <declaration> to `\halign` <declaration>.
-   The result is stored into `\_tbdata` tokens list. For example, the `\_scandata` creates
-   following result when <declaration>=`|cr||cl|`.
+   The \`\_scantabdata` converts `\table`'s `<declaration>` to 
+   `\halign` `<declaration>`.
+   The result is stored into \`\_tabdata` tokens list. 
+   For example, the 
+   following result is generated when `<declaration>=|cr||cl|`.
    \begtt
    tabdata: \_vrule\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA 
-      &\_the\_tabiteml\_hfil#\_unsskip\_the\_tabitemr \_vrule\_kern\_vvkern\_vrule\_tabstrutA 
+      &\_the\_tabiteml\_hfil#\_unsskip\_the\_tabitemr 
+                                             \_vrule\_kern\_vvkern\_vrule\_tabstrutA 
       &\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA
       &\_the\_tabiteml#\_unsskip\_hfil\_the\_tabitemr\_vrule\_tabstrutA
    ddlinedata: &\_dditem &\_dditem\_vvitem &\_dditem &\_dditem
    \endtt
-   The second result in `\_ddlinedata` macro is a teplate of one row of the table
-   used by `\crli` macro.
+   The second result in the \`\_ddlinedata` macro is a teplate of one row of the table
+   used by \^`\crli` macro.
    \_cod -----------------------------
 
 \_def\_scantabdata#1{\_let\_next=\_scantabdata
@@ -79,7 +83,7 @@
 
 \_def\_addtabitem{\_ifnum\_colnum>0 \_addtabdata{&}\_addto\_ddlinedata{&\_dditem}\_fi
     \_advance\_colnum by1 \_let\_tmpa=\_relax}
-\_def\_addtabdata#1{\_toksapp\_tabdata{#1}}
+\_def\_addtabdata#1{\_tabdata\_ea{\_the\_tabdata#1}}
 \_def\_addtabvrule{%
     \_ifx\_tmpa\_vrule \_addtabdata{\_kern\_vvkern}%
        \_ifnum\_colnum=0 \_addto\_vvleft{\_vvitem}\_else\_addto\_ddlinedata{\_vvitem}\_fi
@@ -91,12 +95,13 @@
 \_def\_ddlinedata{}
 
    \_doc -----------------------------
-   The default \"declaration letters" `c`, `l`, `r` and `p` are defined here.
-   You can define more such leeters by `\def\_tabdeclare<letter>{...}` for a non-parametric 
+   The default \"declaration letters" `c`, `l`, `r` and `p` are declared.
+   by `\def\_tabdeclare<letter>{...}` for a non-parametric 
    letter and by `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.
    All items are put in group because of `\aftergroup` can be used (from
    `\localcolors` for example).
+   You can declare more such \"declaration letters" if you want.
    \_cod -----------------------------
 
 \_def\_tabdeclarec{{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}}
@@ -107,10 +112,10 @@
    \_lineskiplimit=0pt \_noindent##\_unsskip\_lower\_dp\_tstrutbox\hbox{}}\_the\_tabitemr}}
 
    \_doc -----------------------------
-   User puts optional spaces around the table item typically, i.e. he/she writes
+   User puts optional spaces around the table item typically, i.\,e.\ he/she writes
    `& text &` instead `&text&`. The left space is ignored by internal \TeX/ algorithm but 
    the right space must be removed by macros. This is a reason why we reccomend to 
-   use `\_unsskip` after each `##` in your definition of \"declaration letters".
+   use \`\_unsskip` after each `##` in your definition of \"declaration letters".
    This macro isn't only the primitive `\unskip` because we allow usage of plain \TeX/ 
    `\hideskip` macro: `&\hideskip text\hideskip&`.
    \_cod -----------------------------
@@ -118,9 +123,11 @@
 \_def\_unsskip{\_ifdim\_lastskip>0pt \_unskip\_fi}
 
    \_doc -----------------------------
-   The family of `\_cr*` macros and `\tskip <dimen>` is implemented here. 
-   The `\_zerotabrule` is used in order to suppress the negative `\lineskip` 
-   declared by `\tablinespace`.
+   The family of `\_cr*` macros 
+   \`\crl`, \`\crll`, \`\crli`, \`\crlli`, \`\crlp` and 
+   \`\tskip` `<dimen>` is implemented here. 
+   The \`\_zerotabrule` is used in order to suppress the negative `\lineskip` 
+   declared by \^`\tablinespace`.
    \_cod -----------------------------
 
 \_def\_crl{\_crcr\_noalign{\_hrule}}
@@ -154,9 +161,9 @@
 \_public \crl \crll \crli \crlli \crlp \tskip ;
 
    \_doc -----------------------------
-   The `\mspan[<declaration>]{<text>}` macro generates similar `\omit\span\omit\span` 
-   sequence as plain \TeX/ macro `\multispan`. Moreover, it uses `\_scantabdata` to
-   convert <declaration> from `\table` syntax to `\halign` syntax.
+   The \`\mspan``[<declaration>]{<text>}` macro generates similar `\omit\span\omit\span` 
+   sequence as plain \TeX/ macro `\multispan`. Moreover, it uses \^`\_scantabdata` to
+   convert `<declaration>` from `\table` syntax to `\halign` syntax.
    \_cod -----------------------------
 
 \_def\_mspan{\_omit \_tabdata={\_tabstrutA}\_let\_tmpa=\_relax \_afterassignment\_mspanA \_mscount=}
@@ -172,7 +179,8 @@
    If we re-define `\hrule` to `\_orihrule height1pt` then each usage
    of redefined `\hrule` uses `1pt` height if this parameter isn't
    overwriten by another following `height` parameter. This principle is used for
-   settings another default rule thickness than 0.4pt. 
+   settings another default rule thickness than 0.4\,pt by the macro
+   \`\rulewidth`.
    \_cod -----------------------------
 
 \_newdimen\_drulewidth  \_drulewidth=0.4pt
@@ -185,7 +193,7 @@
 \_public \rulewidth ;
 
    \_doc -----------------------------
-   The `\frame` uses \"`\vbox` in `\vtop`" trick in order to keep the
+   The \`\frame``{<text>}` uses \"\code{\\vbox} in \code{\\vtop}" trick in order to keep the
    baseline of the internal text at the same level as outer baseline.
    User can write `\frame{abcxyz}` in normal paragraph line, for example
    and gets the expected result: \frame{abcxyz}.

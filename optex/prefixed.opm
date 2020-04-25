@@ -3,7 +3,7 @@
 \_codedecl \public {Prefixing and code syntax <2020-02-14>} % preloaded in format
 
    \_doc ---------
-   All TeX82 primitives have alternative control sequence \_hbox \_string, ...
+   All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
    \_cod ---------
 
 \let\_directlua = \directlua
@@ -17,34 +17,42 @@
 }
 
    \_doc ------------------
-   `\public <sequence> <sequence> ... ;` does
+   \`\ea` is useful shortcut for `\expandafter`. We recommend to use always the
+   private form of \`\_ea` 
+   because there is high probability that `\ea` will be redefined by the user.
+   \nl
+   \`\public` `<sequence> <sequence> ... ;` does
    `\let \<sequence> = \_<sequence>` for all sequences.
-
-   `\private <sequence> <sequence> ...;` does
+   \nl
+   \`\private` `<sequence> <sequence> ...;` does
    `\let \_<sequence> = \<sequence>` for all sequences.
-
-   The auxiliary macro `\xargs <what> <sequece> <sequence> ... ;`
+   \nl
+   \`\xargs` `<what> <sequence> <sequence> ... ;`
    does `<what><sequence>` for each sequences.
-
-   `\_ea` is useful shotcut for `\expandafter`.
    \_cod -----------------
 
 \_let\_ea =\_expandafter  % usefull shortcut
 
 \_long\_def \_xargs #1#2{\_ifx #2;\_else \_ea#1\_ea#2\_ea\_xargs \_ea #1\_fi}
 
+\_def \_pkglabel{}
 \_def \_public {\_xargs \_publicA}
-\_def \_publicA #1{\_ea\_let \_ea#1\_csname _\_csstring #1\_endcsname} 
+\_def \_publicA #1{\_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname} 
 
 \_def \_private {\_xargs \_privateA}
-\_def \_privateA #1{\_ea\_let \_csname _\_csstring #1\_endcsname =#1} 
+\_def \_privateA #1{\_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1} 
+
+\_public \public \private \xargs \ea ;
 
    \_doc -----------------------
-   Each `.opm` file should begin with `\_codedecl \macro {<info>}`.
-   If `\macro` is defined already then the `\endpinput` protects to read
-   such file more than one times. Else the <info> is printed to terminal
-   and file is read.
-   \_cod \_fin ------------------
+   Each macro file should begin with \`\_codedecl` `\macro {<info>}`.
+   If the `\macro` is defined already then the `\endpinput` protects to read
+   such file more than one times. Else the <info> is printed to the terminal
+   and the file is read.\nl
+   The {\`\_endcode`} is defined as `\endinput` in the `optex.ini` file. 
+   \`\wterm` `{<text>}` prints `<text>` 
+   to the terminal and to the `.log` file (as in plain \TeX/).
+   \_cod -----------------------
 
 \_def \_codedecl #1#2{%
    \_ifx #1\_undefined \_wterm{#2}%
@@ -52,32 +60,67 @@
 }
 \_def \_wterm {\_immediate \_write16 }
 
-\_public \public \private \xargs \ea \wterm ;
-\_private \optexversion ;
+\_public \wterm ;
 
-\_endcode %----------------------------------------------------
+   \_doc ------------------------
+   The `\optexversion` and `\fmtname` are defined in the `optex.ini` file.
+   Maybe, somebody will need a private version of these macros.
+   \_cod ------------------------
+
+\_private \optexversion \fmtname ;
+
+   \_doc -----------------------------
+   The `\_mathsbon` and `\_mathsboff` are defined in `math-macros.opm` file.
+   Now, we define the macro \`\_namespace` `{<pkg label>}` for package writers, see
+   section~\ref[pkg-namespace].
+   \_cod -----------------------------
+
+\_def\_namespace #1{%
+   \_ifcsname namesp:#1\_endcsname \_errmessage
+      {The name space "#1" is used already, it cannot be used twice}%
+      \_endinput
+   \_else
+      \_ea \_gdef \_csname namesp:#1\_endcsname {}%
+      \_gdef \_pkglabel{_#1}%
+      \_directlua{
+      callback.register("process_input_buffer",
+        function (str)
+           return string.gsub(str, "\_nbb[.]([a-zA-Z])", "\_nbb _#1_\_pcent 1")
+        end )
+      }%
+      \_gdef \_endcode {%
+          \_ifmathsb \_mathsbon \_else \_mthsboff \_fi
+          \_gdef \_pkglabel{_#1}%
+          \_global \_let \_endcode=\_endinput
+          \_endinput }%
+   \_fi
+}
+
+\_endcode%----------------------------------------------------
 
 
-\secc Prefixing control sequences
+\sec Concept of name spaces of control sequences
+
+\secc Prefixing internal control sequences
 
 All control sequences used in \OpTeX/ are used and defined with `_` prefix. 
-Then user can be sure that when he/she does \def\foo then internal macros of
+The user can be sure that when he/she does `\def\foo` then internal macros of
 \OpTeX/ nor \TeX/ primitives will be not damaged. For example
-`\def\ifx{something}` will not damage maros because \OpTeX/'s macros 
-are using `\_ifx` instead `\ifx`.
+`\def\if{...}` will not damage macros because \OpTeX/'s macros 
+are using `\_if` instead of `\if`.
 
-All \TeX/ primitives are initialzed with two representative control
+All \TeX/ primitives are initialized with two representative control
 sequences: `\word` and `\_word`, for example `\hbox` and `\_hbox`.
 The first alternative is reserved for users or such control sequences 
 can be re-defined by user.
 
-Note that \OpTeX/ sets the character `_` as letter, so it can be used in
+\OpTeX/ sets the character `_` as letter, so it can be used in
 control sequences. When a control sequence begins with this character 
 then it means that it is a primitive or it is used in \OpTeX/ macros as
-internal. User can redefine such control sequence only if he/she explicitly 
-know what happens.
+internal. User can redefine such prefixed control sequence only 
+if he/she explicitly know what happens.
 
-We newer change catcode of `_`, so internal macros can be 
+We never change catcode of `_`, so internal macros can be 
 redefined by user without problems if it is desired. We need not 
 something like `\makealetter` from \LaTeX/.
 
@@ -85,74 +128,112 @@ something like `\makealetter` from \LaTeX/.
 we need to set non-prefixed version. This is done by 
 
 \begtt
-\_public <list of control sequences> ;
+\public <list of control sequences> ;
 \endtt
 
-For example `\_public \foo \bar ;` does `\let\foo=\_foo`, `\let\bar=\_bar`.
+For example \^`\public`` \foo \bar ;` does `\let\foo=\_foo`, `\let\bar=\_bar`.
 
 At the end of each code segment in \OpTeX/, the `\_public` macro is used. You
 can see, what macros are defined for public usage in such code segment. 
 
-The macro `\_private` does reverse job to `\_public` with the same syntax.
-For example `\_private \foo \bar ;` does `\let\_foo=\foo`, `\let\_bar=\bar`.
-This should be used when nonprefixed variant of control sequence is declared
+The macro \^`\private` does a reverse job to `\public` with the same syntax.
+For example `\private \foo \bar ;` does `\let\_foo=\foo`, `\let\_bar=\bar`.
+This should be used when unprefixed variant of control sequence is declared
 already but we need the prefixed variant too.
 
+In this documentation: if both variants of a control sequence are declared
+(prefixed and unprefixed), then the accompanying text mentions only
+unprefixed variant. The code typically defines prefixed variant 
+and then the `\public` (or `\_public`) macro is used.
 
 \secc Name space of control sequences for users
 
 User can define or declare any control sequence with a name without any `_`.
 This does not make any problem. Only one exception is the reserved control
-sequence `\par` which is generated and used as internal in \TeX/.
+sequence `\par`. It is generated by tokenizer (at empty lines) 
+and used as internal in \TeX/.
 
-User can define or declare control seqquences with `_` character, for
+User can define or declare control sequences with `_` character, for
 example `\my_control_sequence`, but with the following exceptions:
 
 \begitems
-* Control sequences which begins with one `_` and there is no second `_` in
-  it and all used letters are lowercase, are reserved for \TeX/ primitives and 
-  \OpTeX/ internal macros.
+* Control sequences which begin with `_` are reserved for \TeX/ primitives, 
+  \OpTeX/ internal macros and macro package writers.
 * Control sequences (terminated by non-letter) in the form 
   `\<word>_` or `\<word>_<one-letter>`, where
-  <word> is a sequence of letters, are unaccesible, because they
+  <word> is a sequence of letters, are unaccessible, because they
   are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
   `_<one-letter>`. This is important for writing math, for example:
-\begtt  
-  \int_a^b    ... is interpreted as \int _a^b
-  \max_M      ... is interpreted as \max _M
-  \alpha_{ij} ... is interpreted as \alpha _{ij}
+\begtt  \adef-{_}
+  \int-a^b    ... is interpreted as \int _a^b
+  \max-M      ... is interpreted as \max _M
+  \alpha-{ij} ... is interpreted as \alpha _{ij}
 \endtt
   This feature is implemented using lua code at input processor level, see
-  math-macro.opm for more details. You can deactivate this feature by
-  `\mathsboff`. After this, you can stil write  `$∫_a^b$` or `$\int _a^b$` 
-  without problems but `\int_a^b` yields to undefined control sequence
-  `\int_a`. You can activate this feature again by `\mathsbon` -- the 
+  the section~\ref[math-macros] for more details. You can deactivate this feature by
+  \^`\mathsboff`. After this, you can still write 
+  `$`$\int$`_a^b$` (Unicode) or `$\int _a^b$` % $∫_a^b$ (Unicode) or $\int _a^b$ 
+  without problems but `\int``_a^b` yields to undefined control sequence
+  `\int``_a`. You can activate this feature again by \^`\mathsbon`. The 
   effect will take shape from next line read from input file.
 * Control sequences in the form `\_<pkg>_<word>` is intended for package
-  writers as internal macros for a package with `<pkg>` identifier.
+  writers as internal macros for a package with `<pkg>` identifier, 
+  see section~\ref[pkg-namespace].
 \enditems
 
-All other control sequences can be used in user name space. For example `\word`,
-`\word_xx`, `\Word_x`, `\word_x_y`.
+The single letter control sequences like `\%`, `\$`, `\^` etc. are not used
+in internal macros. User can redefine them, but (of course) some classical 
+features can be lost (printing percent character by `\%` for example).
+
+\secc[pkg-namespace] Name spaces for package writers  
+
+Package writer should use internal names in the form `\_<pgk>_<sequence>`,
+where `<pkg>` is a package label. For example: 
+`\_qr_newbase` from `qrcode-x.tex` package.
+
+The package writer needs not write repeatedly `\_pkg_foo` `\_pkg_bar` 
+etc.\ again and again in the macro file.\fnote
+{We have not adatped the idea from expl3 language:)} 
+When \^`\_namespace` `{<pkg>}` 
+is declared at the beginning of the macro file then all occurrences of
+`\.foo` will be replaced by `\_<pkg>_foo` at the input processor level.
+The macro writer can write (and backward can read his code) simply with 
+`\.foo`, `\.bar` control sequences and `\_<pkg>_foo`, `\_<pkg>_bar` 
+control sequences are processed internally.
+The scope of the `\_namespace` command ends at the `\_encode` command
+or when another `\_namespace` is used. This command checks
+if the package label is not declared by the `\_namespace` twice.
+
+The `\_public` macro does `\let\foo = \_<pkg>_foo` when 
+`\_namespace {<pkg>}` is declared. And the `\_private` macro does reverse
+operation to it.
+
+If the package writer needs to declare a control sequence by `\newif`, then
+there is an exception of the rule described above. Use
+`\_newifi\_if<pkg>_bar`, for example `\_newifi\_ifqr_incorner`.
+Then the control sequences `\_qr_incornertrue` and
+`\_qr_incornerfalse` can be used (or the sequences `\.incornertrue`
+and `\.incornerfalse` when `\_namespace{qr}` is used).
 
 
 \secc Macro files syntax
 
-Each segment of \OpTeX/ marcos is stored in one file with `.opm` extension
-(means OPtex Macros). Your macros should be in normal *.tex file.
+Each segment of \OpTeX/ macros is stored in one file with `.opm` extension
+(means OPtex Macros). Your macros should be in normal `*.tex` file.
 
-The code in `*.opm` files starts by `\_codedecl` and ends by `\_endcode`.
-The `\_endcode` is equivalent for `\endinput`, so documentation can follow.
-The `\_codedecl` has syntax:
+The code in macro files starts by \^`\_codedecl` and ends by \^`\_endcode`.
+The \^`\_endcode` is equivalent for `\endinput`, so documentation can follow.
+The \^`\_codedecl` has syntax:
 
 \begtt
 \_codedecl \sequence {Name <version>}
 \endtt
 
-If the mentioned `\sequence` is defined, then `\_codedecl` does the same as
+If the mentioned `\sequence` is defined, then \^`\_codedecl` does the same as
 `\endinput`: this protect from reading the file twice. We suppose, that
-`\sequence` is defined.
+`\sequence` is defined in the macro file.
 
-We can read the `*.opm` file in documentation mode. Then the code and the
-comments after `\_endcode` are printed.
+It is possible to use the \^`\_doc` ... \^`\_cod` pair between the macro lines.
+The documentation text should be here. It is ignored when macros are read
+but it can be printed using `optexdoc.opm` macros like in this documentation.
 

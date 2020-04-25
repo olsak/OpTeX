@@ -2,10 +2,13 @@
 
 \_codedecl \MakeReference {Reading bib databases <2020-03-13>} % loaded on demand by \usebib
 
-% we needn't \errmessage when bad TeX engnine is detected during \input librarian:
+   \_doc -----------------------------
+   Loading the `librarian.tex` macro package. See `texdoc librarian`
+   for more information about it.
+   \_cod -----------------------------
 
 \_def\_tmp{}
-\_let\_errmessageori=\_errmessage
+\_let\_errmessageori=\_errmessage % we needn't \errmessage during \input librarian
 \_def\_errmessage#1{\_def\_tmp{error}}
 \_let\_newwriteori=\_newwrite % we need not to create \jobname.lbr:
 \_def\_newwrite#1{\_csname lb@restoreat\_endcsname \_endinput}
@@ -22,7 +25,9 @@
 \_private \BibFile \ReadList \SortList \SortingOrder \NameCount \AbbreviateFirstname
    \CreateField \RetrieveFieldInFor \RetrieveFieldIn ;
 
-% The \usebib command:
+   \_doc -----------------------------
+   The `\usebib` command.
+   \_cod -----------------------------
 
 \_def\_usebib/#1 (#2) #3 {%
   \_ifx\_citelist\_empty
@@ -55,7 +60,9 @@
 \_def\_readbibentryA#1{\_readbibentryB#1,,\_relax!.}
 \_def\_readbibentryB#1#2,#3\_relax!.{\_addto\_citelist{\_citeI[#1#2]}}
 
-% Corrections in librarian macros:
+   \_doc -----------------------------
+   Corrections in librarian macros.
+   \_cod -----------------------------
 
 \_tmpnum=\_catcode`\@  \_catcode`\@=11
 \_def\lb@checkmissingentries#1,{% we needn't \errmessage here, only \opmacwarning
@@ -104,7 +111,9 @@
 \_def\WriteImmediateInfo#1{}  % the existence of .lbr file bocks new reading of .bib
 \_catcode`\@=\_tmpnum
 
-% Main action per every entry:
+   \_doc -----------------------------
+   Main action per every entry.
+   \_cod -----------------------------
 
 \_def\MakeReference{\_par \_bibskip
   \_advance\_bibnum by1
@@ -126,11 +135,15 @@
            \_csname _print:misc\_endcsname
      \_fi\_fi
      \_csname _print:END\_endcsname
-     \_ifx\_wref\_wrefrelax\_else \_immediate\_wref\_Xbib{{\EntryKey}{\_the\_bibnum}{\_the\_bibmark}}\_fi
+     \_ifx\_wref\_wrefrelax\_else 
+         \_immediate\_wref\_Xbib{{\EntryKey}{\_the\_bibnum}{\_the\_bibmark}}\_fi
   }\_par
 }
 
-% The \bprinta, \bprintb, \bprintc, \bprintv commands used in the style files:
+   \_doc -----------------------------
+   The \`\bprinta`, \`\bprintb`, \`\bprintc`, \`\bprintv` 
+   commands used in the style files:
+   \_cod -----------------------------
 
 \_def\_bprinta {\_bprintb*}
 \_def\_bprintb #1[#2#3]{%
@@ -175,7 +188,9 @@
    \_let\_Von=\Von \_let\_Junior=\Junior
 }
 
-% Various macros + multilinguas:
+   \_doc -----------------------------
+   Various macros + multilinguas.
+   \_cod -----------------------------
 
 \_def\_bibwarning{\_opwarning{Missing field "\_bibfieldname" in [\EntryKey]}}  
 
@@ -189,77 +204,71 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The following command is implemented here:
-
-   \usebib/<sorttype> (<style>) <bibfiles>
-
-where <sorttype> is one letter 'c' (references ordered by citation order in
-the text) or 's' (references ordered by key in the style file), 
-<style> is the part of the name `bib-<style>.opm` of the style file
-and <bibfiles> are one or more `.bib` file names without suffix separated by
+The file `usebib.opm` implements the command
+`\usebib/<sorttype> (<style>) <bibfiles>`
+where `<sorttype>` is one letter `c` (references ordered by citation order in
+the text) or `s` (references ordered by key in the style file), 
+`<style>` is the part of the name `bib-<style>.opm` of the style file
+and `<bibfiles>` are one or more `.bib` file names without suffix separated by
 comma without space. Example:
 
-   \usebib/s (simple) mybase,yourbase
+\begtt
+\usebib/s (simple) mybase,yourbase
+\endtt
 
-This command reads the <bibfiles> directly and creates the list of
-bibliographics references (only those declared by by \cite[] or \nocite[]
-in the text). The formatting of such references is defined in the style
+This command reads the `<bibfiles>` directly and creates the list of
+bibliographics references (only those declared by by `\cite[]` or
+`\nocite[]` in the text). The formatting of such references is defined in the style
 file. The usage is mentioned in user documentation too.
 
-The principle "first entry wins" is used. Suppose
-
-   \usebib/s (simple) local,global
-
+The principle \"first entry wins" is used. Suppose `\usebib/s (simple) local,global`.
 If an entry with the same label is declared in `local.bib` and in
 `global.bib` too then the first wins. So, you can set an exceptions in your
-local.bib file for your document, for example.
+`local.bib` file for your document.
 
-
-Notes for style writers:
-------------------------
+\seccc Notes for style writers
 
 The `bib-<style>.opm` file must define the commands:
 
-`\_authorname` ... formatting of one name in the authors list. The macro can
+\begitems
+* `\_authorname` ... formatting of one name in the authors list. The macro can
     use the following data: `\_NameCount` (the number of the currently
     processed author name in the list), `0\_namecount` (the total number of the
     authors in the list), `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior` 
     (the parts of the name). See the documentation of the librarian package 
     for more info.
-
-`\_editorname` ... the same as `\_authorname`, but for editors list.
-
-`_print:<entrytype>` (defined by `\_sdef`) for formatting the entry of <entrytype>.
-    The <entrytype> have to be lowercase. This command can use the command:
-
-`\_bprinta [<fieldname>]  {<if defined>} {<if not defined>}`. The part <if defined>
+* `\_editorname` ... the same as `\_authorname`, but for editors list.
+* `_print:<entrytype>` (defined by `\_sdef`) for formatting the entry of `<entrytype>`.
+    The `<entrytype>` have to be lowercase. This command can use the command:
+* `\_bprinta [<fieldname>]  {<if defined>} {<if not defined>}`. The part <if defined>
     is executed if <fieldname> is declared in .bib file for the entry which is
     currently processed. Else the part <if not defined> is processed.
     The part <if defined> can include the `*` parameter which is replaced
     by the value of the <fieldname>. The part <if not defined> can include
     the `\_bibwarning` command if the <fieldname> is mandatory.
-`\_bprintb [<fieldname>]  {<if defined>} {<if not defined>}`. The same as
-    \_bprinta, but the `##1` parameter is used instead `*`. Differences: `##1`
+* `\_bprintb [<fieldname>]  {<if defined>} {<if not defined>}`. The same as
+    `\_bprinta`, but the `##1` parameter is used instead `*`. Differences: `##1`
     parameter can be used more than once and can be enclosed in nested
     braces. The * parameter can be used at most once and cannot be enclosed
     in braces. Warning: if the `\_bprintb` commands are nested (`\_bprintb` in
     `\_bprintb`), then you need to write `####1` parameter for internal `\_bprintb`.
-    But if `\_bprinta` commands are nested then the * parameter is not dubbled.
-`\_pbprintc \macro {<if non-empty>}`. The <if non-empty> part is executed if
+    But if `\_bprinta` commands are nested then the parameter is not duplicated.
+* `\_pbprintc \macro {<if non-empty>}`. The <if non-empty> part is executed if
     `\macro` is non-empty. The * parameter can be used, it is replaced by
     the `\macro`.
-`\_bprintv [<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
+* `\_bprintv [<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
     The part <if defined> is executed if <field1> or <filed2> or ...
     is defined, else the second part <if not defined> is executed.
     There is one filed name or the list field names separated by commas.  
     The parts cannot include any parameter.
-
+\enditems
+%
 There are two special fieldnames: `!author` and `!editor`. The processed list of
 authors or editors (by repeatedly calling `\_authorname` or `\_editorname`) are 
 used here insted of raw data.
 
 You can define `_print:BEGIN` and/or `_print:END` which is executed at the begin or
-end of each <entrytype>. The formatting does not solve the numbering and
+end of each `<entrytype>`. The formatting does not solve the numbering and
 paragraph indentation of the entry. This is processed by `\_printbib` macro
 used in \OpTeX/ (and may be redefined by the author or document designer).
 
@@ -274,14 +283,14 @@ here.
 If you are using non-standard fieldnames in .bib database and bib. style,
 you has to declare them by `\_CreateField {<fieldname>}`.
 
-You can declare \_SortingOrder in the manner documented by librarian package.
+You can declare `\_SortingOrder` in the manner documented by librarian package.
 
 If your style adds some words or abbreviations you can make them
 multilingual by saying `\_mtext{<label>}` instead such word and
 `\_mtdef{<label>} {<English>} {<Czech>} {<Slovak>}` declaration.
 The right part is printed by current value of the `\language` regiter.
 You can add more languages by re-defining the `\_mtdef` command. 
-See the section \ref[languages] for more information. 
+See the section \ref[langphrases] for more information. 
 
 If you are using `\nonumcitations`, then the `\_bibmark` tokens register have to be
 prepared in the style file (in `_print:BEGIN`, `_print:END`, in
@@ -290,29 +299,26 @@ in the document.
 
 The example of the style file is in `bib-simple.opm`.
 
-User or author of the bib. style can create the hidden field which has a
+User or author of the `bib.` style can create the hidden field which has a
 precedence while sorting names. Example:
 
 \begtt
-   \CreateField {sortedby}
-   \SpecialSort {sortedby}
+\CreateField {sortedby}
+\SpecialSort {sortedby}
 \endtt
-
 Suppose that the .bib file includes:
-
 \begtt
-   ...
-   author   = "Jan Chadima",
-   sortedby = "Hzzadima Jan",
-   ...
+...
+author   = "Jan Chadima",
+sortedby = "Hzzadima Jan",
+...
 \endtt
-
 Now, this author is sorted between H and I, because the Ch digraph in this
 name has to be sorted by this rule.
 
 If you need (for example) to place the autocitations before other citations,
 then you can mark your entries in `.bib` file by `sortedby = "@"`, because this
-character is sorted before A.
+character is sorted before `A`.
 
 \_endinput
 

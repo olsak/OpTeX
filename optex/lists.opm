@@ -1,13 +1,14 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begitems {Lists: begitems, enditems <2020-03-18>} % preloaded in format
+\_codedecl \begitems {Lists: begitems, enditems <2020-04-21>} % preloaded in format
 
    \_doc -----------------------------
-   `\aboveliskip` is used above the list of items, 
-   `\belowliskip` is used below the list of items and 
-   `\interliskip` is used between items.
-   `\listskipA` is used as `\listskipamount` at level 1 of items.
-   `\listskipB` is used as `\listskipamount` at other levels. 
+   \`\_aboveliskip` is used above the list of items,\nl 
+   \`\_belowliskip` is used below the list of items and\nl 
+   \`\_interliskip` is used between items.\nl
+   \`\_listskipA` is used as `\listskipamount` at level 1 of items.\nl
+   \`\_listskipB` is used as `\listskipamount` at other levels.\nl
+   \`\_setlistskip` sets the skip dependent on the current level of items 
    \_cod -----------------------------
 
 \_def\_aboveliskip {\_removelastskip \_penalty-100 \_vskip\_listskipamount}
@@ -22,15 +23,20 @@
    \_fi}
 
    \_doc -----------------------------
-   The `\itemnum` is localy reset to zero in each group declared by
+   The \`\itemnum` is locally reset to zero in each group declared by
    `\begitems`. So nested lists are numbered independently. User can set
    initial value of `\itemnum` to another value after `\beitems` if he/she want.
-
+   \nl
    Each level of nested lists is indented by new `\iindent` from left.
    Default item mark is `\_printitem`.
-
-   The `\begitems` runs `\_aboveliskip` only if we are not near below a title, 
+   \nl
+   The \`\begitems` runs `\_aboveliskip` only if we are not near below a title, 
    where a vertical skip is placed already and where the `\penalty` 11333 is.
+   It activates `*` and defines it as \`\_startitem`.
+   \nl
+   The \`\enditems` runs `\_isnextchar\_par{}{\_noindent}` thus the next
+   paragraph is without indentation if there is no empty line between
+   the list and this paragraph (it is similar behavior as after display math).
    \_cod -----------------------------
 
 \_newcount\_itemnum  \_itemnum=0
@@ -46,15 +52,16 @@
   \_printitem=\_defaultitem
   \_the\_everylist \_relax
 }
-\_def\_enditems{\_par\_belowliskip\_egroup}
+\_def\_enditems{\_par\_belowliskip\_egroup \_isnextchar\_par{}{\_noindent}}
 
 \_def\_startitem{\_par \_ifnum\_itemnum>0 \_interliskip \_fi
    \_advance\_itemnum by1
    \_the\_everyitem \_noindent\_llap{\_the\_printitem}\_ignorespaces
 }
+\_public \begitems \enditems \itemnum ;
 
    \_doc ----------------------------
-   `\novspaces` sets `\listsipamount` to 0pt.
+   \`\novspaces` sets \`\listskipamount` to 0pt.
    \_cod ----------------------------
 
 \_def\_novspaces {\_removelastskip \_listskipamount=0pt \_relax}
@@ -62,8 +69,11 @@
 
    \_doc -----------------------------
    Various item marks are saved in `\_item:<letter>` macros.
-   You ca re-define then or define more such macros.
-   The `\style <letter>` does `\_printitem={\_item:<letter>}`.
+   You can re-define then or define more such macros.
+   The \`\style` `<letter>` does \`\_printitem``={\_item:<letter>}`.
+   More exactly: \^`\begitems` does `\_printitem=`\^`\defaultitem` first,
+   then \`\style` `<letter>` does \`\_printitem``={\_item:<letter>}`
+   when it is used and finally, `\_startitem` alias `*` uses `\_printitem`.
    \_cod -----------------------------
 
 \_def\_style#1{%
@@ -82,8 +92,8 @@
 \_sdef{_item:X}{\_raise.2ex\_fullrectangle{1ex}\_kern.5em}
 
    \_doc -----------------------------
-   `\_athe{<num>}` returns the <num>s lowercase letter from the alphabet.
-   `\_fullrectangle{<dimen>}` prints full rectangle with given <dimen>.  
+   \`\_athe``{<num>}` returns the `<num>`s lowercase letter from the alphabet.\nl
+   \`\_fullrectangle``{<dimen>}` prints full rectangle with given `<dimen>`.  
    \_cod ----------------------------- 
 
 \_def\_fullrectangle#1{\_hbox{\_vrule height#1 width#1}}
@@ -92,8 +102,9 @@
    i\_or j\_or k\_or l\_or m\_or n\_or o\_or p\_or q\_or r\_or s\_or t\_or 
    u\_or v\_or w\_or x\_or y\_or z\_else ?\_fi
 }
-\_public \begitems \enditems \style \itemnum ;
+\_public \style ;
 
 \_endcode % -------------------------------------
 
-
+2020-04-21 \isnextchar\par added to \enditems
+2020-03-18 introduced

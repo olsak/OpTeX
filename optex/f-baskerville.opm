@@ -1,19 +1,15 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_fontdecl [Baskerville] \Baskerville {Free vaiants of classical Baskerville}
+\_famdecl [Baskerville] \Baskerville {Free vaiants of classical Baskerville}
         {\caps} {\rm \bf \it \bi} {}
         {[BaskervilleF-Regular]}
+        {\_def \_fontnamegen {[BaskervilleF-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
  \caps ...... caps & small caps^^J
 }}
 
-\_protected\def \Baskerville {%
-   \_def \_currfamily {Baskerville}%
-   \_def \_fontnamegen {[BaskervilleF-\_currV]:\_capsV\_fontfeatures}% 
-   \_resetmod
-}
 \_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 

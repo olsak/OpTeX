@@ -20,24 +20,31 @@
 
 \_faminfo [Termes] {TeX Gyre Termes fonts based on Times} {f-termes}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Times]
 
 \_faminfo [Heros] {TeX Gyre Heros fonts based on Helvetica} {f-heros}
    { -,\caps,\cond,\caps\cond: {\rm\bf\it\bi} }
+\_famalias [Helvetica]
 
 \_faminfo [Adventor] {TeX Gyre Adventor based on Avantgarde Book} {f-adventor}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Avantgarde Book]
 
 \_faminfo [Bonum] {TeX Gyre Bonum fonts based on Bookman} {f-bonum}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Bookman]
 
 \_faminfo [Pagella] {TeX Gyre Pagella fonts based on Palatino} {f-pagella}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Palation]
 
 \_faminfo [Schola] {TeX Gyre Schola fonts based on New Century} {f-schola}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [New Century]
 
 \_faminfo [Cursor] {TeX Gyre Cursor fonts based on Courier} {f-cursor}
    { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Courier]
 
 \_famtext {Other fonts:}
 
@@ -67,49 +74,57 @@
 
 \_endcode
 
-\sec How to register your own family
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Read comments in `f-heros.opm` file if you want to prepare a font-macro-file for
-your font family. 
-
-Once you have prepared such file with the name f-famname.opm and \TeX/ is
-able to see it in your filesystem then you can type \fontfam[famname] and
+Once you have prepared a font family file with the name `f-<famname>.opm` and \TeX/ is
+able to see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
 the file is read, so the information about font family is loaded. The name
-"famname" must be lowercase and without spaces. On the other hand the
-`\fontfam` command gives more tolerance: you can write uppercase letters and
-spaces here. The spaces are ignored and letters are converted to lowercase.
-For example \fontfam [LM Fonts] is equivalent to \fontfam [LMfonts] and both
+`<famname>` must be lowercase and without spaces in the file name
+`f-<famname>.opm`. On the other hand the `\fontfam` command gives more tolerance: 
+you can write uppercase letters and spaces here. The spaces are ignored and 
+letters are converted to lowercase.
+For example `\fontfam [LM Fonts]` is equivalent to \fontfam [LMfonts] and both
 commands load the file `f-lmfonts.opm`.
 
-You can use your font-macro-file in sense of previous paragraph without
+You can use your font file in sense of previous paragraph without
 registering it. But problem is that such families are not listed when
 `\fontfam[?]` is used and it is not included in font catalogue when
 `\fontfam[catalog]` is printed. The list of families taken in the catalogue and
 listed on the terminal is declared in two files: `fams-ini.opm` and
 `fams-local.opm`. The second file is optional. User can create it and write to
 it the information about user-defined families using the same syntax as in
-existed file `fams-ini.opm`.
+existed file `fams-ini.opm`. 
 
-The `\_faminfo` has the following syntax:
+The information from the user's `fams-local.opm` file has precedence.
+For example `fams-ini.opm` declares aliases Times$\to$Termes etc. If you
+have original Times purchased from Adobe then you can register your
+declaration about Times family in `fams-local.opm`. When an user write
+`\fontfam[Times]` then orginal Times (no Termes) is used in such case.
 
-\begtt
-   \_faminfo [Name Of Family] {Comments} {file-name}
+The `fams-ini.opm` and `fams-local.opm` files use the macros
+`\_famifo`, `\_famalias` and `\_famtext`. See the example from
+`fams-ini.tex`:
+
+{\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
+ \def\docfile{fams-ini.opm}
+\verbinput (3-27) fams-ini.opm
+... etc.
+}
+\medskip
+
+The \^`\_faminfo` commad has the syntax:
+\begtt \catcode`\<=13
+\_faminfo [<Family Name>] {<comments>} {<file-name>}
      { <mod-plus-vars> }
 \endtt
-
-The <mod-plus-vars> data is used when printing catalogue. It consists with
+%
+The `<mod-plus-vars>` data is used only when printing catalogue. It consists with
 one or more pairs `<mods>: {<vars>} <mods>: {<vars>}` etc.
 For each pair: each modifiers (separated by comma) are applied to each <vars>
 and prepared sample is printed. The `-` character means no modifiers 
 should be applied.
 
-The `\_famalias` declares an alias to the last
+The \^`\_famalias` declares an alias to the last
 declared family. 
 
-The `\_famtext` writes a line to the terminal and to the log file when all
+The \^`\_famtext` writes a line to the terminal and to the log file when all
 families are listed.
-
-For modifiers and variants declared by `\_faminfo` the sample of letters 
-and other characters is printed. from `\catalogsample` register. 
 

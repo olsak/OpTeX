@@ -1,8 +1,9 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_fontdecl [Lido] \Lido {by StormType Foundry designed for "lidove noviny"}
+\_famdecl [Lido] \Lido {by StormType Foundry designed for "lidove noviny"}
         {\caps \cond} {\rm \bf \mr \mi \it \bi} {Termes}
         {[LidoSTF]}
+        {\_def\_fontnamegen {[LidoSTF\_condV\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Variants:^^J
@@ -13,11 +14,6 @@ Modifiers:^^J
  \medium .... sets \mr \bf \mi \bi family
 }}
 
-\_protected\def \Lido {%
-   \_def \_currfamily {Lido}%
-   \_def \_fontnamegen {[LidoSTF\_condV\_currV]:\_capsV\_fontfeatures}% 
-   \_resetmod
-}
 \_moddef \resetmod {\_fsetV caps={},cond={},ital=Italic \_fvars {} Bold {\_italV} {Bold\_italV} }
 \_moddef \medium   {\_fvars Medium Bold {Medium\_italV} {Bold\_italV} }
 \_moddef \cond     {\_fsetV cond=Condensed,ital={} }

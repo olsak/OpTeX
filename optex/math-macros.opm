@@ -2,34 +2,53 @@
 
 \_codedecl \sin {Math macros plus mathchardefs <2020-03-14>} % preloaded in format 
 
-%% The character _ as subscript prefix:
+   \_doc -----------------------------
+   The category code of the character `_` remains as letter (11) and the mathocode 
+   of it is `"8000`. 
+   It means that it is active character in math mode. It is defined as subscript prefix.
 
-\catcode`\_ = 8
-\let\sb = _
-\catcode`\_ = 13
-\let _ = \sb
-\catcode`\_ = 11
+   There is a problem: The `x_n` is tokenized as `x`, `_`, `n` and it works
+   without problem. But `\int``_a^b` is tokenized as `\int``_a`, `^`, `b`. The
+   control sequence `\int``_a` isn't defined. We must write `\int _a^b`.
+
+   The lua code presented here solves this problem. But you cannot set our own
+   control sequence in the form `\<word>_` or `\<word>_<one-letter>` (where
+   <word> is sequence of letters) because such control sequences are
+   unacessible: proprocessor rewrites it.
+
+   The \`\mathsbon` macro activates the rewritting rule `\<word>_<nonleter>` to
+   `\<word> _<nonletter>` and 
+   `\<word>``_<letter><nonletter>` to `\<word> _<letter><nonletter>` at input
+   processor level. The \`\mathsboff` deactivates it.
+   You can ask by \`\_ifmathsb` if this feature is activated or deactivated.
+   By default, is is activated in the `\everyjob`.
+   \_cod -----------------------------
+
+\catcode`\_ = 8   \let\sb = _
+\catcode`\_ = 13  \let _ = \sb
+\catcode`\_ = 11  
 \_private \sb ;
 
-% \int_a^b -> \int _a^B, \max_M -> \max _M etc. In general:
-% let <word> be a word. Then \<word>_ or \<word>_<one-letter>
-% (in both cases terminated by non-leter) will be rewritten to
-% \<word> _ or \<word> _<one-letter> in preprocessor.
-
+\_newifi\_ifmathsb   \_mathsbfalse
 \_def \_mathsbon {%
-   \directlua{
+   \_directlua{
    callback.register("process_input_buffer",
      function (str)
        return string.gsub(str.." ", "(\_nbb[a-zA-Z]+)_([a-zA-Z]?[^_a-zA-Z])", "\_pcent 1 _\_pcent 2")
-     end)
-}}
+     end) }%
+   \_global\_mathsbtrue
+}
 \_def \_mathsboff {%
-   \directlua{ callback.register("process_input_buffer", nil) }%
+   \_directlua{ callback.register("process_input_buffer", nil) }%
+   \_global \_mathsbfalse
 }
 \_public \mathsboff \mathsbon ;
 
-
-%% Mathcodes prom plainTeX:
+   \_doc -----------------------------
+   All mathcodes are set to equal values as in plain\TeX/.
+   But all encoding-dependend declarations (like these) will be set 
+   to different values when Unicode-math font is used.
+   \_cod -----------------------------
 
 \_mathcode`\^^@="2201 % \cdot
 \_mathcode`\^^A="3223 % \downarrow
@@ -99,7 +118,16 @@
 \_delcode`\|="26A30C
 \_delcode`\\="26E30F
 
-%% \mathchardef's from plainTeX:
+   \_doc -----------------------------
+   All control sequences declared by `\mathchardef` are supposed (by default)
+   only for public usage. It means that they are delcared without `_` prefix.
+   If such sequences are used in internal \OpTeX/ macro then their internal
+   prefixed form is declared using `\_private` macro.\nl
+   These encoding dependent declarations will be set to different values
+   when Unicode-math font is loaded.\nl
+   The declared sequences for math symbols are not hyperlinked in this documentation.
+   \maxlines=15
+   \_cod -----------------------------
 
 \_mathchardef\alpha="010B
 \_mathchardef\beta="010C
@@ -268,7 +296,10 @@
 \_mathchardef\rightharpoonup="312A
 \_mathchardef\rightharpoondown="312B  
 
-%% Math rm texts:
+   \_doc -----------------------------
+   The math functions like log, sin, cos are declared in tha same way as in
+   plain\TeX/, but they are `\protected` in \OpTeX/.
+   \_cod -----------------------------
 
 \_protected\_def\log {\_mathop{\_rm log}\_nolimits}
 \_protected\_def\lg {\_mathop{\_rm lg}\_nolimits}
@@ -303,7 +334,13 @@
 \_protected\_def\gcd {\_mathop{\_rm gcd}}
 \_protected\_def\deg {\_mathop{\_rm deg}\_nolimits}
 
-%% PlainTeX macros:
+   \_doc -----------------------------
+   These macros are defined similarly as in plain\TeX. Only internal macro 
+   names from plain\TeX/ with `@` character are re-written in more readable
+   form.\nl
+   \`\sp` is alternative for `^`. The \`\sb` alternative for `_` was defined
+   at the line 27 of the file `math-macros.opm`. 
+   \_cod -----------------------------
 
 \_let\_sp=^ \public \sp ;
 % \sb=_ , defined at beginning of this file
@@ -313,8 +350,11 @@
 \_protected\_def\>{\_mskip\_medmuskip}    \let\_medsk   = \>
 \_protected\_def\;{\_mskip\_thickmuskip}  \let\_thicksk = \;
 \_protected\_def\!{\_mskip-\_thinmuskip}  \let\_thinneg = \!
-
 %\_def\*{\discretionary{\thinspace\the\textfont2\char2}{}{}} % obsolete
+
+   \_doc -----------------------------
+   Active \`\prime` character is defined here.
+   \_cod -----------------------------
 
 {\_catcode`\'=\active \_gdef'{^\_bgroup\_primes}} % primes dance
 \_def\_primes{\_prime\_isnextchar'{\_primesA}%
@@ -322,6 +362,13 @@
 \_def\_primesA #1{\_primes}
 \_def\_primesB #1#2{#2\egroup}
 \_private \prime ;
+
+   \_doc -----------------------------
+   \`\big`, \`\Big`, \`\bigg`, \`\Bigg`, \`\bigl`, \`\bigm`, \`\bigr`, \`\Bigl`, \`\Bigm`, 
+   \`\Bigr`, \`\biggl`, \`\biggm`, \`\biggr`, \`\Biggl`, \`\Biggm`, \`\Bigg`, \`\Biggr`
+   are based on the \`\_scalebig` macro because we need the dependency on
+   the various sizes of the fonts.
+   \_cod -----------------------------
 
 %{\catcode`\^^Z=\active \gdef^^Z{\not=}} % ^^Z is like \ne in math %obsolete
 
@@ -345,9 +392,11 @@
 \_protected\_def\_Biggl{\_mathopen\_Bigg}
 \_protected\_def\_Biggm{\_mathrel\_Bigg}
 \_protected\_def\_Biggr{\_mathclose\_Bigg}
-\_public
-   \bigl \bigm \bigr \Bigl \Bigm \Bigr \biggl \biggm \biggr \Biggl \Biggm
-   \Biggr ;
+\_public \bigl \bigm \bigr \Bigl \Bigm \Bigr \biggl \biggm \biggr \Biggl \Biggm \Biggr ;
+
+   \_doc -----------------------------
+   Math relations defined by the \`\jointrel` plain \TeX/ macro: 
+   \_cod -----------------------------
 
 \_protected\_def\_joinrel{\_mathrel{\_mkern-2.5mu}}  % -3mu in plainTeX
 \_protected\_def\relbar{\_mathrel{\_smash-}} % \_smash, because - has the same height as +
@@ -371,6 +420,10 @@
    \longrightarrow \Longleftrightarrow ;
 \_public \joinrel ;
 
+   \_doc -----------------------------
+   \`\ldots`, \`\cdots`,  \`\vdots`, \`\ddots` from plain \TeX/
+   \_cod -----------------------------
+
 \_mathchardef\_ldotp="613A % ldot as a punctuation mark
 \_mathchardef\_cdotp="6201 % cdot as a punctuation mark
 \_mathchardef\_colon="603A % colon as a punctuation mark
@@ -386,6 +439,10 @@
 
 \_public \ldots \cdots \vdots \ddots ;
 
+   \_doc -----------------------------
+   Math accents (encoding dependent declarations).
+   \_cod -----------------------------
+
 \_protected\_def\acute{\_mathaccent"7013 }
 \_protected\_def\grave{\_mathaccent"7012 }
 \_protected\_def\ddot{\_mathaccent"707F }
@@ -398,6 +455,10 @@
 \_protected\_def\dot{\_mathaccent"705F }
 \_protected\_def\widetilde{\_mathaccent"0365 }
 \_protected\_def\widehat{\_mathaccent"0362 }
+
+   \_doc -----------------------------
+   \`\overrightarrow`, \`\overleftarrow`, \`\overbrace`, \`\underbrace`, \`\skew` macros.
+   \_cod -----------------------------
 
 \_def\_math{\_mathsurround0pt }
 \_protected\_def\_overrightarrow #1{\_vbox{\_math\_ialign{##\_crcr
@@ -417,6 +478,10 @@
     #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
 
 \_public \overrightarrow \overleftarrow \overbrace \underbrace \skew ;
+
+   \_doc -----------------------------
+   Macros based on `\delimiter`, `\*witdelims`  and `\radical` primitives.
+   \_cod -----------------------------
 
 \_protected\_def\lmoustache{\_delimiter"437A340 } % top from (, bottom from )
 \_protected\_def\rmoustache{\_delimiter"537B341 } % top from ), bottom from (
@@ -449,6 +514,11 @@
 
 \_protected\_def\_sqrt{\_radical"270370 }  \_public \sqrt ;
 
+   \_doc -----------------------------
+   \`\mathpalette`, \`\vphantom`, \`\hphantom`, \`\phantom`, \`\mathstrut`, and
+   \`\smash` macros from plain \TeX.
+   \_cod -----------------------------
+
 \_def\_mathpalette#1#2{\_mathchoice{#1\_displaystyle{#2}}%
   {#1\_textstyle{#2}}{#1\_scriptstyle{#2}}{#1\_scriptscriptstyle{#2}}}
 \_newbox\_rootbox
@@ -477,6 +547,11 @@
 \_def\_finsmash{\_ht0=0pt \_dp0=0pt \_box0 }
 \_public \mathpalette \vphantom \hphantom \phantom \mathstrut \smash ;
 
+   \_doc -----------------------------
+   \`\cong`, \`\notin`, \`\rightleftharpoons`, \`\buildrel`, \`\doteq`, \`\bmod`
+   and \`\pmod` macros from plain \TeX/.
+   \_cod -----------------------------
+
 \_protected\_def\_cong{\_mathrel{\_mathpalette\_overeq\_sim}} % congruence sign
 \_def\_overeq#1#2{\_lower.05em\_vbox{\_lineskiplimit\_maxdimen\_lineskip=-.05em
     \_ialign{$\_math#1\_hfil##\_hfil$\_crcr#2\_crcr=\_crcr}}}
@@ -494,6 +569,10 @@
   \_mathbin{\_rm mod}\_penalty900\_mkern5mu\_nonscript\_mskip-\_medmuskip}
 \_protected\_def\_pmod#1{\_allowbreak\_mkern18mu({\_rm mod}\_thinsk\_thinsk#1)}
 \_public \bmod \pmod ;
+
+   \_doc -----------------------------
+   \`\cases`, \`\matrix`, \`\pmatrix` and \`\bordermatrix` macros from plain \TeX/
+   \_cod -----------------------------
 
 \_protected\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
     \_ialign{$##\_hfil$&\_quad##\_hfil\_crcr#1\_crcr}}\_right.}
@@ -517,6 +596,11 @@
     \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right)$}%
   \_null\_thicksk\_vbox{\_kern\_ht1 \_box2}\_endgroup}
 \_public \cases \matrix \pmatrix \bordermatrix ;
+
+   \_doc -----------------------------
+   \`\openup`, \`\eqalign`, \`\displaylines` and  \`\eqalignno` macros from
+   plain \TeX/.
+   \_cod -----------------------------
 
 \_def\_openup{\_afterassignment\_openupA\_dimen0=}
 \_def\_openupA{\_advance\_lineskip by\_dimen0
@@ -546,7 +630,10 @@
     #1\_crcr}}
 \_public \openup \eqalign \displaylines \eqalignno ; 
 
-%% Mathchardefs for AMS fonts:
+   \_doc -----------------------------
+   These macros are inspired from `ams-math.tex` file.
+   \maxlines=15
+   \_cod -----------------------------
 
 \_def\_amsafam{4} \_def\_amsbfam{5} 
 
@@ -785,12 +872,17 @@
 \_let\circledslash\oslash
 \_let\circleddot\odot
 
-% \not redefined:
-%    \not< becomes \_nless
-%    \not> becomes \_ngtr
-%    if \_notXXX is defined, \not\XXX becomes \_notXXX;
-%    if \_nXXX is defined, \not\XXX becomes \_nXXX;
-%    otherwise, \not\XXX is done in the usual way.
+   \_doc -----------------------------
+   The \`\not` macro is re-defined to be mote inteligent than in plain
+   \TeX/. The macro follows this rule:
+   \begtt
+   \not< becomes \_nless
+   \not> becomes \_ngtr
+   if \_notXXX is defined, \not\XXX becomes \_notXXX;
+   if \_nXXX is defined, \not\XXX becomes \_nXXX;
+   otherwise, \not\XXX is done in the usual way.
+   \endtt
+   \_cod -----------------------------
 
 \_mathchardef \_notchar  "3236
 
@@ -811,62 +903,16 @@
   \nLeftrightarrow \nleftrightarrow \nexists ;
 \_public \not ;
 
+   \_doc -----------------------------
+   The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
+   It behaves like `\hbox{<text>}` but the `<text>` is scaled to smaller
+   size if it is used in scriptstye or scriptscript style.
+   \_cod -----------------------------
+
 \_def\_mathbox#1{{\_mathchoice{\_mathboxA\_displaystyle[]{#1}}{\_mathboxA\_textstyle[]{#1}} 
     {\_mathboxA\_textstyle[700]{#1}}{\_mathboxA\_textstyle[500]{#1}}}} 
 \_def\_mathboxA#1[#2]#3{\_hbox{\_everymath={#1}\_if^#2^\_else\_typoscale[#2/]\_relax\_fi #3}} 
 \_public \mathbox ;
 
 \_endcode %---------------------------------------------------
-
-\secc The character `_` as subscript prefix
-%------------------------------------------
-
-The category code of `_` remains as letter (11) and the mathocode of `_` is
-`"8000`. It means that it is active character in math mode. It is defined as
-subscript prefix.
-
-There is a problem: The `x_n` is tokenized as `x`, `_`, `n` and it works
-without problem. But `\int_a^b` is tokenized as `\int_a`, `^`, `b`. The
-control sequence `\int_a` isn't defined. We m,aut write `\int _a^b`.
-
-The lua code presented here solves this problem. But you cannot set our own
-control sequence in the form `\<word>_` or `\<word>_<one-letter>` (where
-<word> is sequence of letters) because such contol sequences are
-unacessible: proprocessor rewrites them.
-
-
-\secc Mathcodes from plain\TeX/
-%------------------------------
-
-All mathcodes are set to equal values as in plain\TeX/.
-
-
-\secc Mathchardef from plain\TeX/
-%--------------------------------
-
-All control sequences declared by `\mathchardef` are supposed (by default)
-only for public usage. It means that they are delcared without `_` prefix.
-If such sequences are used in internal \OpTeX/ macro then their internal
-prefixed form is declared using `\_private` macro only if it is explicitly
-needed.
-
-
-\secc Math rm texts
-%------------------
-
-The math functions like log, sin, cos are declared in tha same way as in
-plain\TeX/, but they are `\protected`.
-
-
-\secc Plain\TeX/ macros
-%----------------------
-
-These macros are defined similarly as in plain\TeX. Only internal macro 
-names from plain\TeX/ with `@` character are we-written in more readable
-form. 
-
-\secc Matchchardefs from AMS fonts
-%---------------------------------
-
-These macros are inspired from `ams-math.tex` file.
 

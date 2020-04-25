@@ -2,11 +2,16 @@
 
 \_codedecl \uv {Miscenaleous <2020-04-02>} % preloaded in format
 
-% You can write \useOpTeX at begining of your document
+    \_doc ----------------------------
+    \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
+    \_cod ----------------------------
 
 \_let \useOpTeX = \_relax   \_let \useoptex = \_relax
 
-% lastpage/totalpages
+    \_doc ----------------------------
+    The \`\lastpage` and \`\totalpages` get the information from the
+    \^`\_currpage`. The \^`\_Xpage` from `.ref` file sets the \^`\_currpage`.  
+    \_cod ----------------------------
 
 \_def\_totalpages {\_openref\_ea\_lastpageA\_currpage}
 \_def\_lastpage   {\_openref\_ea\_lastpageB\_currpage}
@@ -14,6 +19,14 @@
 \_def\_lastpageB #1#2{#2}
 \_def\_currpage {{0}{?}}
 \_public \lastpage \totalpages ;
+
+    \_doc ----------------------------
+    We need \`\uv`, \`\clqq`, \`\crqq`, \`\flqq`, \`\frqq`, \`\uslang`, \`\ehyph`
+    \`\chyph`, \`\shyph`, for backward compatibility with \csplain.  
+    Codes are set according to Unicode, because we are using Czech only in Unicode
+    when \LuaTeX/ is used.
+    \_cod ----------------------------
+
 
 % for compatibility with csplain:
 
@@ -27,32 +40,36 @@
 \_let\chyph=\cslang   \_let\shyph=\sklang
 \_let\csUnicode=\csPatt \_let\czUnicode=\csPatt \_let\skUnicode=\skPatt
 
-% classical \ten* macros (keeps only preloaded fonts!)
+    \_doc ----------------------------
+    The \`\letfont` was used in \csplain/ instead of `\fontlet`. 
+    \_cod ----------------------------
 
 \_let \letfont = \_fontlet
-\_let \tenrm = \_tenrm  \_let \tenbf = \_tenbf
-\_let \tenit = \_tenit  \_let \tenbi = \_tenbi
-\_let \tentt = \_tentt 
 
-% non breaking space in Unicode
+    \_doc ----------------------------
+    Non breaking space in Unicode.
+    \_cod ----------------------------
 
 \let ^^a0=~
 
-% TikZ needs these control sequences:
+    \_doc ----------------------------
+    TikZ needs these control sequences.
+    \_cod ----------------------------
 
 \ea\toksdef \csname toks@\endcsname=0
 \ea\let     \csname voidb@x\endcsname=\_voidbox
 
-% another \tmpnum and \tmpdim are declared for user macros, no the same as private:
-
-\newcount\tmpnum % auxiliary count
-\newdimen\tmpdim % auxiliary dimen
-
-% We don't want to read opmac.tex unless \input opmac is specified:
+    \_doc ----------------------------
+    We don't want to read `opmac.tex` unless `\input opmac` is specified.
+    \_cod ----------------------------
 
 \def\OPmacversion{OpTeX}  
 
-% Lorem ipsum. Usage \lipsum[3] or \lipsum[112-121], max=150
+    \_doc ----------------------------
+    Lorem ipsum can be printed by \`\lipsum``[<range>]` or \`\lorem``[<range>]`,
+    for example `\lipsum[3]` or `\lipsum[112-121]`, max=150. The data are read
+    from \LaTeX/ file `lipsum.ltd.tex`.
+    \_cod ----------------------------
 
 \_def \_lipsum {%
    {\_long\_def\ProvidesFile##1[##2]##3{\_ifx\_par##3\_relax\_else \_ea##3\_fi}\_tmpnum=0
@@ -73,6 +90,3 @@
 
 \_endcode
 
-These codes are usable only after Unicode font is loaded using \fontfam.
-If you don't use Unicode fonts then more characters from Czech language stay
-unavailable (ř, ů, for example). See the notice in `fonts-preoad.opm`.

@@ -4,7 +4,7 @@
 
    \_doc -----------------------------
    Default margins and design is declared here. 
-   Note that `\_ttfont` is scaled by `mag1.15` in order to balance the
+   The `\_ttfont` is scaled by `mag1.15` in order to balance the
    ex height of Helvetica (Heros) and LM fonts Typewriter.
    The `\begtt`...`\endtt` verbatim is printed by smaller text.
    \_cod -----------------------------
@@ -32,7 +32,7 @@
    \_doc -----------------------------
    The bottom margin is set to 3\,mm. If we use 1\,mm, then baseline of
    `\footline` is 2\,mm from the bottom page. This is depth of the `\Grey`
-   rectange used for page numbers. It is rlapped to `\hoffset` because left
+   rectangle used for page numbers. It is r-lapped to `\hoffset` width because left
    margin = `\hoffset` = right margin. It is 14\,mm for narrow pages or
    16\,mm for wide pages. 
    \_cod -----------------------------
@@ -43,15 +43,15 @@
                       \_hbox to\_hoffset{\White\_hss\_folio\_kern3mm}}}
 
    \_doc -----------------------------
-   The `\subtit` is defined analogicaly like `\tit`.
+   The \`\subtit` is defined analogically like `\tit`.
    \_cod -----------------------------
 
 \_eoldef\_subtit#1{\_vskip20pt {\_leftskip=0pt plus1fill \_rightskip=\_leftskip
    \_subtitfont #1\_nbpar}}
 
    \_doc -----------------------------
-   The `\pshow<num>` is implemented by printing the text in invisible
-   (transparent) font when `\layernum<<num>`. 
+   The \`\pshow``<num>` prints the text in invisible
+   (transparent) font when \^`\layernum`\code{<}`<num>`. 
    The color font feature is used for this transparency.
    \_cod -----------------------------
 
@@ -60,10 +60,10 @@
 \_def\_pshow#1{\_use{=#1}\Red \_use{<#1}\Transparent \_ignorespaces}
 
    \_doc -----------------------------
-   The main level list is activated here. The `\_item:X` and 
+   The main level list of items is activated here. The `\_item:X` and 
    `\_item:x` are used and are re-defined here.
    If we are in nested level of items and `\pg+` is used then
-   `\egroups` macro xepands to the right number of `\egroup`s
+   `\egroups` macro expands to the right number of `\egroup`s
    in order to close page correctly. The level of nested item lists
    is saved to the `\_ilevel` register and used when we start again 
    the next text after `\pg+`. 
@@ -80,7 +80,7 @@
    \_addto\_egroups{\_egroup}}
 
    \_doc -----------------------------
-   The default values of `\pg;`, `\pg+` and `\pg.` are very simple.
+   The default values of \`\pg`, i.\,e.\ `\pg;`, `\pg+` and `\pg.` are very simple.
    They are used when `\showslides` is not specified.
    \_cod -----------------------------
 
@@ -91,7 +91,7 @@
 
    \_doc -----------------------------
    We need no numbers and no table of contents when using slides.
-   The `\_printsec` macro is redefined in order the title is centered
+   The \^`\_printsec` macro is redefined in order the title is centered
    and typeset in `\Blue`. 
    \_cod -----------------------------
 
@@ -108,18 +108,19 @@
 }
 
    \_doc -----------------------------
-   When `\slideshow` is active then each page is opened (roughly speaking) 
-   by `\setbox\_slidepage=\vbox\bgroup` and closed by `\egroup`. The material is
+   When \`\slideshow` is active then each page is opened 
+   by `\setbox\_slidepage=\vbox\bgroup` (roughly speaking)
+   and closed by `\egroup`. The material is
    `\unvbox`ed and saved for the usage in the next usage if `\pg+` is in process.
-   The `\_slidelayer` is inceremnted instead `\pageno` if `\pg+`.
+   The \`\_slidelayer` is incremented instead `\pageno` if `\pg+`.
    This counter is equal to `\count1`, so it is printed to the terminal and
    log file next to `\pageno`. 
 
-   The code is somewhat more complicated when `\layers` is used. Then
-   <layered-text> is saved to the `\_layertext` macro, the material before
-   it is in `\_sidepage` box and the material after it is in `\_slidepageB`
-   box. The pages are completrd in the `\loop` which increments the
-   `\layernum` register.   
+   The code is somewhat more complicated when \^`\layers` is used. Then
+   `<layered-text>` is saved to the \`\_layertext` macro, the material before
+   it is in \`\_slidepage` box and the material after it is in `\_slidepageB`
+   box. The pages are completed in the `\loop` which increments the
+   \`\layernum` register.   
    \_cod -----------------------------
 
 \_newbox\_slidepage  \_newbox\_slidepageB
@@ -179,10 +180,11 @@
    \_global\_maxlayers=#1
    \_setbox\_slidepageB=\_vbox\_bgroup
 }
+\_public \subtit \slideshow \pg \wideformat \use \pshow ;
 
    \_doc -----------------------------
-   Default `\layers <num>` macro (when `\slideshow` is not activated) is simple.
-   It prints the <layered-text> with `\layernum=<num>+1` because we need the
+   Default \`\layers` `<num>` macro (when \^`\slideshow` is not activated) is simple.
+   It prints the `<layered-text>` with `\layernum=<num>+1` because we need the
    result after last layer is processed.
    \_cod -----------------------------
 
@@ -190,10 +192,9 @@
 \_let\endlayers=\_relax
 
 \_def\layers{\_layers}
-\_public \subtit \slideshow \pg \wideformat \use \pshow ;
 
    \_doc -----------------------------
-   We must to redefine `\fnotenumpages` because the data from `.ref` file
+   We must to redefine \`\fnotenumpages` because the data from `.ref` file
    are less usable for implementing such feature: the
    footnote should be in more layers repeatedly. But we can suppose that 
    each page starts by `\pg;` macro, so we can reset the footnote counter by

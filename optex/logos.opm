@@ -3,10 +3,11 @@
 \_codedecl \TeX {Logos TeX, LuaTeX, etc. <2020-02-28>} % preloaded in format
 
    \_doc ----------------------------
-   Despite plain \TeX/ each macro for logos ends by `\ignoreslash`. 
+   Despite plain \TeX/ each macro for logos ends by \`\ignoreslash`. 
    This macro ignores next slash if it is present. 
    You can `use \TeX/ like this` for protecting the space following the logo. 
    This is visually more comfortable.
+   The macros \`\TeX`, \`\OpTeX`, \`\LuaTeX`, \`\XeTeX` are defined.
    \_cod ----------------------------
 
 \_protected\_def \_TeX {T\_kern-.1667em\_lower.5ex\_hbox{E}\_kern-.125emX\_ignoreslash}
@@ -15,9 +16,14 @@
 \_protected\_def \_XeTeX {X\_kern-.125em\_phantom E%
    \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
 
-   \_doc------------------------------
-   The `\_slantcorr` macro expands to slant-correction of current font. It is
-   used to shifting A if `\LaTeX` is in itallic. 
+\_def\_ignoreslash {\_futurelet\_next \_ignoreslashA}
+\_def\_ignoreslashA {\_ifx\_next/\_ea\_ignoreit\_fi}
+
+\_public \TeX \OpTeX \LuaTeX \XeTeX \ignoreslash ;
+
+   \_doc -----------------------------
+   The \`\_slantcorr` macro expands to slant-correction of current font. It is
+   used to shifting A if the \`\LaTeX` logo is in italic. 
    \_cod -----------------------------
 
 \_protected\_def \_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
@@ -25,29 +31,32 @@
   \_kern-.15em \_kern-\_slantcorr \_TeX}
 \_def\_slantcorr{\_ea\_ignorept \_the\_fontdimen1\_font\_tmpdim}
 
-\_def\_ignoreslash {\_futurelet\_next \_ignoreslashA}
-\_def\_ignoreslashA {\_ifx\_next/\_ea\_ignoreit\_fi}
+\_public \LaTeX ;
+
+   \_doc -----------------------------
+   \`\OPmac`, \`\CS` and \`\csplain` logos.
+   \_cod -----------------------------
 
 \_def\_OPmac{\_leavevmode
    \_lower.2ex\_hbox{\_thefontscale[1400]O}\_kern-.86em P{\_em mac}\_ignoreslash}
 \_def\_CS{$\_cal C$\_kern-.1667em\_lower.5ex\_hbox{$\_cal S$}\_ignoreslash}
 \_def\_csplain{\_CS plain\_ignoreslash}
-\_def\_ignslash#1{\_ifx/#1\_else #1\_fi}
+
+\_public \OPmac \CS \csplain ;
 
    \_doc ----------------------------
-   The expandable versions of logos used in Outlines needs the expandablle
-   `\_ingnslash` (instead of `\_ignoreslash`).
+   The expandable versions of logos used in Outlines needs the expandable
+   \`\ingnslash` (instead of the \^`\ignoreslash`).
    \_cod \_fin ----------------------
 
+\_def\_ignslash#1{\_ifx/#1\_else #1\_fi}
 \_regmacro {}{}{% conversion for PDF outlines
    \_def\TeX{TeX\_ignslash}\_def\OpTeX{OpTeX\_ignslash}%
    \_def\LuaTeX{LuaTeX\_ignslash}\_def\XeTeX{XeTeX\_ignslash}%
    \_def\LaTeX{LaTeX\_ignslash}\_def\OPmac{OPmac\_ignslash}%
    \_def\CS{CS}\_def\csplain{csplain\_ignslash}%
 }
-\_public
-   \TeX \OpTeX \LuaTeX \XeTeX \LaTeX \OPmac \CS \csplain
-   \ignoreslash \ignoreit \ignorept ;
+\_public \ignslash ;
 
 \_endcode
 

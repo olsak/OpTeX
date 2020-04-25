@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \rm {Latin Modern fonts (EC) preloaded <2020-01-23>} % loaded in format
+\_codedecl \tenrm {Latin Modern fonts (EC) preloaded <2020-01-23>} % loaded in format
 
 % Only few text fonts are preloaded:
 
@@ -11,27 +11,25 @@
 \_font\_tentt=ec-lmtt10  % typewriter
 \_tenrm
 
-\_protected\_def\_rm{\_tryloadrm \_tenrm \_fam0 } 
-% \bf, \it, \bi, \tt are defined in math-preload.opm
-\_let\_tryload=\_relax
-
-\_public \rm ;
+\_public \tenrm \tenbf \tenit \tenbi \tentt ; 
 
 \_endcode %---------------------------------------------------
 
-Format in lua\TeX/ can download only non-unicode fonts, Latin Modern EC is
+Format in lua\TeX/ can download only non-Unicode fonts. Latin Modern EC is
 loaded here. These fonts are totally unusable in LuaTeX when languages with out
-of ASCII or ISO-1 alphabets are used (for example Czech). So, we load only
-few fonts here for simple testing the format. But, if an user needs to do a
-more serious work, he/she can use `\fontfam` macro in order to load a
-selected font family of unicode fonts.
+of ASCII or ISO-8859-1 alphabets are used (for example Czech). We load only
+few 8bit fonts here especially for simple testing the format. 
+But, if the user needs to do a more serious work, he/she can 
+use `\fontfam` macro in order to load a selected font family of Unicode fonts.
 
-The non-unicode fonts are not suported in op\TeX/. Use \fontfam[lmfonts]
-at the begin of yor document.
+We have a dilemma: when the Unicode fonts cannot be preloaded in format then basic
+font set can be loaded by `\everyjob`. But why to load a set of fonts ta the
+beginning of every job when there is highly likely that the user will
+load something completely different. Our decision is: there is a basic 8bit
+font set and user will load the font at beginning of the document.
 
-The font resizing macros are in fonts-resize.opm file.
-
-The `\fontfam` macro is defined in fontfam.opm file.
-
-The fonts for maths are preloaded in math-macros.opm file.
+The fonts selectors \`\tenrm`, \`\tenbf`, \`\tenit`, \`\tenbi`, \`\tentt`
+are declared as `\public` here but only for backward compatibility. We don't
+use them in the Font Selection System. But the protected versions of these
+control sequences are used in the Font Selection System.
 

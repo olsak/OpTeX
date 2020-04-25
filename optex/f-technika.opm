@@ -1,8 +1,9 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_fontdecl [Technika] \Technika {Fonts from visual style of CTU in Prague}
+\_famdecl [Technika] \Technika {Fonts from visual style of CTU in Prague}
         {\caps \light} {\rm \bf \it \bi \stencil} {}
         {[Technika-Regular]}
+        {\_def\_fontnamegen {[Technika\_stencilV-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
@@ -13,11 +14,6 @@ Special variant:^^J
  \stencil ... dashed leters (only uppercase)^^J
 }}
 
-\_protected\def \Technika {%
-   \_def \_currfamily {Technika}%
-   \_def \_fontnamegen {[Technika\_stencilV-\_currV]:\_capsV\_fontfeatures}% 
-   \_resetmod
-}
 \_moddef \resetmod {\_fsetV stencil={},caps={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \light    {\_fsetV stencil={} \_fvars Light Regular LightItalic Italic }
 \_moddef \book     {\_fsetV stencil={} \_fvars Book Bold BookItalic BoldItalic }

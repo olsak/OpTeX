@@ -5,7 +5,8 @@
    \_doc -----------------------------
    This code is documented in detail in the \"\TeX/book naruby", pages 244--246,
    free available, \url{http://petr.olsak.net/tbn.html}, but in Czech.
-   Roughly speaking, macros complete all material between `\begmulti` and `\endmulti`
+   Roughly speaking, macros complete all material between 
+   \`\begmulti``<num-columns>` and \`\endmulti`
    into one `\vbox 6`. Then the macro measures the amount of free space at the current 
    page using `\pagegoal` and `\pagtotal` and does `\vsplit` of `\vbox 6` to 
    columns with height of such free space. This is done only if we have
@@ -49,6 +50,11 @@
    \_else \_balancecolumns \_fi  % only balancing
    \_multiskip\_egroup
 }
+
+   \_doc -----------------------------
+   Splitting columns...
+   \_cod -----------------------------   
+
 \_def\_makecolumns{\_bgroup % full page, destination height: \dimen1
    \_vbadness=20000 \_setbox1=\_hbox{}\_tmpnum=0
    \_loop \_ifnum\_Ncols>\_tmpnum
@@ -75,6 +81,11 @@
       \_else \_balancecolumns % last balancing
    \_fi \_fi
 }
+
+   \_doc -----------------------------
+   Final balancing of the columns.
+   \_cod -----------------------------
+
 \_def\_balancecolumns{\_bgroup \_setbox7=\_copy6 % destination height: \dimen0
    \_ifdim\_dimen0>\_baselineskip \_else \_dimen0=\_baselineskip \_fi
    \_vbadness=20000

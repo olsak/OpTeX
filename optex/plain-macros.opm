@@ -2,40 +2,51 @@
 
 \_codedecl \magstep {Macros from plain TeX <2020-02-14>} % preloaded in format
 
-\_chardef\_active = 13
+   \_doc -----------------------------
+   The \`\dospecials` works like in plain TeX but does nothing with `_`.
+   If you need to do the same with this character, you can re-define:
+   \begtt
+   \addto \dospecials{\do\_}
+   \endtt
+   \_cod -----------------------------
 
 \_def\_dospecials {\do\ \do\\\do\{\do\}\do\$\do\&%
   \do\#\do\^\do\^^K\do\^^A\do\%\do\~}
-\_public 
-   \dospecials \active ;
+\_chardef\_active = 13
 
+\_public \dospecials \active ;
+
+   \_doc -----------------------------
+   The shortcuts `\chardef\@one` is not defined in \OpTeX/. Use normal
+   numbers instead of such obscurities.
+   \nl
+   The \`\magstep` and \`\magstephalf` are 
+   defined with `\space`, (no `\relax`), in order to be expandable.
+   \_cod -----------------------------
+   
 \_def \_magstephalf{1095 }
 \_def \_magstep#1{\_ifcase#1 1000\_or 1200\_or 1440\_or 1728\_or 2074\_or 2488\_fi\_space}
-\_public 
-   \magstephalf \magstep ;
+\_public \magstephalf \magstep ;
 
-\_def\_normalbaselines{\_lineskip=\_normallineskip
-  \_baselineskip=\_normalbaselineskip \_lineskiplimit=\_normallineskiplimit}
-\_def\_frenchspacing{\_sfcode`\.=1000 \sfcode`\?=1000 \sfcode`\!=1000
-  \sfcode`\:=1000 \sfcode`\;=1000 \sfcode`\,=1000 }
-\_def\_nonfrenchspacing{\_sfcode`\.=3000 \sfcode`\?=3000 \sfcode`\!=3000
-  \sfcode`\:=2000 \sfcode`\;=1500 \sfcode`\,=1250 }
-\_public 
-   \normalbaselines \frenchspacing \nonfrenchspacing ;
-
-\_normalbaselines % baseline setting
+   \_doc -----------------------------
+   Plain \TeX/ basic macros and control sequences. 
+   \`\endgraf`, \`\endline`.
+   The `^^L` is not defined in \OpTeX/ because it is obsolete.
+   \_cod -----------------------------
 
 \_def\^^M{\ } % control <return> = control <space>
 \_def\^^I{\ } % same for <tab>
 
 \_def\lq{`} \def\rq{'}
-\_def\lbrack{[} \_def\rbrack{]}
-\_chardef\active=13 
+\_def\lbrack{[} \_def\rbrack{]} % They are only public versions.
 % \catcode`\^^L=\active \outer\def^^L{\par} % ascii form-feed is "\outer\par" % obsolete
 
 \_let\_endgraf=\_par \_let\_endline=\_cr
-\_public 
-   \endgraf \endline ;
+\_public \endgraf \endline ;
+
+   \_doc -----------------------------
+   Plain \TeX/ classical \`\obeylines` and \`\obeyspaces`.
+   \_cod -----------------------------
 
 % In \obeylines, we say `\let^^M=\par' instead of `\def^^M{\par}'
 % since this allows, for example, `\let\par=\cr \obeylines \halign{...'
@@ -46,6 +57,14 @@
 {\_obeyspaces\_global\_let =\_space}
 \_public 
    \obeylines \obeyspaces ;
+
+   \_doc -----------------------------
+   Spaces. 
+   \`\thinspace`, \`\negthinspace`, \`\enspace`, \`\enskip`, 
+   \`\quad`, \`\qquad`, \`\smallskip`, 
+   \`\medskip`, \`\bigskip`, \`\nointerlineskip`, \`\offinterlineskip`,
+   \`\topglue`, \`\vglue`, \`\hglue`, \`\slash`. 
+   \_cod -----------------------------
 
 \_protected\_def\_thinspace {\_kern .16667em }
 \_protected\_def\_negthinspace {\_kern-.16667em }
@@ -58,8 +77,8 @@
 \_protected\_def\_bigskip {\_vskip\_bigskipamount}
 \_def\_nointerlineskip {\_prevdepth=-1000pt }
 \_def\_offinterlineskip {\_baselineskip=-1000pt \_lineskip=0pt \_lineskiplimit=\_maxdimen}
-\_public 
-   \thinspace \negthinspace \enspace \enskip \quad \qquad \smallskip
+
+\_public \thinspace \negthinspace \enspace \enskip \quad \qquad \smallskip
    \medskip \bigskip \nointerlineskip \offinterlineskip ;
 
 \_def\_topglue {\_nointerlineskip\_vglue-\_topskip\_vglue} % for top of page
@@ -71,8 +90,15 @@
   \_nobreak\_hskip\_skip0 \_spacefactor=\_count255 }
 \_protected\def~{\penalty10000 \ } % tie
 \_protected\_def\_slash {/\_penalty\_exhyphenpenalty} % a `/' that acts like a `-'
-\_public
-   \topglue \vglue \hglue \slash ;
+
+\_public \topglue \vglue \hglue \slash ;
+
+   \_doc -----------------------------
+   Penalties macros:
+   \`\break`, \`\nobreak`, \`\allowbreak`, \`\filbreak`, \`\goodbreak`,  
+   \`\eject`, \`\supereject`, \`\dosupereject`, 
+   \`\removelastskip`, \`\smallbreak`, \`\medbreak`, \`\bigbreak`.
+   \_cod -----------------------------
 
 \_protected\_def \_break {\_penalty-10000 }
 \_protected\_def \_nobreak {\_penalty10000 }
@@ -90,9 +116,15 @@
   \_removelastskip \_penalty-100 \_medskip \_fi}
 \_def \_bigbreak {\_par\_ifdim\_lastskip<\_bigskipamount
   \_removelastskip \_penalty-200 \_bigskip \_fi}
-\_public
-   \break \nobreak \allowbreak \filbreak \goodbreak \eject \supereject \dosupereject
+
+\_public \break \nobreak \allowbreak \filbreak \goodbreak \eject \supereject \dosupereject
    \removelastskip \smallbreak \medbreak \bigbreak ;
+
+   \_doc -----------------------------
+   Boxes.
+   \`\line`, \`\leftline`, \`\rightline`, \`\centerline`, \`\rlap`, \`\llap`, 
+   \`\underbar`. 
+   \_cod -----------------------------
 
 \_def \_line {\_hbox to\_hsize}
 \_def \_leftline #1{\_line{#1\_hss}}
@@ -100,18 +132,24 @@
 \_def \_centerline #1{\_line{\_hss#1\_hss}}
 \_def \_rlap #1{\_hbox to0pt{#1\_hss}}
 \_def \_llap #1{\_hbox to0pt{\_hss#1}}
-\_public
-   \line \leftline \rightline \centerline \rlap \llap ;
-
 \_def\_underbar #1{$\_setbox0=\_hbox{#1}\dp0=0pt \_math \_underline{\_box0}$}
-\_public
-   \underbar ;
+
+\_public \line \leftline \rightline \centerline \rlap \llap \underbar ;
+
+   \_doc -----------------------------
+   The \`\strutbox` is declared as 10pt size dependent (like in plain \TeX), but
+   the macro `\_setbaselineskip` (from `fonts-opmac.opm`) redefines it.
+   \_cod -----------------------------
 
 \_newbox\_strutbox
 \_setbox\_strutbox=\_hbox{\_vrule height8.5pt depth3.5pt width0pt}
 \_def \_strut {\_relax\_ifmmode\_copy\_strutbox\_else\_unhcopy\_strutbox\_fi}
-\_public
-   \strutbox \strut ;
+
+\_public \strutbox \strut ;
+
+   \_doc -----------------------------
+   Alignment. \`\hidewidth` \`\ialign` \`\multispan`.
+   \_cod -----------------------------
 
 \_def \_hidewidth {\_hskip\_hideskip} % for alignment entries that can stick out
 \_def \_ialign{\_everycr={}\_tabskip=\_zoskip \_halign} % initialized \halign
@@ -119,10 +157,15 @@
 \_def \_multispan #1{\_omit \_mscount=#1\_relax
    \_loop \_ifnum\_mscount>1 \_spanA \_repeat}
 \_def \_spanA {\_span\_omit \_advance\_mscount by-1 }
-\_public
-   \hidewidth \ialign \multispan ;
 
-% tabbing macros ommited
+\_public \hidewidth \ialign \multispan ;
+
+   \_doc -----------------------------
+   Tabbing macros are omitted because they are obsolete.
+   \nl
+   Indentation and others. \`\textindent`, \`\item`, \`\itemitem`,
+   \`\narrower`, \`\raggedright`, \`\ttraggedright`, \`\leavevmode`.
+   \_cod -----------------------------
 
 \_def \_hang {\_hangindent\_parindent}
 \_def \_textindent #1{\_indent\_llap{#1\_enspace}\_ignorespaces}
@@ -133,8 +176,18 @@
 \_def \_raggedright {\_rightskip=0pt plus2em 
    \_spaceskip=.3333em \_xspaceskip=.5em\_relax}
 \_def \_ttraggedright {\_tt \_rightskip=0pt plus2em\_relax} % for use with \tt only
-\_public
-   \hang \textindent \item \itemitem \narrower \raggedright \ttraggedright ;
+\_def \_leavevmode {\_unhbox\_voidbox} % begins a paragraph, if necessary
+
+\_public \hang \textindent \item \itemitem \narrower \raggedright \ttraggedright \leavevmode ;
+
+   \_doc -----------------------------
+   Few character codes are set for backward compatibility. But old obscurities
+   (from plain TeX) based on \`\mathhexbox` 
+   are not supported -- an error message and recommendation 
+   to directly using of the desired character is implemented by the
+   \`\_usedirectly` macro). 
+   The user can re-define these control sequences of course.
+   \_cod -----------------------------
 
 %\chardef\%=`\%
 \_let\% = \_pcent  % more natural, can be used in lua codes.
@@ -158,15 +211,19 @@
 \_def\dag{\_errmessage{\_usedirectly †}} 
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
 %\_def\copyright{\_errmessage{\_usedirectly ©}}
-\_def\copyright{©}
+\_def\copyright{©} % << example, what to do
 %\_def\Orb{\_mathhexbox20D} % obsolete (part of Copyright)
 %\_def\P{\_mathhexbox27B}   % obsolete
 
 \_def \_usedirectly #1{Load Unicoded font by \string\fontfam\space and use directly #1}
-\_def \_leavevmode {\_unhbox\_voidbox} % begins a paragraph, if necessary
 \_def \_mathhexbox #1#2#3{\_leavevmode \_hbox{$\_math \_mathchar"#1#2#3$}}
-\_public
-   \leavevmode \mathhexbox ;
+\_public \mathhexbox ;
+
+   \_doc -----------------------------
+   Accents. 
+   The macros \`\ooalign`, \`\d`, \`\b`, \`\c`, \`\dots`,
+   are defined for backward compatibility.
+   \_cod -----------------------------
 
 \_def \_oalign #1{\_leavevmode\_vtop{\_baselineskip=0pt \_lineskip=.25ex 
    \_ialign{##\_crcr#1\_crcr}}} 
@@ -180,8 +237,15 @@
 \_def \_c #1{{\_setbox0=\_hbox{#1}\_ifdim\_ht0=1ex\_accent\_cedilla #1%
    \_else\_ooalign{\_unhbox0\_crcr\_hidewidth\_cedilla\_hidewidth}\_fi}}
 \_def\_dots{\_relax\_ifmmode\_ldots\_else$\_math\_ldots\_thinsk$\_fi}
-\_public
-   \oalign \ooalign \d \b \c \dots ;
+\_public \oalign \ooalign \d \b \c \dots ;
+
+   \_doc -----------------------------
+   The accents commands like `\v`, `\.`, `\H`, etc. are not defined. Use the
+   accented characters directly -- it is best solution. But you can use the
+   macro \`\oldaccents` which defines accented macros.
+   \nl
+   Much more usable is to define these control sequences to other purposes.
+   \_cod -----------------------------
 
 \def \_oldaccents {%
    \_def\`##1{{\_accent\_tgrave  ##1}}%
@@ -196,8 +260,7 @@
    \_def\"##1{{\_accent\_dieresis ##1}}%
    \_def\r##1{{\_accent\_ring   ##1}}%
 }
-\_public
-   \oldaccents ;
+\_public \oldaccents ;
 
 % ec-lmr encoding (will be changed after \fontfam macro):
 \_chardef\_tgrave=0
@@ -230,6 +293,14 @@
    \_let \_uniaccents=\_relax
 }
 
+   \_doc -----------------------------
+   The last part of plain \TeX/ macros. 
+   \`\hrulefill`, \`\dotfill`, \`\rightarrowfill`, \`\leftarrowfill`, 
+   \`\magnification`, \`\bye`.
+   Math macros are defined in the `math-macros.opm` file.
+   \_cod -----------------------------
+
+
 \_def \_hrulefill {\_leaders\_hrule\_hfill}
 \_def \_dotfill {\_cleaders\_hbox{$\_math \_mkern1.5mu.\_mkern1.5mu$}\_hfill}
 \_def \_rightarrowfill {$\_math\_smash-\_mkern-7mu%
@@ -238,8 +309,8 @@
 \_def \_leftarrowfill {$\_math\_mathord\_leftarrow\_mkern-7mu%
   \_cleaders\_hbox{$\_mkern-2mu\_smash-\_mkern-2mu$}\_hfill
   \_mkern-7mu\_smash-$}
-\_public
-   \hrulefill \dotfill \rightarrowfill \leftarrowfill ;
+
+\_public \hrulefill \dotfill \rightarrowfill \leftarrowfill ;
 
 % \_downbracefil \_upbracefil will be re-defined when Unicode-math is used
 \_mathchardef \_braceld="37A \_mathchardef \_bracerd="37B
@@ -256,8 +327,7 @@
   \_dimen\_footins=8truein 
 }
 % only for backward compatibility, but \margins macro is preferred.
-\_public
-   \magnification ;
+\_public \magnification ;
 
 \_def \_showhyphens #1{\_setbox0=\_vbox{\_parfillskip=0pt \_hsize=\_maxdimen \_tenrm
   \_pretolerance=-1 \tolerance=-1 \hbadness=0 \showboxdepth=0 \ #1}}
@@ -265,33 +335,5 @@
 \_def \_bye {\_par \_vfill \_supereject \_end}
 \_public \bye ;
 
-
 \_endcode % -------------------------------------
 
-All macros from plain TeX are rewritten here. Differences are mentioned in
-the documentation below.
-
-The `\dospecials` works like in plin TeX but does nothing with `_`.
-If you need to do the same with this character, you can re-define:
-
-\begtt
-   \addto \dospecials{\do\_}
-\endtt
-
-The shortcuts like `\chardef\@one` is not defined in \OpTeX/. Use normal
-numbers instead of such obscurities.
-
-The `\magstep` is defined with \space, no with \relax, in order to be
-expandable.
-
-The `\strutbox` is declared as 10pt size dependent (like in plainTeX), but
-the macro `\setbaselineskip` (from OPmac) redefines it.
-
-Few character codes are set for backward compatibility. But old obscurities
-(from plain TeX) are not supported -- an error message about directly using
-of the desired character is prepared instead). User can re-define the control
-sequences `\l`, `\L`, `\aa`, `\copyright` etc. of course.
-
-The accents commands like `\v`, `\.`, `\H`, etc. are not defined. Use the
-accented characters directly -- it is best solution. But you can use the
-macro `\oldaccents` which defines accented macros. 

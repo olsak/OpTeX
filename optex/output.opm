@@ -3,24 +3,24 @@
 \_codedecl \nopagenumbers {Output routine <2020-03-28>} % preloaded in format
 
    \_doc -----------------------------
-   `\_optexouput` is default output routine. You can create another...
+   \`\_optexoutput` is default output routine. You can create another...
    \_cod -----------------------------
 
 \_output={\_optexoutput}
 \_def \_optexoutput{\_begoutput \_shipout\_completepage \_endoutput}
 
    \_doc -----------------------------
-   If you need another functionality implemented in output routine, you can
-   decalre `\addto\_begoutput{...}` or `\addto\_endoutput`. The settings
+   Default \`\_begoutput` and \`\_endoutput` is defined.
+   If you need another functionality implemented in the output routine, you can
+   \^`\addto``\_begoutput{...}` or \^`\addto``\_endoutput{...}`. The settings
    here is local in the `\output` group.
 
-   The `\_prepoffsets` can set `\hoffset` differently for left or right
-   page, it is re-defined by `\margins`, see \ref[margins] for more datail.
+   The \`\_prepoffsets` can set `\hoffset` differently for left or right
+   page. It is re-defined by the \^`\margins` macro..
 
-   The `\_regmark` tokens list includes accumulated `#2` from `\regmacro`,
-   see section \ref[maketoc]. Logos and another macros are re-defined
-   here (locally) for their usage in headlines or footlines.
-   \endtt 
+   The \^`\_regmark` tokens list includes accumulated `#2` from the \^`\regmacro`.
+   Logos and another macros are re-defined here (locally) for their usage 
+   in headlines or footlines.
    \_cod -----------------------------
 
 \_def \_begoutput{\_incr\_gpageno 
@@ -33,22 +33,23 @@
 \_def \_prepoffsets {}
 
    \_doc -----------------------------
-   `\_gpageno` counts pages from one in whole document
+   \`\gpageno` counts pages from one in whole document
    \_cod -----------------------------
 
 \_newcount\_gpageno
 \_public \gpageno ;
 
    \_doc -----------------------------
-   The `\_completepge` is similar what plain \TeX/ does in its oupput routine.
-   New is only `\_backgroundbox`. It is `\vbox` with zero height with its
-   contents (from `\pgbackground`) llaped down. It is shifted directly to the 
+   The \`\_completepage` is similar what plain \TeX/ does in its output routine.
+   New is only \`\_backgroundbox`. It is `\vbox` with zero height with its
+   contents (from \^`\pgbackground`) llaped down. It is shifted directly to the 
    left-upper corner of the paper. 
 
-   The `\_ensureblack` sets the typesetting of its parameter locally to `\Black`
+   The \`\_ensureblack` sets the typesetting of its parameter locally to `\Black`
    color. We needn't do this if colors are never used in the document. So,
    default value of the `\_ensureblack` macro is empty. But first usage of 
-   color macros in the document re-defines `\_ensureblack`.  
+   color macros in the document re-defines `\_ensureblack`.
+   See the section~\ref[colors] for more details.  
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox{%
@@ -63,8 +64,8 @@
 \_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to0pt{\_kern-\voffset #1\_vss}}
 
    \_doc -----------------------------
-   `\_makeheadline` creates `\vbox to0pt` with its contents (the `\headline`) 
-   shifted by `\headlinedist` up. 
+   \`\_makeheadline` creates `\vbox to0pt` with its contents (the \^`\headline`) 
+   shifted by \^`\headlinedist` up. 
    \_cod -----------------------------
 
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse 
@@ -75,7 +76,7 @@
 }
 
    \_doc -----------------------------
-   The `\_makefootline` appends the `\footline` to the page-body box. The
+   The \`\_makefootline` appends the \^`\footline` to the page-body box.
    \_cod -----------------------------
 
 \_def\_makefootline{\_istoksempty \_footline \_iffalse 
@@ -85,9 +86,10 @@
 }
 
    \_doc -----------------------------
-   The `\_pagecontents` is similar as in plain \TeX/. The only differnece is
-   that `\_pagedest` is inserted at the top of `\_pagecontents` and 
-   `\_ensureblack` is applied to `\_topins` and `\_footins` material.
+   The \`\_pagecontents` is similar as in plain \TeX/. The only differnece is
+   that the \`\_pagedest` is inserted at the top of `\_pagecontents` and 
+   \^`\_ensureblack` is applied to the \^`\topins` and \^`\footins` material.\nl
+   The \`\_footnoterule` is defined here.
    \_cod -----------------------------
 
 \_def\_pagecontents{\_pagedest % destination of the page 
@@ -96,14 +98,18 @@
   \_ifvoid\_footins \_else % footnote info is present
     \_vskip\_skip\_footins
     \_ensureblack{\_footnoterule \_openfnotestack \_unvbox\_footins}\fi
-  \_ifraggedbottom \kern-\_dimen0 \_vfil \_fi
+  \kern-\_dimen0 \_vskip \_pgbottomskip
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}
 \_def \_footnoterule {\kern-3pt \hrule width 2truein \kern 2.6pt } 
 
    \_doc -----------------------------
-   The macros used in the context of the output routine
+   \`\pageno`, \`\folio`, \`\nopagenumbers`, \`\advancepageno`
+   and \`\normalbottom`
+   used in the context of the output routine
    from plain \TeX/ is defined here.
+   Only the \`\raggedbottom` macro is defined differently. We use the
+   \^`\pgbottomskip` register here which is set to 0\,pt by default.
    \_cod -----------------------------
 
 \_countdef\_pageno=0 \_pageno=1 % first page is number 1
@@ -112,17 +118,20 @@
 \_def \_advancepageno {%
    \_ifnum\_pageno<0 \_global\_advance\_pageno by-1 \_else \_incr\_pageno \_fi 
 } % increase |pageno|
-\_newifi\_ifraggedbottom
-\_def \_raggedbottom {\_topskip=10pt plus60pt \_raggedbottomtrue}
-\_def \_normalbottom {\_topskip=10pt \_raggedbottomfalse} % undoes \raggedbottom
-\_public
-   \pageno \folio \nopagenumbers \advancepageno \raggedbottom \normalbottom ;
+\_def \_raggedbottom {\_topskip=\_dimexpr\_topskip plus60pt \_pgbottomskip=0pt plus1fil\_relax}
+\_def \_normalbottom {\_topskip=\_dimexpr\_topskip \_pgbottomskip=0pt\_relax}
+
+\_public \pageno \folio \nopagenumbers \advancepageno \raggedbottom \normalbottom ;
 
    \_doc -----------------------------
    Macros for footnotes are the same as in plain \TeX. There is only one
-   difference: `\_vfootnote` is implemented as `\_opfootnote` with empty
+   difference: \`\vfootnote` is implemented as \`\_opfootnote` with empty
    parameter `#1`. This parameter should do a local settings inside
-   `\_footins` group and it does it when `\fnote` macro is used.
+   the \`\footins` group and it does it when `\fnote` macro is used.\nl
+   The `\_opfootnote` nor `\vfootnote` don't take the footnote text
+   as a parameter. This is due to user can do catcode settings (like inline
+   verbatim) in the footnote text. This idea is adapted from plain \TeX.\nl
+   The \`\footnote` and \`\footstrut` is defined as in plain \TeX/.
    \_cod -----------------------------
 
 \_newinsert\_footins
@@ -153,7 +162,9 @@
    \footins \footnote \vfootnote \footstrut ;
 
    \_doc -----------------------------
-   The `\_topins` macros are the same as in plain \TeX/.
+   The \`\topins` macros 
+   \`\topinsert`, \`\midinsert`, \`\pageinsert`, \`\endinsert`
+   are the same as in plain \TeX/.
    \_cod -----------------------------
 
 \_newinsert\_topins
@@ -177,11 +188,10 @@
     \_vbox to\_vsize {\_unvbox0 \_kern-\_dimen0}% depth is zero
     \_else \_box0 \_nobreak \_bigskip \_fi}\_fi\_endgroup}
 
-\_public
-    \topins \topinsert \midinsert \pageinsert \endinsert ;
+\_public \topins \topinsert \midinsert \pageinsert \endinsert ;
 
    \_doc -----------------------------
-   The `\draft` macro is an example of usage `\_pgbackground` to create 
+   The \`\draft` macro is an example of usage `\_pgbackground` to create 
    water color marks.
    \_cod -----------------------------
 
@@ -202,32 +212,34 @@
 \_endcode % -------------------------------------
 
 
-The output routine `\_optexoutput` is similar as in plain TeX. It does:
+The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
-\begitexm
-* `\begoutput` which does:
+\begitems
+* \^`\_begoutput` which does:
   \begitems
-  * increments `\gpageno`, 
-  * prints `\_Xpage{<gpageno>}{<pageno>}` to the `.ref` file (if `\openref` is active), sets `\hoffset` and 
+  * increments \^`\gpageno`, 
+  * prints `\_Xpage{<gpageno>}{<pageno>}` to the `.ref` file 
+    (if \^`\openref` is active), 
   * calculates `\hoffset`,
-  * sets local meaning of macros for headlines/footlines (see `\_regmacro`).
+  * sets local meaning of macros used in headlines/footlines (see \^`\regmacro`).
   \enditems
-* `\shipout\_completepage, which is `\vbox` of --
+* `\shipout`\^`\_completepage`, which is `\vbox` of --
   \begitems
-  * backrground box, if `\pgbackround` is non-empty,
-  * headline box, if `\headline` is nonempty,
-  * \vbox to\vsize of `\pagecontents` which cosnists of --
+  * backrground box, if \^`\pgbackground` is non-empty,
+  * headline box by \^`\_makeheadline`, if the \^`\headline` is nonempty,
+  * `\vbox to\vsize` of \^`\_pagecontents` which cosnists of --
     \begitems
-    * `\_pagedest`, the page destination `pg:<gpageno>` for hyperlinks is created here, 
-    * `\_topins` box if non-empty (from `\topinsers`),
+    * \^`\_pagedest`, the page destination `pg:<gpageno>` for hyperlinks is created here, 
+    * \^`\topins` box if non-empty (from \^`\topinsert`s),
     * `\box255` with completed vertical material from main vertical mode,
-    * `\_footnoterule` and `\_footins` box if nonempty (from `\fnote`, `\footnote`),
+    * \^`\_footnoterule` and \^`\footins` box if nonempty (from \^`\fnote`, \^`\footnote`),
+    * \^`\pgbottomskip` (default is 0\,pt).
     \enditems
-  * footline box, if `\footline` is nonempty
+  * footline box by `\_makefootline`, if the \^`\footline` is nonempty
   \enditems 
-* `\endoutput` which does:
+* \^`\_endoutput` which does:
   \begitems
-  * increments `\pageno` using `\_advancepageno`
-  * runs `\_dosupereject` if needed.
+  * increments \^`\pageno` using \^`\advancepageno`
+  * runs output routine repeatedly if \^`\dosupereject` is activated.
   \enditems
 \enditems

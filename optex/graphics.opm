@@ -3,16 +3,16 @@
 \_codedecl \inspic {Graphics <2020-04-12>} % preloaded in format
 
    \_doc -----------------------------
-   `\inspic` accepts old syntax `\inspic <filename><space>`
+   \`\inspic` accepts old syntax `\inspic <filename><space>`
    or new syntax `\inspic{<filename>}`. So, we need to define
-   two auxiliary macros `\_inspicA` and `\_inspicB`.
+   two auxiliary macros \`\_inspicA` and \`\_inspicB`.
 
    You can include more `\pdfximage` parameters (like `page<number>`)
-   in the `\_picparams` macro.
+   in the \`\_picparams` macro.
 
    All `\inspic` macros are surrounded in `\hbox` in order user can
    write `\moveright\inspic ...` or something similar.
-   \_cod \_fin -----------------------
+   \_cod -----------------------------
 
 \_def\_inspic{\_hbox\_bgroup\_isnextchar\_bgroup\_inspicB\_inspicA}
 \_def\_inspicA #1 {\_inspicB {#1}}
@@ -27,13 +27,13 @@
 \_public \inspic ;
 
    \_doc -----------------------------
-   Inkscape is able to save a picture to `*.pdf` file and labels for the ficture
-   to `*.pdf_tex` file. The second file is in \LaTeX/ format and it is intended to read 
-   immediately it after `*.pdf` in included in order to place labels of this ficture in
-   the same font as document is printed. 
-   We need to read this \LaTeX/ file by plain \TeX/ macros when `\inkinspic` is used. 
-   These macros are stored in the `\_inkdefs` toknes list and it is used
-   localy in the group. The solution is borrowed from OPmac trick 0032. 
+   Inkscape is able to save a picture to `*.pdf` file and labels for the picture
+   to `*.pdf_tex` file. The second file is in \LaTeX/ format (unfortunately) 
+   and it is intended to read immediately it after `*.pdf` in included 
+   in order to place labels of this ficture in the same font as document is printed. 
+   We need to read this \LaTeX/ file by plain \TeX/ macros when \`\inkinspic` is used. 
+   These macros are stored in the \`\_inkdefs` toknes list and it is used
+   locally in the group. The solution is borrowed from OPmac trick 0032. 
    \_cod -----------------------------
 
 \_def\_inkinspic{\_hbox\_bgroup\_isnextchar\_bgroup\_inkinspicB\_inkinspicA}
@@ -67,9 +67,10 @@
 \_public \inkinspic ;
 
    \_doc ----------------------------
-   `\pdfscale` and `\pdfrotate` macros are implemented by `\pdfsetmatrix`
-   primitive. or rotating we need to knos values of sin, cos function.
-   We use Lua code for this.
+   \`\pdfscale``{<x-scale>}{<y-scale>}` and \`\pdfrotate``{<degrees>}` 
+   macros are implemented by `\pdfsetmatrix`
+   primitive. We need to know values of sin, cos function in
+   the `\pdfrotate`. We use Lua code for this.
    \_cod ----------------------------
 
 \_def\_pdfscale#1#2{\_pdfsetmatrix{#1 0 0 #2}}
@@ -85,10 +86,12 @@
 \_public \pdfscale \pdfrotate ;
 
    \_doc -----------------------------
-   The `\transformbox` is copied from OPmac trick 0046. The `\rotbox` is a
-   combination of `\rotsimple` from OPmac trick 0101 and `\transformbox`.
+   The \`\transformbox``{<transformation>}{<text>}` 
+   is copied from OPmac trick 0046.\nl
+   The \`\rotbox``{<degrees>}{<text>}` is a combination of 
+   `\rotsimple` from OPmac trick 0101 and the `\transformbox`.
    Note, that `\rotbox{-90}` puts the rotated text to the height of the outer 
-   box (depth is zero) because code from `\rotsimple` is precessed. 
+   box (depth is zero) because code from `\rotsimple` is processed. 
    But `\rotbox{-90.0}` puts the rotated text to
    the depth of the outer box (height is zero) because `\transformbox` is
    processed. 
@@ -143,17 +146,20 @@
 \_public \transformbox \rotbox ;
 
    \_doc ---------------------------
-   The `\_scantwodimens` scans two objects with the syntactic rule <dimen>
-   and returns `{<number>}{<number>}` in sp unit.
-
-   The `\puttext <right> <up>{<text>}` puts the <text> to desired place:
+   \`\_scantwodimens` scans two objects with the syntactic rule `<dimen>`
+   and returns `{<number>}{<number>}` in `sp` unit.
+   \nl
+   \`\puttext` `<right> <up>{<text>}` puts the `<text>` to desired place:
    From current point moves <down> and <right>, puts the <text> and returns
-   back. The cuuren tpoint is unchanged after this macro ends.
-   
-   The  `\putpic <right> <up> <width> <height> {<image-file>}`
+   back. The current point is unchanged after this macro ends.
+   \nl
+   \`\putpic` `<right> <up> <width> <height> {<image-file>}`
    does `\puttext` with the image scaled to desired <width> and <height>.
    If <with> or <height> is zero, natural dimension is used.
-   The `\nospec` is a shortcut to such natural dimension.
+   The \`\nospec` is a shortcut to such natural dimension.
+   \nl
+   \`\backgroundpic``{<image-file>}` puts the image to 
+   the background of each page. It it used in the slides style, for example.
    \_cod ---------------------------
 
 \_def\_scantwodimens{%
@@ -184,32 +190,14 @@
 \_public \puttext \putpic \backgroundpic ;
 
    \_doc -----------------------------
-   You can use expandable `\_bp{<dimen>}` convertor from
-   \TeX/ `<dimen>` (or from an expression accepted by
-   `\dimexpr` primitive) to a decimal value in big points
-   (used as natural unit in the PDF format). So, you can write, for example:
-   \begtt
-   \pdfliteral{q \_bp{.3\hsize-2mm} \_bp{2mm} m 0 \_bp{-4mm} l S Q}
-   \endtt
-   You can use expandable `\_expr{<expression>}` for analogical purposes.
-   The `<expression>` can include `+-*/()` and decimal numbers in common syntax.
-   \_cod -----------------------------
-
-\_def\_decdigits{3} % digits after decimal point in \_bp and \_expr outputs.
-\_def\_pttopb{%
-   \_directlua{tex.print(string.format('\_pcent.\_decdigits f',
-               token.scan_dimen()/65781.76))}%  pt to bp conversion
-}
-\def\_bp#1{\_ea\_pttopb\_dimexpr#1\_relax}
-\def\_expr#1{\_directlua{tex.print(string.format('\_pcent.\_decdigits f',#1))}}
-
-   \_doc -----------------------------
-   `\)circle<x><y>` creates an ellipse with `<x>` axis and `<y>` axix.
+   \`\_circle``{<x>}{<y>}` creates an ellipse with `<x>` axis and `<y>` axix.
    The origin is in the center.
-   `\_oval<x><y><roudness>` creates an oval with `<x>`, `<y>` size and with 
+   \nl
+   \`\_oval``{<x>}{<y>}{<roudness>}` creates an oval with `<x>`, `<y>` size and with 
    given `<roundness>`. The real size is bigger by 2`<roundness>`. The
-   orgigin is at the left bottom corner.
-   `\_mv<x><y>{<curve>}` moves current point to `<x>`, `<y>`, crates the
+   origin is at the left bottom corner.
+   \nl
+   \`\_mv``{<x>}{<y>}{<curve>}` moves current point to `<x>`, `<y>`, crates the
    `<curve>` and retuns back the current point.
    All these macros are fully expandable and they can be used in the
    `\pdfliteral` argument.
@@ -236,8 +224,14 @@
 \def\_mv#1#2#3{1 0 0 1 \_expr{#1} \_expr{#2} cm #3 1 0 0 1 \_expr{-(#1)} \_expr{-(#2)} cm}
 
    \_doc -----------------------------
-   The `\inoval` is an example of `\_oval` usage.
-   The `\incircle` is an example of `\_circle` usage.
+   The \`\inoval``{<text>}` is an example of \^`\_oval` usage.\nl
+   The \`\incircle``{<text>}` is an example of \^`\_circle` usage.\nl
+   The \`\ratio`, \`\lwidth`, \`\fcolor`, \`\lcolor`, \`\shadow` and \`\overlapmargins`
+   are parameters, they can be set by user in optional brackets `[...]`.
+   For example `\fcolor=\Red` does `\_let\_fcolorvalue=\Red` and it means
+   filling color.\nl
+   The \`\_setflcolor` uses the \^`\_fillstroke` macro to separate filling
+   color and drawing color.
    \_cod -----------------------------
 
 \_newdimen \_lwidth 
@@ -256,7 +250,6 @@
    \_def\_fillstroke##1##2{##2}%
    \_edef#1{#1\_space\_lcolorvalue\_space}%
 }
-
 \_optdef\_inoval[]{\_vbox\_bgroup
    \_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
    \_shadow=N \_overlapmargins=N \_hhkern=0pt \_vvkern=0pt
@@ -322,15 +315,14 @@
 }
 \_def\_circlet#1#2#3{\_circle{#1}{#2}}
 
-\_public 
-   \inoval \incircle \ratio \lwidth \fcolor \lcolor \shadow \overlapmargins ;
+\_public \inoval \incircle \ratio \lwidth \fcolor \lcolor \shadow \overlapmargins ;
 
    \_doc -----------------------------
    A shadow effect is implemented here. The shadow is equal to the
    silhouette of the given path in gray-transparent color shifted by
-   `\shadowmoveto` vector and with blurred boundary.
-   A waistline with the width 2*`\shadowb` around the boundary is blurred.
-   The `\shadowlevels` levels of transparent shapes is used for creating
+   \`\_shadowmoveto` vector and with blurred boundary.
+   A waistline with the width 2*\`\_shadowb` around the boundary is blurred.
+   The \`\shadowlevels` levels of transparent shapes is used for creating
    this effect. The `\shadowlevels+1/2` level is equal to the shifted given path.
    \_cod -----------------------------
 
@@ -342,9 +334,9 @@
 
    \_doc -----------------------------
    The `\_pdfpageresources` primitive is used to define transparency.
-   It does not work when used in a box. So, we use it at begining of
-   output routine. The modification of output routine is done only once
-   when the shadow effect is used first.
+   It does not work when used in a box. So, we use it at the begining of
+   the output routine. The modification of the output routine is done 
+   using \`\_insertshadowresources` only once when the shadow effect is used first.
    \_cod -----------------------------
 
 \_def\_insertshadowresources{%
@@ -359,6 +351,11 @@
    }%
    \_global\_let\_insertshadowresources=\_relax
 }
+
+   \_doc -----------------------------
+   The \`\_doshadow``{<curve>}` does the shadow effect.
+   \_cod -----------------------------
+
 \_def\_doshadow#1{\_vbox{%
     \_insertshadowresources
     \_tmpnum=\_numexpr (\_shadowlevels-1)/2 \_relax
@@ -383,12 +380,12 @@
 }}
 
    \_doc -----------------------------
-   A generic macro `\clipinpath{<x>}{<y>}{<curve>}{<text>}` declares
-   a clipping path by <curve> shifted by <x>, <y>. The <text> is typesset
+   A generic macro \`\_clipinpath``<x> <y> <curve> <text>` declares
+   a clipping path by the `<curve>` shifted by the `<x>`, `<y>`. The `<text>` is typeset
    when such clipping path is active. Dimensions are given by bp without the unit here.
-   Macros `\clipinoval <x> <y> <width> <height> {<text>}` and
-   `\clipincircle <x> <y> <width> <height> {<text>}` are defined here.
-   These marcos read normal \TeX/ dimensions in their parameters.
+   The macros \`\clipinoval` `<x> <y> <width> <height> {<text>}` and
+   \`\clipincircle` `<x> <y> <width> <height> {<text>}` are defined here.
+   These macros read normal \TeX/ dimensions in their parameters.
    \_cod -----------------------------
 
 \_def\_clipinpath#1#2#3#4{% #1=x-pos[bp], #2=y-pos[bp], #3=curve, #4=text
