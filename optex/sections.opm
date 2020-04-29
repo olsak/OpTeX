@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2020-03-14>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2020-03-28>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -10,10 +10,10 @@
    command. 
    \_cod ---------------------------
 
-\_def \_titfont  {\_scalemain\_boldify\_typoscale[\_magstep4/\_magstep5]}
-\_def \_chapfont {\_scalemain\_boldify\_typoscale[\_magstep3/\_magstep3]}
-\_def \_secfont  {\_scalemain\_boldify\_typoscale[\_magstep2/\_magstep2]}
-\_def \_seccfont {\_scalemain\_boldify\_typoscale[\_magstep1/\_magstep1]}
+\_def \_titfont  {\_scalemain\_typoscale[\_magstep4/\_magstep5]\_boldify}
+\_def \_chapfont {\_scalemain\_typoscale[\_magstep3/\_magstep3]\_boldify}
+\_def \_secfont  {\_scalemain\_typoscale[\_magstep2/\_magstep2]\_boldify}
+\_def \_seccfont {\_scalemain\_typoscale[\_magstep1/\_magstep1]\_boldify}
 
    \_doc ---------------------------
    The \`\tit` macro is defined by `\eoldef`, it means that the parameter is
@@ -406,5 +406,6 @@
 
 \_endcode % -------------------------------------
 
+2020-04-28 \_secfonts etc: \_boldify is last.
 2020-04-22 \_chapx, \_secx, \_seccx rewritten
 2020-03-14 introduced

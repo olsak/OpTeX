@@ -17,7 +17,7 @@
       \_lccode"#2="#1
       \_uccode"#1="#2
    \_fi
-   \_ea \_tmp \fi
+   \_ea \_tmp \_fi
 }
 \_tmp
 00AA .

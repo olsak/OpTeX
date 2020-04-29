@@ -207,7 +207,8 @@
 \_chardef\S="9F
 \_def\l{\_errmessage{\_usedirectly ł}}
 \_def\L{\_errmessage{\_usedirectly Ł}}
-\def\_{\_ifmmode \_kern.06em \_vbox{\hrule width.3em}\_else _\fi} % obsolete
+%\def\_{\_ifmmode \kern.06em \vbox{\hrule width.3em}\else _\fi} % obsolete
+\_def\_{\_hbox{_}}
 \_def\dag{\_errmessage{\_usedirectly †}} 
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
 %\_def\copyright{\_errmessage{\_usedirectly ©}}

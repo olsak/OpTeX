@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2020-04-22>}
+\_codedecl \printdoc {Macros for documentation printing <2020-04-28>}
 
    \_doc -----------------------------
    General decalarations.
@@ -174,7 +174,7 @@
    Main documentation point and hyperlinks to/from it.
    \_cod -----------------------------   
 
-\def\`#1`{\edef\tmp{\csstring#1}\iindex{\tmp}%
+\def\`#1`{\leavevmode\edef\tmp{\csstring#1}\iindex{\tmp}%
    \ifcsname cs:\tmp\endcsname\else \dest[cs:\tmp]\fi
    \sxdef{cs:\tmp}{}%
    \hbox{\ifcsname cs:^\tmp\endcsname 
@@ -182,14 +182,14 @@
             {\tt\Red\csstring\\\tmp}\fi}%
 }
 
-\def\^`#1{\edef\tmp{\csstring#1}\iindex{\tmp}%
+\def\^`#1{\leavevmode\edef\tmp{\csstring#1}\iindex{\tmp}%
    \hbox{\ifcsname cs:^\tmp\endcsname \else \dest[cs:^\tmp]\sxdef{cs:^\tmp}{}\fi
          \_link[cs:\tmp]{\Blue}{\tt\string#1}}%
    \futurelet\next\cslinkA
 }
 \def\cslinkA{\ifx\next`\_ea\_ignoreit \else \_ea\_ea\_ea`\_ea\_string\fi}
 
-\def\~`#1{\edef\tmp{\csstring#1}\iindex{\tmp}%
+\def\~`#1{\leavevmode\edef\tmp{\csstring#1}\iindex{\tmp}%
    \hbox{\_link[cs:^\tmp]{\Blue}{\tt\string#1}}%
    \futurelet\next\cslinkA
 }
@@ -257,3 +257,8 @@ And main documentation point is hyperlink to the user documentation point,
 if such point exists. Finally, the 
 \code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
 hyperlinks to the user documentation point.
+
+\endinput
+
+2020-04-28 \levevmode in \^ macros added (bug fixed)
+2020-04-22 released

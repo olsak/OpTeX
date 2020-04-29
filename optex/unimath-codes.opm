@@ -15,9 +15,10 @@
    \Chi \Psi \Omega \_relax
 
 \_umathnumB="03B1
-\_greekdef \alpha \beta \gamma \delta \epsilon \zeta \eta \theta \iota \kappa
+\_greekdef \alpha \beta \gamma \delta \varepsilon \zeta \eta \theta \iota \kappa
    \lambda \mu \nu \xi \omicron \pi \rho \varsigma \sigma \tau \upsilon
-   \varphi \chi \psi \omega \varbeta \vartheta \phi \varpi \_relax
+   \varphi \chi \psi \omega \vardelta \epsilon \vartheta \varkappa \phi
+   \varrho \varpi \_relax
 
    \_doc -----------------------------
    The math alphabets are declared here using the \^`\_umathrange` macro.
@@ -175,6 +176,7 @@
 \_nitgreek \_nitvariables \_rmdigits   % default setting
 
 \_Umathcode `- = 2 1 "2212
+%\_Umathcode`: = 3 1 "3A  % mathclass defines it as 6 1 "3A (punctuation)
 \_let\{=\lbrace \_let\}=\rbrace
 
 \_protected\_def \_sqrt       {\_Uradical 1 "0221A }
@@ -252,7 +254,6 @@
 \_let \hksearow=\hksearrow
 \_let \hkswarow=\hkswarrow
 
-\_let \varepsilon=\epsilon
 \_let \upalpha=\mupalpha         
 \_let \upbeta=\mupbeta          
 \_let \upgamma=\mupgamma         
@@ -348,5 +349,5 @@ can define:
 \_endinput
 
 History:
+2020-04-30  Bug fix: \phi, \varpi etc. were bad encoded
 2020-04-09  Bug fix: \Udelcode`<, \Udelcode`> added
- 

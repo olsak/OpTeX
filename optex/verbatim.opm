@@ -208,7 +208,7 @@
    \_tmpnum=\_vinolines
    \_advance\_tmpnum by-\_viline
    \_ifnum\_tmpnum<0
-      \_openin\_vifile=\_vifilename\_space
+      \_openin\_vifile={\_vifilename}%
       \_global\_viline=0
    \_else
       \_edef\_vinolines{\_the\_tmpnum}%

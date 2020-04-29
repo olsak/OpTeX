@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \typosize {Font managing macros from OPmac <2020-04-14>} % loaded in format
+\_codedecl \typosize {Font managing macros from OPmac <2020-04-28>} % loaded in format
 
    \_doc -----------------------------
    \`\typosize` `[<font-size>/<baselineskip>]` sets given parameters.
@@ -23,7 +23,7 @@
     \_edef\_sizemtext{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
     \_tmpdim=0.7\_tmpdim
     \_edef\_sizemscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
-    \_tmpdim=#1\_ptunit \_tmpdim=0.5\_tmpdim
+   \_tmpdim=#1\_ptunit \_tmpdim=0.5\_tmpdim
     \_edef\_sizemsscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
     \_fi
 }
@@ -41,7 +41,7 @@
       \_edef\_tmp{[\_ea\_ignorept\_the\_tmpdim/}\_fi
    \_ifx$#2$\_edef\_tmp{\_tmp]}\_else
       \_settmpdim{#2}\_baselineskip
-      \_edef\_tmp{\_tmp \_ea\_ignorept\_the\_tmpdim]}\fi
+      \_edef\_tmp{\_tmp \_ea\_ignorept\_the\_tmpdim]}\_fi
    \_ea\_typosize\_tmp 
 }
 \def\_settmpdim#1#2{%
@@ -95,7 +95,7 @@
    \_ifdim \_mainfosize=0pt
        \_mainfosize=10pt  \_mainbaselineskip=12pt
        \_let \_setmainvalues=\_setmainvaluesL       
-    \fi
+    \_fi
    \_optsize=\_mainfosize  \_baselineskip=\_mainbaselineskip
 }
 \_public \scalemain \mainfosize \mainbaselineskip ;
@@ -146,8 +146,7 @@
 
 \_protected\_def \_boldify {%
    \_let \_setmainvalues=\_setmainvaluesL   
-   \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath
-   \_let\_it=\_bi \_let\_rm=\_bf \_rm
+   \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath \_bf
 }
 \_public \em \boldify ;
 
@@ -171,5 +170,6 @@
 \_endcode % -------------------------------------
 
 History:
+2020-04-28 \boldify: removed \let\_rm=\_bf
 2020-04-14 \_setmainvaluesL: \_ifmmode test added
 2020-03-27 \_setmainvalues: \_splittopskip=\_topskip added

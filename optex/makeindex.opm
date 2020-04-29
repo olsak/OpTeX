@@ -107,11 +107,11 @@
    \_ea\_let \_ea\_compoundchars \_csname _compoundchars\_sortinglang\endcsname
    \_ea\_let \_ea\_ignoredchars \_csname _ignoredchars\_sortinglang\endcsname
    \_ifx \_sortingdata\_relax \_addto\_nold{ sortingdata}%
-       \_let \_sortingdata = \_sortingdataen \fi
+       \_let \_sortingdata = \_sortingdataen \)fi
    \_ifx \_compoundchars\_relax \_addto\_nold{ compoundchars}%
-       \_let \_compoundchars = \_compoundcharsen \fi
+       \_let \_compoundchars = \_compoundcharsen \_fi
    \_ifx \_ignoredchars\_relax \_addto\_nold{ ignoredchars}%
-       \_let \_ignoredchars = \_ignoredcharsen \fi
+       \_let \_ignoredchars = \_ignoredcharsen \_fi
    \_ifx \_compoundchars\_empty \_else
       \_edef \_compoundchars {\_detokenize\_ea{\_compoundchars} }\_fi % all must be catcode 12
    \_def \_act ##1{\_ifx##1\_relax \_else
@@ -420,7 +420,7 @@
    \_ifx#1\relax \_global\_addto \_iilist {#1}%
                  \_gdef #1{#2:#4}%
    \else \_global\_addto #1{,#2:#4}%
-   \fi
+   \_fi
    \sxdef{_pgi:#2}{#3}%
 }
 

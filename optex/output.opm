@@ -97,7 +97,7 @@
   \_dimen0=\dp255 \_unvbox255 % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
     \_vskip\_skip\_footins
-    \_ensureblack{\_footnoterule \_openfnotestack \_unvbox\_footins}\fi
+    \_ensureblack{\_footnoterule \_openfnotestack \_unvbox\_footins}\_fi
   \kern-\_dimen0 \_vskip \_pgbottomskip
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}

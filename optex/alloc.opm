@@ -45,7 +45,7 @@
    \_else
       \_global#3#1=\_cs{_#2alloc}%
       \_wlog{\_string#1=\_ea\_string\_csname #2\_endcsname\_the\_cs{_#2alloc}}%
-   \fi
+   \_fi
 }
 
    \_doc -----------------------------

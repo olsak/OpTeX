@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-03-14>} % preloaded in format 
+\_codedecl \sin {Math macros plus mathchardefs <2020-04-27>} % preloaded in format 
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -318,7 +318,7 @@
 \_protected\_def\tanh {\_mathop{\_rm tanh}\_nolimits}
 \_protected\_def\cot {\_mathop{\_rm cot}\_nolimits}
 \_protected\_def\coth {\_mathop{\_rm coth}\_nolimits}
-\_protected\_def\sec {\_mathop{\_rm sec}\_nolimits}
+%\_protected\_def\sec {\_mathop{\_rm sec}\_nolimits} % \sec is section
 \_protected\_def\csc {\_mathop{\_rm csc}\_nolimits}
 \_protected\_def\max {\_mathop{\_rm max}}
 \_protected\_def\min {\_mathop{\_rm min}}
@@ -904,15 +904,43 @@
 \_public \not ;
 
    \_doc -----------------------------
+   \`\mathstyles``{<math list>}`
+   behaves like `{<math list>}`, but you can use following commands in the
+   `<math list>`:
+   \begitems
+   * \`\currstyle` which expands to `\displaystyle`, `\textstyle`,
+     `\scriptstyle` or `\scriptscriptstyle` depending on the current math style
+     when \^`\mathstyles` was opened. 
+   * `\dobystyle{<D>}{<T>}{<S>}{<SS>}` is expandable macro. It expands to
+     `<D>`, `<T>`, `<S>` or `<SS>` depending on the current math style
+     when \^`\mathstyles` was opened.
+   * The value of the \`\stylenum` is 0, 1, 2 or 3 
+     depending on the current math style when \^`\mathstyles` was opened.  
+   \enditems
+   Example of usage of \^`\mathstyles`: 
+   `\def\mathframe#1{\mathstyles{\frame{$\currstyle#1$}}}`.
+   \_cod -----------------------------   
+
+\_newcount\_stylenum
+\_def\_mathstyles#1{{\_mathchoice{\_stylenum0 #1}{\_stylenum1 #1}%
+                                {\_stylenum2 #1}{\_stylenum1 #1}}}
+\_def\_dobystyle#1#2#3#4{\_ifcase\_stylenum#1\_or#2\_or#3\_or#4\_fi}
+\_def\_currstyle{\dobystyle\_displaystyle\_textstyle\_scriptstyle\_scriptscriptstyle}
+\_public \mathstyles \dobystyle \currstyle \stylenum ;
+
+   \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
    It behaves like `\hbox{<text>}` but the `<text>` is scaled to smaller
    size if it is used in scriptstye or scriptscript style.
    \_cod -----------------------------
 
-\_def\_mathbox#1{{\_mathchoice{\_mathboxA\_displaystyle[]{#1}}{\_mathboxA\_textstyle[]{#1}} 
-    {\_mathboxA\_textstyle[700]{#1}}{\_mathboxA\_textstyle[500]{#1}}}} 
-\_def\_mathboxA#1[#2]#3{\_hbox{\_everymath={#1}\_if^#2^\_else\_typoscale[#2/]\_relax\_fi #3}} 
+\_def\mathbox#1{{\_mathstyles{\_hbox{%
+   \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
+   \_else \_typoscale[\_dobystyle{}{}{700}{500}/]\_fi #1}}}%
+}
 \_public \mathbox ;
 
 \_endcode %---------------------------------------------------
 
+2020-04-27 \mathstyles introduced
+2020-03-14 implemented

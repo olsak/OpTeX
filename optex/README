@@ -8,6 +8,8 @@ See http://petr.olsak.net/optex
 
 History:
 
+<0.11> \phi, \varpi in Unicode: bug fixed 
+       \mathstyles introduced.
 <0.10> Technical documentation added 
        \_famdecl instedad \_fontdecl in font family files (incompatible change).
 <0.09> Syntax highlighting implemented.

@@ -190,7 +190,7 @@
       \_protected\_edef #1{\noexpand\_famdepend\noexpand#1{_f:\noexpand\_currfamily:\_tmp}}%
       \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
       \_def#3{\_fontdef#2{#4}}%
-      \_ifx#1\tt \addto#1{\_fam\_ttfam}\fi
+      \_ifx#1\tt \addto#1{\_fam\_ttfam}\_fi
       \_sdef{_currvar:\csstring#2}{#1}%
    \_fi
 }
@@ -555,7 +555,7 @@ into problem with incompatible ex-heights. This problem can be solved using
 
 \def\exhcorr{\setfontsize{mag.88}}
 \famvardef\rmsans{\Heros\exhcorr\rm}
-\famvardef\itsans{\Heros\exhcorr\rm}
+\famvardef\itsans{\Heros\exhcorr\it}
 
 Compare ex-height of Termes \rmsans with Heros \rm and Termes.
 \endtt

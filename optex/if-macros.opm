@@ -16,7 +16,7 @@
    \_cod ----------------------------
 
 \_def\_newif #1{\_ea\_newifA \_string #1\_relax#1}
-\_ea\_def \_ea\_newifA \_string\if #1\_relax#2{%
+\_ea\_def \_ea\_newifA \_string\_if #1\_relax#2{%
    \_sdef{#1true}{\_let#2=\_iftrue}%
    \_sdef{#1false}{\_let#2=\_iffalse}%
    \_let#2=\_iffalse
