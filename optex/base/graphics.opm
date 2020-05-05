@@ -1,0 +1,425 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \inspic {Graphics <2020-04-12>} % preloaded in format
+
+   \_doc -----------------------------
+   \`\inspic` accepts old syntax `\inspic <filename><space>`
+   or new syntax `\inspic{<filename>}`. So, we need to define
+   two auxiliary macros \`\_inspicA` and \`\_inspicB`.
+
+   You can include more `\pdfximage` parameters (like `page<number>`)
+   in the \`\_picparams` macro.
+
+   All `\inspic` macros are surrounded in `\hbox` in order user can
+   write `\moveright\inspic ...` or something similar.
+   \_cod -----------------------------
+
+\_def\_inspic{\_hbox\_bgroup\_isnextchar\_bgroup\_inspicB\_inspicA}
+\_def\_inspicA #1 {\_inspicB {#1}}
+\_def\_inspicB #1{%
+   \_pdfximage \_ifdim\_picwidth=0pt  \_else width\_picwidth\_fi 
+               \_ifdim\_picheight=0pt \_else height\_picheight\_fi 
+               \_picparams {\_the\_picdir#1}%
+   \_pdfrefximage\_pdflastximage\_egroup}
+
+\_def\_picparams{}
+
+\_public \inspic ;
+
+   \_doc -----------------------------
+   Inkscape is able to save a picture to `*.pdf` file and labels for the picture
+   to `*.pdf_tex` file. The second file is in \LaTeX/ format (unfortunately) 
+   and it is intended to read immediately it after `*.pdf` in included 
+   in order to place labels of this ficture in the same font as document is printed. 
+   We need to read this \LaTeX/ file by plain \TeX/ macros when \`\inkinspic` is used. 
+   These macros are stored in the \`\_inkdefs` toknes list and it is used
+   locally in the group. The solution is borrowed from OPmac trick 0032. 
+   \_cod -----------------------------
+
+\_def\_inkinspic{\_hbox\_bgroup\_isnextchar\_bgroup\_inkinspicB\_inkinspicA}
+\_def\_inkinspicA #1 {\_inkinspicB {#1}}
+\_def\_inkinspicB #1{%
+  \_ifdim\_picwidth=0pt \_setbox0=\_hbox{\_inspic{#1}}\_picwidth=\_wd0 \_fi
+  \_the\_inkdefs
+  \_opinput {\_the\_picdir #1_tex}% file with labels
+  \_egroup}
+
+\_newtoks\_inkdefs  \_inkdefs={% 
+  \_def\makeatletter#1\makeatother{}% 
+  \_def\includegraphics[#1]#2{\_inkscanpage#1,page=,\_end \_inspic{#2}\_hss}% 
+  \_def\_inkscanpage#1page=#2,#3\_end{\_ifx,#2,\_else\_def\_picparams{page#2}\_fi}% 
+  \_def\put(#1,#2)#3{\_nointerlineskip\_vbox to0pt{\_vss\_hbox to0pt{\_kern#1\_picwidth 
+      \_pdfsave\_hbox to0pt{#3}\_pdfrestore\_hss}\_kern#2\_picwidth}}% 
+  \_def\begin#1{\_csname _begin#1\_endcsname}%
+  \_def\_beginpicture(#1,#2){\_vbox\_bgroup
+      \_hbox to\_picwidth{}\_kern#2\_picwidth \_def\end##1{\_egroup}}%
+  \_def\_begintabular[#1]#2#3\end#4{%
+      \_vtop{\_def\\{\_cr}\_tabiteml{}\_tabitemr{}\_table{#2}{#3}}}%
+  \_def\color[#1]#2{\_scancolor #2,}% 
+  \_def\_scancolor#1,#2,#3,{\_pdfliteral{#1 #2 #3 rg}}% 
+  \_def\makebox(#1)[#2]#3{\_hbox to0pt{\_csname _mbx:#2\_endcsname{#3}}}% 
+  \_sdef{_mbx:lb}#1{#1\_hss}\_sdef{_mbx:rb}#1{\_hss#1}\_sdef{_mbx:b}#1{\_hss#1\_hss}% 
+  \_sdef{_mbx:lt}#1{#1\_hss}\_sdef{_mbx:rt}#1{\_hss#1}\_sdef{_mbx:t}#1{\_hss#1\_hss}% 
+  \_def\rotatebox#1#2{\_pdfrotate{#1}#2}%
+  \_def\lineheight#1{}%
+  \_def\setlength#1#2{}%
+}
+\_public \inkinspic ;
+
+   \_doc ----------------------------
+   \`\pdfscale``{<x-scale>}{<y-scale>}` and \`\pdfrotate``{<degrees>}` 
+   macros are implemented by `\pdfsetmatrix`
+   primitive. We need to know values of sin, cos function in
+   the `\pdfrotate`. We use Lua code for this.
+   \_cod ----------------------------
+
+\_def\_pdfscale#1#2{\_pdfsetmatrix{#1 0 0 #2}}
+
+\_def\_gonfunc#1#2{%
+   \_directlua{tex.print(string.format('\_pcent.4f',math.#1(3.14159265*(#2)/180)))}%
+}
+\_def\_sin{\_gonfunc{sin}}
+\_def\_cos{\_gonfunc{cos}}
+
+\_def\_pdfrotate#1{\_pdfsetmatrix{\_cos{#1} \_sin{#1} \_sin{(#1)-180} \_cos{#1}}}
+
+\_public \pdfscale \pdfrotate ;
+
+   \_doc -----------------------------
+   The \`\transformbox``{<transformation>}{<text>}` 
+   is copied from OPmac trick 0046.\nl
+   The \`\rotbox``{<degrees>}{<text>}` is a combination of 
+   `\rotsimple` from OPmac trick 0101 and the `\transformbox`.
+   Note, that `\rotbox{-90}` puts the rotated text to the height of the outer 
+   box (depth is zero) because code from `\rotsimple` is processed. 
+   But `\rotbox{-90.0}` puts the rotated text to
+   the depth of the outer box (height is zero) because `\transformbox` is
+   processed. 
+   \_cod -----------------------------
+
+\_def\_multiplyMxV #1 #2 #3 #4 {% matrix * (vvalX, vvalY) 
+   \_tmpdim = #1\_vvalX \_advance\_tmpdim by #3\_vvalY 
+   \_vvalY  = #4\_vvalY \_advance\_vvalY  by #2\_vvalX 
+   \_vvalX = \_tmpdim 
+} 
+\_def\_multiplyMxM #1 #2 #3 #4 {% currmatrix := currmatrix * matrix 
+   \_vvalX=#1pt \_vvalY=#2pt \_ea\_multiplyMxV \_currmatrix 
+   \_edef\_tmpb{\_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY}% 
+   \_vvalX=#3pt \_vvalY=#4pt \_ea\_multiplyMxV \_currmatrix 
+   \_edef\_currmatrix{\_tmpb\_space 
+      \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}% 
+} 
+\_def\_transformbox#1#2{\_hbox{\_setbox0=\_hbox{{#2}}%
+   \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
+   \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
+   \_dimendef\_newLt 15 \_dimendef\_newRt 16 
+   \_preptransform{#1}% 
+   \_kern-\_newLt \_vrule height\_newHt depth\_newDp width0pt 
+   \_setbox0=\_hbox{\_box0}\_ht0=0pt \_dp0=0pt 
+   \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}% 
+} 
+\_def\_preptransform #1{\_def\_currmatrix{1 0 0 1 }% 
+   \_def\_pdfsetmatrix##1{\_edef\_tmpb{##1 }\_ea\_multiplyMxM \_tmpb\_unskip}%
+   \_let\pdfsetmatrix=\_pdfsetmatrix #1% 
+   \_setnewHtDp 0pt  \_ht0  \_setnewHtDp 0pt  -\_dp0 
+   \_setnewHtDp \_wd0 \_ht0  \_setnewHtDp \_wd0 -\_dp0 
+   \_protected\_def \_pdfsetmatrix {\_pdfextension setmatrix}%
+   \_let\pdfsetmatrix=\_pdfsetmatrix
+} 
+\_def\_setnewHtDp #1 #2 {% 
+   \_vvalX=#1\_relax \_vvalY=#2\_relax \_ea\_multiplyMxV \_currmatrix 
+   \_ifdim\_vvalX<\_newLt \_newLt=\_vvalX \_fi \_ifdim\_vvalX>\_newRt \_newRt=\_vvalX \_fi 
+   \_ifdim\_vvalY>\_newHt \_newHt=\_vvalY \_fi \_ifdim-\_vvalY>\_newDp \_newDp=-\_vvalY \_fi 
+} 
+
+\_def\_rotbox#1#2{%
+   \_isequal{90}{#1}\_iftrue \_rotboxA{#1}{\_kern\_ht0 \_tmpdim=\_dp0}{\_vfill}{#2}%
+   \_else \_isequal{-90}{#1}\_iftrue \_rotboxA{#1}{\_kern\_dp0 \_tmpdim=\_ht0}{}{#2}%
+   \_else \_transformbox{\_pdfrotate{#1}}{#2}%
+   \_fi \_fi
+}
+\_def\_rotboxA #1#2#3#4{\_hbox{\_setbox0=\_hbox{{#4}}#2%
+   \_vbox to\_wd0{#3\_wd0=0pt \_dp0=0pt \_ht0=0pt
+                  \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
+   \_kern\_tmpdim
+}}
+\_public \transformbox \rotbox ;
+
+   \_doc ---------------------------
+   \`\_scantwodimens` scans two objects with the syntactic rule `<dimen>`
+   and returns `{<number>}{<number>}` in `sp` unit.
+   \nl
+   \`\puttext` `<right> <up>{<text>}` puts the `<text>` to desired place:
+   From current point moves <down> and <right>, puts the <text> and returns
+   back. The current point is unchanged after this macro ends.
+   \nl
+   \`\putpic` `<right> <up> <width> <height> {<image-file>}`
+   does `\puttext` with the image scaled to desired <width> and <height>.
+   If <with> or <height> is zero, natural dimension is used.
+   The \`\nospec` is a shortcut to such natural dimension.
+   \nl
+   \`\backgroundpic``{<image-file>}` puts the image to 
+   the background of each page. It it used in the slides style, for example.
+   \_cod ---------------------------
+
+\_def\_scantwodimens{%
+   \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}',
+               token.scan_dimen(),token.scan_dimen()))}%
+}
+
+\_def\_puttext{\_ea\_ea\_ea\_puttextA\_scantwodimens}
+\_def\_puttextA#1#2#3{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}
+\_def\_puttextB{%
+   \_ifvmode
+      \_ifdim\_prevdepth>0pt \_vskip-\_prevdepth \_relax \_fi 
+      \_nointerlineskip 
+   \_fi
+   \_wd0=0pt \_ht0=0pt \_dp0=0pt
+   \_vbox to0pt{\_kern-\_dimen2 \_hbox to0pt{\_kern\_dimen1 \_box0\_hss}\_vss}}
+
+\_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
+\_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
+\_def\_putpicB#1#2#3{\_setbox0=\_hbox{\_picwidth=#1sp \_picheight=#2sp \_inspic{#3}}\_puttextB}
+
+\_newbox\_bgbox
+\_def\_backgroundpic#1{%
+   \_setbox\_bgbox=\_hbox{\_picwidth=\_pdfpagewidth \_picheight=\_pdfpageheight \_inspic{#1}}%
+   \_pgbackground={\_copy\_bgbox}
+}
+\_def\nospec{0pt}
+\_public \puttext \putpic \backgroundpic ;
+
+   \_doc -----------------------------
+   \`\_circle``{<x>}{<y>}` creates an ellipse with `<x>` axis and `<y>` axix.
+   The origin is in the center.
+   \nl
+   \`\_oval``{<x>}{<y>}{<roudness>}` creates an oval with `<x>`, `<y>` size and with 
+   given `<roundness>`. The real size is bigger by 2`<roundness>`. The
+   origin is at the left bottom corner.
+   \nl
+   \`\_mv``{<x>}{<y>}{<curve>}` moves current point to `<x>`, `<y>`, crates the
+   `<curve>` and retuns back the current point.
+   All these macros are fully expandable and they can be used in the
+   `\pdfliteral` argument.
+   \_cod -----------------------------
+
+\def\_circle#1#2{\_expr{.5*(#1)} 0 m 
+   \_expr{.5*(#1)} \_expr{.276*(#2)} \_expr{.276*(#1)} \_expr{.5*(#2)} 0 \_expr{.5*(#2)} c
+   \_expr{-.276*(#1)} \_expr{.5*(#2)} \_expr{-.5*(#1)} \_expr{.276*(#2)} \_expr{-.5*(#1)} 0 c
+   \_expr{-.5*(#1)} \_expr{-.276*(#2)} \_expr{-.276*(#1)} \_expr{-.5*(#2)} 0 \_expr{-.5*(#2)} c
+   \_expr{.276*(#1)} \_expr{-.5*(#2)} \_expr{.5*(#1)} \_expr{-.276*(#2)} \_expr{.5*(#1)} 0 c h}
+
+\def\_oval#1#2#3{0 \_expr{-(#3)} m \_expr{#1} \_expr{-(#3)} l 
+    \_expr{(#1)+.552*(#3)} \_expr{-(#3)} \_expr{(#1)+(#3)} \_expr{-.552*(#3)} 
+                                                           \_expr{(#1)+(#3)} 0 c 
+    \_expr{(#1)+(#3)} \_expr{#2} l
+    \_expr{(#1)+(#3)} \_expr{(#2)+.552*(#3)} \_expr{(#1)+.552*(#3)} \_expr{(#2)+(#3)}
+                                             \_expr{#1} \_expr{(#2)+(#3)} c
+    0 \_expr{(#2)+(#3)} l
+    \_expr{-.552*(#3)} \_expr{(#2)+(#3)} \_expr{-(#3)} \_expr{(#2)+.552*(#3)} 
+                                         \_expr{-(#3)} \_expr{#2} c
+    \_expr{-(#3)} 0 l
+    \_expr{-(#3)} \_expr{-.552*(#3)} \_expr{-.552*(#3)} \_expr{-(#3)}  0 \_expr{-(#3)} c h}
+
+\def\_mv#1#2#3{1 0 0 1 \_expr{#1} \_expr{#2} cm #3 1 0 0 1 \_expr{-(#1)} \_expr{-(#2)} cm}
+
+   \_doc -----------------------------
+   The \`\inoval``{<text>}` is an example of \^`\_oval` usage.\nl
+   The \`\incircle``{<text>}` is an example of \^`\_circle` usage.\nl
+   The \`\ratio`, \`\lwidth`, \`\fcolor`, \`\lcolor`, \`\shadow` and \`\overlapmargins`
+   are parameters, they can be set by user in optional brackets `[...]`.
+   For example `\fcolor=\Red` does `\_let\_fcolorvalue=\Red` and it means
+   filling color.\nl
+   The \`\_setflcolor` uses the \^`\_fillstroke` macro to separate filling
+   color and drawing color.
+   \_cod -----------------------------
+
+\_newdimen \_lwidth 
+\_def\_fcolor{\_let\_fcolorvalue}
+\_def\_lcolor{\_let\_lcolorvalue}
+\_def\_shadow{\_let\_shadowvalue}
+\_def\_overlapmargins{\_let\_overlapmarginsvalue}
+\_def\_ratio{\_isnextchar ={\_ratioA}{\_ratioA=}}
+\_def\_ratioA =#1 {\_def\_ratiovalue{#1}}
+\_def\_touppervalue#1{\_ifx#1n\_let#1=N\_fi}
+
+\_def\_setflcolors#1{% use only in a group
+   \_def\_setcolor##1{##1}%
+   \_def\_fillstroke##1##2{##1}%
+   \_edef#1{\_fcolorvalue}%
+   \_def\_fillstroke##1##2{##2}%
+   \_edef#1{#1\_space\_lcolorvalue\_space}%
+}
+\_optdef\_inoval[]{\_vbox\_bgroup
+   \_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+   \_shadow=N \_overlapmargins=N \_hhkern=0pt \_vvkern=0pt
+   \_the\_ovalparams \_relax \_the\_opt \_relax
+   \_touppervalue\_overlapmarginsvalue \_touppervalue\_shadowvalue
+   \_ifx\_overlapmarginsvalue N%
+      \_advance\_hsize by-2\_hhkern \_advance\_hsize by-2\_roundness \_fi
+   \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
+}
+\_def\_inovalA{\_isnextchar\_colorstackpop\_inovalB\_inovalC}
+\_def\_inovalB#1{#1\_isnextchar\_colorstackpop\_inovalB\_inovalC}
+\_def\_inovalC{\_egroup % of \setbox0=\hbox\bgroup
+   \_ifdim\_vvkern=0pt \_else \_ht0=\_dimexpr\_ht0+\_vvkern \_relax
+                              \_dp0=\_dimexpr\_dp0+\_vvkern \_relax \_fi
+   \_ifdim\_hhkern=0pt \_else \_wd0=\_dimexpr\_wd0+\_hhkern \_relax \_fi
+   \_ifx\_overlapmarginsvalue N\_dimen0=\_roundness \_dimen1=\_roundness
+   \_else                      \_dimen0=-\_hhkern   \_dimen1=-\_vvkern \_fi 
+   \_setflcolors\_tmp
+   \_hbox{\_kern\_dimen0 
+      \_vbox to0pt{\_kern\_dp0 
+         \_ifx\_shadowvalue N\_else 
+            \_edef\_tmpb{{\_bp{\_wd0+\_lwidth}}{\_bp{\_ht0+\_dp0+\_lwidth}}{\_bp{\_roundness}}}%
+            \_doshadow\_oval 
+         \_fi
+         \_pdfliteral{q \_bp{\_lwidth} w \_tmp 
+            \_oval{\_bp{\_wd0}}{\_bp{\_ht0+\_dp0}}{\_bp{\_roundness}} B Q}\_vss}%
+      \_ht0=\_dimexpr\_ht0+\_dimen1 \_relax \_dp0=\_dimexpr\_dp0+\_dimen1 \_relax
+      \_box0 
+      \_kern\_dimen0}%
+   \_egroup % of \vbox\bgroup
+}
+\_optdef\_incircle[]{\_vbox\_bgroup
+   \_ratio=1 \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+   \_shadow=N \_overlapmargins=N \_hhkern=3pt \_vvkern=3pt
+   \_ea\_the \_ea\_circleparams \_space \_relax
+   \_ea\_the \_ea\_opt \_space \_relax
+   \_touppervalue\_overlapmarginsvalue \_touppervalue\_shadowvalue
+   \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
+}
+\_def\_incircleA {\_isnextchar\_colorstackpop\_incircleB\_incircleC}
+\_def\_incircleB #1{#1\_isnextchar\_colorstackpop\_incircleB\_incircleC}
+\_def\_incircleC {\_egroup % of \setbox0=\hbox\bgroup
+   \_wd0=\_dimexpr \_wd0+\_hhkern \_relax
+   \_ht0=\_dimexpr \_ht0+\_vvkern \_relax \_dp0=\_dimexpr \_dp0+\_vvkern \_relax
+   \_ifdim \_ratiovalue\_dimexpr \_ht0+\_dp0 > \_wd0
+          \_dimen3=\_dimexpr \_ht0+\_dp0 \_relax  \_dimen2=\_ratiovalue\_dimen3
+   \_else \_dimen2=\_wd0 \_dimen3=\_expr{1/\_ratiovalue}\_dimen2 \_fi
+   \_setflcolors\_tmp
+   \_ifx\_overlapmarginsvalue N\_dimen0=0pt \_dimen1=0pt 
+   \_else \_dimen0=-\_hhkern \_dimen1=-\_vvkern \_fi
+   \_hbox{\_kern\_dimen0 
+      \_ifx\_shadowvalue N\_else 
+         \_edef\_tmpb{{\_bp{\_dimen2+\_lwidth}}{\_bp{\_dimen3+\_lwidth}}{}}%
+         \_doshadow\_circlet
+      \_fi      
+      \_pdfliteral{q \_bp{\_lwidth} w \_tmp \_mv{\_bp{.5\_wd0}}{\_bp{(\_ht0-\_dp0)/2}}
+                                      {\_circle{\_bp{\_dimen2}}{\_bp{\_dimen3}} B} Q}%
+      \_ifdim\_dimen1=0pt \_else 
+           \_ht0=\_dimexpr \_ht0+\_dimen1 \_relax \_dp0=\_dimexpr \_dp0+\_dimen1 \_relax \_fi
+      \_box0
+      \_kern\_dimen0}
+   \_egroup % of \vbox\bgroup
+}
+\_def\_circlet#1#2#3{\_circle{#1}{#2}}
+
+\_public \inoval \incircle \ratio \lwidth \fcolor \lcolor \shadow \overlapmargins ;
+
+   \_doc -----------------------------
+   A shadow effect is implemented here. The shadow is equal to the
+   silhouette of the given path in gray-transparent color shifted by
+   \`\_shadowmoveto` vector and with blurred boundary.
+   A waistline with the width 2*\`\_shadowb` around the boundary is blurred.
+   The \`\shadowlevels` levels of transparent shapes is used for creating
+   this effect. The `\shadowlevels+1/2` level is equal to the shifted given path.
+   \_cod -----------------------------
+
+\_def\_shadowlevels{9}         % number of layers for blurr effect
+\_def\_shadowdarknessA{0.025}  % transparency of first shadowlevels/2 layers
+\_def\_shadowdarknessB{0.07}   % transparency of second half of layers
+\_def\_shadowmoveto{1.8 -2.5}  % vector defines shifting layer (in bp)
+\_def\_shadowb{1}              % 2*shadowb = blurring area thickness
+
+   \_doc -----------------------------
+   The `\_pdfpageresources` primitive is used to define transparency.
+   It does not work when used in a box. So, we use it at the begining of
+   the output routine. The modification of the output routine is done 
+   using \`\_insertshadowresources` only once when the shadow effect is used first.
+   \_cod -----------------------------
+
+\_def\_insertshadowresources{%
+   \_global\_addto\_begoutput{\_setshadowresources}%
+   \_xdef\_setshadowresources{%
+      \_pdfpageresources{/ExtGState 
+      <<
+      /op1  <</Type /ExtGState /ca \_shadowdarknessA>>
+      /op2  <</Type /ExtGState /ca \_shadowdarknessB>>
+      \_morepgresources
+      >>
+      }%
+   }%
+   \_global\_let\_insertshadowresources=\_relax
+}
+\_def\_morepgresources{}
+
+   \_doc -----------------------------
+   The \`\_doshadow``{<curve>}` does the shadow effect.
+   \_cod -----------------------------
+
+\_def\_doshadow#1{\_vbox{%
+    \_insertshadowresources
+    \_tmpnum=\_numexpr (\_shadowlevels-1)/2 \_relax
+    \_edef\_tmpfin{\_the\_tmpnum}%
+    \_ifnum\_tmpfin=0 \_def\_shadowb{0}\_def\_shadowstep{0}%
+    \_else \_edef\_shadowstep{\_expr{\_shadowb/\_tmpfin}}\_fi
+    \_def\_tmpa##1##2##3{\_def\_tmpb
+        {#1{##1+2*\_the\_tmpnum*\_shadowstep}{##2+2*\_the\_tmpnum*\_shadowstep}{##3}}}%
+    \_ea \_tmpa \_tmpb
+    \_def\_shadowlayer{%
+        \_ifnum\_tmpnum=0 /op2 gs \_fi
+        \_tmpb\_space f
+        \_immediateassignment\_advance\_tmpnum by-1
+        \_ifnum-\_tmpfin<\_tmpnum 
+           \_ifx#1\_oval 1 0 0 1 \_shadowstep\_space \_shadowstep\_space cm \_fi 
+           \_ea \_shadowlayer \_fi
+    }%
+    \_pdfliteral{q /op1 gs 0 g 1 0 0 1 \_shadowmoveto\_space cm  
+       \_ifx#1\_circlet 1 0 0 1 \_expr{\_bp{.5\_wd0}} \_expr{\_bp{(\_ht0-\_dp0)/2}} cm 
+       \_else  1 0 0 1 -\_shadowb\_space -\_shadowb\_space cm \_fi
+       \_shadowlayer Q}
+}}
+
+   \_doc -----------------------------
+   A generic macro \`\_clipinpath``<x> <y> <curve> <text>` declares
+   a clipping path by the `<curve>` shifted by the `<x>`, `<y>`. The `<text>` is typeset
+   when such clipping path is active. Dimensions are given by bp without the unit here.
+   The macros \`\clipinoval` `<x> <y> <width> <height> {<text>}` and
+   \`\clipincircle` `<x> <y> <width> <height> {<text>}` are defined here.
+   These macros read normal \TeX/ dimensions in their parameters.
+   \_cod -----------------------------
+
+\_def\_clipinpath#1#2#3#4{% #1=x-pos[bp], #2=y-pos[bp], #3=curve, #4=text
+   \_hbox{\_setbox0=\_hbox{{#4}}%
+          \_tmpdim=\_wd0 \_wd0=0pt
+          \_pdfliteral{q \_mv{#1}{#2}{#3 W n}}%
+          \_box0\_pdfliteral{Q}\_kern\_tmpdim
+   }%
+}
+
+\_def\_clipinoval {\_ea\_ea\_ea\_clipinovalA\_scantwodimens}
+\_def\_clipinovalA #1#2{%
+   \_def\_tmp{{#1/65781.76}{#2/65781.76}}%
+   \_ea\_ea\_ea\_clipinovalB\_scantwodimens
+}
+\_def\_clipinovalB{\_ea\_clipinovalC\_tmp}
+\_def\_clipinovalC#1#2#3#4{%
+   \_ea\_clipinpath{#1-(#3/131563.52)+(\_bp{\_roundness})}{#2-(#4/131563.52)+(\_bp{\_roundness})}%
+   {\_oval{#3/65781.76-(\_bp{2\_roundness})}{#4/65781.76-(\_bp{2\_roundness})}{\_bp{\_roundness}}}%
+}
+\_def\_clipincircle {\_ea\_ea\_ea\_clipincircleA\_scantwodimens}
+\_def\_clipincircleA #1#2{%
+   \_def\_tmp{{#1/65781.76}{#2/65781.76}}%
+   \_ea\_ea\_ea\_clipincircleB\_scantwodimens
+}
+\_def\_clipincircleB#1#2{%
+   \_ea\_clipinpath\_tmp{\_circle{#1/65781.76}{#2/65781.76}}%
+}
+\_public \clipinoval \clipincircle ;
+
+
+\_endcode % -------------------------------------
+
+2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed
+

@@ -1,0 +1,351 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \MakeReference {Reading bib databases <2020-03-13>} % loaded on demand by \usebib
+
+   \_doc -----------------------------
+   Loading the `librarian.tex` macro package. See `texdoc librarian`
+   for more information about it.
+   \_cod -----------------------------
+
+\_def\_tmp{}
+\_let\_errmessageori=\_errmessage % we needn't \errmessage during \input librarian
+\_def\_errmessage#1{\_def\_tmp{error}}
+\_let\_newwriteori=\_newwrite % we need not to create \jobname.lbr:
+\_def\_newwrite#1{\_csname lb@restoreat\_endcsname \_endinput}
+\_def\_tmpb{\_catcode`\_=12 \_input librarian \_catcode`\_=11 }\_tmpb
+\_let\_errmessage=\_errmessageori
+\_let\_newwrite=\_newwriteori
+\_ifx\_tmp\_empty\_else
+  \_def\_usebib/#1 (#2) #3 {%
+     \_opwarning{eTeX and (pdfTeX or XeTeX or LuaTeX) not detected}%
+     \_immediate\_write16{\_space\_space
+               But librarian package needs it. \_noexpand\usebib ignored.}%
+  }
+  \_endinput \_fi
+\_private \BibFile \ReadList \SortList \SortingOrder \NameCount \AbbreviateFirstname
+   \CreateField \RetrieveFieldInFor \RetrieveFieldIn ;
+
+   \_doc -----------------------------
+   The `\usebib` command.
+   \_cod -----------------------------
+
+\_def\_usebib/#1 (#2) #3 {%
+  \_ifx\_citelist\_empty
+     \_opwarning{No cited items. \_noexpand\usebib ignored}%
+  \_else
+     \_bgroup \_par
+        \_emergencystretch=.3\_hsize
+        \_ifx\_bibpart\_undefined \_def\_bibpart{none}\_fi
+        \_def\_optexbibstyle{#2}%
+        \_setctable\_optexcatcodes
+        \_input bib-#2.opm
+        \_the \_bibtexhook
+        \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
+        \_global\_let\_addcitelist=\_writeXcite
+        \_def\_tmp##1[*]##2\_relax{\_def\_tmp{##2}}\_expandafter\_tmp\_citelist[*]\_relax
+        \_ifx\_tmp\_empty\_else % there was \nocite[*] used. 
+           \_setbox0=\_vbox{\_hsize=\_maxdimen \_def\_citelist{}\_adef@{\_readbibentry}%
+           \_input #3.bib
+           \_expandafter}\_expandafter\_def\_expandafter\_citelist\_expandafter{\_citelist}%
+        \_fi
+        \_def\_citeI[##1]{\_csname lb@cite\_endcsname{##1}{\_bibpart}{}{}}\_citelist
+        \_BibFile{#3}%
+        \_if s#1\_SortList{\_bibpart}\_fi
+        \_ReadList{\_bibpart}%
+        \_restorectable
+     \_egroup
+  \_fi
+}
+\_def\_readbibentry#1#{\_readbibentryA}
+\_def\_readbibentryA#1{\_readbibentryB#1,,\_relax!.}
+\_def\_readbibentryB#1#2,#3\_relax!.{\_addto\_citelist{\_citeI[#1#2]}}
+
+   \_doc -----------------------------
+   Corrections in librarian macros.
+   \_cod -----------------------------
+
+\_tmpnum=\_catcode`\@  \_catcode`\@=11
+\_def\lb@checkmissingentries#1,{% we needn't \errmessage here, only \opmacwarning
+  \_def\lb@temp{#1}%
+  \_unless\_ifx\lb@temp\lb@eoe
+    \lb@ifcs{#1}{fields}%
+            {}%
+            {\_opwarning{\_string\_usebib: entry [#1] isn't found in .bib file(s)}}%
+    \_ea\lb@checkmissingentries
+  \_fi
+}
+\_def\lb@readentry#1#2#3,{% space before key have to be ingnored
+  \_def\lb@temp{#2#3}%      we need case sensitive keys
+  \_def\lb@next{\_ea\lb@gotoat\lb@gobbletoeoe}%
+  \lb@ifcs\lb@temp{requested}%
+          {\_let\lb@entrykey\lb@temp
+           \lb@ifcs\lb@entrykey{fields}{}%
+                {\lb@defcs\lb@entrykey{fields}{}%
+                 \_lowercase{\lb@addfield{entrytype}{#1}}%
+                 \_let\lb@next\lb@analyzeentry}}{}%
+  \lb@next
+}
+\_let\lb@compareA=\lb@compare
+\_let\lb@preparesortA=\lb@preparesort
+\_def\lb@compare#1\lb@eoe#2\lb@eoe{% SpecialSort:
+  \_ifx\lb@sorttype\lb@namestring
+     \_ifx\_sortfield\_undefined \lb@compareA#1\lb@eoe#2\lb@eoe
+     \_else 
+        \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@entrykey\lb@temp
+        \_ifx\lb@temp\_empty \_toks1={#1\lb@eoe}\_else \_toks1=\_ea{\lb@temp\lb@eoe}\_fi
+        \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@currententry\lb@temp
+        \_ifx\lb@temp\_empty \_toks2={#2\lb@eoe}\_else \_toks2=\_ea{\lb@temp\lb@eoe}\_fi
+        \_edef\lb@temp{\_noexpand\lb@compareA\_space\_the\_toks1 \_space\_the\_toks2}\lb@temp
+     \_fi
+  \_else \lb@compareA#1\lb@eoe#2\lb@eoe \_fi
+}
+\_def\lb@preparesort#1#2\lb@eoe{%
+  \_if#1-%
+    \_def\lb@sorttype{#2}%
+  \_else
+    \_def\lb@sorttype{#1#2}%
+  \_fi
+  \lb@preparesortA#1#2\lb@eoe
+}
+\_def\_SpecialSort#1{\_def\_sortfield{#1}}
+\_def\WriteImmediateInfo#1{}  % the existence of .lbr file bocks new reading of .bib
+\_catcode`\@=\_tmpnum
+
+   \_doc -----------------------------
+   Main action per every entry.
+   \_cod -----------------------------
+
+\_def\MakeReference{\_par \_bibskip
+  \_advance\_bibnum by1
+  \_isdefined{_bim:\_the\_bibnum}\_iftrue
+     \_edef\_tmpb{\_csname _bim:\_the\_bibnum\_endcsname}%
+     \_bibmark=\_ea{\_tmpb}%
+  \_else \_bibmark={}\_fi
+  \_edef\_tmpb{\EntryKey}%
+  \_noindent \_dest[cite:\_the\_bibnum]\_printlabel\EntryKey 
+  \_printbib 
+  {%  
+     \_RetrieveFieldIn{entrytype}\_entrytype
+     \_csname _print:BEGIN\_endcsname
+     \_isdefined{_print:\_entrytype}\_iftrue 
+        \_csname _print:\_entrytype\_endcsname
+     \_else 
+        \_ifx\_entrytype\_empty \_else
+           \_opwarning{Entrytype @\_entrytype\_space from [\EntryKey] undefined}%
+           \_csname _print:misc\_endcsname
+     \_fi\_fi
+     \_csname _print:END\_endcsname
+     \_ifx\_wref\_wrefrelax\_else 
+         \_immediate\_wref\_Xbib{{\EntryKey}{\_the\_bibnum}{\_the\_bibmark}}\_fi
+  }\_par
+}
+
+   \_doc -----------------------------
+   The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv` 
+   commands used in the style files:
+   \_cod -----------------------------
+
+\_def\_bprinta {\_bprintb*}
+\_def\_bprintb #1[#2#3]{%
+   \_def\_bibfieldname{#2#3}%
+   \_if!#2\_relax 
+      \_def\_bibfieldname{#3}%
+      \_RetrieveFieldIn{#3}\_bibfield
+      \_ifx\_bibfield\_empty\_else
+         \_RetrieveFieldIn{#3number}\_namecount
+         \_def\_bibfield{\_csname _Read#3\_ea\_endcsname \_csname _pp:#3\_endcsname}%
+      \_fi
+   \_else
+      \_RetrieveFieldIn{#2#3}\_bibfield
+   \_fi
+   \_if^#1^%
+      \_ifx\_bibfield\_empty \_ea\_ea\_ea \_doemptyfield
+      \_else \_ea\_ea\_ea \_dofullfield \_fi
+   \_else \_ea \_bprintaA
+   \_fi
+}
+\_def\_dofullfield#1#2{\_def\_dofield##1{#1}\_ea\_dofield\_ea{\_bibfield}}
+\_def\_doemptyfield#1#2{\_def\_dofield##1{#2}\_ea\_dofield\_ea{\_bibfield}}
+\_let\_Readauthor=\ReadAuthor  \_let\_Readeditor=\ReadEditor
+\_def\_bprintaA #1#2{\_ifx\_bibfield\_empty #2\_else\_bprintaB #1**\_eee\_fi}
+\_def\_bprintaB #1*#2*#3\_eee{\_if^#3^#1\_else\_ea\_bprintaC\_ea{\_bibfield}{#1}{#2}\_fi}
+\_def\_bprintaC #1#2#3{#2#1#3}
+\_def\_bprintc#1#2{\_bprintcA#1#2**\_relax}
+\_def\_bprintcA#1#2*#3*#4\_relax{\_ifx#1\_empty \_else \_if^#4^#2\_else#2#1#3\_fi\_fi}
+\_def\_bprintv [#1]#2#3{\_def\_tmpa{#2}\_def\_tmpb{#3}\_bprintvA #1,,}
+\_def\_bprintvA #1,{%
+   \_if^#1^\_tmpb\_else
+      \_RetrieveFieldIn{#1}\_tmp
+      \_ifx \_tmp\_empty 
+      \_else \_tmpa \_def\_tmpb{}\_def\_tmpa{}%
+      \_fi
+   \_ea \_bprintvA
+   \_fi
+} 
+\_sdef{_pp:author}{\_letNames\_authorname}
+\_sdef{_pp:editor}{\_letNames\_editorname}
+\_def\_letNames{\_let\_Firstname=\Firstname \_let\_Lastname=\Lastname
+   \_let\_Von=\Von \_let\_Junior=\Junior
+}
+
+   \_doc -----------------------------
+   Various macros + multilinguas.
+   \_cod -----------------------------
+
+\_def\_bibwarning{\_opwarning{Missing field "\_bibfieldname" in [\EntryKey]}}  
+
+\_def\_mtdef#1#2#3#4{\_sdef{_mt:#1:en}{#2} \_sdef{_mt:#1:cs}{#3}
+  \_if$#4$\_slet{_mt:#1:sk}{_mt:#1:cs}
+  \_else  \_sdef{_mt:#1:sk}{#4}
+  \_fi
+}
+
+\_endcode
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The file `usebib.opm` implements the command
+`\usebib/<sorttype> (<style>) <bibfiles>`
+where `<sorttype>` is one letter `c` (references ordered by citation order in
+the text) or `s` (references ordered by key in the style file), 
+`<style>` is the part of the name `bib-<style>.opm` of the style file
+and `<bibfiles>` are one or more `.bib` file names without suffix separated by
+comma without space. Example:
+
+\begtt
+\usebib/s (simple) mybase,yourbase
+\endtt
+
+This command reads the `<bibfiles>` directly and creates the list of
+bibliographics references (only those declared by by `\cite[]` or
+`\nocite[]` in the text). The formatting of such references is defined in the style
+file. The usage is mentioned in user documentation too.
+
+The principle \"first entry wins" is used. Suppose `\usebib/s (simple) local,global`.
+If an entry with the same label is declared in `local.bib` and in
+`global.bib` too then the first wins. So, you can set an exceptions in your
+`local.bib` file for your document.
+
+\seccc Notes for style writers
+
+The `bib-<style>.opm` file must define the commands:
+
+\begitems
+* `\_authorname` ... formatting of one name in the authors list. The macro can
+    use the following data: `\_NameCount` (the number of the currently
+    processed author name in the list), `0\_namecount` (the total number of the
+    authors in the list), `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior` 
+    (the parts of the name). See the documentation of the librarian package 
+    for more info.
+* `\_editorname` ... the same as `\_authorname`, but for editors list.
+* `_print:<entrytype>` (defined by `\_sdef`) for formatting the entry of `<entrytype>`.
+    The `<entrytype>` have to be lowercase. This command can use the command:
+* `\_bprinta [<fieldname>]  {<if defined>} {<if not defined>}`. The part <if defined>
+    is executed if <fieldname> is declared in .bib file for the entry which is
+    currently processed. Else the part <if not defined> is processed.
+    The part <if defined> can include the `*` parameter which is replaced
+    by the value of the <fieldname>. The part <if not defined> can include
+    the `\_bibwarning` command if the <fieldname> is mandatory.
+* `\_bprintb [<fieldname>]  {<if defined>} {<if not defined>}`. The same as
+    `\_bprinta`, but the `##1` parameter is used instead `*`. Differences: `##1`
+    parameter can be used more than once and can be enclosed in nested
+    braces. The * parameter can be used at most once and cannot be enclosed
+    in braces. Warning: if the `\_bprintb` commands are nested (`\_bprintb` in
+    `\_bprintb`), then you need to write `####1` parameter for internal `\_bprintb`.
+    But if `\_bprinta` commands are nested then the parameter is not duplicated.
+* `\_pbprintc \macro {<if non-empty>}`. The <if non-empty> part is executed if
+    `\macro` is non-empty. The * parameter can be used, it is replaced by
+    the `\macro`.
+* `\_bprintv [<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
+    The part <if defined> is executed if <field1> or <filed2> or ...
+    is defined, else the second part <if not defined> is executed.
+    There is one filed name or the list field names separated by commas.  
+    The parts cannot include any parameter.
+\enditems
+%
+There are two special fieldnames: `!author` and `!editor`. The processed list of
+authors or editors (by repeatedly calling `\_authorname` or `\_editorname`) are 
+used here insted of raw data.
+
+You can define `_print:BEGIN` and/or `_print:END` which is executed at the begin or
+end of each `<entrytype>`. The formatting does not solve the numbering and
+paragraph indentation of the entry. This is processed by `\_printbib` macro
+used in \OpTeX/ (and may be redefined by the author or document designer).
+
+You can declare `\_bimark={something}` in the `_print:END` macro. This bibmark is
+saved to the `.ref` file (created by \OpTeX/) and used in the next \TeX/ run as 
+`\cite` marks when `\nonumcitations` is set.
+
+The whole style file is read in the group during `\usebib` command is executed
+before typesetting the reference list. Each definition or setting is local
+here.
+
+If you are using non-standard fieldnames in .bib database and bib. style,
+you has to declare them by `\_CreateField {<fieldname>}`.
+
+You can declare `\_SortingOrder` in the manner documented by librarian package.
+
+If your style adds some words or abbreviations you can make them
+multilingual by saying `\_mtext{<label>}` instead such word and
+`\_mtdef{<label>} {<English>} {<Czech>} {<Slovak>}` declaration.
+The right part is printed by current value of the `\language` regiter.
+You can add more languages by re-defining the `\_mtdef` command. 
+See the section \ref[langphrases] for more information. 
+
+If you are using `\nonumcitations`, then the `\_bibmark` tokens register have to be
+prepared in the style file (in `_print:BEGIN`, `_print:END`, in
+`\_authorname` etc.) This value will be used in the `\cite[]` places 
+in the document.
+
+The example of the style file is in `bib-simple.opm`.
+
+User or author of the `bib.` style can create the hidden field which has a
+precedence while sorting names. Example:
+
+\begtt
+\CreateField {sortedby}
+\SpecialSort {sortedby}
+\endtt
+Suppose that the .bib file includes:
+\begtt
+...
+author   = "Jan Chadima",
+sortedby = "Hzzadima Jan",
+...
+\endtt
+Now, this author is sorted between H and I, because the Ch digraph in this
+name has to be sorted by this rule.
+
+If you need (for example) to place the autocitations before other citations,
+then you can mark your entries in `.bib` file by `sortedby = "@"`, because this
+character is sorted before `A`.
+
+\_endinput
+
+History:
+--------
+
+Apr. 2014:  released in OPmac
+Jan. 2016:  "first entry wins" implemented
+Apr. 2016:  \readentry -> \readbibentry, \usebib->\MakeReference
+Feb. 2018:  \input librarian does not create \jobname.lbr
+
+% Source:
+
+% opmac-bib
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Petr Olsak, version Feb. 2018 (beta)
+
+% This is module for OPmac macros, see http://petr.olsak.net/opmac.html
+% The command:
+%    \usebib/<sorttype> (<style>) (bibfiles>
+% for direct reading .bib files by OPmac macros (without bibTeX) is implemented here.
+% The implementation depends on librarian.tex package by Paul Isambert.
+% Use:
+%    \input opmac  \input opmac-bib
+% or simply:
+%    \input opmac-bib
+% before using the command \usebib.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end 
+

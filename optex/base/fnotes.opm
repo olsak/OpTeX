@@ -1,0 +1,175 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-20>} % loaded in format
+
+   \_doc -----------------------------
+   \`\_gfnotenum` is conter which counts footnotes globally in the document.
+                  whole document, chapters, pages.\nl
+   \`\_lfnotenum` is counter which counts footnotes at each chapter from one.
+                  It is used for local page footnote counters too.\nl   
+   \`\_ifpgfnote` says that footnote numbers are counted on each page from
+                   one. We need to run `\openref` in such case.\nl
+   \`\fnotenum` is a macro which expands to footnote number counted in declared part.\nl
+   \`\fnotenumchapters` declares footnotes numbered in each chapter from one
+   (default), \`\fnotenumglobal` declares footnotes numbered in whole
+   document from one and \`\fnotenumpages` declares footnotes numbered 
+   at each page from one. 
+   \_cod -----------------------------
+
+\_newcount\_gfnotenum \_gfnotenum=0
+\_newcount\_lfnotenum
+
+\_newifi \_ifpgfnote  
+\_def \_fnotenumglobal   {\_def\_fnotenum{\_the\_gfnotenum}\_pgfnotefalse}
+\_def \_fnotenumchapters {\_def\_fnotenum{\_the\_lfnotenum}\_pgfnotefalse}
+\_def \_fnotenumpages    {\_def\_fnotenum{\_trycs{_fn:\_the\_gfnotenum}{?}}\_pgfnotetrue}
+\_fnotenumchapters  % default are footnotes counted from one in each chapter
+\_def \fnotenum{\_fnotenum}
+\_public \fnotenumglobal \fnotenumchapters \fnotenumpages ;
+\_let \runningfnotes = \fnotenumglobal % for backward compatibility
+
+   \_doc -----------------------------
+   The \`\_printfnotemark` prints the footnote mark. You can re-define this
+   macro if you want another design of footnotes. For example
+   \begtt
+   \fnotenumpages 
+   \def \_printfnotemark {\ifcase 0\fnotenum\or 
+      *\or**\or***\or$^\mathbox{†}$\or$^\mathbox{‡}$\or$^\mathbox{††}$\fi}
+   \endtt
+   This code gives footnotes* and ** and*** and$^\mathbox{†}$ etc.\ 
+   and it supposes that there are no more than 6 footnotes at one page.
+
+   If you want to distinguish between footnote marks in the text and in the front of
+   footnote itself, then you can define `\_printfnotemarkA` and `\_printfnotemarkB`.
+
+   The \`\fnotelinks``<colorA><colorB>` implements the hyperlinked footnotes
+   (from text to footnote and backward).
+   \_cod -----------------------------
+
+\_def \_printfnotemark  {$^{\_fnotenum}$}   % default footnote mark
+\_def \_printfnotemarkA {\_printfnotemark}  % footnote marks used in text
+\_def \_printfnotemarkB {\_printfnotemark}  % footnote marks used in front of footnotes
+
+\_def \_fnotelinks#1#2{% <inText color> <inFootnote color> 
+   \_def\_printfnotemarkA{\_link[fnt:\_the\_gfnotenum]{\_localcolor#1}{\_printfnotemark}%
+                          \_dest[fnf:\_the\_gfnotenum]}%
+   \_def\_printfnotemarkB{\_link[fnf:\_the\_gfnotenum]{\_localcolor#2}{\_printfnotemark}%
+                          \_dest[fnt:\_the\_gfnotenum]}%
+}
+\public \fnotelinks ;
+
+   \_doc ----------------------------
+   Each footnote saves the \`\_Xfnote` (without parameter) to the `.ref` 
+   file (if `\openref`). We can create the mapping from `<gfnotenum>` to`<pgfnotenum>`
+   in the macro `\_fn:<fnotenum>`. Each \^`\_Xpage` macro sets the
+   `\_lfnotenum` to zero.
+   \_cod ----------------------------
+
+\_def \_Xfnote {\_incr\_lfnotenum \_incr\_gfnotenum
+   \_sxdef{_fn:\_the\_gfnotenum}{\_the\_lfnotenum}}
+
+   \_doc ----------------------------
+   The \`\fnote` `{<text>}` macro is simple, \`\fnotemark` and \^`\fnotetext`
+   does the real work.  
+   \_cod ----------------------------
+
+\_def\_fnote{\_fnotemark1\_fnotetext}
+\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\_relax \_printfnotemarkA}}
+
+   \_doc ----------------------------
+   The \`\fnotetext` calls \^`\_opfootnote` which is equivalent to plain \TeX/
+   \^`\vfootnote`. It creates new data to Insert \^`\footins`. The only
+   difference is that we are able to propagate a macro parameter into Insert group
+   before the text is printed (see section \ref[output]). 
+   This propagated macro is \`\_fnset` which sets smaller fonts.
+
+   Note that \^`\vfootnote` and \^`\_opfootnote` does't read the text as a
+   parameter but during normal horizontal mode. This is reason why catcode
+   changes (for example in-line verbatim) can be used here. 
+   \_cod ----------------------------
+
+\_def\_fnotetext{\_incr\_gfnotenum \_incr\_lfnotenum % global increment
+   \_ifpgfnote \_openref \_fi
+   \_wref \_Xfnote{}%
+   \_ifpgfnote \_ifcsname _fn:\_the\_gfnotenum \_endcsname \_else
+       \_opwarning{unknown \_noexpand\fnote mark. TeX me again}
+   \_fi\_fi
+   \_opfootnote\_fnset\_printfnotemarkB
+}
+\_def\_fnset{\_everypar={}\_scalemain \_typoscale[800/800]}
+
+\_public \fnote \fnotemark \fnotetext ;
+
+   \_doc -----------------------------
+   By default \`\mnote``{<text>}` are in right margin at odd pages and they are in left
+   margin at even pages. The `\mnote` macro saves its position to `.ref`
+   file as \`\_Xmnote` without parameter. We define `\_mn:<mnotenum>` as
+   `\right` or `\left` when the `.ref` file is read.
+   The `\ifnum 0`$\le$`0#2` trick returns true if `<pageno>` has numeric type and false 
+   if it is non-numeric type (Roman numeral, for example). We prefer to use
+   `<pageno>`, but only if it has numeric type. We use `<gpageno>` in other cases.
+   \_cod -----------------------------
+
+\_newcount\_mnotenum    \_mnotenum=0       % global counter of mnotes
+\_def \_Xmnote {\_incr\_mnotenum \_ea \_XmnoteA \_currpage}
+\_def \_XmnoteA #1#2{% #1=<gpageno> #2=<pageno>
+   \_sxdef{_mn:\_the\_mnotenum}{\_ifodd\_numtype{#2}{#1} \_right \_else \_left \_fi}}
+\_def \_numtype #1#2{\_ifnum 0<0#1 #1\_else #2\_fi}
+
+   \_doc -----------------------------
+   User can declare \`\fixmnotes``\left` or \^`\fixmnotes``\right`. It defines
+   \`\_mnotesfixed` as `\_left` or `\_right` which declares the placement 
+   of all marginal notes and such declaration has a precedence. 
+   \_cod -----------------------------
+
+\_def \_fixmnotes #1{\_edef\_mnotesfixed{\_cs{_\_csstring #1}}}
+\_public \fixmnotes ;
+
+   \_doc -----------------------------
+   The outer box of marginal note has zero width and zero depth and it is appended 
+   after current line using `\vadjust` primitive or it is inverted to vertical mode 
+   as a box with `\vskip-\baselineskip` followed.  
+   \_cod -----------------------------
+
+\_long\_def\_mnote#1{\_ifvmode {\_mnoteA{#1}}\_nobreak\_vskip-\_baselineskip \_else 
+   \_lower\_dp\_strutbox\_hbox{}\_vadjust{\_kern-\_dp\_strutbox \_mnoteA{#1}\_kern\_dp\_strutbox}%
+   \_fi
+}
+\_public \mnote ;
+
+   \_doc -----------------------------
+   The \`\_mnoteA` macro does the real work. The \`\_lrmnote``{<left>}{<right>}`
+   uses only first or only second parameter depending on the left or right
+   marginal note.
+   \_cod -----------------------------
+
+\_long\_def\_mnoteA #1{\_incr\_mnotenum
+   \_ifx\_mnotesfixed\_undefined
+      \_ifcsname _mn:\_the\_mnotenum \_endcsname 
+          \_edef\_mnotesfixed{\_cs{_mn:\_the\_mnotenum}}%
+      \_else
+          \_opwarning{unknown \_noexpand\mnote side. TeX me again}\_openref
+          \_def\_mnotesfixed{\_right}%
+   \_fi\_fi
+   \_hbox to0pt{\_wref\_Xmnote{}\_everypar={}%
+      \_lrmnote{\_kern-\_mnotesize \_kern-\_mnoteindent}{\_kern\_hsize \_kern\_mnoteindent}%
+      \_vbox to0pt{\_vss \_setbox0=\_vtop{\_hsize=\_mnotesize
+             \_lrmnote{\_leftskip=0pt plus 1fill \_rightskip=0pt}
+                      {\_rightskip=0pt plus 1fil \_leftskip=0pt}%
+             {\_the\_everymnote\_noindent#1\_endgraf}}%
+          \_dp0=0pt \_box0 \_kern\_mnoteskip \_global\_mnoteskip=0pt}\_hss}%
+}
+\_def \_lrmnote#1#2{\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi} 
+
+   \_doc -----------------------------
+   We don't want to process `\fnote`, `\fnotemark`, `\mnote` in TOC, headlines
+   nor outlines.
+   \_cod -----------------------------
+
+\_regmacro {\_def\fnote#1{}} {\_def\fnote#1{}} {\_def\fnote#1{}}
+\_regmacro {\_def\fnotemark#1{}} {\_def\fnotemark#1{}} {\_def\fnotemark#1{}}
+\_regmacro {\_def\mnote#1{}} {\_def\mnote#1{}} {\_def\mnote#1{}}
+
+\_endcode % -------------------------------------
+
+

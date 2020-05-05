@@ -1,0 +1,266 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \printdoc {Macros for documentation printing <2020-04-28>}
+
+   \_doc -----------------------------
+   General decalarations.
+   \_cod -----------------------------
+
+\_fontfam[lmfonts]
+\_hyperlinks \Green \Green
+\_enlang
+\_enquotes
+
+   \_doc -----------------------------
+   Maybe, somebody needs `\seccc` or `\secccc`?
+   \_cod -----------------------------
+
+\_eoldef\seccc#1{\_medskip \_noindent{\_bf#1}\_par\_nobreak\_firstnoindent}
+\_def\secccc{\_medskip\_noindent $\_bullet$ }
+
+   \_doc -----------------------------
+   `\enddocument` can be redefined.
+   \_cod -----------------------------
+
+\_let\enddocument=\_bye
+
+   \_doc -----------------------------
+   Full page of listing causes underfill `\vbox` in output routine.
+   We need to add a small tolerance.
+   \_cod -----------------------------
+
+\_pgbottomskip=0pt plus10pt minus2pt
+
+   \_doc -----------------------------
+   The listing mode is implemented here.
+   \_cod -----------------------------
+
+\_newcount \_maxlines   \_maxlines=100000
+\_public \maxlines ;
+
+\_eoldef\_cod#1{\_par \_wipeepar 
+   \_vskip\_parskip \_medskip \_ttskip
+   \_begingroup
+   \_typosize[8/10] 
+   \_let\_printverbline=\_printcodeline
+   \_ttline=\_inputlineno
+   \_setverb 
+   \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
+   \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_relax \_ttfont
+   \_endlinechar=`^^J
+   \_def\_tmpb{\_start}%
+   \_readverbline
+}
+\_def\_readverbline #1^^J{%
+   \_def\_tmpa{\_empty#1}%
+   \_let\_next=\_readverbline
+   \_ea\_isinlist\_ea\_tmpa\_ea{\_Doc}\_iftrue \_let\_next=\_processinput \_fi
+   \_ea\_isinlist\_ea\_tmpa\_ea{\_Endcode}\_iftrue \_endinput \_let\_next=\_processinput \_fi
+   \_ifx\_next\_readverbline \_addto\_tmpb{#1^^J}\_fi
+   \_next
+}
+{\_catcode`\ =13 \_gdef\_aspace{ }}\_def\_asp{\_ea\_noexpand\_aspace}
+\_edef\_Doc{\_asp\_asp\_bslash _doc}
+\_edef\_Endcode{\_noexpand\_empty\_bslash _endcode}
+
+   \_doc -----------------------------
+   The scanner of the control sequences in the listing mode.
+   \_cod -----------------------------
+
+\_def\_makecs{\_def\_tmp{}\_futurelet\_next\_makecsA}
+\_def\_makecsA{\_ifcat a\_noexpand\_next \_ea\_makecsB \_else \_ea\_makecsF \_fi}
+\_def\_makecsB#1{\_addto\_tmp{#1}\_futurelet\_next\_makecsA}
+\_def\_makecsF{\_ifx\_tmp\_empty \_csstring\\%
+       \_else \_ifcsname ,\_tmp\_endcsname \_link[cs:\_tmp]{\Blue}{\_csstring\\\_tmp}%
+       \_else \_let\_next=\_tmp \_remfirstunderscore\_next
+              \_ifx\_next\_empty \_let\_next=\_tmp \_fi
+              \_ifcsname ,\_next\_endcsname \_link[cs:\_next]{\Blue}{\_csstring\\\_tmp}%
+       \_else \_csstring\\\_tmp \_fi\_fi\_fi
+}
+\_def\_processinput{%
+   \_let\_start=\_relax
+   \_ea\_replstring\_ea\_tmpb\_ea{\_aspace^^J}{^^J}
+   \_addto\_tmpb{\_end}%
+   \_isinlist\_tmpb{\_start^^J}\_iftrue \_advance\_ttline by1\_fi
+   \_replstring\_tmpb{\_start^^J}{\_start}%
+   \_replstring\_tmpb{\_start}{}%
+   \_replstring\_tmpb{^^J\_end}{\_end}%
+   \_replstring\_tmpb{^^J\_end}{}%
+   \_replstring\_tmpb{\_end}{}%
+   \_ea\_prepareverbdata\_ea\_tmpb\_ea{\_tmpb^^J}%
+   \_replthis{\_csstring\\}{\_noexpand\_makecs}%
+   \_ea\_printverb \_tmpb\_end
+   \_par
+   \_endgroup \_ttskip
+   \_isnextchar\_par{}{\_noindent}%
+}
+
+   \_doc -----------------------------
+   The lines in the listing mode have Yellow background.
+   \_cod -----------------------------   
+
+\_def\Yellow{\_setcmykcolor{0.0 0.0 0.3 0.03}}
+
+\_def\_printcodeline#1{\_advance \_maxlines by-1
+   \_ifnum \_maxlines<0 \_ea \_endverbprinting \_fi
+   \_penalty \_ttpenalty \_kern-4pt
+   \_noindent\_rlap{\Yellow \_vrule height8pt depth5pt width\_hsize}%
+   \_printfilename
+   \_indent \_printverblinenum #1\par}
+
+\_def\_printfilename{\_hbox to0pt{%
+   \_hskip\_hsize\vbox to0pt{\_vss\_llap{\Brown\docfile}\_kern7.5pt}\_hss}%
+   \_let\_printfilename=\_relax
+}
+\_everytt={\_let\_printverblinenum=\_relax}
+
+\_long\_def\_endverbprinting#1\_end{\_fi \_global\_maxlines=100000
+   \_noindent\_typosize[8/]\_dots etc. (see {\_tt\Brown\docfile})}
+
+   \_doc -----------------------------
+   `\docfile` is currently documented file.\nl
+   \`\printdoc` and \`\printdoctail` macros are defined here.
+   \_cod -----------------------------   
+
+\_def\docfile{}
+\_def\_printdoc #1 {\_par \_def\docfile{#1}%
+   \_everytt={\_ttshift=-15pt \_let\_printverblinenum=\_relax}%
+   \_ea\_cod \input #1 
+   \_everytt={\_let\_printverblinenum=\_relax}%
+   \_def\docfile{}%
+}
+\_def\_printdoctail #1 {\_bgroup 
+   \_everytt={}\_ttline=-1 \_ea\_printdoctailA \_input #1 \_egroup}
+{\_long\_gdef\_printdoctailA#1\_endcode{}}
+
+\_public \printdoc \printdoctail ;
+
+   \_doc -----------------------------
+   You can do `\verbinuput \vitt{<filename>} (<from>-<to>) <filename>`
+   if you need analogical design like in listing mode.
+   \_cod -----------------------------   
+
+\_def\_vitt#1{\_def\docfile{#1}\_ttline=-1 
+   \_everytt={\_typosize[8/10]\_let\_printverbline=\_printcodeline \_medskip}}
+
+\_public \vitt ;
+
+   \_doc -----------------------------
+   The Index entries are without the trailing backslash. We must to add it
+   when printing Index.
+   \_cod -----------------------------   
+
+\_addto \_ignoredcharsen {_}  % \foo, \_foo is the same in the fist pass of sorting
+\_def\_printii #1#2&{%
+   \_ismacro\_lastii{#1}\_iffalse \_newiiletter{#1}{#2}\_def\_lastii{#1}\_fi
+   \_gdef\_currii{#1#2}\_the\_everyii\_noindent
+   \_hskip-\_iindent \_ignorespaces\_printiiA\bslash#1#2//}
+
+\_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0 
+   {\_rm\_printpages #1,:,\_par}}
+
+\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip 
+   \_bf\_llaptoclink{#1}{#2}\_hfill \_pgn{#3}\_tocpar\_medskip}
+
+   \_doc -----------------------------
+   The \code{<something>} will be print as <something>.
+   \_cod -----------------------------   
+
+\_let\lt=<
+\_catcode`\<=13
+
+\_def<#1>{$\langle\hbox{\it#1\/}\rangle$}
+\_everyintt{\_catcode`\<=13 }
+
+   \_doc -----------------------------
+   If this macro is loaded by \^`\load` then we need to initialize
+   catcodes using the `\_afteroad` macro.
+   \_cod -----------------------------
+
+\_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 }
+
+   \_doc -----------------------------
+   Main documentation point and hyperlinks to/from it.
+   \_cod -----------------------------   
+
+\_activettchar`
+
+\_def\`#1`{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+   \_ifcsname cs:\_tmp\_endcsname\_else \_dest[cs:\_tmp]\_fi
+   \_sxdef{cs:\_tmp}{}%
+   \_hbox{\_ifcsname cs:^\_tmp\_endcsname 
+            \_link[cs:^\_tmp]{\Red}{\_tt\_csstring\\\_tmp}\_else
+            {\_tt\Red\_csstring\\\_tmp}\_fi}%
+}
+
+\_def\^`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+   \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
+         \_link[cs:\_tmp]{\Blue}{\_tt\_string#1}}%
+   \_futurelet\_next\_cslinkA
+}
+\_def\_cslinkA{\_ifx\_next`\_ea\_ignoreit \_else \_ea\_ea\_ea`\_ea\_string\_fi}
+
+\_def\~`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+   \_hbox{\_link[cs:^\_tmp]{\Blue}{\_tt\_string#1}}%
+   \_futurelet\_next\_cslinkA
+}
+
+\_endcode %-------------------------------------------
+
+\noindent
+The \^`\printdoc` `<filename><space>` and \^`\printdoctail` `<filename><space>` 
+commands are defined after the file `doc.opm` is load by \^`\load`~`[doc]`. 
+
+The `\printcoc` starts reading of given `<filename>` from the second line.
+The file is read in {\em the listing mode}. 
+The `\prindoctail` starts reading given `<filename>` from the
+first occurrence of the `\_encode`. The file is read 
+in normal mode (like `\input <filename>`).
+
+The {\em listing mode} prints the lines as listing of a code. This mode is
+finished when first {\visiblesp`  \_doc`} occurs or first `\_endcode`
+occurs. At least two spaces must precede before such `\_doc`. On the other
+hand, the `\_encode` must be at the left edge of the line without spaces. 
+If this rule is not met then the listing mode continues.
+
+If the first line or the last line of the listing mode is empty then such
+lines are not printed. The maximal number of printed lines in the listing
+mode is \^`\maxlines`. Is is set to almost infinity (100000). You can set it
+to a more sensible value. Such setting is valid only for the first following
+listing mode.
+
+When the listing mode is finished by `\_doc` then next lines are read in the
+normal way, but the material between `\begtt` ... `\endtt` pair 
+is shifted by three letters left. The reason is that the three spaces of 
+indentation is recommended in the `\_doc` ... `\_cod` pair and this shifting
+is a compensation of this indentation.
+
+The `\_cod` macro ignores the rest of current line and starts the listing
+mode again.
+
+When the listing mode is finished by the `\_endcode` then the `\endinput` is
+applied, the reading of the file opened by `\printdoc` is finished.
+
+You cannot reach the end of the file (without `\_endcode`) in the listing
+mode.
+
+The listing mode creates all control sequences which are listed in the
+index as active link to the main documentation point of such control sequence
+and prints them in blue. Other text is printed in black.
+
+The main documentation point is denoted by \code{\\`\\}`<sequence>`\code{`}
+in red, for example \code{\\`\\foo`}.
+The user documentation point is the first occurrence of 
+\code{\\^`\\}`<sequence>`\code{`}, for example \code{\\^`\\foo`}.
+There can be more such markups, all of them are hyperlinks to the main
+documentation point. 
+And main documentation point is hyperlink to the user documentation point,
+if such point exists. Finally, the 
+\code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
+hyperlinks to the user documentation point.
+
+\endinput
+
+2020-04-28 \levevmode in \^ macros added (bug fixed)
+2020-04-22 released

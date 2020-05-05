@@ -1,9 +1,10 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 % This file is read from optex-doc.tex
-% Use: optex optex-doc  (three times) to create whole documentation.
+% Use: optex optex-doc  
+% (three times) to create whole documentation including all references and the index.
 
-\ifx\printdoc\undefined \input doc.opm \fi
+\load [doc.opm]
 
 \chap Technical documentation
 
@@ -81,9 +82,7 @@ the `\dump` command.
 
 \printdoctail prefixed.opm
 \secc The implementation of the name spaces
-\edef\_Endcode{\_bslash _endcode\_pcent}
 \printdoc prefixed.opm
-\edef\_Endcode{\_bslash _endcode}
 
 \sec pdf\TeX/ initialization
 \printdoctail luatex-ini.opm
@@ -124,7 +123,7 @@ Differences are mentioned in the documentation below.
 \secc Implementation of the Font Selection System
 \printdoc     fonts-select.opm
 
-\sec Preloaded fonts for math mode
+\sec [math-preload] Preloaded fonts for math mode
 \printdoctail math-preload.opm
 \printdoc     math-preload.opm
 

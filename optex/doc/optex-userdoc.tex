@@ -3,6 +3,8 @@
 % This file is read from optex-doc.tex
 % Use: optex optex-doc  (three times) to create whole documentation.
 
+\let\new=\relax
+
 \sec Starting with \OpTeX/
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -389,7 +391,7 @@ The following math alphabets are available:
 
 The last two selectors \^`\bf` and \^`\bi` select the sans serif fonts in math regardless
 the current text font family. This is common notation for vectors and
-matrices. You can re-declare it, see the file `unimath-codes.opm` where
+matrices. You can re-declare them, see the file `unimath-codes.opm` where
 Unicode math variants of \^`\bf` and \^`\bi` selectors are defined.
 
 The math fonts can be scaled by \^`\typosize` and \^`\typoscale` macros.
@@ -1601,6 +1603,30 @@ Analogical declaration macro `\book` is not prepared. Each book needs an
 individual typographical care. You need to create specific macros for
 design. 
 
+\secc Loading other macro packages
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+You can load more macro packages by `\input{<file-name>}` or by
+\^`\load[<file-names>]`. The first case is \TeX/ primitive command, it can be
+used in the alternative old syntax `\input <filename><space>` too. The
+second case allows to specify a comma separated list of included files.
+Moreover, the \^`\load` macro loads each macro file only once, it sets
+temporarily standard category codes during loading and it tries to
+load `<filename>.opm` or `<filename>.tex` or `<filename>`, first occurence
+wins. Example: 
+\begtt
+\load [qrcode, tikz] 
+\endtt
+%
+does `\input qrcode.opm` \,and `\input tikz.tex` \,and it saves
+local information about the fact that these file names
+`qrcode` and `tikz` were already used, i.\,e. next \^`\load` will skip them.  
+
+It is strongly recommended to use the `\load` macro for loading external
+macros, if you need them. On the other hand, if your document is structured
+to more files, use simply the `\input` primitive.
+
+
 \secc Lorem ipsum dolor sit
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -1660,7 +1686,7 @@ put it as the first command in your document:
 \sec Summary
 %%%%%%%%%%%%
 
-\begtt     \typosize[10/12]\adef!{\string\endtt}\adef&{\kern.25em}
+\begtt     \typosize[9/11]\adef!{\string\endtt}\adef&{\kern.25em}
 \tit Title (terminated by end of line)
 \chap Chapter Title (terminated by end of line)
 \sec Section Title (terminated by end of line)
@@ -1694,6 +1720,7 @@ put it as the first command in your document:
 \bib [labname]  % an item in the list of references
 \usebib/? (style) bib-base % direct using of .bib file, ? in {s,c}
 
+\load [<filenames>]   % loadaing macro files
 \fontfam [FamilyName] % selection of font family
 \typosize [font-size/baselineskip] % size setting of typesetting
 \typoscale [factor-font/factor-baselineskip] % size scaling
@@ -1740,11 +1767,17 @@ use after the command \~`\fontfam[LMfonts]` which reads the fonts in OTF
 format.
 
 \new
-The text accents macros like `\'`, `\v`, `\"` are undefined\fnote 
+Plain \TeX/ defines `\newcount`, `\bye` etc. as `\outer` macros. \OpTeX/
+doesn't set any macro as `\outer`. Macros like `\TeX`, `\rm` are defined as
+`\protected`.
+
+\new
+The text accents macros `\"`, `\'`, `\v`, `\u`, `\=`, `\^`, `\.`, `\H`,
+`\~`, \code{\\`}, `\t`   are undefined\fnote 
 {The math accents macros like `\acute`, `\bar`, `\dot`, `\hat` still work.}
 in \OpTeX/. Use real
-letters like á, ř, ž in your source document instead these old accents macros.
-If you really want to use them, you can initialize them by \^`\oldaccents`
+letters like á, ř, ž in your source document instead of these old accents macros.
+If you really want to use them, you can initialize them by the \^`\oldaccents`
 command. But we don't recommend it.
 
 \new
@@ -1757,6 +1790,9 @@ page layout.
 The origin for typographical area is not at top left 1\,in 1\,in coordinates
 but at top left paper corner exactly. For example, `\hoffset` includes directly left
 margin.
+
+The `\sec` macro is reserved to sections but original Plain \TeX/ declares this
+control sequence for math secans.
 
 \enddocument
 

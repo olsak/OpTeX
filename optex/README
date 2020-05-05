@@ -6,8 +6,23 @@ This software is in public domain.
 
 See http://petr.olsak.net/optex
 
+Files:
+
+base/  ... basic set of macro files used when optex.fmt is generated
+           and more basic macros loaded on demand during document processing.
+demo/  ... examples: short document: op-demo.tex, short letter: op-letter.tex,
+           presentation slides: op-slides.tex.
+pkg/   ... external macros. Maybe, they can be created by other authors if 
+           the macro file conforms to the rules given in the section 2.2.5 
+           in the OpTeX documentation.
+doc/   ... PDF version of the OpTeX documentation and sources.
+
 History:
 
+<0.12> The external macro qrcode.opm introduced
+       New directory structure: base/, demo/, pkg/, doc/ introduced.
+       \load macro introduced 
+       \newif: bug fixed, other bug fixed.
 <0.11> \phi, \varpi in Unicode: bug fixed 
        \mathstyles introduced.
 <0.10> Technical documentation added 

@@ -1,0 +1,258 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-02>} % preloaded in format
+
+   \_doc ----------------------------
+   \secc Classical \code{\\newif}
+   The \`\newif` macro implements boolean value. 
+   It works as in plain \TeX. It means that
+   after `\newif\ifxxx` you can use `\xxxtrue` or
+   `\xxxfalse` to set the boolean value and use `\ifxxx true\else false\fi`
+   to test this value. The default value is false.
+
+   The macro \`\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
+   `\_xxxfalse`. This means that it is usable for internal name space 
+   (`_`prefixed macros).
+   \_cod ----------------------------
+
+\_def\_newif #1{\_ea\_newifA \_string #1\_relax#1}
+\_ea\_def \_ea\_newifA \_string\if #1\_relax#2{%
+   \_sdef{#1true}{\_let#2=\_iftrue}%
+   \_sdef{#1false}{\_let#2=\_iffalse}%
+   \_let#2=\_iffalse
+}
+\_def\_newifi #1{\_ea\_newifiA \string#1\_relax#1}
+\_ea\_def \_ea\_newifiA \_string\_if #1\_relax#2{%
+   \_sdef{_#1true}{\_let#2=\_iftrue}%
+   \_sdef{_#1false}{\_let#2=\_iffalse}%
+   \_let#2=\_iffalse
+}
+\_public \newif ;
+
+   \_doc ----------------------------
+   \secc Loops
+   The \`\loop` `<codeA> \ifsomething <codeB>` \`\repeat` loops `<codeA><codeB>`
+   until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
+   finished. This works like in plain \TeX, but implementation is somewhat
+   better (you can use `\else` clause after the `\ifsomething`).
+
+   There are public version `\loop...\repeat` and private version
+   \`\_loop` ...\`\_repeat`. You cannot mix both versions in one loop. 
+
+   The `\loop` macro keeps its original plain TeX meaning. It is not
+   expandable and nested `\loop`s are possible only in a \TeX/ group.
+   \_cod ----------------------------
+
+\_long\_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
+\_def \loop #1\repeat{\_def\_body{#1}\_iterate}
+\_let \_repeat=\_fi % this makes \loop...\if...\repeat skippable
+\_let \repeat=\_fi
+\_def \_iterate {\_body \_ea \_iterate \_fi}
+
+   \_doc -----------------------------
+   \`\foreach` `<list>` \`\do` `{<what>}` 
+   repeats `<what>` for each element of the
+   `<list>`. The `<what>` can include `#1` which is substituted by each
+   element of the `<list>`. The macro is expandable.
+
+   \`\fornum` `<from>..<to>` \`\do` `{<what>}` or 
+   \`\fornumstep` `<num>: <from>..<to>` \`\do` `{<what>}`
+   repeats `<what>` for each number from `<from>` to `<to>` (with step `<num>`
+   or with step one). The `<what>` can include `#1` which is substituted by
+   current number. The sequence `<from>..<to>` can be decreasing too.
+   The macro is expandable.
+
+   Recommendation: it is better to 
+   use private variants of \`\_foreach` and \`\_fornum`. 
+   When the user writes `\input tikz` then `\foreach` macro is redefined! The
+   private variants use \`\_do` separator instead `\do` separator.
+   \_cod -----------------------------
+
+\_newcount\_frnum        % the numeric variable used in \fornum 
+\_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
+
+\_long\_def\_foreach #1\_do#2{\_putforstack
+   \_immediateassignment\_def\_fbody##1{#2}%
+   \_foreachA #1\_do}
+\_long\_def\_foreachA #1{\_ifx\_do#1\_getforstack\_else\_fbody{#1}\_ea\_foreachA\_fi}
+
+\_def\_fornum#1..#2\_do{\_fornumstep 1:#1..#2\_do}
+\_long\_def\_fornumstep#1:#2..#3\_do#4{\_putforstack
+   \_immediateassigned{%
+      \_def\_fbody##1{#4}%
+      \_def\_fornumsgn{}%
+      \_def\_fornumrel{<}%
+      \_frnum=\_numexpr#2\_relax
+      \_ifnum\_numexpr#3<\_frnum \_def\_fornumrel{>}\_fi %decreasing sequence
+      \_ifnum\_numexpr#1\_fornumrel0 \_def\_fornumsgn{-}\_fi % correction      
+   }%
+   \_fornumB{#3}{#1}%
+}
+\_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_frnum \_getforstack \_else 
+   \_ea\_fbody\_ea{\_the\_frnum}%
+   \_immediateassignment\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax 
+   \_afterfi{\_fornumB{#1}{#2}}\_fi
+}
+\_def\_afterfi#1#2\_fi{\_fi#1}
+
+\_def\foreach #1\do{\_foreach #1\_do}
+\_def\fornum#1..#2\do{\_fornumstep 1:#1..#2\_do}
+\_def\fornumstep#1:#2..#3\do{\_fornumstep #1:#2..#3\_do}
+
+   \_doc ----------------------------
+   The `\foreach` and `\fornum` macros can be nested and arbitrary combined.
+   When they are nested then use `##1` for the variable of nested level,
+   `####1` for the variable of second nested level etc. Example:
+   \begtt
+   \foreach ABC \do {\fornum 1..5 \do {letter:#1, number: ##1. }}
+   \endtt
+   Implementation note: 
+   we cannot use \TeX/-groups for nesting levels because we want to do the
+   macros expandable. We must implement a special for-stack which saves the
+   data needed by `\foreach` and `\fornum`. The \`\_putforstack` is used
+   when `\for*` is initialized and \`\_getforstack` is used when the 
+   `\for*` macro ends. The \`\_forlevel` variable keeps the current nesting
+   level. If it is zero, then we need not save nor restore any data.
+   \_cod ----------------------------
+
+\_newcount\_forlevel
+\_def\_putforstack{\_immediateassigned{%
+   \_ifnum\_forlevel>0
+      \_sdef{_frnum:\_the\_forlevel\_ea}\_ea{\_the\_frnum}%
+      \_slet{_fbody:\_the\_forlevel}{_fbody}%
+   \_fi 
+   \_advance\_forlevel by1
+}}
+\_def\_getforstack{\_immediateassigned{%
+   \_advance\_forlevel by-1 
+   \_ifnum\_forlevel>0
+      \_slet{_fbody}{_fbody:\_the\_forlevel}%
+      \_frnum=\_cs{_frnum:\_the\_forlevel}\_space
+   \_fi
+}}
+
+   \_doc ----------------------------
+   \secc Is-macros
+   There are a collection of macros 
+   `\isempty`, `\istoksempty`, `\isequal`, `\ismacro`, `\isdefined`, `\isinlist` and `\isfile` 
+   with common syntax:
+   \begtt \catcode`\<=13
+   \issomething <params> \iftrue <codeA> \else <codeB> \fi 
+   or 
+   \issomething <params> \iffalse <codeB> \else <codeA> \fi
+   \endtt
+   The `\else` part is optional. The `<codeA>` is processed if
+   `\issomething<params>` generates true condition. The `<codeB>`
+   is processed if `\issomething<params>` generates false condition.
+
+   The `\iftrue` or `\iffalse` is an integral part of this syntax 
+   because we need to keep skippable nested `\if` conditions.
+
+   Implementation note: 
+   we read this `\iftrue` or `\iffalse` into unseparated parameter and repeat
+   it because we need to remove an optional space before this command.
+
+   \medskip\noindent
+   \`\isempty` `{<text>}\iftrue`
+   is true if the `<text>` is empty. This macro is expandable.\nl
+   \`\istoksempty` `<tokens variable>\iftrue` 
+   is true if the `<tokens variable>` is empty. It is expandable.
+   \_cod ----------------------------
+
+\_def \_isempty #1#2{\_if\_relax\_detokenize{#1}\_relax \_else \_ea\_unless \_fi#2}
+\_def \_istoksempty #1#2{\_ea\_isempty\_ea{\_the#1}#2}
+\_public \isempty \istoksempty ;
+
+   \_doc ----------------------------
+   \`\isequal` `{<textA>}{<textB>}\iftrue` 
+   is true if the <textA> and <textB> are
+   equal, only from strings point of view, category codes are ignored.
+   The macro is expandable.
+   \_cod ----------------------------
+
+\_def\_isequal#1#2#3{\_directlua{%
+   if "\_luaescapestring{\_detokenize{#1}}"=="\_luaescapestring{\_detokenize{#2}}" 
+   then else tex.print("\_nbb unless") end}#3}
+\_public \isequal ;
+
+   \_doc ----------------------------
+   \`\ismacro` `\macro{text}\iftrue` is true if macro is defined as {<text>}.
+   Category codes are ignored in this testing. The macro is expandable.
+   \_cod ----------------------------
+
+\_def\_ismacro#1{\_ea\_isequal\_ea{#1}}
+\_public \ismacro ;
+
+   \_doc ----------------------------
+   \`\isdefined` `{<csname>}\iftrue` is true if `\<csname>` is defined.
+   The macro is expandable.
+   \_cod ----------------------------
+
+\_def\_isdefined #1#2{\_ifcsname #1\_endcsname \_else \_ea\_unless \_fi #2}
+\_public \isdefined ;
+
+   \_doc ----------------------------
+   \`\isinlist` `\list{<text>}\iftrue` is true if the
+   `<text>` is included the macro body of the `\list`. 
+   The category code are relevant here. The macro is not expandable.
+   \_cod ----------------------------
+
+\_long\_def\_isinlist#1#2{\_begingroup 
+   \_long\_def\_tmp##1#2##2\_end/_%
+        {\_endgroup\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi}%
+   \_ea\_tmp#1\_endlistsep#2\_end/_%
+}
+\_public \isinlist ;
+
+   \_doc -----------------------------
+   \`\isfile` `{<filename>}\iftrue` is true if the file <filename> exists and are
+   readable by \TeX.
+   \_cod -----------------------------
+
+\_newread \_testin
+\_def\_isfile #1{%
+   \_openin\_testin ={#1}\_relax
+   \_ifeof\_testin \_ea\_unless
+   \_else \_closein\_testin
+   \_fi
+}
+\_public \isfile ;
+
+   \_doc -----------------------------
+   \`\isfont` `{<fontname or [fontfile]>}\iftrue`
+   is true if given font exists. The result of this testing 
+   is saved to the \`\_ifexistfam`. 
+   \_cod -----------------------------
+
+\_newifi \_ifexistfam
+\_def\_isfont#1#2{%
+   \_begingroup
+       \_suppressfontnotfounderror=1
+       \_font\_testfont={#1}\_relax
+       \_ifx\_testfont\_nullfont \_def\_tmp{\_existfamfalse \_unless}
+       \_else \_def\_tmp{\_existfamtrue}\_fi
+   \_ea \_endgroup \_tmp #2%
+}
+\_public \isfont ;
+
+   \_doc ----------------------------
+   The last macro \`\isnextchar` `<char>{<codeA>}{<codeB>}` 
+   has different syntax than all others is-macros.
+   It executes `<codeA>` if next character is equal to <char>. 
+   Else the `<codeB>` is executed. The macro is not expandable.
+   \_cod ----------------------------
+
+\_long\_def\_isnextchar#1#2#3{\_begingroup\_toks0={\_endgroup#2}\_toks1={\_endgroup#3}%
+   \_let\_tmp=#1\_futurelet\_next\_isnextcharA
+}
+\_def\_isnextcharA{\_the\_toks\_ifx\_tmp\_next0\_else1\_fi\_space}
+
+\_public \isnextchar ;
+
+
+\_endcode 
+
+2020-05-02 \newif bug fix
+2020-04-15 \fornumstep 3: 1..12 instead \fornum 1..12\step 3
+2020-04-15 \fornum, \foreach can be nested without groups
+2020-04-01 implemented
