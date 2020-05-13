@@ -74,8 +74,8 @@
 
    \_doc -----------------------------
    The \`\_setcolor` macro redefines empty `\_ensureblack` macro (used in
-   output routine for headres and footers) to `\_ensureblackA` which sets
-   Black at the start of its parameter and retunrs to the current color at the
+   output routine for headers and footers) to `\_ensureblackA` which sets
+   Black at the start of its parameter and returns to the current color at the
    end of its parameter. The current color
    is saved into `\_currentcolor` macro and colorstack is pushed.
    Finally, the `\_colorstackpop` is initialized by `\aftergroup` if
@@ -111,7 +111,7 @@
    can follow on next pages and their colors are independent on colors
    used in the main page-body. The \`\_openfnotestack` is defined as
    \`\_openfnotestackA` when the \^`\_setcolor` is used first.
-   The \`\_fnotestack` is initializedin in `\everyjob` because the
+   The \`\_fnotestack` is initialized in in `\everyjob` because the
    initialization is not saved to the format.
    \_cod -----------------------------
 

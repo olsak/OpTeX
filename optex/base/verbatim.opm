@@ -61,7 +61,7 @@
    \_doc ----------------------------
    \`\activettchar``<char>` saves original catcode of previously declared `<char>` (if
    such character was declared) using \`\_savedttchar` and \`\_savedttcharc`
-   values. Then new such values are stored. The declared charater is activated
+   values. Then new such values are stored. The declared character is activated
    by `\_adef` as a macro (active character) which opens a group, 
    does `\_setverb` and other settings and reads its parameter until second the same 
    character. This is done by the \`\_readverb` macro. Finally it prints scanned

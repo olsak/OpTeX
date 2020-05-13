@@ -29,7 +29,7 @@
 \_let\_wref=\_wrefrelax
 
    \_doc ---------------------
-   If a macro needs to ceate and to use `.ref` file then such macro must use
+   If a macro needs to create and to use `.ref` file then such macro must use
    \`\openref`. When the file is created (using internal \`\_openrefA`) then
    the \`\_wref` `\<macro>{<data>}` is redefined in order to 
    save the line `\<macro><data>` to the `.ref` file using asynchronous

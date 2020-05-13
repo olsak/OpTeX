@@ -265,7 +265,7 @@ The `bib-<style>.opm` file must define the commands:
 %
 There are two special fieldnames: `!author` and `!editor`. The processed list of
 authors or editors (by repeatedly calling `\_authorname` or `\_editorname`) are 
-used here insted of raw data.
+used here instead of raw data.
 
 You can define `_print:BEGIN` and/or `_print:END` which is executed at the begin or
 end of each `<entrytype>`. The formatting does not solve the numbering and

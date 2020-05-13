@@ -30,9 +30,9 @@
    Inkscape is able to save a picture to `*.pdf` file and labels for the picture
    to `*.pdf_tex` file. The second file is in \LaTeX/ format (unfortunately) 
    and it is intended to read immediately it after `*.pdf` in included 
-   in order to place labels of this ficture in the same font as document is printed. 
+   in order to place labels of this picture in the same font as document is printed.
    We need to read this \LaTeX/ file by plain \TeX/ macros when \`\inkinspic` is used. 
-   These macros are stored in the \`\_inkdefs` toknes list and it is used
+   These macros are stored in the \`\_inkdefs` tokens list and it is used
    locally in the group. The solution is borrowed from OPmac trick 0032. 
    \_cod -----------------------------
 
@@ -193,12 +193,12 @@
    \`\_circle``{<x>}{<y>}` creates an ellipse with `<x>` axis and `<y>` axix.
    The origin is in the center.
    \nl
-   \`\_oval``{<x>}{<y>}{<roudness>}` creates an oval with `<x>`, `<y>` size and with 
+   \`\_oval``{<x>}{<y>}{<roundness>}` creates an oval with `<x>`, `<y>` size and with
    given `<roundness>`. The real size is bigger by 2`<roundness>`. The
    origin is at the left bottom corner.
    \nl
-   \`\_mv``{<x>}{<y>}{<curve>}` moves current point to `<x>`, `<y>`, crates the
-   `<curve>` and retuns back the current point.
+   \`\_mv``{<x>}{<y>}{<curve>}` moves current point to `<x>`, `<y>`, creates the
+   `<curve>` and returns back the current point.
    All these macros are fully expandable and they can be used in the
    `\pdfliteral` argument.
    \_cod -----------------------------

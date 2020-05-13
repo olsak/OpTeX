@@ -272,7 +272,7 @@
    `\mark` mechanism is needed. But sections need `\mark`s. And they can be
    mixed with chapter's running heads, of course. 
 
-   The \`\_insermark``{<title text>}` saves `\mark` in the format
+   The \`\_insertmark``{<title text>}` saves `\mark` in the format
    `{<title-num>} {<title-text>}`, so it can be printed \"as is" in
    `\headline` (see the space between them), or you can define a formating
    macro with two parameters for processing these data, if you need it.   
