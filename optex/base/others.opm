@@ -66,6 +66,12 @@
 \_def\OPmacversion{OpTeX}  
 
     \_doc ----------------------------
+    We allow empty lines in math formulae. It is more comfortable.
+    \_cod ----------------------------
+
+\_suppressmathparerror = 1
+
+    \_doc ----------------------------
     Lorem ipsum can be printed by \`\lipsum``[<range>]` or \`\lorem``[<range>]`,
     for example `\lipsum[3]` or `\lipsum[112-121]`, max=150. The data are read
     from \LaTeX/ file `lipsum.ltd.tex`.

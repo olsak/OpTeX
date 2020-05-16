@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-02>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-06>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -243,7 +243,7 @@
    \_cod ----------------------------
 
 \_long\_def\_isnextchar#1#2#3{\_begingroup\_toks0={\_endgroup#2}\_toks1={\_endgroup#3}%
-   \_let\_tmp=#1\_futurelet\_next\_isnextcharA
+   \_let\_tmp= #1\_futurelet\_next\_isnextcharA
 }
 \_def\_isnextcharA{\_the\_toks\_ifx\_tmp\_next0\_else1\_fi\_space}
 
@@ -252,6 +252,7 @@
 
 \_endcode 
 
+2020-05-06 \isnextchar: \let\tmp=#1 -> \let\tmp= #1 (bug fix, #1 should be space)
 2020-05-02 \newif bug fix
 2020-04-15 \fornumstep 3: 1..12 instead \fornum 1..12\step 3
 2020-04-15 \fornum, \foreach can be nested without groups

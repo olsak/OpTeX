@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newdimen {Allocators for registers <2020-01-23>} % loaded in format
+\_codedecl \newdimen {Allocators for registers <2020-05-12>} % loaded in format
 
    \_doc -----------------------------
    The limits are set first.
@@ -28,7 +28,7 @@
 \_countdef\_toksalloc=15   \_toksalloc=255
 \_countdef\_readalloc=16   \_readalloc=-1
 \_countdef\_writealloc=17  \_writealloc=-1
-\_countdef\_mathalloc=18   \_mathalloc=3
+\_countdef\_famalloc=18    \_famalloc=3
 
    \_doc -----------------------------
    The common allocation macro 
@@ -51,7 +51,7 @@
    \_doc -----------------------------
    The allocation macros 
    \`\newcount`, \`\newdimen`, \`\newskip`, \`\newmuskip`, \`\newbox`,
-   \`\newtoks`, \`\newread`, \`\newwrite` and \`\newmath`
+   \`\newtoks`, \`\newread`, \`\newwrite` and \`\newfam`
    are defined here.
    \_cod -----------------------------
 
@@ -63,9 +63,9 @@
 \_def\_newtoks #1{\_allocator #1{toks}\_toksdef}
 \_def\_newread #1{\_allocator #1{read}\_chardef}
 \_def\_newwrite #1{\_allocator #1{write}\_chardef}
-\_def\_newmath #1{\_allocator #1{fam}\_chardef}
+\_def\_newfam #1{\_allocator #1{fam}\_chardef}
 
-\_public \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newmath ;
+\_public \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newfam ;
 
    \_doc -----------------------------
    The \`\newinsert` macro is defined differently than others.
@@ -162,4 +162,7 @@ the array-like declarator of counters.
 }
 \endtt
 
+\_endinput
 
+2020-05-12  \newmath -> \newfam  bug fixing
+2020-01-23  released

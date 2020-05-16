@@ -416,6 +416,18 @@
 \_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace \vvkern \hhkern ;
 
    \_doc -----------------------------
+   The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
+   tokens lists. The default values are set in order this macro beahaves
+   like in Plain \TeX. The \`\eqspace` is horizontal space put 
+   between equation systems if more columns in \^`\eqalign` is used.
+   \_cod -----------------------------
+
+\_newtoks  \_eqlines  \_eqlines={\_openup\_jot}
+\_newtoks  \_eqstyle  \_eqstyle={\_strut\_displaystyle}   
+\_newdimen \_eqspace  \_eqspace=20pt
+\_public \eqlines \eqstyle \eqspace ;
+
+   \_doc -----------------------------
    The output routine uses token list \`\headline` and \`\footline` in the
    same sense as in plain \TeX/. If they are non-empty then `\hfil` or `\hss`
    must be here because they are used inside `\hbox to\hsize`.

@@ -36,7 +36,7 @@
 
 \_faminfo [Pagella] {TeX Gyre Pagella fonts based on Palatino} {f-pagella}
    { -,\caps: {\rm\bf\it\bi} }
-\_famalias [Palation]
+\_famalias [Palatino]
 
 \_faminfo [Schola] {TeX Gyre Schola fonts based on New Century} {f-schola}
    { -,\caps: {\rm\bf\it\bi} }

@@ -151,7 +151,7 @@
      {\_bgroup \_aftergroup\_vfootA \_afterassignment\_ignorespaces \_let\_next=}{\_vfootB}%
 }
 \_def\_vfootA{\_unskip\_strut\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
-\_def\_vfootB #1{#1\_uskip\_strut\_vfootF}
+\_def\_vfootB #1{#1\_unskip\_strut\_vfootF}
 \_def\_vfootF{\_egroup} % close \_insert\_footins\_bgroup
 \_def\_closefncolor#1{#1\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
 \_def \_footstrut {\_vbox to\_splittopskip{}}
@@ -243,3 +243,8 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
   * runs output routine repeatedly if \^`\dosupereject` is activated.
   \enditems
 \enditems
+
+\_endinput
+
+2020-05-12 \vfootB: \uskip -> \unskip bug fixed
+2020-03-28 Released
