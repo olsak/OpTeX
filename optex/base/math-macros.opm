@@ -11,12 +11,12 @@
    without problem. But `\int``_a^b` is tokenized as `\int``_a`, `^`, `b`. The
    control sequence `\int``_a` isn't defined. We must write `\int _a^b`.
 
-   The lua code presented here solves this problem. But you cannot set our own
+   The Lua code presented here solves this problem. But you cannot set our own
    control sequence in the form `\<word>_` or `\<word>_<one-letter>` (where
    <word> is sequence of letters) because such control sequences are
-   unacessible: proprocessor rewrites it.
+   inaccessible: preprocessor rewrites it.
 
-   The \`\mathsbon` macro activates the rewritting rule `\<word>_<nonleter>` to
+   The \`\mathsbon` macro activates the rewriting rule `\<word>_<nonleter>` to
    `\<word> _<nonletter>` and 
    `\<word>``_<letter><nonletter>` to `\<word> _<letter><nonletter>` at input
    processor level. The \`\mathsboff` deactivates it.
@@ -120,7 +120,7 @@
 
    \_doc -----------------------------
    All control sequences declared by `\mathchardef` are supposed (by default)
-   only for public usage. It means that they are delcared without `_` prefix.
+   only for public usage. It means that they are declared without `_` prefix.
    If such sequences are used in internal \OpTeX/ macro then their internal
    prefixed form is declared using `\_private` macro.\nl
    These encoding dependent declarations will be set to different values
@@ -941,7 +941,7 @@
 \_let\circleddot\odot
 
    \_doc -----------------------------
-   The \`\not` macro is re-defined to be mote inteligent than in plain
+   The \`\not` macro is re-defined to be smarter than in plain
    \TeX/. The macro follows this rule:
    \begtt
    \not< becomes \_nless
@@ -999,7 +999,7 @@
    \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
    It behaves like `\hbox{<text>}` but the `<text>` is scaled to smaller
-   size if it is used in scriptstye or scriptscript style.
+   size if it is used in scriptstyle or scriptscript style.
    \_cod -----------------------------
 
 \_def\_mathbox#1{{\_mathstyles{\_hbox{%

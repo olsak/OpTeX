@@ -182,7 +182,7 @@
 \_endcode % ---------------------------------------------
 
 
-Maybe, you need to do more language specific actions than only to swich
+Maybe, you need to do more language specific actions than just switching
 hyphenation patterns. For example you need to load a specific font with a
 specific script used in selected language, you can define a macros for
 quotation marks depending on the language etc.

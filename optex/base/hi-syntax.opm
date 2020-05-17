@@ -170,7 +170,7 @@ The `hisyntax-<name>.opm` file must (globally) declare `\_hisyntax<name>` tokens
 where the action over verbatim text is declared typically by `\replfromto` or
 `\replthis` macros. 
 
-The verbatim text is preparared by {\em pre-processing phase}, then the 
+The verbatim text is prepared by {\em pre-processing phase}, then the
 `\_hisyntax<name>` is applied and then {\em post-processing phase} does final
 corrections. Finally, the verbatim text is printed line by line.
 
@@ -180,7 +180,7 @@ The pre-processing phase does:
 * Each space is replaced by {\visiblesp`\n\ \n`}, so `\n<word>\n` should be a pattern to
   finding whole words (no subwords). The `\n` control sequence is removed in
   the post-processing phase.
-* Each end of line is repersented by `\n^^J\n`.
+* Each end of line is represented by `\n^^J\n`.
 * The `\_start` control sequence is added before the verbatim text and `\_end` control
   sequence is appended to the end of the verbatim text. These control
   sequences are removed in post-processing phase.
@@ -192,7 +192,7 @@ text.
 
 \begitems
 * `\n` means noting but it should be used as a boundary of words as mentioned above.
-* `\t` means a tabelator. It is prepared as `\n\t\n` because it can be at
+* `\t` means a tabulator. It is prepared as `\n\t\n` because it can be at
   the boundary of a word.
 * `\x <letter>{<text>}` can be used as replacing text. Suppose the example
   \begtt
@@ -214,7 +214,7 @@ text.
   The `\z <letter>{<text>}` is expanded to `\_z:<letter>{<text>}` and if
   `\hicolor <letter> <color>` is declared then 
   `\_z:<letter>{<text>}` expands to `{<color><text>}`. So, required color is
-  activated at all lines (separatelly) where C comment spans.
+  activated at all lines (separately) where C comment spans.
 * `\y {<text>}` is replaced by `\<text>` in the post processing phase. It should
   be used for macros without a parameter. You cannot use unprotected macros
   as replacement text before the post-processing phase, because the post-processing

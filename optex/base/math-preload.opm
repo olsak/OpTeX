@@ -4,7 +4,7 @@
 
   \_doc ------------------------------
   We have two math macros \`\normalmath` for normal shape of all math
-  symbols and \`\boldmath` for bold shape of all math symbos. The second one
+  symbols and \`\boldmath` for bold shape of all math symbols. The second one
   can be used in bold titles, for example.
   These macros load all fonts from all given math font families.
   \_cod ------------------------------
@@ -132,7 +132,7 @@
    \`\_sizemsscript` sizes. These sizes are set by the
    \`\setmathsizes` `[<text-size>/<script-size>/<scriptscript-size>]` macro. 
    These parameters are given in the \`\ptmunit` unit, it is set to 
-   1\`\ptunit` and it is set to 1\,pt by  defaut.
+   1\`\ptunit` and it is set to 1\,pt by  default.
    \nl
    \`\_corrmsizes` should be used in the \^`\normalmath` and \^`\boldmath`
    macros if you need a size correction when a selected math family is

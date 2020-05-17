@@ -16,7 +16,7 @@
        \ttlight,\ttcond,\dunhill: {\rm\it} \upital: {\rm} }
 \_famalias [LMfonts] \_famalias [Latin Modern Fonts]
 
-\_famtext {TeX Gyre fonts based o Adobe 35:}
+\_famtext {TeX Gyre fonts based on Adobe 35:}
 
 \_faminfo [Termes] {TeX Gyre Termes fonts based on Times} {f-termes}
    { -,\caps: {\rm\bf\it\bi} }
@@ -48,7 +48,7 @@
 
 \_famtext {Other fonts:}
 
-\_faminfo [Linux Libertine] {Free fonts typicaly installed in systems} {f-libertine}
+\_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
    { -: {\rm\bf\it\bi} \semi: {\rm\it} 
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
@@ -58,7 +58,7 @@
     \medium,\cond\medium, \light, \cond\light:{\rm\it} }
 \_famalias [Antt]
 
-\_faminfo [Baskerville] {Free vaiants of classical Baskerville} {f-baskerville}
+\_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskevilleF]
 
@@ -76,11 +76,11 @@
 
 Once you have prepared a font family file with the name `f-<famname>.opm` and \TeX/ is
 able to see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
-the file is read, so the information about font family is loaded. The name
+the file is read, so the information about the font family is loaded. The name
 `<famname>` must be lowercase and without spaces in the file name
-`f-<famname>.opm`. On the other hand the `\fontfam` command gives more tolerance: 
+`f-<famname>.opm`. On the other hand the `\fontfam` command is more tolerant:
 you can write uppercase letters and spaces here. The spaces are ignored and 
-letters are converted to lowercase.
+uppercase letters are converted to lowercase.
 For example `\fontfam [LM Fonts]` is equivalent to \fontfam [LMfonts] and both
 commands load the file `f-lmfonts.opm`.
 
@@ -95,9 +95,9 @@ existed file `fams-ini.opm`.
 
 The information from the user's `fams-local.opm` file has precedence.
 For example `fams-ini.opm` declares aliases Times$\to$Termes etc. If you
-have original Times purchased from Adobe then you can register your
-declaration about Times family in `fams-local.opm`. When an user write
-`\fontfam[Times]` then orginal Times (no Termes) is used in such case.
+have the original Times purchased from Adobe then you can register your
+declaration of Adobe's Times family in `fams-local.opm`. When a user writes
+`\fontfam[Times]` then the original Times (not Termes) is used.
 
 The `fams-ini.opm` and `fams-local.opm` files use the macros
 `\_famifo`, `\_famalias` and `\_famtext`. See the example from

@@ -117,7 +117,7 @@
    \_doc -----------------------------
    User puts optional spaces around the table item typically, i.\,e.\ he/she writes
    `& text &` instead `&text&`. The left space is ignored by internal \TeX/ algorithm but 
-   the right space must be removed by macros. This is a reason why we reccomend to 
+   the right space must be removed by macros. This is a reason why we recommend to
    use \`\_unsskip` after each `##` in your definition of \"declaration letters".
    This macro isn't only the primitive `\unskip` because we allow usage of plain \TeX/ 
    `\hideskip` macro: `&\hideskip text\hideskip&`.
@@ -181,7 +181,7 @@
    The parameters of primitive `\vrule` and `\hrule` keeps the rule \"last wins".
    If we re-define `\hrule` to `\_orihrule height1pt` then each usage
    of redefined `\hrule` uses `1pt` height if this parameter isn't
-   overwriten by another following `height` parameter. This principle is used for
+   overwritten by another following `height` parameter. This principle is used for
    settings another default rule thickness than 0.4\,pt by the macro
    \`\rulewidth`.
    \_cod -----------------------------

@@ -4,8 +4,8 @@
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
-   does `\input {<file name>}` but catocodes are set to normal catcodes
-   (like \OpTeX/ initializes them) and the catodes setting is return back to
+   does `\input {<file name>}` but the catcodes are set to normal catcodes
+   (like \OpTeX/ initializes them) and the catcodes setting are returned back to
    the current values when the file is read. You can use `\optinput`
    in any situation inside the document and you will be sure that the file
    is read correctly with correct catcode settings.
@@ -33,7 +33,7 @@
    \_doc -----------------------------
    The implementation of the catcodetable stack follows. 
 
-   The current catodes are
+   The current catcodes are
    managed in the `\catcodetable0`. If the `\setctable` is used first (or at
    the outer level of the stack), then the `\catcodetable0` is pushed to the
    stack and the current table is re-set to the given `<catcode table>`.

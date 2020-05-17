@@ -161,7 +161,7 @@ example `\my_control_sequence`, but with the following exceptions:
   \OpTeX/ internal macros and macro package writers.
 * Control sequences (terminated by non-letter) in the form 
   `\<word>_` or `\<word>_<one-letter>`, where
-  <word> is a sequence of letters, are unaccessible, because they
+  <word> is a sequence of letters, are inaccessible, because they
   are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
   `_<one-letter>`. This is important for writing math, for example:
 \begtt  \adef-{_}
