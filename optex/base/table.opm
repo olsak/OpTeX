@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2020-04-10>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2020-05-10>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into 
@@ -35,10 +35,10 @@
           \_offinterlineskip
           \_lineskip=-2\_tablinespace
    \_fi
-   \_colnum=0 \_def\_tmpa{}\_tabdata={}\_scantabdata#1\_relax
+   \_colnum=0 \_let\_addtabitem=\_addtabitemx \_def\_tmpa{}\_tabdata={}\_scantabdata#1\_relax
    \_the\_everytable \_tableB
 }
-\_def\_tableB#1{\_halign\_ea{\_the\_tabdata\_cr#1\_crcr}\_egroup}
+\_def\_tableB#1{\_halign\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_cr#1\_crcr}\_egroup}
 \_newbox\_tstrutbox  % strut used in table rows
 \_newtoks\_tabdata   % the \halign declaration line
 \_newcount\_colnum   % number of columns
@@ -65,14 +65,15 @@
    \_ifx\_relax#1\_let\_next=\_relax
    \_else\_ifx|#1\_addtabvrule
        \_else\_ifx(#1\_def\_next{\_scantabdataE}%
-           \_else\_isinlist{123456789}#1\_iftrue \_def\_next{\_scantabdataC#1}%
-               \_else \_ea\_ifx\_csname _tabdeclare#1\_endcsname \_relax
+           \_else\_ifx:#1\_def\_next{\_scantabdataF}%
+               \_else\_isinlist{123456789}#1\_iftrue \_def\_next{\_scantabdataC#1}%
+                   \_else \_ea\_ifx\_csname _tabdeclare#1\_endcsname \_relax
                       \_ea\_ifx\_csname _paramtabdeclare#1\_endcsname \_relax
                           \_opwarning{tab-declarator "#1" unknown, ignored}%
                       \_else
                           \_def\_next{\_ea\_scantabdataB\_csname _paramtabdeclare#1\_endcsname}\_fi
-                   \_else \_def\_next{\_ea\_scantabdataA\_csname _tabdeclare#1\_endcsname}%
-   \_fi\_fi\_fi\_fi\_fi \_next
+                      \_else \_def\_next{\_ea\_scantabdataA\_csname _tabdeclare#1\_endcsname}%
+   \_fi\_fi\_fi\_fi\_fi\_fi \_next
 }
 \_def\_scantabdataA#1{\_addtabitem \_ea\_addtabdata\_ea{#1\_tabstrutA}\_scantabdata}
 \_def\_scantabdataB#1#2{\_addtabitem\_ea\_addtabdata\_ea{#1{#2}\_tabstrutA}\_scantabdata}
@@ -80,9 +81,11 @@
 \_def\_scantabdataD#1{\_loop \_ifnum\_tmpnum>0 \_advance\_tmpnum by-1 \_addto\_tmpb{#1}\_repeat
    \_ea\_scantabdata\_tmpb}
 \_def\_scantabdataE#1){\_addtabdata{#1}\_scantabdata}
+\_def\_scantabdataF {\_addtabitem\_def\_addtabitem{\_let\_addtabitem=\_addtabitemx}\_scantabdata}
 
-\_def\_addtabitem{\_ifnum\_colnum>0 \_addtabdata{&}\_addto\_ddlinedata{&\_dditem}\_fi
-    \_advance\_colnum by1 \_let\_tmpa=\_relax}
+\_def\_addtabitemx{\_ifnum\_colnum>0 
+   \_addtabdata{\_egroup &\_bgroup}\_addto\_ddlinedata{&\_dditem}\_fi
+   \_advance\_colnum by1 \_let\_tmpa=\_relax}
 \_def\_addtabdata#1{\_tabdata\_ea{\_the\_tabdata#1}}
 \_def\_addtabvrule{%
     \_ifx\_tmpa\_vrule \_addtabdata{\_kern\_vvkern}%
@@ -104,23 +107,23 @@
    You can declare more such \"declaration letters" if you want.
    \_cod -----------------------------
 
-\_def\_tabdeclarec{{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}}
-\_def\_tabdeclarel{{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}}
-\_def\_tabdeclarer{{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}}
-\_def\_paramtabdeclarep#1{{\_the\_tabiteml
+\_def\_tabdeclarec{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}
+\_def\_tabdeclarel{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}
+\_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
+\_def\_paramtabdeclarep#1{\_the\_tabiteml
    \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip 
-   \_lineskiplimit=0pt \_noindent##\_unsskip\_lower\_dp\_tstrutbox\_hbox{}}\_the\_tabitemr}}
+   \_lineskiplimit=0pt \_noindent##\_unsskip\_lower\_dp\_tstrutbox\_hbox{}}\_the\_tabitemr}
 
    \_doc -----------------------------
    User puts optional spaces around the table item typically, i.\,e.\ he/she writes
    `& text &` instead `&text&`. The left space is ignored by internal \TeX/ algorithm but 
-   the right space must be removed by macros. This is a reason why we reccomend to 
+   the right space must be removed by macros. This is a reason why we recommend to
    use \`\_unsskip` after each `##` in your definition of \"declaration letters".
    This macro isn't only the primitive `\unskip` because we allow usage of plain \TeX/ 
    `\hideskip` macro: `&\hideskip text\hideskip&`.
    \_cod -----------------------------
 
-\_def\_unsskip{\_ifdim\_lastskip>0pt \_unskip\_fi}
+\_def\_unsskip{\_ifmmode\_else\_ifdim\_lastskip>0pt \_unskip\_fi\_fi}
 
    \_doc -----------------------------
    The family of `\_cr*` macros 
@@ -178,7 +181,7 @@
    The parameters of primitive `\vrule` and `\hrule` keeps the rule \"last wins".
    If we re-define `\hrule` to `\_orihrule height1pt` then each usage
    of redefined `\hrule` uses `1pt` height if this parameter isn't
-   overwriten by another following `height` parameter. This principle is used for
+   overwritten by another following `height` parameter. This principle is used for
    settings another default rule thickness than 0.4\,pt by the macro
    \`\rulewidth`.
    \_cod -----------------------------
@@ -208,4 +211,20 @@
 
 \_endcode % -------------------------------------
 
+The `<declaration>` part of `\table{<declaration>}{<data>}` includes
+column declarators (letters) and other material: the `|` or `(<cmd>)`.
+The boundaries of columns are just before each column declarator 
+(with exception of the first one) if the boundary declarator `:` is not used. 
+For example, the declaration  `{|c||c(xx)(yy)c}`
+should be written more exactly using the boundary declarator `:` 
+by `{|c||:c(xx)(yy):c}`. But you can set these boundaries to
+another places using the boundary declarator~`:` explicitly, 
+for example `{|c:||c(xx):(yy)c}`. The boundary declarator `:` 
+can be used only once between each two column declarators. 
+
+\_endinput
+
+2020-05-10 \bgroup &\egroup added to tabdata (in order to \aftergroup from colors)  
+           boundary declarator : introduced
+           \_unsskip: \ifmmode added.
 2020-04-10 second group for items in order to \localcolors

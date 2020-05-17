@@ -4,7 +4,7 @@
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
-   The `\alpha` expands to the charcter with unicode `"03B1`, this is normal
+   The `\alpha` expands to the character with unicode `"03B1`, this is normal
    character $α$. You can type it directly in your editor, if you know how
    to do this.
    \_cod -----------------------------

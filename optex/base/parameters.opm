@@ -178,7 +178,7 @@
 \_public \picdir ;
 
    \_doc -----------------------------
-   You can control the dimesions of included images by
+   You can control the dimensions of included images by
    the parameters \`\picwidth` (which is equivalent to \`\picw`) and
    \`\picheight`. By default these parameters are set to zero: the native
    dimension of the image is used. If only `\picwidth` has a nonzero value,
@@ -416,6 +416,18 @@
 \_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace \vvkern \hhkern ;
 
    \_doc -----------------------------
+   The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
+   tokens lists. The default values are set in order this macro beahaves
+   like in Plain \TeX. The \`\eqspace` is horizontal space put 
+   between equation systems if more columns in \^`\eqalign` is used.
+   \_cod -----------------------------
+
+\_newtoks  \_eqlines  \_eqlines={\_openup\_jot}
+\_newtoks  \_eqstyle  \_eqstyle={\_strut\_displaystyle}   
+\_newdimen \_eqspace  \_eqspace=20pt
+\_public \eqlines \eqstyle \eqspace ;
+
+   \_doc -----------------------------
    The output routine uses token list \`\headline` and \`\footline` in the
    same sense as in plain \TeX/. If they are non-empty then `\hfil` or `\hss`
    must be here because they are used inside `\hbox to\hsize`.
@@ -423,7 +435,7 @@
    Assume that page-body text can be typeset in different sizes and
    different fonts and we don't know in what font context the output routine
    is invoked. So, it is strongly recommended to declare fixed variants of
-   fonts at begining of your document. For example `\fontdef\rmfixed{\rm}`,
+   fonts at the beginning of your document. For example `\fontdef\rmfixed{\rm}`,
    `\fontdef\itfixed{\it}`. Then use them in headline and footline:
    \begtt
    \headline={\itfixed Text of headline, section: \fistmark \hss}

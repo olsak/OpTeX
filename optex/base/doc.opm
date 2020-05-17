@@ -32,7 +32,8 @@
 \_pgbottomskip=0pt plus10pt minus2pt
 
    \_doc -----------------------------
-   The listing mode is implemented here.
+   The listing mode is implemented here. The \`\maxlines` 
+   is maximal lines of code printed in the listing mode.
    \_cod -----------------------------
 
 \_newcount \_maxlines   \_maxlines=100000

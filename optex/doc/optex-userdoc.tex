@@ -407,6 +407,8 @@ scriptscript). Moreover, there is the macro \^`\mathstyles{<math list>}` which d
 the current math style. It is documented at the end of the
 section~\ref[math-macros].
 
+The \^`\eqalign` macro is more flexible in \OpTeX/, see technical documentation about it.
+
 
 \sec Typical elements of document
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -780,13 +782,16 @@ You can use `(<text>)` in the <declaration>. Then this text is applied in
 each line of the table. For example `r(\kern10pt)l` adds more 10\,pt space
 between `r` and `l` rows. 
 
+You can use the \"boundary character \code{:}" for setting 
+the columns boundaries, see the section~\ref[table] for more information.
+
 An arbitrary part of the <declaration> can be repeated by a <number>
 prefixed. For example `3c` means `ccc` or `c 3{|c}` means
 `c|c|c|c`. Note that spaces in the <declaration> are ignored and you 
 can use them in order to more legibility.
  
 The command `\cr` used in the <data> part of the table 
-is generally known. It marks end row of the table. 
+is generally known. It marks the end of each row in the table. 
 Moreover \OpTeX/ defines following similar commands:
 
 \begitems
@@ -854,8 +859,8 @@ creates the following result:
 \bigskip
 
 The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
-more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. More about
-it is in technical documentation in the section~\ref[table].
+more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. 
+More about it is in technical documentation in the section~\ref[table].
 
 The rule width of tables and implicit width of all `\vrule`s and `\hrule`s
 can be set by the command \^`\rulewidth=<dimen>`. The default value given 

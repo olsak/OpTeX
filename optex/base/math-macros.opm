@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-04-27>} % preloaded in format 
+\_codedecl \sin {Math macros plus mathchardefs <2020-05-11>} % preloaded in format 
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -11,12 +11,12 @@
    without problem. But `\int``_a^b` is tokenized as `\int``_a`, `^`, `b`. The
    control sequence `\int``_a` isn't defined. We must write `\int _a^b`.
 
-   The lua code presented here solves this problem. But you cannot set our own
+   The Lua code presented here solves this problem. But you cannot set our own
    control sequence in the form `\<word>_` or `\<word>_<one-letter>` (where
    <word> is sequence of letters) because such control sequences are
-   unacessible: proprocessor rewrites it.
+   inaccessible: preprocessor rewrites it.
 
-   The \`\mathsbon` macro activates the rewritting rule `\<word>_<nonleter>` to
+   The \`\mathsbon` macro activates the rewriting rule `\<word>_<nonleter>` to
    `\<word> _<nonletter>` and 
    `\<word>``_<letter><nonletter>` to `\<word> _<letter><nonletter>` at input
    processor level. The \`\mathsboff` deactivates it.
@@ -120,7 +120,7 @@
 
    \_doc -----------------------------
    All control sequences declared by `\mathchardef` are supposed (by default)
-   only for public usage. It means that they are delcared without `_` prefix.
+   only for public usage. It means that they are declared without `_` prefix.
    If such sequences are used in internal \OpTeX/ macro then their internal
    prefixed form is declared using `\_private` macro.\nl
    These encoding dependent declarations will be set to different values
@@ -490,7 +490,7 @@
 \_protected\_def\arrowvert{\_delimiter"26A33C } % arrow without arrowheads
 \_protected\_def\Arrowvert{\_delimiter"26B33D } % double arrow without arrowheads
 \_protected\_def\bracevert{\_delimiter"77C33E } % the vertical bar that extends braces
-\_protected\_def\Vert{\_delimiter"26B30D } \_let\|=\_Vert
+\_protected\_def\Vert{\_delimiter"26B30D } \_let\|=\Vert
 \_protected\_def\vert{\_delimiter"26A30C }
 \_protected\_def\uparrow{\_delimiter"3222378 }
 \_protected\_def\downarrow{\_delimiter"3223379 }
@@ -571,18 +571,44 @@
 \_public \bmod \pmod ;
 
    \_doc -----------------------------
-   \`\cases`, \`\matrix`, \`\pmatrix` and \`\bordermatrix` macros from plain \TeX/
+   \`\matrix`, \`\pmatrix` and \`\bordermatrix`
+   behave as in Plain \TeX/, if it is used in the
+   `\displaystyle` or `\textstyle`. It is printed in smaller size
+   (by appropriate amount) in `\scriptstyle` and `\scriptscriptstyle`. 
+   This feature is new in \OpTeX/.
+   \_cod -----------------------------
+
+\_protected\_def\_matrix#1{\_null\_thinsk
+    \_edef\_stylenum{\_the\_numexpr\_mathstyle/2\_relax}%
+    \_vcenter{\_matrixbaselines\_math
+    \_ialign{\_hfil$\_matrixstyle##$\_hfil&&\_quad\_hfil$\_matrixstyle##$\_hfil\_crcr
+      \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
+      #1\_crcr\_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}}}\_thinsk}
+
+\_def\_matrixbaselines{\_normalbaselines \_def\_matrixstyle{}%
+   \_ifcase\_stylenum \_or \_or
+       \_baselineskip=.7\_baselineskip
+       \_def\_quad {\_hskip.7em\_relax}%
+       \_let\_matrixstyle=\_scriptstyle
+   \_or
+       \_baselineskip=.5\_baselineskip
+       \_def\_quad {\_hskip.5em\_relax}%
+       \_let\_matrixstyle=\_scriptscriptstyle
+   \_fi
+}
+\_protected\_def\_pmatrix#1{\_left(\_matrix{#1}\_right)}
+
+\_public \matrix \pmatrix ;
+
+   \_doc -----------------------------
+   The \`\cases` and `\bordermatrix` macros are identical from plain \TeX/.
    \_cod -----------------------------
 
 \_protected\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
     \_ialign{$##\_hfil$&\_quad##\_hfil\_crcr#1\_crcr}}\_right.}
-\_protected\_def\_matrix#1{\_null\_thinsk\_vcenter{\_normalbaselines\_math
-    \_ialign{\_hfil$##$\_hfil&&\_quad\_hfil$##$\_hfil\_crcr
-      \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
-      #1\_crcr\_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}}}\_thinsk}
-\_protected\_def\_pmatrix#1{\_left(\_matrix{#1}\_right)}
+
 \_newdimen\_ptrenwd
-\_ptrenwd=0.875\_fontdimen6\_textfont1 % width of the big left (
+\_ptrenwd=8.75pt % width of the big left (
 \_protected\_def\_bordermatrix#1{\_begingroup \_math
   \_setbox0=\_vbox{\_def\_cr{\_crcr\_noalign{\_kern.2em\_global\_let\_cr\_endline}}%
     \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
@@ -595,20 +621,62 @@
     \_global\_setbox1=\_vbox{\_box1 \_kern.2em}%
     \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right)$}%
   \_null\_thicksk\_vbox{\_kern\_ht1 \_box2}\_endgroup}
-\_public \cases \matrix \pmatrix \bordermatrix ;
+
+\_public \cases \bordermatrix ;
 
    \_doc -----------------------------
-   \`\openup`, \`\eqalign`, \`\displaylines` and  \`\eqalignno` macros from
-   plain \TeX/.
+   The \`\eqalign` macro behaves like in Plain \TeX/ by default.
+   It creates the `\vcenter` in the math mode. The contents is two column
+   `\halign` with right aligned left column and left aligned right column.
+   The table items are in `\displaystyle` and the `\baselineskip` is
+   advanced by `\jot` (3pt in plain \TeX). It follows from the default
+   settings of \^`\eqlines` and \^`\eqstyle` parameters.
+
+   In \OpTeX/, this macro is more flexible. You can set the
+   `\baselineskip` value by the \^`\eqlines` parameter and math style
+   by the \^`\eqstyle` parameter. 
+   For example, you need to put the system of euations as an index of sum
+   operator:
+   \begtt
+   $$
+     \sum_{\eqlines{\baselineskip=.7\baselineskip}\eqstyle{\scriptstyle}\eqalign{
+                     i &\in A  \cr
+                     j &\in B  \cr
+                     k &\in C }}
+     i + j + k
+   $$
+   \endtt
+   You can write more equation systems one next second:
+   \begtt
+   $$\eqalign{
+        x + y + z &= 1     &&  a + b + c &= -1 \cr  
+            u + v &= 20    &&      f + g &= -20 \cr
+                i &= j   
+   }$$
+   \endtt
+   You can use the third column for centered equations without aligning point
+   (as in \^`\displaylines`, but packed to the `\vcenter` box). For example:
+   \begtt \catcode`\<=13
+   $$ \left( \eqspace=0pt \eqalign{&& <first equation>\cr && <second equation>} \right) $$
+   \endtt
+   The \^`\eqspace` is additional space used in the third column to separate
+   equation systems one next second.
+   \_cod -----------------------------
+
+\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_the\_eqlines\_math
+   \_ialign{&\_hfil$\_the\_eqstyle{##}$&$\_the\_eqstyle{{}##}$\_hfil
+            &\_hskip.5\_eqspace\_hfil$\_the\_eqstyle{##}$\_hskip.5\_eqspace\_hfil
+            \_crcr#1\_crcr}}\_thinsk}
+
+   \_doc -----------------------------
+   \`\openup`, \`\displaylines` and  \`\eqalignno` macros are copied from
+   Plain \TeX/ unchanged.
    \_cod -----------------------------
 
 \_def\_openup{\_afterassignment\_openupA\_dimen0=}
 \_def\_openupA{\_advance\_lineskip by\_dimen0
   \_advance\_baselineskip by\_dimen0
   \_advance\_lineskiplimit by\_dimen0 }
-\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_openup\_jot\_math
-  \_ialign{\_strut\_hfil$\_displaystyle{##}$&$\_displaystyle{{}##}$\_hfil
-      \_crcr#1\_crcr}}\_thinsk}
 \_newifi\_ifdtop
 \_def\_display{\_global\_dtoptrue\_openup\_jot\_math
   \_everycr{\_noalign{\_ifdtop \_global\_dtopfalse \_ifdim\_prevdepth>-1000pt
@@ -873,7 +941,7 @@
 \_let\circleddot\odot
 
    \_doc -----------------------------
-   The \`\not` macro is re-defined to be mote inteligent than in plain
+   The \`\not` macro is re-defined to be smarter than in plain
    \TeX/. The macro follows this rule:
    \begtt
    \not< becomes \_nless
@@ -931,7 +999,7 @@
    \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
    It behaves like `\hbox{<text>}` but the `<text>` is scaled to smaller
-   size if it is used in scriptstye or scriptscript style.
+   size if it is used in scriptstyle or scriptscript style.
    \_cod -----------------------------
 
 \_def\_mathbox#1{{\_mathstyles{\_hbox{%
@@ -942,5 +1010,6 @@
 
 \_endcode %---------------------------------------------------
 
+2020-05-11 \let\|=\Vert, bug fixed
 2020-04-27 \mathstyles introduced
 2020-03-14 implemented

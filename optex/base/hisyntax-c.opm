@@ -46,12 +46,12 @@
 
 
 Each `hisyntax-<name>.opm` file must declare the token list
-`\_hisyntax<name>` using `\newtoks` and must ceclare the syntax declaration
+`\_hisyntax<name>` using `\newtoks` and must declare the syntax declaration
 in it. The second cotken list `\_hicolors<name>` is optional but recommended.
 User can re-declare his/her own colors by `\hicolors` which has precedence
 before `\_hicolors<name>`.
 
-The public variants can be deacred if you want to give these token lists to
+The public variants can be declared if you want to give these token lists to
 the user name space. But it is not explicitly needed.
 
 All settings must be global here, because the file is typically read inside
