@@ -1,6 +1,6 @@
 = OpTeX
 
-Unofficial mirror of OpTeX.
+OpTeX including development verions.
 
 See http://petr.olsak.net/optex/
 

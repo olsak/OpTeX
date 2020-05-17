@@ -76,13 +76,14 @@
    The \`\_setcolor` macro redefines empty `\_ensureblack` macro (used in
    output routine for headres and footers) to `\_ensureblackA` which sets
    Black at the start of its parameter and retunrs to the current color at the
-   end of its parameter. The current color
-   is saved into `\_currentcolor` macro and colorstack is pushed.
+   end of its parameter. 
+
+   The current color is saved into `\_currentcolor` macro and colorstack is pushed.
    Finally, the `\_colorstackpop` is initialized by `\aftergroup` if
    `\localcolor` is declared.
 
    You can save current color to your macro  by `\let\yourmacro=\_currentcolor` 
-   and you can return to this color by the command `\_setcmykcolor\yourmacro`.
+   and you can return to this color by the command `\_setcolor\yourmacro`.
    \_cod -----------------------------
 
 \_protected\_def \_setcolor #1{\_global\_let\_ensureblack=\_ensureblackA
