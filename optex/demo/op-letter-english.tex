@@ -1,0 +1,38 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+\useOpTeX
+
+\letter            % \letter OpTeX style activated
+\enlang \enquotes  % Language and quote style
+\fontfam[bonum]
+
+\hfill\address
+  Alice Author
+  123 Sender Street
+  City 4567
+
+\bigskip
+
+\address
+  Mr. Bobby Bureaucrat
+  456 Magnolia Street
+  City 8901
+
+\hfill\today
+
+\subject Inquiry regarding \"lorem ipsum"
+
+Dear Mr. Bureaucrat,
+
+\lorem[1-2] % 2 paragraphs of blindtext
+
+Thank you for your time.
+
+With best regards,
+
+\bigskip % leave some space for signature
+\bigskip
+
+Alice Author
+
+\bye
+
