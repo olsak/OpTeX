@@ -573,7 +573,7 @@
    \_doc -----------------------------
    \`\matrix`, \`\pmatrix` and \`\bordermatrix`
    behave as in Plain \TeX/, if it is used in the
-   `\displaystyle` or `\textstyle`. It is printed in smaller size
+   `\displaystyle` or `\textstyle`. On the other hand, it is printed in smaller size
    (by appropriate amount) in `\scriptstyle` and `\scriptscriptstyle`. 
    This feature is new in \OpTeX/.
    \_cod -----------------------------

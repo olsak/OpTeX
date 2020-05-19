@@ -764,26 +764,32 @@ These letters can be combined by the `|` character (vertical line). Example
 %
 generates the following result:
 
-\bigskip
+\medskip
 \noindent\hfil\table{||lc|r||}{    \crl
    Month    & commodity  & price   \crli \tskip2pt
    January  & notebook   &  \$ 700 \cr
    February & skateboard &  \$ 100 \cr
    July     & yacht      & k\$ 170 \crl}
-\bigskip
+\medskip
 
 Apart from `l`, `r`, `c` declarators, you can use the `p{<size>}` declarator
-which declares the column of given width. More precisely, a long text in
-the table cell is printed as an paragraph with given width.
-To avoid problems with narrow left-right aligned paragraphs you can write
-`p{<size>`\^`\raggedright}`, then the paragraph will be only left aligned.
+which declares the column with paragraphs of given width. More precisely, 
+a long text in the table cell is printed as an paragraph with given width.
+By default, the paragraph is left-right justified. But there are
+alternatives:
+
+\begitems
+* `p{<size>`\^`\fL}` fit left, i.e.\ left justified, ragged right,
+* `p{<size>`\^`\fR}` fit right, i.e.\ right justified, ragged left,
+* `p{<size>`\^`\fC}` fit center, i.e.\ ragged left plus right,
+* `p{<size>`\^`\fS}` fit special, short one-line pararaph centered, 
+                long paragraph normal,
+* `p{<size>`\^`\fX}` fit extra, left-right justified but last line centered. 
+\enditems 
 
 You can use `(<text>)` in the <declaration>. Then this text is applied in
 each line of the table. For example `r(\kern10pt)l` adds more 10\,pt space
 between `r` and `l` rows. 
-
-You can use the \"boundary character \code{:}" for setting 
-the columns boundaries, see the section~\ref[table] for more information.
 
 An arbitrary part of the <declaration> can be repeated by a <number>
 prefixed. For example `3c` means `ccc` or `c 3{|c}` means
@@ -806,7 +812,7 @@ Moreover \OpTeX/ defines following similar commands:
 \enditems
 
 The \^`\tskip<dimen>` command works like the `\noalign{\vskip<dimen>}` 
-after `\cr*` commands but it doesn't interrupt the vertical lines.
+immediately after `\cr*` commands but it doesn't interrupt the vertical lines.
 
 \new
 You can use following parameters for the \^`\table` macro. Default values are listed
@@ -821,6 +827,8 @@ too.
 \tablinespace=2pt    % additional vert. space before/after horizontal lines
 \vvkern=1pt          % space between lines in double vertical line
 \hhkern=1pt          % space between lines in double horizontal line
+\tabskip=0pt         % space between columns
+\tabskipl=0pt \tabskipr=0pt % space before first and after last column 
 \endtt
 
 Example: if you do \^`\tabiteml={$\enspace}`\^`\tabitemr={\enspace$}` then
@@ -835,7 +843,7 @@ which spans <number> columns and formats the <text> by the
 with the same syntax as common \^`\table` <declaration>.
 If your table includes vertical rules and you want to
 create continuous vertical rules by \^`\mspan`, then use rule declarators `|`
-only after `c`, `l` or `r` letter in \^`\mspan` <declaration>. The
+after `c`, `l` or `r` letter in \^`\mspan` <declaration>. The
 exception is only in the case when \^`\mspan` includes first
 column and the table have rules on the left side. The example of \^`\mspan` 
 usage is below.
@@ -858,14 +866,17 @@ creates the following result:
   seven & eight  & nine   \crli}}
 \bigskip
 
-The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
-more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. 
-More about it is in technical documentation in the section~\ref[table].
-
 The rule width of tables and implicit width of all `\vrule`s and `\hrule`s
 can be set by the command \^`\rulewidth=<dimen>`. The default value given 
 by \TeX/ is 0.4\,pt.
 
+The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
+more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. 
+More about it is in technical documentation in section~\ref[table.impl].
+
+The `:` columns boundary declarator is described in section~\ref[table.bound].
+The tables with given width can be declared by `to<size>` or `xto<size>`.
+More about it is in section~\ref[table.w]
 Many tips about tables can be seen on the site
 \url{http://petr.olsak.net/optex/optex-tricks.html}.
 

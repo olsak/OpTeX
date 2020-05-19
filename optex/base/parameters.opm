@@ -399,12 +399,19 @@
    and the lines of the table.
    \nl
    \`\hhkern` gives the space between horizontal lines if they are doubled and 
-   \`\vvkern` gives the space between such vertical lines. 
+   \`\vvkern` gives the space between such vertical lines.
+   \nl
+   \`\tabskipl` is `\tabskip` used before first column,
+   \`\tabskipr` is `\tabskip` used after the last column.
+   \nl
+   \`\tsize` is virtual unit of the width of paragraph-like table items when 
+   `\table pxto<size>` is used.
    \_cod -----------------------------
 
 \_newtoks\_everytable \_newtoks\_thistable 
 \_newtoks\_tabiteml \_newtoks\_tabitemr \_newtoks\_tabstrut
-\_newdimen\_tablinespace \_newdimen\_vvkern \_newdimen\_hhkern
+\_newdimen\_tablinespace \_newdimen\_vvkern \_newdimen\_hhkern \_newdimen\_tsize
+\_newskip\_tabskipl  \_newskip\_tabskipr 
 \_everytable={}        % code used after settings in \vbox before table processing
 \_thistable={}         % code used when \vbox starts, is is removed after using it
 \_tabstrut={\_strut}
@@ -413,7 +420,10 @@
 \_tablinespace=2pt     % additional vertical space before/after horizontal rules
 \_vvkern=1pt           % space between double vertical line and used in \frame
 \_hhkern=1pt           % space between double horizontal line and used in \frame
-\_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace \vvkern \hhkern ;
+\_tabskipl=0pt\_relax  % \tabskip used before first column 
+\_tabskipr=0pt\_relax  % \tabskip used after the last column
+\_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace 
+         \vvkern \hhkern \tsize \tabskiplr ;
 
    \_doc -----------------------------
    The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
