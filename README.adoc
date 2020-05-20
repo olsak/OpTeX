@@ -1,6 +1,6 @@
 = OpTeX
 
-OpTeX including development verions.
+OpTeX including development versions.
 
 See http://petr.olsak.net/optex/
 

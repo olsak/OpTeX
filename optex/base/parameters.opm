@@ -423,7 +423,7 @@
 \_tabskipl=0pt\_relax  % \tabskip used before first column 
 \_tabskipr=0pt\_relax  % \tabskip used after the last column
 \_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace 
-         \vvkern \hhkern \tsize \tabskiplr ;
+         \vvkern \hhkern \tsize \tabskipl \tabskipr ;
 
    \_doc -----------------------------
    The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
