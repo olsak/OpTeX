@@ -866,6 +866,47 @@ creates the following result:
   seven & eight  & nine   \crli}}
 \bigskip
 
+The \^`\vspan``<number>{<text>}` shifts the <text> down in order it looks
+like to be in the center of the <number> lines (current line is first).
+You can use this for creating tables like in the following example:
+
+\begtt \typosize[8.7/11]
+\thistable{\tabstrut={\vrule height 20pt depth10pt width0pt} 
+           \baselineskip=20pt \tablinespace=0pt \rulewidth=.8pt} 
+\table{|8{c|}}{\crlp{3-8} 
+   \mspan2[c|]{}      & \mspan3[c|]{Singular}         & \mspan3[c|]{Plural} \crlp{3-8} 
+   \mspan2[c|]{}      & Neuter & Masculine & Feminine & Masculine & Feminine & Neuter \crl
+   \vspan2{I}   & Inclusive & \mspan3[c|]{\vspan2{O}} & \mspan3[c|]{X} \crlp{2,6-8} 
+                & Exclusive & \mspan3[c|]{}           & \mspan3[c|]{X} \crl 
+   \vspan2{II}  & Informal  & \mspan3[c|]{X}          & \mspan3[c|]{X} \crlp{2-8} 
+                & Formal    & \mspan6[c|]{X} \crl 
+   \vspan2{III} & Informal  & \vspan2{O} & X & X      & \mspan2[c|]{X} &\vspan2{O} \crlp{2,4-7} 
+                & Formal    &                         & \mspan4[c|]{X} & \crl 
+} 
+\endtt
+
+\puttext 8.9cm -4cm {\pdfsave\pdfscale{.5}{.5}\rlap{%
+\thistable{\tabstrut={\vrule height 20pt depth10pt width0pt} 
+           \baselineskip=20pt \tablinespace=0pt \rulewidth=.8pt} 
+\table{|8{c|}}{\crlp{3-8} 
+   \mspan2[c|]{}      &\mspan3[c|]{Singular} &\mspan3[c|]{Plural} \crlp{3-8} 
+   \mspan2[c|]{}      & Neuter & Masculine & Feminine & Masculine & Feminine & Neuter \crl
+   \vspan2{I}   & Inclusive & \mspan3[c|]{\vspan2{O}} &\mspan3[c|] X \crlp{2,6-8} 
+                & Exclusive & \mspan3[c|]{} &\mspan3[c|] X \crl 
+   \vspan2{II}  & Informal  & \mspan3[c|] X &\mspan3[c|] X \crlp{2-8} 
+                & Formal    & \mspan6[c|] X \crl 
+   \vspan2{III} & Informal  & \vspan2 O & X & X &\mspan2[c|] X & \vspan2 O \crlp{2,4-7} 
+                & Formal    & &\mspan4[c|] X & \crl 
+}}\pdfrestore}
+
+
+\hangindent=-7.5cm \hangafter=0 
+The <number> parameter of \^`\vspan` must be one-digit number. 
+If you want to set more digits then use braces. 
+You can use non-integer values too if you feel that the
+result is better, for example \^`\vspan{2.1}{text}`.
+
+\hangindent=-7.5cm \hangafter=0 
 The rule width of tables and implicit width of all `\vrule`s and `\hrule`s
 can be set by the command \^`\rulewidth=<dimen>`. The default value given 
 by \TeX/ is 0.4\,pt.
@@ -873,12 +914,14 @@ by \TeX/ is 0.4\,pt.
 The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
 more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`. 
 More about it is in technical documentation in section~\ref[table.impl].
+See the definition of the \^`\tabdeclarec` macro, for example.
 
 The `:` columns boundary declarator is described in section~\ref[table.bound].
 The tables with given width can be declared by `to<size>` or `xto<size>`.
 More about it is in section~\ref[table.w]
 Many tips about tables can be seen on the site
 \url{http://petr.olsak.net/optex/optex-tricks.html}.
+
 
 \label[verbatim]\secc Verbatim
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1596,7 +1639,7 @@ depending on current language) in bold. Moreover, the \^`\address` macro
 can be used when \^`\letter` is declared. The usage of the \^`\address` macro
 looks like:
 
-\begtt
+\begtt \catcode`\<=13
 \address
   <first line of address>
   <second line of address>
@@ -1744,7 +1787,7 @@ put it as the first command in your document:
 \thefontsize [size] \thefontscale [factor]   % current font size
 
 \inspic file.ext    % insert a picture, extensions: jpg, png, pdf
-\table {rule}{data} % simple macro for the tables like in LaTeX
+\table {rule}{data} % macro for the tables like in LaTeX
 
 \fnote {text}   % footnote (local numbering on each page)
 \mnote {text}   % note in the margin (left or right by page number)
