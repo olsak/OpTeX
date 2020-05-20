@@ -159,7 +159,7 @@
    is true if the `<tokens variable>` is empty. It is expandable.
    \_cod ----------------------------
 
-\_def \_isempty #1#2{\_if\_relax\_detokenize{#1}\_relax \_else \_ea\_unless \_fi#2}
+\_long\_def \_isempty #1#2{\_if\_relax\_detokenize{#1}\_relax \_else \_ea\_unless \_fi#2}
 \_def \_istoksempty #1#2{\_ea\_isempty\_ea{\_the#1}#2}
 \_public \isempty \istoksempty ;
 
