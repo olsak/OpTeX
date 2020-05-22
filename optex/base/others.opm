@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2020-04-02>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2020-05-22>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -73,8 +73,13 @@
 
     \_doc ----------------------------
     Lorem ipsum can be printed by \`\lipsum``[<range>]` or \`\lorem``[<range>]`,
-    for example `\lipsum[3]` or `\lipsum[112-121]`, max=150. The data are read
-    from \LaTeX/ file `lipsum.ltd.tex`.
+    for example `\lipsum[3]` or `\lipsum[112-121]`, max=150.
+
+    First usage of `\lipsum` reads the \LaTeX/ file `lipsum.ltd.tex`
+    and prints the selected paragraph(s). Next usages of `\lipsum`
+    prints the selected paragraph(s) from memory. This second and more
+    usages of `\lipsum` are fully expandable. If you want to have all
+    printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
     \_cod ----------------------------
 
 \_def \_lipsum {%
@@ -87,12 +92,13 @@
 }
 \_def\_negativermnm{\_romannumeral-`\.} 
 \_def\_reallipsum[#1]{\_lipsumA #1\_empty-\_empty\_end} 
-\_def\_lipsumA #1-#2\_empty#3\_end{\_tmpnum=#1 \_edef\_tmp{\_ifx^#2^#1\_else#2\_fi}% 
-   \_loop \_csname lips:\_the\_tmpnum\_endcsname \par % \par is better here
-         \_ifnum\_tmpnum<\_tmp \_advance\_tmpnum by1 \_repeat 
-}
+\_def\_lipsumA #1-#2\_empty#3\_end{%
+    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_csname lips:##1\_endcsname \par}}
+
 \def\lipsum {\_lipsum}
 \def\lorem  {\_lipsum}
 
 \_endcode
 
+2020-05-22 \lipsum uses \fornum (expandable after first usage)
+2020-04-02 released

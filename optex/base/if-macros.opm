@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-06>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-22>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -72,25 +72,25 @@
 \_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
 
 \_long\_def\_foreach #1\_do#2{\_putforstack
-   \_immediateassignment\_def\_fbody##1{#2}%
+   \_immediateassignment\_gdef\_fbody##1{#2}%
    \_foreachA #1\_do}
 \_long\_def\_foreachA #1{\_ifx\_do#1\_getforstack\_else\_fbody{#1}\_ea\_foreachA\_fi}
 
 \_def\_fornum#1..#2\_do{\_fornumstep 1:#1..#2\_do}
 \_long\_def\_fornumstep#1:#2..#3\_do#4{\_putforstack
    \_immediateassigned{%
-      \_def\_fbody##1{#4}%
-      \_def\_fornumsgn{}%
-      \_def\_fornumrel{<}%
-      \_frnum=\_numexpr#2\_relax
-      \_ifnum\_numexpr#3<\_frnum \_def\_fornumrel{>}\_fi %decreasing sequence
-      \_ifnum\_numexpr#1\_fornumrel0 \_def\_fornumsgn{-}\_fi % correction      
+      \_gdef\_fbody##1{#4}%
+      \_gdef\_fornumsgn{}%
+      \_gdef\_fornumrel{<}%
+      \_global\_frnum=\_numexpr#2\_relax
+      \_ifnum\_numexpr#3<\_frnum \_gdef\_fornumrel{>}\_fi %decreasing sequence
+      \_ifnum\_numexpr#1\_fornumrel0 \_gdef\_fornumsgn{-}\_fi % correction
    }%
    \_fornumB{#3}{#1}%
 }
 \_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_frnum \_getforstack \_else 
    \_ea\_fbody\_ea{\_the\_frnum}%
-   \_immediateassignment\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax 
+   \_immediateassignment\_global\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax
    \_afterfi{\_fornumB{#1}{#2}}\_fi
 }
 \_def\_afterfi#1#2\_fi{\_fi#1}
@@ -118,16 +118,16 @@
 \_newcount\_forlevel
 \_def\_putforstack{\_immediateassigned{%
    \_ifnum\_forlevel>0
-      \_sdef{_frnum:\_the\_forlevel\_ea}\_ea{\_the\_frnum}%
-      \_slet{_fbody:\_the\_forlevel}{_fbody}%
+      \_sxdef{_frnum:\_the\_forlevel\_ea}{\_the\_frnum}%
+      \_global\_slet{_fbody:\_the\_forlevel}{_fbody}%
    \_fi 
-   \_advance\_forlevel by1
+   \_global\_advance\_forlevel by1
 }}
 \_def\_getforstack{\_immediateassigned{%
-   \_advance\_forlevel by-1 
+   \_global\_advance\_forlevel by-1
    \_ifnum\_forlevel>0
-      \_slet{_fbody}{_fbody:\_the\_forlevel}%
-      \_frnum=\_cs{_frnum:\_the\_forlevel}\_space
+      \_global\_slet{_fbody}{_fbody:\_the\_forlevel}%
+      \_global\_frnum=\_cs{_frnum:\_the\_forlevel}\_space
    \_fi
 }}
 
@@ -252,6 +252,7 @@
 
 \_endcode 
 
+2020-05-22 \foreach, \fornum: all settings are global, independent on TeX group
 2020-05-06 \isnextchar: \let\tmp=#1 -> \let\tmp= #1 (bug fix, #1 should be space)
 2020-05-02 \newif bug fix
 2020-04-15 \fornumstep 3: 1..12 instead \fornum 1..12\step 3

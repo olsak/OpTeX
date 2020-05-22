@@ -109,11 +109,11 @@
 \_newdimen \tmpdim  \_newdimen \_tmpdim
 
    \_doc -----------------------------
-   A few registers are initialized like in plain\TeX/. Note that `\z@` and `\z@skip` from
-   plain\TeX/ is `\zo` and `\zoskip` because we absolutely 
+   A few registers are initialized like in plain\TeX/. Note that `\z@skip` from
+   plain\TeX/ is `\zoskip` here because we absolutely
    don't support the `@` category dance.
-   Note that `\p@` is not defined because we can write 1pt which is more
-   legible.
+   The `\z@` and `\p@` is not defined because we can write 0pt or 1pt which is more
+   legible in source code. You can see `plain-at.opm` file.
    \_cod -----------------------------
 
 \_newdimen\_maxdimen \_maxdimen=16383.99999pt % the largest legal <dimen>

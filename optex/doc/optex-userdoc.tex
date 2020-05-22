@@ -802,6 +802,7 @@ Moreover \OpTeX/ defines following similar commands:
 
 \begitems
 * \^`\crl` \dots\ the end of the row with a horizontal line after it.
+* \^`\crll` \dots\ the end of the row with a double horizontal line after it.
 * \^`\crli` \dots\ like \^`\crl` but the horizontal line doesn't intersect the
       vertical double lines.
 * \^`\crlli` \dots\ like \^`\crli` but horizontal line is doubled.
@@ -1807,9 +1808,12 @@ put it as the first command in your document:
 
 All macros of Plain \TeX/ are re-written in \OpTeX/. Common macros should
 work in the same sense as in original Plain \TeX. Internal control sequences
-\new 
 like `\p@` or `\f@@t` are removed and mostly replaced by control sequences
-prefixed by `_` (like `\_this`). All primitives and common macros have two
+prefixed by `_` (like `\_this`). If you need to use basic set of such Plain
+\TeX/ control sequences (for example you are reading an old macro file),
+use `\load[plain-at]`.
+
+All primitives and common macros have two
 control sequences with the same meaning: in prefixed and unprefixed form.
 For example `\hbox` is equal to `\_hbox`. 
 Internal macros of \OpTeX/ have and use only prefixed form. User should use

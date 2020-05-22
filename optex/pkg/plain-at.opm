@@ -1,0 +1,43 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+
+\_codedecl \_undefined {Obscure @ names from plain TeX <2020-05-22>}
+
+\_setctable \_optexcatcodes
+% PlainTeX obscure names:
+\_catcode`\@=11
+\_newdimen\z@ \z@=0pt
+\_newdimen\p@ \p@=1pt
+\_let\z@skip=\_zoskip
+\_chardef\@ne=1 
+\_chardef\tw@=2 
+\_chardef\thr@@=3 
+\_chardef\sixt@@n=16
+\_mathchardef\@m=1000 
+\_mathchardef\@M=10000 
+\_mathchardef\@MM=20000
+\_countdef\m@ne=22 \m@ne=-1
+\_chardef\@cclv=255
+\_mathchardef\@cclvi=256
+\_skipdef\skip@=0
+\_dimendef\dimen@=0
+\_dimendef\dimen@i=1
+\_dimendef\dimen@ii=2
+\_countdef\count@=255
+\_def\m@th{\_mathsurround\z@}
+\_def\o@lign{\_lineskiplimit\z@ \_oalign}
+\_def\n@space{\_nulldelimiterspace\z@ \m@th}
+\_newdimen\p@renwd \p@renwd=8.75pt
+\_def\alloc@#1#2#3#4#5{\_allocator#5{\_csstring#2}#3}
+\_restorectable
+
+\_endcode
+
+We absolutely don't recommend to use such obscure names in your macros. But
+sometimes you need to read an old plain TeX document or a macro file. You
+can load this file in such cases. For example:
+
+\begtt
+       \load [plain-at, shapepar.sty]
+\endtt
+
+\_endinput

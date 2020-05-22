@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macos <2020-05-03>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macos <2020-05-22>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -176,7 +176,8 @@
    If you really need primitive `\catcode` then you can use `\_catcode`.
    \_cod -----------------------------
 
-\_def\catcode{\_catcode\_string} % more robust in cases \catcode` or \catcode"
+\_def\catcode#1{\_catcode \_if`\_noexpand#1\_ea`\_else\_if"\_noexpand#1"\_else
+   \_if'\_noexpand#1'\_else \_ea\_ea\_ea\_ea\_ea\_ea\_ea#1\_fi\_fi\_fi}
 
    \_doc -----------------------------
    The \`\removespaces` `<text with spaces >{}` expands to <textwithoutspaces>.
@@ -237,5 +238,6 @@
 
 \_endcode % -------------------------------------
 
+2020-05-22 robust \catcode newly defined in order \catcode\string.... be possible
 2020-05-03 \load macro introduced
 2020-03-15 released
