@@ -89,6 +89,7 @@
    \_ifcsname _bib:#1#2\_endcsname \_else
       \_addcitelist{#1#2}%
       \_opwarning{The cite [#1#2] unknown. Try to TeX me again}\_openref
+      \_incr\_unresolvedrefs%
       \_addto\_savedcites{?,}\_def\_sortcitesA{}\_lastcitenum=0
       \_ea\_gdef \_csname _bib:#1#2\_endcsname {}%
       \_ea\_skiptorelax \_fi

@@ -140,7 +140,7 @@
    \_sdef{_spg:;}{\_closepage \_global\_slidelayer=1 \_resetpage \_openslide}
    \_sdef{_spg:.}{\_closepage \_end}
    \_sdef{_spg:+}{\_closepage \_incr\_slidelayer \_decr\_pageno \_openslide}
-   \_def\bye     {\_closepage \_end}
+   \_def\bye     {\_closepage \_byehook \_end}
    \_let\_layers=\_layersactive
    \_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}%
 }
