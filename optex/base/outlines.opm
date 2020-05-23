@@ -5,6 +5,7 @@
 \_def\_outlines#1{\_pdfcatalog{/PageMode/UseOutlines}\_openref
    \_ifx\_toclist\_empty
      \_opwarning{\_noexpand\outlines -- data unavailable. TeX me again}%
+     \_incr\_unresolvedrefs%
    \_else
      \_ifx\_dest\_destactive \_else
         \_opwarning{\_noexpand\outlines doesn't work when \_noexpand\hyperlinks isn't declared}\_fi

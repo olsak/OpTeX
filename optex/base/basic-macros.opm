@@ -93,21 +93,17 @@
 \_public \loggingall \tracingall ; 
 
    \_doc ------------------------------
-   Write a warning if the user forgot to load a Unicode Font {\em or} 
+   Write a warning if the user did not to load a Unicode Font {\em or}
    if there were unresolved references.
    \_cod ------------------------------
 
-\_def\_warnunifont{%
-\_ifx\_initunifonts\_relax \_relax\_else%
-\_opwarning{You forgot to load a Unicode font}%
-\_fi%
-}
-
-\_def\_byehook{%
-\_warnunifont%
-\_ifnum\_unresolvedrefs>0%
-\_opwarning{Rerun to get references right}%
-\_fi%
+\_def\_byehook{
+\_ifx\_initunifonts\_relax \_relax\_else
+\_opwarning{Unicode font was not loaded}
+\_fi
+\_ifnum\_unresolvedrefs>0
+\_opwarning{Rerun to get references right}
+\_fi
 }
 
 \_endcode % -------------------------------------

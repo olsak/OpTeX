@@ -283,7 +283,8 @@
    \_cod -----------------------------
 
 \_def\_makeindex{\_par
-  \_ifx\_iilist\_empty \_opwarning{index data-buffer is empty. TeX me again}
+  \_ifx\_iilist\_empty \_opwarning{index data-buffer is empty. TeX me again}%
+  \_incr\_unresolvedrefs%
   \_else
     \_dosorting \_iilist % sorting \_iilist   
     \_bgroup

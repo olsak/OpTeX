@@ -92,7 +92,8 @@
    \_ifpgfnote \_openref \_fi
    \_wref \_Xfnote{}%
    \_ifpgfnote \_ifcsname _fn:\_the\_gfnotenum \_endcsname \_else
-       \_opwarning{unknown \_noexpand\fnote mark. TeX me again}
+       \_opwarning{unknown \_noexpand\fnote mark. TeX me again}%
+       \_incr\_unresolvedrefs%
    \_fi\_fi
    \_opfootnote\_fnset\_printfnotemarkB
 }
