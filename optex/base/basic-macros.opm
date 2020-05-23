@@ -97,10 +97,14 @@
    if there were unresolved references.
    \_cod ------------------------------
 
-\_def\_byehook{%
+\_def\_warnunifont{%
 \_ifx\_initunifonts\_relax \_relax\_else%
 \_opwarning{You forgot to load a Unicode font}%
 \_fi%
+}
+
+\_def\_byehook{%
+\_warnunifont%
 \_ifnum\_unresolvedrefs>0%
 \_opwarning{Rerun to get references right}%
 \_fi%
