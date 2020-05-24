@@ -3,7 +3,7 @@
 \_codedecl \maketoc {Macros for maketoc <2020-03-12>} % preloaded in format
 
    \_doc ------------------------------------
-   \`\_Xtoc` `{<level>}{<type>}{<number>}{<title>}` (in `.ref` file) reads the 
+   \`\_Xtoc` `{<level>}{<type>}{<number>}<title>` (in `.ref` file) reads the
    specified data and appends them to the \`\_toclist` as
    \^`\_tocline``{<level>}{<type>}{<number>}{<title>}{<gpageno>}{<pageno>}`
    where:
@@ -17,15 +17,17 @@
    \enditems
    The last two parameters are restored from previous
    \^`\_Xpage``{<pageno>}{<gpageno>}`, data were saved in the \^`\_currpage` macro.
+
+   We read the <title> parameter by \^`\_scantoeol` from `.ref` file
+   because the <title> can include something like \code{`\{`}.
    \_cod ------------------------------------
 
 \_def\_toclist{} 
 \_newifi \_ifischap \_ischapfalse
 
-\_def\_Xtoc#1#2#3#4{\_ifnum#1=0 \_ischaptrue\_fi 
-   \_addto\_toclist{\_tocline{#1}{#2}{#3}{#4}}
-   \_ea\_addto\_ea\_toclist\_ea{\_currpage}%
-}
+\_def\_Xtoc#1#2#3{\_ifnum#1=0 \_ischaptrue\_fi
+   \_addto\_toclist{\_tocline{#1}{#2}{#3}}\_scantoeol\_XtocA}
+\_def\_XtocA#1{\_addto\_toclist{{#1}}\_ea\_addto\_ea\_toclist\_ea{\_currpage}}
 
    \_doc ------------------------------------
    \`\_tocline``{<level>}{<type>}{<number>}{<title>}{<gpageno>}{<pageno>}` prints
@@ -59,7 +61,7 @@
       \_def\_pgn{\_ilink[pg:#5]}%
       \_the\_everytocline
       \_ifcsname _tocl:#1\_endcsname 
-         \_cs{_tocl:#1}{#3}{#4}{#6}\_par
+         \_cs{_tocl:#1}{#3}{\_scantextokens{#4}}{#6}\_par
       \_fi
    \_egroup
 }

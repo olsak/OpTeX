@@ -147,6 +147,30 @@
 \_public \eoldef \skiptoeol \bracedparam ;
 
    \_doc -----------------------------
+   \`\scantoeol``\macro <text to end of line>` scans the
+   `<text to end of line>` in verbatim mode and runs the
+   `\macro{<text to end of line>}`. The `\macro`
+   can be defined `\def\macro#1{...\scantextokens{#1}...}`.
+   The new tokenization of the parameter is processed when the parameter is used,
+   no when the parameter is scanned. This principle is used in definition
+   of \^`\chap`, \^`\sec`, \^`\secc` and \^`\_Xtoc` macros.
+   It means that user can write \code{\\sec text `&` text} for example.
+   Inline verbatim works in title sections.
+
+   The verbatim scanner of `\scatoeol` keeps category 7 for `^` in
+   order to be able to use `^^J` as comment chracter which means that
+   the next line continues.
+   \_cod -----------------------------
+
+\_def\_scantoeol#1{\def\_tmp{#1}\_begingroup \_setscancatcodes \_scantoeolA}
+\_def\_setscancatcodes{\_setverb \_catcode`\^^M=12\_catcode`\^=7\_catcode`\ =10\_catcode`\^^J=14 }
+\_catcode`\^^M=12 %
+\_def\_scantoeolA#1^^M{\_endgroup \_tmp{#1}}%
+\_normalcatcodes %
+
+\_public \scantoeol ;
+
+   \_doc -----------------------------
    The \`\replstring``\macro{<textA>}{<textB>}`
    replaces all occurrences of `<textA>` by `<textB>` in the `\macro` body.
    The `\macro` must be defined without parameters. The occurrences of

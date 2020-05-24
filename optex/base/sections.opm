@@ -16,16 +16,19 @@
 \_def \_seccfont {\_scalemain\_typoscale[\_magstep1/\_magstep1]\_boldify}
 
    \_doc ---------------------------
-   The \`\tit` macro is defined by `\eoldef`, it means that the parameter is
-   separated by end of line. The macros `\chap`, `\sec` and `\secc` use
-   `\eoldef` too.
+   The \`\tit` macro is defined using \^`\scantoeol` and \`\_printtit`. 
+   It means that the parameter is
+   separated by end of line and inline verbatim is allowed. The same
+   principle is used in the \^`\chap`, \^`\sec` and \^`\secc` macros. 
    \_cod ---------------------------
 
-\_eoldef\_tit #1{\_vglue\_titskip
+\_def\_printtit #1{\_vglue\_titskip
   {\_leftskip=0pt plus1fill \_rightskip=\_leftskip % centering
    \_titfont \_noindent #1\_par}%
    \_nobreak\_bigskip
 }
+\_def\_tit{\_scantoeol\_printtit}
+
 \_public \tit ;
 
    \_doc ---------------------------
@@ -165,32 +168,35 @@
    The \`\chap`, \`\sec` and \`\secc` macros are implemented here.
    The \`\_inchap`, \`\_insec` and \`\_insecc` macros does the real work,
    First, we read the optional parameter `[<label>]`, if it exists.
+   The `\chap`, `\sec` and `\secc` macro reads its parameter using
+   \^`\scantoeol`. This causes that they cannot be used inside other macros.
+   Use \`\_inchap`, \`\_insec` and \`\_insecc` macros directly in such case.
    \_cod ----------------------------
 
-\_optdef\_chap[]{\_trylabel \_inchap}
-\_optdef\_sec []{\_trylabel \_insec}
-\_optdef\_secc[]{\_trylabel \_insecc}
+\_optdef\_chap[]{\_trylabel \_scantoeol\_inchap}
+\_optdef\_sec []{\_trylabel \_scantoeol\_insec}
+\_optdef\_secc[]{\_trylabel \_scantoeol\_insecc}
 \_def\_trylabel{\_istoksempty\_opt\_iffalse \_label[\_the\_opt]\_fi}
 
-\_eoldef\_inchap #1{\_par \_sectionlevel=1
+\_def\_inchap #1{\_par \_sectionlevel=1
    \_def \_savedtitle {#1}% saved to .ref file
    \_ifnonum \_else {\_globaldefs=1 \_incr\_chapnum \_chapx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_thechapnum \_fi}%
-   \_printchap{#1}%
+   \_printchap{\_scantextokens{#1}}%
    \_resetnonumnotoc
 }
-\_eoldef\_insec #1{\_par \_sectionlevel=2
+\_def\_insec #1{\_par \_sectionlevel=2
    \_def \_savedtitle {#1}% saved to .ref file
    \_ifnonum \_else {\_globaldefs=1 \_incr\_secnum \_secx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_thesecnum \_fi}%
-   \_printsec{#1}%
+   \_printsec{\_scantextokens{#1}}%
    \_resetnonumnotoc
 }
-\_eoldef\_insecc #1{\_par \_sectionlevel=3
+\_def\_insecc #1{\_par \_sectionlevel=3
    \_def \_savedtitle {#1}% saved to .ref file
    \_ifnonum \_else {\_globaldefs=1 \_incr\_seccnum \_seccx}\_fi
    \_edef \_therefnum {\_ifnonum \_space \_else \_theseccnum \_fi}%
-   \_printsecc{#1}%
+   \_printsecc{\_scantextokens{#1}}%
    \_resetnonumnotoc
 }
 \_public \chap \sec \secc ;
@@ -215,7 +221,7 @@
    \_fi
 }
 \_def \_wtotoc #1#2#3#4{\_edef\_tmp{{#1}{#2}{#3}{#4}}\_ea\_wtotocA\_tmp}
-\_def \_wtotocA #1#2#3#4{\_wref\_Xtoc{{#1}{#2}{#3}{#4}}}
+\_def \_wtotocA #1#2#3#4{\_wref\_Xtoc{{#1}{#2}{#3}#4}}
 
    \_doc -----------------------------
    The \`\_abovetitle``{<penaltyA>}{<skipA>}` and \`\_belowtitle``{<skipB>}` pair 

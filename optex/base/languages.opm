@@ -80,7 +80,7 @@
    another meaning when `\oldaccents` command is used.
    The macros `\"` and `\'` are not defined as `\protected` because we need
    their expansion when `\outlines` are created.
-   User can declare quotes by \`\quoteschars``<clqq><crqq><clq><crq>`, where
+   User can declare quotes by \^`\quoteschars``<clqq><crqq><clq><crq>`, where
    `<clqq>...<crqq>` are normal quotes and `<clq>...<crq>` are alternative quotes.
    or use \`\altquotes` to swap between meaning of these two types of quotes.
    \nl
@@ -98,8 +98,26 @@
 \_let \_skquotes = \_csquotes
 \_let \_dequotes = \_csquotes
 
+   \_doc -----------------------------
+   The \`\quoteschars``<lqq><rqq><lq><rq>` defines `\"` and `\"` as `\_qqA`
+   in in normal mode and as expadable macros in outline mode.
+   We want to well process the common cases: \code{\\"`&`"} or \code{\\"`\{`"}.
+   This is reason why the quotes parameter is read in verbatim mode and retokenized
+   again by `\scantextokens`. We want to allow to quote the quoutes mark
+   itself by \code{\\"{`"`}"}. This is reason why the sub-verbatim mode is
+   used when first character is \code{\{} in the parameter.\nl
+   The `\"` is defined as `\_qqA\_qqB<lqq><rqq>` and `\'` as `\_qqA\_qqC<lq><rq>`.
+   The \`\_qqA``\_qqB<clqq><crqq>` runs \`\_qqB``<lqq><rqq><text>"`.
+   \_cod -----------------------------
+
 \_def \_quoteschars #1#2#3#4{\_def\_altquotes{\_quoteschars#3#4#1#2}\_public\altquotes;%
-   \_def \"##1"{#1##1#2}\_def \'##1'{#3##1#4}}
+   \_protected\_def \"{\_qqA\_qqB#1#2}\_protected\_def \'{\_qqA\_qqC#3#4}%
+   \_regmacro{}{}{\_catcode`\"=12 \_catcode`\'=12 \_def \"##1"{#1##1#2}\_def \'##1'{#3##1#4}}}
+
+\_def\_qqA#1#2#3{\_bgroup\_setverb \_catcode`\ =10
+   \_isnextchar\_bgroup{\_catcode`\{=1 \_catcode`\}=2 #1#2#3}{#1#2#3}}
+\_long\_def\_qqB#1#2#3"{\_egroup#1\_scantextokens{#3}#2}
+\_long\_def\_qqC#1#2#3'{\_egroup#1\_scantextokens{#3}#2}
 
    \_doc -----------------------------
    Sometimes should be usable to leave the markup `"such"` or `'such'` i.e.~without
@@ -109,8 +127,7 @@
    \^`\activequotes`.
    \_cod -----------------------------
 
-\_def\_activequotes{\_ea\_activequotesA\"""\_ea\_activequotesA\'''}
-\_def\_activequotesA#1#2#3{\_bgroup\_lccode`\~=`#3\_lowercase{\_egroup\_adef#3##1~{#1##1#2}}}
+\_def\_activequotes{\_adef"{\"}\_adef'{\'}}
 
 \_public \quoteschars \activequotes \enquotes \csquotes \skquotes \frquotes \plquotes 
    \esquotes \grquotes \ruquotes \itquotes \dequotes ;

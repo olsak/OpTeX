@@ -2,6 +2,11 @@
 
 \_codedecl \pdfunidef {PDFunicode strings for outlines <2020-03-12>} % preloaded in format
 
+   \_doc -----------------------------
+   The \`\_octalprint` is lua script which prints the character code in the
+   octal notation.
+   \_cod -----------------------------
+
 \_edef\_octalprint#1#2{\_noexpand\_directlua{% #1=character-code #2=character
     if ('#2'>='A' and '#2'<='Z') or ('#2'>='a' and '#2'<='z') then
       tex.print(string.format('000\_pcent s',"#2"))
@@ -10,17 +15,34 @@
       tex.print(string.format('\_pcent 03o\_nbb\_pcent03o',(#1-num)/256,num))
     end
 }}
+
+   \_doc -----------------------------
+   \`\pdfunidef``\macro{<text>}` does more things than only converting to octal notation.
+   The <text> can be scanned in verbatim mode (it is true becuase \^`\_Xtoc`
+   reads the <text> in verbatim mode). First `\edef` do
+   `\_scantextokens\unexpanded` and second `\edef` expands the parameter
+   according to current values on selected macros from `\_regoul`. Then
+   \`\_removeoutmath` converts `..$x^2$..` to `..x^2..`, i.e removes dollars.
+   Then \`\_removeoutbraces` converts `..{x}..` to `..x..`.
+   Finaly, the <text> is detokenized, spaces are preprocessed using \^`\replstring` 
+   and then the \`\_pdfunidefB` is repeated on each character. It calls the 
+   `\directlua` chunk to print octal numbers in the macro \^`\_octalprint`.
+   \_cod -----------------------------
+
 \_def\_pdfunidef#1#2{%
    \_begingroup
-      \_catcode`\\=12 \_let\\=\_bslash
       \_the\_regoul \_relax % \_regmacro alternatives of logos etc.
+      \_ifx\_savedttchar\_undefined \_def#1{\_scantextokens{\_unexpanded{#2}}}%
+      \_else \_lccode`\;=\_savedttchar \_lowercase{\_prepinverb#1;}{#2}\fi
+      \_edef#1{#1}%
       \_escapechar=-1
-      \_edef#1{#2\_empty}%
+      \_edef#1{#1\_empty}%
       \_escapechar=`\\
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_end$}%  $x$ -> x
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_end}}%  {x} -> x
       \_edef#1{\_detokenize\_ea{#1}}%
       \_replstring#1{ }{{ }}%  text text -> text{ }text
+      \_catcode`\\=12 \_let\\=\_bslash
       \_edef\_out{\\376\\377}%
       \_ea\_pdfunidefB#1^%  text -> \_out in octal
       \_ea
@@ -38,6 +60,28 @@
 \_def\_removeoutbraces #1#{#1\_removeoutbracesA}
 \_def\_removeoutbracesA #1{\_ifx\_end#1\_else #1\_ea\_removeoutbraces\_fi}
 \_def\_removeoutmath #1$#2${#1\_ifx\_end#2\_else #2\_ea\_removeoutmath\_fi}
+
+   \_doc -----------------------------
+   The \`\_prepinverb``<macro><separator>{<text>}`, 
+   e.g.\ `\_prepinverb\tmpb|{aaa |bbb| cccc |dd| ee}`
+   does `\def\tmpb{<su>{aaa }bbb<su>{ cccc }dd<su>{ ee}}` where
+   <su> is `\scantextokens\unexpanded`. It means that in-line verbatim
+   are not argument of `\scantextoken`. First `\edef\tmpb` tokenizes again
+   the <text> but not the parts which were in the the in-line verbatim. 
+   \_cod -----------------------------
+
+\_def\_prepinverb#1#2#3{\_def#1{}%
+   \_def\_dotmpb ##1#2##2{\_addto#1{\_scantextokens{\_unexpanded{##1}}}%
+      \_ifx\_end##2\_else\_ea\_dotmpbA\_ea##2\_fi}%
+   \_def\_dotmpbA ##1#2{\_addto#1{##1}\_dotmpb}%
+   \_dotmpb#3#2\_end
+}
+
+   \_doc -----------------------------
+   The \^`\regmacro` is used in order to sed the values of macros
+   `\em`, `\rm`, `\bf`, `\it`, `\bi`, `\tt`, `\/` and `~` to values usable in
+   PDF outlines.
+   \_cod -----------------------------
 
 \_regmacro {}{}{\_let\em=\_empty \_let\rm=\_empty \_let\bf=\_empty
     \_let\it=\_empty \_let\bi=\_empty \_let\tt=\_empty \_let\/=\_empty
@@ -65,14 +109,4 @@ bytes FEFF. Moreover, each byte is encoded by three octal digits preceded by
 backslash. The only exception is the visible ASCII character encoding: such
 a character is encoded by its real byte preceded by `\000`.
 
-The command \`\pdfunidef``\macro{string}` is implemented here
-using `\directlua`.
-The input string is preprocessed: detokenized, converted `\word /` to
-`\word/` (used in logos) preprocessed spaces using \^`\replstring` and then the
-\`\_pdfunidefB` is repeated on each character. It calls the `\directlua` chunk
-to print octal numbers in the macro `\_octalprint`.
-
-The \^`\regmacro` is used in order to sed the values of macros
-`\em`, `\rm`, `\bf`, `\it`, `\bi`, `\tt`, `\/` and `~` to values usable in
-PDF outlines.
 

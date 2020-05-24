@@ -428,10 +428,6 @@ braces are used):
 \secc Subsection title <end of line>
 \endtt
 
-If you want to write a title to more lines in your source file then you can
-use percent character before <end of line>. Such <end of line> is not
-scanned and reading of the title continues at the next line.
-
 The chapters are automatically numbered by one number, sections by two numbers
 (chapter.section) and subsections by three numbers. If there are no chapters
 then section have only one number and subsection two.
@@ -447,6 +443,12 @@ paragraphs indented.
 If a title is so long then it breaks to more lines. It is better to hint the
 breakpoints because \TeX/ does not interpret the meaning of the title.
 User can put the \^`\nl` (it means newline) macro to the breakpoints.
+
+If you want to organize a title to more lines in your source file then you can
+use `^^J` at the end of each line (except the last one). 
+When `^^J` is used, then reading of the title continues at the next line.
+You can use \^`\nl`` ^^J` if you want to have corresponding lines in the source
+and in the output.
 
 The chapter, section or subsection isn't numbered if the \^`\nonum` precedes.
 And the chapter, section or subsection isn't delivered to the table of
@@ -918,7 +920,7 @@ More about it is in technical documentation in section~\ref[table.impl].
 See the definition of the \^`\tabdeclarec` macro, for example.
 
 The `:` columns boundary declarator is described in section~\ref[table.bound].
-The tables with given width can be declared by `to<size>` or `xto<size>`.
+The tables with given width can be declared by `to<size>` or `pxto<size>`.
 More about it is in section~\ref[table.w]
 Many tips about tables can be seen on the site
 \url{http://petr.olsak.net/optex/optex-tricks.html}.
