@@ -93,7 +93,7 @@
    \_wref \_Xfnote{}%
    \_ifpgfnote \_ifcsname _fn:\_the\_gfnotenum \_endcsname \_else
        \_opwarning{unknown \_noexpand\fnote mark. TeX me again}%
-       \_incr\_unresolvedrefs%
+       \_incr\_unresolvedrefs
    \_fi\_fi
    \_opfootnote\_fnset\_printfnotemarkB
 }
@@ -149,8 +149,8 @@
       \_ifcsname _mn:\_the\_mnotenum \_endcsname 
           \_edef\_mnotesfixed{\_cs{_mn:\_the\_mnotenum}}%
       \_else
-          \_opwarning{unknown \_noexpand\mnote side. TeX me again}\_openref%
-          \_incr\_unresolvedrefs%
+          \_opwarning{unknown \_noexpand\mnote side. TeX me again}\_openref
+          \_incr\_unresolvedrefs
           \_def\_mnotesfixed{\_right}%
    \_fi\_fi
    \_hbox to0pt{\_wref\_Xmnote{}\_everypar={}%

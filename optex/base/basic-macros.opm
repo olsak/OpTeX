@@ -94,16 +94,12 @@
 
    \_doc ------------------------------
    Write a warning if the user did not to load a Unicode Font {\em or}
-   if there were unresolved references.
+   if there were unresolved references. \`\_byehook` is used in the \^`\bye` macro.
    \_cod ------------------------------
 
-\_def\_byehook{
-\_ifx\_initunifonts\_relax \_relax\_else
-\_opwarning{Unicode font was not loaded}
-\_fi
-\_ifnum\_unresolvedrefs>0
-\_opwarning{Rerun to get references right}
-\_fi
+\_def\_byehook{%
+   \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
+   \_ifnum\_unresolvedrefs>0 \_opwarning{Rerun to get references right}\_fi
 }
 
 \_endcode % -------------------------------------
