@@ -996,10 +996,11 @@ Each occurrence of ? will be changed to ! and vice versa.
 \endtt
 
 The in-line verbatim surrounded by an `\activettchar` doesn't work in
-parameter of macros and macro definitions, especially in titles declared by
-\~`\chap`, \~`\sec` etc. 
+parameter of macros and macro definitions. (It works in titles declared by
+\~`\chap`, \~`\sec` etc. and in \~`\fnote`s, because these macros are
+specially defined in \OpTeX/).
 \new
-You can use more robust command \^`\code{<text>}` in such
+You can use more robust command \^`\code{<text>}` in problematic
 situations, but you have to escape following characters in the <text>:
 `\`, `#`, `%`, braces (if the braces are unmatched in the <text>), 
 and space or `^` (if there are more than one subsequent spaces or `^` in 
