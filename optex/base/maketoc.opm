@@ -101,7 +101,8 @@
    \_cod ----------------------------------
 
 \_def\_maketoc{\_par \_ifx\_toclist\_empty
-      \_opwarning{\_noexpand\maketoc -- data unavailable, TeX me again}\_openref
+      \_opwarning{\_noexpand\maketoc -- data unavailable, TeX me again}\_openref%
+      \_incr\_unresolvedrefs%
    \_else \_begingroup 
       \_tocrefnum=0 \_penalty11333 
       \_the\_regtoc \_toclist 
