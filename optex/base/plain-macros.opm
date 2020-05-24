@@ -332,7 +332,7 @@
 \_def \_showhyphens #1{\_setbox0=\_vbox{\_parfillskip=0pt \_hsize=\_maxdimen \_tenrm
   \_pretolerance=-1 \tolerance=-1 \hbadness=0 \showboxdepth=0 \ #1}}
 
-\_def \_bye {\_par \_vfill \_supereject \_end}
+\_def \_bye {\_par \_vfill \_supereject \_byehook \_end}
 \_public \bye ;
 
 \_endcode % -------------------------------------

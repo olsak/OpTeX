@@ -10,6 +10,13 @@
 \_def\_Xpage#1#2{\_def\_currpage{{#1}{#2}}\_lfnotenum=0 }
 
    \_doc ----------------------------
+   Counter for unresolved references.
+   \_cod ----------------------------
+
+\_newcount\_unresolvedrefs
+\_unresolvedrefs=0
+
+   \_doc ----------------------------
    \`\_Xlabel` `{<label>}{<text>}` saves the <text> to `\_lab:<label>` and saves
    `[pg:<gpageno>]{<pageno>}` to `\_pgref:<label>`.
    \_cod ----------------------------
@@ -53,12 +60,14 @@
 
 \_def\_ref[#1]{\_isdefined{_lab:#1}%
   \_iftrue \_ilink[ref:#1]{\_csname _lab:#1\_endcsname}%
-  \_else ??\_opwarning{label [#1] unknown. Try to TeX me again}\_openref
+  \_else ??\_opwarning{label [#1] unknown. Try to TeX me again}%
+  \_incr\_unresolvedrefs\_openref%
   \_fi
 }
 \_def\_pgref[#1]{\_isdefined{_pgref:#1}%
   \_iftrue \_ea\_ea\_ea\_ilink \_csname _pgref:#1\_endcsname
-  \_else ??\_opwarning{pg-label [#1] unknown. Try to TeX me again}\_openref
+  \_else ??\_opwarning{pg-label [#1] unknown. Try to TeX me again}%
+  \_incr\_unresolvedrefs\_openref%
   \_fi
 }
 \_public \ref \pgref ;
