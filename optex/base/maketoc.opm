@@ -18,7 +18,7 @@
    The last two parameters are restored from previous
    \^`\_Xpage``{<pageno>}{<gpageno>}`, data were saved in the \^`\_currpage` macro.
 
-   We read the <title> parameter by \^`\_scantoeol` from `.ref` file
+   We read the <title> parameter by \^`\scantoeol` from `.ref` file
    because the <title> can include something like \code{`\{`}.
    \_cod ------------------------------------
 
