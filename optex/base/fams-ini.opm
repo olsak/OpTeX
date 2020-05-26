@@ -60,7 +60,7 @@
 
 \_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
    { -,\caps: {\rm\bf\it\bi} }
-\_famalias [BaskevilleF]
+\_famalias [BaskervilleF]
 
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }

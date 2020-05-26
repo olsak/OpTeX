@@ -120,7 +120,7 @@
    number using `\_llap`.
    \_cod ----------------------------
 
-\_eoldef \begtt#1{\_par \_wipeepar 
+\_eoldef \begtt#1{\_par \_wipeepar \_setxhsize
    \_vskip\_parskip \_ttskip
    \_begingroup
    \_setverb 
@@ -213,7 +213,7 @@
    \_else
       \_edef\_vinolines{\_the\_tmpnum}%
    \_fi
-   \_vskip\_parskip \_ttskip \_wipeepar
+   \_vskip\_parskip \_ttskip \_wipeepar \_setxhsize
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_setverb \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt

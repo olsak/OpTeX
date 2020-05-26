@@ -25,12 +25,26 @@
 
 \_def \_begoutput{\_incr\_gpageno 
    \_immediate\_wref\_Xpage{{\_the\_gpageno}{\_folio}}%
-   \_prepoffsets \_the\_regmark} % 
+   \_setxhsize \_prepoffsets \_the\_regmark}
 \_def \_endoutput{\_advancepageno
    {\_globaldefs=1 \_the\_nextpages \_nextpages={}}%
    \_ifnum\_outputpenalty>-20000 \_else\_dosupereject\_fi
 }
 \_def \_prepoffsets {}
+
+   \_doc -----------------------------
+   The `\hsize` value can be changed at various places in the document but
+   we need to have constant value \`\_xhsize` in output routine
+   (for headlines and footlines, for instance). This value is set
+   from current value of `\hsize` when \`\_setxhsize` macro is called.
+   This macro destroys itself, so the value is set only once. Typicaly it is
+   done when first \^`\_optexoutput` routine is called (see \^`\_begoutput`).
+   Or it is called at begining of the \^`\begtt`...`\endtt` environment before
+   `\hsize` value is eventually changed by user in this environment.
+   \_cod -----------------------------
+
+\_newdimen \_xhsize
+\_def\_setxhsize {\_global\_xhsize=\_hsize \_global\_let\_setxhsize=\_relax}
 
    \_doc -----------------------------
    \`\gpageno` counts pages from one in whole document
@@ -71,7 +85,7 @@
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse 
    \_vbox to0pt{\_vss 
                 \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
-                \_line{\_the\_headline}\_hbox{}}\_nointerlineskip 
+                \_hbox to\_xhsize{\_the\_headline}\_hbox{}}\_nointerlineskip
    \_fi
 }
 
@@ -81,7 +95,7 @@
 
 \_def\_makefootline{\_istoksempty \_footline \_iffalse 
       \_baselineskip=\_footlinedist 
-      \_lineskiplimit=-\_maxdimen \_line{\_the\_footline}
+      \_lineskiplimit=-\_maxdimen \_hbox to\_xhsize{\_the\_footline}
    \_fi
 }
 
@@ -201,7 +215,7 @@
 }
 \_def \_draftbox #1{\_setbox0=\_hbox{#1}%
    \_kern.5\_vsize \_kern4.5\_wd0 
-   \_hbox to0pt{\_kern.5\_hsize \_kern-1\_wd0
+   \_hbox to0pt{\_kern.5\_xhsize \_kern-1\_wd0
    \_pdfsave \_pdfrotate{55}\_pdfscale{10}{10}%
    \_hbox to0pt{\_localcolor\LightGrey \_box0\_hss}%
    \_pdfrestore

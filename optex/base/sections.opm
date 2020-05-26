@@ -24,7 +24,7 @@
 
 \_def\_printtit #1{\_vglue\_titskip
   {\_leftskip=0pt plus1fill \_rightskip=\_leftskip % centering
-   \_titfont \_noindent #1\_par}%
+   \_titfont \_noindent \_scantextokens{#1}\_par}%
    \_nobreak\_bigskip
 }
 \_def\_tit{\_scantoeol\_printtit}

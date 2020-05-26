@@ -26,7 +26,7 @@
 \_newcount\_mullines
 
 \_def\_begmulti #1 {\_par\_bgroup\_wipeepar\_multiskip\_penalty0 \_def\_Ncols{#1}
-   \_setbox6=\_vbox\_bgroup\_penalty0
+   \_setbox6=\_vbox\_bgroup \_let\_setxhsize=\_relax \_penalty0
    %% \hsize := column width = (\hsize+\colsep) / n - \colsep
    \_advance\_hsize by\_colsep
    \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep

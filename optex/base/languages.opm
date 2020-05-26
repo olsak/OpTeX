@@ -128,13 +128,15 @@
 
    \`\_resetaquotes` redefines expandable version of `\"<text>"` and `\'<text>'`
    used in outlines in order to the delimiter is {\em active} character. We
-   need to do this work only once (\^`\activequotes` can be called more than once).
+   are testing if \^`\quoteschars` were used now because the error in outlines
+   can be more confusing.
    \_cod -----------------------------
 
 \_def\_activequotes{\_adef"{\"}\_adef'{\'}\_resetaquotes}
 
 \_bgroup \_catcode`,=13 \_lccode`\~=`\" \_lccode`\,=`\' \_lowercase{\_egroup
-   \_def\_resetaquotes{\_let\_resetaquotes=\_relax
+   \_def\_resetaquotes{%
+      \_bgroup \_the\_regoul \_edef\_tmp{\"?"}\_egroup % test if \quoteschar were used
       \_regmacro{}{}{\_edef\"##1~{\"##1"}\_edef\'##1,{\'##1'}}}
 }
 
