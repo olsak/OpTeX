@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2020-05-20>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2020-05-26>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into 
@@ -337,6 +337,28 @@
    }\_kern\_vvkern\_hrule}\_vrule}}
 \_public \frame ;
 
+   \_doc -----------------------------
+   \`\eqbox` and \`\eqboxsize` are implemented here. The widths of
+   all `\eqbox`es are saved to the `.ref` file in the format
+   \`\_Xeqbox``{<label>}{<size>}`. The `.ref` file is read again and maximum
+   box width for each <label> is saved to `\_eqb:<label>`.
+   \_cod -----------------------------
+
+\_def\_Xeqbox#1#2{%
+   \_ifcsname _eqb:#1\_endcsname
+      \_ifdim #2>\_cs{_eqb:#1}\_relax \_sdef{_eqb:#1}{#2}\_fi
+   \_else \_sdef{_eqb:#1}{#2}\_fi
+}
+\_def\_eqbox #1[#2]#3{\_setbox0=\_hbox{{#3}}%
+   \_openref \_immediate\_wref \_Xeqbox{{#2}{\_the\_wd0}}%
+   \_ifcsname _eqb:#2\_endcsname
+       \_hbox to\_cs{_eqb:#2}{\_ifx r#1\_hfill\_fi\_hss\_unhbox0\_hss\_ifx l#1\_hfill\_fi}%
+   \_else \_box0 \_fi
+}
+\_def\_eqboxsize [#1]#2{\_trycs{_eqb:#1}{#2}}
+
+\public \eqbox \eqboxsize ;
+
 \_endcode % -------------------------------------
 
 \secc[table.bound] The boundary declarator \code{:}
@@ -449,8 +471,41 @@ For example,
 %
 This gives the ratio of widths of individual paragraphs in the table.
 
+\secc `\eqbox`: boxes with equal width acros the whole document
+
+The \^`\eqbox` `[<label>]{<text>}` behaves like `\hbox{<text>}` in the first
+run of \TeX. But the widths of all boxes with the same label are saved to
+`.ref` file and the maximum box width for each label is calculated at the
+beginning of the next \TeX/ run. Then \^`\eqbox`~`[<label>]{<text>}` behaves
+like `\hbox to <dim:label> {\hss <text>\hss}`, where <dim:label> is
+the maximum width of all boxes
+labeled by the same `[<label>]`. The documentation of the \LaTeX/ package
+`eqparbox` includes more information and tips.
+
+The \^`\eqboxsize` `[<label>]{<dimen>}` expands to <dim:label> if this value is known,
+else it expands to the given <dimen>.
+
+The optional parameter `r` or `l` can be writen before `[<label>]` (for example
+`\eqbox r[label]{text}`) if you want to put the text to the right or to the
+left side of the box width.
+
+Try the following example and watch what happens after first \TeX/ run and
+after second one.
+
+\begtt
+\def\leftitem#1{\par
+   \noindent \hangindent=\eqboxsize[items]{2em}\hangafter=1
+   \eqbox r[items]{#1 }\ignorespaces}
+
+\leftitem {\bf first}      \lorem[1]
+\leftitem {\bf second one} \lorem[2]
+\leftitem {\bf final}      \lorem[3]
+\endtt
+
+
 \_endinput
 
+2020-05-26 \eqbox implemented
 2020-05-20 \colnum implemented.
            \vspan implemented.
 2020-05-19 \fL, \fR ets defined.

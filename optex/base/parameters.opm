@@ -149,7 +149,7 @@
 \_public \plaintexsetting ;
 
    \_doc -----------------------------
-   \secc \OpTeX/ parameters
+   \secc[oparams] \OpTeX/ parameters
 
    The main principle how to configure \OpTeX/ is not to use only parameters.
    A designer can copy macros from \OpTeX/ and re-define them as required.
@@ -361,20 +361,12 @@
    The \`\mnotesize` is horizontal size of the marginal notes.
    \nl
    The \`\mnoteindent` is horizontal space between body-text and marginal note.
-   \nl
-   The \`\mnoteskip` is a dimen which denotes the vertical shift of marginal
-   note from its normal position. Positive value means shift up, negative
-   down. The `\mnoteskip` register is set to zero 
-   after the marginal note is printed.
-   Use it as an exception of marginal note position if the marginal
-   notes overlaps or they are put at bottom of the page.      
    \_cod -----------------------------
 
 \_newtoks\_everymnote 
 \_newdimen\_mnotesize   \_mnotesize=20mm   % the width of the mnote paragraph
 \_newdimen\_mnoteindent \_mnoteindent=10pt % ditance between mnote and text
-\_newdimen\_mnoteskip  
-\_public \everymnote \mnotesize \mnoteindent \mnoteskip ;
+\_public \everymnote \mnotesize \mnoteindent ;
 
    \_doc -----------------------------
    The `\table` parameters follows. The \`\thistable` tokens list 

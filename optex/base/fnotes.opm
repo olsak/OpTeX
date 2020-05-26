@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-03-20>} % loaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-05-26>} % loaded in format
 
    \_doc -----------------------------
    \`\_gfnotenum` is conter which counts footnotes globally in the document.
@@ -127,16 +127,30 @@
 \_public \fixmnotes ;
 
    \_doc -----------------------------
-   The outer box of marginal note has zero width and zero depth and it is appended 
-   after current line using `\vadjust` primitive or it is inverted to vertical mode 
+   The \`\_mnoteD``{<text>}` macro sets the position the marginal note.
+   The outer box of marginal note has zero width and zero depth and it is appended
+   after current line using `\vadjust` primitive or it is inverted to vertical mode
    as a box with `\vskip-\baselineskip` followed.  
    \_cod -----------------------------
 
-\_long\_def\_mnote#1{\_ifvmode {\_mnoteA{#1}}\_nobreak\_vskip-\_baselineskip \_else 
+\_def\_mnote #1#{\_ifx^#1^\_else \_mnoteC#1\_end \_fi \_mnoteD}
+\_def\_mnoteC up#1\_end{\_mnoteskip=#1\_relax} % \mnote up<dimen> {<text>} syntax
+\_long\_def\_mnoteD#1{\_ifvmode {\_mnoteA{#1}}\_nobreak\_vskip-\_baselineskip \_else
    \_lower\_dp\_strutbox\_hbox{}\_vadjust{\_kern-\_dp\_strutbox \_mnoteA{#1}\_kern\_dp\_strutbox}%
    \_fi
 }
 \_public \mnote ;
+
+   \_doc -----------------------------
+   The \`\mnoteskip` is a dimen which denotes the vertical shift of marginal
+   note from its normal position. Positive value means shift up, negative
+   down. The `\mnoteskip` register is set to zero
+   after the marginal note is printed. The new sytax `\mnote up<dimen>{<text>}`
+   is possible too, but public `\mnoteskip` is kept for backward compatibility.
+   \_cod -----------------------------
+
+\_newdimen\_mnoteskip
+\_public \mnoteskip ;
 
    \_doc -----------------------------
    The \`\_mnoteA` macro does the real work. The \`\_lrmnote``{<left>}{<right>}`
@@ -174,4 +188,5 @@
 
 \_endcode % -------------------------------------
 
-
+2020-05-26 \mnote up<dimen> implemented
+2020-03-20 released

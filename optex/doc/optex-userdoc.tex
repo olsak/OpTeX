@@ -136,7 +136,8 @@ review printing. After review is done, the second line can be commented out.
 \secc Concept of default page
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\OpTeX/ uses for page design very similar to Plain \TeX/ \"output routine". 
+\OpTeX/ uses \"output routine" for page design.
+It is very similar to Plain \TeX/ output routine.
 There is \^`\headline` followed by \"page body" followed by
 \^`\footline`. The \^`\headline` is empty by default and it can be used
 for running headers repeated on each page. The \^`\footline` prints
@@ -168,8 +169,7 @@ creating background of each page (colors, picture, watermark for example).
 The macro \^`\draft` uses this register and puts big text DRAFT as watermark
 to each page. You can try it.
 
-More about the page layout is documented in files `parameters.opm` and 
-`output.opm`.
+More about the page layout is documented in sections~\ref[oparams] and~\ref[output].
 
 
 \secc Footnotes and marginal notes
@@ -184,8 +184,7 @@ on each chapter from one\fnote
 document from one or \^`\fnotenumpages` if you want footnotes numbered at each
 page from one. Default setting is \^`\fnotenumchapters`}.
 The <text> is scaled to 80 \%. 
-User can redefine footnote mark or scaling, as shown in the file
-`fnotes.opm`.
+User can redefine footnote mark or scaling, as shown in the section~\ref[fnotes].
 
 The \^`\fnote` macro is fully applicable only in \"normal outer" paragraph.
 It doesn't work inside boxes (tables, for example). If you are solving such
@@ -219,11 +218,11 @@ The <text> is formatted as a little paragraph with the maximal width
 \^`\mnotesize` ragged left on the left margins or ragged right on the right
 margins. The first line of this little paragraph has its vertical position
 given by the position of \^`\mnote` in the text. The exceptions are possible
-by setting the \^`\mnoteskip` register. You can implement such exceptions to
-each \^`\mnote` manually in final printing in order to margin notes do not
-overlap. The positive value of \^`\mnoteskip` shifts the note up and negative
-value shifts it down. For example \^`\mnoteskip=2\baselineskip` \^`\mnote{<text>}`
-shifts this (and only this) note two lines up.
+by using the `up` keyword: \~`\mnote`` up<dimen>{<text>}`.
+You can set such <dimen> to each \^`\mnote` manually in final printing
+in order to margin notes do not overlap. The positive value of <dimen>
+shifts the note up and negative value shifts it down. For example
+\^`\mnote`` up 2\badselineskip{<text>}` shifts this marginal note two lines up.
 
 
 \sec Fonts
@@ -255,7 +254,7 @@ be used before a variant selector and they
 can be (independently) combined: `\caps\it` or `\cond\caps\bf`. The
 modifiers keeps their internal setting until group ends or until another
 modifier which negates the previous feature is used. So
-`\caps \rm First text \it Second text`  
+`{\caps \rm First text \it Second text}`
 gives {\caps \rm First text \it Second text}.
 
 \new
@@ -278,7 +277,7 @@ This is {\em important} text.     % = This is {\it important\/} text.
 \endtt
 
 \new
-More about the \OpTeX/ Font Selection System is written the technical
+More about the \OpTeX/ Font Selection System is written in the technical
 documentation in the section~\ref[fontsystem].
 You can mix more font families in your document, you can
 declare your own variant selectors or modifiers etc.
@@ -368,7 +367,7 @@ math font. This font is automatically loaded unless you specify
 \^`\noloadmath` before first \^`\fontfam` command. See log file for more
 information about loading text font family and Unicode math fonts. If you
 prefer another Unicode math font, specify it by \^`\loadmath{[<font-file>]}`
-or \^`\loadmath{font-name}` before first \^`\fontfam` command.
+or \^`\loadmath{<font-name>}` before first \^`\fontfam` command.
 
 Hundreds math symbols and operators like in AMS\TeX/ are accessible. 
 For example  `\alpha` $\alpha$, `\geq`~$\geq$, `\sum` $\sum$, 
@@ -391,8 +390,8 @@ The following math alphabets are available:
 
 The last two selectors \^`\bf` and \^`\bi` select the sans serif fonts in math regardless
 the current text font family. This is common notation for vectors and
-matrices. You can re-declare them, see the file `unimath-codes.opm` where
-Unicode math variants of \^`\bf` and \^`\bi` selectors are defined.
+matrices. You can re-declare them, see section~\ref[unimath-codes] where
+definitions of Unicode math variants of \^`\bf` and \^`\bi` selectors are documented.
 
 The math fonts can be scaled by \^`\typosize` and \^`\typoscale` macros.
 Two math fonts collections are prepared: \^`\normalmath` for normal weight
@@ -407,7 +406,7 @@ scriptscript). Moreover, there is the macro \^`\mathstyles{<math list>}` which d
 the current math style. It is documented at the end of the
 section~\ref[math-macros].
 
-The \^`\eqalign` macro is more flexible in \OpTeX/, see technical documentation about it.
+The \^`\eqalign` and \^`\matrix` macros are more flexible in \OpTeX/, see section~\ref[math-macros].
 
 
 \sec Typical elements of document
@@ -416,7 +415,7 @@ The \^`\eqalign` macro is more flexible in \OpTeX/, see technical documentation 
 \secc[chap] Chapters and sections
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The document can be divided into chapters (\^`\chap`), 
+The documents can be divided into chapters (\^`\chap`),
 sections (\^`\sec`), subsections (\^`\secc`) and they can be titled
 by \^`\tit` command. The parameters are separated by the end of current line (no
 braces are used):
@@ -440,14 +439,14 @@ The first paragraph after the title of chapter, section and subsection is
 not indented but you can type `\let`\^`\_firstnoindent=\relax` if you need all
 paragraphs indented.
 
-If a title is so long then it breaks to more lines. It is better to hint the
+If a title is so long then it breaks to more lines in the output. It is better to hint the
 breakpoints because \TeX/ does not interpret the meaning of the title.
 User can put the \^`\nl` (it means newline) macro to the breakpoints.
 
 If you want to organize a title to more lines in your source file then you can
 use `^^J` at the end of each line (except the last one). 
 When `^^J` is used, then reading of the title continues at the next line.
-You can use \^`\nl`` ^^J` if you want to have corresponding lines in the source
+You can use \^`\nl`{\visiblesp` ^^J`} if you want to have corresponding lines in the source
 and in the output.
 
 The chapter, section or subsection isn't numbered if the \^`\nonum` precedes.
@@ -459,7 +458,7 @@ contents if \^`\notoc` precedes. You can combine both prefixes.
 
 Apart from chapters, sections and subsections, there are another
 automatically numbered objects: equations, captions for tables and
-figures. The user can declare more numbered object.
+figures. The user can declare more numbered objects.
 
 If the user writes the \^`\eqmark` as the last element of the display mode then
 this equation is numbered. The equation number is printed in brackets. This number
@@ -530,6 +529,10 @@ Example:
    <caption and table>
 \endinsert
 \endtt
+%
+The pair \^`\midinsert`...\^`\endinsert` prefers to put the enclosed object
+to the current place. Only if this is unable due to page breaking, it
+behaves like \^`\topinsert`...\^`\endinsert`.
 
 \new
 There are five prepared counters `A`, `B`, `C`, `D` and `E`.
@@ -547,10 +550,10 @@ macro. For example:
 Three independent numbers are used in this example. One for Theorems and Corollaries
 second for Definitions and third for Examples. The user can write
 `\theorem Let $M$ be...` and the new paragraph is started with the text:
-{\bf Theorem 2.3.1.} Let $M$ be... 
+{\bf Theorem 1.4.1.} Let $M$ be...
 You can add an optional parameter in brackets. For example, 
 `\theorem [(L'Hôpital's rule)] Let $f$, $g$ be...` 
-is printed like {\bf Theorem 2.4.2 (L'Hôpital's rule).} Let $f$, $g$ be...
+is printed like {\bf Theorem 1.4.2 (L'Hôpital's rule).} Let $f$, $g$ be...
 
 
 \secc References
@@ -586,12 +589,12 @@ During each pass, the working `*.ref` file (with references data) is created
 and this file is used (if it exists) at the beginning of the document.
 
 You can use the \^`\label[<label>]` before the `\theorem`, `\definition` etc.\ 
-(macros defined by `\numberedpar`) if you want to reference these numbered objects. 
+(macros defined with `\numberedpar`) if you want to reference these numbered objects.
 You can't use `\theorem[<label>]` because the optional parameter 
 is reserved to another purpose here.
 
 You can create a reference to whatever else by commands
-\^`\label[<label>]\wlabel{<text>}`. The connection between <label> and
+\^`\label[<label>]`\^`\wlabel{<text>}`. The connection between <label> and
 <text> is established. The \^`\ref[<label>]` will print <text>.
 
 By default, labels are not printed, of course. But if you are preparing a
@@ -602,14 +605,14 @@ are printed at their destination places after such declaration.
 \secc Hyperlinks, outlines
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-If the command \^`\hyperlinks <color-in> <color-out>` is used at the beginning of
+If the command \^`\hyperlinks` `<color-in> <color-out>` is used at the beginning of
 the document, then the following objects are hyperlinked in the PDF output:
 
 \begitems
 * numbers generated by \^`\ref` or \^`\pgref`,
 * numbers of chapters, sections and subsections in the table of contents,
-* numbers or marks generated by `\cite` command (bibliography references),
-* texts printed by \^`\url` or \^`\ulink` commands.
+* numbers or marks generated by \~`\cite` command (bibliography references),
+* texts printed by \~`\url` or \~`\ulink` commands.
 \enditems
 
 The last object is an external link and it is colored by
@@ -641,7 +644,7 @@ in footnotes have <color-fnf>. You can define relevant borders
 
 There are \"low level" commands to create the links. You can specify the
 destination of the internal link by \^`\dest[<type>:<label>]`. The
-active text linked to the `\dest` can be created by
+active text linked to the \^`\dest` can be created by
 \^`\ilink[<type>:<label>]{<text>}`. The `<type>` parameter is one of
 the `toc`, `pg`, `cite`, `ref` or another special for your purpose. 
 These commands create internal links only when \^`\hyperlinks` is declared.
@@ -659,17 +662,17 @@ You can insert the `\|` command
 in the `\url` argument as a potential breakpoint.
 
 If the linked text have to be different than the URL, you can use
-\^`\ulink[<url>]{text}` macro. For example:
+\^`\ulink[<url>]{<text>}` macro. For example:
 `\ulink[http://petr.olsak.net/optex]{\OpTeX/ page}`
 outputs to the text
 \ulink[http://petr.olsak.net/optex]{\OpTeX/ page}.
 
 The PDF format provides {\em outlines} which are notes placed in the special frame of
-the PDF viewer. These notes can be managed as structured as hyperlinked
+the PDF viewer. These notes can be managed as structured and hyperlinked
 table of contents of the document. The command \^`\outlines{<level>}` creates
 such outlines from data used for table of contents in the document. The
 <level> parameter gives the level of opened sub-outlines
-in the default view. The deeper levels can be open by mouse click on the
+in the default view. The deeper levels can be opened by mouse click on the
 triangle symbol after that.
 
 \new
@@ -734,7 +737,7 @@ produces:
 
 Another style can be defined by the command \^`\sdef{_item:<style>}{<text>}`.
 Default item can be set by \^`\defaultitem={<text>}`.
-The list environments can be nested. Each new level of item is indented by
+The list environments can be nested. Each new level of items is indented by
 next multiple of \^`\iindent` value which is set to `\parindent` by default.
 The \^`\ilevel` register says what level of items is currently processed.
 Each \^`\begitems` starts \^`\everylist` tokens register. You can set, for
@@ -753,7 +756,7 @@ found in the section~\ref[lists].
 
 The macro \^`\table{<declaration>}{<data>}` provides similar <declaration>
 of tables as in \LaTeX: you can use letters `l`, `r`, `c`, each letter declares 
-one column (aligned to left, right, center respectively). 
+one column (aligned to left, right, center, respectively).
 These letters can be combined by the `|` character (vertical line). Example
 
 \begtt
@@ -776,7 +779,7 @@ generates the following result:
 
 Apart from `l`, `r`, `c` declarators, you can use the `p{<size>}` declarator
 which declares the column with paragraphs of given width. More precisely, 
-a long text in the table cell is printed as an paragraph with given width.
+a long text in the table cell is printed as a multiline paragraph with given width.
 By default, the paragraph is left-right justified. But there are
 alternatives:
 
@@ -799,7 +802,7 @@ prefixed. For example `3c` means `ccc` or `c 3{|c}` means
 can use them in order to more legibility.
  
 The command `\cr` used in the <data> part of the table 
-is generally known. It marks the end of each row in the table. 
+is generally known from Plain \TeX. It marks the end of each row in the table.
 Moreover \OpTeX/ defines following similar commands:
 
 \begitems
@@ -814,7 +817,7 @@ Moreover \OpTeX/ defines following similar commands:
   \^`\crlp{1-3,5}` is equal to \^`\crlp{1,2,3,5}`. 
 \enditems
 
-The \^`\tskip<dimen>` command works like the `\noalign{\vskip<dimen>}` 
+The \^`\tskip``<dimen>` command works like the `\noalign{\vskip<dimen>}`
 immediately after `\cr*` commands but it doesn't interrupt the vertical lines.
 
 \new
@@ -955,7 +958,7 @@ User can change values of the `\parindent` and \^`\ttindent` independently.
 The \^`\begtt` command starts internal group in which the catcodes are changed. 
 \new
 Then the \^`\everytt` tokens register is run. It is empty by default and user can
-control fine behavior by it. For example the catcodes can be reseted here. If
+control fine behavior by it. For example the catcodes can be re-declared here. If
 you need to define active character in the \^`\everytt`, use \^`\adef` as in the
 following example:
 
@@ -1042,10 +1045,10 @@ numbers are printed.
 The \^`\verbinput` can be controlled by \^`\everytt`, \^`\ttindent` just like
 in \~`\begtt...`\~`\endtt`.
 
-The \~`\begtt`...`\~``\endtt` pair or \~`\verbinput` can be used for listings of
+The \~`\begtt`...\~`\endtt` pair or \~`\verbinput` can be used for listings of
 codes. Automatic syntax highlighting is possible, for example
 `\begtt` \^`\hisyntax{C}` activates colors for C programs. Or
-`\verinput` \^`\hisyntax{HTML} (-) file.html` can be used for HTML or XML codes. 
+`\verbinput` \^`\hisyntax{HTML} (-) file.html` can be used for HTML or XML codes.
 \OpTeX/ implements C, Python, \TeX/, HTML and XML syntax highlighting.
 More languages can be declared, see the section~\ref[hisyntax]. 
 
