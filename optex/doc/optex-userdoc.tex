@@ -443,9 +443,10 @@ If a title is so long then it breaks to more lines in the output. It is better t
 breakpoints because \TeX/ does not interpret the meaning of the title.
 User can put the \^`\nl` (it means newline) macro to the breakpoints.
 
-If you want to organize a title to more lines in your source file then you can
+If you want to arrange a title to more lines in your source file then you can
 use `^^J` at the end of each line (except the last one). 
 When `^^J` is used, then reading of the title continues at the next line.
+The \"normal" comment character `%` doesn't work in titles.
 You can use \^`\nl`{\visiblesp` ^^J`} if you want to have corresponding lines in the source
 and in the output.
 
@@ -1064,10 +1065,11 @@ and \~`\secc` used in the document. These data are read from external `*.ref` fi
 you have to run \TeX/ more than once (typically three times if the table of
 contents is at the beginning of the document). 
 
-The name of the section with table of contents is not printed. The direct usage
-of \~`\chap` or \~`\sec` isn't recommended here because the table of contents 
+Typically, we don't want to repeat the name of the section \"table of contents"
+in the table of contents again. The direct usage
+of \~`\chap` or \~`\sec` isn't recommended here because the table of contents
 is typically not referenced to itself. You can print the unnumbered and unreferenced
-title of the section by the code:
+title of the section like this:
 
 \begtt
 \nonum\notoc\sec Table of Contents
@@ -1101,9 +1103,9 @@ program is needed, the alphabetical sorting are done inside \TeX/ at macro
 level.
 
 The \^`\ii` command (insert to index) declares the word separated by the space
-as the index item. This declaration is represented as invisible atom on the
+as the index item. This declaration is represented as invisible item on the
 page connected to the next visible word. The page number of the page where
-this atom occurs is listed in the index entry. So you can type:
+this item occurs is listed in the index entry. So you can type:
 
 \begtt
 The \ii resistor resistor is a passive electrical component ...
@@ -1121,7 +1123,7 @@ Note that the dot or comma have to be separated by space when \^`\iid` is
 used. This space (before dot or comma) is removed by the macro in 
 the current text.
 
-The multiple-words entries are commonly organized in the index as follows:
+The multiple-words entries are commonly arranged in the index as follows:
 
 \medskip
 
@@ -1146,7 +1148,7 @@ Example:
 
 The number of the parts of one index entry is unlimited. Note, that you can
 spare your typing by the comma in the \~`\ii` parameter. The previous example
-is equivalent to `\ii linear/space` `\ii vector/space`.
+is equivalent to `\ii linear/space \ii vector/space`~.
 
 Maybe you need to propagate to the index the similar entry to the
 linear/space in the form space/linear. You can do this by the shorthand `,@`
@@ -1173,7 +1175,7 @@ The \^`\makeindex` creates the list of alphabetically sorted index entries
 without the title of the section and without creating more columns. \OpTeX/
 provides another macros \^`\begmulti` and \^`\endmulti` for more columns: 
 
-\begtt
+\begtt \catcode`\<=13
 \begmulti <number of columns>
 <text>
 \endmulti
@@ -1225,7 +1227,7 @@ depending on the used bib-style. For example the citations look like
 [Now08] or [Nowak, 2008].
 
 The \^`\rcite[<labels>]` creates the same list as \^`\cite[<labels>]` but without
-the outer brackets. Example: `[\rcite[tbn], pg.~13]` creates [4,~pg.13].
+the outer brackets. Example: `[\rcite[tbn], pg.~13]` creates [4,~pg.~13].
 
 The \^`\ecite[<label>]{<text>}` prints the `<text>` only, but the entry labeled
 <label> is decided as to be cited. If \~`\hyperlinks` is used then <text>
@@ -1341,10 +1343,10 @@ with CMYK components using \^`\setcmykcolor`.
 On the other hand, you can define a color with three 
 RGB components and \^`\morecolors` defines such RGB colors. 
 By default, the color model isn't converted but only stored to
-PDF output for each used color by default. Thus, there may be a mix of color
+PDF output for each used color. Thus, there may be a mix of color
 models in the PDF output which is not good idea. You can overcome this
 problem by declaration \^`\onlyrgb` or \^`\onlycmyk`. Then only selected color
-model is used for PDF output and if an used color is declared by another color
+model is used for PDF output and if a used color is declared by another color
 model then it is converted.
 The \^`\onlyrgb` creates colors more bright (usable for computer
 presentations). On the other hand CMYK makes colors more true\fnote
@@ -1436,8 +1438,8 @@ with the current matrix so linear transformations can be composed.
 One linear transformation given by the `\pdfsetmatrix` above transforms
 the vector $[0,1]$ to [<a>,\,<b>] and $[1,0]$ to [<c>,\,<d>].
 The stack-oriented commands `\pdfsave` and `\pdfrestore` gives a possibility of
-storing and restoring the current transformation matrix and the current point.
-The position of the current point have to be the same from \TeX{}'s point of
+storing and restoring the current transformation matrix and the position of the current point.
+This position have to be the same from \TeX{}'s point of
 view as from transformation point of view when `\pdfrestore` is processed.
 Due to this fact the `\pdfsave\rlap{<transformed text>}\pdfrestore` 
 or something similar is recommended.
@@ -1445,7 +1447,7 @@ or something similar is recommended.
 \OpTeX/ provides two special transformation macros
 \^`\pdfscale` and \^`\pdfrotate`:
 
-\begtt
+\begtt \catcode`\<=13
 \pdfscale{<horizontal-factor>}{<vertical-factor>} 
 \pdfrotate{<angle-in-degrees>}
 \endtt 
@@ -1477,8 +1479,8 @@ third: \pdfsave \pdfrotate{-15.3}\pdfsetmatrix{2 0 1.5 2}\rlap{text3}\pdfrestore
 You can see that \TeX/ knows nothing about dimensions of transfomed material,
 it treats it as with a zero dimension object. 
 \new
-It can be solved by the \^`\transformbox{<transformation>}{<text>}` 
-macro. This macro puts the transformed
+The \^`\transformbox{<transformation>}{<text>}`
+macro solves the problem. This macro puts the transformed
 material to a box with relevant dimension. The <transfromation> parameter
 includes one or more transfromation commands `\pdfsetmatrix`, `\pdfscale`,
 `\pdfrotate` with their parameters. The <text> is transformed text.
@@ -1663,7 +1665,7 @@ document. Or you can use `<prefixed text>\address...` to put
 `<prefixed text>` before first line of the address.
 
 The \^`\slides` style creates a simple presentation slides. See an example
-in the file `op-slides.tex`. Run `optex op-slides.tex` and see the usage of
+in the file `op-slides.tex`. Run `optex op-slides.tex` and see the documentation of
 \^`\slides` style in the file `op-slides.pdf`. 
 
 Analogical declaration macro `\book` is not prepared. Each book needs an
@@ -1674,10 +1676,10 @@ design.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 You can load more macro packages by `\input{<file-name>}` or by
-\^`\load[<file-names>]`. The first case is \TeX/ primitive command, it can be
+\^`\load[<file-names>]`. The first case (`\input`) is \TeX/ primitive command, it can be
 used in the alternative old syntax `\input <filename><space>` too. The
-second case allows to specify a comma separated list of included files.
-Moreover, the \^`\load` macro loads each macro file only once, it sets
+second case (\^`\load`) allows to specify a comma separated list of included files.
+Moreover, it loads each macro file only once, it sets
 temporarily standard category codes during loading and it tries to
 load `<filename>.opm` or `<filename>.tex` or `<filename>`, first occurence
 wins. Example: 
@@ -1690,8 +1692,8 @@ local information about the fact that these file names
 `qrcode` and `tikz` were already used, i.\,e. next \^`\load` will skip them.  
 
 It is strongly recommended to use the `\load` macro for loading external
-macros, if you need them. On the other hand, if your document is structured
-to more files, use simply the `\input` primitive.
+macros, if you need them. On the other hand, if your source document is structured
+to more files (with individual chapters or sections), use simply the `\input` primitive.
 
 
 \secc Lorem ipsum dolor sit
@@ -1704,7 +1706,7 @@ neutral text for such experiments. Use \^`\lorem[<number>]` or
 \^`\lorem[<from>-<to>]`. It prints a paragraph (or paragraphs) with neutral
 text. The numbers <number> or <from>, <to> must be in the range 1 to 150
 because there are 150 paragraphs with neutral text prepared for you.
-The \^`\lipsum` macro is equivalent to \^`\lorem`. Example \^`\lipsum[1-150]`
+The \^`\lipsum` macro is equivalent to \^`\lorem`. Example: \^`\lipsum[1-150]`
 prints all prepared paragraphs.
 
 \secc Logos
@@ -1825,10 +1827,10 @@ For example `\hbox` is equal to `\_hbox`.
 Internal macros of \OpTeX/ have and use only prefixed form. User should use
 unprefixed forms, but prefixed forms are accessible too, because the `_` is
 set as a letter category code globally (in macro files and in users document too). User
-should re-define unprefixed forms of control sequences with no worries that
+should re-define unprefixed forms of control sequences without worries that
 something internal will be broken (only the sequence `\par` cannot be
-re-defined without internal change of \TeX/ behavior because it is
-hard-coded in \TeX/s tokenization processor).
+re-defined without change of internal \TeX/ behavior because it is
+hard-coded in \TeX/, unfortunately).
 
 \new
 The Latin Modern 8bit fonts instead Computer Modern 7bit fonts are

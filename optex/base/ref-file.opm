@@ -118,12 +118,12 @@ The `.ref` file looks like:
 %
 where <gpageno> is internal page number globally numbered from one and 
 `<pageno>` is a page number (`\the\pageno`) used in pagination (they may be differ). 
-Each page begins with `\_Xpage`.
+Each page begins with \^`\_Xpage`.
 The `<label>` is a label used by user in `\label[<label>]` and `<text>` is a
 text which should be referenced (the number of section or table, for
 example `2.3.14`). The `<title>` is a title of the chapter (`<level>`=1,
 `<type>`=`chap`), section (`<level>`=2, `<type>`=`sec`), subsection 
-(`<level>`=3, `<type>`=`secc`). The `\_Xpage` is written at begining of each
+(`<level>`=3, `<type>`=`secc`). The \^`\_Xpage` is written at begining of each
 page, the `\_Xtoc` is written when chapter or section or subsection title
 exists on the page and `\_Xlabel` when labeled object prefixed by
 `\label[<label>]` exists on the page. 
