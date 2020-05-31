@@ -421,5 +421,24 @@
 
 \_endcode % -------------------------------------
 
+The \^`\inspic` is defined by `\pdfximage` and `\pdfrefximage` primitives.
+If you want to use one picture more than once in your document, then the
+following code is recommended:
+\begtt \catcode`\<=13
+\newbox\mypic
+\setbox\mypic = \hbox{\picw=3cm \inspic{<picture>}}
+
+My picture: \copy\mypic, again my picture: \copy\mypic, etc.
+\endtt
+This code downloads the picture data to the PFD oputput only once (when
+`\setbox` is processed). Each usage of `\copy\mypic` puts only a pointer to
+the picture data in the PDF.
+
+If you want to copy the same picture in different sizes, then choose
+a \"basic size" used in `\setbox` and all different sizes can be realized by
+the \^`\transformbox{<transformation>}{\copy\mypic}`.
+
+\_endinput
+
 2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed
 

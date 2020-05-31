@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-05-11>} % preloaded in format 
+\_codedecl \sin {Math macros plus mathchardefs <2020-05-30>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -571,7 +571,7 @@
 \_public \bmod \pmod ;
 
    \_doc -----------------------------
-   \`\matrix`, \`\pmatrix` and \`\bordermatrix`
+   \`\matrix` and \`\pmatrix`
    behave as in Plain \TeX/, if it is used in the
    `\displaystyle` or `\textstyle`. On the other hand, it is printed in smaller size
    (by appropriate amount) in `\scriptstyle` and `\scriptscriptstyle`. 
@@ -605,7 +605,7 @@
    \_cod -----------------------------
 
 \_protected\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
-    \_ialign{$##\_hfil$&\_quad##\_hfil\_crcr#1\_crcr}}\_right.}
+    \_ialign{$##\_hfil$&\_quad{##}\_hfil\_crcr#1\_crcr}}\_right.}
 
 \_newdimen\_ptrenwd
 \_ptrenwd=8.75pt % width of the big left (
@@ -655,9 +655,10 @@
    }$$
    \endtt
    You can use the third column for centered equations without aligning point
-   (as in \^`\displaylines`, but packed to the `\vcenter` box). For example:
+   (as in \^`\displaylines`). For example:
    \begtt \catcode`\<=13
-   $$ \left( \eqspace=0pt \eqalign{&& <first equation>\cr && <second equation>} \right) $$
+   $$ \left( \eqspace=0pt \eqalign{&& <first equation>\cr
+                                   && <second equation>} \right) $$
    \endtt
    The \^`\eqspace` is additional space used in the third column to separate
    equation systems one next second.
@@ -668,8 +669,68 @@
             &\_hskip.5\_eqspace\_hfil$\_the\_eqstyle{##}$\_hskip.5\_eqspace\_hfil
             \_crcr#1\_crcr}}\_thinsk}
 
+\_public \eqalign ;
+
    \_doc -----------------------------
-   \`\openup`, \`\displaylines` and  \`\eqalignno` macros are copied from
+   The \`\displaylines``{<formula>\cr<formula>\cr...<formula>}`
+   creates horizontally centered formulae.
+   It behaves exactly as in Plain \TeX/. The `\halign` is applied directly
+   in the outer display environment with lines of type `\hbox to\displaywidth`.
+   This enables to break lines inside such display to more pages but it is
+   impossible to use `\eqno` or `\leqno` or \^`\eqmark`.
+
+   \OpTeX/ offers
+   `\dislaylines to<dimen>{<formula>\cr<formula>\cr...<formula>}`
+   as an alternative case of usage `\displaylines`.
+   The centered formulae are in `\vcenter` in this case,
+   so lines cannot be broken to more pages, but this case
+   enables to use `\eqno` or `\leqno` or \^`\eqmark`.
+   The lines have the form `\hbox to<dimen>` and formulae are centered using
+   `\hss` from both sides. This means that you can set arbitrary <dimen>
+   without visual change of the formulae. But use smaller value than
+   `\displaywidth` if you want to center formulae with `\eqno` appended.
+   (Note that `\displaywith` is equal to `\hsize` in most cases but it is
+   real display width when `\parshape` or `\hangindent` is used.)
+   The rule says: the formula with `\eqno` (or `\leqno`) is centered
+   if its width is less or equal `\displaywidth-4<eqno-size>`. So
+   \begtt \catcode`\<=13
+   \displaylines to\hsize-8em {<formula>\cr<formula>}\eqno (1)
+   \endtt
+   does global centering, because size of `(1)` is less than 2\,em.
+   You can do more experiments with this example,
+   for example `\diplaylines to\hsize{...}`
+   puts the `\eqno` mark to the next line in the display environment. Read
+   \TeX/book or \TeX/book naruby, where the precise explanation about of
+   positioning is.
+
+   You can use \"`\displaylines to`" for more applications. You can put more
+   \"`\displaylines to`", one next to second in order to creating more
+   centered columns with controlled width of such columns. Or you can give
+   an exception for first and last formula:
+   \begtt \catcode`\<=13
+   $$\displaylines to 10cm {<formula>\hfill \cr
+                            <formula>\cr
+                            <formula>\cr
+                            \hfill <formula>}
+   $$
+   \endtt
+   This example gives similar result as the \LaTeX/ `multline` environment.
+   \_cod -----------------------------
+
+\_def\_displaylines #1#{\_ifx&#1&\_ea\_displaylinesD
+   \_else \_def\_tmp to##1\_end{\_def\_tmp{\_dimexpr ##1}}\_tmp #1\_end
+        \_ea\_displaylinesto \_fi}
+\_def\_displaylinesD #1{\_display \_tabskip=\_zoskip
+   \_halign{\_hbox to\_displaywidth{$\_elign\_hfil\_displaystyle##\_hfil$}\_crcr
+      #1\_crcr}}
+\_def\_displaylinesto #1{\_vcenter{\_openup\_jot \_math \_tabskip=\_zoskip
+   \_halign{\_strut\_hbox to\_span\_tmp{$\_hss\_displaystyle##\_hss$}\_crcr
+      #1\_crcr}}}
+
+\_public\displaylines ;
+
+   \_doc -----------------------------
+   \`\openup`, \`\eqalignno` and `\leqalignno` macros are copied from
    Plain \TeX/ unchanged.
    \_cod -----------------------------
 
@@ -683,9 +744,6 @@
       \_vskip-\_lineskiplimit \_vskip\_normallineskiplimit \_fi
       \_else \_penalty\_interdisplaylinepenalty \_fi}}}
 \_def\_elign{\_tabskip=\_zoskip\_everycr{}} % restore inside \_display
-\_def\_displaylines#1{\_display \_tabskip=\_zoskip
-  \_halign{\_hbox to\_displaywidth{$\_elign\_hfil\_displaystyle##\_hfil$}\_crcr
-    #1\_crcr}}
 \_def\_eqalignno#1{\_display \_tabskip=\_centering
   \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip\_centering
@@ -696,7 +754,7 @@
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip=\_centering
     &\_kern-\_displaywidth\_rlap{$\_elign##$}\_tabskip\_displaywidth\_crcr
     #1\_crcr}}
-\_public \openup \eqalign \displaylines \eqalignno ; 
+\_public \openup \eqalignno \leqalignno ;
 
    \_doc -----------------------------
    These macros are inspired from `ams-math.tex` file.
@@ -1010,6 +1068,8 @@
 
 \_endcode %---------------------------------------------------
 
+2020-05-30 \cases: group added in the second column.
+           "\displaylines to<size>" implemented and documented.
 2020-05-11 \let\|=\Vert, bug fixed
 2020-04-27 \mathstyles introduced
 2020-03-14 implemented

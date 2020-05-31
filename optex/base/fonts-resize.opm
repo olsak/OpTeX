@@ -266,7 +266,7 @@ create a size-dependent selector for such font then you can use
 The example above uses the 8\,bit `tfm` font. You can use Unicode font too, of
 course. The \^`\fontfam` macro initializes the extended `\font` primitive
 features for \LuaTeX/. If you didn't use this command, you must to initialize
-these features by `\initunifonts` command, for example:
+these features by the \^`\initunifonts` command explicitly, for example:
 
 \begtt
 \initunifonts
