@@ -276,7 +276,7 @@
 \_public \crl \crll \crli \crlli \crlp \tskip ;
 
    \_doc -----------------------------
-   The \`\mspan``[<declaration>]{<text>}` macro generates similar `\omit\span\omit\span` 
+   The \`\mspan``{<number>}[<declaration>]{<text>}` macro generates similar `\omit\span\omit\span`
    sequence as plain \TeX/ macro `\multispan`. Moreover, it uses \^`\_scantabdata` to
    convert `<declaration>` from `\table` syntax to `\halign` syntax.
    \_cod -----------------------------

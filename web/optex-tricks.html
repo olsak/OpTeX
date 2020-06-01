@@ -116,6 +116,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#booktabs">Tables like in booktabs package</a>
     <li><a href="#decdigits">Decimal digits aligned by the decimal point</a>
     <li><a href="#longtable">Long table across multiple pages</a>
+    <li><a href="#tablevcent">Vertically centered paragraphs in table</a>
 </ul>
 
 <li>Macro tricks
@@ -759,6 +760,62 @@ OPmac trick 0024.
 
 
 <p CLASS=datum>(0016) -- P. O. 2020-05-20<p>
+<hr>
+
+<h2><a name="tablevcent"></a>Vertically centered paragraphs in table</h2>
+
+<p>The p declarator in the \table macro creates paragraphs in \vtop. It
+means that first line of all paragraphs in one table row is vertically
+aligned. Maybe, you want to set vertically alignment to center or to the last
+line. The following testing code shows one approach:
+
+<pre>
+\def\vcent{\def\_vtop##1{$\vcenter{\noindent\raise\ht\_tstrutbox\hbox{}##1}$}}
+\def\vbot{\def\_vtop##1{\vbox{\noindent\raise\ht\_tstrutbox\hbox{}##1}}}
+
+\table{|p{1.5cm}|p{4cm}|}{ % top alignment (default)
+ \crl
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
+ \crl
+}
+
+\table{|(\vcent)p{1.5cm}|:(\vcent)p{4cm}|}{ % vertically centered paragraphs
+ \crl
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
+ \crl
+}
+</pre>
+
+<p>The \_vtop used in the p declarator is locally redefined to \vcenter. This is
+done by (\vcent) prefixed before each p declarator. We must to use column
+boundary declarator ":" in order to apply the \vcent to the following p column.
+The \vbot macro can be used instead \vcent: the paragraphs will be
+vertically aligned to the bottom.
+The tabstrut must be added to the first line of the paragraphs. This is done
+in \vcent or \vbot macros.
+
+<p>The alternative is:
+
+<pre>
+\thistable{\vcent} \table{|p{1.5cm}|p{4cm}|}{...}
+</pre>
+
+<p>Another alternative is to declare new column declatator,
+for example "V":
+
+<pre>
+\_def\_paramtabdeclareV#1{\_the\_tabiteml
+   $\_vcenter{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
+   \_lineskiplimit=0pt \_noindent \raise\ht\_tstrutbox\hbox{}##\_unsskip
+   \_ifvmode\_vskip\_dp\_tstrutbox
+   \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}$\_the\_tabitemr}
+
+\table{|V{1.5cm}|V{4cm}|}{...}
+</pre>
+
+<p CLASS=datum>(0023) -- P. O. 2020-06-01<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
