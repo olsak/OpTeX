@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+   
+<HTML><HEAD>
+<META HTTP-Equiv="Content-Type" CONTENT="text/html; charset=utf8">
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+
+<TITLE>OpTeX</TITLE>
+
+<style type="text/css">
+<!--
+ .lmarg {margin-left: -200px; margin-top: -15px;
+        width: 200px; height: 0px;
+        font-weight: bold;
+        text-align: right;
+        position: relative; top: 15px; left: -15px; 
+        overflow; }
+ .rmarg {margin-left: 13px; margin-top: -15px;
+        width: 270px; height: 0px;
+        text-align: left;
+        position: relative; top: 15px; right: -600px; 
+        overflow; }
+  .datum {text-align: right; margin-bottom: -10px; font-size: 80%}
+  p   { text-align: justify }
+  pre { width: 600px; overflow; }  
+-->
+</style>
+</HEAD>
+<BODY bgcolor="#FFFFFF">
+
+<table width="600" border="0" cellspacing="0" cellpadding="0"
+align="center">
+<tr><td>
+  <div STYLE="text-align: center">
+  <IMG SRC="../img/optex-logo.jpg" ALT="OpTeX" border=0>
+  </div>
+
+
+<h2 style="text-align: center"> LuaTeX format with extended plainTeX macros </h1>
+<p style="text-align: center"> 
+  <i> <a href="http://petr.olsak.net">Petr Olsak</a>, 2020 </i>
+
+<p CLASS="rmarg">
+<a href="optex-c.html"><img src="../img/cz.jpg" alt="cz">&nbsp;Cesky</a><br><br>
+<a href="../ftp/olsak/optex/optex-doc.pdf">optex-doc.pdf</a><br><br>
+<a href="../ftp/olsak/optex/tex-nutshell.pdf">tex-nutshell.pdf</a><br><br>
+<a href="https://github.com/olsak/OpTeX">OpTeX at github</a><br>
+<a href="../ftp/olsak/optex/optex-13.zip">optex-13.zip</a> (20 May 2020)<br>
+<a href="../ftp/olsak/optex/optex-12.zip">optex-12.zip</a> (6 May 2020)<br>
+<a href="../ftp/olsak/optex/optex-11.zip">optex-11.zip</a> (30 Apr 2020)<br>
+<a href="../ftp/olsak/optex/optex-10.zip">optex-10.zip</a> (25 Apr 2020)<br>
+...
+</p>
+
+<p CLASS="lmarg">Links:<br>
+<a href="optex-tricks.html">Tips, triks, howto</a><br>
+<a href="../ftp/olsak/optex/">FTP site</a>
+</p>
+
+
+<p>
+OpTeX is a LuaTeX format based on Plain TeX macros (by Donald Knuth) and on
+<a href="../opmac-e.html">OPmac macros</a>. The main features are:
+
+<p>OpTeX should be a modern plain TeX with power from OPmac (fonts selection
+system, colors, external graphics, references, hyperlinks...) with unicode
+fonts.
+
+<ul>
+<li>OpTeX keeps the simplicity (like in plain TeX and OPmac macros).
+<li>There is no old obscurities concerning with various 8-bit encodings and
+various engines. We are using only Unicode and only LuaTeX.
+<li>OpTeX provides a powerful font selection system (for Unicode font
+    families, of course).
+<li>OpTeX supports hyphenations of all languages installed in your TeX system. 
+<li>All features from OPmac macros are copied (for example, you can see 
+    <a href="../opmac-prospectus.pdf">opmac-prospectus.pdf</a>) 
+<li>Macros are documented in the same place where code is.
+<li>User name space of control sequences is separated from internal
+name space of OpTeX and primitives (\foo versus \_foo).
+</ul>
+
+<p>Installation: Use TeXlive (for example) and unzip the installation file.
+Run:
+
+<pre>
+   unzip optex-(version).zip
+   cd optex/base
+   luatex -ini optex.ini
+</pre>
+
+<p>The format file is generated. Copy the optex.fmt file somewhere to
+your TeX system where format files can be read by LuaTeX. Copy *.opm files
+to a directory where LuaTeX can read them. For example:
+
+<pre>
+   mkdir -p ~/texmf/web2c/luatex/ ~/texmf/tex/optex/
+   cp optex.fmt ~/texmf/web2c/luatex/
+   cp *.opm ~/texmf/tex/optex/
+</pre>
+
+You can process your document by 
+<pre>
+   luatex -fmt optex document.tex 
+</pre>
+
+<p>or you can create an alias with name <tt>optex</tt> (to <tt>luatex -fmt
+optex</tt>) in your system. You can try <tt>luatex -fmt optex op-demo.tex</tt> 
+if the files <tt>op-demo.tex</tt> and <tt>op-ring.png</tt> from <tt>optex/demo</tt> 
+are in your actual directory (or somewhere LuaTeX can find them).
+
+<p>See <a href="../ftp/olsak/optex/optex-doc.pdf">optex-doc.pdf</a>
+file for more information.
+
+<p><b>License:</b> Public domanin. More precisely, it is the same as for 
+<a href="../opmac-e.html">OPmac macros</a>.
+
+
+</td></tr>
+</table>
+
+</BODY></HTML>
