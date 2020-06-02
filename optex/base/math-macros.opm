@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-05-30>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2020-06-02>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -604,7 +604,7 @@
    The \`\cases` and `\bordermatrix` macros are identical from plain \TeX/.
    \_cod -----------------------------
 
-\_protected\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
+\_protected\_long\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
     \_ialign{$##\_hfil$&\_quad{##}\_hfil\_crcr#1\_crcr}}\_right.}
 
 \_newdimen\_ptrenwd
@@ -664,7 +664,7 @@
    equation systems one next second.
    \_cod -----------------------------
 
-\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_the\_eqlines\_math
+\_long\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_the\_eqlines\_math
    \_ialign{&\_hfil$\_the\_eqstyle{##}$&$\_the\_eqstyle{{}##}$\_hfil
             &\_hskip.5\_eqspace\_hfil$\_the\_eqstyle{##}$\_hskip.5\_eqspace\_hfil
             \_crcr#1\_crcr}}\_thinsk}
@@ -720,10 +720,10 @@
 \_def\_displaylines #1#{\_ifx&#1&\_ea\_displaylinesD
    \_else \_def\_tmp to##1\_end{\_def\_tmp{\_dimexpr ##1}}\_tmp #1\_end
         \_ea\_displaylinesto \_fi}
-\_def\_displaylinesD #1{\_display \_tabskip=\_zoskip
+\_long\_def\_displaylinesD #1{\_display \_tabskip=\_zoskip
    \_halign{\_hbox to\_displaywidth{$\_elign\_hfil\_displaystyle##\_hfil$}\_crcr
       #1\_crcr}}
-\_def\_displaylinesto #1{\_vcenter{\_openup\_jot \_math \_tabskip=\_zoskip
+\_long\_def\_displaylinesto #1{\_vcenter{\_openup\_jot \_math \_tabskip=\_zoskip
    \_halign{\_strut\_hbox to\_span\_tmp{$\_hss\_displaystyle##\_hss$}\_crcr
       #1\_crcr}}}
 
@@ -744,12 +744,12 @@
       \_vskip-\_lineskiplimit \_vskip\_normallineskiplimit \_fi
       \_else \_penalty\_interdisplaylinepenalty \_fi}}}
 \_def\_elign{\_tabskip=\_zoskip\_everycr{}} % restore inside \_display
-\_def\_eqalignno#1{\_display \_tabskip=\_centering
+\_long\_def\_eqalignno#1{\_display \_tabskip=\_centering
   \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip\_centering
     &\_llap{$\_elign##$}\_tabskip\_zoskip\_crcr
     #1\_crcr}}
-\_def\_leqalignno#1{\_display \_tabskip=\_centering
+\_long\_def\_leqalignno#1{\_display \_tabskip=\_centering
   \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip=\_centering
     &\_kern-\_displaywidth\_rlap{$\_elign##$}\_tabskip\_displaywidth\_crcr
@@ -1068,6 +1068,7 @@
 
 \_endcode %---------------------------------------------------
 
+2020-06-02 $$\par$$ error is supressed, so we define \(l)eqalign(no), \displayines as \long
 2020-05-30 \cases: group added in the second column.
            "\displaylines to<size>" implemented and documented.
 2020-05-11 \let\|=\Vert, bug fixed
