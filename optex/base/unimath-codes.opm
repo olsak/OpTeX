@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-03-14>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2020-06-03>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -294,15 +294,18 @@
 \_let \upvarpi=\mupvarpi         
 
    \_doc -----------------------------
-   The \^`\not` macro is redefined here.
+   The \`\not` macro is redefined here. If the `\_not!<char>` is defined
+   (by \`\_negationof`)
+   then this macro is used. Else centered / is printed over the <char>.
    \_cod -----------------------------
 
 \_protected\_def\_not#1{%
-  \_ifcsname _not!\_csstring#1\_endcsname \_csname _not!\_csstring#1\_endcsname
-  \_else \_mathrel{\_mathord{\_rlap{\_kern1pt/}}\_mathord{#1}}%
-  \_fi
-}
+  \_trycs{_not!\_csstring#1}{\_mathrel\_mathstyles{%
+     \_setbox0=\_hbox{\_math$\_currstyle#1$}%
+     \_hbox to\_wd0{\_hss$\_currstyle/$\_hss}\_kern-\_wd0 \_box0
+}}}
 \_def\_negationof #1#2{\_ea\_let \_csname _not!\_csstring#1\_endcsname =#2}
+
 \_negationof =         \neq   
 \_negationof <         \nless 
 \_negationof >         \ngtr
@@ -314,6 +317,44 @@
 \_negationof \greater  \ngtr 
 \_negationof \forksnot \forks
 \_negationof \in       \notin
+\_negationof \mid      \nmid
+\_negationof \cong     \ncong
+\_negationof \leftarrow \nleftarrow
+\_negationof \rightarrow \nrightarrow
+\_negationof \leftrightarrow \nleftrightarrow
+\_negationof \Leftarrow \nLeftarrow
+\_negationof \Leftrightarrow \nLeftrightarrow
+\_negationof \Rightarrow \nRightarrow
+\_negationof \exists  \nexists
+\_negationof \ni      \nni
+\_negationof \paralel \nparalel
+\_negationof \sim     \nsim
+\_negationof \approx  \napprox
+\_negationof \equiv   \nequiv
+\_negationof \asymp   \nasymp
+\_negationof \lesssim \nlesssim
+\_negationof \ngtrsim \ngtrsim
+\_negationof \lessgtr \nlessgtr
+\_negationof \gtrless \ngtrless
+\_negationof \prec    \nprec
+\_negationof \succ    \nsucc
+\_negationof \subset  \nsubset
+\_negationof \supset  \nsupset
+\_negationof \subseteq \nsubseteq
+\_negationof \supseteq \nsupseteq
+\_negationof \vdash   \nvdash
+\_negationof \vDash   \nvDash
+\_negationof \Vdash  \nVdash
+\_negationof \VDash  \nVDash
+\_negationof \preccurlyeq \npreccurlyeq
+\_negationof \succcurlyeq \nsucccurlyeq
+\_negationof \sqsubseteq \nsqsubseteq
+\_negationof \sqsupseteq \nsqsupseteq
+\_negationof \vartriangleleft \nvartriangleleft
+\_negationof \vartriangleright \nvartriangleright
+\_negationof \trianglelefteq \ntrianglelefteq
+\_negationof \trianglerighteq \ntrianglerighteq
+\_negationof \vinfty \nvinfty
 
 \_public \not ;
 
@@ -357,5 +398,6 @@ can define:
 \_endinput
 
 History:
+2020-06-03  \not\mid = \nmid added, \not corrected
 2020-04-30  Bug fix: \phi, \varpi etc. were bad encoded
 2020-04-09  Bug fix: \Udelcode`<, \Udelcode`> added

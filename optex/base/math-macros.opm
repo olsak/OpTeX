@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-06-02>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2020-06-03>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -563,6 +563,7 @@
         $#1\_leftharpoondown$}}}}
 \_protected\_def\_buildrel#1\over#2{\_mathrel{\_mathop{\_kern0pt #2}\_limits^{#1}}}
 \_protected\_def\_doteq{\_buildrel\_textstyle.\over=}
+\_private \in \sim ;
 \_public \cong \notin \rightleftharpoons \buildrel \doteq ;
 
 \_protected\_def\_bmod{\_nonscript\_mskip-\_medmuskip\_mkern5mu
@@ -999,7 +1000,7 @@
 \_let\circleddot\odot
 
    \_doc -----------------------------
-   The \`\not` macro is re-defined to be smarter than in plain
+   The \^`\not` macro is re-defined to be smarter than in plain
    \TeX/. The macro follows this rule:
    \begtt
    \not< becomes \_nless
@@ -1068,6 +1069,7 @@
 
 \_endcode %---------------------------------------------------
 
+2020-06-03 \notin corrected
 2020-06-02 $$\par$$ error is supressed, so we define \(l)eqalign(no), \displayines as \long
 2020-05-30 \cases: group added in the second column.
            "\displaylines to<size>" implemented and documented.
