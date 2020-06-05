@@ -130,6 +130,8 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#condi">Structured conditionals</a>
     <li><a href="#setpos">Absolute positions on the page<a>
     <li><a href="#tabs">Tabbing macros</a>
+    <li><a href="#vardef">Macro with variable number of arguments in braces</a>
+
 </ul>
 
 <li>Others
@@ -1092,6 +1094,74 @@ it, measures \wd0, sets appropriate kern, opens \setbox0=\hbox\bgroup
 
 <p CLASS=datum>(0021) -- P. O. 2020-05-27<p>
 <hr>
+
+<h2><a name="vardef"></a>Macro with variable number of arguments in braces</h2>
+
+<p>You can create a macro by \vardef\mymacro{...} which can be used
+with arbitrary number of parameters enclosed in braces. For example
+\mymacro{first}{second} or \mymacro{one}{two}{three}.
+If the \mymacro is declared by \vardef, then you can use
+\NARGS in the macro body (this expands to the number of parameters just
+read) and \ARG{num} which expands to the num-th parameter.
+
+<p>This code is published at
+<a href="https://tex.stackexchange.com/questions/305383#305433">Stack
+exchange</a> too. The discussion and more detail description is there.
+
+<pre>
+\newcount\vardefnum
+\newtoks\vardefinition
+
+\def\vardef#1#2{%
+\def#1{%
+    \vardefnum=0
+    \vardefinition{#2}%
+    \grab}}
+
+\def\grab{\futurelet\next\grabA}
+
+\def\grabA{\ifx\next\bgroup \expandafter\storearg \else
+  \edef\NARGS{\the\vardefnum}%
+  \def\ARG##1{\csname vararg:##1\endcsname}%
+  \the\vardefinition
+  \let\NARGS\undefined \let\ARG=\undefined
+  \fi}
+
+\def\storearg#1{\advance\vardefnum by 1
+  \ea\def\csname vararg:\the\vardefnum\endcsname{#1}%
+  \grab}
+</pre>
+
+<p>The body #2 of a user defined macro is stored in the \vardefinition token
+string. Then the opening brace { is tested by the \futurelet primitive and
+possible parameters are read to \vararg:num macro. Next, the \vardefinition
+is processed.
+
+<p>You can test it by following code:
+
+<pre>
+\vardef\mymacro{%
+  The number of arguments passed to {\tt\string\mymacro} is \NARGS.
+  \ifnum\NARGS=0\else
+     They are:
+     \tmpnum=1 \loop \ARG{\the\tmpnum}%
+        \ifnum\NARGS>\tmpnum, \advance\tmpnum by 1 \repeat.\fi
+}
+
+\mymacro{a}{b}{c}
+
+\mymacro{1}{2}{3}{4}{5}
+
+\mymacro{x}
+
+\mymacro{}{}{}{}
+
+\mymacro123  % You can't omit brackets!
+</pre>
+
+<p CLASS=datum>(0025) -- Matteo Caoduro. 2020-06-05<p>
+<hr>
+
 
 <p CLASS="lmarg">Others</p>
 
