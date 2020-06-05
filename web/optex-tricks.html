@@ -103,6 +103,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#keepverb">Inline verbatim in macro parameters</a>
 </ul>
 
+<li>Graphics
+<ul>
+    <li><a href="#gradients">Color gradients</a>
+</ul>
+
 <li>Math
 <ul>
     <li><a href="#bbchar">\bbchar from AMS fonts when Unicode math font is used</a>
@@ -369,6 +374,47 @@ parameter is pre-processed. Only \code{...} is 100% working.
 solution.
 
 <p CLASS=datum>(0017) -- P. O. 2020-05-22<p>
+<hr>
+
+<p CLASS="lmarg">Graphics</p>
+
+<h2><a name="gradients"></a>Color gradients</h2>
+
+<p>We can use \input tikz and color gradients support from this package.
+But there is another approach: create a color gradient in interactive vector
+editor (Inkscape, for example) and use it. You can create arbitrary rectangle
+with color gradient in it and save such image to (say) my-gradient.pdf.
+
+<p>Then you can draw a rule with 1pt thickness of this gradient by
+
+<pre>
+\hbox{\picwidth=\hsize \picheight=1pt \inspic{my-gradient.pdf}}
+</pre>
+
+<p>If you want to use gradients to another graphic objects, then it may be
+more complicated. For example gradiented oval boundary with text in it:
+
+<pre>
+\newdimen\ovalw  \newdimen\ovalh
+\ovalw=8cm \ovalh=15cm
+
+\def\gradientoval{\clipinoval \dimexpr\ovalw/2 \dimexpr\ovalh/2 \ovalw \ovalh
+   {\rlap{\picwidth=\ovalw \picheight=\ovalh \inspic{my-gradient.pdf}}%
+   \raise5mm\hbox{\kern1mm
+   \inoval[\roundness=4mm \fcolor=\White \lcolor=\White]
+   {\raise\dimexpr\ovalh-1cm\hbox to\dimexpr\ovalw-1cm{}}}}}
+
+\def\textingradientoval#1{\hbox{\rlap{\gradientoval}\kern5mm
+   \raise\dimexpr\ovalh-1cm\vtop{\hsize=\dimexpr\ovalw-1cm\noindent #1}}}
+
+\textingradientoval{\lorem[1]}
+</pre>
+
+<p>The \clipinoval is used first with my-gradient.pdf. Then a slightly
+smaller white oval is drawn over it. Only the boundary remains visible.
+Finally, the text is printed in it.
+
+<p CLASS=datum>(0024) -- P. O. 2020-06-05<p>
 <hr>
 
 
