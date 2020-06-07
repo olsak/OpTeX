@@ -67,12 +67,12 @@
 \_protected\_def\_bigreek    {\_umathrangegreek\_greekbia}
 \_protected\_def\_bsansgreek {\_umathrangegreek\_greeksna}
 \_protected\_def\_bisansgreek{\_umathrangegreek\_greeksia}
-\_protected\_def\_itGreek    {\_umathrangeGREEK\_greekrmA}
+\_protected\_def\_itGreek    {\_umathrangeGREEK\_greekitA}
 \_protected\_def\_rmGreek    {\_umathrangeGREEK\_greekrmA}
 \_protected\_def\_bfGreek    {\_umathrangeGREEK\_greekbfA}
-\_protected\_def\_biGreek    {\_umathrangeGREEK\_greekbfA}
+\_protected\_def\_biGreek    {\_umathrangeGREEK\_greekbiA}
 \_protected\_def\_bsansGreek {\_umathrangeGREEK\_greeksnA}
-\_protected\_def\_bisansGreek{\_umathrangeGREEK\_greeksnA}
+\_protected\_def\_bisansGreek{\_umathrangeGREEK\_greeksiA}
 
 \_chardef\_digitrmO=`0
 \_chardef\_digitbfO="1D7CE

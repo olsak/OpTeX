@@ -2,17 +2,26 @@
 
 \_codedecl \_undefined {Printing Unicode-math table \string<2020-06-08>}
 
-\_def\UnicodeMathSymbol#1#2#3#4{
-   \_ifnum#1>"10000 \_endinput \_else \_printmathsymbol{#1}{#2}{#3}{#4}\_fi
-}
-\_def\UnicodeMathSymbolA#1#2#3#4{
-   \_ifnum#1>"10000 \_printmathsymbol{#1}{#2}{#3}{#4}\_fi 
-}
-\_def\_printmathsymbol#1#2#3#4{%
-   \_hbox{\_hbox to2em{$#2{}$\_hss}\_hbox to3em{\small\_printop#3\_hss}{\_tt\_string#2}}
-}
-
 \_begingroup
+   \_def\UnicodeMathSymbol#1#2#3#4{%
+      \_ifnum#1>"10000 \_endinput \_else \_printmathsymbol{#1}{#2}{#3}{#4}\_fi
+   }
+   \_def\UnicodeMathSymbolA#1#2#3#4{%
+      \_ifnum#1>"10000 \_printmathsymbol{#1}{#2}{#3}{#4}\_fi
+   }
+   \_def\_printmathsymbol#1#2#3#4{%
+      \_hbox{\_hbox to2em{$#2{}$\_hss}\_hbox to3em
+          {\small\_printop#3\_hss}{\_tt\_string#2\_trycs{_eq:\_string#2}{}}}
+   }
+   \_def\_eq#1#2{\_sdef{_eq:\_string#2}{=\_string#1}}
+   \_eq \diamond\smwhtdiamond \_eq \bullet\smblkcircle \_eq \circ\vysmwhtcircle
+   \_eq \bigcirc\mdlgwhtcircle \_eq \to\rightarrow \_eq \le\leq
+   \_eq \ge\geq \_eq \neq\ne \_eq \emptyset\varnothing \_eq \hbar\hslash
+   \_eq \land\wedge \_eq \lor\vee \_eq \owns\ni \_eq \gets\leftarrow
+   \_eq \mathring\ocirc \_eq \lnot\neg \_eq \backepsilon\upbackepsilon
+   \_eq \eth\matheth \_eq \dbkarow\dbkarrow \_eq \drbkarow\drbkarrow
+   \_eq \hksearow\hksearrow  \_eq \hkswarow\hkswarrow
+
    \_tracinglostchars=0
    \_fontdef\small{\_setfontsize{at5pt}\_rm}
    \_def\_printop{\_def\mathop{Op}}
