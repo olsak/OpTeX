@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-06-03>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2020-06-07>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -41,7 +41,7 @@
 
 \_protected\_def\_rmvariables     {\_umathrange{A-Z}\_ncharrmA \_umathrange{a-z}\_ncharrma}
 \_protected\_def\_bfvariables     {\_umathrange{A-Z}\_ncharbfA \_umathrange{a-z}\_ncharbfa}
-\_protected\_def\_nitvariables    {\_umathrange{A-Z}\_ncharitA \_umathrange{a-z}\_ncharita}
+\_protected\_def\_itvariables     {\_umathrange{A-Z}\_ncharitA \_umathrange{a-z}\_ncharita}
 \_protected\_def\_bivariables     {\_umathrange{A-Z}\_ncharbiA \_umathrange{a-z}\_ncharbia}
 \_protected\_def\_calvariables    {\_umathrange{A-Z}\_ncharclA \_umathrange{a-z}\_ncharcla}
 \_protected\_def\_bcalvariables   {\_umathrange{A-Z}\_ncharbcA \_umathrange{a-z}\_ncharbca}
@@ -61,20 +61,18 @@
 \_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
 \_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\_protected\_def\_nitgreek   {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekita}
-\_protected\_def\_rmgreek    {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekrma}
-\_protected\_def\_bfgreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbfa}
-\_protected\_def\_bigreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbia}
-\_protected\_def\_sansgreek  {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksna}
-\_protected\_def\_isansgreek {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksia}
-
-% Another possibility (slanted capitals in \_nitgreek, \_bigreek, \_isansgreek):
-%\_protected\_def\_nitgreek   {\_umathrangeGREEK\_greekitA \_umathrangegreek\_greekita}
-%\_protected\_def\_rmgreek    {\_umathrangeGREEK\_greekrmA \_umathrangegreek\_greekrma}
-%\_protected\_def\_bfgreek    {\_umathrangeGREEK\_greekbfA \_umathrangegreek\_greekbfa}
-%\_protected\_def\_bigreek    {\_umathrangeGREEK\_greekbiA \_umathrangegreek\_greekbia}
-%\_protected\_def\_sansgreek  {\_umathrangeGREEK\_greeksnA \_umathrangegreek\_greeksna}
-%\_protected\_def\_isansgreek {\_umathrangeGREEK\_greeksiA \_umathrangegreek\_greeksia}
+\_protected\_def\_itgreek    {\_umathrangegreek\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangegreek\_greekrma}
+\_protected\_def\_bfgreek    {\_umathrangegreek\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangegreek\_greekbia}
+\_protected\_def\_bsansgreek {\_umathrangegreek\_greeksna}
+\_protected\_def\_bisansgreek{\_umathrangegreek\_greeksia}
+\_protected\_def\_itGreek    {\_umathrangeGREEK\_greekrmA}
+\_protected\_def\_rmGreek    {\_umathrangeGREEK\_greekrmA}
+\_protected\_def\_bfGreek    {\_umathrangeGREEK\_greekbfA}
+\_protected\_def\_biGreek    {\_umathrangeGREEK\_greekbfA}
+\_protected\_def\_bsansGreek {\_umathrangeGREEK\_greeksnA}
+\_protected\_def\_bisansGreek{\_umathrangeGREEK\_greeksnA}
 
 \_chardef\_digitrmO=`0
 \_chardef\_digitbfO="1D7CE
@@ -99,8 +97,10 @@
    You can redefine them again if you need different behavior (for example
    you don't want to use sans serif bold in math). What to do:
    \begtt \advance\hsize by2em
-   \_protected\_def\_bf {\_tryloadbf\_tenbf \_inmath{\_bfvariables\_bfgreek\_bfdigits}}
-   \_protected\_def\_bi {\_tryloadbi\_tenbi \_inmath{\_bivariables\_bigreek\_bfdigits}}
+   \_protected\_def\_bf
+      {\_tryloadbf\_tenbf \_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}
+   \_protected\_def\_bi
+      {\_tryloadbi\_tenbi \_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}
    \_public \bf \bi ;
    \endtt
    \`\_inmath` `{<cmds>}` applies `<cmds>` only in math mode.
@@ -113,18 +113,21 @@
 % \bf and \bi behaves as sans serif in math, ...
 
 \_protected\_def\_rm {\_tryloadrm \_tenrm \_inmath{\_rmvariables \_rmdigits}}
-\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_nitvariables}}
-\_protected\_def\_bf {\_tryloadbf \_tenbf \_inmath{\_bsansvariables \_sansgreek \_bsansdigits}}
-\_protected\_def\_bi {\_tryloadbi \_tenbi \_inmath{\_bisansvariables \_isansgreek \_bsansdigits}}
+\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_itvariables}}
+\_protected\_def\_bf
+   {\_tryloadbf \_tenbf \_inmath{\_bsansvariables \_bsansgreek \_bsansGreek \_bsansdigits}}
+\_protected\_def\_bi
+   {\_tryloadbi \_tenbi \_inmath{\_bisansvariables \_bisansgreek \_bsansGreek \_bsansdigits}}
 \_protected\_def\_tt {\_tryloadtt \_tentt \_inmath{\_ttvariables \_ttdigits}}
 \_protected\_def\_bbchar  {\_bbvariables \_bbdigits}
 \_protected\_def\_cal     {\_calvariables}
 \_protected\_def\_frak    {\_frakvariables}
-\_protected\_def\_misans  {\_isansvariables \_isansgreek \_sansdigits}
-\_protected\_def\_mbisans {\_bisansvariables \_isansgreek \_bsansdigits}
+\_protected\_def\_misans  {\_isansvariables \_sansdigits}
+\_protected\_def\_mbisans {\_bisansvariables \_bisansgreek \_bsansGreek \_bsansdigits}
 \_protected\_def\_script  {\_rmvariables \_fam4 }
+\_protected\_def\_mit     {\_itvariables \_rmdigits \_itgreek \_rmGreek }
 
-\_public \rm \it \bf \bi \tt \bbchar \cal \frak \misans \mbisans \script ;
+\_public \rm \it \bf \bi \tt \bbchar \cal \frak \misans \mbisans \script \mit ;
 
    \_doc -----------------------------
    Each Unicode slot carries information about math type. This is saved in
@@ -181,7 +184,7 @@
 \_global\_Udelcode`<=1 "027E8 % these characters have different meaning
 \_global\_Udelcode`>=1 "027E9 % as normal and as delimeter
 
-\_nitgreek \_nitvariables \_rmdigits   % default setting
+\_mit % default math alphapbets setting
 
 \_Umathcode `- = 2 1 "2212
 %\_Umathcode`: = 3 1 "3A  % mathclass defines it as 6 1 "3A (punctuation)
@@ -254,7 +257,7 @@
 \_let \gets=\leftarrow
 \_let \mathring=\ocirc
 \_let \lnot=\neg
-\_let \longdivision=\longdivisionsign
+\_let \longdivisionsign=\longdivision
 \_let \backepsilon=\upbackepsilon
 \_let \eth=\matheth
 \_let \dbkarow=\dbkarrow
@@ -398,6 +401,7 @@ can define:
 \_endinput
 
 History:
+2020-06-07  \_itgreek \_itGreek, \_rmgreek \_rmGreek etc. introduced, names changed
 2020-06-03  \not\mid = \nmid added, \not corrected
 2020-04-30  Bug fix: \phi, \varpi etc. were bad encoded
 2020-04-09  Bug fix: \Udelcode`<, \Udelcode`> added

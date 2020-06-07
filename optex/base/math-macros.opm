@@ -1038,7 +1038,7 @@
    * \`\currstyle` which expands to `\displaystyle`, `\textstyle`,
      `\scriptstyle` or `\scriptscriptstyle` depending on the current math style
      when \^`\mathstyles` was opened. 
-   * `\dobystyle{<D>}{<T>}{<S>}{<SS>}` is expandable macro. It expands to
+   * \`\dobystyle``{<D>}{<T>}{<S>}{<SS>}` is expandable macro. It expands to
      `<D>`, `<T>`, `<S>` or `<SS>` depending on the current math style
      when \^`\mathstyles` was opened.
    * The value of the \`\stylenum` is 0, 1, 2 or 3 

@@ -1,0 +1,56 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \_undefined {Printing Unicode-math table \string<2020-06-08>}
+
+% This file can be used for testing your Unicode Math font and/or for printing
+% TeX sequences used in math.
+
+% Load Unicode mat font first (for example \fontfam[termes]) and then you
+% can do \input print-unimath.opm . The table with math symbols is printed.
+
+\_def\UnicodeMathSymbol#1#2#3#4{
+   \_ifnum#1>"10000 \_endinput \_else \_printmathsymbol{#1}{#2}{#3}{#4}\_fi
+}
+\_def\UnicodeMathSymbolA#1#2#3#4{
+   \_ifnum#1>"10000 \_printmathsymbol{#1}{#2}{#3}{#4}\_fi 
+}
+\_def\_printmathsymbol#1#2#3#4{%
+   \_hbox{\_hbox to2em{$#2{}$\_hss}\_hbox to3em{\small\_printclass#3\_hss}{\_tt\_string#2}}
+}
+
+\_begingroup
+   \_tracinglostchars=0
+   \_fontdef\small{\_setfontsize{at5pt}\_rm}
+   \_def\_printclass{%
+      \def\mathalpha{Alph}%
+      \def\mathord{Ord}%
+      \def\mathop{Op}%
+      \def\mathbin{Bin}%
+      \def\mathrel{Rel}%
+      \def\mathopen{Open}%
+      \def\mathclose{Close}%
+      \def\mathpunct{Punct}%
+      \def\mathfence{Fence}%
+      \def\mathaccent{Acc}%
+      \def\mathaccentwide{Accw}%
+      \def\mathbotaccentwide{AccBw}%
+      \def\mathbotaccent{AccB}%
+      \def\mathaccentoverlay{AccO}%
+      \def\mathover{Over}%
+      \def\mathunder{Under}%
+   }
+   \_typosize[7.5/9]\_normalmath \_everymath={}
+
+   Codes U+00000 \_dots\ U+10000
+   \_begmulti 3
+      \_input unimath-table.opm
+   \_endmulti
+
+   \_medskip\_goodbreak
+   Codes U+10001 \_dots\ U+1EEF1  \_let\UnicodeMathSymbol=\UnicodeMathSymbolA 
+   \_begmulti 4 
+      \_input unimath-table.opm
+   \_endmulti
+\_endgroup
+
+\_endcode
