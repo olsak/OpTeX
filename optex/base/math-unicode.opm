@@ -230,7 +230,10 @@ the section~\ref[math-macros].
 \printdoc     unimath-codes.opm
 \printdoctail unimath-codes.opm
 
+\secc Printing all Unicode math slots in used math font
 
+\printdoctail print-unimath.opm
+\printdoc     print-unimath.opm
 
 \_endinput
 

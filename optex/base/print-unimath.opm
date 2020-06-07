@@ -2,12 +2,6 @@
 
 \_codedecl \_undefined {Printing Unicode-math table \string<2020-06-08>}
 
-% This file can be used for testing your Unicode Math font and/or for printing
-% TeX sequences used in math.
-
-% Load Unicode mat font first (for example \fontfam[termes]) and then you
-% can do \input print-unimath.opm . The table with math symbols is printed.
-
 \_def\UnicodeMathSymbol#1#2#3#4{
    \_ifnum#1>"10000 \_endinput \_else \_printmathsymbol{#1}{#2}{#3}{#4}\_fi
 }
@@ -15,30 +9,18 @@
    \_ifnum#1>"10000 \_printmathsymbol{#1}{#2}{#3}{#4}\_fi 
 }
 \_def\_printmathsymbol#1#2#3#4{%
-   \_hbox{\_hbox to2em{$#2{}$\_hss}\_hbox to3em{\small\_printclass#3\_hss}{\_tt\_string#2}}
+   \_hbox{\_hbox to2em{$#2{}$\_hss}\_hbox to3em{\small\_printop#3\_hss}{\_tt\_string#2}}
 }
 
 \_begingroup
    \_tracinglostchars=0
    \_fontdef\small{\_setfontsize{at5pt}\_rm}
-   \_def\_printclass{%
-      \def\mathalpha{Alph}%
-      \def\mathord{Ord}%
-      \def\mathop{Op}%
-      \def\mathbin{Bin}%
-      \def\mathrel{Rel}%
-      \def\mathopen{Open}%
-      \def\mathclose{Close}%
-      \def\mathpunct{Punct}%
-      \def\mathfence{Fence}%
-      \def\mathaccent{Acc}%
-      \def\mathaccentwide{Accw}%
-      \def\mathbotaccentwide{AccBw}%
-      \def\mathbotaccent{AccB}%
-      \def\mathaccentoverlay{AccO}%
-      \def\mathover{Over}%
-      \def\mathunder{Under}%
-   }
+   \_def\_printop{\_def\mathop{Op}}
+   \_def\mathalpha{Alph}\_def\mathord{Ord}\_def\mathbin{Bin}\_def\mathrel{Rel}
+   \_def\mathopen{Open}\_def\mathclose{Close}\_def\mathpunct{Punct}\_def\mathfence{Fence}
+   \_def\mathaccent{Acc}\_def\mathaccentwide{Accw}\_def\mathbotaccentwide{AccBw}
+   \_def\mathbotaccent{AccB}\_def\mathaccentoverlay{AccO}
+   \_def\mathover{Over}\_def\mathunder{Under}
    \_typosize[7.5/9]\_normalmath \_everymath={}
 
    Codes U+00000 \_dots\ U+10000
@@ -54,3 +36,12 @@
 \_endgroup
 
 \_endcode
+
+This file can be used for testing your Unicode Math font
+and/or for printing \TeX/ sequences which can be used in math.
+
+Load Unicode math font first (for example by `\fontfam[termes]` or by
+`\loadmath{<math-font>}`) and then you
+can do `\input print-unimath.opm`. The big table with all math symbols is printed.
+
+\_endinput
