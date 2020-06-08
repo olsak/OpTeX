@@ -152,8 +152,8 @@
    \_doc -----------------------------
    The \`\_regtfm` `<font id> <optical size data>` 
    saves the <optical size data> concerned to `<font id>`.
-   The `<optical size data>` is in the form as show below in the code where
-   `\regtfm` is used. 
+   The `<optical size data>` is in the form as shown below in the code where
+   `\_regtfm` is used.
    \nl
    The \`\_wichtfm` `<fontname>` expands to the `<fontname>` or to the corrected
    `<fontname>` read from the `<optical size data>`. It is used in the

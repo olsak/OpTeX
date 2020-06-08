@@ -21,7 +21,8 @@
    \varrho \varpi \_relax
 
    \_doc -----------------------------
-   The math alphabets are declared here using the \^`\_umathrange` macro.
+   The math alphabets are declared here using the
+   \^`\_umathrange {<range>}<class><family><starting-code>` macro.
    \_cod -----------------------------
 
 \_chardef\_ncharrmA=`A       \_chardef\_ncharrma=`a
@@ -39,20 +40,20 @@
 \_chardef\_ncharsxA="1D63C   \_chardef\_ncharsxa="1D656
 \_chardef\_ncharttA="1D670   \_chardef\_nchartta="1D68A
 
-\_protected\_def\_rmvariables     {\_umathrange{A-Z}\_ncharrmA \_umathrange{a-z}\_ncharrma}
-\_protected\_def\_bfvariables     {\_umathrange{A-Z}\_ncharbfA \_umathrange{a-z}\_ncharbfa}
-\_protected\_def\_itvariables     {\_umathrange{A-Z}\_ncharitA \_umathrange{a-z}\_ncharita}
-\_protected\_def\_bivariables     {\_umathrange{A-Z}\_ncharbiA \_umathrange{a-z}\_ncharbia}
-\_protected\_def\_calvariables    {\_umathrange{A-Z}\_ncharclA \_umathrange{a-z}\_ncharcla}
-\_protected\_def\_bcalvariables   {\_umathrange{A-Z}\_ncharbcA \_umathrange{a-z}\_ncharbca}
-\_protected\_def\_frakvariables   {\_umathrange{A-Z}\_ncharfrA \_umathrange{a-z}\_ncharfra}
-\_protected\_def\_bfrakvariables  {\_umathrange{A-Z}\_ncharbrA \_umathrange{a-z}\_ncharbra}
-\_protected\_def\_bbvariables     {\_umathrange{A-Z}\_ncharbbA \_umathrange{a-z}\_ncharbba}
-\_protected\_def\_sansvariables   {\_umathrange{A-Z}\_ncharsnA \_umathrange{a-z}\_ncharsna}
-\_protected\_def\_bsansvariables  {\_umathrange{A-Z}\_ncharbsA \_umathrange{a-z}\_ncharbsa}
-\_protected\_def\_isansvariables  {\_umathrange{A-Z}\_ncharsiA \_umathrange{a-z}\_ncharsia}
-\_protected\_def\_bisansvariables {\_umathrange{A-Z}\_ncharsxA \_umathrange{a-z}\_ncharsxa}
-\_protected\_def\_ttvariables     {\_umathrange{A-Z}\_ncharttA \_umathrange{a-z}\_nchartta}
+\_protected\_def\_rmvariables     {\_umathrange{A-Z}71\_ncharrmA \_umathrange{a-z}71\_ncharrma}
+\_protected\_def\_bfvariables     {\_umathrange{A-Z}71\_ncharbfA \_umathrange{a-z}71\_ncharbfa}
+\_protected\_def\_itvariables     {\_umathrange{A-Z}71\_ncharitA \_umathrange{a-z}71\_ncharita}
+\_protected\_def\_bivariables     {\_umathrange{A-Z}71\_ncharbiA \_umathrange{a-z}71\_ncharbia}
+\_protected\_def\_calvariables    {\_umathrange{A-Z}71\_ncharclA \_umathrange{a-z}71\_ncharcla}
+\_protected\_def\_bcalvariables   {\_umathrange{A-Z}71\_ncharbcA \_umathrange{a-z}71\_ncharbca}
+\_protected\_def\_frakvariables   {\_umathrange{A-Z}71\_ncharfrA \_umathrange{a-z}71\_ncharfra}
+\_protected\_def\_bfrakvariables  {\_umathrange{A-Z}71\_ncharbrA \_umathrange{a-z}71\_ncharbra}
+\_protected\_def\_bbvariables     {\_umathrange{A-Z}71\_ncharbbA \_umathrange{a-z}71\_ncharbba}
+\_protected\_def\_sansvariables   {\_umathrange{A-Z}71\_ncharsnA \_umathrange{a-z}71\_ncharsna}
+\_protected\_def\_bsansvariables  {\_umathrange{A-Z}71\_ncharbsA \_umathrange{a-z}71\_ncharbsa}
+\_protected\_def\_isansvariables  {\_umathrange{A-Z}71\_ncharsiA \_umathrange{a-z}71\_ncharsia}
+\_protected\_def\_bisansvariables {\_umathrange{A-Z}71\_ncharsxA \_umathrange{a-z}71\_ncharsxa}
+\_protected\_def\_ttvariables     {\_umathrange{A-Z}71\_ncharttA \_umathrange{a-z}71\_nchartta}
 
 \_chardef\_greekrmA="0391   \_chardef\_greekrma="03B1
 \_chardef\_greekbfA="1D6A8  \_chardef\_greekbfa="1D6C2
@@ -61,18 +62,18 @@
 \_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
 \_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\_protected\_def\_itgreek    {\_umathrangegreek\_greekita}
-\_protected\_def\_rmgreek    {\_umathrangegreek\_greekrma}
-\_protected\_def\_bfgreek    {\_umathrangegreek\_greekbfa}
-\_protected\_def\_bigreek    {\_umathrangegreek\_greekbia}
-\_protected\_def\_bsansgreek {\_umathrangegreek\_greeksna}
-\_protected\_def\_bisansgreek{\_umathrangegreek\_greeksia}
-\_protected\_def\_itGreek    {\_umathrangeGREEK\_greekitA}
-\_protected\_def\_rmGreek    {\_umathrangeGREEK\_greekrmA}
-\_protected\_def\_bfGreek    {\_umathrangeGREEK\_greekbfA}
-\_protected\_def\_biGreek    {\_umathrangeGREEK\_greekbiA}
-\_protected\_def\_bsansGreek {\_umathrangeGREEK\_greeksnA}
-\_protected\_def\_bisansGreek{\_umathrangeGREEK\_greeksiA}
+\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma}
+\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia}
+\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna}
+\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia}
+\_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA}
+\_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA}
+\_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA}
+\_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA}
+\_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA}
+\_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA}
 
 \_chardef\_digitrmO=`0
 \_chardef\_digitbfO="1D7CE
@@ -81,12 +82,12 @@
 \_chardef\_digitbsO="1D7EC
 \_chardef\_digitttO="1D7F6
 
-\_protected\_def\_rmdigits    {\_umathrange{0-9}\_digitrmO}
-\_protected\_def\_bfdigits    {\_umathrange{0-9}\_digitbfO}
-\_protected\_def\_bbdigits    {\_umathrange{0-9}\_digitbbO}
-\_protected\_def\_sansdigits  {\_umathrange{0-9}\_digitsnO}
-\_protected\_def\_bsansdigits {\_umathrange{0-9}\_digitbsO}
-\_protected\_def\_ttdigits    {\_umathrange{0-9}\_digitttO}
+\_protected\_def\_rmdigits    {\_umathrange{0-9}71\_digitrmO}
+\_protected\_def\_bfdigits    {\_umathrange{0-9}71\_digitbfO}
+\_protected\_def\_bbdigits    {\_umathrange{0-9}71\_digitbbO}
+\_protected\_def\_sansdigits  {\_umathrange{0-9}71\_digitsnO}
+\_protected\_def\_bsansdigits {\_umathrange{0-9}71\_digitbsO}
+\_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
 
    \_doc -----------------------------
    The  \`\cal`, \`\bbchar`, \`\frak`, \`\script`

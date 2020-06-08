@@ -111,16 +111,16 @@ Full set of all math objects used in math typesetting
 is listed in the section~\ref[objects] with their default classes.
 
 \bigskip
-\noindent\hfil\table{lll}{
-   Class  & Meaning          & Example \crl
-   Ord    & ordinary object  & variables, digits, $x, {\bbchar R}, \Gamma, 0, 1$ \cr
-   Op     & big opertator    & $\sum, \int$ \cr
-   Bin    & binary operator  & $+, \times, -$ \cr
-   Rel    & reations         & $=, \ne, \leq, \supseteq$ \cr
-   Open   & opening bracket  & $\{, (, [$ \cr
-   Close  & closing bracket  & $\}, ), ]$ \cr
-   Punct  & punctuation      & comma \cr
-   Inner  & left-right       & \code{\\left...\\right} outputs, see section~\ref[delims]
+\noindent\hfil\table{llll}{
+     & Class  & Meaning          & Example \crl
+   0 & Ord    & ordinary object  & variables, digits, $x, {\bbchar R}, \Gamma, 0, 1$ \cr
+   1 & Op     & big opertator    & $\sum, \int, \bigcup$ \cr
+   2 & Bin    & binary operator  & $+, \times, -, \pm, \cup$ \cr
+   3 & Rel    & reations         & $=, \ne, \leq, \supseteq, \succsim$ \cr
+   4 & Open   & opening bracket  & $\{, (, [, \langle$ \cr
+   5 & Close  & closing bracket  & $\}, ), ], \rangle$ \cr
+   6 & Punct  & punctuation      & comma \cr
+     & Inner  & left-right       & \code{\\left...\\right} outputs, see section~\ref[delims]
 }
 \bigskip
 
@@ -189,8 +189,8 @@ scriptscript style ($SS$).
 
 The $T$ style is started in in-line math mode `$...$` and the $D$
 style is started in display math mode `$$...$$`. The first level of exponents or
-subsripts are processed in $S$ style and the second and more levels of
-exponents or indexes are processed in $SS$ style.
+subsripts is processed in $S$ style and the second and more levels of
+exponents or indexes is processed in $SS$ style.
 There are special rules for math styles when fractions are constructed, see
 section~\ref[frac].
 
@@ -531,6 +531,12 @@ The additional fixed accents depends on used Unicode math font. The
 `\dddot x` $\dddot x$, `\ddddot x` $\ddddot x$, 
 `\widebridgeabove x` $\widebridgeabove x$, `\asteraccent x` $\asteraccent x$. 
 
+There exist one special math accent `'` (single quote, ASCII 39)
+which can be appended after a symbol like this: `f'`
+and it creates $f'$ (typical meaning is the
+derivation of the given function). You can put more such accents, for
+example `g'''` gives $g'''$.
+
 \secc Roots
 
 There is a macro `\sqrt{<math list>}` to create square root. For example:
@@ -546,11 +552,12 @@ example `\root k+1\of x` gives $\root k+1\of x$.
 Letters $a\dots z$, $A\dots Z$ and $\alpha$\dots$\omega$ are printed in italics
 in math mode. This follows the traditional typographical rule. 
 All other math symbols, digits and uppercase Greek letters must be
-unslanted.\fnote
+upright.\fnote
 {French typographical rule says that uppercase Greek letters have to be
  slatned too.}
+These rules are independent of the curent variant of surrounding text font.
 
-If we want to use the letters or digits 
+If we want to use the letters or digits
 in another than this default shape, then we can use
 {\em math alphabet selectors}: `\mit`, `\rm`, `\it`, `\bf`, `\cal`.
 \new \OpTeX/
@@ -669,6 +676,33 @@ pages.
 \input print-unimath.opm
 \bigskip
 
+It isn't very comfortable to find something in the previous table
+if you know the shape. You can try the online web tool
+\ulink[https://detexify.kirelabs.org/classify.html]{Detexify}.
+You can draw the symbol here and the suggention of \TeX/ sequence is
+printed.
+
+\def\g#1{{\tt\string#1}~$#1$}
+
+The generic \TeX/ sequences for the Greek letters can be used:
+\g\alpha, \g\beta, \g\gamma, \g\delta, \g\varepsilon, \g\zeta, \g\eta,
+\g\theta, \g\iota, \g\kappa, \g\lambda, \g\mu, \g\nu, \g\xi,
+\g\omicron, \g\pi, \g\rho, \g\varsigma, \g\sigma, \g\tau, \g\upsilon,
+\g\varphi, \g\chi, \g\psi, \g\omega, \g\vardelta, \g\epsilon, \g\vartheta,
+\g\varkappa, \g\phi, \g\varrho, \g\varpi\
+and
+\g\Alpha, \g\Beta, \g\Gamma, \g\Delta, \g\Epsilon, \g\Zeta, \g\Eta, \g\Theta,
+\g\Iota, \g\Kappa, \g\Lambda, \g\Mu, \g\Nu, \g\Xi, \g\Omicron, \g\Pi, \g\Rho,
+\g\Sigma, \g\Tau, \g\Upsilon, \g\Phi, \g\Chi, \g\Psi, \g\Omega.
+
+\new \OpTeX/
+The variant of greek letters in the output
+(upright, italic, bold, bold sans serif, etc.)
+written by the sequences `\alpha`, `\beta` etc. depends on the math alphabet
+selected by `\_itgreek`, `\_rmgreek`, etc. selectors. The user-level
+selectors `\bf` and `\bi` set `\_bsansgreek` and `\_bisansgreek`, so
+`{\bi\delta}` produces $\bi\delta$.
+
 \new Unicode
 All characters available in the math font can be accessed by \TeX/ control
 sequence or by direct using the Unicode character in the document source.
@@ -692,6 +726,8 @@ $$
   ∑_{k=0}^∞ e^{(α + iβ_k)} = e^α ∑_{k=0}^∞ e^{iβ_k} 
                            = e^α ∑_{k=0}^∞ (\cos β_k + i\sin β_k).
 $$
+\medskip
+
 
 \sec More specialities
 
@@ -705,8 +741,12 @@ The slash $/$ is overprinted such math object, for example
 If there exist a direct Unicode character for negation of a relation symbol
 (for example `\ne` creates $\ne$ directly as a character U+2260) 
 then `\not<char>` expands to appropriate Unicode character. 
-For example `\not=` expands to `\ne`. If such character does not exists then
+For example `\not=` expands to `\ne` or `\not\in` expands to `\notin`.
+If such character does not exist then
 the centered $/$ is overprinted over the next character. 
+
+
+
 
 \secc The `\bulidrel` macro: text over relation
 
@@ -742,7 +782,7 @@ the centered $/$ is overprinted over the next character.
 
 ... todo
 
-\sec Lines in display style
+\sec Lines in display mode
 
 \secc `\displaylines`
 
@@ -751,5 +791,175 @@ the centered $/$ is overprinted over the next character.
 \secc `\eqalign` and friends
 
 ... todo
+
+\sec Concept of loading math fonts
+
+\secc[fams] Math families
+
+\TeX/ is able to use more than one math font in math mode. This was a
+necessity in old days when only 128-caracters fonts existed.
+Each math font used in math mode has its {\em math family} reperesented by a number.
+Math family is collection of three (amost) equal fonts in three sizes:
+first for `\textstyle` and `\displaystyle`, second for `\scriptstyle`
+and third for `\scriptscriptstyle`.
+
+\new Unicode
+When Unicode math font is loaded then it includes all three optical sizes and
+all characters needed for typeseting math formula.
+Theoretically, we can use only one math family with this single font. But more math families
+(i.e.\ more fonts in math mode) is still possible. You can combine
+characters from more fonts (Unicode fonts or old TFM fonts together) in one math formula.
+
+\new \OpTeX/
+\OpTeX/ loads the specified Unicode math font into math family 1. The math
+families 2 and 3 are reserved for specific \TeX/nical reasons, family 4 is
+used for `\script` font and family 5 and more can be used by user for
+loading more fonts. The macro for loading math fonts  looks like:
+
+\begtt \typosize[10/12]
+\_def\_normalunimath{%
+    \_loadumathfamily 1 {\_unimathfont}{} % Base Unicode math font
+    \_loadmathfamily  4 rsfs              % \script (old TFM font)
+    \_setunimathdimens   % set dimen parameters used in math formulas internally
+}%
+\let\_normalmath=\_normalunimath % this is done when Unicode math is initialized
+\endtt
+%
+Whenever \OpTeX/ needs to resize math fonts (for example in footnotes or
+titles), it calls the `\_normalmath` macro in order to reload all math
+families to desired size. If you want to add a next font, you can add
+`\_loadunimathfamily <family> {<Unicode-font>}{<features>}` or
+`\_loadmathfamily <family> <TFM-font>` into the `\_normalmath` macro.
+The example in section~\ref[newfam] show how to do it.
+
+\secc Two variants of math fonts: normal and bold
+
+The math formulas in the document need only one Unicode font (or only one collection
+of math fonts as mentioned in section~\ref[fams]). But this
+is not realy true if titles are in bold font. If math formula is present in
+a such bold title then all characters of this formula must be bolder.
+For example \"normal" variables must be in bold italic in titles, symbols
+like `+` `=` must be bold and \"normal bold" letters (e.g., indicating vectors in math formula) must be
+extra bold in titles.
+It means that all fonts from collection of math fonts must be bolder.
+We need second collection of math fonts with bolder
+shape. Unfortunately, it is not always available.
+
+\new \OpTeX/
+If you  have bold variant of used Unicode math font, then you can use
+`\loadboldmath` command, for example:
+\begtt
+\loadmath     {[xitsmath-regular]}
+\loadboldmath {[xitsmath-bold]} \to {[xitsmath-regular]}
+\endtt
+%
+\OpTeX/ uses `\_normalmath` macro for loading collection of math fonts in
+\"normal" cases and `\_boldmath` macro for bold titles. The font declared by
+`\loadboldmath` is used in second case. But if the bold variant of font is
+not available (this is unfortunatelly more typical), then \OpTeX/ uses faked
+bold of basic Unicode math font (the `embolden` internal font feature is
+used). So, the default `\_boldmath` macro defined by \OpTeX/ looks like:
+
+\begtt \typosize[10/12]
+\_def\_boldunimath{%
+   \_ifx\_unimathboldfont \_undefined
+      \_loadumathfamily 1 {\_unimathfont}{embolden=1.7;} % Base faked bold
+   \_else
+      \_loadumathfamily 1 {\_unimathboldfont}{} % Base real bold font
+   \_fi
+   \_loadmathfamily 4 rsfs  % rsfs in not in bold, unfortunately
+   \_setunimathdimens
+}%
+\let\_boldmath=\_boldunimath % this is done when Unicode math is initialized
+\endtt
+
+\secc[newfam] Example of using additional math font
+
+The font `bbold10.tfm` includes double stroked characters, for example
+double stroked plus, double stroked Greek letters and digits.
+Try to run `pdftex testfont`, then answer to the question about name of the
+font: `bbold10` and then type command `\table\end`. The testfont.pdf is
+printed with the table of characters of this font.
+Most of these characters cannot be found in Unicode math fonts.
+
+\new \OpTeX/
+We show an example how to add this font to the collection of used math fonts.
+We can re-define the `\_normalmath` macro by:
+\begtt \typosize[10/12]
+\addto\_normalmath {\_loadmathfamily 5 bbold }
+
+\_regtfm bbold 0 bbold5 5.5 bbold6 6.5 bbold7 7.5 bbold8 8.5 bbold9
+               9.5 bbold10 11.1 bbold12 15 bbold17 * % using all bbold*.tfm
+\_normalmath  % reload the math fonts collection
+\endtt
+%
+The string \"`bbold`" is declared by `\_regtfm` as a collection of all
+`bbold*.tfm` fonts, the optical sizes are supported.
+
+\addto\_normalmath {\_loadmathfamily 5 bbold }
+\_regtfm bbold 0 bbold5 5.5 bbold6 6.5 bbold7 7.5 bbold8 8.5 bbold9
+               9.5 bbold10 11.1 bbold12 15 bbold17 * % using all bbold*.tfm
+\_normalmath
+\Umathchardef \bbplus 2 5 "2B
+\Umathchardef \bble   3 5 "3C
+\Umathchardef \bbge   3 5 "3E
+
+Finally, we must to declare new \TeX/ sequences for acessing the characters
+from the new font, for example:
+
+\begtt \typosize[10/12]
+\Umathchardef \bbplus 2 5 "2B
+\Umathchardef \bble   3 5 "3C
+\Umathchardef \bbge   3 5 "3E
+\endtt
+%
+The `\Umathchardef` \TeX/ primitive declares new \TeX/ sequence used in math
+typesetting. First parameter is class number (2 means Bin, 3 means Rel,
+see the table in the section~\ref[class]).  Second parameter is math
+family number. It is 5, see the redefinition of the `\_normalmath` macro above.
+Third parameter is the slot in the font. Now you can try to use these characters:
+$$
+   `a \bbplus b \bbge c` \quad \hbox{gives} \quad a \bbplus b \bbge c.
+$$
+%
+Maybe, you want to declare a special math selector which can be used as
+`$\bball a+b>c$` in order to get $\bbchar a \bbplus b \bbge c$.
+Then you can define:
+
+\begtt \typosize[10/12]
+\def\bball {\bbchar \Umathcodenum `+ \bbplus
+                    \Umathcodenum `> \bbge
+                    \Umathcodenum `< \bble }
+\endtt
+
+If you want to add all double stroked grrek characters into `\bball`
+selector, then you can do somethink like this:
+
+\begtt \typosize[10/12]
+\def\setbbgreek #1 {\tmpnum=#1\xargs\setbbgreekA}
+\def\setbbgreekA #1{\Umathcode \_ea`#1 0 5 \tmpnum \advance\tmpnum by1 }
+
+\addto\bball {%
+   \setbbgreek "0B \alpha \beta \gamma \delta \epsilon \zeta \eta
+                   \theta \iota \kappa \lambda \mu \nu \xi \pi \rho \sigma
+                   \tau \upsilon \phi \chi ;
+   \setbbgreek "7F \omega ;
+   \setbbgreek "00 \Gamma \Delta \Theta \Lambda \Xi \Pi \Sigma \Upsilon
+                   \Phi \Psi \Omega ; }
+\endtt
+%
+The `\Umathcode <input-code> <class> <family> <font-slot>` primitive is used
+here. The control sequences `\alpha`, `\beta` etc. are macros which expand
+to the Unicode character of appropriate Greek letter. We set the
+Umathcode to such character, for example
+\code{\\Umathcode `}$\_rmgreek\alpha$` 0 5 "0B` is processed.
+
+The bold variant of the font `bbold*.tfm` is not available, unfortunately.
+We have to settle for normal version of the font in the `\_boldmath` macro:
+
+\begtt \typosize[10/12]
+   \addto \_boldmath {\_loadmathfamily 5 bbold }
+\endtt
+
 
 \bye

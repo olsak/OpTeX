@@ -118,7 +118,7 @@
    different parts of Unicode table. We need auxiliary macros for setting
    mathcodes by selected math alphabet.
    \nl 
-   \`\_umathrange` `{<from->-<to>}\<first>` sets `\Umathcode`s
+   \`\_umathrange` `{<from->-<to>}<class><family>\<first>` sets `\Umathcode`s
    of the characters in the interval `<from>-<to>` to `\<first>`, 
    `\<first>+1`, `\<first>+2`
    etc., but \`\_umathcharholes` are skipped 
@@ -155,21 +155,17 @@
    [120122]{"2102}[120127]{"210D}[120133]{"2115}[120135]{"2119}
    [120136]{"211A}[120137]{"211D}[120145]{"2124}%
 }
-\_def\_umathrange#1#2{\_umathnumB=#2\_relax \_umathrangeA#1}
+\_def\_umathrange#1#2#3#4{\_umathnumB=#4\_def\_tmp{#2 #3 }\_umathrangeA#1}
 \_def\_umathrangeA#1-#2{\_umathnumA=`#1\_relax
    \_loop
       \_umathcorr\_umathprepare\_umathnumB
-      \_Umathcode \_umathnumA = 7 1 \_umathcorr\_umathvalue{\_umathnumB}
+      \_Umathcode \_umathnumA = \_tmp \_umathcorr\_umathvalue{\_umathnumB}
       \_ifnum\_umathnumA<`#2\_relax
          \_advance\_umathnumA by1 \_advance\_umathnumB by1
    \_repeat
 }
-\_def\_umathrangeGREEK{\_begingroup
-   \_lccode`A="0391 \_lccode`Z="03A9
-   \_lowercase{\_endgroup \_umathrange{A-Z}}}
-\_def\_umathrangegreek{\_begingroup
-   \_lccode`A="03B1 \_lccode`Z="03D6
-   \_lowercase{\_endgroup \_umathrange{A-Z}}}
+\_def\_umathrangeGREEK{\_umathrange{^^^^0391-^^^^03a9}}
+\_def\_umathrangegreek{\_umathrange{^^^^03b1-^^^^03d6}}
 \_def\_greekdef#1{\_ifx#1\_relax \_else
    \_begingroup \_lccode`X=\_umathnumB \_lowercase{\_endgroup \_def#1{X}}%
    \_advance\_umathnumB by 1
