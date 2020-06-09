@@ -13,6 +13,10 @@
 \def<#1>{$\langle\hbox{\it#1\/}\rangle$}
 \everyintt={\catcode`\<=13 }
 
+\hyperlinks\Green\Green
+
+\insertoutline{MATH}
+\outlines{0}
 
 \tit Typesetting Math with \OpTeX/
 
@@ -21,7 +25,7 @@
 This document is a brief summary about typesetting math. It describes \TeX/,
 Plain \TeX/ and \OpTeX/ features concerned to math.  The first two types of
 features are documented in \TeX/book in chapters 16, 17 and 18, but it is
-sumarized here in short again in order to give a complete guide about math
+summarized here in short again in order to give a complete guide about math
 typesetting for \OpTeX/ users.
 
 \new {}
@@ -34,12 +38,13 @@ There are more types of extensions: e\TeX, lua\TeX/, Unicode math and
 \OpTeX/ macros. The appropriate label (e\TeX, Lua\TeX/, Unicode, \OpTeX/) 
 is appended to the red triangle to inform you about the extension type.
 Nevertheless, \OpTeX/ user doesn't have to worry about it, all extensions 
-are available if Unicode Math font is loaded (e.g.,\ by the command
+are available if Unicode Math font is loaded (e.g., by the command
 `\fonfam[lmfonts]`). See section 1.3.3 in \OpTeX/ documentation about 
 loading Unicode math fonts.
 
+{\iindent=2em
 \bigskip
-\maketoc
+\maketoc }
 \vfil\break
 
 \sec Basics structure of math formulas
@@ -63,12 +68,11 @@ The math atoms are {\em single math objects} or composed math atoms.
   It consists from {\em nucleus} <math list 1>, exponent <math list 2> and subscript 
   <math list 3>. Each part of the atom should be empty. If the mentioned <math list>
   consist only from a single math object then we need not to use brackets, for example
-  `x^2` is a math atom with `x` in nucleus, `2` in exponent and with empty subsript.
-  Or `a_{i,j}` is a math atom with `a` in nucleus, empty exponent and `i,j` in substript.
+  `x^2` is a math atom with `x` in nucleus, `2` in exponent and with empty subscript.
+  Or `a_{i,j}` is a math atom with `a` in nucleus, empty exponent and `i,j` in subscript.
   The constructors for exponent `^` and for subscript `_` can be used in arbitrary order 
   followed by the nucleus, for example `z_1^{x+y}` it the same math atom as
-  `z^{x+y}_1`.
-  The single math objects which is not followed by `^` nor `_` are
+  `z^{x+y}_1`.  The single math objects not followed by `^` nor `_` are
   considered as math atoms with this object in nucleus and with empty
   exponent and subscript (this is very common case). 
   \TeX/ assigns the {\em class} for each math atom, see section~\ref[class].
@@ -79,29 +83,34 @@ Example: The `Z = \int``_\Omega x^{2y} + z\, dx` generates
 $Z = \int_\Omega x^{2y} + z\, dx$ and it is <math list> which consists from:
 
 \begitems
-* `Z` is math atom with empty exponent and substript, class: Ord,
-* `=` is math atom with empty exponent and substript, class: Rel,
-* `\int``_\Omega` is math atom with empty exponent and with substript `\Omega`, class: Op,
-* `x^{2y}` is math atom with exponent `2y` and empty substript, class: Ord,
-* `+` is math atom with empty exponent and substript, class: Bin,  
-* `z` is math atom with empty exponent and substript, class: Ord,
-* `\,` is other other material, the glue (space) in this case,
-* `d` is math atom with empty exponent and substript, class: Ord,
-* `x`is math atom with empty exponent and substript, class: Ord.
+* `Z` is math atom with empty exponent and subscript, class: Ord,
+* `=` is math atom with empty exponent and subscript, class: Rel,
+* `\int``_\Omega` is math atom with empty exponent and with subscript `\Omega`, class: Op,
+* `x^{2y}` is math atom with exponent `2y` and empty subscript, class: Ord,
+  \begitems \let\_bullet=\circ
+  * `2` is math atom with empty exponent and subscript, class: Ord,
+  * `y` is math atom with empty exponent and subscript, class: Ord,
+  \enditems
+* `+` is math atom with empty exponent and subscript, class: Bin,
+* `z` is math atom with empty exponent and subscript, class: Ord,
+* `\,` is other material, the glue (space) in this case,
+* `d` is math atom with empty exponent and subscript, class: Ord,
+* `x`is math atom with empty exponent and subscript, class: Ord.
 \enditems
 
 \secc[class] Classes of math atoms
 
-\TeX/ gives {\em a class} for each math atom.\fnote
+\TeX/ assigns {\em a class} for each math atom.\fnote
 {Using terminology of \TeX/book, each single math object has its {\em class} but the 
  math atom has its {\em kind} derived from this class. I use only one word
  for both meanings in this document.}
 This data type is used when
-\TeX/ decides about horizontal spaces between atoms. For example
-`xy` prints two atoms without space between them but `x+y` is printed with
+\TeX/ decides about horizontal spaces between atoms in the output. (Note
+that spaces in the input are ignored.) For example,
+`$xy$` prints two atoms without space between them but `$x+y$` is printed with
 small spaces around the `+` binary operator. Compare: $xy$ and $x+y$.
 
-The class is set depending on the nucleus of the atom. If the nucleus is
+The class is assigned depending on the nucleus of the atom. If the nucleus is
 not single math object, i.e. it is constructed by `{<math list>}` with braces
 then the atom has its class Ord. If the nucleus is single math object constructed
 without braces then the class of the atom depends on this single math
@@ -124,7 +133,7 @@ is listed in the section~\ref[objects] with their default classes.
 }
 \bigskip
 
-There are three spaces used by the algoritmh for horizontal spacing in the
+There are three space types used by the algorithm for horizontal spacing in the
 math formulas.
 
 \begitems
@@ -162,8 +171,8 @@ Ord atom if no atom precedes or if Op, Bin, Rel, Open or Punct atom
 precedes. And it is transformed to the Ord atom if Rel, Close or Punct atom
 follows. This corresponds to the empty cells in the table.
 Why such behavior? Compare \"\hbox{$0-1$}" and \"$-1$". The Bin atom in
-the second case behaves like Ord atom, there is no space
-between minus and one.
+the second case behaves like Ord atom because it is {\em unary minus}.
+There is no space between unary minus and one.
 
 All medium spaces and thick spaces and some thin spaces from this table are
 omitted if the <math list> is processed in script or scriptscript styles
@@ -173,7 +182,7 @@ You can overwrite the default class derived from the nucleus of the atom by
 \TeX/ primitives `\mathord`, `\mathop`, `\mathbin`, `\mathrel`, `\mathopen`,
 `\mathclose`, `\mathpunct` and `\mathinner`. They can precede a nucleus of
 the atom and they set the class of the atom.
-For example, `x \mathrel+ y` behaves like `x = y` in spacing pint of view but +
+For example, `x \mathrel+ y` behaves like `x = y` in spacing point of view but +
 is printed. Another example: `\mathop{\rm lim} z` creates the atom `lim` in
 roman font of class Op. So, the thin space is inserted between lim and $z$.
 
@@ -184,20 +193,21 @@ like Ord atom in the horizontal spacing algorithm.
 \secc[styles] Math styles
 
 When a formula (or a sub-formula) is processed by \TeX/ then one from four
-slyles is active: display style ($D$), text style ($T$), script style ($S$) or
+styles is active: display style ($D$), text style ($T$), script style ($S$) or
 scriptscript style ($SS$). 
 
 The $T$ style is started in in-line math mode `$...$` and the $D$
 style is started in display math mode `$$...$$`. The first level of exponents or
-subsripts is processed in $S$ style and the second and more levels of
-exponents or indexes is processed in $SS$ style.
+subscripts is processed in $S$ style and the second and more levels of
+exponents or indexes are processed in $SS$ style.
 There are special rules for math styles when fractions are constructed, see
 section~\ref[frac].
 
 The $D$ and $T$ style uses basic font size, $S$ uses smaller font size (typically
-70~\%) and $SS$ style uses more smaller font size (typically 50~\%). 
+70~\%) and $SS$ style uses more smaller font size (typically 50~\%). Next
+levels of \"more smaller fonts" are not used due to classical typographic rules.
 
-The nucleus of Op atoms (big operators, $\sum$, $\int$ etc.) have typicaly bigger versions
+The nucleus of Op atoms (big operators, $\sum$, $\int$, etc.) have typically bigger versions
 of the character shape for $D$ style than for $T$ style. 
 So, there are four sizes for such math
 objects: one size for each math style. All other math objects (with non Op
@@ -213,23 +223,25 @@ This default behavior of the Op atom
 can be modified by placing `\limits` or `\nolimits` or
 `\displaylimits` \TeX/ primitive just after the Op nucleus before the constructors
 of exponent and/or index. The `\nolimits` puts exponent and subscript right
-to the nucleus (regardles of the current style) and `\limits` puts these
+to the nucleus (regardless of the current style) and `\limits` puts these
 objects above and below the nucleus (regardless of the current style). There
-can be more such primitives in a queue (due to a macro expannsion, for
-instance). Then the last primitive in the queue wins. 
-If the last primitive is `\displaylimits` then 
-default behavior is processed regardles there are `\limits` or `\nolimits`
+can be more such primitives in a queue (due to a macro expansion, for
+instance). Then the last primitive in the queue wins.
+If the last primitive is `\displaylimits` then
+default behavior is processed regardless there are `\limits` or `\nolimits`
 before it.
 $$
   `\sum\nolimits``_{i=1}^\infty` \quad \hbox{gives}\quad \sum\nolimits_{i=1}^\infty
+  \hbox{ in $D$ style and}\quad \textstyle\sum\nolimits_{i=1}^\infty
+  \hbox{ in $T$ style}.
 $$
 Atoms of all other classes have their exponents and/or subscripts only right
 to their nucleus without any exception.
 
 The primitives `\displaystyle`, `\textstyle`, `\scriptstyle` and
-`\scriptscriptstyle` set the given style regardles the default rules. For
+`\scriptscriptstyle` set the given style regardless the default rules. For
 example, you can create a formula in in-line math mode and in $D$ style by
-`$\displaystyle <fomula>$` or a formula in in display mode and $T$ style can be printed
+`$\displaystyle <fomula>$` or a formula in display mode and $T$ style can be printed
 by `$$\textstyle <fomrula>$$`.
 
 If the subformula is placed below something (below a rule from root symbol,
@@ -237,13 +249,14 @@ below a fraction rule), then the processed style $D, T, S$ or $SS$ is {\em cramp
 The exponents are positioned slightly lower than in non-cramped style.
 
 Several macros need to know what math style is currently processed (for
-example they need to draw something in an appropriate size). But is
+example they need to draw something in an appropriate size). But it
 not possible simply due to the syntax of fractions (section~\ref[frac]).  
 This syntax requires to process all math lists in two steps: the first step
 expands all macros and creates structured data of processed math list. The
-second step reads the otput of the first step and switches between math
-styles and creates definitive output. So, macros cannot know the current math
-style which is set only in the second step. \TeX/ supports the primitive
+second step reads the output of the first step, switches between math
+styles and creates definitive output. So, macros (working in first step)
+cannot know the current math
+style because it is set only in the second step. \TeX/ supports the primitive
 `\matchchioce{<D>}{<T>}{<S>}{<SS>}` which prepares four math lists in the
 first step and only one of these four lists are used in the second step. We
 can put different macros into each of the four parameters of `\mathchoice`.
@@ -251,9 +264,9 @@ Plain \TeX/ supports the macro `\mathpalette` which gives a more comfortable
 interface of `\mathchoice` to macro programmer.
 
 \new \OpTeX/
-We decribe another interface for creating macros depending on current
+We describe another interface for creating macros depending on current
 style. You can use `\mathstyles{<math list>}`. It 
-behaves like `{<math list>}`, but you can use following commands inside such
+behaves like `{<math list>}`, moreover, you can use following commands inside such
 <math list>:
 \begitems
 * The macro `\currstyle`. It expands to 
@@ -285,11 +298,11 @@ computer time in special cases.
 \new Lua\TeX/
 Lua\TeX/ supports the `\mathstyle` primitive 
 (no \"`s`" at the end of this control sequence) which
-returns values 0 to 7 depending on the current style: 
+expands to values 0 to 7 depending on the current style:
 $D, D', T, T', S, S', SS, SS'$ 
 (where $X'$ means cramped variant of the style). This primitive does
-not use `\mathchoice` but it simply ingnores the fraction syntax, so
-`$a\symbol b\over c$` cannot work if `\symbol` is defned using the `\mathstyle`
+not use `\mathchoice` but it simply ignores the fraction syntax, so
+`$a\mysymbol b\over c$` cannot work if `\mysymbol` is defined using the `\mathstyle`
 primitive. See section 7.3.1 of Lua\TeX/ documentation for more information.  
 
 
@@ -299,8 +312,8 @@ The fraction can be constructed by `{<numerator>\over<denominator>}`. If the
 fraction is only single object in the whole math mode (between dollars), 
 you need not to use the outer braces, so you can write `$1\over2$` to get $1\over2$.
 
-The <numerator> and <denomiator> are printed in \"smaller" math style than
-current math style. More exactly the following shema is used. 
+The <numerator> and <denominator> are printed in \"smaller" math style than
+current math style. More exactly the following schema is used.
 $D$: $T\over T$., $T$: $S\over S$, $S$: $SS\over SS$, $SS$: $SS\over SS$.
 For example
 $$
@@ -325,7 +338,7 @@ but there is something extra:
   without the fractional rule.
 * `{<above>\above<dimen><below>}` creates fractional rule with <dimen> thickness.
 * `{<above>\overwithdelims<delim-l><delim-r><below>}` adds the <delim-l> left to
-  the fraction and the <delim-2> right to the fraction.
+  the fraction and the <delim-r> right to the fraction.
 * `{<above>\atopwithdelims<delim-l><delim-r><below>}` is analogical to
   `\overwithdelims` but without fractional rule.
 * `{<above>\abovewithdelims<delim-l><delim-r><dimen><below>}` behaves as
@@ -335,26 +348,26 @@ but there is something extra:
 The `\...withdelims` variants read <delim-l> and <delim-r>, they must be
 declared as {\em math delimiter} in \TeX. They are vertically scalable
 math objects, typically brackets. See section~\ref[delims] for more
-information about math demiliters. Example:
+information about math delimiters. Example:
 $$
  `{n \atopwithdelims() k}`\quad \hbox{ creates } 
   {n \choose k} \hbox{ in $D$ style and }
   \textstyle {n \choose k} \hbox{ in $T$ style}.
 $$
 The `\choose` macro is defined by `\def\choose{\atopwithdelims()}`, so the
-user can write `{n\choose k}` in order to get binomical coefficients.
+user can write `{n\choose k}` in order to get binomial coefficients.
 
 
 \secc[delims] Vertically scalable objects: math delimiters 
 
 The vertically scalable objects are called {\em delimiters}. For example,
-all brackets are declared as delimiters. 
+all types of brackets are declared as delimiters.
 This means that you can use a bracket in arbitrary
 vertical size.\fnote{
 This is not exactly true, because traditional typography says that they
-cannot be scaled continuosly but by visible steps. This means that there is
-a sequence of increasing brackets, reader must see a difference between each 
-two sizes of brackets.}
+cannot be scaled continuously but by visible steps. This means that there is
+a sequence of increasing brackets in the font, reader must see a difference
+between each two sizes of brackets.}
 
 The following objects are declared as delimiters (i.e.\ vertically scalable):
 
@@ -385,15 +398,15 @@ The following objects are declared as delimiters (i.e.\ vertically scalable):
 If you are able to produce the characters $\langle$, $\rangle$,\fnote
  {Do not confuse $\string<, >$ and $\langle, \rangle$. The first pair are Rel atoms
   with meaning \"less than" or \"greater than", but the second pair are special
-  types of brackes. They are not directly availbale at computer keyboards without 
-  using a keyoard macro.}
+  types of brackets. They are not directly available at computer keyboards without
+  using a keyboard macro.}
 $\lfloor$, $\rfloor$, ... $\updownarrow$, $\Updownarrow$ 
 directly in your text editor then you can use these Unicode characters in your source instead of control
 sequences `\langle`, `\rangle`, `\lfloor`, `\rfloor` ... `\updownarrow`, `\Updownarrow`.
 For many users (including me), there is more simple to type `\lfloor` than to find
 how to create the $\lfloor$ character in my text editor. Note that there exist 
 text editors (Emacs, for example)
-enabling you to type `\lfloor` and this control sequence is immediatelly
+enabling you to type `\lfloor` and this control sequence is immediately
 converted to the $\lfloor$ Unicode character. 
 Your source looks pretty and you can use classical \TeX/ sequences.
 
@@ -409,7 +422,7 @@ Arbitrary tall formula can be surrounded by a pair of delimiters using
 The delimiters are scaled to the height and depth of the <formula>
 and vertically centered to the {\em math axis}.\fnote
 {Math axis is a horizontal line passing through the center of symbols $+$
- and $-$. All vertically scalable objects are vertically centeted with
+ and $-$. All vertically scalable objects are vertically centered with
  respect to this axis.} 
 Example:
 $$
@@ -428,10 +441,10 @@ $$
  
 \new e\TeX/
 You can use `\middle<delim>` inside the <formula> which is surrounded by
-`\left...\right`. Then the given <delim> is scaled in to the same size like
+`\left...\right`. Then the given <delim> is scaled to the same size like
 their `\left` and `\right` counterparts. 
 
-When a delimiter is used without `\left` nor `\right` prefix, the it is the
+When a delimiter is used without `\left` nor `\right` prefix, then it is the
 Open, Close, Ord or Bin atom by its natural meaning:
 $(, [, \{, \ldots, \lfloor, \lceil$ are Open atoms,
 $], ], \}, \ldots, \rfloor, \rceil$ are Close atoms, 
@@ -466,9 +479,9 @@ Then we can use macros
 `\Bigr<delim>`, 
 `\biggr<delim>`, 
 `\Biggr<delim>` for creating Close atoms. Unfortunately, the source is not
-too attractive when more sizes of brakets are used, but typography
-tratidions say that we must distinguish brackets by the size in math
-mode if they are in equal shapes:
+too attractive when more sizes of brackets are used, but typographic
+traditions say that we have to distinguish brackets by the size in math
+mode if they are in equal types:
 $$
   `\Bigl( f\bigl( 2(x+y) + z\bigr) \Bigr)'` \quad \hbox{gives }
   \Bigl(f\bigl(2(x+y)+z\bigr)\Bigr)'. 
@@ -476,7 +489,7 @@ $$
 
 \secc Horizontally scalable objects: math accents
 
-Arbirtrary wide formula can be covered by {\em scalable math accent}.
+Arbitrary wide formula can be covered by {\em scalable math accent}.
 Example:
 $$
   `\overrightarrow {a+b+c+d+e+f}` \quad \hbox{gives } \overrightarrow {a+b+c+d+e+f}.
@@ -491,7 +504,7 @@ Standard scalable math accents are:
 `\underline` $\underline{abc}$,
 `\underbrace` $\underbrace{abc}$.
 
-A special Accent atom is created. The exponents and subscripts are centered above
+A Op atom is created. The exponents and subscripts are centered above
 and below the nucleus of this atom (regardless of the current style). Example:
 $$
   `\overbrace {b\cdot b\cdot b \cdots b}^{k\times}` \quad \hbox{gives }
@@ -518,7 +531,7 @@ The accent is centered (with respect of slanting axis) and the result is a
 nucleus of Ord
 atom. For example `\dot x` gives $\dot x$. The list of fixed math accents
 follows: `\acute x` $\acute x$, `\bar x` $\bar x$, 
-`\breve x` $\breve x$, `\check a` $\check a$, 
+`\breve x` $\breve x$, `\check x` $\check x$,
 `\dot x` $\dot x$, `\ddot x` $\ddot x$, 
 `\grave x` $\grave x$, `\hat x` $\hat x$, 
 `\vec x` $\vec x$, `\tilde x` $\tilde x$.
@@ -544,18 +557,18 @@ $$
   `\sqrt{\sqrt{\sqrt{x+1}+1}+1}` \quad \hbox{gives }
    \sqrt{\sqrt{\sqrt{x+1}+1}+1}
 $$
-The $n$-th root is created by the macro `\root n\of{<math list>}`. For
+The $n$-th root is created by the macro `\root <n>\of{<math list>}`. For
 example `\root k+1\of x` gives $\root k+1\of x$.
 
 \secc Math alphabets
 
-Letters $a\dots z$, $A\dots Z$ and $\alpha$\dots$\omega$ are printed in italics
-in math mode. This follows the traditional typographical rule. 
+Letters $a\dots z$, $A\dots Z$ and $\alpha$\dots$\omega$ are printed in italic
+in math mode. This follows the traditional typographic rule.
 All other math symbols, digits and uppercase Greek letters must be
 upright.\fnote
-{French typographical rule says that uppercase Greek letters have to be
- slatned too.}
-These rules are independent of the curent variant of surrounding text font.
+{French typographic convention says that uppercase Greek letters have to be
+ in italic too. Use `\_itGreek` declaration in this case.}
+These rules are independent of the current variant of surrounding text font.
 
 If we want to use the letters or digits
 in another than this default shape, then we can use
@@ -570,7 +583,7 @@ of fonts in non-math mode (text mode) and they act
 as math alphabet selectors in math mode. This \"overlaying" concept 
 is given by Plain \TeX/. Example: math operators lim, sin, cos,
 log, etc.\ must be printed unslanted. We are using `\lim`, `\sin`, `\cos`,
-`\log` etc.\ in math mode in order to comply this typographical rule. For
+`\log` etc.\ in math mode in order to comply this typographic convention. For
 example `\sin` is defined as:
 \begtt
 \def\sin {\mathop{\rm sin}\nolimits}
@@ -583,7 +596,7 @@ The list of all predefined `\rm`-like math operators follows: `\arccos`,
 `\det`, `\dim`, `\exp`, `\gcd`, `\hom`, `\inf`, `\ker`, `\lg`, `\lim`,
 `\liminf`, `\limsup`, `\ln`, `\log`, `\max`, `\min`, `\Pr`, `\scs`, `\sin`,
 `\sinh`, `\sup`, `\tan`, `\tanh`, You can define another such operator
-analogicaly.
+analogically.
 
 \new Unicode
 Unicode font can include the following math alphabets:
@@ -608,17 +621,17 @@ Unicode font can include the following math alphabets:
 \_bsansdigits      % bold sans serif digits 0..9
 \_ttdigits         % monospace typewriter digits 0..9
 \_bbdigits         % double-struck digits 0..9
-\_rmgreek          % upright greek letters \alpha-\omega
-\_itgreek          % slanted greek letters \alpha-\omega
-\_bfgreek          % bold greek letters \alpha-\omega
-\_bigreek          % bold italic greek letters \alpha-\omega
-\_bsansgreek       % bold sans serif greek letters \alpha-\omega
-\_bisansgreek      % bold slanted snas serif greek letters \alpha-\omega
-\_itGreek          % slanted greek letters \Alpha-\Omega
-\_bfGreek          % bold greek letters \Alpha-\Omega
-\_biGreek          % bold italic greek letters \Alpha-\Omega
-\_bsansGreek       % bold sans serif greek letters \Alpha-\Omega
-\_bisansGreek      % bold slanted snas serif greek letters \Alpha-\Omega
+\_rmgreek          % upright Greek letters \alpha-\omega
+\_itgreek          % slanted Greek letters \alpha-\omega
+\_bfgreek          % bold Greek letters \alpha-\omega
+\_bigreek          % bold italic Greek letters \alpha-\omega
+\_bsansgreek       % bold sans serif Greek letters \alpha-\omega
+\_bisansgreek      % bold slanted snas serif Greek letters \alpha-\omega
+\_itGreek          % slanted Greek letters \Alpha-\Omega
+\_bfGreek          % bold Greek letters \Alpha-\Omega
+\_biGreek          % bold italic Greek letters \Alpha-\Omega
+\_bsansGreek       % bold sans serif Greek letters \Alpha-\Omega
+\_bisansGreek      % bold slanted snas serif Greek letters \Alpha-\Omega
 \endtt
 %
 Not all Unicode math fonts include all math alphabets listed here. Typically, 
@@ -627,12 +640,12 @@ bold calligraphic shape are missing.
 
 \new \OpTeX/
 \OpTeX/ defines internal math alphabet selectors as mentioned in the
-previous listing and sets as default:
+previous listing of math alphabets and sets as default:
 \begtt \typosize[10/12]
 \_itvariables \_rmdigits \_itgreek \_rmGreek
 \endtt
 %
-Moreower, it defines the alphabet selectors at user level (see section 1.3.3
+Moreover, it defines the alphabet selectors at user level (see section 1.3.3
 of the \OpTeX/ manual). For example
 \begtt \typosize[10/12]
 \def\rm {\_tryload\_tenrm \_inmath{\_rmavariables \_rmdigits}}
@@ -645,7 +658,7 @@ The first part
 You can see the file `unimath-codes.opm` where all user level selectors are
 defined. You can redefine them. For example, \OpTeX/ defines `\bf` as a math
 alphabet selector which selects sans serif bold in math. This is common
-notation for vectors and matrices. If you dislike this, then you can define:
+notation for vectors, tensors and matrices. If you dislike this, then you can define:
 \begtt \typosize[10/12]
 \def\bf {\_tryloadbf\_tenbf \_inmath{\_bfvariables\_bfdigits\_bfgreek\_bfGreek}}
 \endtt
@@ -679,7 +692,7 @@ pages.
 It isn't very comfortable to find something in the previous table
 if you know the shape. You can try the online web tool
 \ulink[https://detexify.kirelabs.org/classify.html]{Detexify}.
-You can draw the symbol here and the suggention of \TeX/ sequence is
+You can draw the symbol here and the suggestion of \TeX/ sequence is
 printed.
 
 \def\g#1{{\tt\string#1}~$#1$}
@@ -696,7 +709,7 @@ and
 \g\Sigma, \g\Tau, \g\Upsilon, \g\Phi, \g\Chi, \g\Psi, \g\Omega.
 
 \new \OpTeX/
-The variant of greek letters in the output
+The variant of Greek letters in the output
 (upright, italic, bold, bold sans serif, etc.)
 written by the sequences `\alpha`, `\beta` etc. depends on the math alphabet
 selected by `\_itgreek`, `\_rmgreek`, etc. selectors. The user-level
@@ -729,7 +742,7 @@ $$
 \medskip
 
 
-\sec More specialities
+\sec Other specialities
 
 \secc The `\not` prefix
 
@@ -746,11 +759,12 @@ If such character does not exist then
 the centered $/$ is overprinted over the next character. 
 
 
-
-
 \secc The `\bulidrel` macro: text over relation
 
-... todo
+The macro `\buildrel <text>\over <relation>` creates a new atom Rel wit the
+<relation> and with the smaller <text> above this <relation>. For example
+`$M\buildrel def\over= X$` gives $M\buildrel def\over= X$.
+
 
 \secc Spaces
 
@@ -797,9 +811,9 @@ the centered $/$ is overprinted over the next character.
 \secc[fams] Math families
 
 \TeX/ is able to use more than one math font in math mode. This was a
-necessity in old days when only 128-caracters fonts existed.
-Each math font used in math mode has its {\em math family} reperesented by a number.
-Math family is collection of three (amost) equal fonts in three sizes:
+necessity in old days when only 128-characters fonts existed.
+Each math font used in math mode has its {\em math family} represented by a number.
+Math family is a collection of three (almost) equal fonts in three sizes:
 first for `\textstyle` and `\displaystyle`, second for `\scriptstyle`
 and third for `\scriptscriptstyle`.
 
@@ -808,13 +822,13 @@ When Unicode math font is loaded then it includes all three optical sizes and
 all characters needed for typeseting math formula.
 Theoretically, we can use only one math family with this single font. But more math families
 (i.e.\ more fonts in math mode) is still possible. You can combine
-characters from more fonts (Unicode fonts or old TFM fonts together) in one math formula.
+characters from more fonts (Unicode fonts and old TFM fonts together) in one math formula.
 
 \new \OpTeX/
 \OpTeX/ loads the specified Unicode math font into math family 1. The math
 families 2 and 3 are reserved for specific \TeX/nical reasons, family 4 is
-used for `\script` font and family 5 and more can be used by user for
-loading more fonts. The macro for loading math fonts  looks like:
+used for `\script` font and families 5, 6, 7, etc. can be used by user for
+loading more fonts. The default macro for loading math fonts looks like:
 
 \begtt \typosize[10/12]
 \_def\_normalunimath{%
@@ -830,17 +844,17 @@ titles), it calls the `\_normalmath` macro in order to reload all math
 families to desired size. If you want to add a next font, you can add
 `\_loadunimathfamily <family> {<Unicode-font>}{<features>}` or
 `\_loadmathfamily <family> <TFM-font>` into the `\_normalmath` macro.
-The example in section~\ref[newfam] show how to do it.
+The example in section~\ref[newfam] shows how to do it.
 
 \secc Two variants of math fonts: normal and bold
 
-The math formulas in the document need only one Unicode font (or only one collection
+All math formulas in the whole document need only one Unicode font (or only one collection
 of math fonts as mentioned in section~\ref[fams]). But this
-is not realy true if titles are in bold font. If math formula is present in
-a such bold title then all characters of this formula must be bolder.
+is not really true if titles are in bold font. If a math formula is present in
+such a bold title then all characters of this formula must be bolder.
 For example \"normal" variables must be in bold italic in titles, symbols
-like `+` `=` must be bold and \"normal bold" letters (e.g., indicating vectors in math formula) must be
-extra bold in titles.
+like `+` `=` must be bold and \"normal bold" letters
+(e.g., indicating vectors in math formula) must be extra bold in titles.
 It means that all fonts from collection of math fonts must be bolder.
 We need second collection of math fonts with bolder
 shape. Unfortunately, it is not always available.
@@ -855,8 +869,8 @@ If you  have bold variant of used Unicode math font, then you can use
 %
 \OpTeX/ uses `\_normalmath` macro for loading collection of math fonts in
 \"normal" cases and `\_boldmath` macro for bold titles. The font declared by
-`\loadboldmath` is used in second case. But if the bold variant of font is
-not available (this is unfortunatelly more typical), then \OpTeX/ uses faked
+`\loadboldmath` is used in second case. But if the bold variant of the font is
+not available (this is unfortunately more typical), then \OpTeX/ uses faked
 bold of basic Unicode math font (the `embolden` internal font feature is
 used). So, the default `\_boldmath` macro defined by \OpTeX/ looks like:
 
@@ -878,7 +892,7 @@ used). So, the default `\_boldmath` macro defined by \OpTeX/ looks like:
 The font `bbold10.tfm` includes double stroked characters, for example
 double stroked plus, double stroked Greek letters and digits.
 Try to run `pdftex testfont`, then answer to the question about name of the
-font: `bbold10` and then type command `\table\end`. The testfont.pdf is
+font: `bbold10` and then type command `\table\end`. The `testfont.pdf` is
 printed with the table of characters of this font.
 Most of these characters cannot be found in Unicode math fonts.
 
@@ -904,7 +918,7 @@ The string \"`bbold`" is declared by `\_regtfm` as a collection of all
 \Umathchardef \bble   3 5 "3C
 \Umathchardef \bbge   3 5 "3E
 
-Finally, we must to declare new \TeX/ sequences for acessing the characters
+Finally, we must to declare new \TeX/ sequences for accessing the characters
 from the new font, for example:
 
 \begtt \typosize[10/12]
@@ -932,8 +946,8 @@ Then you can define:
                     \Umathcodenum `< \bble }
 \endtt
 
-If you want to add all double stroked grrek characters into `\bball`
-selector, then you can do somethink like this:
+If you want to add all double stroked Greek letters into `\bball`
+selector, then you can do something like this:
 
 \begtt \typosize[10/12]
 \def\setbbgreek #1 {\tmpnum=#1\xargs\setbbgreekA}
@@ -949,8 +963,8 @@ selector, then you can do somethink like this:
 \endtt
 %
 The `\Umathcode <input-code> <class> <family> <font-slot>` primitive is used
-here. The control sequences `\alpha`, `\beta` etc. are macros which expand
-to the Unicode character of appropriate Greek letter. We set the
+here. The control sequences `\alpha`, `\beta`, `\gamma` etc. are macros which expand
+to the Unicode character of appropriate (non-math) Greek letter. We set the
 Umathcode to such character, for example
 \code{\\Umathcode `}$\_rmgreek\alpha$` 0 5 "0B` is processed.
 
