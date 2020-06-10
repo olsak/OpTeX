@@ -12,6 +12,7 @@
 \catcode`\<=13
 \def<#1>{$\langle\hbox{\it#1\/}\rangle$}
 \everyintt={\catcode`\<=13 }
+\def\ss#1{$\vrule height3pt#1\vrule height3pt$}
 
 \hyperlinks\Green\Green
 
@@ -761,34 +762,172 @@ the centered $/$ is overprinted over the next character.
 
 \secc The `\bulidrel` macro: text over relation
 
-The macro `\buildrel <text>\over <relation>` creates a new atom Rel wit the
-<relation> and with the smaller <text> above this <relation>. For example
-`$M\buildrel def\over= X$` gives $M\buildrel def\over= X$.
+The macro `\buildrel <text>\over <relation>` creates a new atom Rel with the
+<relation> and with the smaller <text> above this <relation>. Example:
+`$M \buildrel\rm def\over= X\cup Y$` gives $M\buildrel\rm def\over= X\cup Y$.
 
 
 \secc Spaces
 
-... todo
+Spaces between atoms are created automatically as were mentioned in
+section~\ref[class]. But sometimes you have to help \TeX/ to create
+appropriate space. You can use following macros:
+
+\begitems
+* `\,` is {\em thin space} used around Op atoms, after comma, etc.: \ss\,,
+* `\!` is negative thin space,
+* `\>` is {\em medium space} used around Bin atoms: \ss\>,
+* `\;` is {\em thick space} used around Rel atoms: \ss\;,
+* `\quad` is {\em em space}: \ss\quad,
+* `\qquad` is {\em double em space}: \ss\qquad.
+\enditems
+%
+Of course, you can use {\em direct space} {\visiblesp`\ `} which is \TeX/ primitive
+and gives interword space: \ss\ \
+or you can use `\hskip <value>` to put arbitrary space.
+
+The space size of `\,`, `\!` resp. `\>`, resp. `\;` is given by
+`\thinmuskip`, resp. `\medmuskip`, resp. `\thickmuskip` values. You can see
+in the `plain.tex` file that these default values differ very little in their basic
+size but there is no stretchability/shrinkability in the `\,` space, there is small
+stretchability in the `\>` space and more stretchability in the `\;` space.
+
+The registers `\thinmuskip`, `\medmuskip` and `\thickmuskip` store so called
+{\em mu values} given by math unit `mu`. It is 1/18 em and this unit depends
+on the current font size used in the math formula ($S$ or $SS$ styles use
+smaller font size, the `mu` unit is smaller here). You can use `\muskip`
+instead `\hskip` or `\mukern` instead `\kern` if you want to use this
+special mu unit. It is allowed only in math mode.
+
+The `\quad` and `\qquad` spaces have fixed width and they can be used in text
+mode too. (\OpTeX/ allows to use `\,` in text mode too).
+Use `\quad` or `\qquad` if you want to separate more formulas created in
+single math mode. Examples of typical usage of spaces:
+
+\begtt \adef/{} \typosize[10/12]
+$$ \alpha\,(x+y), \qquad \int/_a^b \!\! f(x)\,{\rm d}x, \qquad \Gamma/_{\!i}. $$
+\endtt
+$$ \alpha\,(x+y), \qquad \int_a^b \!\! f(x)\,{\rm d}x, \qquad \Gamma_{\!i}. $$
+
 
 \secc Texts in math mode
 
-... todo
+If you write `$Hello world!$` (i.e.\ Hello world in math mode), then you get
+$Hello world!$. It is interpreted as product of variables $H$ and $e$ and
+$l^2$ and $o$ etc., followed by the symbol ! used for factorial.
+The non-ASCII letters (with accents) don't work at all because they are
+never used as symbols for variables. Spaces are ignored.
 
-\secc Three dots
+If you want to write a short text in the math mode, then you can use
+`\hbox{<text>}`. The `\hbox` primitive initializes text mode regardless of
+the \"outer mode". Example:
 
-... todo
+\begtt  \adef/{} \typosize[10/12]
+$$ \sum/_{n=0}^\infty (-1)^n a_n \hbox{ converges, if $a_n\searrow 0$.} $$
+\endtt
+$$ \sum_{n=0}^\infty (-1)^n a_n \hbox{ converges, if $a_n\searrow 0$.} $$
+%
+Note the space before the word \"converges". The space before `\hbox` is
+irrelevant. Second notice: the example shows the text mode inside math mode
+and the in-line math mode inside this text mode. The same result can be
+produced by:
 
-\secc Phantom
+\begtt  \adef/{} \typosize[10/12]
+$$ \sum/_{n=0}^\infty (-1)^n a_n \hbox{ converges, if } a_n\searrow 0. $$
+\endtt
+%
+The difference can be visible if the formula $a_n\searrow 0$ includes a
+fraction, for example ${1\over2}a_n\searrow 0$. The first example prints the
+fraction in the text style and the second example prints it the display style.
 
-... todo
+The disadvantage of `\hbox` is that it starts in the text mode independently
+of the current style, but we want to use smaller font in $S$ or $SS$ styles.
+\new \OpTeX/
+You can use `\mathbox{<text>}` in such situations. This macro behaves like
+`\hbox` but the text is appropriately smaller in $S$ and $SS$ styles.
+Example:
+$$
+  `{\mathbox{cena}\over\mathbox{výkon}}` \quad \hbox{gives }
+   {\mathbox{cena}\over\mathbox{výkon}}  \hbox{ in $D$ style and }
+   \textstyle {\mathbox{cena}\over\mathbox{výkon}} \hbox{ in $T$ style.}
+$$
+Note that $\mathbox{cena}\over\mathbox{výkon}$ means $\rm price\over performance$
+and you can write `$\rm price\over performance$` when you are using only
+words without spaces and accented letters. But phrases with spaces or accented letters
+should be printed in text mode using `\hbox` or `\mathbox`.
 
 \secc `\vcenter`
 
-... todo
+The `\vcenter` primitive behaves like `\vbox`, but it can be used only in
+math mode and its result is vertically centered to the math axis.
+For example, matrices, are created by tables in `\vcenter`.
+
+All big objects in math formula is centered to math axis and the baseline is
+ignored. In the following example we create a new big math operator by
+`\vcenter`:
+\begtt
+$$
+  \def\myop#1{\mathop{\vcenter{\frame{\vbox to2em{\vss\hbox{ $#1$ }\vss}}}}}
+  F(x) = \myop{x(i)}_{i=1}^\infty
+$$
+\endtt
+$$
+  \def\myop#1{\mathop{\vcenter{\frame{\vbox to2em{\vss\hbox{ $#1$ }\vss}}}}}
+  F(x) = \myop{x(i)}_{i=1}^\infty
+$$
+
+
+\secc Three dots
+
+You can write `$1,2,\dots,n$` to get $1,2,\dots,n$. The `\dots` macro puts
+thin space between dots and after the last dot, so the five object: comma,
+dots, comma are exactly equidistant.
+
+Typographic conventions say that you have to use the repeating symbol
+before and after three dots (comma in previous example) and the three dots
+should be at baseline, if the repeating symbol is at baseline. Or they should be
+at math axis, if the repeating symbol is at math axis. WE have to use `\cdots` instead
+`\dots` in second case. Example:
+$$
+  `a_1, a_2, \dots, a_n, \quad a_1 + a_2 + \cdots + a_n` \qquad
+   a_1, a_2, \dots, a_n, \quad a_1 + a_2 + \cdots + a_n
+$$
+
+There are `\vdots` $\vdots$, `\ddots` $\ddots$ and `\adots` $\adots$ which
+can be used in matrices.
+
+Three dots like the output of the `\dots` macro are present as a single
+character in fonts too. This character is called ellipsis. Font designers
+typically suggest this character with smaller spaces between dots than we
+need in math mode. So the rule about equidistant \"comma, three dots, comma"
+is not met when this character is used. You can try `$1,2,\unicodeellipsis, n$`
+and `$1+2+\unicodecdots + n$`. You get $1,2,\unicodeellipsis, n$ and
+$1+2+\unicodecdots + n$. If you feel that this is better, then you can set:
+`\let\dots=\unicodeellipsis \let\cdots=\unicodecdots`.
+
+
+\secc Phantoms and `\smash`
+
+The `\phantom{<math list>}` macro creates an invisible subformula equal to
+the formula generated by <math list>. It has its size, so it can
+interfere with surrounding visible subformulas. This macro is very useful for
+aligning with special requirements. We will show examples in
+section~\ref[matrix] and~\ref[eqalign].
+
+The `\vphantom{<math list>}` has only its vertical size (i.e.\ its height
+and depth), the width is zero. The `\hphantom{<math list>}` has only its
+width.
+
+The `\smash{<math list>}` is the opposite of `\vphantom`. It creates visible
+subformula but it has only its width. Its height and depth are zero.
+
+These macros work in the text mode too. Then their argument is
+the <horizontal list>.
+
 
 \sec Structured objects
 
-\secc Matrices
+\secc[matrix] Matrices
 
 ... todo
 
@@ -802,7 +941,7 @@ The macro `\buildrel <text>\over <relation>` creates a new atom Rel wit the
 
 ... todo
 
-\secc `\eqalign` and friends
+\secc[eqalign] `\eqalign` and friends
 
 ... todo
 

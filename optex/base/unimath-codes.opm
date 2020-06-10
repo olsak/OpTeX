@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-06-07>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2020-06-10>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -234,6 +234,9 @@
 \_mathchardef\ldotp="612E
 \_let\|=\Vert
 \_mathcode`\_="8000
+
+\_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass.txt says that it is Rel
+\_global\_Umathchardef \unicodecdots = 0 1 "22EF
 
    \_doc -----------------------------
    Aliases are declared here. They are names not menitioned in the `unimath-table.opm` file
