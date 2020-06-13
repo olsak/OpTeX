@@ -430,6 +430,14 @@
 \_public \eqlines \eqstyle \eqspace ;
 
    \_doc -----------------------------
+   \`\lmfil` is \"left matrix filler" (for `\matrix` columns). The default
+   value does centering because right matrix filler is directly set to `\hfil`.
+   \_cod -----------------------------
+
+\_newtoks \_lmfil   \_lmfil={\_hfil}
+\_public \lmfil ;
+
+   \_doc -----------------------------
    The output routine uses token list \`\headline` and \`\footline` in the
    same sense as in plain \TeX/. If they are non-empty then `\hfil` or `\hss`
    must be here because they are used inside `\hbox to\hsize`.

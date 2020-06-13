@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-06-10>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2020-06-13>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -238,6 +238,8 @@
 \_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass.txt says that it is Rel
 \_global\_Umathchardef \unicodecdots = 0 1 "22EF
 
+\_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
+
    \_doc -----------------------------
    Aliases are declared here. They are names not menitioned in the `unimath-table.opm` file
    but commonly used in \TeX.
@@ -405,6 +407,7 @@ can define:
 \_endinput
 
 History:
+2020-06-13  Umathcode of / declared asi iin Plain TeX
 2020-06-07  \_itgreek \_itGreek, \_rmgreek \_rmGreek etc. introduced, names changed
 2020-06-03  \not\mid = \nmid added, \not corrected
 2020-04-30  Bug fix: \phi, \varpi etc. were bad encoded

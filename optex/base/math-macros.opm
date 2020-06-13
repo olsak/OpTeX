@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-06-03>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2020-06-13>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as letter (11) and the mathocode 
@@ -433,11 +433,21 @@
 \_protected\_def\_cdots{\_mathinner{\_cdotp\_cdotp\_cdotp}}
 \_protected\_def\_vdots{\_vbox{\_baselineskip=.4em \_lineskiplimit=0pt
     \_kern.6em \_hbox{.}\_hbox{.}\_hbox{.}}}
-\_protected\_def\_ddots{\_mathinner{% 
+\_protected\_def\_ddots{\_mathinner{%
     \_mkern1mu\_raise.7em\_vbox{\_kern.7em\_hbox{.}}\_mkern2mu
     \_raise.4em\_hbox{.}\_mkern2mu\_raise.1em\_hbox{.}\_mkern1mu}}
 
 \_public \ldots \cdots \vdots \ddots ;
+
+   \_doc -----------------------------
+   \`\adots` ispired by plain \TeX/
+   \_cod -----------------------------
+
+\_protected\_def\_adots{\_mathinner{%
+    \_mkern1mu\_raise.1em\_hbox{.}\_mkern2mu
+    \_raise.4em\_hbox{.}\_mkern2mu\_raise.7em\_vbox{\_kern.7em\_hbox{.}}\_mkern1mu}}
+
+\_public \adots ;
 
    \_doc -----------------------------
    Math accents (encoding dependent declarations).
@@ -574,28 +584,29 @@
    \_doc -----------------------------
    \`\matrix` and \`\pmatrix`
    behave as in Plain \TeX/, if it is used in the
-   `\displaystyle` or `\textstyle`. On the other hand, it is printed in smaller size
-   (by appropriate amount) in `\scriptstyle` and `\scriptscriptstyle`. 
+   `\displaystyle`. On the other hand, it is printed in smaller size
+   (by appropriate amount) in `\textstyle` = `\scriptstyle` and `\scriptscriptstyle`.
    This feature is new in \OpTeX/.
    \_cod -----------------------------
 
 \_protected\_def\_matrix#1{\_null\_thinsk
     \_edef\_stylenum{\_the\_numexpr\_mathstyle/2\_relax}%
     \_vcenter{\_matrixbaselines\_math
-    \_ialign{\_hfil$\_matrixstyle##$\_hfil&&\_quad\_hfil$\_matrixstyle##$\_hfil\_crcr
+    \_ialign{\_the\_lmfil$\_matrixstyle##$\_hfil&&\_quad\_the\_lmfil$\_matrixstyle##$\_hfil\_crcr
       \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
       #1\_crcr\_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}}}\_thinsk}
 
 \_def\_matrixbaselines{\_normalbaselines \_def\_matrixstyle{}%
-   \_ifcase\_stylenum \_or \_or
-       \_baselineskip=.7\_baselineskip
-       \_def\_quad {\_hskip.7em\_relax}%
-       \_let\_matrixstyle=\_scriptstyle
+   \_let\_matrixbaselines=\_relax % \matrix inside matrix does not change size again
+   \_ifcase\_stylenum \_or \_matrixscriptbaselines \_or \_matrixscriptbaselines
    \_or
        \_baselineskip=.5\_baselineskip
        \_def\_quad {\_hskip.5em\_relax}%
        \_let\_matrixstyle=\_scriptscriptstyle
    \_fi
+}
+\_def\_matrixscriptbaselines{\_baselineskip=.7\_baselineskip
+   \_def\_quad {\_hskip.7em\_relax}\_let\_matrixstyle=\_scriptstyle
 }
 \_protected\_def\_pmatrix#1{\_left(\_matrix{#1}\_right)}
 
@@ -611,7 +622,7 @@
 \_newdimen\_ptrenwd
 \_ptrenwd=8.75pt % width of the big left (
 \_protected\_def\_bordermatrix#1{\_begingroup \_math
-  \_setbox0=\_vbox{\_def\_cr{\_crcr\_noalign{\_kern.2em\_global\_let\_cr\_endline}}%
+  \_setbox0=\_vbox{\_def\cr{\_crcr\_noalign{\_kern.2em\_global\_let\_cr\_endline}}%
     \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
       &&\_quad\_hfil$##$\_hfil\_crcr
       \_omit\_strut\_hfil\_crcr\_noalign{\_kern-\_baselineskip}%
@@ -1069,6 +1080,7 @@
 
 \_endcode %---------------------------------------------------
 
+2020-06-13 \adots introduced, \bordermatrix corrected
 2020-06-03 \notin corrected
 2020-06-02 $$\par$$ error is supressed, so we define \(l)eqalign(no), \displayines as \long
 2020-05-30 \cases: group added in the second column.
