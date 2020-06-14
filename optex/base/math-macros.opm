@@ -617,22 +617,23 @@
    \_cod -----------------------------
 
 \_protected\_long\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
-    \_ialign{$##\_hfil$&\_quad{##}\_hfil\_crcr#1\_crcr}}\_right.}
+    \_ialign{$##\_hfil$&\_quad{##\_unsskip}\_hfil\_crcr#1\_crcr}}\_right.}
 
 \_newdimen\_ptrenwd
 \_ptrenwd=8.75pt % width of the big left (
 \_protected\_def\_bordermatrix#1{\_begingroup \_math
-  \_setbox0=\_vbox{\_def\cr{\_crcr\_noalign{\_kern.2em\_global\_let\_cr\_endline}}%
-    \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
-      &&\_quad\_hfil$##$\_hfil\_crcr
-      \_omit\_strut\_hfil\_crcr\_noalign{\_kern-\_baselineskip}%
-      #1\_crcr\_omit\_strut\_cr}}%
+  \_setbox0=\_vbox{\_bordermatrixA #1\_stopbmatrix}%
   \_setbox2=\_vbox{\_unvcopy0 \_global\_setbox1=\_lastbox}%
   \_setbox2=\_hbox{\_unhbox1 \_unskip\_global\_setbox1=\_lastbox}%
   \_setbox2=\_hbox{$\_kern\_wd1 \_kern-\_ptrenwd\_left(\_kern-\_wd1
     \_global\_setbox1=\_vbox{\_box1 \_kern.2em}%
     \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right)$}%
   \_null\_thicksk\_vbox{\_kern\_ht1 \_box2}\_endgroup}
+\_def\_bordermatrixA #1\cr#2\_stopbmatrix{%
+    \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
+      &&\_quad\_hfil$##$\_hfil\_crcr
+      \_omit\_strut\_hfil\_crcr\_noalign{\_kern-\_baselineskip}%
+      #1\_crcr\_noalign{\_kern.2em}#2\_crcr\_omit\_strut\_cr}}
 
 \_public \cases \bordermatrix ;
 
@@ -644,36 +645,15 @@
    advanced by `\jot` (3pt in plain \TeX). It follows from the default
    settings of \^`\eqlines` and \^`\eqstyle` parameters.
 
-   In \OpTeX/, this macro is more flexible. You can set the
-   `\baselineskip` value by the \^`\eqlines` parameter and math style
+   In \OpTeX/, this macro is more flexible. See section 4.4 in the
+   \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]
+         {Typesetting Math with \OpTeX/}.
+   The `\baselineskip` value is set by the \^`\eqlines` parameter and math style
    by the \^`\eqstyle` parameter. 
-   For example, you need to put the system of euations as an index of sum
-   operator:
-   \begtt
-   $$
-     \sum_{\eqlines{\baselineskip=.7\baselineskip}\eqstyle{\scriptstyle}\eqalign{
-                     i &\in A  \cr
-                     j &\in B  \cr
-                     k &\in C }}
-     i + j + k
-   $$
-   \endtt
-   You can write more equation systems one next second:
-   \begtt
-   $$\eqalign{
-        x + y + z &= 1     &&  a + b + c &= -1 \cr  
-            u + v &= 20    &&      f + g &= -20 \cr
-                i &= j   
-   }$$
-   \endtt
-   You can use the third column for centered equations without aligning point
-   (as in \^`\displaylines`). For example:
-   \begtt \catcode`\<=13
-   $$ \left( \eqspace=0pt \eqalign{&& <first equation>\cr
-                                   && <second equation>} \right) $$
-   \endtt
-   The \^`\eqspace` is additional space used in the third column to separate
-   equation systems one next second.
+
+   There are more possible columns than two (used in classical Plain TeX):
+   `rlcrlcrlc` etc.\ where `r` and `l` columns are without spaces and `c` column
+   (if used) has the space \^`\eqspace`/2 at its both sides.
    \_cod -----------------------------
 
 \_long\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_the\_eqlines\_math
@@ -693,40 +673,12 @@
 
    \OpTeX/ offers
    `\dislaylines to<dimen>{<formula>\cr<formula>\cr...<formula>}`
-   as an alternative case of usage `\displaylines`.
-   The centered formulae are in `\vcenter` in this case,
+   as an alternative case of usage `\displaylines`. See section 4.3 in the
+   \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]
+         {Typesetting Math with \OpTeX/}.
+   The centered formulas are in `\vcenter` in this case,
    so lines cannot be broken to more pages, but this case
    enables to use `\eqno` or `\leqno` or \^`\eqmark`.
-   The lines have the form `\hbox to<dimen>` and formulae are centered using
-   `\hss` from both sides. This means that you can set arbitrary <dimen>
-   without visual change of the formulae. But use smaller value than
-   `\displaywidth` if you want to center formulae with `\eqno` appended.
-   (Note that `\displaywith` is equal to `\hsize` in most cases but it is
-   real display width when `\parshape` or `\hangindent` is used.)
-   The rule says: the formula with `\eqno` (or `\leqno`) is centered
-   if its width is less or equal `\displaywidth-4<eqno-size>`. So
-   \begtt \catcode`\<=13
-   \displaylines to\hsize-8em {<formula>\cr<formula>}\eqno (1)
-   \endtt
-   does global centering, because size of `(1)` is less than 2\,em.
-   You can do more experiments with this example,
-   for example `\diplaylines to\hsize{...}`
-   puts the `\eqno` mark to the next line in the display environment. Read
-   \TeX/book or \TeX/book naruby, where the precise explanation about of
-   positioning is.
-
-   You can use \"`\displaylines to`" for more applications. You can put more
-   \"`\displaylines to`", one next to second in order to creating more
-   centered columns with controlled width of such columns. Or you can give
-   an exception for first and last formula:
-   \begtt \catcode`\<=13
-   $$\displaylines to 10cm {<formula>\hfill \cr
-                            <formula>\cr
-                            <formula>\cr
-                            \hfill <formula>}
-   $$
-   \endtt
-   This example gives similar result as the \LaTeX/ `multline` environment.
    \_cod -----------------------------
 
 \_def\_displaylines #1#{\_ifx&#1&\_ea\_displaylinesD
@@ -1080,7 +1032,8 @@
 
 \_endcode %---------------------------------------------------
 
-2020-06-13 \adots introduced, \bordermatrix corrected
+2020-06-14 \borermatrix, \cases corrected
+2020-06-13 \adots introduced, \matrix smaller in T mode too.
 2020-06-03 \notin corrected
 2020-06-02 $$\par$$ error is supressed, so we define \(l)eqalign(no), \displayines as \long
 2020-05-30 \cases: group added in the second column.
