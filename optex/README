@@ -19,6 +19,11 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<0.14> Typeseting Math with OpTeX: new document added.
+       Math macros corrected.
+       In-line verbatim in section titles allowed.
+       \eqbox implemented.
+       "\mnote up", "\displaylines to" (new features implemented)
 <0.13> \table have more features: \tabskip, \table to, \table pxto, \vspan
        The \eqalign reimplemented to be more flexible.
        The boundary character ":" introduced in the \table.
