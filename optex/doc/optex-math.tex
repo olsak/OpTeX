@@ -42,7 +42,7 @@
 
 \tit Typesetting Math with \OpTeX/
 
-\vskip-\baselineskip \hfill Version 01
+\vskip-\baselineskip \hfill Version 01+
 
 \author Petr Olšák
 
@@ -693,7 +693,7 @@ notation for vectors, tensors and matrices. If you dislike this, then you can de
 \secc[objects] List of single math objects
 
 \new Unicode
-All single math objects is listed in the `unimath-table.opm` or
+All single math objects are listed in the `unimath-table.opm` or
 `unicode-math-table.tex` file. You can
 look into this file. The codes, \TeX/ sequences, classes and comments
 for all possible math codes are here. Maybe, your Unicode math font which is loaded,
@@ -785,7 +785,7 @@ If such character does not exist then
 the centered $/$ is overprinted over the next character. 
 
 
-\secc The `\bulidrel` macro: text over relation
+\secc The `\buildrel` macro: text over relation
 
 The macro `\buildrel <text>\over <relation>` creates a new atom Rel with the
 <relation> and with the smaller <text> above this <relation>. Example:
@@ -863,7 +863,7 @@ $$ \sum/_{n=0}^\infty (-1)^n a_n \hbox{ converges, if } a_n\searrow 0. $$
 %
 The difference can be visible if the formula $a_n\searrow 0$ includes a
 fraction, for example ${1\over2}a_n\searrow 0$. The first example prints the
-fraction in the text style and the second example prints it the display style.
+fraction in the text style and the second example prints it in the display style.
 
 The disadvantage of `\hbox` is that it starts in the text mode independently
 of the current style, but we want to use smaller font in $S$ or $SS$ styles.

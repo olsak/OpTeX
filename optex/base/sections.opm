@@ -70,6 +70,7 @@
    \_cod ---------------------------
 
 \_def\_printchap #1{\_vfill\_supereject
+   \_vglue\_medskipamount % shifted by topkip+\medskipamount
    {\_chapfont \_noindent \_mtext{chap} \_printrefnum[@]\_par
     \_nobreak\_smallskip
     \_noindent \_raggedright #1\_nbpar}\_mark{}%
@@ -83,7 +84,7 @@
    \_firstnoindent
 }
 \_def\_printsecc#1{\_par 
-   \_abovetitle{\_penalty-200}\_medskip 
+   \_abovetitle{\_penalty-200}{\_medskip\_smallskip}
    {\_seccfont \_noindent \_raggedright \_printrefnum[@\_quad]#1\_nbpar}%
    \_nobreak \_belowtitle{\_medskip}% 
    \_firstnoindent

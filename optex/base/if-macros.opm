@@ -133,8 +133,9 @@
 
    \_doc ----------------------------
    \secc Is-macros
-   There are a collection of macros 
-   `\isempty`, `\istoksempty`, `\isequal`, `\ismacro`, `\isdefined`, `\isinlist` and `\isfile` 
+   There are a collection of macros
+   \^`\isempty`, \^`\istoksempty`, \^`\isequal`, \^`\ismacro`,
+   \^`\isdefined`, \^`\isinlist` and \^`\isfile`
    with common syntax:
    \begtt \catcode`\<=13
    \issomething <params> \iftrue <codeA> \else <codeB> \fi 
