@@ -79,7 +79,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li> Tables to given width.
 <li> Variations of paragraphs with p declarator.
 <li> Vertical centered text in more rows in tables. 
-<lI> Eqbox: equal width of boxes acros whole document.
+<lI> Eqbox: equal width of boxes across whole document.
 <li> \slides style allows to create presentations.
 <li> \usebib reads directly .bib databases without any external program.
 <li> Index allows hyperlinked pages and alternative page lists.
@@ -112,6 +112,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#bbchar">\bbchar from AMS fonts when Unicode math font is used</a>
     <li><a href="#matrixx">More comfortable writing of matrices</a>
+    <li><a href="#biglr">Bigger outer parentheses automatically set</a>
 </ul>
 
 <li>Tables
@@ -471,6 +472,51 @@ $$
 
 <p CLASS=datum>(0010) -- P. O. 2020-04-09<p>
 <hr>
+
+
+<h2><a name="biglr"></a>Bigger outer parentheses automatically set</h2>
+
+<p>Sometimes we need to typeset something like f(b+((c+d)(e+f))\cdot g)
+and we want to set outer parentheses bigger than the inner ones because this
+is traditional typographical rule. We can write
+$f\Bigl(b+\bigl((c+d)(e+f)\bigr)\cdot g\Bigl)$
+in our TeX source but this makes the source less clear. The macro \biglr
+defined here is able to set such task automatically. you can write:
+
+<pre>
+$\biglr f(b+((c+d)(e+f))\cdot g) \biglr$
+</pre>
+
+<p>All material between the couple of \biglr is scaned by TeX and the
+appropriate \bigl, \bigr, \Bigl etc. are added before parentheses ()
+automatically.
+
+<pre>
+\def\biglr#1\biglr{%
+   \def\biglrL{}\tmpnum=0 \def\biglrM{0}%
+   \def\tmpb{#1}\replstring\tmpb{(}{\biglrC(}\replstring\tmpb{)}{\biglrC)}%
+   \ea\biglrA\tmpb\biglrC.%
+}
+\def\biglrA#1\biglrC#2{\addto\biglrL{#1}%
+   \ifx.#2\tmpnum=\biglrM\relax \biglrL
+   \else \addto\biglrL{\biglrC#2}%
+         \ifx(#2\advance\tmpnum by1 \ifnum\biglrM&lt;\tmpnum \edef\biglrM{\the\tmpnum}\fi\fi
+         \ifx)#2\advance\tmpnum by-1 \fi
+         \ea \biglrA\fi}
+\def\biglrC#1{\ifx(#1\advance\tmpnum by-1 \biglrD(\fi
+              \ifx)#1\biglrE)\advance\tmpnum by1 \fi}
+\def\biglrD{\ifcase\tmpnum \or\ea\bigl\or \ea\Bigl\or \ea\biggl \else \ea\Biggl\fi}
+\def\biglrE{\ifcase\tmpnum \or\ea\bigr\or \ea\Bigr\or \ea\biggr \else \ea\Biggr\fi}
+</pre>
+
+<p>Note that the \biglr scanner is active only at outer level of braces {}. And it is
+not usable when you are using fractions or other big objects inside
+parentheses in display style.
+Use \left, \right primitives in such situations.
+
+<p CLASS=datum>(0026) -- P. O. 2020-06-30<p>
+<hr>
+
 
 <p CLASS="lmarg">Tables</p>
 
