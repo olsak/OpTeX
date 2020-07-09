@@ -113,6 +113,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#bbchar">\bbchar from AMS fonts when Unicode math font is used</a>
     <li><a href="#matrixx">More comfortable writing of matrices</a>
     <li><a href="#biglr">Bigger outer parentheses automatically set</a>
+    <li><a href="#textinmath">Text fonts in math mode</a>
 </ul>
 
 <li>Tables
@@ -517,6 +518,84 @@ Use \left, \right primitives in such situations.
 <p CLASS=datum>(0026) -- P. O. 2020-06-30<p>
 <hr>
 
+<h2><a name="textinmath"></a>Text fonts in math mode</h2>
+
+<p>When you write 13 or $13$ then the digits are (typically) rendered from
+different fonts: from text font in first case and from math font in second
+one. Sometimes you want to use only text fonts in both cases. Suppose that
+you have a text font without visually compatible math font. Then you may
+want to use a-z, A-Z, 0-9 and some other characters from text font in math
+mode instead from math font. The following trick does this (compare
+the mathastext.sty package used in LaTeX).
+
+<p>We assume that the Unicode math font is loaded already and now, we want
+to typeset characters mentioned above from text font in math mode. Try this:
+
+<pre>
+\loadmath{texgyretermes-math} % Math font is loaded: texgyretermes-math, just for testing
+\fontfam[Heros]               % Text font is loaded: texgyreheros, just for testing
+
+% Test:
+Heros in text, 13, but $Termes-math, 13$. It is visually incompatible.
+
+\_def\_xsetmathfamily#1 #2 #3{\_resizefont{#2}#3\_setmathfamily #1 #3}
+
+\_addto\_normalmath{% This must be declared after Unicode math font is loaded
+    \_xsetmathfamily    5 rm \_tenrm
+    \_xsetmathfamily    6 it \_tenit
+}%
+\_addto\_boldmath{%
+    \_xsetmathfamily    5 bf \_tenbf
+    \_xsetmathfamily    6 bi \_tenbi
+}
+\def\_rmdigits    {\_umathrange{0-9}75\_digitrmO}
+\def\_rmvariables {\_umathrange{A-Z}75\_ncharrmA \_umathrange{a-z}75\_ncharrma}
+\def\_itdigits    {\_umathrange{0-9}76\_digitrmO}
+\def\_itvariables {\_umathrange{A-Z}76\_ncharrmA \_umathrange{a-z}76\_ncharrma}
+
+% Default settings:
+\_normalmath              % reloads math fonts incuding families 5, 6.
+\_rmdigits \_itvariables  % Upright digits, slanted variables
+
+\_def\textcharsinmath #1#2 {\_ifx\_end#2\_else
+   \_Umathcode `#1=#2 5 `#1\_relax \_ea\textcharsinmath\_fi}
+
+% Characters !?*,.:;+-=()[]/&lt;&gt| are printed from math family 5, i.e. normal text font
+\textcharsinmath !5 ?5 *2 ,6 .0 :6 ;6 +2 −2 =3 (4 )5 [4 ]5 /0 &lt;3 &gt;3 |0 .\end
+\Umathcode `- = 2 5 "2212   % Minus in math mode creted by hyphen character
+\Umathcode `\{ = 4 5 `\{    % \{ and \} must have mathcode from fam 5
+\Umathcode `\} = 5 5 `\}
+\Udelcode  `\{ = 1 `\{      % and delcode from fam 1 (math font)
+\Udelcode  `\} = 1 `\}
+\edef\{{\csstring\{}  \edef\}{\csstring\}}
+
+% Test:
+Heros in text and in math: $Heros-math: 13, M = -(3!) + y_5$.
+</pre>
+
+<p>The code above reloads the same Unicode math font but moreover, it loads the currently
+used \rm and \it text fonts as math family 5 and 6. The digits are rendered
+from family 5 and variables from family 6 instead from the math fonts. The
+characters specified by \textcharsinmath, i.e. ! ? * , . : + - = ( ) [ ] &lt;
+&gt; | \csstring\{ and \csstring\}, are printed from family 5 too.
+Other math symbols are printed from original Unicode math font.
+
+<p>If you have loaded a special text font by \font primitive, i.e.
+\font\foo=something, then you can set this font as family 5 by
+
+<pre>
+\_addto\_normalmath{%
+    \_setmathfamily    5 \foo
+}
+</pre>
+
+<p>Note that \_setmathfamily (no \_xsetmathfamily) is used with only two
+parameters: family number and the font switch.
+
+
+
+<p CLASS=datum>(0027) -- P. O. 2020-07-09<p>
+<hr>
 
 <p CLASS="lmarg">Tables</p>
 
