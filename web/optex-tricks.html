@@ -114,6 +114,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#matrixx">More comfortable writing of matrices</a>
     <li><a href="#biglr">Bigger outer parentheses automatically set</a>
     <li><a href="#textinmath">Text fonts in math mode</a>
+    <li><a href="#torighteq">Equation marks in atypical cases</a>
 </ul>
 
 <li>Tables
@@ -577,7 +578,7 @@ Heros in text and in math: $Heros-math: 13, M = -(3!) + y_5$.
 used \rm and \it text fonts as math family 5 and 6. The digits are rendered
 from family 5 and variables from family 6 instead from the math fonts. The
 characters specified by \textcharsinmath, i.e. ! ? * , . : + - = ( ) [ ] &lt;
-&gt; | \csstring\{ and \csstring\}, are printed from family 5 too.
+&gt; | \{ and \}, are printed from family 5 too.
 Other math symbols are printed from original Unicode math font.
 
 <p>If you have loaded a special text font by \font primitive, i.e.
@@ -592,10 +593,39 @@ Other math symbols are printed from original Unicode math font.
 <p>Note that \_setmathfamily (no \_xsetmathfamily) is used with only two
 parameters: family number and the font switch.
 
-
-
 <p CLASS=datum>(0027) -- P. O. 2020-07-09<p>
 <hr>
+
+<h2><a name="torighteq"></a>Equation marks in atypical cases</h2>
+
+<p>We want to put equation marks \eqmark in more lines in display mode
+when we are using macros not designed for such case.
+For example in the lines of \case macro:
+
+<pre>
+$$ f(x) = \cases{0 &amp; for $x&lt;0$\toright\eqmark \cr
+                 1 &amp; otherwise\toright\eqmark } $$
+</pre>
+
+<p>This puts the equation marks to the right margin in each line generated
+by the \case macro. The \toright\eqmark is used here.
+
+The \toright macro is based on the <a href="#setpos">OpTeX trick 0020</a>
+where the \setpos and \posx macros are defined.
+
+<pre>
+\newcount\torightnum
+\def\toright#1{\_incr\torightnum \setpos[tr:\the\torightnum]%
+   \rlap{\kern-\posx[tr:\the\torightnum]\kern\hoffset\kern\hsize\llap{#1}}}
+</pre>
+
+<p>The parameter #1 is shifted to the right margin in the second run of TeX
+because we need to know the absolute position of the current point and we
+shift it to the right margin.
+
+<p CLASS=datum>(0028) -- P. O. 2020-07-10<p>
+<hr>
+
 
 <p CLASS="lmarg">Tables</p>
 
@@ -1115,8 +1145,8 @@ TeX job. If these vaules are not known then mentioned macros expand to 0sp,
 \refdecl{
    \def\Xpos#1#2#3{\sxdef{pos:#1}{{#2}{#3}\_currpage}}
 }
-
-\def\setpos[#1]{\openref\pdfsavepos\_wref\Xpos{{#1}{\the\pdflastxpos}{\the\pdflastypos}}}
+\def\setpos[#1]{\openref\pdfsavepos \edef\next{\noexpand\setposA{#1}}\next}
+\def\setposA#1{\_wref\Xpos{{#1}{\the\pdflastxpos}{\the\pdflastypos}}}
 
 \def\posx [#1]{\_ea \posi   \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
 \def\posy [#1]{\_ea \posii  \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
