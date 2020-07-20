@@ -312,15 +312,16 @@
 
 \_public \hrulefill \dotfill \rightarrowfill \leftarrowfill ;
 
-% \downbracefill \upbracefill will be re-defined when Unicode-math is used
+% \_downbracefill \_upbracefill are used in 7bit math \overbrace, \underbrace
 \_mathchardef \_braceld="37A \_mathchardef \_bracerd="37B
 \_mathchardef \_bracelu="37C \_mathchardef \_braceru="37D
-\_def \downbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
+\_def \_downbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
   \_braceld \_leaders\_vrule height\_ht0 depth0pt \_hfill \_braceru
   \_bracelu \_leaders\_vrule height\_ht0 depth0pt \_hfill \_bracerd$}
-\_def \upbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
+\_def \_upbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
   \_bracelu \_leaders\_vrule height\_ht0 depth0pt \_hfill \_bracerd
   \_braceld \_leaders\_vrule height\_ht0 depth0pt \_hfill \_braceru$}
+\_public \downbracefill \upbracefill ;
 
 \_def \_magnification {\_afterassignment \_magA \_count255 }
 \_def \_magA {\_mag=\_count255 \_truedimen\_hsize \_truedimen\_vsize
