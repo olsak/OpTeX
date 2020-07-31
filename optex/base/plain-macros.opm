@@ -294,12 +294,13 @@
 }
 
    \_doc -----------------------------
-   The last part of plain \TeX/ macros. 
+   The plain \TeX/ macros
    \`\hrulefill`, \`\dotfill`, \`\rightarrowfill`, \`\leftarrowfill`, 
-   \`\magnification`, \`\bye`.
-   Math macros are defined in the `math-macros.opm` file.
+   \`\downbracefill`, \`\upbracefill`.
+   The last four are used in non-Unicode variants of `\overrightarrow`,
+   `\overleftarrow`, `\overbrace` and `\underbrace` macros, see
+   section~\ref[math-macros].
    \_cod -----------------------------
-
 
 \_def \_hrulefill {\_leaders\_hrule\_hfill}
 \_def \_dotfill {\_cleaders\_hbox{$\_math \_mkern1.5mu.\_mkern1.5mu$}\_hfill}
@@ -310,9 +311,6 @@
   \_cleaders\_hbox{$\_mkern-2mu\_smash-\_mkern-2mu$}\_hfill
   \_mkern-7mu\_smash-$}
 
-\_public \hrulefill \dotfill \rightarrowfill \leftarrowfill ;
-
-% \_downbracefill \_upbracefill are used in 7bit math \overbrace, \underbrace
 \_mathchardef \_braceld="37A \_mathchardef \_bracerd="37B
 \_mathchardef \_bracelu="37C \_mathchardef \_braceru="37D
 \_def \_downbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
@@ -321,7 +319,15 @@
 \_def \_upbracefill {$\_math \_setbox0=\_hbox{$\_braceld$}%
   \_bracelu \_leaders\_vrule height\_ht0 depth0pt \_hfill \_bracerd
   \_braceld \_leaders\_vrule height\_ht0 depth0pt \_hfill \_braceru$}
-\_public \downbracefill \upbracefill ;
+
+\_public \hrulefill \dotfill
+   \rightarrowfill \leftarrowfill \downbracefill \upbracefill ;
+
+   \_doc -----------------------------
+   The last part of plain \TeX/ macros: \`\magnification`, \`\bye`.
+   Note that math macros are defined in the `math-macros.opm` file
+   (section~\ref[math-macros]).
+   \_cod -----------------------------
 
 \_def \_magnification {\_afterassignment \_magA \_count255 }
 \_def \_magA {\_mag=\_count255 \_truedimen\_hsize \_truedimen\_vsize

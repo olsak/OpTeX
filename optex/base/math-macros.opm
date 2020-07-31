@@ -467,10 +467,14 @@
 \_protected\_def\widehat{\_mathaccent"0362 }
 
    \_doc -----------------------------
-   \`\overrightarrow`, \`\overleftarrow`, \`\overbrace`, \`\underbrace`, \`\skew` macros.
+   \`\_math`, \`\skew`,
+   \`\overrightarrow`, \`\overleftarrow`, \`\overbrace`, \`\underbrace` macros.
+   The last four are redefined when Unicode math is loaded.
    \_cod -----------------------------
 
 \_def\_math{\_mathsurround0pt }
+\_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0=by2 \_mkern\_muskip0
+    #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
 \_protected\_def\_overrightarrow #1{\_vbox{\_math\_ialign{##\_crcr
       \_rightarrowfill\_crcr\_noalign{\_kern-.1em \_nointerlineskip}
       $\_hfil\_displaystyle{#1}\_hfil$\_crcr}}}
@@ -484,8 +488,6 @@
 \_protected\_def\_underbrace #1{\_mathop{\_vtop{\_math\_ialign{##\_crcr
       $\_hfil\_displaystyle{#1}\_hfil$\_crcr\_noalign{\_kern.3em \_nointerlineskip}
       \_upbracefill\_crcr\_noalign{\_kern.3em}}}}\_limits}
-\_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0=by2 \_mkern\_muskip0
-    #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
 
 \_public \overrightarrow \overleftarrow \overbrace \underbrace \skew ;
 
