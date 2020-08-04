@@ -5,23 +5,17 @@
    \_doc -----------------------------
    Loading the `librarian.tex` macro package. See `texdoc librarian`
    for more information about it.
+
+   We want to ignore `\errmessage` and we want not to create `\jobname.lbr`
+   file.
    \_cod -----------------------------
 
-\_def\_tmp{}
-\_let\_errmessageori=\_errmessage % we needn't \errmessage during \input librarian
-\_def\_errmessage#1{\_def\_tmp{error}}
-\_let\_newwriteori=\_newwrite % we need not to create \jobname.lbr:
-\_def\_newwrite#1{\_csname lb@restoreat\_endcsname \_endinput}
+\_def\errmessage#1{}
+\_def\newwrite#1{\_csname lb@restoreat\_endcsname \_endinput}
 \_def\_tmpb{\_catcode`\_=12 \_input librarian \_catcode`\_=11 }\_tmpb
-\_let\_errmessage=\_errmessageori
-\_let\_newwrite=\_newwriteori
-\_ifx\_tmp\_empty\_else
-  \_def\_usebib/#1 (#2) #3 {%
-     \_opwarning{eTeX and (pdfTeX or XeTeX or LuaTeX) not detected}%
-     \_immediate\_write16{\_space\_space
-               But librarian package needs it. \_noexpand\usebib ignored.}%
-  }
-  \_endinput \_fi
+\_let\errmessage=\_errmessage
+\_let\newwrite=\_newwrite
+
 \_private \BibFile \ReadList \SortList \SortingOrder \NameCount \AbbreviateFirstname
    \CreateField \RetrieveFieldInFor \RetrieveFieldIn ;
 
