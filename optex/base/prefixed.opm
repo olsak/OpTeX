@@ -83,13 +83,13 @@
       \_ea \_gdef \_csname namesp:#1\_endcsname {}%
       \_gdef \_pkglabel{_#1}%
       \_directlua{
-      callback.register("process_input_buffer",
+      callback.register_x("process_input_buffer",
         function (str)
            return string.gsub(str, "\_nbb[.]([a-zA-Z])", "\_nbb _#1_\_pcent 1")
         end )
       }%
       \_gdef \_endcode {%
-          \_ifmathsb \_mathsbon \_else \_mthsboff \_fi
+          \_ifmathsb \_mathsbon \_else \_mathsboff \_fi
           \_gdef \_pkglabel{_#1}%
           \_global \_let \_endcode=\_endinput
           \_endinput }%
