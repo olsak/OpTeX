@@ -70,7 +70,7 @@
       \_next                                   %  runs itself in processing state
    }
    \_addto\_langlist{ #1(#2)}%
-   \_sdef{#1lang}{\_csname _#1lang\_endcsname}% unprefixed \<isocode>lang
+   \_sdef{#1lang\_ea}\_ea{\_csname _#1lang\_endcsname}% unprefixed \<isocode>lang
 }
 \_def\_loadpattrs#1 #2 {%
    \_directlua{

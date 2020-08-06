@@ -71,29 +71,30 @@
 
    \_doc -----------------------------
    The `\_mathsbon` and `\_mathsboff` are defined in `math-macros.opm` file.
-   Now, we define the macro \`\_namespace` `{<pkg label>}` for package writers, see
-   section~\ref[pkg-namespace].
+   Now, we define the macros
+   \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}` and \`\_endnamespace`
+   for package writers, see section~\ref[pkg-namespace].
    \_cod -----------------------------
 
 \_def\_namespace #1{%
    \_ifcsname namesp:#1\_endcsname \_errmessage
       {The name space "#1" is used already, it cannot be used twice}%
       \_endinput
-   \_else
-      \_ea \_gdef \_csname namesp:#1\_endcsname {}%
-      \_gdef \_pkglabel{_#1}%
-      \_directlua{
+   \_else \_restorenamespace{#1}\_fi
+}
+\_def\_restorenamespace #1{%
+   \_ea \_gdef \_csname namesp:#1\_endcsname {}%
+   \_gdef \_pkglabel{_#1}%
+   \_directlua{
       callback.register_x("process_input_buffer",
         function (str)
            return string.gsub(str, "\_nbb[.]([a-zA-Z])", "\_nbb _#1_\_pcent 1")
         end )
-      }%
-      \_gdef \_endcode {%
-          \_ifmathsb \_mathsbon \_else \_mathsboff \_fi
-          \_gdef \_pkglabel{_#1}%
-          \_global \_let \_endcode=\_endinput
-          \_endinput }%
-   \_fi
+   }%
+}
+\_def\_endnamespace {%
+   \_ifmathsb \_mathsbon \_else \_mathsboff \_fi
+   \_gdef \_pkglabel{}%
 }
 
 \_endcode %----------------------------------------------------
@@ -222,7 +223,7 @@ is declared at the beginning of the macro file then all occurrences of
 The macro writer can write (and backward can read his/her code) simply with 
 `\.foo`, `\.bar` control sequences and `\_<pkg>_foo`, `\_<pkg>_bar` 
 control sequences are processed internally.
-The scope of the \^`\_namespace` command ends at the \^`\_endcode` command
+The scope of the \^`\_namespace` command ends at the \^`\_endnamespace` command
 or when another \^`\_namespace` is used. This command checks
 if the same package label is not declared by the \^`\_namespace` twice.
 
@@ -230,6 +231,11 @@ The \^`\public` macro does `\let\foo = \_<pkg>_foo` when
 \^`\_namespace{<pkg>}` is declared. And the \^`\private` macro does reverse
 operation to it. Example: you can define `\def\.macro{...}` and then
 set it to the user name space by `\_public \macro;`.
+
+Don't load another pakages (wich are using their own name space) inside your
+name space. Do load them before your your \^`\_namespace`~`{<pkg>}` is
+initialized. Or close your name space by \^`\_endnamespace` and open it again
+(after other packages are loaded) by \^`\_restorenamespace`~`{<pkg>}`.
 
 If the package writer needs to declare a control 
 sequence by \^`\newif`, then there is an exception of the rule described above. Use

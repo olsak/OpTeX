@@ -2598,6 +2598,7 @@
 \_def\.qrbeginhook{}
 \_def\.qrendhook{}
 
+\_endnamespace
 \_endcode
 
 This macro file is created for \OpTeX/. It is derived from:

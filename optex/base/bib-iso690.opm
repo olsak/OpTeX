@@ -882,7 +882,7 @@ howpublished = "\Mtext{blue-ray}"
 Now, you can set the variants of blue-ray into your macros:
 
 \begtt
-\mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
+\_mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
 \endtt
 
 
