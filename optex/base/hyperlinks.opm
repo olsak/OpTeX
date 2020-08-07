@@ -63,18 +63,18 @@
 
    \_doc ----------------------------
    The `\_pdfstartlink` primitive uses `\_pdfborder{<type>}` in its parameter
-   (see \^`\_linkactive` or \^`\_urlactive` macros). The \`\_pdfborder``{<type>}` 
-   expands to `attr{/C[? ? ?] /Border[0 0 .6]}` if the 
-   `\<type>border` (i.e.\ \`\refborder`, \`\citeborder`, \`\tocborder`, \`\pgborder`,
-   \`\urlborder`, \`\fntborder` or \`\fnfborder`)
+   (see \^`\_linkactive` or \^`\_urlactive` macros). The \`\_pdfborder``{<type>}`
+   expands to `attr{/C[? ? ?] /Border[0 0 .6]}` if the
+   `\_<type>border` (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
+   \`\_pgborder`, \`\_urlborder`, \`\_fntborder` or \`\_fnfborder`)
    is defined. User can define it in
    order to create colored frames around active links. For example
-   `\def\tocborder{1 0 0}` causes red frames in TOC (not printed, only visible
+   `\def\_tocborder{1 0 0}` causes red frames in TOC (not printed, only visible
    in PDF viewers).
    \_cod ----------------------------
 
-\_def\_pdfborder#1{\_ifcsname #1border\_endcsname
-       attr{/C[\_csname #1border\_endcsname] /Border[0 0 .6]}%
+\_def\_pdfborder#1{\_ifcsname _#1border\_endcsname
+       attr{/C[\_csname _#1border\_endcsname] /Border[0 0 .6]}%
    \_else attr{/Border[0 0 0]}\_fi
 }
 

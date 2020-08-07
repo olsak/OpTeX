@@ -630,14 +630,14 @@ The last object is an external link and it is colored by
 
 You can use another marking of active links: by frames which are visible in
 the PDF viewer but invisible when the document is printed. The way to do it
-is to define the macros \^`\pgborder`, \^`\tocborder`, \^`\citeborder`,
-\^`\refborder` and \^`\urlborder` as the triple of RGB components of the used
+is to define the macros \^`\_pgborder`, \^`\_tocborder`, \^`\_citeborder`,
+\^`\_refborder` and \^`\_urlborder` as the triple of RGB components of the used
 color. Example:
 
 \begtt
-\def\tocborder {1 0 0}  % links in table of contents: red frame
-\def\pgborder {0 1 0}   % links to pages: green frame
-\def\citeborder {0 0 1} % links to references: blue frame
+\def\_tocborder {1 0 0}  % links in table of contents: red frame
+\def\_pgborder {0 1 0}   % links to pages: green frame
+\def\_citeborder {0 0 1} % links to references: blue frame
 \endtt
 
 By default these macros are not defined. It means that no frames are created.
@@ -645,7 +645,7 @@ By default these macros are not defined. It means that no frames are created.
 The hyperlinked footnotes can be activated by \^`\fnotelinks` `<color-fnt> <color-fnf>`
 where footnote marks in text have `<color-fnt>` and the same footnote marks
 in footnotes have <color-fnf>. You can define relevant borders
-\^`\fntborder` and \^`\fnfborder` analogically as \^`\pgborder` (for example).
+\^`\_fntborder` and \^`\_fnfborder` analogically as \^`\_pgborder` (for example).
 
 There are \"low level" commands to create the links. You can specify the
 destination of the internal link by \^`\dest[<type>:<label>]`. The
