@@ -105,7 +105,7 @@ Sub-modifiers (selects special variants of given subfamily):^^J
 \_moddef \caps     {\_onlyif subfam=rm,tt:    {\_fvars rc . ic . }}
 
 \_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}} 
-\_let\_LMfonts=\LMfonts  \_let\_ttset=\ttset % used in \_tryloadtt
+\_private \LMfonts \ttset ; % used in \_tryloadtt
 
 \_initfontfamily % new font family must be initialized
 

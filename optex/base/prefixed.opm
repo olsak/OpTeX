@@ -37,10 +37,10 @@
 
 \_def \_pkglabel{}
 \_def \_public {\_xargs \_publicA}
-\_def \_publicA #1{\_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname} 
+\_def \_publicA #1{\_ea\_let \_ea#1\_csname  _\_csstring #1\_endcsname}
 
 \_def \_private {\_xargs \_privateA}
-\_def \_privateA #1{\_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1} 
+\_def \_privateA #1{\_ea\_let \_csname  _\_csstring #1\_endcsname =#1}
 
 \_public \public \private \xargs \ea ;
 
@@ -72,17 +72,19 @@
    \_doc -----------------------------
    The `\_mathsbon` and `\_mathsboff` are defined in `math-macros.opm` file.
    Now, we define the macros
-   \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}` and \`\_endnamespace`
+   \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}`, \`\_endnamespace`,
+   \`\_nspublic` and \`\_nsprivate`
    for package writers, see section~\ref[pkg-namespace].
    \_cod -----------------------------
 
+\_def \_pkglabel{}
 \_def\_namespace #1{%
    \_ifcsname namesp:#1\_endcsname \_errmessage
       {The name space "#1" is used already, it cannot be used twice}%
       \_endinput
-   \_else \_restorenamespace{#1}\_fi
+   \_else \_resetnamespace{#1}\_fi
 }
-\_def\_restorenamespace #1{%
+\_def\_resetnamespace #1{%
    \_ea \_gdef \_csname namesp:#1\_endcsname {}%
    \_gdef \_pkglabel{_#1}%
    \_directlua{
@@ -96,6 +98,13 @@
    \_ifmathsb \_mathsbon \_else \_mathsboff \_fi
    \_gdef \_pkglabel{}%
 }
+
+\_def \_nspublic {\_xargs \_nspublicA}
+\_def \_nspublicA #1{\_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname}
+
+\_def \_nsprivate {\_xargs \_nsprivateA}
+\_def \_nsprivateA #1{\_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1}
+
 
 \_endcode %----------------------------------------------------
 
@@ -227,15 +236,15 @@ The scope of the \^`\_namespace` command ends at the \^`\_endnamespace` command
 or when another \^`\_namespace` is used. This command checks
 if the same package label is not declared by the \^`\_namespace` twice.
 
-The \^`\public` macro does `\let\foo = \_<pkg>_foo` when 
-\^`\_namespace{<pkg>}` is declared. And the \^`\private` macro does reverse
+The \^`\_nspublic` macro does `\let\foo = \_<pkg>_foo` when
+\^`\_namespace{<pkg>}` is declared. And the \^`\_nsprivate` macro does reverse
 operation to it. Example: you can define `\def\.macro{...}` and then
-set it to the user name space by `\_public \macro;`.
+set it to the user name space by `\_nspublic \macro;`.
 
 Don't load another pakages (wich are using their own name space) inside your
-name space. Do load them before your your \^`\_namespace`~`{<pkg>}` is
+name space. Do load them before your \^`\_namespace`~`{<pkg>}` is
 initialized. Or close your name space by \^`\_endnamespace` and open it again
-(after other packages are loaded) by \^`\_restorenamespace`~`{<pkg>}`.
+(after other packages are loaded) by \^`\_resetnamespace`~`{<pkg>}`.
 
 If the package writer needs to declare a control 
 sequence by \^`\newif`, then there is an exception of the rule described above. Use
