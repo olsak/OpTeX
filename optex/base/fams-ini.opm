@@ -62,6 +62,11 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskervilleF]
 
+\_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
+   { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
+     -: {\initials} }
+\_famalias [Garamond]
+
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
