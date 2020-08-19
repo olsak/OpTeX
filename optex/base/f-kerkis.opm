@@ -1,0 +1,32 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Kerkis] \Kerkis {Free Bookman alternative with Greek letters}
+        {\semibold \sans \sanssemi \caps} {\rm \bf \it \bi \calli} {}
+        {[Kerkis]}
+        {\_def\_fontnamegen {[Kerkis\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \semibold .. semibold weight (only \rm, \it)^^J
+ \caps ...... caps & small caps (only \rm \bf, bad accents in \bf)^^J
+ \sans ...... sans serif^^J
+ \sanssemi .. semibold sans serif (only \rm, accented letters not available)^^J 
+Variant:^^J
+ \calli ..... Calligraphic (only upercase, lowercase letters equal to Italic)^^J
+}}
+
+\_moddef \resetmod {\_fvars {} -Bold -Italic -BoldItalic }
+\_moddef \semibold {\_fvars -SemiBold . -SemiBold-Italic . }
+\_moddef \caps     {\_fvars -SmallCaps.otf -BoldSmallCaps . . }
+\_moddef \sans     {\_fvars Sans Sans-Bold Sans-Italic Sans-BoldItalic }
+\_moddef \sanssemi {\_fvars Sans-SmallCaps . . . }
+
+\_famvardef \calli {\_fvars -Calligraphic . . . \rm}
+
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.

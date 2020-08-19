@@ -67,6 +67,10 @@
      -: {\initials} }
 \_famalias [Garamond]
 
+\_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
+   { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\rm\it}
+     \sanssemi: {\rm} -:{\calli}  }
+
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
