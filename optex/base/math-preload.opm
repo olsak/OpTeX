@@ -94,7 +94,7 @@
 \_regtfm cmbx 0 cmbx5 5.5 cmbx6 6.5 cmbx7 7.5 cmbx8 8.5 cmbx9 9.5 
                 cmbx10 11.1 cmbx12 *
 \_regtfm cmti 0 cmti7 7.5 cmti8 8.5 cmti9 9.5 cmti10 11.1 cmti12 *
-\_regtfm cmtt 0 cmtt10 11.1 cmtt12 *
+\_regtfm cmtt 0 cmtt8 8.5 cmtt9 9.5 cmtt10 11.1 cmtt12 *
 
 %% AMS math fonts, optical sizes:
 
@@ -103,8 +103,8 @@
 
 %% fraktur, rsfs, optical sizes:
 
-\_regtfm eufm 0 eufm5 5.5 eufm6 6.5 eufm7 7.5 eufm8 8.5 eufm9 9.5 eufm10 *
-\_regtfm eufb 0 eufb5 5.5 eufb6 6.5 eufb7 7.5 eufb8 8.5 eufb9 9.5 eufb10 *
+\_regtfm eufm 0 eufm5 6 eufm7 8.5 eufm10 *
+\_regtfm eufb 0 eufb5 6 eufb7 8.5 eufb10 *
 \_regtfm rsfs 0 rsfs5 6 rsfs7 8.5 rsfs10 *
 
 %% bf and bi sansserif math alternatives:

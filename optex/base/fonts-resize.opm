@@ -203,7 +203,7 @@
 \_regtfm lmbx 0 ec-lmbx5 5.5 ec-lmbx6 6.5 ec-lmbx7 7.5 ec-lmbx8 8.5 ec-lmbx9 9.5 
                 ec-lmbx10 11.1 ec-lmbx12 *
 \_regtfm lmri 0 ec-lmri7 7.5 ec-lmri8 8.5 ec-lmri9 9.5 ec-lmri10 11.1 ec-lmri12 *
-\_regtfm lmtt 0 ec-lmtt10 11.1 ec-lmtt12 *
+\_regtfm lmtt 0 ec-lmtt8 8.5 ec-lmtt9 9.5 ec-lmtt10 11.1 ec-lmtt12 *
 
 \_setfontsize {at10pt} % default font size
 
