@@ -11,12 +11,12 @@
    is read correctly with correct catcode settings.
 
    In order to achieve this, we declare \`\optexcatcodes` catcode table
-   and \`\plaintexcatocdes`. They save the commonly used catcode tables.
+   and \`\plaintexcatcodes`. They save the commonly used catcode tables.
    Note that `\catcodetable` is a part of \LuaTeX/ extension.
    The catcodetable stack is implemented by \OpTeX/ macros.
    The \`\setctable` `<catcode table>` pushes 
    current catcode table to the stack and activates catcodes from
-   the `<catcode table>`. The \`\restorectable` returns to the saved catocdes
+   the `<catcode table>`. The \`\restorectable` returns to the saved catcodes
    from the catcode table stack. So, the `\opinput` macro can be implemented simply:
    \_cod -----------------------------
 

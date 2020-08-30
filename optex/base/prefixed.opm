@@ -241,7 +241,7 @@ The \^`\_nspublic` macro does `\let\foo = \_<pkg>_foo` when
 operation to it. Example: you can define `\def\.macro{...}` and then
 set it to the user name space by `\_nspublic \macro;`.
 
-Don't load another pakages (wich are using their own name space) inside your
+Don't load another packages (which are using their own name space) inside your
 name space. Do load them before your \^`\_namespace`~`{<pkg>}` is
 initialized. Or close your name space by \^`\_endnamespace` and open it again
 (after other packages are loaded) by \^`\_resetnamespace`~`{<pkg>}`.
