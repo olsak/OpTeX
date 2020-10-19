@@ -19,6 +19,10 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<0.16> callback.register_x introduced, namespaces for packages corrected
+       kerkis and EBGaramond fontfiles added
+       little corrections
+       optex-math manual: Index added 
 <0.15> Release for Overleaf - TL2020.
        More vertical space above in \chap and \secc.
 <0.14> Typeseting Math with OpTeX: new document added.
