@@ -75,7 +75,7 @@
 \_chardef\_insertmin = 201 
 
 \_def\_newinsert #1{%
-   \_advance\_insertalloc by-1
+   \_global\_advance\_insertalloc by-1
    \_ifnum\_insertalloc <\_insertmin
       \_errmessage {No room for a new \_string\insert}%
    \_else
@@ -150,11 +150,11 @@ the array-like declarator of counters.
 \_maicount = \maicount  % first value is top of the array
 
 \def\newcountarray #1[#2]{% \newcountarray \foo[100]
-    \advance\_maicount by -#2\relax
+    \global\advance\_maicount by -#2\relax
     \ifnum \_countalloc > \_maicount
         \errmessage{No room for a new array of \string\count}%
     \else
-        \chardef#1=\_maicount
+        \global\chardef#1=\_maicount
     \fi
 }
 \def\usecount #1[#2]{%  \usecount \foo[2]
