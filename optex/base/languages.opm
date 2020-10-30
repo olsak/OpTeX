@@ -38,7 +38,7 @@
 \_langw de  Kapitel      Tabelle     Abbildung    Betreff
 \_langw es  Capítulo     Tabla       Figura       Sujeto
 \_langw fr  Chaptire     Tableau     Figure       Matière
-\_langw it  Capitolo     Tabella     Fig.         Soggetto
+\_langw it  Capitolo     Tabella     Fig.         Oggetto
 \_langw pl  Rozdział     Tabela      Ilustracja   Temat
 \_langw gr  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
 \_langw ru  Глава        Таблица     Рисунок      Предмет
@@ -64,6 +64,9 @@
              července srpna září října listopadu prosince
 \_monthw sk  januára februára marca apríla mája júna
              júla augusta septembra októbra novembra decembra
+\_monthw it  gennaio febbraio marzo aprile maggio giugno
+             luglio agosto settembre ottobre novembre dicembre
+             
 
 \_sdef{_mt:today:en}{\_mtext{m\_the\_month} \_the\_day, \_the\_year}
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year}
