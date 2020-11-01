@@ -42,7 +42,7 @@
 \_input hyphen  % en(USenglish) patterns from TeX82
 
    \_doc -----------------------------
-   \`\preplang` `<iso-code> <long-lang> <number-cs> <number> <pre-hyph><post-hyph>`
+   \`\_preplang` `<iso-code> <long-lang> <hyph-file-spec> <number> <pre-hyph><post-hyph>`
    prepares the\nl `\<iso-code>lang` to its initialization state. Roughly
    speaking, it does:
    \begtt \catcode`\<=13
@@ -50,33 +50,66 @@
    \def\_lan:<number> {<iso-code>}
    \def\_ulan:<long-lang> {<iso-code>}
    \def\_<iso-code>lang {%
-      \_loadpattrs <long-lang> <number> % loads patterns using Lua code
+      \_loadpattrs <hyph-file-spec> <number> <long-lang> % loads patterns using Lua code
       \gdef\_<iso-code>lang {\_uselang{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>}
       \_<iso-code>lang                  % runs itself in processing state
    }
    \def\<iso-code>lang {\_<iso-code>lang} % public version \<iso-code>lang
    \endtt
-   You can see that `\<iso-code>lang` runs \`\_loadpattrs` `<long-lang> <iso-code>`
-   in initialization state and \^`\_uselang` in processing state.
+   You can see that `\<iso-code>lang` runs \^`\_loadpattrs` and
+   \^`\_uselang` first (in initialization state) and it runs 
+   only \^`\_uselang` when it is called again (in processing state).
    \_cod -----------------------------
 
-\_def\_preplang #1 #2 #3#4 #5 {%
-   \_chardef#3=#4
-   \_sdef{_lan:#4}{#1}\_lowercase{\_sdef{_ulan:#2}}{#1}%  
-   \_def\_next{\_ea\_noexpand\_csname _#1lang\_endcsname}
+\_def\_preplang #1 #2 #3 #4 #5 {%
+   \_ea\_chardef \_csname _#1Patt\_endcsname=#4
+   \_sdef{_lan:#4}{#1}\_lowercase{\_sdef{_ulan:#2}}{#1}%
+   \_def\_next{\_ea\_noexpand\_csname _#1lang\_endcsname}%
    \_ea\_edef \_csname _#1lang\_endcsname {%
-      \_lowercase{\_noexpand\_loadpattrs #2} #4 % loads patterns
-      \_gdef\_next{\_noexpand\_uselang{#1}#3#5}%  re-defines itself
+      \_noexpand\_loadpattrs #3 #4 #2 % loads patterns
+      \_gdef\_next{\_noexpand\_uselang{#1}\_csname _#1Patt\_endcsname #5}% re-defines itself
       \_next                                   %  runs itself in processing state
    }
    \_addto\_langlist{ #1(#2)}%
    \_sdef{#1lang\_ea}\_ea{\_csname _#1lang\_endcsname}% unprefixed \<isocode>lang
 }
-\_def\_loadpattrs#1 #2 {%
+
+   \_doc -----------------------------
+   \`\_loadpattrs` `<hyph-file-spec> <number> <long-lang>`
+   loads hyphenation patterns and hyphenation exceptions for given language
+   and registers them as `\language=<number>`.
+
+   The <hyph-file-spec> is a part of full file name wich is read:
+   `hyph-<hyph-file-spec>.pat.txt`. The patterns is saved here in UTF-8
+   encoding. If the <hyph-file-spec> ends by plus character then this
+   character is ignored when file name is constructed but it tells 
+   that not only patterns but the hyphenation exceptions is read from the
+   `hyph-<hyph-file-spec>.hyp.txt` file too.
+   The <hyph-file-spec> should be a list of individual <hyph-file-spec>'s
+   separated by comma, see the language Serbian below for example.
+   \_cod -----------------------------
+
+\_def\_loadpattrs#1 #2 #3 {%
+   \_wlog{Loading hyphenation #3: (#1) \_string\language=#2}%
    \_directlua{
-      require("luatex-hyphen")
-      luatexhyphen.loadlanguage("#1",#2)
-   }%
+      local function read_file(name)
+         local file = kpse.find_file(name) or tex.error("Can't find hyphenation "..
+               "file '"..name.."', perhaps you don't have the right package "..
+               "installed?")
+         local f = assert(io.open(file, "r"))
+         local data = assert(f:read("*a"))
+         f:close()
+         return data
+      end
+      local l = lang.new(#2)
+      for _, hyph in ipairs(string.explode("#1", ",")) do
+         local lname, plus = string.gsub(hyph, "+", "")
+         lang.patterns(l, read_file("hyph-"..lname..".pat.txt"))
+         if plus > 0 then % plus means "also load exceptions"
+            lang.hyphenation(l, read_file("hyph-"..lname..".hyp.txt"))
+         end
+      end
+    }%
 }
 
    \_doc -----------------------------
@@ -108,64 +141,84 @@
    but we load only Unicode patterns (greater than 100), of course.
    \_cod -----------------------------
 
-\_preplang enus USenglishmax \_enusPatt 100 23
-\_preplang engb UKenglish    \_engbPatt 101 23
-\_preplang it   Italian      \_itPatt 102 22
-\_preplang ia   Interlingua  \_iaPatt 103 22
-\_preplang id   Indonesian   \_idPatt 104 22
+\_preplang enus  USenglishmax    en-us+            100 23
+\_preplang engb  UKenglish       en-gb+            101 23
+\_preplang it    Italian         it                102 22
+\_preplang ia    Interlingua     ia+               103 22
+\_preplang id    Indonesian      id+               104 22
 
-\_preplang cs   Czech      \_csPatt 115 23
-\_preplang sk   Slovak     \_skPatt 116 23
-\_preplang de   nGerman    \_dePatt 121 22
-\_preplang fr   French     \_frPatt 122 22
-\_preplang pl   Polish     \_plPatt 123 22 
-\_preplang cy   Welsh      \_cyPatt 124 23
-\_preplang da   Danish     \_daPatt 125 22
-\_preplang es   Spanish    \_esPatt 126 22
-\_preplang sl   Slovenian  \_slPatt 128 22
-\_preplang fi   Finnish    \_fiPatt 129 22
-\_preplang hu   Hungarian  \_huPatt 130 22
-\_preplang tr   Turkish    \_trPatt 131 22
-\_preplang et   Estonian   \_etPatt 132 23
-\_preplang eu   Basque     \_euPatt 133 22
-\_preplang ga   Irish      \_gaPatt 134 23
-\_preplang nb   Bokmal     \_nbPatt 135 22
-\_preplang nn   Nynorsk    \_nnPatt 136 22
-\_preplang nl   Dutch      \_nlPatt 137 22
-\_preplang pt   Portuguese \_ptPatt 138 23
-\_preplang ro   Romanian   \_roPatt 139 22
-\_preplang hr   Croatian   \_hrPatt 140 22
-\_preplang zh   Pinyin     \_zhPatt 141 11
-\_preplang is   Icelandic  \_isPatt 142 22
-\_preplang hsb  Uppersorbian \_hsbPatt 143 22
-\_preplang af   Afrikaans  \_afPatt 144 12
-\_preplang gl   Galician   \_glPatt 145 22
-\_preplang kmr  Kurmanji   \_kmrPatt 146 22
-\_preplang tk   Turkmen    \_tkPatt 147 22
-\_preplang la   Latin      \_laPatt 148 22
-\_preplang lac  classicLatin \_lacPatt 149 22
-\_preplang lal  liturgicalLatin \_lalPatt 150 22
-\_preplang elm  monoGreek  \_elmPatt 201 11
-\_preplang elp  Greek      \_elpPatt 202 11
-\_preplang grc  ancientGreek \_grcPatt 203 11
-\_preplang ca   Catalan    \_caPatt 204 22
-\_preplang cop  Coptic     \_copPatt 205 11
-\_preplang mn   Mongolian  \_mnPatt 206 22
-\_preplang sa   Sanskrit   \_saPatt 207 13
-\_preplang ru   Russian    \_ruPatt 208 22
-\_preplang uk   Ukrainian  \_ukPatt 209 22
-\_preplang hy   Armenian   \_hyPatt 210 12
-\_preplang as   Assamese   \_asPatt 211 11
-\_preplang hi   Hindi      \_hiPatt 212 11
-\_preplang kn   Kannada    \_knPatt 213 11
-\_preplang lv   Latvian    \_lvPatt 215 22
-\_preplang lt   Lithuanian \_ltPatt 216 22
-\_preplang ml   Malayalam  \_mlPatt 217 11
-\_preplang mr   Marathi    \_mrPatt 218 11
-\_preplang or   Oriya      \_orPatt 219 11
-\_preplang pa   Panjabi    \_paPatt 220 11
-\_preplang ta   Tamil      \_taPatt 221 11
-\_preplang te   Telugu     \_tePatt 222 11
+\_preplang cs    Czech           cs+               115 23
+\_preplang sk    Slovak          sk+               116 23
+\_preplang de    nGerman         de-1996           121 22
+\_preplang fr    French          fr                122 22
+\_preplang pl    Polish          pl+               123 22
+\_preplang cy    Welsh           cy                124 23
+\_preplang da    Danish          da                125 22
+\_preplang es    Spanish         es                126 22
+\_preplang sl    Slovenian       sl                128 22
+\_preplang fi    Finnish         fi                129 22
+\_preplang hu    Hungarian       hu                130 22
+\_preplang tr    Turkish         tr                131 22
+\_preplang et    Estonian        et                132 23
+\_preplang eu    Basque          eu                133 22
+\_preplang ga    Irish           ga+               134 23
+\_preplang nb    Bokmal          nb+               135 22
+\_preplang nn    Nynorsk         nn+               136 22
+\_preplang nl    Dutch           nl+               137 22
+\_preplang pt    Portuguese      pt+               138 23
+\_preplang ro    Romanian        ro                139 22
+\_preplang hr    Croatian        hr                140 22
+\_preplang zh    Pinyin          zh-latn-pinyin    141 11
+\_preplang is    Icelandic       is                142 22
+\_preplang hsb   Uppersorbian    hsb+              143 22
+\_preplang af    Afrikaans       af+               144 12
+\_preplang gl    Galician        gl                145 22
+\_preplang kmr   Kurmanji        kmr               146 22
+\_preplang tk    Turkmen         tk                147 22
+\_preplang la    Latin           la                148 22
+\_preplang lac   classicLatin    la-x-classic      149 22
+\_preplang lal   liturgicalLatin la-x-liturgic     150 22
+\_preplang elm   monoGreek       el-monoton        201 11
+\_preplang elp   Greek           el-polyton        202 11
+\_preplang grc   ancientGreek    grc               203 11
+\_preplang ca    Catalan         ca+               204 22
+\_preplang cop   Coptic          cop               205 11
+\_preplang mn    Mongolian       mn-cyrl           206 22
+\_preplang sa    Sanskrit        sa                207 13
+\_preplang ru    Russian         ru+               208 22
+\_preplang uk    Ukrainian       uk                209 22
+\_preplang hy    Armenian        hy                210 12
+\_preplang as    Assamese        as                211 11
+\_preplang hi    Hindi           hi                212 11
+\_preplang kn    Kannada         kn                213 11
+\_preplang lv    Latvian         lv                215 22
+\_preplang lt    Lithuanian      lt                216 22
+\_preplang ml    Malayalam       ml                217 11
+\_preplang mr    Marathi         mr                218 11
+\_preplang or    Oriya           or                219 11
+\_preplang pa    Panjabi         pa                220 11
+\_preplang ta    Tamil           ta                221 11
+\_preplang te    Telugu          te                222 11
+
+\_preplang be    Belarusian      be                223 22
+\_preplang bg    Bulgarian       bg                224 22
+\_preplang bn    Bengali         bn                225 11
+\_preplang cu    churchslavonic  cu+               226 12
+\_preplang deo   oldGerman       de-1901           227 22
+\_preplang gsw   swissGerman     de-ch-1901        228 22
+\_preplang eo    Esperanto       eo                229 22
+\_preplang fur   Friulan         fur               230 22
+\_preplang gu    Gujarati        gu                231 11
+\_preplang ka    Georgian        ka                232 12
+\_preplang mk    Macedonian      mk                233 22
+\_preplang oc    Occitan         oc                234 22
+\_preplang pi    Pali            pi                235 12
+\_preplang pms   Piedmontese     pms               236 22
+\_preplang rm    Romansh         rm                237 22
+\_preplang sr    Serbian         sh-cyrl+,sh-latn+ 238 22
+\_preplang sv    Swedish         sv                239 22
+\_preplang th    Thai            th                240 23
+\_preplang ethi  Ethiopic        mul-ethi          241 11
 
    \_doc -----------------------------
    The \`\langlist` includes names of all languages which are ready to load
