@@ -3,7 +3,7 @@
 \_famdecl [Lido] \Lido {by StormType Foundry designed for "lidove noviny"}
         {\caps \cond} {\rm \bf \mr \mi \it \bi} {Termes}
         {[LidoSTF]}
-        {\_def\_fontnamegen {[LidoSTF\_condV\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[LidoSTF\_condV\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Variants:^^J
