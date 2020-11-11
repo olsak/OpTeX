@@ -86,7 +86,7 @@
 \_public \newinsert ;
 
    \_doc -----------------------------
-   Other allocation macros \`\newattribute` and \`\newcatodetable`
+   Other allocation macros \`\newattribute` and \`\newcatcodetable`
    have their counter allocated by the `\newcount` macro.
    \_cod -----------------------------
 

@@ -32,14 +32,14 @@
 \_newifi\_ifmathsb   \_mathsbfalse
 \_def \_mathsbon {%
    \_directlua{
-   callback.register_x("process_input_buffer",
+   callback.add_to_callback("process_input_buffer",
      function (str)
        return string.gsub(str.." ", "(\_nbb[a-zA-Z]+)_([a-zA-Z]?[^_a-zA-Z])", "\_pcent 1 _\_pcent 2")
-     end) }%
+     end, "_mathsb") }%
    \_global\_mathsbtrue
 }
 \_def \_mathsboff {%
-   \_directlua{ callback.register_x("process_input_buffer", nil) }%
+   \_directlua{ callback.remove_from_callback("process_input_buffer", "_mathsb") }%
    \_global \_mathsbfalse
 }
 \_public \mathsboff \mathsbon ;

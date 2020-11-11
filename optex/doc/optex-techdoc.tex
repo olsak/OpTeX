@@ -71,12 +71,16 @@ The `\_codedecl` will be re-defined later.
 Individual `*.opm` macro files are read.
 
 \verbinput (44-87) optex.ini
-
 %
+The file `optex.lua` is embedded into the format as byte-code.
+It is documented in section~\ref[lua].
+
+\verbinput (89-92) optex.ini
+
 The `\everyjob` register is initialized and the format is saved by 
 the `\dump` command.
 
-\verbinput (89-97) optex.ini
+\verbinput (94-102) optex.ini
 
 }
 
@@ -243,6 +247,24 @@ The `\margins` macro is documented in the section~\ref[marg].
 \sec Other macros
 Miscellaneous macros are here.
 \printdoc others.opm
+
+\sec[lua] Lua code embedded to the format
+
+The file `optex.lua` is loaded into the format in `optex.ini` as byte-code
+and initialized by `\everyjob`, see section~\ref[init].
+
+The file implements part of the functionality from `luatexbase` namespace,
+nowadays defined by \LaTeX/ kernel. `luatexbase` deals with modules,
+allocators and callback management. Callback management is a nice extension
+and is actually used in \OpTeX/. Other functions are defined more or less just
+to suit luaotfload's use.
+
+{\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
+ \def\docfile{optex.lua}
+
+\verbinput (-) optex.lua
+}
+
 
 \sec Printing documentation
 \printdoctail doc.opm

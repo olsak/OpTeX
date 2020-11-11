@@ -3,25 +3,23 @@
 \_codedecl \fontfam {Fonts selection system <2020-03-18>} % preloaded in format
 
    \_doc -----------------------------
-   The \`\initunifonts` initializes extended `\font` primitive 
-   (to be able to load Unicode fonts). Unfortunately, this part of
-   \OpTeX/ depends on \LaTeX/ lua codes `ltluatex.lua` and
-   `luaotfload-main.lua`. And this code need to be declared a
-   control sequence `\e@alloc@attribute@count` by `\countdef` primitive.
-   Moreover, the `\initunifont` switches with 
+   \`\initunifonts` macro extends \LuaTeX's font capabalities,
+   in order to be able to load Unicode fonts. Unfortunately, this part of
+   \OpTeX/ depends on `luaotfload` package, which adapts Con\TeX/t's generic
+   font loader for plain \TeX/ and \LaTeX. `luaotfload` uses Lua functions
+   from \LaTeX's `luatexbase` namespace, we provide our own replacements.
+   Moreover, `\initunifont` switches with
    the \^`\_doresizefont` macro to OTF mode which is represented by the
    macro \`\_doresizeunifont`. This mode includes
    a fallback to TFM mode if \^`\_fontnamegen` is not defined.
-   Finally, the `\initunifnt` sets itself to relax because we need not to do
+   Finally, `\initunifont` sets itself to relax because we don't want to do
    this work twice.
    \_cod -----------------------------
 
 \_def\_initunifonts {%
-   \_ea\_newcount \_csname e@alloc@attribute@count\_endcsname
-   \_global \_csname e@alloc@attribute@count\_endcsname=-1   
-   \_directlua{%
-      require("ltluatex")
-      require('luaotfload-main') local _void = luaotfload.main ()
+   \directlua{%
+      require('luaotfload-main')
+      luaotfload.main()
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
    \_global\_let \_doresizefont=\_doresizeunifont

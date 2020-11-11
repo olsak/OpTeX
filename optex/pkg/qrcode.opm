@@ -2527,7 +2527,7 @@
   \_fi
 }%
 
-\_public \qrcode \qrset ;
+\_nspublic \qrcode \qrset ;
 
 \_def\.qrcode_int_new{%
   \.qrbeginhook

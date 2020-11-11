@@ -88,14 +88,14 @@
    \_ea \_gdef \_csname namesp:#1\_endcsname {}%
    \_gdef \_pkglabel{_#1}%
    \_directlua{
-      callback.register_x("process_input_buffer",
+      callback.add_to_callback("process_input_buffer",
         function (str)
            return string.gsub(str, "\_nbb[.]([a-zA-Z])", "\_nbb _#1_\_pcent 1")
-        end )
+        end, "_namespace")
    }%
 }
 \_def\_endnamespace {%
-   \_ifmathsb \_mathsbon \_else \_mathsboff \_fi
+   \_directlua{ callback.remove_from_callback("process_input_buffer", "_namespace") }%
    \_gdef \_pkglabel{}%
 }
 
