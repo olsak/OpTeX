@@ -12,7 +12,7 @@
    the \^`\_doresizefont` macro to OTF mode which is represented by the
    macro \`\_doresizeunifont`. This mode includes
    a fallback to TFM mode if \^`\_fontnamegen` is not defined.
-   Finally, `\initunifont` sets itself to relax because we don't want to do
+   Finally, `\initunifonts` sets itself to relax because we don't want to do
    this work twice.
    \_cod -----------------------------
 
@@ -660,6 +660,34 @@ with Unicode fonts loaded by \^`\fontfam`.
 %---------------------------------------------------------------
 
 \printdoctail fams-ini.opm
+
+\secc[exfont] Notices about extension of `\font` primitive
+%---------------------------------------------------------
+
+Unicode fonts are dealed by extended `\font` primitive. This extension is
+not activated in \OpTeX/ by default, \^`\initunifonts` macro activates it.
+You need not to use \^`\initunifonts` explicitly if \^`\fontfam` macro is
+used because \^`\fontam` runs it internally.
+
+The \^`\initunifonts` loads the lua code from Luaotfload package which
+actually implements the `\font` primitive extension. See its
+documentation `luaotfload-latex.pdf` for information about
+all possibilities of extended `\font` primitive.
+
+The \OpTeX/ format is initialized by `luatex` engine by default but
+you can initialize it by `luahbtex` engine too. Then the harfbuzz library is
+ready to use for font rendering as an alternative of build-in font renderer
+from Luaotfload. The harfbuzz library gives more features for rendering
+indic and arabic scripts. But it is not used as default, you need to specify
+`mode=harf` in fontfeatures field when `\font` is used. Moreover, when
+`mode=harf` is used, then you must specify `script` too. For example
+
+\begtt
+\font\devafont=[NotoSansDevanagari-Regular]:mode=harf;script=dev2
+\endtt
+%
+If `luahbtex` engine is not used then `mode=harf` is ignored. See
+Luaotfload documentation for more information.
 
 \endinput
 

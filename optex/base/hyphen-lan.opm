@@ -88,14 +88,16 @@
 
 \_def\_loadpattrs#1 #2 #3 {%
    \_wlog{Loading hyphenation #3: (#1) \_string\language=#2}%
-   \_begingroup
-      \_let\patterns=\_patterns \_let\hyphenation=\_hyphenation \_language=#2\_def\\{#3}%
+   \_begingroup\_setbox0=\_vbox{% we don't want spaces in horizontal mode
+      \_language=#2\_def\\{#3}%
+      \_let\patterns=\_patterns \_let\hyphenation=\_hyphenation \_def\message##1{}%
       \_loadpattrsA #1,,%
-   \_endgroup
+   }\_endgroup
 }
 \_def\_loadpattrsA #1,{\_ifx,#1,\_else
    \_isfile {hyph-#1}\_iftrue \_opinput{hyph-#1}%
-   \_else \_opwarning{Hyph. patterns #1 for \\ not loaded, probably missing package}\_fi
+   \_else \_opwarning{Hyph. patterns #1 for \\ not loaded, probably missing package}%
+          \_def\_opwarning##1{}\_fi
    \_ea \_loadpattrsA \_fi
 }
 
