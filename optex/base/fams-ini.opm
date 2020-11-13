@@ -14,7 +14,7 @@
        \ttprop,\ttprop\bolder,\quotset: {\rm\bf\it\bi}
        \caps: {\rm\it}
        \ttlight,\ttcond,\dunhill: {\rm\it} \upital: {\rm} }
-\_famalias [LMfonts] \_famalias [Latin Modern Fonts]
+\_famalias [LMfonts] \_famalias [Latin Modern Fonts] \_famalias [lm]
 
 \_famtext {TeX Gyre fonts based on Adobe 35:}
 

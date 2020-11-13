@@ -74,7 +74,7 @@
    Now, we define the macros
    \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}`, \`\_endnamespace`,
    \`\_nspublic` and \`\_nsprivate`
-   for package writers, see section~\ref[pkg-namespace].
+   for package writers, see section~\ref[pkg-namespace].{\hbadness=2200\par}
    \_cod -----------------------------
 
 \_def \_pkglabel{}

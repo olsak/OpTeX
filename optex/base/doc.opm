@@ -116,7 +116,7 @@
 }
 \_everytt={\_let\_printverblinenum=\_relax}
 
-\_long\_def\_endverbprinting#1\_end{\_fi \_global\_maxlines=100000
+\_long\_def\_endverbprinting#1\_end#2\_end{\_fi\_fi \_global\_maxlines=100000
    \_noindent\_typosize[8/]\_dots etc. (see {\_tt\Brown\docfile})}
 
    \_doc -----------------------------

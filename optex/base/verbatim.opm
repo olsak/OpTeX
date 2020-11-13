@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2020-04-22>} % preloaded in format
+\_codedecl \begtt {Verbatim <2020-11-13>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters 
@@ -109,16 +109,10 @@
    active characters (defined as {\visiblesp`\ `}). 
    Other characters have normal category 11 or 12.  
 
-   When `\_prepareverbdata` finishes then `\_startverb` runs \`\_printverb` loop
+   When `\_prepareverbdata` finishes then `\_startverb` runs `\_printverb` loop
    over each line of the data and does a final work: last skip plus `\noindent`
    in the next paragraph. 
-
-   The `\_printverb` macro calls \`\_printverbline``{<line>}` to each scanned line of
-   verbatim text. This macro expect that it strarts in vertical mode and it must
-   do `\par` in order to return the vertical mode. The \`\_printverblinenum`
-   is used here: it does nothing when `\_ttline`\code{<0} else it prints the line
-   number using `\_llap`.
-   \_cod ----------------------------
+   \_cod ---------------------------
 
 \_eoldef \begtt#1{\_par \_wipeepar \_setxhsize
    \_vskip\_parskip \_ttskip
@@ -128,6 +122,7 @@
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt \_relax #1\_relax \_ttfont
+   \_def\_testcommentchars##1\_iftrue{\_iffalse}%
    \_endlinechar=`^^J
    \_startverb
 }
@@ -138,19 +133,45 @@
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
-\_def\_printverb #1^^J#2{\_ifx\_end#2
-      \_bgroup \_adef{ }{}\_def\t{}%
-          \_ifcat&#1&\_egroup \_else\_egroup \_printverbline{#1}\_fi
-   \_else
-      \_printverbline{#1}%
-      \_ea \_printverb \_ea #2%
-   \_fi
-}
 \_def\_prepareverbdata#1#2{\_def#1{#2}}
+
+   \_doc
+   The \`\_printverb` macro calls \^`\_printverbline``{<line>}` repeatedly
+   to each scanned line of verbatim text. The `\_printverb` is used from
+   `\begtt...\endtt` and from `\verbinput` too.
+
+   The \^`\_testcommentchars` replaces the following `\_iftrue` to
+   `\_iffalse` by default unless the \^`\commentchars` are set. So, main body
+   of the loop is written in `\_else` part of the `\_iftrue` condition.
+   The \^`\_printverbline``{<line>}` is called here.
+
+   The \`\_printverbline``{<line>}` expects that it starts in vertical mode and it must
+   do `\par` in order to return the vertical mode. The \`\_printverblinenum`
+   is used here: it does nothing when `\_ttline`\code{<0} else it prints the line
+   number using `\_llap`.
+   \_cod ----------------------------
+
+\_def\_printverb #1^^J#2{%
+   \_ifx\_printverblinenum\_relax \_else \_global\_advance\_ttline by1 \_fi
+   \_testcommentchars #1\_relax\_relax\_relax
+   \_iftrue
+      \_ifx\_end#2 \_printcomments\_fi
+   \_else
+      \_ifx\_vcomments\_empty\_else  \_printcomments \_def\_vcomments{}\_fi
+      \_ifx\_end#2
+         \_bgroup \_adef{ }{}\_def\t{}% if the last line is emtpy, we don't print it
+         \_ifcat&#1&\_egroup \_else\_egroup \_printverbline{#1}\_fi
+      \_else
+         \_printverbline{#1}%
+      \_fi
+   \_fi
+   \_ifx\_end#2 \_let\_next=\_relax \_else \_def\_next{\_printverb#2}\_fi
+   \_next
+}
 \_def\_printverbline#1{\_penalty \_ttpenalty 
    \_indent \_printverblinenum \_kern\_ttshift #1\par}
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
-\_def\_printverblinenum{\_global\_advance\_ttline by1 \_llap{\_sevenrm \_the\_ttline\_kern.9em}}
+\_def\_printverblinenum{\_llap{\_sevenrm \_the\_ttline\_kern.9em}}
 
    \_doc ----------------------------
    Macro \`\verbinput` uses a file read previously or opens the given file. Then
@@ -247,6 +268,57 @@
 \_public \verbinput ;
 
    \_doc -----------------------------
+   If the language of your code printed by \^`\verbinput` supports the
+   format of comments started by two characters from beginning of the
+   line then you can set these characters by \`\commentchars``<first><second>`.
+   Such comments are printed in non-verbatim mode without these two
+   characters and they look like the verbatim printing is interrupred
+   at the places where such comments are.
+   See the section~\ref[lua] for good illustration.
+   The file `optex.lua` is read by single command
+   `\verbinput (4-) optex.lua` here and the `\commentchars --` was set before it.
+
+   If you need to set a special character by \^`\commentchars` then you must
+   to set the catcode to 12 (and space to 13). Examples:
+   \begtt
+   \commentchars //        % C++ comments
+   \commentchars --        % Lua comments
+   {\catcode`\%=12 \_ea}\commentchars %%                  % TeX comments
+   {\catcode`\#=12 \catcode`\ =13 \_ea}\commentchars#{ }  % bash comments
+   \endtt
+
+   The \^`\commentchars``<first><second>` redefines the \`\_testcommentchars`
+   used in \^`\_printverb` in order to it removes the following `\_iftrue`
+   and returns `\_iftrue` or `\_iffalse` depending on the fact that
+   the comment characters are or aren't present at the beginning ot tested line.
+   If it is true (`\ifnum` expands to `\ifnum 10>0`) then the rest of the
+   line is added to the \`\_vcomments` macro.
+
+   The accumulated comments are printed whenever the non-comment line
+   occurs. This is done by \`\_printcomments` macro.
+   You can re-define it, but main idea must be kept: it is printed in the
+   group, `\_reloding \_rm` initializes normal font, `\catcodetable0`
+   returns to normal catcode table used before `\verbinput` is started, and
+   the text accumulated in `\_vcomments` must be printed by
+   `\_scantextokens` primitive.
+   \_cod -----------------------------
+
+\_def\_vcomments{}
+
+\_def\_commentchars#1#2{%
+   \_def\_testcommentchars ##1##2##3\_relax ##4\_iftrue{\_ifnum % not closed in this macro
+      \_ifx #1##1\_ifx#2##21\_fi\_fi 0>0
+      \_ifx\_relax##3\_relax \_addto\_vcomments{\_endgraf}% empty comment=\enfgraf
+      \_else \_addto\_vcomments{##3 }\_fi
+}}
+\_def\_testcommentchars #1\_iftrue{\_iffalse} % default value of \_testcommentchar
+\_def\_printcomments{\_bigskip
+   {\_catcodetable0 \_reloading \_rm \_everypar={}\_scantextokens\_ea{\_vcomments}}%
+   \_bigskip
+}
+\_public \commentchars ;
+
+   \_doc -----------------------------
    The \`\visiblesp` sets spaces as visible characters \char9251.
    It redefines {\visiblesp`\ `} primitive, so it is useful for verbatim modes only.
    \_cod -----------------------------
@@ -261,6 +333,7 @@
 \_endinput
 
 History:
+2020-11-13 ... \commentchars implemented
 2020-04-22 ... \ttshift introduced
 2020-04-06 ... \visiblesp added
 2020-04-04 ... ^^I activated as \t for multiline verbatim

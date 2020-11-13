@@ -667,7 +667,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 Unicode fonts are dealed by extended `\font` primitive. This extension is
 not activated in \OpTeX/ by default, \^`\initunifonts` macro activates it.
 You need not to use \^`\initunifonts` explicitly if \^`\fontfam` macro is
-used because \^`\fontam` runs it internally.
+used because \^`\fontfam` runs it internally.
 
 The \^`\initunifonts` loads the lua code from Luaotfload package which
 actually implements the `\font` primitive extension. See its

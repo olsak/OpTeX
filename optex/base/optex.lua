@@ -1,6 +1,6 @@
 -- This is part of OpTeX project, see http://petr.olsak.net/optex
 
--- The basic lua functions and declarations used in OpTeX are here
+-- The basic lua functions and declarations used in \OpTeX/ are here
 
 -- GENERAL
 
@@ -8,17 +8,17 @@
 local function err(message)
     error("\nerror: "..message.."\n")
 end
-
--- For a \chardef'd, \countdef'd, etc., csname return corresponding register
--- number. The responsibility of providing a \XXdef'd name is on the caller.
+--
+-- For a `\chardef`'d, `\countdef`'d, etc., csname return corresponding register
+-- number. The responsibility of providing a `\XXdef`'d name is on the caller.
 function registernumber(name)
     return token.create(name).index
 end
-
+--
 -- ALLOCATORS
 alloc = alloc or {}
-
--- An attribute allocator in Lua that cooperates with normal OpTeX allocator.
+--
+-- An attribute allocator in Lua that cooperates with normal \OpTeX/ allocator.
 local attributes = {}
 local attribute_max = registernumber("_maiattribute")
 function alloc.new_attribute(name)
@@ -32,31 +32,31 @@ function alloc.new_attribute(name)
         return cnt
     end
 end
-
+--
 -- CALLBACKS
 callback = callback or {}
-
--- Save callback.register function for internal use.
+--
+-- Save `callback.register` function for internal use.
 local callback_register = callback.register
 function callback.register(name, fn)
     err("direct registering of callbacks is forbidden, use 'callback.add_to_callback'")
 end
-
+--
 -- Table with lists of functions for different callbacks.
 local callback_functions = {}
 -- Table that maps callback name to a list of descriptions of its added
--- functions. The order corresponds with callback_functions.
+-- functions. The order corresponds with `callback_functions`.
 local callback_description = {}
-
+--
 -- Table used to differentiate user callbacks from standard callbacks. Contains
 -- user callbacks as keys.
 local user_callbacks = {}
 -- Table containing default functions for callbacks, which are called if either
 -- a user created callback is defined, but doesn't have added functions or for
--- standard callbacks that are "extended" (see mlist_to_hlist and its pre/post
+-- standard callbacks that are \"extended" (see `mlist_to_hlist` and its pre/post
 -- filters below).
 local default_functions = {}
-
+--
 -- Table that maps standard (and later user) callback names to their types.
 local callback_types = {
     -- file discovery
@@ -140,8 +140,7 @@ local callback_types = {
     -- undocumented
     glyph_stream_provider = "exclusive",
 }
-
-
+--
 -- Return a list containing descriptions of added callback functions for
 -- specific callback.
 function callback.callback_descriptions(name)
@@ -155,9 +154,9 @@ local valid_callback_types = {
     list = true,
     reverselist = true,
 }
-
+--
 -- Create a user callback that can only be called manually using
--- "call_callback". A default function is only needed by "exclusive" callbacks.
+-- `call_callback`. A default function is only needed by "exclusive" callbacks.
 function callback.create_callback(name, cbtype, default)
     if callback_types[name] then
         err("cannot create callback '"..name.."' - it already exists")
@@ -171,12 +170,12 @@ function callback.create_callback(name, cbtype, default)
     default_functions[name] = default or nil
     user_callbacks[name] = true
 end
-
+--
 -- Add a function to the list of functions executed when callback is called.
 -- For standard luatex callback a proxy function that calls our machinery is
 -- registered as the real callback function. This doesn't happen for user
--- callbacks, that are called manually by user using "call_callback" or for
--- standard callbacks that have default functions - like "mlist_to_hlist" (see
+-- callbacks, that are called manually by user using `call_callback` or for
+-- standard callbacks that have default functions -- like `mlist_to_hlist` (see
 -- below).
 function callback.add_to_callback(name, fn, description)
     if user_callbacks[name] or callback_functions[name] or default_functions[name] then
@@ -205,7 +204,7 @@ function callback.add_to_callback(name, fn, description)
     callback_description[name] = callback_description[name] or {}
     table.insert(callback_description[name], description)
 end
-
+--
 -- Remove a function from the list of functions executed when callback is
 -- called. If last function in the list is removed delete the list entirely.
 function callback.remove_from_callback(name, description)
@@ -235,7 +234,7 @@ function callback.remove_from_callback(name, description)
 
     return fn, description
 end
-
+--
 -- helper iterator generator for iterating over reverselist callback functions
 local function reverse_ipairs(t)
     local i, n = #t + 1, 1
@@ -246,11 +245,11 @@ local function reverse_ipairs(t)
         end
     end
 end
-
+--
 -- Call all functions added to callback. This function handles standard
 -- callbacks as well as user created callbacks. It can happen that this
--- function is called when no functions were added to callback - like for user
--- created callbacks or "mlist_to_hlist" (see below), these are handled either
+-- function is called when no functions were added to callback -- like for user
+-- created callbacks or `mlist_to_hlist` (see below), these are handled either
 -- by a default function (like for "mlist_to_hlist" and those user created
 -- callbacks that set a default function) or by doing nothing for empty
 -- function list.
@@ -304,9 +303,9 @@ function callback.call_callback(name, ...)
     end
     return not changed or head
 end
-
--- Create "virtual" callbacks pre/post_mlist_to_hlist_filter by setting
--- mlist_to_hlist callback. The default behaviour of mlist_to_hlist is kept by
+--
+-- Create \"virtual" callbacks pre/post_mlist_to_hlist_filter by setting
+-- `mlist_to_hlist` callback. The default behaviour of `mlist_to_hlist` is kept by
 -- using a default function, but it can still be overriden by using
 -- add_to_callback.
 default_functions["mlist_to_hlist"] = node.mlist_to_hlist
@@ -336,8 +335,8 @@ callback_register("mlist_to_hlist", function(head, ...)
     end
     return head
 end)
-
--- Compatibility with LaTeX through luatexbase namespace. Needed for
+--
+-- Compatibility with \LaTeX/ through luatexbase namespace. Needed for
 -- luaotfload.
 luatexbase = {
     registernumber = registernumber,

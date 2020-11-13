@@ -247,6 +247,7 @@
 
 \_let \setminus=\smallsetminus
 \_let \diamond=\smwhtdiamond
+\_let \colon=\mathcolon
 \_let \bullet=\smblkcircle
 \_let \circ=\vysmwhtcircle
 \_let \bigcirc=\mdlgwhtcircle

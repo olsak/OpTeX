@@ -81,7 +81,7 @@
   \_delimitershortfall=0.5\_fontdimen6\_textfont3
   \_nulldelimiterspace=0.12\_fontdimen6\_textfont3
   \_scriptspace=0.05\_fontdimen6\_textfont3
-  {\_everymath{}\_global\_setbox0=\_hbox{$\_displaystyle{0\_atop0}$}}% correction for \choose
+  {\_everymath{}\_global\_setbox0=\_hbox{$\_fam1\_displaystyle{0\_atop0}$}}% correction for \choose
   \_Umathfractiondelsize\_displaystyle = \_dimexpr(\_ht0-\_Umathaxis\_displaystyle)*2\_relax
 }
 
