@@ -85,10 +85,11 @@
    \_cod -----------------------------
 
 \_def\_hisyntax#1{\_def\_prepareverbdata##1##2{%
-   \_let\n=\_relax \_def\t{\n\_noexpand\t\n}\_let\_start=\_relax
+   \_let\n=\_relax \_let\b=\_relax \_def\t{\n\_noexpand\t\n}\_let\_start=\_relax
    \_adef{ }{\n\ \n}\_edef\_tmpb{\_start^^J##2\_end}%
-   \_replthis{^^J}{\n^^J\n}\_replthis{\n\_end}{\_end}%
+   \_replthis{^^J}{\n^^J\b\n}\_replthis{\b\n\_end}{\_end}%
    \_let\x=\_relax  \_let\y=\_relax \_let\z=\_relax \_let\t=\_relax
+   \_hicomments % keeps comments declared by \commentchars
    \_endlinechar=`\^^M
    \_lowercase{\_def\_tmpa{#1}}%
    \_ifcsname _hialias:\_tmpa\_endcsname \_edef\_tmpa{\_cs{_hialias:\_tmpa}}\_fi
@@ -107,8 +108,9 @@
       \_else\_opwarning{Syntax highlighting "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
    \_fi\_fi
    \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
-   \_def\n{}%
-   \_def\x####1####2{\_xscan{####1}####2^^J^}%
+   \_def\n{}\_def\b{}\_adef{ }{\_sp}%
+   \_bgroup \_lccode`\~=`\ \_lowercase{\_egroup\_def\ {\_noexpand~}}%
+   \_def\w####1{####1}\_def\x####1####2{\_xscan{####1}####2^^J^}%
    \_def\y####1{\_ea \_noexpand \_csname ####1\_endcsname}%
    \_edef\_tmpb{\_tmpb}%
    \_def\z####1{\_cs{_z:####1}}%

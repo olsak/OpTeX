@@ -79,7 +79,7 @@
    \_ifx\_savedttchar\_undefined\_else \_catcode\_savedttchar=\_savedttcharc \_fi
    \_chardef\_savedttchar=`#1
    \_chardef\_savedttcharc=\_catcode`#1
-   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\ }\_ttfont \_the\_everyintt\_relax \_readverb}%
+   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\_sp}\_ttfont \_the\_everyintt\_relax \_readverb}%
    \_def\_readverb ##1#1{\_printinverbatim{##1}\_endgroup}%
 }
 \_public \activettchar ;
@@ -119,10 +119,10 @@
    \_begingroup
    \_setverb 
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_adef{ }{\_sp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt \_relax #1\_relax \_ttfont
-   \_def\_testcommentchars##1\_iftrue{\_iffalse}%
+   \_def\_testcommentchars##1\_iftrue{\_iffalse}\_let\_hicomments=\_relax
    \_endlinechar=`^^J
    \_startverb
 }
@@ -237,7 +237,7 @@
    \_vskip\_parskip \_ttskip \_wipeepar \_setxhsize
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_setverb \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_setverb \_adef{ }{\_sp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt\_relax \_tmpb\_relax \_ttfont
    \_endlinechar=`^^J \_tmpnum=0
@@ -255,6 +255,7 @@
             \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_else \_visaveline \_fi %% save line
             \_repeat
    \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb^^J}%
+   \_catcode`\ =10
    \_ea\_printverb \_tmpb\_end
    \_global\_ttlinesave
    \_par
@@ -287,12 +288,23 @@
    {\catcode`\#=12 \catcode`\ =13 \_ea}\commentchars#{ }  % bash comments
    \endtt
 
-   The \^`\commentchars``<first><second>` redefines the \`\_testcommentchars`
+   There is one limitation when \TeX/ interpret's the comments declared by
+   \^`\commentchars`. Each block of comments are accummulated to one line
+   and then it is re-interpreted by \TeX. So, the end of lines in the
+   comments block are lost. You cannot use macros or constructions which
+   need to scan end of lines, for example `\begtt...\endtt` inside comments
+   block does not work.
+
+   Implementation: The \^`\commentchars``<first><second>` redefines the \`\_testcommentchars`
    used in \^`\_printverb` in order to it removes the following `\_iftrue`
    and returns `\_iftrue` or `\_iffalse` depending on the fact that
    the comment characters are or aren't present at the beginning ot tested line.
    If it is true (`\ifnum` expands to `\ifnum 10>0`) then the rest of the
    line is added to the \`\_vcomments` macro.
+
+   The \`\_hicomments` is `\relax` by default but it is redefined by \^`\commentchars`
+   in order to keep no-colorized comments if we need to use feature from
+   \^`\commentchars`.
 
    The accumulated comments are printed whenever the non-comment line
    occurs. This is done by \`\_printcomments` macro.
@@ -304,27 +316,33 @@
    \_cod -----------------------------
 
 \_def\_vcomments{}
+\_let\_hicomments=\_relax
 
 \_def\_commentchars#1#2{%
    \_def\_testcommentchars ##1##2##3\_relax ##4\_iftrue{\_ifnum % not closed in this macro
       \_ifx #1##1\_ifx#2##21\_fi\_fi 0>0
       \_ifx\_relax##3\_relax \_addto\_vcomments{\_endgraf}% empty comment=\enfgraf
-      \_else \_addto\_vcomments{##3 }\_fi
-}}
+      \_else \_addto\_vcomments{##3 }\_fi}%
+   \_def\_hicomments{\_replfromto{\b\n#1#2}{^^J}{\w{#1#2####1}^^J}}% used in \hisyntax
+}
 \_def\_testcommentchars #1\_iftrue{\_iffalse} % default value of \_testcommentchar
-\_def\_printcomments{\_bigskip
-   {\_catcodetable0 \_reloading \_rm \_everypar={}\_scantextokens\_ea{\_vcomments}}%
-   \_bigskip
+\_def\_printcomments{\_ttskip
+   {\_catcodetable0 \_reloading \_rm \_everypar={}\_scantextokens\_ea{\_vcomments}\_par}%
+   \_ttskip
 }
 \_public \commentchars ;
 
    \_doc -----------------------------
    The \`\visiblesp` sets spaces as visible characters \char9251.
-   It redefines {\visiblesp`\ `} primitive, so it is useful for verbatim modes only.
+   It redefines the \^`\_sp`, so it is useful for verbatim modes only.
+
+   The \`\_sp` is equivalent to {\visiblesp`\ `} primitive.
+   It is used in all verbatim environments: spaces are active and defined as `\_sp` here.
    \_cod -----------------------------
 
-\_def \_visiblesp{\_ifx\_initunifonts\_relax \_def\ {\_char9251 }%
-                  \_else \_def\ {\_char32 }\_fi}
+\_def \_visiblesp{\_ifx\_initunifonts\_relax \_def\_sp{\_char9251 }%
+                  \_else \_def\_sp{\_char32 }\_fi}
+\_let\_sp=\  % primitive "direct space"
 
 \_public \visiblesp ;
 

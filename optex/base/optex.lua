@@ -342,7 +342,6 @@ luatexbase = {
     registernumber = registernumber,
     attributes = attributes,
     new_attribute = alloc.new_attribute,
-
     callback_descriptions = callback.callback_descriptions,
     create_callback = callback.create_callback,
     add_to_callback = callback.add_to_callback,
