@@ -19,7 +19,10 @@
 \_def\_initunifonts {%
    \directlua{%
       require('luaotfload-main')
+      print_bak = print
+      print = function () end
       luaotfload.main()
+      print = print_bak % "print hack" until luaotfload will be corrected
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}% 
    \_global\_let \_doresizefont=\_doresizeunifont
