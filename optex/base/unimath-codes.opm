@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-06-13>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2020-11-13>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -408,7 +408,8 @@ can define:
 \_endinput
 
 History:
-2020-06-13  Umathcode of / declared asi iin Plain TeX
+2020-11-13  Bug fix: \colon declared
+2020-06-13  Umathcode of / declared as in Plain TeX
 2020-06-07  \_itgreek \_itGreek, \_rmgreek \_rmGreek etc. introduced, names changed
 2020-06-03  \not\mid = \nmid added, \not corrected
 2020-04-30  Bug fix: \phi, \varpi etc. were bad encoded

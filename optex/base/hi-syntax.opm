@@ -86,7 +86,7 @@
 
 \_def\_hisyntax#1{\_def\_prepareverbdata##1##2{%
    \_let\n=\_relax \_let\b=\_relax \_def\t{\n\_noexpand\t\n}\_let\_start=\_relax
-   \_adef{ }{\n\ \n}\_edef\_tmpb{\_start^^J##2\_end}%
+   \_adef{ }{\n\_noexpand\ \n}\_edef\_tmpb{\_start^^J##2\_end}%
    \_replthis{^^J}{\n^^J\b\n}\_replthis{\b\n\_end}{\_end}%
    \_let\x=\_relax  \_let\y=\_relax \_let\z=\_relax \_let\t=\_relax
    \_hicomments % keeps comments declared by \commentchars

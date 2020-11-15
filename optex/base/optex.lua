@@ -250,7 +250,7 @@ end
 -- callbacks as well as user created callbacks. It can happen that this
 -- function is called when no functions were added to callback -- like for user
 -- created callbacks or `mlist_to_hlist` (see below), these are handled either
--- by a default function (like for "mlist_to_hlist" and those user created
+-- by a default function (like for `mlist_to_hlist` and those user created
 -- callbacks that set a default function) or by doing nothing for empty
 -- function list.
 function callback.call_callback(name, ...)
@@ -304,10 +304,10 @@ function callback.call_callback(name, ...)
     return not changed or head
 end
 --
--- Create \"virtual" callbacks pre/post_mlist_to_hlist_filter by setting
+-- Create \"virtual" callbacks `pre/post_mlist_to_hlist_filter` by setting
 -- `mlist_to_hlist` callback. The default behaviour of `mlist_to_hlist` is kept by
 -- using a default function, but it can still be overriden by using
--- add_to_callback.
+-- `add_to_callback`.
 default_functions["mlist_to_hlist"] = node.mlist_to_hlist
 callback.create_callback("pre_mlist_to_hlist_filter", "list")
 callback.create_callback("post_mlist_to_hlist_filter", "reverselist")

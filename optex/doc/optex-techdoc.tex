@@ -259,6 +259,12 @@ allocators and callback management. Callback management is a nice extension
 and is actually used in \OpTeX/. Other functions are defined more or less just
 to suit luaotfload's use.
 
+\newtoks \_hisyntaxlua
+\_hisyntaxlua={%
+   \_hicolor C \Green
+   \_replfromto {--}{^^J}   {\z C{--#1}^^J}%
+}
+
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
   \commentchars-- \def\docfile{optex.lua} \ttline=-1
   \_def\_printcomments{\_medskip
@@ -266,7 +272,7 @@ to suit luaotfload's use.
      \_bigskip
    }
 
-\verbinput (4-) optex.lua
+\verbinput \hisyntax{lua} (4-) optex.lua
 }
 
 

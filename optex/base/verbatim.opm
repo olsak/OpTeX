@@ -141,7 +141,7 @@
    `\begtt...\endtt` and from `\verbinput` too.
 
    The \^`\_testcommentchars` replaces the following `\_iftrue` to
-   `\_iffalse` by default unless the \^`\commentchars` are set. So, main body
+   `\_iffalse` by default unless the \~`\commentchars` are set. So, main body
    of the loop is written in `\_else` part of the `\_iftrue` condition.
    The \^`\_printverbline``{<line>}` is called here.
 
@@ -269,9 +269,10 @@
 \_public \verbinput ;
 
    \_doc -----------------------------
-   If the language of your code printed by \^`\verbinput` supports the
+   If the language of your code\label[commentchars]\wlabel{}
+   printed by \^`\verbinput` supports the
    format of comments started by two characters from beginning of the
-   line then you can set these characters by \`\commentchars``<first><second>`.
+   line then you can set these characters by \^`\commentchars``<first><second>`.
    Such comments are printed in non-verbatim mode without these two
    characters and they look like the verbatim printing is interrupred
    at the places where such comments are.
@@ -295,7 +296,7 @@
    need to scan end of lines, for example `\begtt...\endtt` inside comments
    block does not work.
 
-   Implementation: The \^`\commentchars``<first><second>` redefines the \`\_testcommentchars`
+   Implementation: The \`\commentchars``<first><second>` redefines the \`\_testcommentchars`
    used in \^`\_printverb` in order to it removes the following `\_iftrue`
    and returns `\_iftrue` or `\_iffalse` depending on the fact that
    the comment characters are or aren't present at the beginning ot tested line.
