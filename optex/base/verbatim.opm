@@ -79,7 +79,7 @@
    \_ifx\_savedttchar\_undefined\_else \_catcode\_savedttchar=\_savedttcharc \_fi
    \_chardef\_savedttchar=`#1
    \_chardef\_savedttcharc=\_catcode`#1
-   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\_sp}\_ttfont \_the\_everyintt\_relax \_readverb}%
+   \_adef{#1}{\_begingroup \_setverb \_adef{ }{\_dsp}\_ttfont \_the\_everyintt\_relax \_readverb}%
    \_def\_readverb ##1#1{\_printinverbatim{##1}\_endgroup}%
 }
 \_public \activettchar ;
@@ -119,7 +119,7 @@
    \_begingroup
    \_setverb 
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_adef{ }{\_sp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt \_relax #1\_relax \_ttfont
    \_def\_testcommentchars##1\_iftrue{\_iffalse}\_let\_hicomments=\_relax
@@ -237,7 +237,7 @@
    \_vskip\_parskip \_ttskip \_wipeepar \_setxhsize
    \_begingroup
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
-   \_setverb \_adef{ }{\_sp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_setverb \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt\_relax \_tmpb\_relax \_ttfont
    \_endlinechar=`^^J \_tmpnum=0
@@ -338,15 +338,16 @@
 
    \_doc -----------------------------
    The \`\visiblesp` sets spaces as visible characters \char9251.
-   It redefines the \^`\_sp`, so it is useful for verbatim modes only.
+   It redefines the \^`\_dsp`, so it is useful for verbatim modes only.
 
-   The \`\_sp` is equivalent to {\visiblesp`\ `} primitive.
-   It is used in all verbatim environments: spaces are active and defined as `\_sp` here.
+   The \`\_dsp` is equivalent to {\visiblesp`\ `} primitive.
+   It is used in all verbatim environments: spaces are active and defined as
+   `\_dsp` here.
    \_cod -----------------------------
 
-\_def \_visiblesp{\_ifx\_initunifonts\_relax \_def\_sp{\_char9251 }%
-                  \_else \_def\_sp{\_char32 }\_fi}
-\_let\_sp=\  % primitive "direct space"
+\_def \_visiblesp{\_ifx\_initunifonts\_relax \_def\_dsp{\_char9251 }%
+                  \_else \_def\_dsp{\_char32 }\_fi}
+\_let\_dsp=\  % primitive "direct space"
 
 \_public \visiblesp ;
 

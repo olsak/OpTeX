@@ -108,7 +108,7 @@
       \_else\_opwarning{Syntax highlighting "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
    \_fi\_fi
    \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
-   \_def\n{}\_def\b{}\_adef{ }{\_sp}%
+   \_def\n{}\_def\b{}\_adef{ }{\_dsp}%
    \_bgroup \_lccode`\~=`\ \_lowercase{\_egroup\_def\ {\_noexpand~}}%
    \_def\w####1{####1}\_def\x####1####2{\_xscan{####1}####2^^J^}%
    \_def\y####1{\_ea \_noexpand \_csname ####1\_endcsname}%
