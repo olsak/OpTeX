@@ -22,13 +22,13 @@
 \addto\_secfont\Blue  \addto\_seccfont\Blue
 \_def\_printsec#1{\_par
    \_abovetitle{\_penalty-400}\_bigskip
-   {\_secfont \_noindent \_raggedright \llap{\_printrefnum[@\_quad]}#1\_nbpar}\_insertmark{#1}%
+   {{\_secfont \_noindent \_raggedright \llap{\_printrefnum[@\_quad]}#1}\_nbpar}\_insertmark{#1}%
    \_nobreak \_belowtitle{\_medskip}%
    \_firstnoindent
 }
 \_def\_printsecc#1{\_par
    \_abovetitle{\_penalty-200}\_medskip
-   {\_seccfont \_noindent \_raggedright \llap{\_printrefnum[@\_quad]}#1\_nbpar}%
+   {{\_seccfont \_noindent \_raggedright \llap{\_printrefnum[@\_quad]}#1}\_nbpar}%
    \_nobreak \_belowtitle{\_medskip}%
    \_firstnoindent
 }
@@ -105,7 +105,13 @@ The math atoms are \ii single/math/object {\em single math objects} or
   consist only from a single math object then we need not to use brackets.
   For example
   `x^2` is a math atom with `x` in nucleus, `2` in exponent and with empty subscript.
-  Or `a_{i,j}` is a math atom with `a` in nucleus, empty exponent and `i,j` in subscript.
+  Or `a_{i,j}` is a math atom with `a` in nucleus, empty exponent and `i,j` in subscript.%
+  \fnote{In \OpTeX/, the character `_` can be interpreted as a part of
+  control sequence name, not as the subscript constructor. But in common cases,
+  constructions of math atoms are interpreded exactly as in plain \TeX. See sections
+  2.2.2 and 2.14 of \OpTeX/ documentation for more details. If you want to
+  be sure that `_` is only subscript constructor in \OpTeX/ then you can set \code{\\catcode`\\_=8}
+  but after this, you cannot use control sequences with `_` character.}
   The constructors for exponent `^` and for subscript `_` can be used in arbitrary order 
   after the nucleus, for example `z_1^{x+y}` is the same math atom as
   `z^{x+y}_1`.  The single math objects not followed by `^` nor `_` are

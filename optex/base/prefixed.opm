@@ -168,7 +168,7 @@ example `\my_control_sequence`, but with the following exceptions:
 
 \begitems
 * Control sequences which begin with `_` are reserved for \TeX/ primitives, 
-  \OpTeX/ internal macros and macro package writers.
+  \OpTeX/ internal macros and packages internal macros.
 * Control sequences (terminated by non-letter) in the form 
   `\<word>_` or `\<word>_<one-letter>`, where
   <word> is a sequence of letters, are inaccessible, because they
