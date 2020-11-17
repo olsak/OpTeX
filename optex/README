@@ -19,6 +19,9 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<0.17> optex.lua introduced (instead external ltluatex.lua)
+       hyph.patterns are loaded directly by \patterns, not using lua code
+       \commentchars introduced (comments which are able to interrupt verbatim mode)
 <0.16> callback.register_x introduced, namespaces for packages corrected
        kerkis and EBGaramond fontfiles added
        little corrections
