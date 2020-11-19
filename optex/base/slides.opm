@@ -12,11 +12,12 @@
 \_margins/1 a5l (14,14,10,3)mm  % landscape A5 format
 \_def\_wideformat{\_margins/1 (263,148) (16,16,10,3)mm } % 16:9 format
 
-\_fontfam[Heros]
+\_ifx\_fontnamegen\_undefined \_fontfam[Heros]
+   \_famvardef\_ttfont{\_setfontsize{mag1.15}\_tt}
+\_fi
 \_typosize[16/19]
-\_famvardef\_ttfont{\_setfontsize{mag1.15}\_tt}
 \_def\_urlfont{}
-\_everytt={\_typosize[13/16] \advance\hsize by10mm}
+\_everytt={\_typosize[13/16] \_advance\_hsize by10mm}
 \_fontdef\_fixbf{\_bf}
 
 \_nopagenumbers
@@ -93,8 +94,21 @@
 
 \_def\_pg#1{\_cs{_spg:#1}}
 \_sdef{_spg:;}{\_vfil\_break \_lfnotenumreset}
-\_sdef{_spg:.}{\_end}
+\_sdef{_spg:.}{\_endslides}
 \_sdef{_spg:+}{\_par}
+
+   \_doc -----------------------------
+   The \`\_endslides` is defined as `\_end` primitive, but
+   slide-designer can redefine it. For example,
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html#slider]{OpTeX trick 0029}
+   shows how to define a clickable navigation to the pages and how to check
+   the data integrity at the end of document using `\_endslides`.
+
+   The `\bye` macro is re-defined here as an alternative to `\pg.`.
+   \_cod -----------------------------
+
+\_def\_endslides{\_end}
+\_def\bye{\_pg.}
 
    \_doc -----------------------------
    We need no numbers and no table of contents when using slides.
@@ -138,12 +152,13 @@
 
 \_def\_slideshowactive{%
    \_sdef{_spg:;}{\_closepage \_global\_slidelayer=1 \_resetpage \_openslide}
-   \_sdef{_spg:.}{\_closepage \_end}
+   \_sdef{_spg:.}{\_closepage \_endslides}
    \_sdef{_spg:+}{\_closepage \_incr\_slidelayer \_decr\_pageno \_openslide}
-   \_def\bye     {\_closepage \_byehook \_end}
    \_let\_layers=\_layersactive
-   \_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}%
+   \_destboxslide % to prevent hyperlink-dests duplication
 }
+\_def\_destboxslide{\_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}}
+
 \_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup \_setilevel 
    \_ifvoid\_slidepage \_else \_unvbox\_slidepage \_nointerlineskip\_lastbox \_fi}
 \_def\_setilevel{\_loop \_decr\_gilevel \_ifnum\_gilevel<0 \_else \_begitems \_repeat}

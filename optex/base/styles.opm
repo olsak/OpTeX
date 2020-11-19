@@ -60,7 +60,8 @@
    \_cod -----------------------------
 
 \_def\_slides{\_par
-  \_input slides.opm
+  \_opinput{slides.opm}
+  \_adef*{\_startitem}
 }
 \_public \slides ;
 
