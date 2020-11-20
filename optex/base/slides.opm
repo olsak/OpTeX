@@ -100,7 +100,7 @@
    \_doc -----------------------------
    The \`\_endslides` is defined as `\_end` primitive, but
    slide-designer can redefine it. For example,
-   \ulink[http://petr.olsak.net/optex/optex-tricks.html#slider]{OpTeX trick 0029}
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#slider]{OpTeX trick 0029}
    shows how to define a clickable navigation to the pages and how to check
    the data integrity at the end of document using `\_endslides`.
 
