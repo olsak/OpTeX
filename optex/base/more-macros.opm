@@ -6,7 +6,7 @@
    We define \`\opinput` `{<file name>}` macro which
    does `\input {<file name>}` but the catcodes are set to normal catcodes
    (like \OpTeX/ initializes them) and the catcodes setting are returned back to
-   the current values when the file is read. You can use `\optinput`
+   the current values when the file is read. You can use `\opinput`
    in any situation inside the document and you will be sure that the file
    is read correctly with correct catcode settings.
 
@@ -17,13 +17,22 @@
    The \`\setctable` `<catcode table>` pushes 
    current catcode table to the stack and activates catcodes from
    the `<catcode table>`. The \`\restorectable` returns to the saved catcodes
-   from the catcode table stack. So, the `\opinput` macro can be implemented simply:
+   from the catcode table stack.
+
+   The `\opinput` works inside catcode table stack. It reads `\optexcatcodes`
+   table and stores it to \`\_tmpcatcodes`  table.
+   This table is actually used during `\input` (maybe catcodes are
+   changed here). Finally, `\_restoretable` pops the stacks and returns
+   to the catcodes used before `\opinput` is run.
    \_cod -----------------------------
 
-\_def\_opinput #1{\_setctable\_optexcatcodes \_input {#1}\_relax\_restorectable}
+\_def\_opinput #1{\_setctable\_optexcatcodes
+   \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
+   \_input {#1}\_relax\_restorectable}
 
 \_newcatcodetable \_optexcatcodes
 \_newcatcodetable \_plaintexcatcodes
+\_newcatcodetable \_tmpcatcodes
 
 \_public \optexcatcodes \plaintexcatcodes \opinput ;
 
