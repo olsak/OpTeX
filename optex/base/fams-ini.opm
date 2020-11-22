@@ -53,6 +53,10 @@
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
 
+\_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
+   { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans, \caps\mono: {\rm\bf\it\bi} }
+\_famalias [KP]
+
 \_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
    { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi} 
     \medium,\cond\medium, \light, \cond\light:{\rm\it} }

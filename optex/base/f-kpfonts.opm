@@ -1,0 +1,42 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [KP Fonts] \Kpfonts {KP fonts -- Johannes Kepler project}
+        {\sans \mono \light \caps} {\rm \bf \it \bi} {KpMath}
+        {[KpRoman-Regular]}
+        {\_def\_fontnamegen {[Kp\_subfamV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \sans ...... sans serif^^J
+ \mono ...... non-proportional^^J
+ \light ..... light + semibold variants^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_def\_RBIfvars{\_fvars Regular Bold Italic BoldItalic }
+\_moddef \resetmod {\_fsetV subfam=Roman,caps={} \_RBIfvars }
+\_moddef \sans     {\_fsetV subfam=Sans \_RBIfvars }
+\_moddef \mono     {\_fsetV subfam=Mono \_RBIfvars }
+\_moddef \light    {\_fsetV subfam=Roman \_fvars Light Semibold LightItalic SemiboldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[KpMath-Regular]}
+\_loadboldmath {[KpMath-Bold]} \to {[KpMath-Regular]}
+
+\_endcode
+
+The KP fonts family includes more variants of Math fonts.
+Only Regular / Bold pair is loaded as default.
+
+There are alternatives:
+
+\doloadmath \loadmath {KpMath-Light}
+\loadboldmath {[KpMath-Semibold]} \to {[KpMath-Light]}
+
+or
+
+\doloadmath \loadmath {KpMath-Sans}
+

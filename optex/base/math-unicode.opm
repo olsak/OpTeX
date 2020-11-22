@@ -47,7 +47,7 @@
 
 \_def\_loadboldmath#1#2\to #3{%
    \_def\_tmp{#3}\_ifx\_unimathfont\_tmp % do work only if #3 is loaded as normal Math
-   \_isfont"#1"\_iffalse
+   \_isfont{#1}\_iffalse
       \_opwarning{Bold-Math font "#1" not found, skipped...}   
    \_else
       \_def\_unimathboldfont{#1}%
