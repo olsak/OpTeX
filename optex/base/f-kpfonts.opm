@@ -9,7 +9,7 @@
 Modifiers:^^J
  \sans ...... sans serif^^J
  \mono ...... non-proportional^^J
- \light ..... light + semibold variants^^J
+ \light ..... light (\rm, \it) + semibold (\bf, \bi) variants^^J
  \caps ...... caps & small caps^^J
 }}
 

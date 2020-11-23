@@ -1,0 +1,31 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [DejaVu] \Dejavu {Derived from the Vera fonts}
+        {\sans \mono \cond \light \caps} {\rm \bf \it \bi} {TG-DejavuMath}
+        {[DejaVuSerif]}
+        {\_def\_fontnamegen {[DejaVu\_subfamV\_typfamV\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \sans ...... sans serif^^J
+ \serif ..... serif (default)^^J
+ \mono ...... non-proportional, only \sans^^J
+ \light ..... extra-light, only \sans, only \rm, others (\bf\it\bi) unchanged^^J
+ \cond ...... condensed (\sans or \serif, not \mono)
+}}
+
+\_def\_BIfvars{\_fvars {} -Bold -Italic -BoldItalic }
+\_def\_BOfvars{\_fvars {} -Bold -Oblique -BoldOblique }
+\_moddef \resetmod {\_fsetV subfam=Serif,typfam={} \_BIfvars }
+\_moddef \sans     {\_fsetV subfam=Sans \_BOfvars }
+\_moddef \serif    {\_fsetV subfam=Serif,typfam={} \_BOfvars }
+\_moddef \mono     {\_fsetV subfam=Sans,typfam=Mono \_BOfvars }
+\_moddef \light    {\_fsetV subfam=Sans,typfam={} \_fvars -ExtraLight -Bold -Oblique -BoldOblique }
+\_moddef \cond     {\_fsetV typfam=Condensed }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyredejavu-math]}
+
+\_endcode
+

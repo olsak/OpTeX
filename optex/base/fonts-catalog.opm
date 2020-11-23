@@ -2,6 +2,7 @@
 
 \_codedecl \_undefined {Font catalogue <2020-02-26>} % loaded on demand by \fontfam[catalog]
 
+\_tracinglostchars=1 % only to log file
 \_initunifonts  
 \_begingroup
 
