@@ -3,14 +3,15 @@
 \_famdecl [GFS Bodoni] \GFSBodoni {Based on Bodoni with greek letters}
         {} {\rm \bf \it \bi} {}
         {[GFSBodoni]}
-        {\_def\_fontnamegen {[GFSBodoni\_currV]:\_fontfeatures}}
+        {\_def\_fontnamegen{[GFSBodoni\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
- \caps ...... doesn't work even though otfinfo -f lists smcp^^J
+ \caps ...... Caps & Small caps (only \rm)^^J
 }}
 
-\_moddef \resetmod {\_fvars {} Bold It BoldIt }
+\_moddef \resetmod {\_fsetV caps={} \_fvars {} Bold It BoldIt }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 
 \_initfontfamily % new font family must be initialized
 

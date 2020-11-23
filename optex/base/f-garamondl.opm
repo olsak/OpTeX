@@ -1,0 +1,24 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Garamond Libre] \Garamondl {Free, old style font family}
+        {\caps} {\rm \bf \it \bi} {Garamond-Math}
+        {[GaramondLibre-Regular]}
+        {\_def\_fontnamegen
+        {[GaramondLibre-\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic Bolditalic }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum;-liga; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[Garamond-Math]}
+
+\_endcode
+

@@ -79,6 +79,10 @@
      -: {\initials} }
 \_famalias [Garamond]
 
+\_faminfo [Garamond Libre] {Free, old style font family} {f-garamondl}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [GaramondL]
+
 \_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
    { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\rm\it}
      \sanssemi: {\rm} -:{\calli}  }
@@ -91,7 +95,7 @@
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
 
 \_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
-   { -: {\rm\bf\it\bi} }
+   { -: {\rm\bf\it\bi} \caps: {\rm} }
 
 \_endcode
 

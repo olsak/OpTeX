@@ -3,7 +3,7 @@
 \_famdecl [Antykwa Torunska] \Antt {Traditional Polish font family}
       {\cond \medium \light \caps} {\rm \bf \it \bi} {Pagella}
       {[AntykwaTorunska-Regular]}
-      {\_def\_fontnamegen {[AntykwaTorunska\_sfamxV\_sfamyV-\_currV]:\_capsV\_fontfeatures}}
+      {\_def\_fontnamegen {[AntykwaTorunska\_sfamxV\_sfamyV-\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
