@@ -53,6 +53,11 @@
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
 
+\_faminfo [Libertinus] {Free fonts derived from Linux Libertine} {f-libertinus}
+   { -: {\rm\bf\it\bi} \semi: {\bf\bi} \sans: {\rm\bf\it}
+     \caps: {\rm\bf\it\bi} \caps\semi: {\bf\bi} \caps\sans: {\rm\bf\it}
+     -: {\mono\initials\displ\keybr} }
+
 \_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
    { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans, \caps\mono: {\rm\bf\it\bi} }
 \_famalias [KP]
