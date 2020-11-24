@@ -3,7 +3,7 @@
 \_famdecl [Baskerville] \Baskerville {Free vaiants of classical Baskerville}
         {\caps} {\rm \bf \it \bi} {}
         {[BaskervilleF-Regular]}
-        {\_def \_fontnamegen {[BaskervilleF-\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
+        {\_def \_fontnamegen {[BaskervilleF-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifier:^^J

@@ -3,7 +3,7 @@
 \_famdecl [Kerkis] \Kerkis {Free Bookman alternative with Greek letters}
         {\semibold \sans \sanssemi \caps} {\rm \bf \it \bi \calli} {}
         {[Kerkis]}
-        {\_def\_fontnamegen {[Kerkis\_currV]:mode=node;script=latn;\_fontfeatures}}
+        {\_def\_fontnamegen {[Kerkis\_currV]:script=latn;\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J

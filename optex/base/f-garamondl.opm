@@ -4,7 +4,7 @@
         {\caps} {\rm \bf \it \bi} {Garamond-Math}
         {[GaramondLibre-Regular]}
         {\_def\_fontnamegen
-        {[GaramondLibre-\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
+        {[GaramondLibre-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifier:^^J

@@ -3,7 +3,7 @@
 \_famdecl [GFS Bodoni] \GFSBodoni {Based on Bodoni with greek letters}
         {} {\rm \bf \it \bi} {}
         {[GFSBodoni]}
-        {\_def\_fontnamegen{[GFSBodoni\_currV]:mode=node;script=latn;\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen{[GFSBodoni\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifier:^^J
