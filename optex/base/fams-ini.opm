@@ -49,17 +49,17 @@
 \_famtext {Other fonts:}
 
 \_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
-   { -: {\rm\bf\it\bi} \semi: {\rm\it} 
+   { -: {\rm\bf\it\bi} \semibold: {\bf\bi}
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
 
 \_faminfo [Libertinus] {Free fonts derived from Linux Libertine} {f-libertinus}
-   { -: {\rm\bf\it\bi} \semi: {\bf\bi} \sans: {\rm\bf\it}
-     \caps: {\rm\bf\it\bi} \caps\semi: {\bf\bi} \caps\sans: {\rm\bf\it}
+   { -: {\rm\bf\it\bi} \semibold: {\bf\bi} \sans: {\rm\bf\it}
+     \caps: {\rm\bf\it\bi} \caps\semibold: {\bf\bi} \caps\sans: {\rm\bf\it}
      -: {\mono\initials\displ\keybr} }
 
 \_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
-   { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans, \caps\mono: {\rm\bf\it\bi} }
+   { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans,\caps\mono,\swash: {\rm\bf\it\bi} }
 \_famalias [KP]
 
 \_faminfo [DejaVu] {Derived from the Vera fonts} {f-dejavu}
@@ -76,15 +76,15 @@
 
 \_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
    { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
-     -: {\initials} }
+     \swash: {\it\bi} -: {\initials} }
 \_famalias [Garamond]
 
-\_faminfo [Garamond Libre] {Free, old style font family} {f-garamondl}
-   { -,\caps: {\rm\bf\it\bi} }
+\_faminfo [Garamond Libre] {Free, derived from old style font family} {f-garamondl}
+   { -,\caps: {\rm\bf\it\bi} \swash: {\it\bi} }
 \_famalias [GaramondL]
 
 \_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
-   { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\rm\it}
+   { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\bf\bi}
      \sanssemi: {\rm} -:{\calli}  }
 
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 

@@ -7,7 +7,7 @@
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
- \semibold .. semibold weight (only \rm, \it)^^J
+ \semibold .. semibold weight (changed only \bf, \bi)^^J
  \caps ...... caps & small caps (only \rm \bf, bad accents in \bf)^^J
  \sans ...... sans serif^^J
  \sanssemi .. semibold sans serif (only \rm, accented letters not available)^^J 
@@ -16,7 +16,7 @@ Variant:^^J
 }}
 
 \_moddef \resetmod {\_fvars {} -Bold -Italic -BoldItalic }
-\_moddef \semibold {\_fvars -SemiBold . -SemiBold-Italic . }
+\_moddef \semibold {\_fvars {} -SemiBold -Italic -SemiBold-Italic }
 \_moddef \caps     {\_fvars -SmallCaps.otf -BoldSmallCaps . . }
 \_moddef \sans     {\_fvars Sans Sans-Bold Sans-Italic Sans-BoldItalic }
 \_moddef \sanssemi {\_fvars Sans-SmallCaps . . . }

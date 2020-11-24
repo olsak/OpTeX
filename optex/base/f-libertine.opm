@@ -1,7 +1,7 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Linux Libertine] \Libertine {Free Linux Libertine fonts}
-        {\sans \mono \caps \semi} {\rm \bf \it \bi \initials \displ \keybr} {Libertinus}
+        {\sans \mono \caps \semibold} {\rm \bf \it \bi \initials \displ \keybr} {Libertinus}
         {[LinLibertine_R]}
         {\_def\_fontnamegen {[Lin\_subfamV _\_currV]:\_capsV\_fontfeatures}}
 
@@ -9,7 +9,7 @@
 Modifiers:^^J
  \sans ...... smaller serifs^^J
  \mono ...... non-proportional^^J
- \semi ...... semi-bold variants (\rm, \it)^^J
+ \semibold .. semi-bold variants (changed only \bf, \bi)^^J
  \caps ...... caps & small caps^^J
 Special variants:^^J
  \initials .. special initials (only uppercase letters)^^J
@@ -20,7 +20,7 @@ Special variants:^^J
 \_moddef \resetmod {\_fsetV subfam=Libertine,caps={} \_fvars R RB RI RBI }
 \_moddef \sans     {\_fsetV subfam=Biolinum \_fvars R RB RI RBO }
 \_moddef \mono     {\_fsetV subfam=Libertine \_fvars M MB MO MBO }
-\_moddef \semi     {\_fsetV subfam=Libertine \_fvars RZ . RZI . }
+\_moddef \semibold {\_fsetV subfam=Libertine \_fvars R RZ RI RZI }
 \_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
