@@ -1,0 +1,35 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Poltawski] \Poltawski {Antykwa Poltawskiego, font family from GUST}
+      {\light \noexpd \expd \eexpd \cond \ccond \osize \caps} {\rm \bf \it \bi} {}
+      {[antpolt-regular]}
+      {\_def\_fontnamegen {[antpolt\_liV\_condV-\_currV]\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \light ..... light weight, \bf,\bi=semibold^^J
+ \noexpd .... no expanded, no condensed, designed for 10pt size (default)^^J
+ \eexpd ..... expanded, designed for 6pt size^^J
+ \expd ...... semi expanded, designed for 8pt size^^J
+ \cond ...... semi condensed, designed for 12pt size^^J
+ \ccond ..... condensed, designed for 17pt size^^J
+ \osize ..... auto-sitches between \ccond \cond \noexpd \expd \eexpd by size^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV li={},cond={},caps={} \_fvars regular bold italic bolditalic }
+\_moddef \light    {\_fsetV li=lt }
+\_moddef \noexpd   {\_fsetV cond={} }
+\_moddef \eexpd    {\_fsetV cond=expd }
+\_moddef \expd     {\_fsetV cond=semiexpd }
+\_moddef \cond     {\_fsetV cond=semicond }
+\_moddef \ccond    {\_fsetV cond=cond }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+\_moddef \osize    {\_def\_fontnamegen 
+                    {[antpolt\_liV\_optname{x}-\_currV]:\_capsV\_fontfeatures}%
+                    \_regoptsizes x ? expd <7 semiexpd <9 {} <11.1 semicond <15 cond <*}
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode

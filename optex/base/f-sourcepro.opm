@@ -2,7 +2,7 @@
 
 \_famdecl [Source Pro] \Sourcepro {SourceSerifPro,SourceSansPro,SourceCodePro}
         {\serif \sans \mono \light \elight \bolder \medium \caps} {\rm \bf \it \bi} {Termes}
-        {[texgyretermes-regular]}
+        {[SourceSerifPro-Regular]}
         {\_def\_fontnamegen {[Source\_typfV Pro-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
@@ -12,7 +12,7 @@ Modifiers:^^J
  \mono ...... Code family^^J
  \light ..... \rm=Light, \bf=Semibold^^J
  \elight .... \rm=Extra light, \bf=Regular^^J
- \bolder .... \rm=Bold, \bf=Black^^J
+ \bolder .... \rm=Semibold, \bf=Black^^J
  \medium .... \rm=Medium, \bf=Bold (only for \mono family)^^J
  \caps ...... caps & small caps, only for \sans (\serif: only \rm,\bf)^^J
 }}
@@ -21,7 +21,6 @@ Modifiers:^^J
 \_moddef \serif    {\_fsetV typf=Serif }
 \_moddef \sans     {\_fsetV typf=Sans }
 \_moddef \mono     {\_fsetV typf=Code }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 \_moddef \light    {\_fvars Light Semibold LightIt SemiboldIt }
 \_moddef \elight   {\_fvars ExtraLight Regular ExtraLightIt RegularIt }
 \_moddef \bolder   {\_fvars Semibold Black SemiboldIt BlackIt }

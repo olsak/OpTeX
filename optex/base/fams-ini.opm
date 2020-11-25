@@ -70,6 +70,12 @@
     \medium,\cond\medium, \light, \cond\light:{\rm\it} }
 \_famalias [Antt]
 
+\_faminfo [Poltawski] {Antykwa Poltawskiego, font family from GUST} {f-poltawski}
+   { \ccond,\cond,-,\expd,\eexpd,
+     \light\ccond,\light\cond,\light,\light\expd,\light\eexpd,
+     \caps: {\rm\bf\it\bi} }
+\_famalias [Antykwa Poltawskiego] \_famalias [Poltawskiego] \_famalias [APoltawskiego]
+
 \_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskervilleF]
