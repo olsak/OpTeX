@@ -1,0 +1,40 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Source Pro] \Sourcepro {SourceSerifPro,SourceSansPro,SourceCodePro}
+        {\serif \sans \mono \light \elight \bolder \medium \caps} {\rm \bf \it \bi} {Termes}
+        {[texgyretermes-regular]}
+        {\_def\_fontnamegen {[Source\_typfV Pro-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \serif ..... Serif family (default)^^J
+ \sans ...... Sans family^^J
+ \mono ...... Code family^^J
+ \light ..... \rm=Light, \bf=Semibold^^J
+ \elight .... \rm=Extra light, \bf=Regular^^J
+ \bolder .... \rm=Bold, \bf=Black^^J
+ \medium .... \rm=Medium, \bf=Bold (only for \mono family)^^J
+ \caps ...... caps & small caps, only for \sans (\serif: only \rm,\bf)^^J
+}}
+
+\_moddef \resetmod {\_fsetV typf=Serif,caps={} \_fvars Regular Bold RegularIt BoldIt }
+\_moddef \serif    {\_fsetV typf=Serif }
+\_moddef \sans     {\_fsetV typf=Sans }
+\_moddef \mono     {\_fsetV typf=Code }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \light    {\_fvars Light Semibold LightIt SemiboldIt }
+\_moddef \elight   {\_fvars ExtraLight Regular ExtraLightIt RegularIt }
+\_moddef \bolder   {\_fvars Semibold Black SemiboldIt BlackIt }
+\_moddef \medium   {\_fsetV typf=Code \_fvars Medium Bold MediumIt BoldIt }
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyretermes-math]}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+
