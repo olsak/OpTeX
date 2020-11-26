@@ -45,7 +45,9 @@ align="center">
 <a href="../ftp/olsak/optex/optex-doc.pdf">optex-doc.pdf</a><br><br>
 <a href="../ftp/olsak/optex/tex-nutshell.pdf">tex-nutshell.pdf</a><br>
 <a href="../ftp/olsak/optex/optex-math.pdf">optex-math.pdf</a><br><br>
-<a href="https://github.com/olsak/OpTeX">OpTeX at github</a><br>
+<a href="https://github.com/olsak/OpTeX">OpTeX at github</a> (current)<br>
+<a href="../ftp/olsak/optex/optex-17.zip">optex-17.zip</a> (17 Nov 2020)<br>
+<a href="../ftp/olsak/optex/optex-16.zip">optex-16.zip</a> (19 Oct 2020)<br>
 <a href="../ftp/olsak/optex/optex-15.zip">optex-15.zip</a> (23 Jun 2020)<br>
 <a href="../ftp/olsak/optex/optex-14.zip">optex-14.zip</a> (15 Jun 2020)<br>
 <a href="../ftp/olsak/optex/optex-13.zip">optex-13.zip</a> (20 May 2020)<br>
@@ -57,7 +59,8 @@ align="center">
 
 <p CLASS="lmarg">Links:<br>
 <a href="optex-tricks.html">Tips, triks, howto</a><br>
-<a href="../ftp/olsak/optex/">FTP site</a>
+<a href="../ftp/olsak/optex/">FTP site</a><br>
+<a href="https://github.com/olsak/CTUstyle3">CTUstyle for OpTeX</a>
 </p>
 
 
@@ -83,8 +86,11 @@ various engines. We are using only Unicode and only LuaTeX.
 name space of OpTeX and primitives (\foo versus \_foo).
 </ul>
 
-<p>Installation: Use TeXlive (for example) and unzip the installation file.
-Run:
+<p>TeXlive includes OpTeX in its last version released at CTAN. You
+can process your document by <tt>optex document</tt>. Try
+<tt>optex op-demo</tt> for example.
+
+<p>If you have a TeX distribution without OpTeX, you can install it manually:
 
 <pre>
    unzip optex-(version).zip
@@ -94,30 +100,38 @@ Run:
 
 <p>The format file is generated. Copy the optex.fmt file somewhere to
 your TeX system where format files can be read by LuaTeX. Copy *.opm files
-to a directory where LuaTeX can read them. For example:
-
-<pre>
-   mkdir -p ~/texmf/web2c/luatex/ ~/texmf/tex/optex/
-   cp optex.fmt ~/texmf/web2c/luatex/
-   cp *.opm ~/texmf/tex/optex/
-</pre>
+to a directory where LuaTeX can read them.
 
 You can process your document by 
-<pre>
+<tt>
    luatex -fmt optex document.tex 
-</pre>
+</tt>
+or you can create an alias with name <tt>optex</tt> (to <tt>luatex -fmt
+optex</tt>) in your system.
 
-<p>or you can create an alias with name <tt>optex</tt> (to <tt>luatex -fmt
-optex</tt>) in your system. You can try <tt>luatex -fmt optex op-demo.tex</tt> 
-if the files <tt>op-demo.tex</tt> and <tt>op-ring.png</tt> from <tt>optex/demo</tt> 
-are in your actual directory (or somewhere LuaTeX can find them).
+<h3>Documents</h3>
 
-<p>See <a href="../ftp/olsak/optex/optex-doc.pdf">optex-doc.pdf</a>
-file for more information.
+<p>User documentation + technical reference of OpTeX is in
+<a href="../ftp/olsak/optex/optex-doc.pdf">optex-doc.pdf</a>.
 
-<p><b>License:</b> Public domanin. More precisely, it is the same as for 
+<p>Brief summary about TeX and plain TeX is in
+<a href="../ftp/olsak/optex/tex-nutshell.pdf">tex-nutshell.pdf</a>.
+
+<p>Summary about math in TeX, plain TeX and OpteX is in
+<a href="../ftp/olsak/optex/optex-math.pdf">optex-math.pdf</a>.
+
+<p>Slides in OpTeX can be prepared by
+<a href="../ftp/olsak/optex/op-slides.pdf">op-slides.pdf</a>.
+
+<p>Fonts registered by OpTeX macros are catalogized in
+<a href="../ftp/olsak/optex/op-catalog.pdf">op-catalog.pdf</a>.
+You can prepare it by <tt>\fontfam[catalog] \bye</tt>.
+Then it shows only fonts registered in OpTeX macros and ready in your system.
+
+<h3>License</h3>
+
+<p>Public domain. More precisely, it is the same as for
 <a href="../opmac-e.html">OPmac macros</a>.
-
 
 </td></tr>
 </table>
