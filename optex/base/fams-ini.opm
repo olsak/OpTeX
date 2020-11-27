@@ -107,6 +107,9 @@
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
 
+\_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
+   { -,\angular: {\lr\li\rm\it\bf\bi} }
+
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
 

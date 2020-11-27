@@ -1,0 +1,23 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [ComicNeue] \Comicneue {Comic Neue sans serif}
+        {\angular} {\lr \li \rm \bf \it \bi} {}
+        {[ComicNeue-Regular]}
+        {\_def\_fontnamegen {[ComicNeue\_anguV-\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \angular ...... Angular, more extended variants^^J
+Variants:^^J 
+ \lr (Light) \rm \bf \li (LightItalic) \it \bi^^J 
+}}
+
+\_moddef \resetmod {\_fsetV angu={} \_fvars Regular Bold RegularItalic Bolditalic }
+\_moddef \angular  {\_fsetV angu=Angular }
+\_famvardef \lr    {\_fsetV curr=Light \_rm}
+\_famvardef \li    {\_fsetV curr=LightItalic \_rm} 
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
