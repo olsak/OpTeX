@@ -110,6 +110,9 @@
 \_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
    { -,\angular: {\lr\li\rm\it\bf\bi} }
 
+\_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
+   { -,\sans: {\lr\li\rm\it\bf\bi\bk\ki} \caps,\sans\caps: {\rm\it} }
+
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
 
@@ -125,7 +128,7 @@ the file is read, so the information about the font family is loaded. The name
 `f-<famname>.opm`. On the other hand the `\fontfam` command is more tolerant:
 you can write uppercase letters and spaces here. The spaces are ignored and 
 uppercase letters are converted to lowercase.
-For example `\fontfam [LM Fonts]` is equivalent to \fontfam [LMfonts] and both
+For example `\fontfam [LM Fonts]` is equivalent to `\fontfam [LMfonts]` and both
 commands load the file `f-lmfonts.opm`.
 
 You can use your font file in sense of previous paragraph without

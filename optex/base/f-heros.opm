@@ -135,6 +135,10 @@ the
 is processed. We assume that a font file `texgyreheroscn-bold.otf` is present
 in your TeX system.
 
+The macro \^`\_onlyif` `<word>=<value-a>,<value-b>,...<value-n>: {<what>}` can
+be used inside `\_moddef` as simple IF statement: the `<what>` is processed only
+if `<word>` has `<value-a>` or `<value-b>` \dots or `<value-n>`.
+
 Recommendation: the \^`\_fontfeatures` macro at the end of the `\_fontnamegen`
 macro in order to the \^`\setff`, \^`\setfontcolor`, \^`\setletterspace`
 macros can work. 
