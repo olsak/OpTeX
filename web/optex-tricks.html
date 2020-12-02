@@ -115,6 +115,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#biglr">Bigger outer parentheses automatically set</a>
     <li><a href="#textinmath">Text fonts in math mode</a>
     <li><a href="#torighteq">Equation marks in atypical cases</a>
+    <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
 </ul>
 
 <li>Tables
@@ -629,6 +630,91 @@ because we need to know the absolute position of the current point and we
 shift it to the right margin.
 
 <p CLASS=datum>(0028) -- P. O. 2020-07-10<p>
+<hr>
+
+<h2><a name="addumathfont"></a>Loading additional Unicode math fonts</h2>
+
+<p>Unicode math font should include all math characters needed in the document.
+But it is not really true: try to load a Unicode math font using
+\loadmath{math-font} followed by \input print-unimath.opm and you can see empty
+slots. They are not supported by loaded math font.
+
+<p>Maybe, another Unicode math fonts supports another slots. You can combine
+more than one math font in single document. For example, you have loaded
+Garamond-Math font and you find that \triangleq isn't supported. Then you
+can load additional Unicode math font by \addUmathfont and you can
+re-declare \triangleq in order this additional font is used for such
+character. Example:
+
+<pre>
+\loadfam [EBGaramond]  % Garamond family including Garamond-Math is loaded
+\addUmathfont \stix {[STIXMath-Regular]}{} {}{} % additional font STIX loaded
+\resetUmathchar \stix \triangleq  % \triangleq will use STIX
+
+Test: $a \triangleq b$. % All is in Garamond only \triangleq in STIX.
+</pre>
+
+<p>You can load more than one additional Unicode math font (use more than
+one \addUmathfont command). Each additional font declares a new math-font
+family (its name is given in the first parameter) and you can use this name for
+re-declaring math characters. You can use \resetUmathchars (instead
+\resetUmathchar) in order to re-declare more than one math character.
+The list of character sequences must be terminated by colon in such case.
+For example:
+
+<pre>
+\resetUmathchars \stix \stareq \triangleq \veeeq \wedgeq ;
+</pre>
+
+<p>The implementation of \addUmathfont, \resetUmathchar and \resetUmathchars
+macros follows:
+
+<pre>
+\def\resetUmathchar #1#2{% #1: fam, #2 \mathsequence
+   \tmpnum=#2 \divide\tmpnum by16777216 \multiply\tmpnum by16777216
+   \tmpnum=\numexpr #2-\tmpnum \relax
+   \global\Umathcharnumdef #2=\numexpr 16777216*#1 + \tmpnum\relax
+   \setUmathcode#2
+}
+\def\setUmathcode#1{% #1 \mathsequence
+   \tmpnum=#1 \divide\tmpnum by1048576 \multiply\tmpnum by1048576
+   \global\Umathcodenum\numexpr #1-\tmpnum =#1\relax
+}
+\def\resetUmathchars #1{\def\tmp{\resetUmathchar#1}\xargs\tmp}
+
+\def\addUmathfont #1#2#3#4#5{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
+   \ifx\_ncharrmA\undefined \errmessage{basic Unicode math font must be loaded first}\fi
+   \global\advance \famaddress by1
+   \global\chardef #1=\famaddress
+   \global\addto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
+   \ifx\relax#4\relax
+      \global\addto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
+   \else
+      \global\addto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
+   \fi
+   \_normalmath
+   \wterm{MATH-FONT: added #1=\the#1, normal: "#2", \ifx"#4"\else bold: "#4"\fi}
+}
+\newcount\famaddress  \famaddress=100
+</pre>
+
+<p>The \addUmathfont has five parameters:
+family-name {normal-font}{features} {bold-font}{features}.
+If "bold-font" is empty then faked bold constructed from normal-font is used.
+The math families are allocated from 101, 102 etc., i.e. macro programmer can
+use the numbers 5..99 for direct addressing (note that 0..4 are reserved by
+TeX and OpTeX).
+
+<p>The \resetUmathchar re-sets the appropriate Umathcode too (using
+\setUmathcode macro).
+
+<p>This trick was inspired by <a
+href="https://tex.stackexchange.com/questions/573046/">a question at
+StackExchange</a>, but I recommend to use my answer (wipet's answer) in this
+case becuase combination of basic equal sign from Garamond with other equal
+signs from STIX does'n look good in single formula.
+
+<p CLASS=datum>(0030) -- P. O. 2020-12-02<p>
 <hr>
 
 
