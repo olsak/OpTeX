@@ -384,7 +384,7 @@
 
 \secc A few observations
 
-You can combine more fonts in math, if you register them to another
+{\bf 1.} You can combine more fonts in math, if you register them to another
 math families (5, 6, 7, etc.) in the \^`\normalmath` macro.
 
 The default value of \^`\normalmath` shows a combination of base Unicode Math
@@ -392,8 +392,9 @@ font with 8bit Math font at family 4. See definition of the `\script` macro wher
 `\fam4` is used. Of course, we need to set `\rmvariables` too, because 8bit font
 accepts only codes less than 255.
 
-XITSmath-bold needs correction: the norm symbol ||x|| is missing here. So, you
-can define: 
+\medskip\noindent{\bf 2.}
+XITSmath-bold needs correction: the norm symbol $\|x\|$ is missing here.
+So, you can define:
 
 \begtt
 \def\_boldmath{%
@@ -404,6 +405,10 @@ can define:
    \setmathdimens
 }
 \endtt
+
+\noindent{\bf 3.} You can combine more Unicode math fonts in single formula using
+\ulink[http://petr.olsak.net/optex/optex-tricks.html#addumathfont]{\OpTeX/ trick 0030}.
+
 
 \_endinput
 

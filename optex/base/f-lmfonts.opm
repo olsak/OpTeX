@@ -179,3 +179,8 @@ artists are very creative people), so you need to declare more systematic
 \fontalias crea-b-bolditalic    {Creative Bold subfam Oblique}
 \endtt
 
+Another example of font family with optical sizes is Antykwa Półtawskiego.
+The optical sizes feature is deactivated by default and it is switched on by
+`\osize` font modifier:
+
+\printdoc f-poltawski.opm

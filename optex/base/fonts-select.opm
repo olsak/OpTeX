@@ -101,7 +101,7 @@
    `<variant name>`. Usable only of standard four variants. Next variants
    can be declared by the \^`\famvardef` macro.
    \nl
-   \`\_fset` `<key>=<value>,...,<key>=<value>` expands to
+   \`\_fsetV` `<key>=<value>,...,<key>=<value>` expands to
    `\def\_<key>V{<value>}` in the loop.
    \nl
    \`\_onlyif` `<key>=<value-a>,<value-b>...,<value-z>: {<what>}` 

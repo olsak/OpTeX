@@ -112,9 +112,9 @@ is processed.
 
 You can use any expandable macros or expandable primitives in the `\_fontnamegen`
 macro. The simple macros in our example with names `\_<word>V` are preferred. They
-expand typically to their content. The macro `\_fsetV <word>=<content>`
+expand typically to their content. The macro \^`\_fsetV` `<word>=<content>`
 (terminated by a space) is equivalent to `\def\_<word>V{<content>}` and you
-can use it in font modifiers. You can use the `\_fsetV` macro in more
+can use it in font modifiers. You can use the \^`\_fsetV` macro in more
 general form:
 
 \begtt \catcode`\<=13

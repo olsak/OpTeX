@@ -26,8 +26,7 @@ Modifiers:^^J
 \_moddef \ccond    {\_fsetV cond=cond }
 \_moddef \caps     {\_fsetV caps=+smcp;+onum; }
 \_moddef \nocaps   {\_fsetV caps={} }
-\_moddef \osize    {\_def\_fontnamegen 
-                    {[antpolt\_liV\_optname{x}-\_currV]:\_capsV\_fontfeatures}%
+\_moddef \osize    {\_def\_fontnamegen{[antpolt\_liV\_optname{x}-\_currV]:\_capsV\_fontfeatures}%
                     \_regoptsizes x ? expd <7 semiexpd <9 {} <11.1 semicond <15 cond <*}
 
 \_initfontfamily % new font family must be initialized

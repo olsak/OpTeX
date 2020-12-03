@@ -511,9 +511,9 @@
 \_public \pgbackground  ;
 
    \_doc -----------------------------
-   The parameters used in `\inoval` and `\incircle` macros.
-   The default values (documented in user manual) are set in the macros.
-   The user can re-set these values using tokens \`\ovalparams`, \`\circleparams`. 
+   The parameters used in \^`\inoval` and \^`\incircle` macros
+   can be re-set by \`\ovalparams`, \`\circleparams` tokens lists.
+   The default values (documented in the user manual) are set in the macros.
    \_cod -----------------------------
 
 \_newtoks \_ovalparams
