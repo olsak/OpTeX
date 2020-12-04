@@ -88,12 +88,12 @@
                          In:~%
    \_bprinta [!editor]    {*,~eds.\ }{}%
    \_bprintb [booktitle]  {{\_em##1}.\ }{\_bibwarning}% 
-   \_bprinta [address]    {*: }{\_bibwarning}%
-   \_bprinta [publisher]  {*, }{\_bibwarning}%
+   \_bprinta [address]    {*: }{}%
+   \_bprinta [publisher]  {*, }{}%
    \_bprinta [year]       {*.\ }{\_bibwarning}%
    \_bprinta [chapter]    {*.\ }{%
                          \_bprinta [pages]      {*.\ }{}}%
-   \_bprinta [isbn]       {ISBN~*.\ }{\_bibwarning}%
+   \_bprinta [isbn]       {ISBN~*.\ }{}%
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_slet{_print:inproceedings}{_print:inbook}
@@ -121,19 +121,10 @@
    \_bprinta [isbn]       {ISBN~*.\ }{}%
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
-\_sdef{_print:phdthesis}{%
+\_sdef{_print:thesis}{%
    \_bprinta [!author]    {*\.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\.\ }{\_bibwarning}%
-                         \_mtext{bib.phdthesis}, %
-   \_bprinta [school]     {*.\ }{}%
-   \_bprinta [address]    {*, }{}%
-   \_bprinta [year]       {*.\ }{}%
-   \_bprintb [url]        {\_preurl\_url{##1}. }{}%
-}
-\_sdef{_print:mastersthesis}{%
-   \_bprinta [!author]    {*\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\.\ }{\_bibwarning}%
-                         \_mtext{bib.masterthesis}, %
+   \_bprinta [type]       {*,\ }{\_bibwarning}%
    \_bprinta [school]     {*.\ }{}%
    \_bprinta [address]    {*, }{}%
    \_bprinta [year]       {*.\ }{}%

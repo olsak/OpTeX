@@ -365,8 +365,9 @@
 
 The `<declaration>` part of `\table{<declaration>}{<data>}` includes
 column declarators (letters) and other material: the `|` or `(<cmd>)`.
-The boundaries of columns are just before each column declarator 
-(with exception of the first one) if the boundary declarator `:` is not used. 
+If the boundary declarator `:` is not used then
+the boundaries of columns are just before each column declarator
+with exception of the first one.
 For example, the declaration  `{|c||c(xx)(yy)c}`
 should be written more exactly using the boundary declarator `:` 
 by `{|c||:c(xx)(yy):c}`. But you can set these boundaries to
@@ -374,7 +375,7 @@ another places using the boundary declarator~`:` explicitly,
 for example `{|c:||c(xx):(yy)c}`. The boundary declarator `:` 
 can be used only once between each two column declarators. 
 
-Each table item have its own group. The `(<cmd>)` are parts of the given
+Each table item has its own group. The `(<cmd>)` are parts of the given
 table item (depending on the boundary declarator position).
 If you want to apply a special setting for given column, you can do this by
 `(<setting>)` followed by column declarator. But if such column is not
