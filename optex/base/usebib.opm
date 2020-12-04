@@ -183,10 +183,13 @@
 }
 
    \_doc -----------------------------
-   Various macros + multilinguas.
+   Various macros + multilinguas. Note that \`\_nobibwarnlist` is used in
+   \`\_bibwarning` and it is set by \^`\nobibwarning` macro.
    \_cod -----------------------------
 
-\_def\_bibwarning{\_opwarning{Missing field "\_bibfieldname" in [\EntryKey]}}  
+\_def\_bibwarning{%
+   \_ea\_isinlist \_ea\_nobibwarnlist\_ea{\_ea,\EntryKey,}\_iffalse
+       \_opwarning{Missing field "\_bibfieldname" in [\EntryKey]}\_fi}
 
 \_def\_mtdef#1#2#3#4{\_sdef{_mt:#1:en}{#2} \_sdef{_mt:#1:cs}{#3}
   \_if$#4$\_slet{_mt:#1:sk}{_mt:#1:cs}
@@ -220,7 +223,16 @@ If an entry with the same label is declared in `local.bib` and in
 `global.bib` too then the first wins. So, you can set an exceptions in your
 `local.bib` file for your document.
 
-\seccc Notes for style writers
+The `bib-<style>.opm` declares entry types (like `@BOOK`, `@ARTICLE`) and declares
+their mandatory and optionals fields (like `author`, `title`). When
+mandatory field is missing in an entry in the `.bib` file then warning is printed on the
+terminal about it. You can suppress such warnings by command
+\^`\nobibwarning`~`[<bib-labels>]`, where <bib-labels> is comma separated list
+of labels (without spaces) declared in `.bib` file where missing mandatory fields
+will be no warned.
+
+
+\secc Notes for bib style writers
 
 The `bib-<style>.opm` file must define the commands:
 
@@ -234,23 +246,29 @@ The `bib-<style>.opm` file must define the commands:
 * `\_editorname` ... the same as `\_authorname`, but for editors list.
 * `_print:<entrytype>` (defined by `\_sdef`) for formatting the entry of `<entrytype>`.
     The `<entrytype>` have to be lowercase. This command can use the command:
-* `\_bprinta [<fieldname>]  {<if defined>} {<if not defined>}`. The part <if defined>
+\enditems
+
+The `bib-<style>.opm` can use the commands:
+
+\begitems
+* \^`\_bprinta` `[<fieldname>]  {<if defined>} {<if not defined>}`. The part <if defined>
     is executed if <fieldname> is declared in .bib file for the entry which is
     currently processed. Else the part <if not defined> is processed.
     The part <if defined> can include the `*` parameter which is replaced
-    by the value of the <fieldname>. The part <if not defined> can include
-    the `\_bibwarning` command if the <fieldname> is mandatory.
-* `\_bprintb [<fieldname>]  {<if defined>} {<if not defined>}`. The same as
+    by the value of the <fieldname>.
+*   The part <if not defined> can include
+    the \^`\_bibwarning` command if the <fieldname> is mandatory.
+* \^`\_bprintb` `[<fieldname>]  {<if defined>} {<if not defined>}`. The same as
     `\_bprinta`, but the `##1` parameter is used instead `*`. Differences: `##1`
     parameter can be used more than once and can be enclosed in nested
     braces. The * parameter can be used at most once and cannot be enclosed
     in braces. Warning: if the `\_bprintb` commands are nested (`\_bprintb` in
     `\_bprintb`), then you need to write `####1` parameter for internal `\_bprintb`.
     But if `\_bprinta` commands are nested then the parameter is not duplicated.
-* `\_pbprintc \macro {<if non-empty>}`. The <if non-empty> part is executed if
+* \^`\_bprintc` `\macro {<if non-empty>}`. The <if non-empty> part is executed if
     `\macro` is non-empty. The * parameter can be used, it is replaced by
     the `\macro`.
-* `\_bprintv [<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
+* \^`\_bprintv` `[<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
     The part <if defined> is executed if <field1> or <filed2> or ...
     is defined, else the second part <if not defined> is executed.
     There is one filed name or the list field names separated by commas.  

@@ -23,7 +23,7 @@
    You can ask by \`\_ifmathsb` if this feature is activated or deactivated.
    By default, it is activated in the `\everyjob`, see section~\ref[init].
    Note, that the `\everyjob` is processed after the first line of the document is
-   read, so the \^`\matsbon` is activated from second line of the document.
+   read, so the \^`\mathsbon` is activated from second line of the document.
    \_cod -----------------------------
 
 \catcode`\_ = 8   \let\sb = _

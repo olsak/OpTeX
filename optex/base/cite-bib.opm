@@ -233,6 +233,17 @@
 \_def\_usebib{\_par \_opinput {usebib.opm} \_usebib}
 \_def\usebib{\_usebib}
 
+   \_doc ------------------------------
+   \`\nobibwarning` `[<list of bib-labels>]` declares a list of bib labels
+   which are not fully declared in `.bib` file but we want to suppress the
+   warning about it. List of bib labels are comma separated case sensitive
+   list without spaces.
+   \_cod ------------------------------
+
+\_def\_nobibwarnlist{,}
+\_def\_nobibwarning[#1]{\_global\_addto\_nobibwarnlist{#1,}}
+\_public \nobibwarning ;
+
    \_doc -----------------------------
    The macros above works if all `\cite` (or similar) commands are used
    before the `\usebib` command is used because `\usebib` prints only such

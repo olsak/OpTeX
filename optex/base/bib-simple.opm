@@ -88,8 +88,8 @@
                          In:~%
    \_bprinta [!editor]    {*,~eds.\ }{}%
    \_bprintb [booktitle]  {{\_em##1}.\ }{\_bibwarning}% 
-   \_bprinta [address]    {*: }{}%
-   \_bprinta [publisher]  {*, }{}%
+   \_bprinta [address]    {*: }{\_bibwarning}%
+   \_bprinta [publisher]  {*, }{\_bibwarning}%
    \_bprinta [year]       {*.\ }{\_bibwarning}%
    \_bprinta [chapter]    {*.\ }{%
                          \_bprinta [pages]      {*.\ }{}}%
