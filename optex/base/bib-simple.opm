@@ -34,14 +34,6 @@
    \_bibmark=\_ea{\_tmp}%
 }
 
-% Multilinguals:      English     Czech     Slovak
-
-\_mtdef{bib.and}       {, and }    { a }     {}
-\_mtdef{bib.edition}   {edition}   {vydání}  {vydanie}
-\_mtdef{bib.masterthesis} {Master's Thesis}   {Diplomová práce}   {Diplomová práca}
-\_mtdef{bib.phdthesis} {Ph.D. Thesis}   {Disertační práce}  {Dizertačná práca}
-
-
 \_def\_preurl{\_hfil\_break} 
 
 % Non-standard fieldnames:

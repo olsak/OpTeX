@@ -183,6 +183,12 @@
 
    \_doc -----------------------------
    Main documentation point and hyperlinks to/from it.
+   Main documentation point: \code{\\`\\foo`}.
+   User-level documentation point: \code{\\^`\\foo}, first occurence only.
+   Next occurences are only links to main documentation point.
+   Link to user-level documentation point: \code{\\~`\\foo}.
+   If user-level documentation point follows the main documentation point
+   then use \code{\\_forwardlink\\`\\foo`}.
    \_cod -----------------------------   
 
 \_activettchar`
@@ -194,6 +200,7 @@
             \_link[cs:^\_tmp]{\Red}{\_tt\_csstring\\\_tmp}\_else
             {\_tt\Red\_csstring\\\_tmp}\_fi}%
 }
+\_def\_forwardlink\`#1`{{\_slet{cs:^\_csstring#1}{relax}\`#1`}}
 
 \_def\^`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi

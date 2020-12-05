@@ -234,7 +234,8 @@
 \_def\usebib{\_usebib}
 
    \_doc ------------------------------
-   \`\nobibwarning` `[<list of bib-labels>]` declares a list of bib labels
+   \_forwardlink\`\nobibwarning` `[<list of bib-labels>]`
+   declares a list of bib labels
    which are not fully declared in `.bib` file but we want to suppress the
    warning about it. List of bib labels are comma separated case sensitive
    list without spaces.

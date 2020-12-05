@@ -99,23 +99,10 @@
    \_ifx\_tmp\_empty \_RetrieveFieldIn{year}\_tmp \_edef\_tmp{\_dobibmark, \_tmp}\_fi
    \_bibmark=\_ea{\_tmp}%
 }
-% Multilinguals:           English                Czech               Slovak
 
-\_mtdef{bib.and}           {, and }               { a }               {}
-\_mtdef{bib.etal}          { et al.}              { a~kol.}           {}
-\_mtdef{bib.edition}       { ed.}                 { vyd.}             {}
-\_mtdef{bib.bachthesis}    {Bachelor's Thesis}    {Bakalářská práce}  {Bakalárska práca}
-\_mtdef{bib.masthesis}     {Master's Thesis}      {Diplomová práce}   {Diplomová práca}
-\_mtdef{bib.phdthesis}     {Ph.D. Thesis}         {Disertační práce}  {Dizertačná práca}
-\_mtdef{bib.available}     {Available from }      {Dostupné na }      {}
-\_mtdef{bib.availablealso} {Available also from } {Dostupné též na }  {Dotupné tiež na }
-\_mtdef{bib.citedate}      {cit.~}                {vid.~}             {}
-\_mtdef{bib.volume}        {Vol.~}                {ročník~}           {}
-\_mtdef{bib.number}        {No.~}                 {č.~}               {}
-\_mtdef{bib.prepages}      {pp.~}                 {s.~}               {}
-\_mtdef{bib.postpages}     {~p.}                  {~s.}               {}
-\_mtdef{bib.editor}        {,~ed.}                {,~editor}          {}
-\_mtdef{bib.editors}       {,~eds.}               {,~editoři}         {,~editori}
+   \_doc -----------------------------
+   Setting phrases.
+   \_cod -----------------------------
 
 \_def\_bibconjunctionand{\_Mtext{bib.and}}
 \_def\_preurl{\_Mtext{bib.available}}
@@ -127,14 +114,18 @@
 \_def\_prepages{\_mtext{bib.prepages}}
 \_def\_posteditor{\_ifnum0\_namecountraw>1 \_Mtext{bib.editors}\_else\_Mtext{bib.editor}\_fi}
 
+   \_doc ----------------------------
+   \`\_Mtext``{<identifier>}` expands to a
+   phrase by outer document language (no entry language) is defined here.
+   \_cod -----------------------------
+
 \_chardef\_documentlanguage=\_language
 \_def\_Mtext#1{\_csname _mt:#1:\_csname _lan:\_the\_documentlanguage\_endcsname\_endcsname}
 
 \_CreateField {lang}
 \_def\_setlang#1{\_ifx#1\_empty \_else 
-      \_ea \_ifx \_csname _#1Patt\_endcsname \_relax
-         \_opwarning{The language "#1" used in .bib file is unknown}
-      \_else \_language=\_csname _#1Patt\_endcsname
+     \_ifcsname _mt:bib.and:#1\_endcsname \_language=\_csname _#1Patt\_endcsname \_relax
+     \_else \_opwarning{No phrases for lang. "#1" used by [\EntryKey] in bib file}%
    \_fi\_fi
 }
 
@@ -167,19 +158,10 @@
 
 \_def\_docitedate #1/#2/#3/#4\_relax{[\_Mtext{bib.citedate}%
    \_if^#2^#1\_else
-      \_if^#3^#1/#2\_else \_docitedateA{#1}{#2}{#3}%
+      \_if^#3^#1/#2\_else
+         \_cs{_\_cs{_lan:\_the\_documentlanguage}dateformat}#1/#2/#3\relax
    \_fi\_fi ]%
 }
-\_def\_docitedateA#1#2#3{%
-   \_ifnum\_documentlanguage=\_csPatt \_docitedateCS{#1}{#2}{#3}%
-   \_else \_ifnum\_documentlanguage=\_skPatt \_docitedateSK{#1}{#2}{#3}%
-         \_else \_docitedateEN{#1}{#2}{#3}%
-   \_fi\_fi
-}
-\_def\_docitedateEN#1#2#3{#1-#2-#3}
-\_def\_docitedateCS#1#2#3{\_hbox{\_tmpnum=#3 \_the\_tmpnum. \_tmpnum=#2 \_the\_tmpnum. #1}} 
-\_let\_docitedateSK=\_docitedateCS
-
 \_def\_doyear#1{
    \_biboptionvalue{yearprint}\_yearprint
    \_ifx\_yearprint\_empty#1\_else\_def\YEAR{#1}\_yearprint\_fi
@@ -330,12 +312,12 @@
 
 This is the iso690 bibliographic style used by \OpTeX/.
 
-See `op-example.bib` for an example of the `.bib` input. You can try it by:
+See `op-biblist.bib` for an example of the `.bib` input. You can try it by:
 
 \begtt
 \fontfam[LMfonts]
 \nocite[*]
-\usebib/s (iso690) op-example
+\usebib/s (iso690) op-biblist
 \end
 \endtt
 
@@ -858,48 +840,33 @@ may be printed in the language of the outer document. The data of the entry
 have to be printed in the entry language (edition ed./vyd., Vol./ročník,
 No./č. etc.). Finally there are the phrases independent on the language
 (for example In:). Unfortunately, the bib\TeX/ supposes that the entry data
-are not fully included in value parts of the fields (see edition, volume
-etc. fields) so the automaton have to add some text during processing.
+are not fully included in the fields so the automaton have to add some
+text during processing (\"ed.", \"Vol.", \"see also", etc.).
 But what language have to be chosen?
 
 The current value of the `\language` register at the start of the `.bib`
-processing is decided as the language of the outer document. This language
-is used for technical notes regardless of the entry language. Each entry can
-have the lang field with the two-letter mark of the entry language. This
+processing is descided as the language of the outer document. This language
+is used for technical notes regardless of the entry language. Moreover,
+each entry can have the `lang` field (short name of the language). This
 language is used for ed./vyd., vol./ročník etc. and it is used for
-hyphenation too. If the entry language is not set then the outer document
+hyphenation too. If the `lang` is not set then the outer document
 language is used.
 
-If the outer document language is known before creating of the `.bib` file, you
-can store some language-dependent phrases into it. On the other hand, if the
-main document language is unknown, you can use the `\Mtext` macro to
-create the text multilingual. Example:
+You can use \^`\_Mtext{bib.<identifier>}` if you want to use a phrase
+dependent on outer document language (no on entry language).
+Example:
 
 \begtt
-howpublished = "\Mtext{blue-ray}"
+howpublished = "\_Mtext{bib.blue-ray}"
 \endtt
 
-Now, you can set the variants of blue-ray into your macros:
+Now, you can set the variants of `bib.blue-ray` phrase for various
+languages:
 
 \begtt
-\_mtdef {blue-ray}  {Blue-ray disc}  {Blue-ray disk} {}
+\_sdef{_mt:bib.blue-ray:en} {Blue-ray disc}
+\_sdef{_mt:bib.blue-ray:cs} {Blue-ray disk}
 \endtt
-
-
-\seccc Tips for using more languages
-
-This style prefers English, Czech and Slovak languages. However, you can add
-more languages. Use the shortcuts of language names (`de` and `pl` in the
-example below). You can define all phrases for your language:
-\begtt
-\def\mtdefx#1#2#3{\sdef{_mt:#1:de}{#2}\sdef{_mt:#1:pl}{#3}}
-
-                          % German              % Polish
-\mtdefx {bib.and}         { und }               { a }
-\mtdefx {bib.phdthesis}   {Ph.D. Dissertation}  {Praca doktorska}
-...
-\endtt
-See more about language phrases in the \ref[langphrases] section.
 
 
 \seccc Summary of non-standard fields

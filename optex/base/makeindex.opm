@@ -410,7 +410,7 @@
    there is first occurrence of the <word>. The list of pages where `<word>`
    occurs, is the value of the macro `\,<word>`, so the `<gpageno>:<iitype>` 
    is appended to this list.
-   Moreower, we need a mapping from <gpageno> to `<pageno>`, because we print
+   Moreover, we need a mapping from <gpageno> to `<pageno>`, because we print
    `<pageno>` in the index, but hyperlinks are implemented by `<gpageno>`.
    So, the macro `\_pgi:<gpageno>` is defined as `<pageno>`.
    \_cod -----------------------------
