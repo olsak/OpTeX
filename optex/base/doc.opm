@@ -96,6 +96,8 @@
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
+\_def\_remfirstunderscore#1{\_ea\_remfirstunderscoreA#1\_relax#1}
+\_def\_remfirstunderscoreA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi}
 
    \_doc -----------------------------
    The lines in the listing mode have Yellow background.

@@ -13,7 +13,7 @@
 \_def\_wideformat{\_margins/1 (263,148) (16,16,10,3)mm } % 16:9 format
 
 \_ifx\_fontnamegen\_undefined \_fontfam[Heros]
-   \_famvardef\_ttfont{\_setfontsize{mag1.15}\_tt}
+   \_let\_ttfont=\_undefined \_famvardef\_ttfont{\_setfontsize{mag1.15}\_tt}
 \_fi
 \_typosize[16/19]
 \_def\_urlfont{}

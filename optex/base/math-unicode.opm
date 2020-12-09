@@ -31,7 +31,7 @@
       \_let\_normalmath = \_normalunimath  \_let\_boldmath = \_boldunimath 
       \_normalmath
       \_wterm {MATH-FONT: "#1" -- unicode math prepared.}%
-      \_opinput {unimath-codes.opm}% 
+      \_ifx\_ncharrmA\_undefined \_opinput {unimath-codes.opm}\_fi
       \_mathloadingfalse
    \_fi\_fi}
 

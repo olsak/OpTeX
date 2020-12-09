@@ -31,9 +31,9 @@ Extended variants:^^J
 \_moddef \cond     {\_fsetV sub=Condensed \_onlyif w=b: {\normal}\_onlyif w=t: {\light}}
 \_moddef \ttset    {\_fsetV sub=Slab \_fvars Regular Bold . . }
 
-\_moddef \thin     {\_onlyif sub=,Mono: {\_fsetV w=t \_fvars Thin Regular ThinItalic Italic }%
+\_moddef \thin     {\_onlyif sub={},Mono: {\_fsetV w=t \_fvars Thin Regular ThinItalic Italic }%
                     \_onlyif sub=Slab: {\_fsetV w=t \_fvars Thin Regular . . }}
-\_moddef \light    {\_onlyif sub=,Mono: {\_fsetV w=l \_fvars Light Medium LightItalic MediumItalic }%
+\_moddef \light    {\_onlyif sub={},Mono: {\_fsetV w=l \_fvars Light Medium LightItalic MediumItalic }%
                     \_onlyif sub=Condensed: {\_fsetV w=l \_fvars Light Regular LightItalic Italic }%
                     \_onlyif sub=Slab: {\_fsetV w=l \_fvars Light Bold . . }}
 \_moddef \normal   {\_fsetV w=n \_fvars Regular Bold Italic BoldItalic 

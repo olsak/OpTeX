@@ -51,13 +51,13 @@ If you want to write such font file, you need to keep following rules.
 * You can declare optical sizes using `\_regoptsizes` if there are more font files
   with different optical sizes (like in Latin Modern). See `f-lmfonts.ofm`
   file for more information about this special feature.
-* Declare font modifiers using `\_moddef` if they are present. The \`\resetmod` 
+* Declare font modifiers using \~`\moddef` if they are present. The \`\resetmod`
   must be declared in each font family.
 * Check if all your declared modifiers does not produce any space in
   horizontal mode. For example check: `X\caps Y`, the letters `XY` must 
   be printed without any space. 
 * Optionally, declare new variants by the \^`\famvardef` macro.
-* Run `\_initfontfamily` in order to start the family.
+* Run `\_initfontfamily` in order to start the family (it is mandatory).
 * If math font should be loaded, use `\_loadmath{<math font>}`.
 \enditems
 
@@ -77,7 +77,7 @@ Note that the extended `\font` syntax
 is expected here.
 
 \bigskip
-{\noindent\bf Example.} 
+{\noindent\bf Example 1.}
 Assume an abstract font family with fonts `xx-Regular.otf`,
 `xx-Bold.otf`, `xx-Italic.otf` and `xx-BoldItalic.otf`. Then you can declare
 the `\resetmod` (for initializing the family) by:
@@ -102,12 +102,13 @@ Assume that the user needs `\it` variant in this family. Then the
 `[xx-Italic]`. The Font Selection System uses `\font {[xx-Italic]}`.
 This command loads the `xx-Italic.otf` font file.
 
-See more advanced examples in `f-<family>.opm` files. The `f-heros.opm` is listed
-here. When Heros family is selected and `\bf` is asked then
-\begtt
-\font {[texgyreheros-bold]:+tlig;} at10pt
-\endtt
-%
+See more advanced examples are in `f-<family>.opm` files.
+
+\bigskip
+{\noindent\bf Example 2.}
+The `f-heros.opm` is listed here. Look at it.
+When Heros family is selected and `\bf` is asked then
+`\font {[texgyreheros-bold]:+tlig;} at10pt`
 is processed.
 
 You can use any expandable macros or expandable primitives in the `\_fontnamegen`
@@ -123,7 +124,9 @@ general form:
 %
 with obvious result `\def \_<word-a>V {<value-a>}\def \_<word-b>V {<value-b>}` etc.
 
-Example: if both font modifiers `\caps` and `\cond` were applied from the Heros
+\bigskip
+{\noindent\bf Example 3.}
+If both font modifiers `\caps` and `\cond` were applied from the Heros
 family, then `\def\_capsV{+smcp;+onum}` and `\def\_condV{cn}` were processed
 by these font modifiers. If user needs the `\bf` variant at 11\,pt now then
 the
@@ -133,13 +136,14 @@ the
 \endtt
 %
 is processed. We assume that a font file `texgyreheroscn-bold.otf` is present
-in your TeX system.
+in your \TeX/ system.
 
 The macro \^`\_onlyif` `<word>=<value-a>,<value-b>,...<value-n>: {<what>}` can
-be used inside `\_moddef` as simple IF statement: the `<what>` is processed only
-if `<word>` has `<value-a>` or `<value-b>` \dots or `<value-n>`.
+be used inside `\moddef` as simple IF statement: the `<what>` is processed only
+if `<word>` has `<value-a>` or `<value-b>` \dots or `<value-n>`. See
+`f-roboto.opm` for examples of usage of many `\_onlyif`'s.
 
-Recommendation: the \^`\_fontfeatures` macro at the end of the `\_fontnamegen`
+Recommendation: use the \^`\_fontfeatures` macro at the end of the `\_fontnamegen`
 macro in order to the \^`\setff`, \^`\setfontcolor`, \^`\setletterspace`
 macros can work. 
 
@@ -150,6 +154,8 @@ does more things than simple `\_def`:
 \begitems
 * The modifier macros are defined as `\_protected`.
 * The modifier macros are defined as family-dependent. 
+* If the declared control sequence is defined already (and it is not font
+  modifier) then it is re-defined with warning.
 \enditems
 \noindent
 The \^`\famvardef` macro has the same features.
@@ -174,19 +180,18 @@ is defined by the \^`\_famdecl` macro as:
    \enditems
 
 {\noindent\bf The \^`\_initfontfamily` must be run} after modifers decaration. 
-It sets `\_let\_resetmod=\resetmod` and runs the `\<Familyselector>`. 
-Finally, it runs `\_rm`, so first font from new family is loaded and it 
-is ready to use it.
+It runs the `\<Familyselector>` and it runs `\_rm`,
+so first font from new family is loaded and it is ready to use it.
 
-\bigskip
-{\noindent\bf Name conventions.}
+\seccc Name conventions
+
 Create font modifiers, new variants and the `\<Familyselector>` only as public, i.e.
-without `_` prefix. We assume that if user re-defines them then he/she needs
-not them, so we have no problems.
+in user name space without `_` prefix. We assume that if user re-defines them then he/she needs
+not them, so we have no problems. If user's definition done before loading
+font family file is re-defined then \OpTeX/ warns about it. See the end of
+section~\ref[fontcommands].
 
 The name of `\<Familyselector>` should begin with uppercase letter.
-
-\seccc Additional notes
 
 Please, look at
 \ulink[http://petr.olsak.net/ftp/olsak/optex/op-catalog.pdf]{\OpTeX/ font catalogue}
@@ -194,12 +199,12 @@ before you will create your own font family file and use the same names for
 analogical font modifiers (like `\cond`, `\caps`, `\sans`, `\mono` etc.)\ 
 and for extra variant selectors (like `\lf`, `\li`, `\kf`, `\ki` etc.\ used in
 Roboto font family).
-These names are declared in user name space. We suppose that if user
-re-defines such names then he/she does not need to use them.
 
 If you need to declare your private modifier (because it is used in another
 modifiers or macros, for example), use the name `\_wordM`. You can be
 sure that such name does not influence the private name space used by \OpTeX/.
+
+\seccc Additional notes
 
 See the font family file `f-libertine-s.opm` which is another example where no
 font files but font names are used.

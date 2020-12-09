@@ -41,29 +41,33 @@
    The \`\_famdecl` `[<Family Name>] \<Famselector> {<comment>} {<modifiers>} {<variants>} {<math>}`\nl
    `{<font for testing>} {\def`\^`\_fontnamegen``{<data>}}` runs \^`\initunifonts`, then
    checks if `\<Famselector>` is defined. If it is true, then closes the file by 
-   `\endinput`. Else it defines `\<Famselector>` and saves it to the \`\_mainfamcommand` 
-   macro because the \`\_initfontfamily` needs it. The \`\_currfamily` is set
+   `\endinput`. Else it defines `\<Famselector>` and saves it to the
+   internal `\_f:<currfamily>:main.fam` command.
+   The macro \`\_initfontfamily` needs it. The \`\_currfamily` is set
    to the `<Famselector>` because the following \^`\moddef` commands need to
    be in the right font family context. The `\_currfamily` is set to the
    `<Famselector>` by the `\<Famselector>` too, because `\<Famselector>`
-   must set the right faily context. The font family context is given by the current
-   `\_currfamily` value and by the actual meaning of the \^`\_fontnamegen` macro. 
+   must set the right font family context. The font family context is given by the current
+   `\_currfamily` value and by the actual meaning of the \^`\_fontnamegen` macro.
+   The \`\_mathfaminfo` is saved for usage in the catalogue.
    \_cod -----------------------------
 
 \_def\_famdecl [#1]#2#3#4#5#6#7#8{%
    \_initunifonts \_uniaccents
-   \_ifx #2\_undefined 
+   \_unless\_ifcsname _f:\_csstring#2:main.fam\_endcsname
       \_isfont{#7}\_iffalse
          \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
-         \_edef\_currfamily {\_csstring #2}%
-         \_def\_mainfamcommand{#2}\_def\_mathfaminfo{#6}%
-         \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetmod}}%
+         \_edef\_currfamily {\_csstring #2}\_def\_mathfaminfo{#6}%
          \_wterm {FONT: [#1] -- \_string#2 \_detokenize{(#3)^^J mods:{#4} vars:{#5} math:{#6}}}%
+         \_unless \_ifx #2\_undefined
+            \_opwarning{\_string#2 is redefined by \_string\_famdecl\_space[#1]}\_fi
+         \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetmod}}%
+         \_ea \_let \_csname _f:\_currfamily:main.fam\_endcsname =#2%
       \_fi 
-   \_else \_ea #2\_ea\_endinput \_fi
+   \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_reloading \_rm \_ea \_endinput \_fi
 }
 \_def\_initfontfamily{%
-   \_mainfamcommand \_reloading \_rm   
+   \_csname _f:\_currfamily:main.fam\_endcsname \_reloading \_rm
 }
 
    \_doc -----------------------------
@@ -107,6 +111,9 @@
    \`\_onlyif` `<key>=<value-a>,<value-b>...,<value-z>: {<what>}` 
    runs <what> only if the `\_<key>V` is defined as `<value-a>` or
    `<value-b>` or ... or `<value-z>`.
+   \nl
+   \`\_prepcommalist` `ab,{},cd,\_end,` expands to `ab,,cd,` (auxiliary macro
+   used in `\_onlyif`).
    \_cod -----------------------------
 
 \_def\_fvars #1 #2 #3 #4 {%
@@ -125,9 +132,10 @@
    \_ifx,#1\_else\_sdef{_#1V}{#2}\_ea\_ea\_ea\_fsetVa\_fi\_fi
 }
 \_def \_onlyif #1=#2:#3{%
-    \_edef\_act{\_noexpand\_isinlist{,#2,}{,\_cs{_#1V},}}\_act
+    \_edef\_act{\_noexpand\_isinlist{,\_prepcommalist #2,\_end,}{,\_cs{_#1V},}}\_act
     \_iftrue #3\_fi
 }
+\_def\_prepcommalist#1,{\_ifx\_end#1\_empty\_else #1,\_ea\_prepcommalist\_fi}
 
    \_doc -----------------------------
    The \`\moddef` `\<modifier> {<data>}` simply speaking does
@@ -145,22 +153,28 @@
    `_<something>` or to `<something>`. The `\_remifirstunderscore` 
    redefines `\_tmp` in the way that it
    expands only to `<something>` without the first `_`.
+
+   \`\_setnewmeaning` `<cs-name>=\_tmpa <by-what>` does `\_let <csname>=\_tmpa`
+   but warning is printed if <cs-name> is defined already and it is not a variant
+   selector or font modifier.
    \_cod -----------------------------
 
-\_def \_moddef #1#2{\_edef\_tmp{\_csstring#1}\_remfirstunderscore\_tmp
+\_def \_moddef #1#2{\_edef\_tmp{\_csstring#1}%
    \_sdef{_f:\_currfamily:\_tmp}{#2\_reloading}%
-   \_protected \_edef #1{\noexpand\_famdepend\noexpand#1{_f:\noexpand\_currfamily:\_tmp}}%
-   \_ea \_ifx \_csname\_tmp\_endcsname #1\_else
-      \_ea \_public \_csname\_tmp\_endcsname ;\_fi
+   \_protected \_edef \_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
+   \_setnewmeaning #1=\_tmpa \moddef
 }
-\_def\_remfirstunderscore#1{\_ea\_remfirstunderscoreA#1\_relax#1}
-\_def\_remfirstunderscoreA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi}
-
 \_protected \_def\_resetmod {\_cs{_f:\_currfamily:resetmod}} % private variant of \resetmod
 \_def\_currfamily{} % default current family is empty
 
 \_def\_famdepend#1#2{\_ifcsname#2\_endcsname \_csname#2\_ea\_endcsname \_else
    \_opwarning{\_string#1 is undeclared in current family "\_currfamily", ignored}\_fi
+}
+\_def\_setnewmeaning #1=\_tmpa#2{%
+   \_ifx #1\_undefined \_else \_ifx #1\_tmpa \_else
+      \_opwarning{The \_string#1 is redefined by \_string#2 (line: \_the\_inputlineno)}%
+   \_fi\_fi
+   \_let#1=\_tmpa
 }
 \_public \moddef ;
 
@@ -179,19 +193,19 @@
    \enditems
    \_cod -----------------------------
 
-\_def\_famvardef#1{\_edef\_tmp{\_csstring#1}\_remfirstunderscore\_tmp
+\_def\_famvardef#1{\_edef\_tmp{\_csstring#1}%
    \_ea\_famvardefA \_ea#1\_csname _ten\_tmp\_ea\_endcsname
       \_csname _tryload:\_tmp\_endcsname
 }
-\_def\_famvardefA #1#2#3#4{% #1=\_XX #2=\_tenXX #3=\_tryloadXX #4=data
+\_def\_famvardefA #1#2#3#4{% #1=\XX #2=\_tenXX #3=\_tryloadXX #4=data
    \_isinlist{.\_rm\_bf\_it\_bi\currvar\_currvar}#1\_iftrue
       \_opwarning{\_string\famvardef: 
           You cannot re-declare private standard variant selector \_string#1}%
    \_else
-      \_protected\_edef #1{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
+      \_protected\_edef\_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
+      \_setnewmeaning #1=\_tmpa \famvardef
       \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
       \_def#3{\_fontdef#2{#4}}%
-      \_ifx#1\tt \_addto#1{\_fam\_ttfam}\_fi
       \_sdef{_currvar:\_csstring#2}{#1}%
    \_fi
 }
@@ -378,13 +392,13 @@ was documented in the section~\ref[fontfam].
 We distinguish between
 \begitems
 * {\em font switchers}, they are declared by the `\font` primitive or by 
-  \^`\fontlet` or \^`\fontdef` macros,
+  \^`\fontlet` or \~`\fontdef` macros,
 * {\em variant selectors}, there are four basic variant selectors
   `\rm`, `\bf`, `\it`, `\bi`, there is a special selector `\currvar`
-  and more variant selectors can be declared by the \^`\famvardef` macro.
+  and more variant selectors can be declared by the \~`\famvardef` macro.
 * {\em font modifiers} (for example `\cond`, `\caps`, \^`\setfontsize``{<size spec>}`), 
   they are in two types: bulid in (like \^`\setfontsize`) or
-  declared modifiers (by by the \^`\moddef` macro).
+  declared modifiers (by by the \~`\moddef` macro).
 * {\em family selectors} (for example `\Termes`, `\LMfonts`), 
   they are declared typically in the {\em font family files}. 
 \enditems
@@ -395,6 +409,7 @@ used when the group was opened. They have the following features:
 
 \begitems
 * The {\em font switchers} select fonts independent on the font context.
+  They are declared directly byt he `\font` primitive.
 * The {\em variant selectors} select the font depending on the font context and on
   the specified variant.
 * The {\em font modifiers} create a change in the font context but they 
@@ -403,9 +418,14 @@ used when the group was opened. They have the following features:
   font modifiers. They dont't select the font itself.
 \enditems
 
-The variant selectors and declared font modifiers are 
-defined in the family context.  They can behave differently in different 
-families. 
+The {\em font context} is a set of macro values which will affect the
+selection of real font when variant selector is processed. It includes the
+value of {\em current family} and more values stored by font modifiers.
+
+The {\em family context} is the current family value stored in the font
+context. The variant selectors declared by \~`\famvardef` and
+font modifiers declared by \~`\moddef` are dependent on the {\em family context}.
+They can have the same names but different behavior in different families.
 
 The fonts registered in \OpTeX/ have their macros in the {\em font family files}, 
 each family is declared in one font family file with the name `f-famname.opm`. 
@@ -417,8 +437,9 @@ declarations in the file `fams-local.opm`.
 The \^`\fontfam` `[<Font Family>]` opens the relevant font family file where 
 the `<Font Family>` is declared. The family selector is defined here by rules
 described in the section~\ref[fontfamfiles]. Font modifiers and variant
-selectors may be declared here. Their definitions depends on given family.
-The family is set as active in the font context and `\rm` variant selector is run.
+selectors may be declared here.
+The given family is set as in the font context and
+`\rm` variant selector is processed.
 
 The available declared font modifiers and declared variant selectors are
 listed in the log file when font family is load. Or you can print
@@ -480,11 +501,11 @@ If you want to use your specially selected Unicode-math font then use
 `\fontfam` is used.
 
 
-\secc Declaring font commands
+\secc[fontcommands] Declaring font commands
 %----------------------------
 
-The font switches can be declared by `\font` primitive or by \^`\fontdef` or
-\^`\fontlet` macros. See the sections~\ref[fontdef] and~\ref[fontlet] 
+The font switches can be declared by `\font` primitive or by \~`\fontdef` or
+\~`\fontlet` macros. See the sections~\ref[fontdef] and~\ref[fontlet]
 for more details. The general format for \^`\fontdef` is
 \begtt \catcode`\<=13
 \fontdef\<font switch> {\<family selector> <font modifiers> \<variant selector>}
@@ -525,7 +546,7 @@ macro has similar syntax as \^`\fontdef`:
 %
 The `\<new variant selector>` should be used in the same sense as `\rm`,
 `\bf` etc. It can be used as the final command in the 
-`\fontdef` or `\famvardef` declarators
+\^`\fontdef` or \^`\famvardef` declarators
 too. When the `\<new variant selector>` is used in normal text then it does
 following steps: pushes current font context to a stack, modifies font
 context by declared `<font modifiers>`, runs following `\<variant selector>`.
@@ -533,21 +554,20 @@ It selects a font. Then pops the stack. The font context have its original
 values but new font is selected.
 
 The \^`\famvardef` creates the `\<new variant selector>` family dependent.
-When the selector is used in another family than it is defined then warning is
+When the selector is used in another family context than it is defined then warning is
 printed on the terminal \"<var selector> is undeclared in current family"
 and nothing happens. But you can declare the same variant selector by
 \^`\famvardef` macro in the context of new family. Then the same command
 will be do different work depending on the current font family.
 
 Suppose that the selected font family provides the font modifier `\medium` for
-mediate weight of fonts but supports only basic variant selectors `\rm`, `\bf`, `\it`,
-and `\bi`. Then you can declare:
+mediate weight of fonts. Then you can declare:
 \begtt
-\famvardef \mr {\medium\rm}
+\famvardef \mf {\medium\rm}
 \famvardef \mi {\medium\it}
 \endtt
 Now, you can use six independent variant selectors `\rm`, `\bf`, `\it`,
-`\bi`, `\mr` and  `\mi` in the selected font family.
+`\bi`, `\mf` and  `\mi` in the selected font family.
 
 A `\<family selector>` can be written before `<font modifiers>` in the
 `\famvardef` parameter. Then the `\<new variant selector>` is declared in
@@ -567,8 +587,26 @@ into problem with incompatible ex-heights. This problem can be solved using
 Compare ex-height of Termes \rmsans with Heros \rm and Termes.
 \endtt
 
-There exists analogical declarator `\moddef` for declaration family dependent 
+There exists analogical declarator \~`\moddef` for declaration family dependent
 font modifiers. It is described in detail the section~\ref[fontfamfiles].
+
+The variant selectors (declared by \^`\famvardef`) or font
+modifiers (declared by \~`\moddef`) are control sequences in user name
+space (`\mf`, `\caps`). They are declared typically in font family files and
+they are loaded by \^`\fontfam`. A conflict with such names in
+user name space can be here. For example: if `\mf` is defined by user and then
+`\fontfam[Roboto]` is used then `\famvardef\mf` is performed for Roboto
+family and the original meaning of `\mf` is lost. But \OpTeX/ prints warning
+about it. You have two choices:
+
+\begtt
+\def\mf{Metafont}
+\fontfam[Roboto]  % warning: "The \mf is redefined by \famvardef" is printed
+  or
+\fontfam[Roboto]
+\def\mf{Metafont} % \mf variant selector redefined by user, we suppose that \mf
+                  % is used only in the meaning of "Metafont" in the document.
+\endtt
 
 
 \secc Modifying font features
