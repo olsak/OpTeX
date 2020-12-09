@@ -340,7 +340,7 @@ editors, available, availablealso, bachthesis, masthesis, phdthesis
 are defined already, see the end of section~\ref[langphrases].
 
 If you are using non-standard field-names in .bib database and bib style,
-you has to declare them by `\_CreateField {<fieldname>}`.
+you have to declare them by `\_CreateField {<fieldname>}`.
 
 You can declare `\_SortingOrder` in the manner documented by librarian package.
 

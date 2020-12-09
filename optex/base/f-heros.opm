@@ -186,16 +186,25 @@ not them, so we have no problems.
 
 The name of `\<Familyselector>` should begin with uppercase letter.
 
+\seccc Additional notes
+
+Please, look at
+\ulink[http://petr.olsak.net/ftp/olsak/optex/op-catalog.pdf]{\OpTeX/ font catalogue}
+before you will create your own font family file and use the same names for
+analogical font modifiers (like `\cond`, `\caps`, `\sans`, `\mono` etc.)\ 
+and for extra variant selectors (like `\lf`, `\li`, `\kf`, `\ki` etc.\ used in
+Roboto font family).
+These names are declared in user name space. We suppose that if user
+re-defines such names then he/she does not need to use them.
+
 If you need to declare your private modifier (because it is used in another
 modifiers or macros, for example), use the name `\_wordM`. You can be
 sure that such name does not influence the private name space used by \OpTeX/.
 
-\bigskip
-{\noindent\bf Additional notes.}
 See the font family file `f-libertine-s.opm` which is another example where no
 font files but font names are used.
 
-See the font family file `f-lmfonts.opm` where you can find the 
+See the font family file `f-lmfonts.opm` or `f-poltawski.opm` where you can find the
 the example of the optical sizes declaration including a documentation about
 it.
 

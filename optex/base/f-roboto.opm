@@ -1,0 +1,59 @@
+%% This is part of OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Roboto] \Roboto {Geometric grotesk, thin variants included}
+        {\cond \mono \ttset \thin \light \normal \bolder \caps} 
+        {\tf \ti \lf \li \rm \it \mf \mi \bf \bi \kf \ki} {}
+        {[Roboto-Regular]}
+        {\_def\_fontnamegen {[Roboto\_subV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (subfamilies):^^J
+ \cond ...... Condensed variants (no Thin, Medium, Black)^^J
+ \mono ...... Monospaced variants [Mono] (no Black)^^J
+ \ttset ..... Typewriter-like variants [Slab] (no Italic, no Medium, Black)^^J%
+Modifiers (face weight):^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Normal^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Medium^^J
+ \normal .... \rm, \it = Normal, \bf, \bi = Bold^^J
+ \bolder .... \rm, \it = Medium, \bf, \bi = Black^^J%
+Modifiers (Caps):^^J
+ \caps ...... Caps & small Caps^^J
+ \nocaps .... no \caps^^J%
+Extended variants:^^J
+ \tf \ti .... Thin, ThinItalic^^J
+ \lf \li .... Light, LightItalic^^J
+ \mf \mi .... Medium, MediumItalic^^J
+ \kf \ki .... Black, BlackItalic^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},sub={},w=n \_fvars Regular Bold Italic BoldItalic }
+\_moddef \mono     {\_fsetV sub=Mono \_onlyif w=b: {\normal}}
+\_moddef \cond     {\_fsetV sub=Condensed \_onlyif w=b: {\normal}\_onlyif w=t: {\light}}
+\_moddef \ttset    {\_fsetV sub=Slab \_fvars Regular Bold . . }
+
+\_moddef \thin     {\_onlyif sub=,Mono: {\_fsetV w=t \_fvars Thin Regular ThinItalic Italic }%
+                    \_onlyif sub=Slab: {\_fsetV w=t \_fvars Thin Regular . . }}
+\_moddef \light    {\_onlyif sub=,Mono: {\_fsetV w=l \_fvars Light Medium LightItalic MediumItalic }%
+                    \_onlyif sub=Condensed: {\_fsetV w=l \_fvars Light Regular LightItalic Italic }%
+                    \_onlyif sub=Slab: {\_fsetV w=l \_fvars Light Bold . . }}
+\_moddef \normal   {\_fsetV w=n \_fvars Regular Bold Italic BoldItalic 
+                    \_onlyif sub=Slab: {\_fvars Regular Bold . . }}
+\_moddef \bolder   {\_onlyif sub={}: {\_fsetV w=b \_fvars Medium Black MediumItalic BlackItalic }}
+
+\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_famvardef \tf    {\_thinM \_rm}
+\_famvardef \ti    {\_thinM \_it}
+\_famvardef \lf    {\_lightM \_rm}
+\_famvardef \li    {\_lightM \_it}
+\_famvardef \mf    {\_bolderM \_rm}
+\_famvardef \mi    {\_bolderM \_it}
+\_famvardef \kf    {\_bolderM \_rm}
+\_famvardef \ki    {\_bolderM \_it}
+\_let\_thinM=\thin \_let\_lightM=\light \_let\_bolderM=\bolder
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+

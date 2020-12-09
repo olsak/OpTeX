@@ -9,6 +9,7 @@
 
 \_famtext {Computer Modern like family:}
 
+\_famfrom {GUST}
 \_faminfo [Latin Modern] {TeX Gyre fonts based on Coputer Modern} {f-lmfonts}
    { -,\nbold,\sans,\sans\nbold,\slant,\ttset,\ttset\slant,\ttset\caps,%
        \ttprop,\ttprop\bolder,\quotset: {\rm\bf\it\bi}
@@ -48,47 +49,57 @@
 
 \_famtext {Other fonts:}
 
+\_famfrom {Philipp H. Poll}
 \_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
    { -: {\rm\bf\it\bi} \semibold: {\bf\bi}
      \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
 \_famalias [Libertine] \_famalias [LinLibertine]
 
+\_famfrom {Philipp H. Poll, Khaled Hosny}
 \_faminfo [Libertinus] {Free fonts derived from Linux Libertine} {f-libertinus}
    { -: {\rm\bf\it\bi} \semibold: {\bf\bi} \sans: {\rm\bf\it}
      \caps: {\rm\bf\it\bi} \caps\semibold: {\bf\bi} \caps\sans: {\rm\bf\it}
      -: {\mono\initials\displ\keybr} }
 
+\_famfrom {Daniel Flipo}
 \_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
    { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans,\caps\mono,\swash: {\rm\bf\it\bi} }
 \_famalias [KP]
 
+\_famfrom {DejaVu fonts team}
 \_faminfo [DejaVu] {Derived from the Vera fonts} {f-dejavu}
    { -,\cond,\sans,\sans\cond,\mono: {\rm\bf\it\bi} \light: {\rm} }
 
+\_famfrom {Zygfryd Gardzielewski, Janusz M. Nowacki}
 \_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
    { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi} 
     \medium,\cond\medium, \light, \cond\light:{\rm\it} }
 \_famalias [Antt]
 
-\_faminfo [Poltawski] {Antykwa Poltawskiego, font family from GUST} {f-poltawski}
+\_famfrom {Adam Półtawski, Janusz M. Nowacki, Bogusław Jackowski and Piotr Strzelczyk}
+\_faminfo [Poltawski] {Antykwa Poltawskiego, Polish traditional font family} {f-poltawski}
    { \ccond,\cond,-,\expd,\eexpd,
      \light\ccond,\light\cond,\light,\light\expd,\light\eexpd,
      \caps: {\rm\bf\it\bi} }
 \_famalias [Antykwa Poltawskiego] \_famalias [Poltawskiego] \_famalias [APoltawskiego]
 
+\_famfrom {Michael Sharpe}
 \_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskervilleF]
 
+\_famfrom {Georg Duffner, Octavio Pardo}
 \_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
    { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
      \swash: {\it\bi} -: {\initials} }
 \_famalias [Garamond]
 
+\_famfrom {George Douros, Benjamin Miller}
 \_faminfo [Garamond Libre] {Free, derived from old style font family} {f-garamondl}
    { -,\caps: {\rm\bf\it\bi} \swash: {\it\bi} }
 \_famalias [GaramondL]
 
+\_famfrom {Adobe, Paul D. Hunt}
 \_faminfo [Source Pro] {Adobe SourceSerifPro, SourceSansPro, SourceCodePro} {f-sourcepro}
    { \elight,\light,-,\bolder: {\rm\it} -,\bolder: {\bf\bi}
      \sans\elight,\sans\light,\sans,\sans\bolder: {\rm\it} \sans,\sans\bolder: {\bf\bi}
@@ -99,23 +110,38 @@
    }
 \_famalias [AdobeSource] \_famalias [AdobeSourcePro]
 
+\_famfrom {Uni. of the  Aegean}
 \_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
    { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\bf\bi}
      \sanssemi: {\rm} -:{\calli}  }
 
-\_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika} 
+\_famfrom {Craig Rozynski}
+\_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
+   { -,\angular: {\lf\li\rm\it\bf\bi} }
+
+\_famfrom {Eben Sorkin}
+\_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
+   { -,\sans: {\lf\li\rm\it\bf\bi\kf\ki} \caps,\sans\caps: {\rm\it} }
+
+\_famfrom {Google, Christian Robertson}
+\_faminfo [Roboto] {Geometric grotesk, thin variants included} {f-roboto}
+   { -: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi\kf\ki}
+     \cond: {\lf\li\rm\it\bf\bi}
+     \mono: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi}
+     \ttset: {\tf\lf\rm\bf}
+     \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
+   }
+
+\_famfrom {CTU in Prague, Roman Cernohous}
+\_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika}
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
 
-\_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
-   { -,\angular: {\lr\li\rm\it\bf\bi} }
-
-\_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
-   { -,\sans: {\lr\li\rm\it\bf\bi\bk\ki} \caps,\sans\caps: {\rm\it} }
-
+\_famfrom {Bitstream, Andrey V. Panov, Michael Sharpe}
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
 
+\_famfrom {George Matthiopoulos, Greek Font Society}
 \_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
 
@@ -152,7 +178,7 @@ The `fams-ini.opm` and `fams-local.opm` files use the macros
 
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
  \def\docfile{fams-ini.opm}
-\verbinput (3-27) fams-ini.opm
+\verbinput (3-28) fams-ini.opm
 ... etc.
 }
 \medskip
@@ -164,9 +190,10 @@ The \^`\_faminfo` commad has the syntax:
 \endtt
 %
 The `<mod-plus-vars>` data is used only when printing catalogue. It consists with
-one or more pairs `<mods>: {<vars>} <mods>: {<vars>}` etc.
-For each pair: each modifiers (separated by comma) are applied to each <vars>
-and prepared sample is printed. The `-` character means no modifiers 
+one or more pairs `<mods>: {<vars>}`.
+For each pair: each modifiers (separated by comma) is applied to each
+variant selector in <vars>
+and prepared samples are printed. The `-` character means no modifiers
 should be applied.
 
 The \^`\_famalias` declares an alias to the last
@@ -175,3 +202,8 @@ declared family.
 The \^`\_famtext` writes a line to the terminal and to the log file when all
 families are listed.
 
+The \^`\_famfrom` saves the information about font type foundry or
+manufacturer or designer or license owner. You can use it before `\_faminfo`
+in order to print `\_famfrom` info into the catalogue.
+The `\_famfrom` data is applied to each following declared families until new
+`\_famfrom` is given. Use `\_famfrom {}` if the information is not known.

@@ -225,7 +225,7 @@
 }
 \_def\_tryloadfamslocal{%
    \_isfile {fams-local.opm}\_iftrue
-      \_opinput {fams-local.opm}
+      \_opinput {fams-local.opm}\_famfrom={}%
    \_fi
    \_let \_tryloadfamslocal=\_relax  % need not to load fams-local.opm twice
 }
@@ -260,7 +260,11 @@
    \nl
    \`\_famalias` `[<Family Alias>]` does `\def \_famf:<familyalias> {<file-name>}`
    where `<file-name>` is stored from the previous `\_faminfo` command. Or
-   prints information on the terminal. 
+   prints information on the terminal.
+   \nl
+   \`\_famfrom` declares type foundry or owner or designer of the font family.
+   It can be used in `fams-ini.opm` or `fams-local.opm` and it is printed
+   in the font catalog.
    \_cod -----------------------------
 
 \_def\_famtext #1{}
@@ -273,8 +277,10 @@
    \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
    \_sdef{_famf:\_famname\_ea}\_ea{\_famfile}%
 }   
+\_newtoks\_famfrom
 \_input fams-ini.opm
 \_let\_famfile=\_undefined
+\_famfrom={}
 
    \_doc -----------------------------
    When the \^`\fontfam``[catalog]` is used then the file

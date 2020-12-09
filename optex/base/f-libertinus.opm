@@ -9,7 +9,7 @@
 Modifiers:^^J
  \semibold .. semi-bold variants, changed only \bf, \bi^^J
  \sans ...... smaller serifs, only \rm, \bf \it^^J
- \caps ...... caps & small caps^^J
+ \caps ...... caps & small caps^^J%
 Special variants:^^J
  \mono  ..... non-proportional
  \initials .. special initials (only uppercase letters)^^J

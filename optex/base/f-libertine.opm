@@ -10,7 +10,7 @@ Modifiers:^^J
  \sans ...... smaller serifs^^J
  \mono ...... non-proportional^^J
  \semibold .. semi-bold variants (changed only \bf, \bi)^^J
- \caps ...... caps & small caps^^J
+ \caps ...... caps & small caps^^J%
 Special variants:^^J
  \initials .. special initials (only uppercase letters)^^J
  \displ ..... display variant, suitable at big sizes^^J

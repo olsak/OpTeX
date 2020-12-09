@@ -116,7 +116,7 @@
 
    \_doc ----------------------------
    \`\_Mtext``{<identifier>}` expands to a
-   phrase by outer document language (no entry language) is defined here.
+   phrase by outer document language (no entry language).
    \_cod -----------------------------
 
 \_chardef\_documentlanguage=\_language

@@ -9,7 +9,7 @@
 Modifiers:^^J
  \light ..... ligher variants: \rm\bf=light \bf\bi=normal^^J
  \book ...... semi-ligher variants: \rm\bf=book \bf\bi=bold^^J
- \caps ...... caps & small caps^^J
+ \caps ...... caps & small caps^^J%
 Special variant:^^J
  \stencil ... dashed leters (only uppercase)^^J
 }}

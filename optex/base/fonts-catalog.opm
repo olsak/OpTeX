@@ -7,8 +7,8 @@
 \_begingroup
 
 \_istoksempty\_catalogmathsample \_iftrue \_noloadmath \_fi
-\_let\_ttfixed=\_tentt
-\_fontlet\_smalltt=\_tentt at7pt
+\_font\_ttfixed=[LMMono10-Regular]\_relax
+\_fontlet\_smalltt=\_ttfixed at7pt
 \_suppressfontnotfounderror=1
 
 \_lowercase\_ea{\_ea\_def\_ea\_cataloglist\_ea{\_the\_catalogonly}}
@@ -69,6 +69,7 @@
       \_edef\_tmp{#1}\_replstring\_tmp{^^J}{\_par}%
       \_smalltt \_noindent \_ea \string \_mainfamcommand 
       \_vtop{\leftskip=1em \_baselineskip=9pt \_tmp \_par}\_hss
+      \_if\_relax\_the\_famfrom\_relax \_else from: \_the\_famfrom \_fi
    }
 }
 
