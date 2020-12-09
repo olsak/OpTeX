@@ -541,24 +541,28 @@ define:
 You can declare a new variant slector by the \^`\famvardef` macro. This
 macro has similar syntax as \^`\fontdef`:
 \begtt \catcode`\<=13
-\famvardef\<new variant selector> {<font modifiers> \<variant selector>}
+\famvardef\<new var. selector> {\<family selector> <font modifiers> \<var. selector>}
 \endtt
 %
-The `\<new variant selector>` should be used in the same sense as `\rm`,
-`\bf` etc. It can be used as the final command in the 
+where `\<family selector>` and `<font modifiers>` are optional and
+`\<var. selector>` is mandatory.
+The `\<new var. selector>` should be used in the same sense as `\rm`,
+`\bf` etc. It can be used as the final command in next
 \^`\fontdef` or \^`\famvardef` declarators
-too. When the `\<new variant selector>` is used in normal text then it does
+too. When the `\<new var. selector>` is used in normal text then it does
 following steps: pushes current font context to a stack, modifies font
-context by declared `<font modifiers>`, runs following `\<variant selector>`.
-It selects a font. Then pops the stack. The font context have its original
-values but new font is selected.
+context by declared `\<family selector>` and/or `<font modifiers>`,
+runs following `\<var. selector>`.
+This last one selects a real font. Then pops the font context stack.
+The new font is selected but the font context has its original values.
+This is main difference between `\famvardef\foo{...}` and `\def\foo{...}`.
 
-The \^`\famvardef` creates the `\<new variant selector>` family dependent.
+Moreover, the \^`\famvardef` creates the `\<new variant selector>` family dependent.
 When the selector is used in another family context than it is defined then warning is
 printed on the terminal \"<var selector> is undeclared in current family"
 and nothing happens. But you can declare the same variant selector by
 \^`\famvardef` macro in the context of new family. Then the same command
-will be do different work depending on the current font family.
+will do different work depending on the current font family.
 
 Suppose that the selected font family provides the font modifier `\medium` for
 mediate weight of fonts. Then you can declare:
