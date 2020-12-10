@@ -125,7 +125,7 @@
 \_CreateField {lang}
 \_def\_setlang#1{\_ifx#1\_empty \_else 
      \_ifcsname _mt:bib.and:#1\_endcsname \_language=\_csname _#1Patt\_endcsname \_relax
-     \_else \_opwarning{No phrases for lang. "#1" used by [\EntryKey] in bib file}%
+     \_else \_opwarning{No phrases for "#1" used by [\EntryKey] in .bib}%
    \_fi\_fi
 }
 

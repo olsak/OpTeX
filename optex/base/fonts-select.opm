@@ -168,11 +168,11 @@
 \_def\_currfamily{} % default current family is empty
 
 \_def\_famdepend#1#2{\_ifcsname#2\_endcsname \_csname#2\_ea\_endcsname \_else
-   \_opwarning{\_string#1 is undeclared in current family "\_currfamily", ignored}\_fi
+   \_opwarning{\_string#1 is undeclared in family "\_currfamily", ignored}\_fi
 }
 \_def\_setnewmeaning #1=\_tmpa#2{%
    \_ifx #1\_undefined \_else \_ifx #1\_tmpa \_else
-      \_opwarning{The \_string#1 is redefined by \_string#2 (line: \_the\_inputlineno)}%
+      \_opwarning{\_string#1 is redefined by \_string#2}%
    \_fi\_fi
    \_let#1=\_tmpa
 }
@@ -200,7 +200,7 @@
 \_def\_famvardefA #1#2#3#4{% #1=\XX #2=\_tenXX #3=\_tryloadXX #4=data
    \_isinlist{.\_rm\_bf\_it\_bi\currvar\_currvar}#1\_iftrue
       \_opwarning{\_string\famvardef: 
-          You cannot re-declare private standard variant selector \_string#1}%
+         You cannot re-declare standard variant selector \_string#1}%
    \_else
       \_protected\_edef\_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
       \_setnewmeaning #1=\_tmpa \famvardef
@@ -562,7 +562,7 @@ When the selector is used in another family context than it is defined then warn
 printed on the terminal \"<var selector> is undeclared in current family"
 and nothing happens. But you can declare the same variant selector by
 \^`\famvardef` macro in the context of new family. Then the same command
-will do different work depending on the current font family.
+may do different work depending on the current font family.
 
 Suppose that the selected font family provides the font modifier `\medium` for
 mediate weight of fonts. Then you can declare:
@@ -594,14 +594,14 @@ Compare ex-height of Termes \rmsans with Heros \rm and Termes.
 There exists analogical declarator \~`\moddef` for declaration family dependent
 font modifiers. It is described in detail the section~\ref[fontfamfiles].
 
-The variant selectors (declared by \^`\famvardef`) or font
-modifiers (declared by \~`\moddef`) are control sequences in user name
-space (`\mf`, `\caps`). They are declared typically in font family files and
+The variant selectors (declared by \~`\famvardef`) or font
+modifiers (declared by \~`\moddef`) are (typically) control sequences in user name
+space (`\mf`, `\caps`). They are most often declared in font family files and
 they are loaded by \^`\fontfam`. A conflict with such names in
 user name space can be here. For example: if `\mf` is defined by user and then
 `\fontfam[Roboto]` is used then `\famvardef\mf` is performed for Roboto
 family and the original meaning of `\mf` is lost. But \OpTeX/ prints warning
-about it. You have two choices:
+about it. There are two cases:
 
 \begtt
 \def\mf{Metafont}

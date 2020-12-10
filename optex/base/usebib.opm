@@ -37,7 +37,7 @@
         \_the \_bibtexhook
         \_ifcsname _mt:bib.and:\_cs{_lan:\_the\_language}\_endcsname \_else
            \_opwarning{\_string\usebib: No phrases for language
-                       "\_cs{_lan:\_the\_language}" (falback to "en" phrases)}%
+                       "\_cs{_lan:\_the\_language}" (using "en")}%
            \_language=0 \_chardef\_documentlanguage=0
         \_fi
         \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
@@ -71,7 +71,7 @@
   \_unless\_ifx\lb@temp\lb@eoe
     \lb@ifcs{#1}{fields}%
             {}%
-            {\_opwarning{\_string\_usebib: entry [#1] isn't found in .bib file(s)}}%
+            {\_opwarning{\_string\usebib: entry [#1] isn't found in .bib}}%
     \_ea\lb@checkmissingentries
   \_fi
 }

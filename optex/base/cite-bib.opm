@@ -88,7 +88,7 @@
    \_if *#1\_addcitelist{*}\_ea\_skiptorelax \_fi
    \_ifcsname _bib:#1#2\_endcsname \_else
       \_addcitelist{#1#2}%
-      \_opwarning{The cite [#1#2] unknown. Try to TeX me again}\_openref
+      \_opwarning{\_noexpand\cite [#1#2] unknown. Try to TeX me again}\_openref
       \_incr\_unresolvedrefs
       \_addto\_savedcites{?,}\_def\_sortcitesA{}\_lastcitenum=0
       \_ea\_gdef \_csname _bib:#1#2\_endcsname {}%
@@ -173,7 +173,7 @@
 
 \_def\_nonumcitations{\_lastcitenum=0\_def\_sortcitesA{}\_def\_etalchar##1{$^{##1}$}%
    \_def\_citelinkA##1{\_isdefined{_bim:##1}\_iftrue \_csname _bim:##1\_endcsname
-      \_else ##1\_opwarning{\_noexpand\_nonumcitations + empty bibmark. Maybe bad BibTeX style}\_fi}
+      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib style}\_fi}
 }
 \_def\_citelinkA{}
 

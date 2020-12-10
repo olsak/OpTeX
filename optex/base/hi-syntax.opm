@@ -105,7 +105,7 @@
                       \_global\_cs{_hicolors\_tmpa}=\_hicolors \_global\_hicolors={}%
           \_fi\_fi\_fi
           \_ea\_the \_csname _hisyntax\_tmpa\_endcsname % \_the\_hisyntax<name>
-      \_else\_opwarning{Syntax highlighting "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
+      \_else\_opwarning{Syntax "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
    \_fi\_fi
    \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
    \_def\n{}\_def\b{}\_adef{ }{\_dsp}%

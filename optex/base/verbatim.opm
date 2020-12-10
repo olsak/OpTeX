@@ -193,7 +193,7 @@
       \_openin\_vifile={#3}%
       \_global\_viline=0 \_global\_let\_vifilename=\_tmpa
       \_ifeof\_vifile
-         \_opwarning{\_noexpand\verbinput - file "#3" is unable to reading}
+         \_opwarning{\_string\verbinput: file "#3" unable to read}
          \_ea\_ea\_ea\_skiptorelax
       \_fi
    \_fi

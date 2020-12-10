@@ -96,7 +96,7 @@
 }
 \_def\_loadpattrsA #1,{\_ifx,#1,\_else
    \_isfile {hyph-#1}\_iftrue \_opinput{hyph-#1}%
-   \_else \_opwarning{Hyph. patterns #1 for \\ not loaded, probably missing package}%
+   \_else \_opwarning{No hyph. patterns #1 for \\, missing package?}%
           \_def\_opwarning##1{}\_fi
    \_ea \_loadpattrsA \_fi
 }

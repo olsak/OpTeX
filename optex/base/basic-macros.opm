@@ -75,7 +75,7 @@
    \`\opwarning` `{<text>}` prints warning on the terminal and to the log file.
    \_cod ------------------------------
 
-\_def \_opwarning #1{\_wterm{WARNING: #1.}}
+\_def \_opwarning #1{\_wterm{l.\_the\_inputlineno> WARNING: #1.}}
 \_public \opwarning ;
 
    \_doc ------------------------------
