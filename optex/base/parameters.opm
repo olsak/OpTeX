@@ -488,7 +488,7 @@
    `\globaldefs=1` prefix. The `\nextpages` is reset to empty after
    processing. Example of usage:
    \begtt
-   \headline={} \nexptages={\headline={\fixedrm \firstmark \hfil}}
+   \headline={} \nexptages={\headline={\rmfixed \firstmark \hfil}}
    \endtt 
    This example sets current page with empty headline, but next pages have 
    non-empty headlines.
