@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2020-03-18>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2020-12-12>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
@@ -61,7 +61,7 @@
          \_wterm {FONT: [#1] -- \_string#2 \_detokenize{(#3)^^J mods:{#4} vars:{#5} math:{#6}}}%
          \_unless \_ifx #2\_undefined
             \_opwarning{\_string#2 is redefined by \_string\_famdecl\_space[#1]}\_fi
-         \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetmod}}%
+         \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetfam}}%
          \_ea \_let \_csname _f:\_currfamily:main.fam\_endcsname =#2%
       \_fi 
    \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_reloading \_rm \_ea \_endinput \_fi
@@ -154,21 +154,36 @@
    redefines `\_tmp` in the way that it
    expands only to `<something>` without the first `_`.
 
-   \`\_setnewmeaning` `<cs-name>=\_tmpa <by-what>` does `\_let <csname>=\_tmpa`
+   \`\_setnewmeaning` `<cs-name>=\_tmpa <by-what>` does exactly `\_let <csname>=\_tmpa`
    but warning is printed if <cs-name> is defined already and it is not a variant
    selector or font modifier.
+
+   \`\_addtomodlist` `<font modifier>` adds given modifier to \`\_modlist`
+   macro. This list is used after `\resetmod` when new family is selected by
+   a family selector, see \`\_resetfam` macro.
+   This allows to reinitialize the same current modifiers in the font context
+   after family is changed.
    \_cod -----------------------------
 
 \_def \_moddef #1#2{\_edef\_tmp{\_csstring#1}%
-   \_sdef{_f:\_currfamily:\_tmp}{#2\_reloading}%
+   \_sdef{_f:\_currfamily:\_tmp}{\_addtomodlist#1#2\_reloading}%
    \_protected \_edef \_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
    \_setnewmeaning #1=\_tmpa \moddef
 }
 \_protected \_def\_resetmod {\_cs{_f:\_currfamily:resetmod}} % private variant of \resetmod
-\_def\_currfamily{} % default current family is empty
+\_def \_resetfam{\_def\_addtomodlist##1{}\_resetmod
+   \_edef \_modlist{\_ea}\_modlist
+   \_let\_addtomodlist=\_addtomodlistb
+}
+\_def \_currfamily{} % default current family is empty
+\_def \_modlist{}    % list of currently used modifiers
+
+\_def \_addtomodlist#1{\_addto\_modlist#1}
+\_let \_addtomodlistb=\_addtomodlist
 
 \_def\_famdepend#1#2{\_ifcsname#2\_endcsname \_csname#2\_ea\_endcsname \_else
-   \_opwarning{\_string#1 is undeclared in family "\_currfamily", ignored}\_fi
+   \_ifx\_addtomodlist\_addtomodlistb
+      \_opwarning{\_string#1 is undeclared in family "\_currfamily", ignored}\_fi\_fi
 }
 \_def\_setnewmeaning #1=\_tmpa#2{%
    \_ifx #1\_undefined \_else \_ifx #1\_tmpa \_else
@@ -185,19 +200,18 @@
    \`\_famvardefA` `\<XX> \_ten<XX> \_tryload<XX> {<data>}` is used.
    It does:
    \begitems
-   * `\protected\def \<XX> {\_famdepend \<XX> {_f:\_currfamily:<XX>}}`,
-   * `\def \_f:<current family>:<XX> {\_tryload<XX>\_ten<XX>}` keeps family dependent definition,
-   * `\def \_tryload<XX> {`\^`\fontdef`` \_ten<XX> {<data>}}` loads actually the font `\_ten<XX>`,
-   * `\def \_currvar:_ten<XX> {\<XX>}` in ordef to the \^`\currvar` macro
-   work correctly.
+   * `\protected\def \<XX> {\_famdepend \<XX> {_f:<currfam>:<XX>}}`,
+   * `\def \_f:<currfam>:<XX> {\_tryload:<currfam>:<XX>\_ten<XX>}` keeps family dependent definition,
+   * `\def \_tryload:<currfam>:<XX> {`\^`\fontdef`` \_ten<XX> {<data>}}` loads font `\_ten<XX>`,
+   * `\def \_currvar:_ten<XX> {\<XX>}` in order to the \^`\currvar` macro work correctly.
    \enditems
    \_cod -----------------------------
 
 \_def\_famvardef#1{\_edef\_tmp{\_csstring#1}%
    \_ea\_famvardefA \_ea#1\_csname _ten\_tmp\_ea\_endcsname
-      \_csname _tryload:\_tmp\_endcsname
+      \_csname _tryload:\_currfamily:\_tmp\_endcsname
 }
-\_def\_famvardefA #1#2#3#4{% #1=\XX #2=\_tenXX #3=\_tryloadXX #4=data
+\_def\_famvardefA #1#2#3#4{% #1=\XX #2=\_tenXX #3=\_tryload:currfam:XX #4=data
    \_isinlist{.\_rm\_bf\_it\_bi\currvar\_currvar}#1\_iftrue
       \_opwarning{\_string\famvardef: 
          You cannot re-declare standard variant selector \_string#1}%
@@ -392,35 +406,30 @@ was documented in the section~\ref[fontfam].
 We distinguish between
 \begitems
 * {\em font switchers}, they are declared by the `\font` primitive or by 
-  \^`\fontlet` or \~`\fontdef` macros,
+  \^`\fontlet` or \~`\fontdef` macros, they select given font.
 * {\em variant selectors}, there are four basic variant selectors
   `\rm`, `\bf`, `\it`, `\bi`, there is a special selector `\currvar`
   and more variant selectors can be declared by the \~`\famvardef` macro.
-* {\em font modifiers} (for example `\cond`, `\caps`, \^`\setfontsize``{<size spec>}`), 
-  they are in two types: bulid in (like \^`\setfontsize`) or
-  declared modifiers (by by the \~`\moddef` macro).
+  They select the font depending on given variant and on the {\em font context}.
+* {\em font modifiers} are declared in a family (`\cond`, `\caps`) or are
+  \"build in" (\^`\setfontsize``{<size spec>}`, \~`\setff{<features>}`).
+  They do appropriate change in the {\em font context} but do not select
+  the font.
 * {\em family selectors} (for example `\Termes`, `\LMfonts`), 
-  they are declared typically in the {\em font family files}. 
+  they are declared typically in the {\em font family files}.
+  They enable to swithch between font families, they do appropriate
+  change in the {\em font context} but do not select
+  the font.
 \enditems
 
-These selectors / switchers sets its values locally. When the \TeX/ group is
+These commands set their values locally. When the \TeX/ group is
 leaved then selected font and the {\em font context} are returned back to the values
 used when the group was opened. They have the following features:
 
-\begitems
-* The {\em font switchers} select fonts independent on the font context.
-  They are declared directly byt he `\font` primitive.
-* The {\em variant selectors} select the font depending on the font context and on
-  the specified variant.
-* The {\em font modifiers} create a change in the font context but they 
-  don't select the font itself.
-* The {\em family selectors} set a family in the font context and resets all
-  font modifiers. They dont't select the font itself.
-\enditems
-
 The {\em font context} is a set of macro values which will affect the
 selection of real font when variant selector is processed. It includes the
-value of {\em current family} and more values stored by font modifiers.
+value of {\em current family}, current font size and
+more values stored by font modifiers.
 
 The {\em family context} is the current family value stored in the font
 context. The variant selectors declared by \~`\famvardef` and
@@ -438,8 +447,7 @@ The \^`\fontfam` `[<Font Family>]` opens the relevant font family file where
 the `<Font Family>` is declared. The family selector is defined here by rules
 described in the section~\ref[fontfamfiles]. Font modifiers and variant
 selectors may be declared here.
-The given family is set as in the font context and
-`\rm` variant selector is processed.
+The loaded family is set as current and `\rm` variant selector is processed.
 
 The available declared font modifiers and declared variant selectors are
 listed in the log file when font family is load. Or you can print
@@ -472,7 +480,7 @@ reloaded with respect to the current font context by previously given family
 selector and font modifiers. 
 
 You can use the \^`\setfontsize` `{<sizespec>}` command in the same sense as
-other font modifiers. It saves only information about font size to the font
+other font modifiers. It saves information about font size to the font
 context. See section~\ref[setfontsize]. Example:
 
 \begtt
@@ -480,10 +488,10 @@ context. See section~\ref[setfontsize]. Example:
 in 14pt size too \bf bold too.
 \endtt
 
-Much more comfortable way to resize fonts is using OPmac-like command
-`\typosize`, `\typoscale`. 
+Much more comfortable way to resize fonts is using OPmac-like commands
+\~`\typosize` and \~`\typoscale`.
 These commands prepare the right sizes for math
-fonts too and re-calculates many internal parameters like `\baselineskip`.
+fonts too and they re-calculate many internal parameters like `\baselineskip`.
 See section~\ref[opmac-fonts] for more information. 
 
 
@@ -504,55 +512,83 @@ If you want to use your specially selected Unicode-math font then use
 \secc[fontcommands] Declaring font commands
 %----------------------------
 
-The font switches can be declared by `\font` primitive or by \~`\fontdef` or
-\~`\fontlet` macros. See the sections~\ref[fontdef] and~\ref[fontlet]
-for more details. The general format for \^`\fontdef` is
+Font commands can be font switches, variant selectors, font modifiers,
+family selectors and defined font macros doing something with fonts.
+
+\begitems
+* Font switches can be decared by `\font` primitive (see
+  section~\ref[fontprimitive]) or by \^`\fontlet` command (see
+  section~\ref[fontlet]) or by \~`\fontdef` command (see
+  sections~\ref[fontdef2] and~\ref[fontdef]).
+  When the font switches are used then they select given font independently
+  of current font context. They can be used
+  in `\output` routine (for example) becuase we need to set fixed fonts
+  in hedares and footers.
+* Variant selectors are `\rm`, `\bf`, `\it`, `\bi` and `\currvar`. More
+  variant selectors can be declared by \~`\famvardef` command. They select a
+  font dependent on the current font context, see section~\ref[famvardef].
+* Font modifiers are \"build in" or declared by \~`\moddef` command.
+  They do modifications in the font context but don't select any font.
+  \begitems
+  * \"build-in" font modifiers are \^`\setfontsize` (see
+    section~\ref[setfontsize]), \~`\setff` (see section~\ref[setff]),
+    \~`\setfontcolor`, \~`\setletterspace` and \~`\setwordspace`
+    (see section~\ref[specff]). They are independent of font family.
+  * Font modifiers declared by \~`\moddef` depend on the font family and they
+    are typicaly declared in font family files, see
+    section~\ref[fontfamfiles].
+  \enditems
+* Family selectors set the given
+  font family as current and re-set data used by family-dependent font
+  modifiers to initial values and to the currently used modifiers.
+  They are declared in font family files
+  by \~`\_famdecl` macro, see section~\ref[fontfamfiles].
+* Font macros can be defined arbitrary by `\def` primitive by user.
+  See an example in section~\ref[fontmacros].
+\enditems
+
+All declaration commands mentioned here: `\font`, `\fontlet`, `\fontdef`, `\famvardef`,
+`\moddef`, `\_famdecl` and `\def` make local assignment.
+
+\secc[fontdef2] The `\fontdef` declarator in detail
+
+The general format for \^`\fontdef` usage is
 \begtt \catcode`\<=13
 \fontdef\<font switch> {\<family selector> <font modifiers> \<variant selector>}
 \endtt
+%
+where `\<family selector>` and `<font modifiers>` are optional and
+`\<variant selector>` is mandatory.
 
-Such font switches should be used in `\output` routine (headers, footers) for
-example. We need fixed sizes here. But they are less usable in common
-text. For example the document includes notices in smaller font. 
-When the notice is started then we want
-to do all variants smaller: `\rm`, `\it`, `\bf`, etc.
-It means that the smaller font for notices should be initialized by
-`\setfontsize{at9pt}\rm` for example. If you want a \"notices font selector"
-then you can do `\def\noticefont{\setfontsize{at9pt}\rm}`. This font
-selector does not change the `\baselineskip`. If you want to do this then
-put different `\baselineskip` setting to your definition. But you must not
-forget that the end of group before `\par` is a typical mistake of \TeX/
-users: the last paragraph is in smaller font but in normal baselineskip,
-because `\baselineskip` setting is taken into account when `\par` 
-command is processed.
+The \^`\fontdef` does following steps.
+It pushes current font context to a stack, it do modifications of the font
+context by given `\<family selector>` and/or `<font modifiers>` and it
+find the real font by `\<variant selector>`. This font is not selected but
+it is assigned to the declared `\<font switch>` (like `\font` primitive does
+it). Finally, `\fontdef` pops the font context stack, so the current
+font context is the same as it was before `\fontdef` is used.
 
-Somewhat more complicated task is the \"title font selector", because titles are
-not only bigger but they are typically in bold variant. When the user puts 
-`{\it...}` into the title then he/she expects bold italic here, no normal
-italic. You can remember the great song by John Lennon \"Let It Be" and
-define:
+More about `\fontdef` command including examples is written in
+section~\ref[fontdef].
 
-\begtt
-\def\titlefont{\setfontsize{at14pt}\bf \let\it\bi}
-...
-{\titlefont here we have bold 14pt font and {\it here} was bold 14pt italics}
-\endtt
 
-You can declare a new variant slector by the \^`\famvardef` macro. This
+\secc[famvardef] The `\famvardef` declarator
+
+You can declare a new variant selector by the \^`\famvardef` macro. This
 macro has similar syntax as \^`\fontdef`:
 \begtt \catcode`\<=13
-\famvardef\<new var. selector> {\<family selector> <font modifiers> \<var. selector>}
+\famvardef\<new variant selector> {\<family selector> <font modifiers> \<variant selector>}
 \endtt
 %
 where `\<family selector>` and `<font modifiers>` are optional and
-`\<var. selector>` is mandatory.
-The `\<new var. selector>` should be used in the same sense as `\rm`,
+`\<variant selector>` is mandatory.
+The `\<new variant selector>` should be used in the same sense as `\rm`,
 `\bf` etc. It can be used as the final command in next
 \^`\fontdef` or \^`\famvardef` declarators
-too. When the `\<new var. selector>` is used in normal text then it does
+too. When the `\<new variant selector>` is used in normal text then it does
 following steps: pushes current font context to a stack, modifies font
 context by declared `\<family selector>` and/or `<font modifiers>`,
-runs following `\<var. selector>`.
+runs following `\<variant selector>`.
 This last one selects a real font. Then pops the font context stack.
 The new font is selected but the font context has its original values.
 This is main difference between `\famvardef\foo{...}` and `\def\foo{...}`.
@@ -591,9 +627,6 @@ into problem with incompatible ex-heights. This problem can be solved using
 Compare ex-height of Termes \rmsans with Heros \rm and Termes.
 \endtt
 
-There exists analogical declarator \~`\moddef` for declaration family dependent
-font modifiers. It is described in detail the section~\ref[fontfamfiles].
-
 The variant selectors (declared by \~`\famvardef`) or font
 modifiers (declared by \~`\moddef`) are (typically) control sequences in user name
 space (`\mf`, `\caps`). They are most often declared in font family files and
@@ -612,8 +645,30 @@ about it. There are two cases:
                   % is used only in the meaning of "Metafont" in the document.
 \endtt
 
+\secc[fontmacros] Font commands defined by `\def`
 
-\secc Modifying font features
+Such font commands can be used as fonts selectors for titles, footnotes,
+ctitations etc. User can define them.
+
+The following example shows how to define a \"title-font selector".
+Titles are not only bigger but they are typically in bold variant. When the user puts
+`{\it...}` into the title text then he/she expects bold italic here, no normal
+italic. You can remember the great song by John Lennon \"Let It Be" and
+define:
+
+\begtt
+\def\titlefont{\setfontsize{at14pt}\bf \let\it\bi}
+...
+{\titlefont Title in bold 14pt font and {\it bold 14pt italics} too}
+\endtt
+
+\OpTeX/ defines similar internal commands \^`\_titfont`, \^`\_chapfont`, \^`\_secfont` and
+\^`\_seccfont`, see section~\ref[sections]. The commands \^`\typosize` and
+\^`\boldify` are used in these macros. They set the math fonts to given size too and they
+are defined in section~\ref[opmac-fonts].
+
+
+\secc[setff] Modifying font features
 %----------------------------
 
 Each OTF font provides \"font features". You can list these font features
@@ -629,9 +684,9 @@ reinitialize the font with the new font feature. For example
 selector too:
 
 \begtt
-   \fontfam[LinLibertine]
-   \famvardef \fraclig {\setff{+frac}\currvar}
-   Compare 1/2 or 1/10 \fraclig to 1/2 or 1/10.
+\fontfam[LinLibertine]
+\famvardef \fraclig {\setff{+frac}\currvar}
+Compare 1/2 or 1/10 \fraclig to 1/2 or 1/10.
 \endtt
 
 If the used font does not supports given font feature then font is realoaded
@@ -642,7 +697,7 @@ Caps+SmallCaps variant in \OpTeX/ font family files. So you need not to
 create a new modifier, just use `{\caps`\^`\currvar`` 012345}`.
 
 
-\secc Special font modifiers
+\secc[specff] Special font modifiers
 %---------------------------
 
 Despite the font modifiers declared in the font family file (and dependent on 
@@ -742,6 +797,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2020-12-12  \_modlist added, doc improved
 2020-04-18  \_tryloadfamslocal introduced
             \_fontdecl -> \_famdecl with different concept
 2020-03-18  released

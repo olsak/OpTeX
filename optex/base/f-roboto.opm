@@ -49,8 +49,8 @@ Extended variants:^^J
 \_famvardef \li    {\_lightM \_it}
 \_famvardef \mf    {\_bolderM \_rm}
 \_famvardef \mi    {\_bolderM \_it}
-\_famvardef \kf    {\_bolderM \_rm}
-\_famvardef \ki    {\_bolderM \_it}
+\_famvardef \kf    {\_bolderM \_bf}
+\_famvardef \ki    {\_bolderM \_bi}
 \_let\_thinM=\thin \_let\_lightM=\light \_let\_bolderM=\bolder
 
 \_initfontfamily % new font family must be initialized

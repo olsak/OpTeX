@@ -1,24 +1,24 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Lido] \Lido {by StormType Foundry designed for "lidove noviny"}
-        {\caps \cond} {\rm \bf \mr \mi \it \bi} {Termes}
+        {\caps \cond} {\rm \bf \mf \mi \it \bi} {Termes}
         {[LidoSTF]}
         {\_def\_fontnamegen {[LidoSTF\_condV\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Variants:^^J
  \rm \bf \it \bi ... classical variants^^J
- \mr \mi .... medium regular and medium italics (between normal and bold)^^J
+ \mf \mi .... medium regular and medium italics (between normal and bold)^^J
 Modifiers:^^J
  \cond ...... condensed (italic is not avalable for \cond variants)^^J
- \medium .... sets \mr \bf \mi \bi family
+ \medium .... sets \mf \bf \mi \bi family
 }}
 
 \_moddef \resetmod {\_fsetV caps={},cond={},ital=Italic \_fvars {} Bold {\_italV} {Bold\_italV} }
 \_moddef \medium   {\_fvars Medium Bold {Medium\_italV} {Bold\_italV} }
 \_moddef \cond     {\_fsetV cond=Condensed,ital={} }
 
-\_famvardef \mr    {\_fvars Medium . . . \_rm} 
+\_famvardef \mf    {\_fvars Medium . . . \_rm}
 \_famvardef \mi    {\_fvars . . {Medium\_italV} . \_it}
 
 
@@ -34,13 +34,13 @@ newspaper. It is similar to Times but it is not Times.
 The Lido font family supports 6 standard selectors
 
 \rm Regular          \it Italics
-\mr Medium-Regular   \mi Medium-Italics
+\mf Medium-Regular   \mi Medium-Italics
 \bf Bold-Regular     \bi Bold-Italics
 
 and three Condensed variants:
 
 \cond \rm Condensed
-      \mr Condensed-Medium
+      \mf Condensed-Medium
       \bf Condensed-Bold
 
 The italic variants are missing when \cond is selected. This means that

@@ -1,6 +1,6 @@
 %% This is part of OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \typosize {Font managing macros from OPmac <2020-04-28>} % loaded in format
+\_codedecl \typosize {Font managing macros from OPmac <2020-12-12>} % loaded in format
 
    \_doc -----------------------------
    \`\typosize` `[<font-size>/<baselineskip>]` sets given parameters.
@@ -160,8 +160,8 @@
 
 \_def \_rmfixed {% used in default \footline
    {\_ifdim\_mainfosize=0pt \_mainfosize=10pt \_fi
-    \_fontdef\_rmfixed{\_setfontsize{at\mainfosize}\_resetmod\_rm}%
-    \_global\_let\_rmfixed=\_rmfixed}% next use will be font switch only
+    \_fontdef\_tenrm{\_setfontsize{at\mainfosize}\_resetmod\_rm}%
+    \_global\_let\_rmfixed=\_tenrm}% next use will be font switch only
    \_rmfixed 
 }
 \_let \rmfixed = \_tenrm % user can redefine it
@@ -169,6 +169,7 @@
 \_endcode % -------------------------------------
 
 History:
+2020-12-12 \_rmfixed fixed
 2020-04-28 \boldify: removed \let\_rm=\_bf
 2020-04-14 \_setmainvaluesL: \_ifmmode test added
 2020-03-27 \_setmainvalues: \_splittopskip=\_topskip added

@@ -44,12 +44,12 @@ If you want to write such font file, you need to keep following rules.
   existence of `<font-for-testing>` in your system. If it doesn't exist, the
   file loading is skipped with a warning on the terminal.
   The \^`\_ifexistfam` macro returns false in such case.
-  The `\_fontnamegen` macro must be defined in the last parameter of the
-  `\_famdecl`. More about it is documented below.
-* You can use `\_wlog{\_detokenize{...` to write aditional information into
+  The \^`\_fontnamegen` macro must be defined in the last parameter of the
+  \^`\_famdecl`. More about it is documented below.
+* You can use `\_wlog{\_detokenize{...` to write additional information into
   log file.
-* You can declare optical sizes using `\_regoptsizes` if there are more font files
-  with different optical sizes (like in Latin Modern). See `f-lmfonts.ofm`
+* You can declare optical sizes using \~`\_regoptsizes` if there are more font files
+  with different optical sizes (like in Latin Modern). See `f-lmfonts.opm`
   file for more information about this special feature.
 * Declare font modifiers using \~`\moddef` if they are present. The \`\resetmod`
   must be declared in each font family.
@@ -62,7 +62,7 @@ If you want to write such font file, you need to keep following rules.
 \enditems
 
 {\noindent \bf The \`\_fontnamegen` macro} 
-(declared in the last parameter of the `\_famdecl`) 
+(declared in the last parameter of the \^`\_famdecl`)
 must expand (at expand processor level only) to a file name of loaded font (or to its font
 name) and to optional font features appended. The Font Selection 
 System uses this macro at primitive level in the following sense:
@@ -76,22 +76,22 @@ Note that the extended `\font` syntax
 `\font\<selector> {[<font file name>]:<font features>} <size spec.>`
 is expected here.
 
-\bigskip
-{\noindent\bf Example 1.}
+\seccc Example 1
+
 Assume an abstract font family with fonts `xx-Regular.otf`,
 `xx-Bold.otf`, `xx-Italic.otf` and `xx-BoldItalic.otf`. Then you can declare
-the `\resetmod` (for initializing the family) by:
+the \^`\resetmod` (for initializing the family) by:
 \begtt
 \_moddef\resetmod{\_fvars Regular Bold Italic BoldItalic }
 \endtt
-and define the `\_fontnamegen` in the last parameter of the `\_famdecl` by:
+and define the \^`\_fontnamegen` in the last parameter of the \^`\_famdecl` by:
 \begtt
 \_famdecl ...
     {\def\_fontnamegen{[xx-\_currV]}}
 \endtt
 The following auxiliary macros are used here:
 \begitems
-* \^`\moddef` declares the family dependent modifier. The `\resetmod` saves
+* \^`\moddef` declares the family dependent modifier. The \^`\resetmod` saves
   initial values for the family.
 * \^`\_fvars` saves four names to the memory, they are used by the \^`\_currV` macro.
 * \^`\_currV` expands to one of the four names dependent on `\rm` or `\bf` or
@@ -104,8 +104,8 @@ This command loads the `xx-Italic.otf` font file.
 
 See more advanced examples are in `f-<family>.opm` files.
 
-\bigskip
-{\noindent\bf Example 2.}
+\seccc Example 2
+
 The `f-heros.opm` is listed here. Look at it.
 When Heros family is selected and `\bf` is asked then
 `\font {[texgyreheros-bold]:+tlig;} at10pt`
@@ -122,11 +122,11 @@ general form:
    \_fsetV <word-a>=<value-a>,<word-b>=<value-b>  ...etc. terminated by a space 
 \endtt
 %
-with obvious result `\def \_<word-a>V {<value-a>}\def \_<word-b>V {<value-b>}` etc.
+with obvious result `\def\_<word-a>V {<value-a>}\def\_<word-b>V {<value-b>}` etc.
 
-\bigskip
-{\noindent\bf Example 3.}
-If both font modifiers `\caps` and `\cond` were applied from the Heros
+\seccc Example 3
+
+If both font modifiers `\caps`, `\cond` were applied in Heros
 family, then `\def\_capsV{+smcp;+onum}` and `\def\_condV{cn}` were processed
 by these font modifiers. If user needs the `\bf` variant at 11\,pt now then
 the
@@ -138,7 +138,9 @@ the
 is processed. We assume that a font file `texgyreheroscn-bold.otf` is present
 in your \TeX/ system.
 
-The macro \^`\_onlyif` `<word>=<value-a>,<value-b>,...<value-n>: {<what>}` can
+\seccc The \code{\\_onlyif} macro
+
+has the syntax \^`\_onlyif` `<word>=<value-a>,<value-b>,...<value-n>: {<what>}`. It can
 be used inside `\moddef` as simple IF statement: the `<what>` is processed only
 if `<word>` has `<value-a>` or `<value-b>` \dots or `<value-n>`. See
 `f-roboto.opm` for examples of usage of many `\_onlyif`'s.
@@ -147,9 +149,9 @@ Recommendation: use the \^`\_fontfeatures` macro at the end of the `\_fontnamege
 macro in order to the \^`\setff`, \^`\setfontcolor`, \^`\setletterspace`
 macros can work. 
 
-\bigskip
-{\noindent\bf The \^`\moddef` macro} 
-does more things than simple `\_def`:
+\seccc The \code{\\moddef} macro
+
+has the syntax \^`\moddef\<modifier>{<what to do>}`. It does more things than simple `\_def`:
 
 \begitems
 * The modifier macros are defined as `\_protected`.
@@ -166,20 +168,13 @@ is defined by the \^`\_famdecl` macro as:
 \begtt \catcode`<=13
 \protected\def\<Familyselector> {%
    \_def\_currfamily {<Familyselector>}%
-   \_def\_fontnamegen {<font name or font file name generated>}%
+   \_def\_fontnamegen {...}% this is copied from 7-th parameter of \_famdecl
    \resetmod 
+   <run all family-dependent font modifiers used before Familyselector without warnings>
 \endtt
 
-{\noindent\bf  The font context} consists from
-   \begitems
-   * Family context, i.\,e.\ \^`\_currfamily` and \^`\_fontnamegen` values
-     saved by the `\<Familyselector>`,
-   * \^`\_sizespec` value saved by the \^`\setfontsize` macro,
-   * whatever what influences the expansion of the `\_fontnamegen` macro,
-     they are typically macros `\_<key>V` saved by the font modifiers.
-   \enditems
-
-{\noindent\bf The \^`\_initfontfamily` must be run} after modifers decaration. 
+{\noindent\bf The \^`\_initfontfamily`}\nl
+must be run after modifers decaration.
 It runs the `\<Familyselector>` and it runs `\_rm`,
 so first font from new family is loaded and it is ready to use it.
 
@@ -199,6 +194,21 @@ before you will create your own font family file and use the same names for
 analogical font modifiers (like `\cond`, `\caps`, `\sans`, `\mono` etc.)\ 
 and for extra variant selectors (like `\lf`, `\li`, `\kf`, `\ki` etc.\ used in
 Roboto font family).
+
+If you are using the same font modifier names to analogical font shapes then
+such modifiers are kept when family is changend. For example:
+
+\begtt
+\fontfam [Termes] \fontfam[Heros]
+\caps\cond\it Caps+Cond italic in Heros \Termes\currvar Caps italic in Termes.
+\endtt
+%
+The family selector first resets all modifiers data by
+\^`\resetmod` and then it tries to run all currently used family-dependent modifiers
+before the family switching (without warnings if such modifier is
+unavailable in the new family).
+In this example, `\Termes` does `\resetmod` followed by `\caps\cond`.
+The `\caps` is applied and `\cond` is silently ignored in Termes family.
 
 If you need to declare your private modifier (because it is used in another
 modifiers or macros, for example), use the name `\_wordM`. You can be

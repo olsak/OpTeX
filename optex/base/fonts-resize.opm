@@ -213,6 +213,8 @@
 \sec[setfontsize] Scaling fonts in text mode (low-level macros)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\secc The `\setfontsize` macro
+
 The \^`\setfontsize` `{<size spec>}` 
 saves the information about `<size spec>`. This information is taken into
 account when a variant selector (for example `\rm`, `\bf`, `\it`, `\bi`)
@@ -228,7 +230,7 @@ or `\resizethefont` is used. The `<size spec>` can be:
 \enditems
 The initialization value in \OpTeX/ is given by `\setfontsize{at10pt}`.
 
-The \^`\resizethefont` resizes the current font to the size given by previous
+The \^`\resizethefont` resizes the currently selected font to the size given by previous
 \^`\setfontsize`. For example
 
 \begtt
@@ -250,9 +252,11 @@ typography.
 Text \smaller text \smaller text \smaller text.
 \endtt
 
+\secc[fontprimitive] The `\font` primitive
+
 If you load a font directly by `\font` primitive and you want to
 create a size-dependent selector for such font then you can use
-\^`\resizethefont`:
+\~`\resizethefont`:
 
 \begtt
 \font\tencomfortaa=Comfortaa-Regular-T1 at10pt
@@ -281,7 +285,7 @@ these features by the \^`\initunifonts` command explicitly, for example:
 
 \secc[fontdef] The \code{\\fontdef} declarator
 
-You can declare `\<newfont>` by the \^`\fontdef` command. 
+You can declare `\<newfont>` by the \~`\fontdef` command.
 
 \begtt \catcode`\<=13
   \fontdef \<newfont> {<font modifiers> \<variant-selector>}
@@ -289,15 +293,15 @@ You can declare `\<newfont>` by the \^`\fontdef` command.
   \fontdef \bigfont {\setfontsize{at15pt}\bf}
 \endtt
 %
-This command runs `<font modifiers> \<variant-selector>` in a group and sets the
-resulting current font as `\<newfont>`. 
+This command runs `<font modifiers> \<variant-selector>` in an internal group and sets the
+resulting selected font as `\<newfont>`.
 
-The resulting `\<newfont>` declared by \^`\fontdef` is \"fixed font switch"
+The resulting `\<newfont>` declared by \~`\fontdef` is \"fixed font switch"
 independent of \^`\setfontsize` and other font modifiers. More exactly, it is 
 fixed font switch when it is used but it can depend on the current font
 modifiers and font family and given font modifiers when it is declared.
 
-The parameter of the \^`\fontdef` macro must be exactly finished by the
+The parameter of the \~`\fontdef` macro must be exactly finished by the
 variant selector. More information about font modifiers
 and variant selectors are in the section~\ref[fontsystem].
 
@@ -306,7 +310,7 @@ and variant selectors are in the section~\ref[fontsystem].
 We have another command for scaling: \^`\fontlet` which is able to resize
 arbitrary font given by its font switch.
 This font switch was declared it by the
-`\font` primitive or the `\fontdef` macro.
+`\font` primitive or the \~`\fontdef` macro.
 
 \begtt \catcode`\<=13
   \fontlet \<newfont> = \<fontswitch> <sizespec>
@@ -314,8 +318,8 @@ This font switch was declared it by the
   \fontlet \bigfont = \_tenbf at15pt
 \endtt
 
-The resulted `\bigfont` is the same as in previous example where `\fontdef`
-was used. The advantage of `\fontdef` macro will be more clear when you load
+The resulted `\bigfont` is the same as in previous example where \~`\fontdef`
+was used. The advantage of \~`\fontdef` macro will be more clear when you load
 font families by `\fontfam` and you are using more font modifiers declared
 in such families.
 
@@ -323,7 +327,7 @@ Summary: you can declare font switches:
 \begitems
 * by the `\font` primitive if you know the font file,
 * by the \^`\fontlet` command if you know the font switch and the size, or
-* by the \^`\fontdef` command if you know the variant and modifiers.
+* by the \~`\fontdef` command if you know the variant and modifiers.
 \enditems
 
 \secc Optical sizes
