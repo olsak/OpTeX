@@ -200,11 +200,14 @@
    \`\_famvardefA` `\<XX> \_ten<XX> \_tryload<XX> {<data>}` is used.
    It does:
    \begitems
+   * `\def \_tryload:<currfam>:<XX> {`\^`\fontdef`` \_ten<XX> {<data>}}` loads font `\_ten<XX>`,
    * `\protected\def \<XX> {\_famdepend \<XX> {_f:<currfam>:<XX>}}`,
    * `\def \_f:<currfam>:<XX> {\_tryload:<currfam>:<XX>\_ten<XX>}` keeps family dependent definition,
-   * `\def \_tryload:<currfam>:<XX> {`\^`\fontdef`` \_ten<XX> {<data>}}` loads font `\_ten<XX>`,
    * `\def \_currvar:_ten<XX> {\<XX>}` in order to the \^`\currvar` macro work correctly.
    \enditems
+   `\famvardef\tt` behaves somewhat differently: it doesn't re-define the
+   `\tt` macro which is defined  as `\_tryloadtt \_tentt` in sections~\ref[math-preload]
+   and~\ref[unimath-codes]. It only re-defines the internal `\_tryloadtt` macro.
    \_cod -----------------------------
 
 \_def\_famvardef#1{\_edef\_tmp{\_csstring#1}%
@@ -216,10 +219,10 @@
       \_opwarning{\_string\famvardef: 
          You cannot re-declare standard variant selector \_string#1}%
    \_else
-      \_protected\_edef\_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
-      \_setnewmeaning #1=\_tmpa \famvardef
-      \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
       \_def#3{\_fontdef#2{#4}}%
+      \_protected\_edef\_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
+      \_ifx #1\_tt \_let\_tryloadtt=#3\_else \_setnewmeaning #1=\_tmpa \famvardef \_fi
+      \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
       \_sdef{_currvar:\_csstring#2}{#1}%
    \_fi
 }
@@ -644,6 +647,38 @@ about it. There are two cases:
 \def\mf{Metafont} % \mf variant selector redefined by user, we suppose that \mf
                   % is used only in the meaning of "Metafont" in the document.
 \endtt
+
+\secc The `\tt` variant selector
+
+This is additional special variant selector which is defined as \"select typewriter
+font independently of current font family". By default, the typewriter font-face
+from LatinModern font family is used.
+
+The `\tt` variant selector is used in \OpTeX/ internal macros
+\^`\_ttfont` (verbatim texts) and \^`\_urlfont` (printing URL's).
+
+You can redefine the behavior of `\tt` by \^`\famvardef`. For example:
+
+\begtt
+\fontfam[Cursor]
+\fontfam[Heros]
+\fontfam[Termes]
+\famvardef\tt{\Cursor\setff{-liga;-tlig}\rm}
+
+Test in Termes: {\tt text}. {\Heros\rm Test in Heros: {\tt text}}.
+Test in URL \url{http://something.org}.
+\endtt
+%
+You can see that `\tt` stay family independent. This is special feature only
+for `\tt` selector. New definition is used in \^`\_ttfont` and \^`\_urlfont` too.
+It is recommended to use `\setff{-liga;-tlig}` in order to supress the
+liguatures in typewriter fonts.
+
+If Unicode math font is loaded then the `\tt` macro selects typewriter
+font-face in math mode too. This face
+is selected from used Unicode math font and it is independent of
+`\famvardef\tt` declaration.
+
 
 \secc[fontmacros] Font commands defined by `\def`
 
