@@ -267,7 +267,7 @@
        \_def\_faminfo [##1]##2##3##4{%
            \_wterm{ \_space\_noexpand\fontfam [##1] -- ##2}%
        \_let\_famalias=\_famaliasA}%
-       \_opinput {fams-ini.opm}
+       \_opinput {fams-ini.opm}%
        \_isfile {fams-local.opm}\_iftrue \_opinput {fams-local.opm}\_fi
        \_message{^^J}%
    \_endgroup
@@ -278,8 +278,8 @@
 \_public \fontfam ;
 
    \_doc -----------------------------
-   When the `fams-ini.opm` or `fams-loca.opm` files are read then we need
-   to save ony a mapping from family names or alias names to the font family file
+   When the `fams-ini.opm` or `fams-local.opm` files are read then we need
+   to save only a mapping from family names or alias names to the font family file
    names. All other information is ignored in this case. But if these files
    are read by the `\_listfamnames` macro or when printing a catalog then
    more infrormation is used and printed.\nl
@@ -411,9 +411,12 @@ We distinguish between
 * {\em font switchers}, they are declared by the `\font` primitive or by 
   \^`\fontlet` or \~`\fontdef` macros, they select given font.
 * {\em variant selectors}, there are four basic variant selectors
-  `\rm`, `\bf`, `\it`, `\bi`, there is a special selector `\currvar`
-  and more variant selectors can be declared by the \~`\famvardef` macro.
-  They select the font depending on given variant and on the {\em font context}.
+  \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, there is a special selector \^`\currvar`.
+  More variant selectors can be declared by the \~`\famvardef` macro.
+  They select the font depending on given variant and on the {\em font context}
+  (i.e.\ on current family and on more features given by font modifiers).
+  In addition, \OpTeX/ defines \~`\tt` as variant selector
+  independent of chosen font family. It selects typewriter-like font.
 * {\em font modifiers} are declared in a family (`\cond`, `\caps`) or are
   \"build in" (\^`\setfontsize``{<size spec>}`, \~`\setff{<features>}`).
   They do appropriate change in the {\em font context} but do not select
@@ -527,9 +530,10 @@ family selectors and defined font macros doing something with fonts.
   of current font context. They can be used
   in `\output` routine (for example) becuase we need to set fixed fonts
   in hedares and footers.
-* Variant selectors are `\rm`, `\bf`, `\it`, `\bi` and `\currvar`. More
+* Variant selectors are \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, \~`\tt` and \^`\currvar`. More
   variant selectors can be declared by \~`\famvardef` command. They select a
   font dependent on the current font context, see section~\ref[famvardef].
+  The `\tt` selector is documented in section~\ref[tt].
 * Font modifiers are \"build in" or declared by \~`\moddef` command.
   They do modifications in the font context but don't select any font.
   \begitems
@@ -648,13 +652,13 @@ about it. There are two cases:
                   % is used only in the meaning of "Metafont" in the document.
 \endtt
 
-\secc The `\tt` variant selector
+\secc[tt] The `\tt` variant selector
 
-This is additional special variant selector which is defined as \"select typewriter
+\^`\tt` is additional special variant selector which is defined as \"select typewriter
 font independently of current font family". By default, the typewriter font-face
 from LatinModern font family is used.
 
-The `\tt` variant selector is used in \OpTeX/ internal macros
+The \^`\tt` variant selector is used in \OpTeX/ internal macros
 \^`\_ttfont` (verbatim texts) and \^`\_urlfont` (printing URL's).
 
 You can redefine the behavior of `\tt` by \^`\famvardef`. For example:

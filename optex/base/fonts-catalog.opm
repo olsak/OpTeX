@@ -81,7 +81,7 @@
 
 \_input fams-ini.opm
 
-\_isfile {fams-local.opm}\_iftrue \_input fams-local.opm \_fi
+\_isfile {fams-local.opm}\_iftrue \_famfrom{}\_input fams-local.opm \_fi
 
 \_endgroup
 
