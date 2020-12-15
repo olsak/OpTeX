@@ -202,7 +202,7 @@
    \_global\_maxlayers=#1
    \_setbox\_slidepageB=\_vbox\_bgroup
 }
-\_public \subtit \slideshow \pg \wideformat \use \pshow ;
+\_public \subtit \slideshow \pg \wideformat \use \pshow \layernum ;
 
    \_doc -----------------------------
    Default \`\layers` `<num>` macro (when \^`\slideshow` is not activated) is simple.

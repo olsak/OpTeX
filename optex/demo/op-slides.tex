@@ -232,6 +232,7 @@ partially show):
 \def\use#1#2{\ifnum\layernum#1\relax#2\fi}
 \def\pshow#1{\use{=#1}\Red \use{<#1}\Transparent \ignorespaces}
 \endtt
+`\use{=3}{do something}` does something only if `\layernum=3`.
 
 The `{\pshow<num> <text>}` prints <text> in Red when current layer is equal
 to <num> or it prints <text> normally when current layers is greater than <num>.
