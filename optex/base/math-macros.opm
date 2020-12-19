@@ -551,14 +551,14 @@
 \_def\_mathphant#1#2{\_setbox0=\_hbox{$\_math#1{#2}$}\_finphant}
 \_def\_finphant{\_setbox2=\_null
   \_ifvp \_ht2=\_ht0 \_dp2=\_dp0 \_fi
-  \_ifhp \_wd2=\_wd0 \_fi \_box2 }
+  \_ifhp \_wd2=\_wd0 \_fi \_hbox{\_box2}}
 \_def\_mathstrut{\_vphantom(}
 \_protected\_def\_smash{\_relax % \_relax, in case this comes first in \halign
   \_ifmmode\_def\_next{\_mathpalette\_mathsmash}\_else\_let\_next\_makesmash
   \_fi\_next}
 \_def\_makesmash#1{\_setbox0=\_hbox{#1}\_finsmash}
 \_def\_mathsmash#1#2{\_setbox0=\_hbox{$\_math#1{#2}$}\_finsmash}
-\_def\_finsmash{\_ht0=0pt \_dp0=0pt \_box0 }
+\_def\_finsmash{\_ht0=0pt \_dp0=0pt \_hbox{\_box0}}
 \_public \mathpalette \vphantom \hphantom \phantom \mathstrut \smash ;
 
    \_doc -----------------------------
@@ -1036,6 +1036,7 @@
 
 \_endcode %---------------------------------------------------
 
+2020=12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
 2020-06-13 \adots introduced, \matrix smaller in T mode too.
 2020-06-03 \notin corrected
