@@ -30,6 +30,17 @@
 \_public \newif ;
 
    \_doc ----------------------------
+   \`\afterfi` `{<what to do>}<ignored>\fi` closes condition by `\fi` and processes
+   <what to do>. Usage:
+   \begtt
+   \if<something> \afterfi{<result is true>} \else \afterfi{<resut is false>} \fi
+   \endtt
+   \_cod ----------------------------
+
+\_def\_afterfi#1#2\_fi{\_fi#1}
+\_def\afterfi#1#2\fi{\_fi#1}
+
+   \_doc ----------------------------
    \secc Loops
    The \`\loop` `<codeA> \ifsomething <codeB>` \`\repeat` loops `<codeA><codeB>`
    until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
@@ -50,20 +61,22 @@
 \_def \_iterate {\_body \_ea \_iterate \_fi}
 
    \_doc -----------------------------
-   \`\foreach` `<list>` \`\do` `{<what>}` 
+   \`\foreach` `<list>`\`\do` `{<what>}`
    repeats `<what>` for each element of the
    `<list>`. The `<what>` can include `#1` which is substituted by each
    element of the `<list>`. The macro is expandable.
+   \nl
+   \`\foreach` `<list>`\`\do` `<parameter-mask>{<what>}`
+   reads parameters from <list> repeatedly and does <what> for each such reading.
+   The parameters are declared by <parameter-mask>. Examples:
+   \begtt
+   \foreach (a,1)(b,2)(c,3)\do (#1,#2){#1=#2 }
+   \foreach word1,word2,word3,\do #1,{Word is #1.}
+   \foreach A=word1 B=word2 \do #1=#2 {"#1 is set as #2".}
+   \endtt
+   Note that `\foreach <list>\do {<what>}` is equivalent to `\foreach <list>\do #1{<what>}`.
 
-   \`\fornum` `<from>..<to>` \`\do` `{<what>}` or 
-   \`\fornumstep` `<num>: <from>..<to>` \`\do` `{<what>}`
-   repeats `<what>` for each number from `<from>` to `<to>` (with step `<num>`
-   or with step one). The `<what>` can include `#1` which is substituted by
-   current number. The sequence `<from>..<to>` can be decreasing too.
-   The macro is expandable.
-
-   Recommendation: it is better to 
-   use private variants of \`\_foreach` and \`\_fornum`. 
+   Recommendation: it is better to use private variants of \`\_foreach`.
    When the user writes `\input tikz` then `\foreach` macro is redefined! The
    private variants use \`\_do` separator instead `\do` separator.
    \_cod -----------------------------
@@ -71,10 +84,26 @@
 \_newcount\_frnum        % the numeric variable used in \fornum 
 \_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
 
-\_long\_def\_foreach #1\_do#2{\_putforstack
-   \_immediateassignment\_gdef\_fbody##1{#2}%
-   \_foreachA #1\_do}
-\_long\_def\_foreachA #1{\_ifx\_do#1\_getforstack\_else\_fbody{#1}\_ea\_foreachA\_fi}
+\_long\_def\_foreach #1\_do #2#{\_isempty{#2}\_iftrue
+   \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
+\_long\_def\_foreachA #1#2#3{\_putforstack
+   \_immediateassignment \_long\_gdef\_fbody#2{\_testparam##1..\_iftrue #3\_ea\_fbody\_fi}%
+   \_fbody #1#2\_finbody\_getforstack
+}
+\_def\_testparam#1#2#3\_iftrue{\_ifx###1\_empty\_ea\_finbody\_else}
+\_def\_finbody#1\_finbody{}
+
+\_def\foreach #1\do#2#{\_isempty{#2}\_iftrue
+   \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
+
+   \_doc -----------------------------
+   \`\fornum` `<from>..<to>` \`\do` `{<what>}` or
+   \`\fornumstep` `<num>: <from>..<to>` \`\do` `{<what>}`
+   repeats `<what>` for each number from `<from>` to `<to>` (with step `<num>`
+   or with step one). The `<what>` can include `#1` which is substituted by
+   current number. The sequence `<from>..<to>` can be decreasing too.
+   The macro is expandable.
+   \_cod -----------------------------
 
 \_def\_fornum#1..#2\_do{\_fornumstep 1:#1..#2\_do}
 \_long\_def\_fornumstep#1:#2..#3\_do#4{\_putforstack
@@ -93,9 +122,6 @@
    \_immediateassignment\_global\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax
    \_afterfi{\_fornumB{#1}{#2}}\_fi
 }
-\_def\_afterfi#1#2\_fi{\_fi#1}
-
-\_def\foreach #1\do{\_foreach #1\_do}
 \_def\fornum#1..#2\do{\_fornumstep 1:#1..#2\_do}
 \_def\fornumstep#1:#2..#3\do{\_fornumstep #1:#2..#3\_do}
 
@@ -130,6 +156,28 @@
       \_global\_frnum=\_cs{_frnum:\_the\_forlevel}\_space
    \_fi
 }}
+
+   \_doc ----------------------------
+   User can define own expandable \"foreach" macro by
+   \`\foreachdef` `\macro <parameter-mask>{<what>}`
+   which can be used by `\macro {<list>}`. The macro reads repeatedly parameters from <list>
+   using <parameter-mask> and does <what> for each such reading. For example
+   \begtt
+   \foreachdef\mymacro #1,{[#1]}
+   \mymacro{a,b,cd,efg,}
+   \endtt
+   expands to [a][b][cd][efg]. Such user defined macros are more effecive during processing
+   than `\foreach` itself because they need not to operate with the for-stack.
+   \_cod ----------------------------
+
+\_def\_foreachdef#1#2#{\_toks0{#2}%
+   \_long\_edef#1##1{\_ea\_noexpand\_csname _body:\_csstring#1\_endcsname
+                     ##1\_the\_toks0 \_noexpand\_finbody}%
+   \_foreachdefA#1{#2}}
+\_def\_foreachdefA#1#2#3{%
+   \_sdef{_body:\_csstring#1}#2{\_testparam##1..\_iftrue #3\_cs{_body:\_csstring#1\_ea}\_fi}}
+
+\_public \foreachdef ;
 
    \_doc ----------------------------
    \secc Is-macros
