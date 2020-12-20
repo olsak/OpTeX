@@ -20,7 +20,7 @@
    \_else \_destbox[#1:#2]%
    \_fi\_fi
 }
-\_def\_destbox[#1]{\_vbox to0pt{\_kern-\_destheight \_pdfdest name{#1} xyz\_vss}}
+\_def\_destbox[#1]{\_vbox to\_zo{\_kern-\_destheight \_pdfdest name{#1} xyz\_vss}}
 \_def\_dest[#1]{}
 \_public \dest ;
 

@@ -92,7 +92,7 @@
 \_def\_setmainvaluesL {\_ifmmode \_normalmath \_else
    \_rm \_everymath={\_normalmath}\_everydisplay={\_normalmath}\_fi}
 \_def\_scalemain {%
-   \_ifdim \_mainfosize=0pt
+   \_ifdim \_mainfosize=\_zo
        \_mainfosize=10pt  \_mainbaselineskip=12pt
        \_let \_setmainvalues=\_setmainvaluesL       
     \_fi
@@ -134,7 +134,7 @@
    \_ea\_ifx \_the\_font \_tenbi \_additcorr \_bf  \_else
    \_it \_aftergroup\_afteritcorr\_fi\_fi\_fi
 }
-\_def\_additcorr{\_ifdim\_lastskip>0pt 
+\_def\_additcorr{\_ifdim\_lastskip>\_zo
    \_skip0=\_lastskip \_unskip\_italcorr \_hskip\_skip0 \_else\_italcorr \_fi}
 \_def\_afteritcorr{\_futurelet\_next\_afteritcorrA}
 \_def\_afteritcorrA{\_ifx\_next.\_else\_ifx\_next,\_else \_italcorr \_fi\_fi}

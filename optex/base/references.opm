@@ -80,7 +80,7 @@
 
 \_def\_printlabel#1{}
 \_def\_showlabels {%
-   \_def\_printlabel##1{\_vbox to0pt{\_vss\_llap{\_labelfont[##1]}\_kern1.7ex}}%
+   \_def\_printlabel##1{\_vbox to\_zo{\_vss\_llap{\_labelfont[##1]}\_kern1.7ex}}%
    \_fontdef\_labelfont{\_setfontsize{at10pt}\setfontcolor{blue}\_tt}
 }
 \_public \showlabels ;

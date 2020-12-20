@@ -241,9 +241,9 @@
 \_newskip \_savedtitleskip  
 \_newskip \_savedlastskip
 \_def\_abovetitle #1#2{\_savedlastskip=\_lastskip % <whatever-skip>
-   \_ifdim\_lastskip>0pt \_vskip-\_lastskip \_fi
+   \_ifdim\_lastskip>\_zo \_vskip-\_lastskip \_fi
    \_ifnum\_lastpenalty=11333 \_vskip-\_savedtitleskip \_else #1\_fi
-   \_ifdim\_savedlastskip>0pt \_setbox0=\_vbox{#2\_global\_tmpdim=\_lastskip}%
+   \_ifdim\_savedlastskip>\_zo \_setbox0=\_vbox{#2\_global\_tmpdim=\_lastskip}%
    \_else \_tmpdim=\_maxdimen \_fi
    \_ifdim\_savedlastskip>\_tmpdim \vskip\_savedlastskip \_else #2\_fi
 }

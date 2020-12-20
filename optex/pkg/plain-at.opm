@@ -5,9 +5,9 @@
 \_setctable \_optexcatcodes
 % PlainTeX obscure names:
 \_catcode`\@=11
-\_newdimen\z@ \z@=0pt
-\_newdimen\p@ \p@=1pt
+\_let\z@=\_zo
 \_let\z@skip=\_zoskip
+\_newdimen\p@ \p@=1pt
 \_chardef\@ne=1 
 \_chardef\tw@=2 
 \_chardef\thr@@=3 

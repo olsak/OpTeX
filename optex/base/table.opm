@@ -44,7 +44,7 @@
    \_the\_thistable \_global\_thistable={}%
    \_ea\_ifx\_ea^\_the\_tabstrut^\_setbox\_tstrutbox=\_null
    \_else \_setbox\_tstrutbox=\_hbox{\_the\_tabstrut}%
-          \_setbox\_tstrutbox=\_hbox{\_vrule width0pt
+          \_setbox\_tstrutbox=\_hbox{\_vrule width\_zo
               height\_dimexpr\_ht\_tstrutbox+\_tablinespace 
               depth\_dimexpr\_dp\_tstrutbox+\_tablinespace}%
           \_offinterlineskip
@@ -207,7 +207,7 @@
 \_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
 \_def\_paramtabdeclarep#1{\_the\_tabiteml
    \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip 
-   \_lineskiplimit=0pt \_noindent##\_unsskip
+   \_lineskiplimit=\_zo \_noindent##\_unsskip
    \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}\_the\_tabitemr}
 
    \_doc -----------------------------
@@ -219,7 +219,7 @@
    `\hideskip` macro: `&\hideskip text\hideskip&`.
    \_cod -----------------------------
 
-\_def\_unsskip{\_ifmmode\_else\_ifdim\_lastskip>0pt \_unskip\_fi\_fi}
+\_def\_unsskip{\_ifmmode\_else\_ifdim\_lastskip>\_zo \_unskip\_fi\_fi}
 
    \_doc -----------------------------
    The \`\fL`, \`\fR`, \`\fC` and \`\fX` macros only does a special parameters settings
@@ -247,7 +247,7 @@
 
 \_def\_crl{\_crcr\_noalign{\_hrule}}
 \_def\_crll{\_crcr\_noalign{\_hrule\_kern\_hhkern\_hrule}}
-\_def\_zerotabrule {\_noalign{\_hrule height0pt width0pt depth0pt}}
+\_def\_zerotabrule {\_noalign{\_hrule height\_zo width\_zo depth\_zo}}
 
 \_def\_crli{\_crcr \_zerotabrule \_omit 
    \_gdef\_dditem{\_omit\_tablinefil}\_gdef\_vvitem{\_kern\_vvkern\_vrule}\_gdef\_vvitemA{\_vrule}%
@@ -300,7 +300,7 @@
    then use braces. 
    \_cod -----------------------------
 
-\_def\_vspan#1#2{\_vtop to 0pt{\_hbox{\_lower \_dimexpr
+\_def\_vspan#1#2{\_vtop to\_zo{\_hbox{\_lower \_dimexpr
    #1\_dimexpr(\_ht\_tstrutbox+\_dp\_tstrutbox)/2\_relax
     -\_dimexpr(\_ht\_tstrutbox+\_dp\_tstrutbox)/2\_relax \_hbox{#2}}\_vss}} 
 \_public \vspan ;

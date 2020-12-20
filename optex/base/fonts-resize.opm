@@ -25,7 +25,7 @@
 \_def\_setoptsizeA at#1\_relax{\_optsize=#1\_relax\_lastmagsize=\_optsize}   % at<dimen>
 \_def\_setoptsizeB scaled#1\_relax{\_optsize=\_defaultoptsize\_relax} % scaled<scalenum>
 \_def\_setoptsizeC mag#1\_relax{%
-   \_ifdim\_lastmagsize>0pt \_optsize=\_lastmagsize \_else \_optsize=\_pdffontsize\_font \_fi
+   \_ifdim\_lastmagsize>\_zo \_optsize=\_lastmagsize \_else \_optsize=\_pdffontsize\_font \_fi
    \_optsize=#1\_optsize 
    \_lastmagsize=\_optsize
    \_edef\_sizespec{at\_the\_optsize}%
@@ -53,7 +53,7 @@
     \_edef\_whatresize{#1}%
     \_ifx \_fontselector \_undefined \_doresizefont#2%
     \_else \_ea \_doresizefont \_fontselector \_fi
-    \_lastmagsize=0pt
+    \_lastmagsize=\_zo
     \_slet{_tryload#1}{_relax}%
 }
 \_def\_doresizetfmfont#1{\_logfont{#1}%

@@ -433,7 +433,7 @@
 
 \_protected\_def\_ldots{\_mathinner{\_ldotp\_ldotp\_ldotp}}
 \_protected\_def\_cdots{\_mathinner{\_cdotp\_cdotp\_cdotp}}
-\_protected\_def\_vdots{\_vbox{\_baselineskip=.4em \_lineskiplimit=0pt
+\_protected\_def\_vdots{\_vbox{\_baselineskip=.4em \_lineskiplimit=\_zo
     \_kern.6em \_hbox{.}\_hbox{.}\_hbox{.}}}
 \_protected\_def\_ddots{\_mathinner{%
     \_mkern1mu\_raise.7em\_vbox{\_kern.7em\_hbox{.}}\_mkern2mu
@@ -474,7 +474,7 @@
    The last four are redefined when Unicode math is loaded.
    \_cod -----------------------------
 
-\_def\_math{\_mathsurround0pt }
+\_def\_math{\_mathsurround\_zo}
 \_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0=by2 \_mkern\_muskip0
     #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
 \_protected\_def\_overrightarrow #1{\_vbox{\_math\_ialign{##\_crcr
@@ -558,7 +558,7 @@
   \_fi\_next}
 \_def\_makesmash#1{\_setbox0=\_hbox{#1}\_finsmash}
 \_def\_mathsmash#1#2{\_setbox0=\_hbox{$\_math#1{#2}$}\_finsmash}
-\_def\_finsmash{\_ht0=0pt \_dp0=0pt \_hbox{\_box0}}
+\_def\_finsmash{\_ht0=\_zo \_dp0=\_zo \_hbox{\_box0}}
 \_public \mathpalette \vphantom \hphantom \phantom \mathstrut \smash ;
 
    \_doc -----------------------------
@@ -575,7 +575,7 @@
 \_def\_rlhp#1{\_vcenter{\_math\_hbox{\_ooalign{\_raise.2em
           \_hbox{$#1\_rightharpoonup$}\_crcr
         $#1\_leftharpoondown$}}}}
-\_protected\_def\_buildrel#1\over#2{\_mathrel{\_mathop{\_kern0pt #2}\_limits^{#1}}}
+\_protected\_def\_buildrel#1\over#2{\_mathrel{\_mathop{\_kern\_zo #2}\_limits^{#1}}}
 \_protected\_def\_doteq{\_buildrel\_textstyle.\over=}
 \_private \in \sim ;
 \_public \cong \notin \rightleftharpoons \buildrel \doteq ;

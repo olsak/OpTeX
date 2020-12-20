@@ -75,7 +75,7 @@
 }
 \_def \_ensureblack #1{#1} % will be re-defined by color macros
 \_let \_openfnotestack = \_relax % will be re-defined by color macros
-\_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to0pt{\_kern-\_voffset #1\_vss}}
+\_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to\_zo{\_kern-\_voffset #1\_vss}}
 
    \_doc -----------------------------
    \`\_makeheadline` creates `\vbox to0pt` with its contents (the \^`\headline`) 
@@ -83,9 +83,9 @@
    \_cod -----------------------------
 
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse 
-   \_vbox to0pt{\_vss 
-                \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
-                \_hbox to\_xhsize{\_the\_headline}\_hbox{}}\_nointerlineskip
+   \_vbox to\_zo{\_vss
+                 \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
+                 \_hbox to\_xhsize{\_the\_headline}\_hbox{}}\_nointerlineskip
    \_fi
 }
 
@@ -155,7 +155,7 @@
 \_def\_vfootnote{\_opfootnote{}}
 \_def \_opfootnote #1#2{\_insert\_footins\_bgroup
   \_interlinepenalty=\_interfootnotelinepenalty
-  \_leftskip=0pt \_rightskip=0pt \_spaceskip=0pt \_xspaceskip=0pt \_relax 
+  \_leftskip=\_zo \_rightskip=\_zo \_spaceskip=\_zo \_xspaceskip=\_zo \_relax
   \_let\_colorstackcnt=\_fnotestack % special color stack for footnotes
   #1\_relax % local settings used by \fnote macro
   \_splittopskip=\_ht\_strutbox % top baseline for broken footnotes
