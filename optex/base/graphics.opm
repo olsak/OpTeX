@@ -168,7 +168,7 @@
 }
 
 \_def\_puttext{\_ea\_ea\_ea\_puttextA\_scantwodimens}
-\_def\_puttextA#1#2#3{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}
+\_def\_puttextA#1#2#3{{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
 \_def\_puttextB{%
    \_ifvmode
       \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
@@ -179,7 +179,7 @@
 
 \_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
 \_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
-\_def\_putpicB#1#2#3{\_setbox0=\_hbox{\_picwidth=#1sp \_picheight=#2sp \_inspic{#3}}\_puttextB}
+\_def\_putpicB#1#2#3{{\_setbox0=\_hbox{\_picwidth=#1sp \_picheight=#2sp \_inspic{#3}}\_puttextB}}
 
 \_newbox\_bgbox
 \_def\_backgroundpic#1{%
@@ -440,5 +440,6 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2020-12-21: \puttext: \box0 in goup, bugfix
 2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed
 
