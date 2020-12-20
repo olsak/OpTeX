@@ -69,6 +69,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li> \hisyntax performs syntax highlighting for C, Python, TeX, 
      html and XML languages.
 <li> \draft and \showlabels can be used for printing labels in draft mode.
+<li> Options in key=value dictionaries.
 <li> \lipsum prints the text Lorem ipsum dolor sit.
 <li> \mathbox creates a \hbox in math list with size-context.
 <li> \numberedpar helps with creating numbered Theorems, Definitions etc.
@@ -130,7 +131,6 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Macro tricks
 <ul>
-    <li><a href="#keyval">The options in key=value dictionaries</a>
     <li><a href="#condi">Structured conditionals</a>
     <li><a href="#setpos">Absolute positions on the page<a>
     <li><a href="#tabs">Tabbing macros</a>
@@ -1113,71 +1113,6 @@ for example "V":
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
-
-<h2><a name="keyval"></a>The options in key=value dictionaries</h2>
-
-<p>We want to set the data in the form keyA=valueA, keyB=valueB etc. i.e.
-the comma separated list of equations. The list of
-key=value pairs is read by \readkv\defaultvalues macro.
-Next, the macro \kv{key} expands to the
-appropriate value or to \kvunknown, if the key is not set.
-For example:
-
-<pre>
-\def\mymacrodefault          {color={}, width=0.4pt} 
-\optdef\mymacro [] {\bgroup 
-   \readkv\mymacrodefault
-   \kv{color}% color setting 
-   \let\vruleprimitive=\vrule 
-   \def\vrule{\vruleprimitive width\kv{width}}% vrule width setting 
-   ... 
-   \egroup 
-} 
-</pre>
-
-<p>The user can write the \mymacro without parameters or (for example)
-\mymacro[width=.7pt] or \mymacro[width=.8pt, color=\Red].
-
-<p>The macros \kv and \kvread are implemented here:
-
-<pre>
-\def\kv#1{\trycs{kv:#1}{\kvunknown}}
-\def\kvunknown{???} 
-\def\kvscan #1#2=#3,{\ifx#1,\else \sdef{kv:#1#2}{#3}\_ea\kvscan\fi} 
-\def\readkv#1{\_ea\def\_ea\tmpb\_ea{#1,}\_ea\addto\_ea\tmpb\_ea{\the\opt}%
-   \replstring\tmpb{= }{=}\replstring\tmpb{ =}{=}%
-   \_ea \kvscan \tmpb,,=,%
-}
-</pre>
-
-<p>The \readkv macro prepares options in \tmpb. It removes optional spaces
-around equal sign by \replstring and runs \kvscan macro.
-
-<p>If we want to mix single options with key=value pairs, for example
-
-<pre>
-\mymacro [width=1mm, draft]
-</pre>
-
-<p>then we must to \replstring such single options to key=value pairs before
-\readkv is used, for example:
-
-<pre>
-\def\mymacrodefault          {color={}, width=0.4pt, draftmode=0} 
-\optdef\mymacro [] {\bgroup 
-   \_ea\addto\_ea\mymacrodefault\_ea{\_ea,\the\opt}\opt={}%
-   \replstring\mymacrodefault{draft}{draftmode=1}%
-   \readkv\mymacrodefault
-   \kv{color}% color setting 
-   \let\vruleprimitive=\vrule 
-   \def\vrule{\vruleprimitive width\kv{width}}% vrule width setting 
-   ... 
-   \egroup 
-} 
-</pre>
-
-<p CLASS=datum>(0008) -- P. O. 2020-04-10<p>
-<hr>
 
 <h2><a name="condi"></a>Structured conditionals</h2>
 
