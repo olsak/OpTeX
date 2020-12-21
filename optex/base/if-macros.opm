@@ -175,7 +175,7 @@
                      ##1\_the\_toks0 \_noexpand\_finbody}%
    \_foreachdefA#1{#2}}
 \_def\_foreachdefA#1#2#3{%
-   \_sdef{_body:\_csstring#1}#2{\_testparam##1..\_iftrue #3\_cs{_body:\_csstring#1\_ea}\_fi}}
+   \_long\_sdef{_body:\_csstring#1}#2{\_testparam##1..\_iftrue #3\_cs{_body:\_csstring#1\_ea}\_fi}}
 
 \_public \foreachdef ;
 

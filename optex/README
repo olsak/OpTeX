@@ -19,32 +19,49 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
-<0.17> optex.lua introduced (instead external ltluatex.lua)
+<0.18> Dec. 2020
+       Font support for next 9 families added.
+       Font selection system improved.
+       Documentation (especially about font selection system) corrected.
+       Macros supporting key=value included to the format.
+       \foreach macro improved.
+       Concept of multilang in bib rewritten.
+       \opwarning format changed (line numbers are printed too).
+       Several bugs fixed.
+<0.17> Nov. 2020
+       optex.lua introduced (instead external ltluatex.lua)
        hyph.patterns are loaded directly by \patterns, not using lua code
        \commentchars introduced (comments which are able to interrupt verbatim mode)
-<0.16> callback.register_x introduced, namespaces for packages corrected
+<0.16> Oct. 2020
+       callback.register_x introduced, namespaces for packages corrected
        kerkis and EBGaramond fontfiles added
        little corrections
        optex-math manual: Index added 
-<0.15> Release for Overleaf - TL2020.
+<0.15> Jun. 2020
+       Release for Overleaf - TL2020.
        More vertical space above in \chap and \secc.
-<0.14> Typeseting Math with OpTeX: new document added.
+<0.14> Jun. 2020
+       Typeseting Math with OpTeX: new document added.
        Math macros corrected.
        In-line verbatim in section titles allowed.
        \eqbox implemented.
        "\mnote up", "\displaylines to" (new features implemented)
-<0.13> \table have more features: \tabskip, \table to, \table pxto, \vspan
+<0.13> May 2020
+       \table have more features: \tabskip, \table to, \table pxto, \vspan
        The \eqalign reimplemented to be more flexible.
        The boundary character ":" introduced in the \table.
        \| undefined in 8bit math: bug fixed.
        \isnextchar: \let\tmp=#1 -> \let\tmp= #1 
-<0.12> The external macro qrcode.opm introduced
+<0.12> May 2020
+       The external macro qrcode.opm introduced
        New directory structure: base/, demo/, pkg/, doc/ introduced.
        \load macro introduced 
        \newif: bug fixed, other bug fixed.
-<0.11> \phi, \varpi in Unicode: bug fixed 
+<0.11> Apr. 2020
+       \phi, \varpi in Unicode: bug fixed
        \mathstyles introduced.
-<0.10> Technical documentation added 
+<0.10> Apr. 2020
+       Technical documentation added
        \_famdecl instedad \_fontdecl in font family files (incompatible change).
 <0.09> Syntax highlighting implemented.
 <0.08> \numberedpar implmented. \emergencystretch=20pt added as default. 
