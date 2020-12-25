@@ -186,15 +186,26 @@
    `<textA>` are not replaced if they are \"hidden" in braces, for example
    `...{...<textA>...}...`. The category codes in the `<textA>` must exactly
    match.
+
+   How it works: `\replstring\foo{<textA>}{<textB>}` prepares
+   `\_replacestringsA#1<textA>{...}` and runs
+   `\_replacestringsA<foo-body>?<textA>!<textA>`.
+   So, `#1` includes the first part of <foo-body> before first <textA>.
+   It is saved to \`\_tmptoks` and `\_replacestringsB` is run in a loop.
+   It finishes processing or appends next part to `\_tmptoks` separated by
+   <textB> and continues loop. The final part of the macro removes the last `?`
+   from resulting `\_tmptoks` and defines new version of the `\foo`.
    \_cod -----------------------------
 
+\_newtoks\_tmptoks
 \_catcode`!=3 \_catcode`?=3
 \_def\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
-   \_long\_def\_replacestringsA##1#2{\_def #1{##1}\_replacestringsB}%
-   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_addto #1{#3##1}%
-      \_ea\_replacestringsB\_fi}%      
+   \_long\_def\_replacestringsA##1#2{\_tmptoks{##1}\_replacestringsB}%
+   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_toksapp\_tmptoks{#3##1}%
+                                     \_ea\_replacestringsB\_fi}%
    \_ea\_replacestringsA #1?#2!#2%
-   \_long\_def\_replacestringsA##1?{\_def #1{##1}}\_ea\_replacestringsA #1}
+   \_long\_def\_replacestringsA##1?{\_tmptoks{##1}\_edef#1{\_the\_tmptoks}}%
+   \_ea\_replacestringsA \_the\_tmptoks}
 \_normalcatcodes
 
 \_public \replstring ;

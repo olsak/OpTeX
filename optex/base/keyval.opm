@@ -60,7 +60,7 @@ We recommend to use \^`\optdef` for defining macros with optional parameters
 written in `[]`. Then the optional parameters are saved in the \^`\opt` tokens
 register. First: we append the \^`\opt` (actual optional parameters) to 
 `\myframedefault` by \^`\addto` macro.
-Lua\TeX/ primitive. Second: we read the parameters by
+Second: we read the parameters by
 \^`\readkv{<pramaters list>}` macro.
 Third: the values can be used by expandable \^`\kv{<key>}` macro.
 The \^`\kv{<key>}` returns `???` if such key is not declared.

@@ -36,8 +36,9 @@
    `\_lineskip=-2\_tablinespace`. Normal table rows (where no `\hrule` is
    between them) have normal baseline distance.\nl
    The \`\_tableA``{<declaration>}` macro scans the `<declaration>` by
-   `\_scantabdata#1\_relax` and continues by reading `{<data>}` by
-   the \^`\_tableB` macro.
+   `\_scantabdata#1\_relax` and continues by processing `{<data>}` by \^`\_tableB`.
+   The trick `\_tmptoks={<data>}\_edef\_tmpb{\_the\_tmptoks}`
+   is used here in order to keep the hash marks in the <data> unchanged.
    \_cod -----------------------------
 
 \_def\_tableA#1{\_egroup
@@ -52,14 +53,14 @@
    \_fi
    \_colnum=0 \_let\_addtabitem=\_addtabitemx 
    \_def\_tmpa{}\_tabdata={\_colnum1\_relax}\_scantabdata#1\_relax
-   \_the\_everytable \_tableB
+   \_the\_everytable \_afterassignment\_tableB \_tmptoks=%
 }
 
    \_doc -----------------------------
-   The \`\_tableB``{<data>}` saves `<data>` to `\_tmpb`
+   The \`\_tableB` saves `<data>` to `\_tmpb`
    and does four \^`\replstring`s to prefix each macro \^`\crl` (etc.)
    by `\_crcr`. The reason is: we want to use macros which scan its parameter 
-   to the delimeiter written in right part of table item declaration. 
+   to the delimiter written in right part of table item declaration.
    See \^`\fS` for example. The `\crcr` cannot be hidden in other macro in such case.
 
    The `\tabskip` value is saved for places between columns
@@ -91,7 +92,7 @@
    \relax
    \_cod -----------------------------
 
-\_def\_tableB#1{\_def\_tmpb{#1}%
+\_def\_tableB{\_edef\_tmpb{\_the\_tmptoks}%
    \_replstring\_tmpb{\crl}{\_crcr\crl}\_replstring\_tmpb{\crll}{\_crcr\crll}%
    \_replstring\_tmpb{\crli}{\_crcr\crli}\_replstring\_tmpb{\crlli}{\_crcr\crlli}%
    \_replstring\_tmpb{\crlp}{\_crcr\crlp}%
@@ -141,10 +142,10 @@
                        \_else \_def\_next{\_ea\_scantabdataA\_csname _tabdeclare#1\_endcsname}%
    \_fi\_fi\_fi\_fi\_fi\_fi \_next
 }
-\_def\_scantabdataA#1{\_addtabitem 
-   \_ea\_addtabdata\_ea{#1\_tabstrutA \_tabskip\_tabskipmid}\_scantabdata}
+\_def\_scantabdataA#1{\_addtabitem
+   \_ea\_addtabdata\_ea{#1\_tabstrutA \_tabskip\_tabskipmid\_relax}\_scantabdata}
 \_def\_scantabdataB#1#2{\_addtabitem
-   \_ea\_addtabdata\_ea{#1{#2}\_tabstrutA \_tabskip\_tabskipmid}\_scantabdata}
+   \_ea\_addtabdata\_ea{#1{#2}\_tabstrutA \_tabskip\_tabskipmid\_relax}\_scantabdata}
 \_def\_scantabdataC {\_def\_tmpb{}\_afterassignment\_scantabdataD \_tmpnum=}
 \_def\_scantabdataD#1{\_loop \_ifnum\_tmpnum>0 \_advance\_tmpnum by-1 \_addto\_tmpb{#1}\_repeat
    \_ea\_scantabdata\_tmpb}
