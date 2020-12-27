@@ -305,8 +305,8 @@
    \_def\_famfile{#3}%
 }
 \_def\_famalias [#1]{%
-   \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
-   \_sdef{_famf:\_famname\_ea}\_ea{\_famfile}%
+   \_lowercase{\_edef\_tmpa{\_ea\_removespaces #1 {} }}%
+   \_sdef{_famf:\_tmpa\_ea}\_ea{\_famfile}%
 }   
 \_newtoks\_famfrom
 \_input fams-ini.opm

@@ -282,7 +282,7 @@
    convert `<declaration>` from `\table` syntax to `\halign` syntax.
    \_cod -----------------------------
 
-\_def\_mspan{\_omit \_tabdata={\_tabstrutA}\_let\_tmpa=\_relax \_afterassignment\_mspanA \_mscount=}
+\_def\_mspan{\_omit \_afterassignment\_mspanA \_mscount=}
 \_def\_mspanA[#1]#2{\_loop \_ifnum\_mscount>1 \_cs{_span}\_omit \_advance\_mscount-1 \_repeat
    \_count1=\_colnum \_colnum=0 \_def\_tmpa{}\_tabdata={}\_scantabdata#1\_relax
    \_colnum=\_count1 \_setbox0=\_vbox{\_halign\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_cr#2\_cr}%
