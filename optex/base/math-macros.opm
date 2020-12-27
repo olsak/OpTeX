@@ -1017,7 +1017,7 @@
 
 \_newcount\_stylenum
 \_def\_mathstyles#1{{\_mathchoice{\_stylenum0 #1}{\_stylenum1 #1}%
-                                {\_stylenum2 #1}{\_stylenum1 #1}}}
+                                {\_stylenum2 #1}{\_stylenum3 #1}}}
 \_def\_dobystyle#1#2#3#4{\_ifcase\_stylenum#1\_or#2\_or#3\_or#4\_fi}
 \_def\_currstyle{\dobystyle\_displaystyle\_textstyle\_scriptstyle\_scriptscriptstyle}
 \_public \mathstyles \dobystyle \currstyle \stylenum ;
