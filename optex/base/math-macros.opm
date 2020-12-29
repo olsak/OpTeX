@@ -1019,8 +1019,26 @@
 \_def\_mathstyles#1{{\_mathchoice{\_stylenum0 #1}{\_stylenum1 #1}%
                                 {\_stylenum2 #1}{\_stylenum3 #1}}}
 \_def\_dobystyle#1#2#3#4{\_ifcase\_stylenum#1\_or#2\_or#3\_or#4\_fi}
-\_def\_currstyle{\dobystyle\_displaystyle\_textstyle\_scriptstyle\_scriptscriptstyle}
+\_def\_currstyle{\_dobystyle\_displaystyle\_textstyle\_scriptstyle\_scriptscriptstyle}
 \_public \mathstyles \dobystyle \currstyle \stylenum ;
+
+   \_doc -----------------------------
+   The \`\cramped` macro
+   sets the cramped variant of current style.
+   Note that \^`\currstyle` initializes non-cramped variants.
+   The example `\mathframe` above should be:\nl
+   `\def\mathframe#1{\mathstyles{\frame{$\currstyle\cramped #1$}}}`.\nl
+   Second note: `\cramped` macro reads the current math style from
+   the `\mathstyle` LuaTeX primitive, so it does not work in numerators of
+   generalized fractions but you can use it before the fraction is opened:
+   `$\cramped {x^2\over y^2}$`.
+   \_cod -----------------------------
+
+\_def\_cramped{\_ifcase\_numexpr(\_mathstyle+1)/2\_relax\_or
+   \_crampeddisplaystyle \_or \_crampedtextstyle \_or
+   \_crampedscriptstyle \_or \_crampedscriptscriptstyle \_fi
+}
+\_public \cramped ;
 
    \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
