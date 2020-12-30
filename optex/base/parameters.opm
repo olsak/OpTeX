@@ -343,6 +343,11 @@
 \_newtoks\_bibtexhook
 \_public \bibtexhook ;
 
+   \_doc -----------------------------
+   \`\everycapitonf` is used before printing caption in figures and
+   \`\everycapitont` is used before printing caption in tables.
+   \_cod -----------------------------
+
 \_newtoks\_everycaptiont  \_newtoks\_everycaptionf
 \_public \everycaptiont \everycaptionf ;
 

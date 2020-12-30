@@ -99,7 +99,7 @@ automatically mirrored in such case, it means that <left> is replaced by
 <right> and vice versa.
 
 \OpTeX/ declares following paper formats: a4, a4l (landscape~a4), 
-a5, a5l, a3, a3l, b5, letter and user can declare another own format by `\sdef`:
+a5, a5l, a3, a3l, b5, letter and user can declare another own format by \~`\sdef`:
 
 \begtt
 \sdef{_pgs:b5l}{(250,176)mm} 
@@ -410,9 +410,7 @@ is usable for math formulae in titles typeset in bold, for example.
 You can use \^`\mathbox{<text>}` inside math mode. It behaves as `{\hbox{<text>}}`
 (i.e. the <text> is printed in horizontal non-math mode)
 but the size of the <text> is adapted to the context of math size (text or script or
-scriptscript). Moreover, there is the macro \^`\mathstyles{<math list>}` which depends on
-the current math style. It is documented at the end of the
-section~\ref[math-macros].
+scriptscript).
 
 
 \sec Typical elements of document
@@ -742,7 +740,7 @@ produces:
 * Finito
 \enditems
 
-Another style can be defined by the command \^`\sdef{_item:<style>}{<text>}`.
+Another style can be defined by the command \~`\sdef{_item:<style>}{<text>}`.
 Default item can be set by \^`\defaultitem={<text>}`.
 The list environments can be nested. Each new level of items is indented by
 next multiple of \^`\iindent` value which is set to `\parindent` by default.
@@ -966,7 +964,7 @@ The \^`\begtt` command starts internal group in which the catcodes are changed.
 \new
 Then the \^`\everytt` tokens register is run. It is empty by default and user can
 control fine behavior by it. For example the catcodes can be re-declared here. If
-you need to define active character in the \^`\everytt`, use \^`\adef` as in the
+you need to define active character in the \^`\everytt`, use \~`\adef` as in the
 following example:
 
 \begtt \adef@{\string\endtt}
@@ -977,7 +975,7 @@ the question mark and vice versa. Really? You can try it!
 @
 \endtt
 %
-The \^`\adef` command sets its parameter as active {\it after\/}
+The \~`\adef` command sets its parameter as active {\it after\/}
 the parameter of \^`\everytt` is read. So you don't have to worry about active
 categories in this parameter. 
 
@@ -1615,7 +1613,7 @@ in used language and it depends on the previously used language selectors
 Czech, German, Spanish, French, Greek, Italian, Polish, Russian, Slovak and 
 English, If you need to use these words in another languages or you want to
 auto-generate more words in your macros, then you can declare it by 
-\^`\sdef` or \^`\_langw` commands as shown in section~\ref[langphrases].
+\~`\sdef` or \^`\_langw` commands as shown in section~\ref[langphrases].
 
 The \~`\makeindex` command needs to know the sorting rules used in your language.
 \OpTeX/ defines only few language rules for sorting: Czech,
@@ -1823,6 +1821,82 @@ put it as the first command in your document:
 
 \report \letter \slides  % style declaration macros
 \endtt
+
+
+\sec API for macro writers
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+All \TeX/ primitives and almost all \OpTeX/ macros are accesible by two
+names: `\foo` (public or user name space) and `\_foo` (private name space).
+For example `\hbox` and `\_hbox` means the same \TeX/ primitive. More about
+it is documented in section~\ref[prefixed].
+
+If this manual refers `\foo` then `\_foo` equivalent exists too. For example
+we mention `\addto` macro below. The `\_addto` equivalent exists too, but it
+is not explicitly mentioned here. If we refer only `\_foo` then its public
+equivalent does not exist. For example we mention `\_codedecl` macro below, so
+this macro is not available as `\codedecl`.
+
+If you are writing a document or macros specific for the document, then use
+simply user name space (`\foo`). If you are writting more general macros,
+then use private name space (`\_foo`), but you should declare your own name space
+by \~`\_namespace` macro and you have to follow naming discipline described in
+section~\ref[pkg-namespace].
+
+The alphabeticaly sorted list of macros typically usable for macro writers follows.
+More information about such macros can be found in the technical documentation.
+You can use hyperlinks here in order to go to the appropriate place of the technical
+documentation.
+
+\medskip \noindent
+\^`\addto`` \macro{<text>}` adds <text> at the end of `\macro` body.\nl
+\^`\adef` `<char>{<body>}` defines <char> active character with meaning <body>.\nl
+\^`\afterfi` `{<text>}<ignored>\fi` expands to `\fi<text>`.\nl
+\^`\bp`` {<dimen expression>}` expands \TeX/ dimension to decimal number in `bp` without unit.\nl
+\~`\_codedecl`` <sequence> {<info>}` is used at beginning of macro files.\nl
+\~`\colordef`` \macro {<mix of colors>}` declares `\macro` as color switch.\nl
+\^`\cs` `{<string>}` expands `\<string>`.\nl
+\~`\_doc` `...` \~`\_cod` encloses documenation text in the macro code.\nl
+\^`\eoldef`` \macro #1{<body>}` defines `\macro` with parameter separated to end of line.\nl
+\~`\_endcode` closes the part of macro code in macro files.\nl
+\~`\_endnamespace` closes name space declared by \~`\_namespace`.\nl
+\~`\eqbox`` [<label>]{<text>}` creates `\hbox{<text>}` with common width across whole document.\nl
+\^`\expr`` {<expression>}` expands to result of the <expression> with decimal numbers.\nl
+\~`\fontdef`` \f {<font spec.>}` declares `\f` as font switch.\nl
+\~`\fontlet` `\fa=\fb <sizespec.>` declares `\fa` as the same font switch
+   like `\fb` at given <sizespec.>.\nl
+\^`\foreach` `<list>\do <parameters>{<what>}` is exapandable loop over <list>.\nl
+\^`\foreachdef` `\macro <parameters>{<what>}` declares expandable `\macro` as loop over <list>.\nl
+\^`\fornum` `<from>..<to>\do {<what>}` is expanadable loop with numeric variable.\nl
+`\expandafter` \^`\ignorept` `\the<dimen>` expands to decimal number <dimen> without `pt`.\nl
+\~`\isempty`, \~`\istoksempty`, \~`\isequal`, \~`\ismacro`, \~`\isdefined`, \~`\isinlist`
+\~`\isfile`, \~`\isfont` do various tests. Example: \~`\isinlist\list{<text>}\iftrue` does
+   `\iftrue` if <text> is in `\list`.\nl
+\^`\isnextchar`` <char>{<text1>}{<text2>}` performs <text1> if next
+   character is <char>, else <text2>.\nl
+\~`\kv` `{<key>}` expands to value when key-value parameters are used.\nl
+\^`\loop` `...` \^`\repeat` is classical Plain \TeX/ loop.\nl
+\^`\mathstyles`` {<math list>}` enables to create macros dependent on current math style.\nl
+\~`\_namespace`` {<pkg>}` declares name space used by package writers.\nl
+\^`\newcount`, \^`\newdimen` etc. are classical Plain \TeX/ allocators.\nl
+\^`\newif` `\iffoo` declares boolean `\iffoo` as in Plain \TeX/.\nl
+\^`\_newifi` `\_iffoo` declares boolean `\_iffoo`.\nl
+\^`\opinput`` {<filename>}` reads file like `\input` but with standard catcodes.\nl
+\^`\optdef`` \macro [<opt-default>] <parameters>{<body>}` defines `\macro` with [opt.parameter].\nl
+\^`\opwarning` `{<text>}` prints <text> to the terminal and .log file as warning.\nl
+\~`\private`` <sequence> <sequence> ... ;` declares <sequence>s for private name space.\nl
+\~`\public`` <sequence> <sequence> ... ;` declares <sequence>s for public name space.\nl
+\~`\readkv` `\macro` reads parameters from `\macro` in key-value format.\nl
+\^`\replstring`` \macro{<stringA>}{<stringB>}` replaces all <stringA> to <stringB> in `\macro`.\nl
+\^`\sdef` `{<string>}<parameters>{<body>}` behaves like `\def\<string><parameters>{<body>}`.\nl
+\^`\setctable` and \^`\restorectable` manipulate with stack of catcode tables.\nl
+\^`\slet` `{<stringA>}{<stringB>}` behaves like `\let\<stringA>=\<stringB>`\nl
+\^`\sxdef` `{<string>}<parameters>{<body>}` behaves like `\xdef\<string><parameters>{<body>}`.\nl
+\^`\trycs`` {<string>}{<text>}` expands `\<string>` if it is defined else expands <text>.\nl
+\^`\wlog`` {<text>}` writes <text> to .log file.\nl
+\^`\wterm`` {<text>}` writes <text> to the terminal and .log file.\nl
+\^`\xargs`` <what> <token> <token> ... ;` repeats <what><token> for each <token>.\nl
+\unpenalty\unskip
 
 
 \sec Compatibility with Plain \TeX/

@@ -107,7 +107,7 @@
 
 \_def\_printcodeline#1{\_advance \_maxlines by-1
    \_ifnum \_maxlines<0 \_ea \_endverbprinting \_fi
-   \_penalty \_ttpenalty \_kern-4pt
+   \_ifx\_printfilename\_relax \_penalty \_ttpenalty \_fi \_vskip-4pt
    \_noindent\_rlap{\Yellow \_vrule height8pt depth5pt width\_hsize}%
    \_printfilename
    \_indent \_printverblinenum #1\par}

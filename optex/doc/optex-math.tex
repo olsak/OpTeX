@@ -292,7 +292,13 @@ If a subformula is placed below something (below a line from root symbol,
 below a fraction line), then the processed style $D, T, S$ or $SS$ is 
 \ii cramped/style {\em cramped}.
 The exponents are positioned slightly lower than in 
-\ii non-cramped/style non-cramped style.
+\ii non-cramped/style non-cramped style. The selectors `\displaystyle`\,\dots
+`\scriptscriptstyle` mentioned above select non-cramped style. The
+non-cramped style is selected when math mode starts too.
+\new \OpTeX/
+You can select cramped style by the macro \x`\cramped` at the start of the
+math formula or after the math-style selectors: `\scriptstyle\cramped` for
+example.
 
 Several macros need to know what math style is currently processed (for
 example they need to draw something in an appropriate size). But it

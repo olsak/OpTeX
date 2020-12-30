@@ -317,8 +317,7 @@
    \_else \_opwarning{Unknown caption /\_tmpa}\_fi
    \_edef\_thecapnum {\_csname _the\_tmpa num\_endcsname}%
    \_edef\_thecaptitle{\_mtext{\_tmpa}}%
-   \_ifcsname _everycaption\_tmpa\_endcsname 
-       \_ea\_the \_csname _everycaption\_tmpa\_endcsname \_fi
+   \_ea\_the \_csname _everycaption\_tmpa\_endcsname
    \_def\_par{\_nbpar\_egroup}\_let\par=\_par
    \_cs{_printcaption\_tmpa}%
 }

@@ -109,7 +109,7 @@
 \_endcode %----------------------------------------------------
 
 
-\sec Concept of name spaces of control sequences
+\sec[prefixed] Concept of name spaces of control sequences
 
 \secc Prefixing internal control sequences
 
