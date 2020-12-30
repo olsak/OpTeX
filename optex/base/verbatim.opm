@@ -149,6 +149,9 @@
    do `\par` in order to return the vertical mode. The \`\_printverblinenum`
    is used here: it does nothing when `\_ttline`\code{<0} else it prints the line
    number using `\_llap`.
+
+   \`\_putttpenalty` puts \^`\_ttpenalty` before second and next lines, but
+   not before first line in each `\begtt...\endtt` environment.
    \_cod ----------------------------
 
 \_def\_printverb #1^^J#2{%
@@ -168,10 +171,10 @@
    \_ifx\_end#2 \_let\_next=\_relax \_else \_def\_next{\_printverb#2}\_fi
    \_next
 }
-\_def\_printverbline#1{\_penalty \_ttpenalty 
-   \_indent \_printverblinenum \_kern\_ttshift #1\par}
+\_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\par}
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
 \_def\_printverblinenum{\_llap{\_sevenrm \_the\_ttline\_kern.9em}}
+\_def\_putttpenalty{\_def\_putttpenalty{\_penalty\_ttpenalty}}
 
    \_doc ----------------------------
    Macro \`\verbinput` uses a file read previously or opens the given file. Then
@@ -356,6 +359,7 @@
 \_endinput
 
 History:
+2020-12-30 ... \secc followed by \begtt must be unbreakable
 2020-11-13 ... \commentchars implemented
 2020-04-22 ... \ttshift introduced
 2020-04-06 ... \visiblesp added
