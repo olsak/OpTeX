@@ -309,7 +309,7 @@ and variant selectors are in the section~\ref[fontsystem].
 
 We have another command for scaling: \^`\fontlet` which is able to resize
 arbitrary font given by its font switch.
-This font switch was declared it by the
+This font switch was declared by the
 `\font` primitive or the \~`\fontdef` macro.
 
 \begtt \catcode`\<=13

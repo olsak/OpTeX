@@ -43,7 +43,7 @@
 }
 \_def\_openrefA #1{%
    \_immediate\_openout\_reffile="\_jobname.ref"\_relax 
-   \_gdef\_wref ##1##2{\_write\_reffile{\_string##1##2}}%
+   \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
    \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file (#1)}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
 }
