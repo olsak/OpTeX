@@ -362,7 +362,7 @@
 \_optdef\_eqmark []{\_trylabel \_ineqmark}
 \_def\_ineqmark{\_incr\_dnum
   \_ifinner\_else\_eqno \_fi 
-  \_wlabel\_thednum \_thednum
+  \_wlabel\_thednum \_hbox{\_thednum}%
 }
 \_public \eqmark ;
 
@@ -412,6 +412,7 @@
 
 \_endcode % -------------------------------------
 
+2021-01-05 \_thednum printed in text mode in its both occurences.
 2020-04-28 \_secfonts etc: \_boldify is last.
 2020-04-22 \_chapx, \_secx, \_seccx rewritten
 2020-03-14 introduced
