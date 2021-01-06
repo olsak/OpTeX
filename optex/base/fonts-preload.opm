@@ -26,7 +26,8 @@ We have a dilemma: when the Unicode fonts cannot be preloaded in the format then
 font set can be loaded by `\everyjob`. But why to load a set of fonts at the
 beginning of every job when it is highly likely that the user will
 load something completely different. Our decision is: there is a basic 8bit
-font set in the format (for testing purposes only) and the user should load a Unicode font family at beginning of the document.
+font set in the format (for testing purposes only) and the user should load
+a Unicode font family at beginning of the document.
 
 The fonts selectors \`\tenrm`, \`\tenbf`, \`\tenit`, \`\tenbi`, \`\tentt`
 are declared as `\public` here but only for backward compatibility. We don't

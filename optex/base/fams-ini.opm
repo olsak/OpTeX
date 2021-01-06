@@ -147,7 +147,8 @@
 
 \_endcode
 
-Once you have prepared a font family file with the name `f-<famname>.opm` and \TeX/can see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
+Once you have prepared a font family file with the name `f-<famname>.opm` and
+\TeX/can see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
 the file is read, so the information about the font family is loaded. The name
 `<famname>` must be lowercase and without spaces in the file name
 `f-<famname>.opm`. On the other hand, the `\fontfam` command is more tolerant:

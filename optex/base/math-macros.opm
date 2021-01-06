@@ -1,34 +1,34 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \sin {Math macros plus mathchardefs <2020-06-13>} % preloaded in format
 
    \_doc -----------------------------
-   The category code of the character `_` remains as letter (11) and the mathocode 
-   of it is `"8000`. 
-   It means that it is active character in math mode. It is defined as subscript prefix.
+   The category code of the character `_` remains as the letter (11) and the mathocode
+   of it is `"8000`.
+   It means that it is an active character in math mode. It is defined as the subscript prefix.
 
    There is a problem: The `x_n` is tokenized as `x`, `_`, `n` and it works
-   without problem. But `\int``_a^b` is tokenized as `\int``_a`, `^`, `b`. The
+   without problems. But `\int``_a^b` is tokenized as `\int``_a`, `^`, `b`. The
    control sequence `\int``_a` isn't defined. We must write `\int _a^b`.
 
-   The Lua code presented here solves this problem. But you cannot set our own
+   The Lua code presented here solves this problem. But you cannot set your own
    control sequence in the form `\<word>_` or `\<word>_<one-letter>` (where
-   <word> is sequence of letters) because such control sequences are
+   <word> is a sequence of letters) because such control sequences are
    inaccessible: preprocessor rewrites it.
 
    The \`\mathsbon` macro activates the rewriting rule `\<word>_<nonleter>` to
-   `\<word> _<nonletter>` and 
+   `\<word> _<nonletter>` and
    `\<word>``_<letter><nonletter>` to `\<word> _<letter><nonletter>` at input
    processor level. The \`\mathsboff` deactivates it.
    You can ask by \`\_ifmathsb` if this feature is activated or deactivated.
    By default, it is activated in the `\everyjob`, see section~\ref[init].
    Note, that the `\everyjob` is processed after the first line of the document is
-   read, so the \^`\mathsbon` is activated from second line of the document.
+   read, so the \^`\mathsbon` is activated from the second line of the document.
    \_cod -----------------------------
 
 \catcode`\_ = 8   \let\sb = _
 \catcode`\_ = 13  \let _ = \sb
-\catcode`\_ = 11  
+\catcode`\_ = 11
 \_private \sb ;
 
 \_newifi\_ifmathsb   \_mathsbfalse
@@ -48,8 +48,8 @@
 
    \_doc -----------------------------
    All mathcodes are set to equal values as in plain\TeX/.
-   But all encoding-dependend declarations (like these) will be set 
-   to different values when Unicode-math font is used.
+   But all encoding-dependent declarations (like these) will be set
+   to different values when a Unicode-math font is used.
    \_cod -----------------------------
 
 \_mathcode`\^^@="2201 % \cdot
@@ -181,7 +181,7 @@
 \_mathchardef\Im="023D
 \_mathchardef\partial="0140
 \_mathchardef\infty="0231
-\_mathchardef\prime="0230   
+\_mathchardef\prime="0230
 \_mathchardef\emptyset="023B
 \_mathchardef\nabla="0272
 \_protected\_def \surd{{\_mathchar"1270}}
@@ -205,7 +205,7 @@
 \_mathchardef\biguplus="1355
 \_mathchardef\bigcap="1354
 \_mathchardef\bigcup="1353
-\_mathchardef\intop="1352  
+\_mathchardef\intop="1352
 \_protected\_def \int{\_intop\_nolimits}  \_private \intop;
 \_mathchardef\prod="1351
 \_mathchardef\sum="1350
@@ -263,7 +263,7 @@
 \_mathchardef\swarrow="322E
 \_mathchardef\Leftrightarrow="322C
 \_mathchardef\Leftarrow="3228
-\_mathchardef\Rightarrow="3229 
+\_mathchardef\Rightarrow="3229
 \_protected\_def \neq{\_not=} \_let\ne=\neq
 \_mathchardef\leq="3214 \let\le=\leq
 \_mathchardef\geq="3215 \let\ge=\geq
@@ -282,7 +282,7 @@
 \_mathchardef\ll="321C
 % \_mathchardef\not="3236  % defined below
 \_mathchardef\leftrightarrow="3224
-\_mathchardef\leftarrow="3220  \_let\gets=\leftarrow 
+\_mathchardef\leftarrow="3220  \_let\gets=\leftarrow
 \_mathchardef\rightarrow="3221 \_let\to=\rightarrow
 \_mathchardef\mapstochar="3237
 \_protected\_def\mapsto{\_mapstochar\_rightarrow}  \_private \mapstochar \rightarrow ;
@@ -293,13 +293,13 @@
 \_mathchardef\asymp="3210
 \_mathchardef\smile="315E
 \_mathchardef\frown="315F
-\_mathchardef\leftharpoonup="3128  
+\_mathchardef\leftharpoonup="3128
 \_mathchardef\leftharpoondown="3129
 \_mathchardef\rightharpoonup="312A
-\_mathchardef\rightharpoondown="312B  
+\_mathchardef\rightharpoondown="312B
 
    \_doc -----------------------------
-   The math functions like log, sin, cos are declared in tha same way as in
+   The math functions like log, sin, cos are declared in the same way as in
    plain\TeX/, but they are `\protected` in \OpTeX/.
    \_cod -----------------------------
 
@@ -337,17 +337,17 @@
 \_protected\_def\deg {\_mathop{\_rm deg}\_nolimits}
 
    \_doc -----------------------------
-   These macros are defined similarly as in plain\TeX. Only internal macro 
-   names from plain\TeX/ with `@` character are re-written in more readable
+   These macros are defined similarly as in plain\TeX. Only internal macro
+   names from plain\TeX/ with `@` character are re-written in a more readable
    form.\nl
-   \`\sp` is alternative for `^`. The \`\sb` alternative for `_` was defined
-   at the line 27 of the file `math-macros.opm`. 
+   \`\sp` is an alternative for `^`. The \`\sb` alternative for `_` was defined
+   at line 27 of the file `math-macros.opm`.
    \_cod -----------------------------
 
 \_let\_sp=^ \public \sp ;
 % \sb=_ , defined at beginning of this file
 
-\_def\_thinsk {\_mskip\_thinmuskip} 
+\_def\_thinsk {\_mskip\_thinmuskip}
 \_protected\_def\,{\_relax\_ifmmode \_thinsk \_else \_thinspace \_fi}
 \_protected\_def\>{\_mskip\_medmuskip}    \let\_medsk   = \>
 \_protected\_def\;{\_mskip\_thickmuskip}  \let\_thicksk = \;
@@ -366,7 +366,7 @@
 \_private \prime ;
 
    \_doc -----------------------------
-   \`\big`, \`\Big`, \`\bigg`, \`\Bigg`, \`\bigl`, \`\bigm`, \`\bigr`, \`\Bigl`, \`\Bigm`, 
+   \`\big`, \`\Big`, \`\bigg`, \`\Bigg`, \`\bigl`, \`\bigm`, \`\bigr`, \`\Bigl`, \`\Bigm`,
    \`\Bigr`, \`\biggl`, \`\biggm`, \`\biggr`, \`\Biggl`, \`\Biggm`, \`\Bigg`, \`\Biggr`
    are based on the \`\_scalebig` macro because we need the dependency on
    the various sizes of the fonts.
@@ -376,8 +376,8 @@
 
 \_def\_scalebig#1#2{{\_left#1\_vbox to#2\_fontdimen6\_textfont1{}%
                      \_kern-\_nulldelimiterspace\_right.}}
-\_protected\_def\_big#1{\_scalebig{#1}{.85}}  
-\_protected\_def\_Big#1{\_scalebig{#1}{1.15}} 
+\_protected\_def\_big#1{\_scalebig{#1}{.85}}
+\_protected\_def\_Big#1{\_scalebig{#1}{1.15}}
 \_protected\_def\_bigg#1{\_scalebig{#1}{1.45}}
 \_protected\_def\_Bigg#1{\_scalebig{#1}{1.75}}
 \_public \big \Big \bigg \Bigg ;
@@ -397,26 +397,26 @@
 \_public \bigl \bigm \bigr \Bigl \Bigm \Bigr \biggl \biggm \biggr \Biggl \Biggm \Biggr ;
 
    \_doc -----------------------------
-   Math relations defined by the \`\jointrel` plain \TeX/ macro: 
+   Math relations defined by the \`\jointrel` plain \TeX/ macro:
    \_cod -----------------------------
 
 \_protected\_def\_joinrel{\_mathrel{\_mkern-2.5mu}}  % -3mu in plainTeX
 \_protected\_def\relbar{\_mathrel{\_smash-}} % \_smash, because - has the same height as +
 \_protected\_def\Relbar{\_mathrel=}
-\_mathchardef\lhook="312C 
+\_mathchardef\lhook="312C
 \_protected\_def\hookrightarrow{\_lhook\_joinrel\_rightarrow}
-\_mathchardef\rhook="312D 
-\_protected\_def\hookleftarrow{\_leftarrow\_joinrel\_rhook} 
+\_mathchardef\rhook="312D
+\_protected\_def\hookleftarrow{\_leftarrow\_joinrel\_rhook}
 \_protected\_def\bowtie{\_mathrel\_triangleright\_joinrel\_mathrel\_triangleleft}
 \_protected\_def\models{\_mathrel|\_joinrel=}
-\_protected\_def\Longrightarrow{\_Relbar\_joinrel\_Rightarrow} 
-\_protected\_def\longrightarrow{\_relbar\_joinrel\_rightarrow} 
-\_protected\_def\longleftarrow{\_leftarrow\_joinrel\_relbar}  
-\_protected\_def\Longleftarrow{\_Leftarrow\_joinrel\_Relbar} 
+\_protected\_def\Longrightarrow{\_Relbar\_joinrel\_Rightarrow}
+\_protected\_def\longrightarrow{\_relbar\_joinrel\_rightarrow}
+\_protected\_def\longleftarrow{\_leftarrow\_joinrel\_relbar}
+\_protected\_def\Longleftarrow{\_Leftarrow\_joinrel\_Relbar}
 \_protected\_def\longmapsto{\_mapstochar\_longrightarrow}
 \_protected\_def\longleftrightarrow{\_leftarrow\_joinrel\_rightarrow}
 \_protected\_def\Longleftrightarrow{\_Leftarrow\_joinrel\_Rightarrow}
-\_protected\_def\iff{\_thicksk\_Longleftrightarrow\_thicksk} 
+\_protected\_def\iff{\_thicksk\_Longleftrightarrow\_thicksk}
 \_private \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
    \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
    \longrightarrow \Longleftrightarrow ;
@@ -442,7 +442,7 @@
 \_public \ldots \cdots \vdots \ddots ;
 
    \_doc -----------------------------
-   \`\adots` ispired by plain \TeX/
+   \`\adots` inspired by plain \TeX/
    \_cod -----------------------------
 
 \_protected\_def\_adots{\_mathinner{%
@@ -643,8 +643,8 @@
 
    \_doc -----------------------------
    The \`\eqalign` macro behaves like in Plain \TeX/ by default.
-   It creates the `\vcenter` in the math mode. The contents is two column
-   `\halign` with right aligned left column and left aligned right column.
+   It creates the `\vcenter` in the math mode. The content is two column
+   `\halign` with right-aligned left column and left-aligned right column.
    The table items are in `\displaystyle` and the `\baselineskip` is
    advanced by `\jot` (3pt in plain \TeX). It follows from the default
    settings of \^`\eqlines` and \^`\eqstyle` parameters.
@@ -653,11 +653,11 @@
    \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]
          {Typesetting Math with \OpTeX/}.
    The `\baselineskip` value is set by the \^`\eqlines` parameter and math style
-   by the \^`\eqstyle` parameter. 
+   by the \^`\eqstyle` parameter.
 
    There are more possible columns than two (used in classical Plain TeX):
    `rlcrlcrlc` etc.\ where `r` and `l` columns are without spaces and `c` column
-   (if used) has the space \^`\eqspace`/2 at its both sides.
+   (if used) has space \^`\eqspace`/2 at its both sides.
    \_cod -----------------------------
 
 \_long\_def\_eqalign#1{\_null\_thinsk\_vcenter{\_the\_eqlines\_math
@@ -681,7 +681,7 @@
    \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]
          {Typesetting Math with \OpTeX/}.
    The centered formulas are in `\vcenter` in this case,
-   so lines cannot be broken to more pages, but this case
+   so lines cannot be broken into more pages, but this case
    enables to use `\eqno` or `\leqno` or \^`\eqmark`.
    \_cod -----------------------------
 
@@ -725,11 +725,11 @@
 \_public \openup \eqalignno \leqalignno ;
 
    \_doc -----------------------------
-   These macros are inspired from `ams-math.tex` file.
+   These macros are inspired by `ams-math.tex` file.
    \maxlines=15
    \_cod -----------------------------
 
-\_def\_amsafam{4} \_def\_amsbfam{5} 
+\_def\_amsafam{4} \_def\_amsbfam{5}
 
 \_mathchardef \boxdot   "2\_amsafam 00
 \_mathchardef \boxplus   "2\_amsafam 01
@@ -988,7 +988,7 @@
   \_else \_ifcsname _n\_tmpn\_endcsname \_csname _n\_tmpn\_endcsname
   \_else \_mathrel{\_mathord{\_notchar}\_mathord{#1}}%
   \_fi \_fi \_fi \_fi}
-\_private 
+\_private
   \nleq \ngeq \nless \ngtr \nprec \nsucc \nleqslant \ngeqslant \npreceq
   \nsucceq \nleqq \ngeqq \nsim \ncong \nsubseteqq \nsupseteqq \nsubseteq
   \nsupseteq \nparallel \nmid \nshortmid \nshortparallel \nvdash \nVdash
@@ -999,21 +999,21 @@
 
    \_doc -----------------------------
    \`\mathstyles``{<math list>}`
-   behaves like `{<math list>}`, but you can use following commands in the
+   behaves like `{<math list>}`, but you can use the following commands in the
    `<math list>`:
    \begitems
    * \`\currstyle` which expands to `\displaystyle`, `\textstyle`,
      `\scriptstyle` or `\scriptscriptstyle` depending on the current math style
-     when \^`\mathstyles` was opened. 
+     when \^`\mathstyles` was opened.
    * \`\dobystyle``{<D>}{<T>}{<S>}{<SS>}` is expandable macro. It expands to
      `<D>`, `<T>`, `<S>` or `<SS>` depending on the current math style
      when \^`\mathstyles` was opened.
-   * The value of the \`\stylenum` is 0, 1, 2 or 3 
-     depending on the current math style when \^`\mathstyles` was opened.  
+   * The value of the \`\stylenum` is 0, 1, 2 or 3
+     depending on the current math style when \^`\mathstyles` was opened.
    \enditems
-   Example of usage of \^`\mathstyles`: 
+   Example of usage of \^`\mathstyles`:
    `\def\mathframe#1{\mathstyles{\frame{$\currstyle#1$}}}`.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_newcount\_stylenum
 \_def\_mathstyles#1{{\_mathchoice{\_stylenum0 #1}{\_stylenum1 #1}%
@@ -1024,7 +1024,7 @@
 
    \_doc -----------------------------
    The \`\cramped` macro
-   sets the cramped variant of current style.
+   sets the cramped variant of the current style.
    Note that \^`\currstyle` initializes non-cramped variants.
    The example `\mathframe` above should be:\nl
    `\def\mathframe#1{\mathstyles{\frame{$\currstyle\cramped #1$}}}`.\nl
@@ -1042,7 +1042,7 @@
 
    \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
-   It behaves like `\hbox{<text>}` but the `<text>` is scaled to smaller
+   It behaves like `\hbox{<text>}` but the `<text>` is scaled to a smaller
    size if it is used in scriptstyle or scriptscript style.
    \_cod -----------------------------
 

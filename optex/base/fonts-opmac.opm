@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \typosize {Font managing macros from OPmac <2020-12-12>} % loaded in format
 
@@ -9,7 +9,7 @@
    \^`\_sizemsscript`. It uses common concept font thes sizes: 100\,\%,
    70\,\% and 50\,\%.
    The \^`\_setmainvalues` sets the parameters as main values when
-   the `\_typosize` is called first. 
+   the `\_typosize` is called first.
    \_cod -----------------------------
 
 \_protected\_def \_typosize [#1/#2]{%
@@ -30,7 +30,7 @@
 \_public \typosize ;
 
    \_doc -----------------------------
-   \`\typoscale` `[<font-factor>/<baseline-factor>]` scales 
+   \`\typoscale` `[<font-factor>/<baseline-factor>]` scales
    font size and baselineskip by given factors in respect to current values.
    It calculates the \^`\typosize` parameters and runs the \^`\typosize`.
    \_cod -----------------------------
@@ -42,7 +42,7 @@
    \_ifx$#2$\_edef\_tmp{\_tmp]}\_else
       \_settmpdim{#2}\_baselineskip
       \_edef\_tmp{\_tmp \_ea\_ignorept\_the\_tmpdim]}\_fi
-   \_ea\_typosize\_tmp 
+   \_ea\_typosize\_tmp
 }
 \_def\_settmpdim#1#2{%
    \_tmpdim=#1pt \_divide\_tmpdim by1000
@@ -51,14 +51,14 @@
 \_public \typoscale ;
 
    \_doc -----------------------------
-   \`\_setbaselineskip` `{<baselineskip>}` sets new `\baselineskip` and 
+   \`\_setbaselineskip` `{<baselineskip>}` sets new `\baselineskip` and
    more values of registers which are dependent on the `<baselineskip>`
    including the \^`\strutbox`.
    \_cod -----------------------------
 
 \_def \_setbaselineskip #1{\_if$#1$\_else
    \_tmpdim=#1\_ptunit
-   \_baselineskip=\_tmpdim \_relax 
+   \_baselineskip=\_tmpdim \_relax
    \_bigskipamount=\_tmpdim plus.33333\_tmpdim minus.33333\_tmpdim
    \_medskipamount=.5\_tmpdim plus.16666\_tmpdim minus.16666\_tmpdim
    \_smallskipamount=.25\_tmpdim plus.08333\_tmpdim minus.08333\_tmpdim
@@ -70,12 +70,12 @@
 }
 
    \_doc -----------------------------
-   \`\_setmainvalues` sets the current font size and `\baselineskip` 
+   \`\_setmainvalues` sets the current font size and `\baselineskip`
    values to the \`\mainfosize` and \hbox{\`\mainbaselineskip`} registers.
-   It redefines itself in order to set the main values only first.
+   It redefines itself to set the main values only first.
    \nl
    \`\scalemain` returns to these values if they were set. Else they are set
-   to 10/12\,pt. 
+   to 10/12\,pt.
    \_cod -----------------------------
 
 \_newskip   \_mainbaselineskip   \_mainbaselineskip=0pt \_relax
@@ -94,19 +94,19 @@
 \_def\_scalemain {%
    \_ifdim \_mainfosize=\_zo
        \_mainfosize=10pt  \_mainbaselineskip=12pt
-       \_let \_setmainvalues=\_setmainvaluesL       
+       \_let \_setmainvalues=\_setmainvaluesL
     \_fi
    \_optsize=\_mainfosize  \_baselineskip=\_mainbaselineskip
 }
 \_public \scalemain \mainfosize \mainbaselineskip ;
 
    \_doc -----------------------------
-   \`\thefontsize` `[<size>]` and \`\thefontscale` `[<factor>]` 
+   \`\thefontsize` `[<size>]` and \`\thefontscale` `[<factor>]`
     do modification of the size of the current font. They are implemented by the
    \^`\newcurrfontsize` macro.
    \_cod -----------------------------
 
-\_protected\_def\_thefontsize[#1]{\_if$#1$\_else 
+\_protected\_def\_thefontsize[#1]{\_if$#1$\_else
      \_tmpdim=#1\_ptunit
      \_newcurrfontsize{at\_tmpdim}%
   \_fi
@@ -122,10 +122,10 @@
 \_public \thefontsize \thefontscale ;
 
    \_doc -----------------------------
-   \`\em` keeps the weight of the current vaiant and switches 
+   \`\em` keeps the weight of the current variant and switches
    roman $\leftrightarrow$ italic. It adds the italic correction by
    the \`\_additcorr` and \`\_afteritcorr` macros. The second does not
-   add italic correction if the next character is dot or comma. 
+   add italic correction if the next character is dot or comma.
    \_cod -----------------------------
 
 \_protected\_def\_em {%
@@ -145,7 +145,7 @@
    \_cod -----------------------------
 
 \_protected\_def \_boldify {%
-   \_let \_setmainvalues=\_setmainvaluesL   
+   \_let \_setmainvalues=\_setmainvaluesL
    \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath \_bf
 }
 \_public \em \boldify ;
@@ -153,16 +153,16 @@
    \_doc -----------------------------
    We need to use a font selector for default pagination. Because we don't
    know what default font size will be selected by the user, we use this
-   \`\_rmfixed` macro. It sets the `\rm` font from default font size
+   \`\_rmfixed` macro. It sets the `\rm` font from the default font size
    (declared by first \^`\typosize` command and redefines itself be only
-   the font switch for next pages.   
+   the font switch for the next pages.
    \_cod -----------------------------
 
 \_def \_rmfixed {% used in default \footline
    {\_ifdim\_mainfosize=0pt \_mainfosize=10pt \_fi
     \_fontdef\_tenrm{\_setfontsize{at\mainfosize}\_resetmod\_rm}%
     \_global\_let\_rmfixed=\_tenrm}% next use will be font switch only
-   \_rmfixed 
+   \_rmfixed
 }
 \_let \rmfixed = \_tenrm % user can redefine it
 

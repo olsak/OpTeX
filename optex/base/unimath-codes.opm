@@ -1,11 +1,11 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \_ncharrmA {Uni math codes <2020-11-13>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
-   The `\alpha` expands to the character with unicode `"03B1`, this is normal
-   character $α$. You can type it directly in your editor, if you know how
+   The `\alpha` expands to the character with Unicode `"03B1`, this is a normal
+   character $α$. You can type it directly in your editor if you know how
    to do this.
    \_cod -----------------------------
 
@@ -110,8 +110,8 @@
 \_protected\_def\_inmath#1{\_relax \_ifmmode#1\_fi} % to keep off \loop processing in text mode
 
 % You can redefine these macros to follow your wishes.
-% For example you need upgright lowercase greek letters, you don't need
-% \bf and \bi behaves as sans serif in math, ...
+% For example, you need upright lowercase greek letters, you don't need
+% \bf and \bi behave as sans serif in math, ...
 
 \_protected\_def\_rm {\_tryloadrm \_tenrm \_inmath{\_rmvariables \_rmdigits}}
 \_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_itvariables}}
@@ -135,7 +135,7 @@
    the file `mathclass.txt` which is copied to `mathclass.opm` The file
    has the following format:
    {\vitt{mathclass.opm}\verbinput (70-85) mathclass.opm }
-   We have to read this information and convert it to the `\Umathcode`s. 
+   We have to read this information and convert it to the `\Umathcode`s.
    \_cod -----------------------------
 
 \_begingroup  % \input mathclass.opm  (which is a copy of MathClass.txt):
@@ -146,7 +146,7 @@
          \_loop
             \_pset{\_umathnumA}{#4}%
             \_ifnum\_umathnumA<"#2 \_advance\_umathnumA by1
-         \_repeat 
+         \_repeat
       \_fi
    }
    \_def\_pB#1{\_if#1L1\_fi \_if#1B2\_fi \_if#1V2\_fi \_if#1R3\_fi \_if#1N0\_fi \_if#1U0\_fi
@@ -163,9 +163,9 @@
 
    \_doc -----------------------------
    Each math symbol has its declaration in the file `unicode-math-table.tex`
-   which is copied to `unimath-table.opm`. The file has following format:
+   which is copied to `unimath-table.opm`. The file has the following format:
    {\vitt{unimath-table.opm}\verbinput (70-85) unimath-table.opm }
-   We have to read this information and convert it to the Unicode math codes. 
+   We have to read this information and convert it to the Unicode math codes.
    \_cod -----------------------------
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
@@ -185,7 +185,7 @@
 \_global\_Udelcode`<=1 "027E8 % these characters have different meaning
 \_global\_Udelcode`>=1 "027E9 % as normal and as delimeter
 
-\_mit % default math alphapbets setting
+\_mit % default math alphabets setting
 
 \_Umathcode `- = 2 1 "2212
 %\_Umathcode`: = 3 1 "3A  % mathclass defines it as 6 1 "3A (punctuation)
@@ -200,14 +200,14 @@
 \_def\_intwithnolimits#1#2 {\_ifx#1\_relax \_else
    \_ea\_let\_csname\_csstring#1op\_endcsname=#1%
    \_ea\_def\_ea #1\_ea{\_csname\_csstring#1op\_endcsname \_nolimits}%
-   \_bgroup \_lccode`\~=#2 \_lowercase{\_egroup \_mathcode`~="8000 \_let ~=#1}%       
+   \_bgroup \_lccode`\~=#2 \_lowercase{\_egroup \_mathcode`~="8000 \_let ~=#1}%
    \_ea \_intwithnolimits \_fi
 }
-\_intwithnolimits \int "0222B \iint "0222C \iiint "0222D 
-   \oint "0222E \oiint "0222F \oiiint "02230 
-   \intclockwise "02231 \varointclockwise "02232 \ointctrclockwise "02233 
+\_intwithnolimits \int "0222B \iint "0222C \iiint "0222D
+   \oint "0222E \oiint "0222F \oiiint "02230
+   \intclockwise "02231 \varointclockwise "02232 \ointctrclockwise "02233
    \sumint "02A0B \iiiint "02A0C \intbar "02A0D \intBar "02A0E \fint "02A0F
-   \pointint "02A15 \sqint "02A16 \intlarhk "02A17 \intx "02A18 
+   \pointint "02A15 \sqint "02A16 \intlarhk "02A17 \intx "02A18
    \intcap "02A19 \intcup "02A1A \upint "02A1B \lowint "02A1C \_relax "0
 
 \_protected\_def \vert  {\_Udelimiter 0 1 "07C }
@@ -241,7 +241,7 @@
 \_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
 
    \_doc -----------------------------
-   Aliases are declared here. They are names not menitioned in the `unimath-table.opm` file
+   Aliases are declared here. They are names not mentioned in the `unimath-table.opm` file
    but commonly used in \TeX.
    \_cod -----------------------------
 
@@ -272,36 +272,36 @@
 \_let \hksearow=\hksearrow
 \_let \hkswarow=\hkswarrow
 
-\_let \upalpha=\mupalpha         
-\_let \upbeta=\mupbeta          
-\_let \upgamma=\mupgamma         
-\_let \updelta=\mupdelta         
-\_let \upepsilon=\mupvarepsilon        
+\_let \upalpha=\mupalpha
+\_let \upbeta=\mupbeta
+\_let \upgamma=\mupgamma
+\_let \updelta=\mupdelta
+\_let \upepsilon=\mupvarepsilon
 \_let \upvarepsilon=\mupvarepsilon
-\_let \upzeta=\mupzeta          
-\_let \upeta=\mupeta           
-\_let \uptheta=\muptheta        
-\_let \upiota=\mupiota          
-\_let \upkappa=\mupkappa         
-\_let \uplambda=\muplambda        
-\_let \upmu=\mupmu            
-\_let \upnu=\mupnu            
-\_let \upxi=\mupxi            
-\_let \upomicron=\mupomicron       
-\_let \uppi=\muppi            
+\_let \upzeta=\mupzeta
+\_let \upeta=\mupeta
+\_let \uptheta=\muptheta
+\_let \upiota=\mupiota
+\_let \upkappa=\mupkappa
+\_let \uplambda=\muplambda
+\_let \upmu=\mupmu
+\_let \upnu=\mupnu
+\_let \upxi=\mupxi
+\_let \upomicron=\mupomicron
+\_let \uppi=\muppi
 \_let \uprho=\muprho
-\_let \upvarrho=\mupvarrho           
-\_let \upvarsigma=\mupvarsigma      
-\_let \upsigma=\mupsigma         
-\_let \uptau=\muptau           
-\_let \upupsilon=\mupupsilon       
-\_let \upvarphi=\mupvarphi        
-\_let \upchi=\mupchi           
-\_let \uppsi=\muppsi           
-\_let \upomega=\mupomega         
-\_let \upvartheta=\mupvartheta      
-\_let \upphi=\mupphi           
-\_let \upvarpi=\mupvarpi         
+\_let \upvarrho=\mupvarrho
+\_let \upvarsigma=\mupvarsigma
+\_let \upsigma=\mupsigma
+\_let \uptau=\muptau
+\_let \upupsilon=\mupupsilon
+\_let \upvarphi=\mupvarphi
+\_let \upchi=\mupchi
+\_let \uppsi=\muppsi
+\_let \upomega=\mupomega
+\_let \upvartheta=\mupvartheta
+\_let \upphi=\mupphi
+\_let \upvarpi=\mupvarpi
 
    \_doc -----------------------------
    The \`\not` macro is redefined here. If the `\_not!<char>` is defined
@@ -316,15 +316,15 @@
 }}}
 \_def\_negationof #1#2{\_ea\_let \_csname _not!\_csstring#1\_endcsname =#2}
 
-\_negationof =         \neq   
-\_negationof <         \nless 
+\_negationof =         \neq
+\_negationof <         \nless
 \_negationof >         \ngtr
 \_negationof \gets     \nleftarrow
 \_negationof \simeq    \nsime
-\_negationof \equal    \ne   
-\_negationof \le       \nleq 
-\_negationof \ge       \ngeq 
-\_negationof \greater  \ngtr 
+\_negationof \equal    \ne
+\_negationof \le       \nleq
+\_negationof \ge       \ngeq
+\_negationof \greater  \ngtr
 \_negationof \forksnot \forks
 \_negationof \in       \notin
 \_negationof \mid      \nmid
@@ -370,12 +370,12 @@
 
    \_doc -----------------------------
    Newly declared public control sequences are used in internal macros by
-   \OpTeX/. We need to get new meanings of these control sequences in
-   private name space.
+   \OpTeX/. We need to get new meanings for these control sequences in
+   the private namespace.
    \_cod -----------------------------
 
-\_private 
-   \ldotp \cdotp \bullet \triangleleft \trianglerigt \mapstochar \rightarrow 
+\_private
+   \ldotp \cdotp \bullet \triangleleft \trianglerigt \mapstochar \rightarrow
    \prime \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
    \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
    \longrightarrow \Longleftrightarrow \vdots \ddots ;
@@ -384,15 +384,7 @@
 
 \secc A few observations
 
-{\bf 1.} You can combine more fonts in math, if you register them to another
-math families (5, 6, 7, etc.) in the \^`\normalmath` macro.
-
-The default value of \^`\normalmath` shows a combination of base Unicode Math
-font with 8bit Math font at family 4. See definition of the `\script` macro where
-`\fam4` is used. Of course, we need to set `\rmvariables` too, because 8bit font
-accepts only codes less than 255.
-
-\medskip\noindent{\bf 2.}
+\medskip\noindent{\bf 1.}
 XITSmath-bold needs correction: the norm symbol $\|x\|$ is missing here.
 So, you can define:
 
@@ -406,9 +398,11 @@ So, you can define:
 }
 \endtt
 
-\noindent{\bf 3.} You can combine more Unicode math fonts in single formula using
+\noindent{\bf 2.} You can combine more Unicode math fonts in single formula using
 \ulink[http://petr.olsak.net/optex/optex-tricks.html#addumathfont]{\OpTeX/ trick 0030}.
 
+\medskip\noindent{\bf 3.} See \url{http://tex.stackexchange.com/questions/308749/}
+for technical details about Unicode-math.
 
 \_endinput
 

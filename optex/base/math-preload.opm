@@ -1,10 +1,10 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalmath {Math fonts CM + AMS preloaded <2020-05-06>} % preloaded in format 
+\_codedecl \normalmath {Math fonts CM + AMS preloaded <2020-05-06>} % preloaded in format
 
   \_doc ------------------------------
-  We have two math macros \`\normalmath` for normal shape of all math
-  symbols and \`\boldmath` for bold shape of all math symbols. The second one
+  We have two math macros \`\normalmath` for the normal shape of all math
+  symbols and \`\boldmath` for the bold shape of all math symbols. The second one
   can be used in bold titles, for example.
   These macros load all fonts from all given math font families.
   \_cod ------------------------------
@@ -13,7 +13,7 @@
   \_loadmathfamily 0 cmr  % CM Roman
   \_loadmathfamily 1 cmmi % CM Math Italic
   \_loadmathfamily 2 cmsy % CM Standard symbols
-  \_loadmathfamily 3 cmex % CM extra symbols   
+  \_loadmathfamily 3 cmex % CM extra symbols
   \_loadmathfamily 4 msam % AMS symbols A
   \_loadmathfamily 5 msbm % AMS symbols B
   \_loadmathfamily 6 rsfs % script
@@ -28,7 +28,7 @@
   \_loadmathfamily 0 cmbx  % CM Roman Bold Extended
   \_loadmathfamily 1 cmmib % CM Math Italic Bold
   \_loadmathfamily 2 cmbsy % CM Standard symbols Bold
-  \_loadmathfamily 3 cmexb % CM extra symbols Bold   
+  \_loadmathfamily 3 cmexb % CM extra symbols Bold
   \_loadmathfamily 4 msam  % AMS symbols A (bold not available?)
   \_loadmathfamily 5 msbm  % AMS symbols B (bold not available?)
   \_loadmathfamily 6 rsfs  % script (bold not available?)
@@ -44,11 +44,11 @@
 \_def \normalmath {\_normalmath}  \_def\boldmath {\_boldmath}
 
    \_doc -----------------------------
-   The classical math family selectors 
+   The classical math family selectors
    \`\mit`, \^`\cal`, \^`\bbchar`, \^`\frak` and \^`\script`
-   are defined here. 
-   The \^`\rm`, \^`\bf`, \^`\it`, \^`\bi` and \^`\tt` does two things: 
-   they are variant selectors for text fonts and math family selectors for math fonts. 
+   are defined here.
+   The \^`\rm`, \^`\bf`, \^`\it`, \^`\bi` and \^`\tt` does two things:
+   they are variant selectors for text fonts and math family selectors for math fonts.
    The idea was adapted from plain \TeX/.\nl
    These macros are redefined when `unimat-codes.opm` is loaded,
    see the section~\ref[unimath-codes].
@@ -59,10 +59,10 @@
 %\_chardef\_ttfam = 10
 %\_chardef\_itfam = 11
 
-\_protected\_def \_rm {\_tryloadrm \_tenrm \_fam0 } 
+\_protected\_def \_rm {\_tryloadrm \_tenrm \_fam0 }
 \_protected\_def \_bf {\_tryloadbf \_tenbf \_fam\_bffam}
 \_protected\_def \_it {\_tryloadit \_tenit \_fam1 }
-\_protected\_def \_bi {\_tryloadbi \_tenbi \_fam\_bifam}  
+\_protected\_def \_bi {\_tryloadbi \_tenbi \_fam\_bifam}
 \_protected\_def \_tt {\_tryloadtt \_tentt}
 
 \_protected\_def \_mit    {\_fam1 }
@@ -74,7 +74,7 @@
 \_public \rm \bf \it \bi \tt \mit \cal \bbchar \frak \script ;
 
    \_doc -----------------------------
-   The optical sizes of Computer Modern fonts, AMS and other fonts
+   The optical sizes of Computer Modern fonts, AMS, and other fonts
    are declared here.
    \_cod -----------------------------
 
@@ -85,13 +85,13 @@
 \_regtfm cmmib 0 cmmib5 5.5 cmmib6 6.5 cmmib7 7.5 cmmib8 8.5 cmmib9 9.5 cmmib10 *
 \_regtfm cmtex 0 cstex8 8.5 cstex9 9.5 cstex10 *
 \_regtfm cmsy 0 cmsy5 5.5 cmsy6 6.5 cmsy7 7.5 cmsy8 8.5 cmsy9 9.5 cmsy10 *
-\_regtfm cmbsy 0 cmbsy5 5.5 cmbsy6 6.5 cmbsy7 7.5 cmbsy8 8.5 cmbsy9 9.5 cmbsy10 *  
+\_regtfm cmbsy 0 cmbsy5 5.5 cmbsy6 6.5 cmbsy7 7.5 cmbsy8 8.5 cmbsy9 9.5 cmbsy10 *
 \_regtfm cmex 0 cmex7 7.5 cmex8 8.5 cmex9 9.5 cmex10 *
 \_regtfm cmexb 0 cmexb10 *
 
 \_regtfm cmr  0 cmr5 5.5 cmr6 6.5 cmr7 7.5 cmr8 8.5 cmr9 9.5
                 cmr10 11.1 cmr12 15 cmr17 *
-\_regtfm cmbx 0 cmbx5 5.5 cmbx6 6.5 cmbx7 7.5 cmbx8 8.5 cmbx9 9.5 
+\_regtfm cmbx 0 cmbx5 5.5 cmbx6 6.5 cmbx7 7.5 cmbx8 8.5 cmbx9 9.5
                 cmbx10 11.1 cmbx12 *
 \_regtfm cmti 0 cmti7 7.5 cmti8 8.5 cmti9 9.5 cmti10 11.1 cmti12 *
 \_regtfm cmtt 0 cmtt8 8.5 cmtt9 9.5 cmtt10 11.1 cmtt12 *
@@ -109,17 +109,17 @@
 
 %% bf and bi sansserif math alternatives:
 
-\_regtfm bfsans 0 ecsx0500 5.5 ecsx0600 6.5 ecsx0700 7.5 ecsx0800 
-             8.5 ecsx0900 9.5 ecsx1000 11.1 ecsx1200 * 
-\_regtfm bisans 0 ecso0500 5.5 ecso0600 6.5 ecso0700 7.5 ecso0800 
-             8.5 ecso0900 9.5 ecso1000 11.1 ecso1200 * 
-\_regtfm bbfsans 0 ecsx0500 5.5 ecsx0600 6.5 ecsx0700 7.5 ecsx0800 
-             8.5 ecsx0900 9.5 ecsx1000 11.1 ecsx1200 * 
-\_regtfm bbisans 0 ecso0500 5.5 ecso0600 6.5 ecso0700 7.5 ecso0800 
-             8.5 ecso0900 9.5 ecso1000 11.1 ecso1200 * 
+\_regtfm bfsans 0 ecsx0500 5.5 ecsx0600 6.5 ecsx0700 7.5 ecsx0800
+             8.5 ecsx0900 9.5 ecsx1000 11.1 ecsx1200 *
+\_regtfm bisans 0 ecso0500 5.5 ecso0600 6.5 ecso0700 7.5 ecso0800
+             8.5 ecso0900 9.5 ecso1000 11.1 ecso1200 *
+\_regtfm bbfsans 0 ecsx0500 5.5 ecsx0600 6.5 ecsx0700 7.5 ecsx0800
+             8.5 ecsx0900 9.5 ecsx1000 11.1 ecsx1200 *
+\_regtfm bbisans 0 ecso0500 5.5 ecso0600 6.5 ecso0700 7.5 ecso0800
+             8.5 ecso0900 9.5 ecso1000 11.1 ecso1200 *
 
    \_doc -----------------------------
-   \`\_loadmathfamily` `<number> <font>` loads one math family, i.\,e.\ 
+   \`\_loadmathfamily` `<number> <font>` loads one math family, i.\,e.\
    the triple of fonts in the text size, script size and script-script size.
    The `<font>` is `<font-id>` used in the `\_regtfm` parameter or
    the real TFM name. The family is saved as `\fam<number>`.
@@ -130,13 +130,13 @@
    \nl
    The font family is loaded at \`\_sizemtext`, \`\_sizemscript` and
    \`\_sizemsscript` sizes. These sizes are set by the
-   \`\setmathsizes` `[<text-size>/<script-size>/<scriptscript-size>]` macro. 
-   These parameters are given in the \`\ptmunit` unit, it is set to 
+   \`\setmathsizes` `[<text-size>/<script-size>/<scriptscript-size>]` macro.
+   These parameters are given in the \`\ptmunit` unit, it is set to
    1\`\ptunit` and it is set to 1\,pt by  default.
    \nl
    \`\_corrmsizes` should be used in the \^`\normalmath` and \^`\boldmath`
    macros if you need a size correction when a selected math family is
-   loaded. It is similar as ex-height correction but for math fonts. 
+   loaded. It is similar to ex-height correction but for math fonts.
    \_cod -----------------------------
 
 \_def\_corrmsizes{\_ptmunit=1\_ptunit\_relax} % for corrections of sizes in diferent fomts
@@ -156,7 +156,7 @@
   \_optsize=\_optsizesave \_let#2=\_mF
 }
 \_def\_setmathsizes[#1/#2/#3]{%
-   \_def\_sizemtext{#1\_ptmunit}\_def\_sizemscript{#2\_ptmunit}% 
+   \_def\_sizemtext{#1\_ptmunit}\_def\_sizemscript{#2\_ptmunit}%
    \_def\_sizemsscript{#3\_ptmunit}%
 }
 \_newdimen\_ptunit   \_ptunit=1pt
@@ -177,18 +177,18 @@
   \_scriptspace=0.05\_fontdimen6\_textfont3
   \_skewchar\_textfont1=127 \_skewchar\_scriptfont1=127
   \_skewchar\_scriptscriptfont1=127
-  \_skewchar\_textfont2=48  \_skewchar\_scriptfont2=48 
-  \_skewchar\_scriptscriptfont2=48 
+  \_skewchar\_textfont2=48  \_skewchar\_scriptfont2=48
+  \_skewchar\_scriptscriptfont2=48
   \_skewchar\_textfont6=127 \_skewchar\_scriptfont6=127
   \_skewchar\_scriptscriptfont6=127
 }
 
    \_doc -----------------------------
-   Finaly, we preload a math fonts colleciton in [10/7/5] sizes 
+   Finally, we preload a math fonts collection in [10/7/5] sizes
    when the format is generated. This is done when
-   `\_suppressfontnotfounderror=1` because we need not errors when format is
+   `\_suppressfontnotfounderror=1` because we need not errors when the format is
    generated. Maybe there are not all fonts in the \TeX/ distribution
-   installed. 
+   installed.
    \_cod -----------------------------
 
 \_suppressfontnotfounderror=1
@@ -203,11 +203,11 @@ concept, where each math family includes three fonts with max 256 characters
 (typically 128 characters).
 
 On the other hand, when \^`\fontfam` macro is used in the document then text
-font family and appropriate math family is loaded with Unicoded fonts, i.e.
-Unicoded-math is used. It re-defines all settings given here.
+font family and appropriate math family is loaded with Unicode fonts, i.e.
+Unicode-math is used. It re-defines all settings given here.
 
 The general rule of usage the math fonts in different sizes in \OpTeX/ says: set three
-sizes by the macro 
+sizes by the macro
 \^`\setmathsizes` `[<text-size>/<script-size>/<scriptscript-size>]` and then
 load all math fonts in given sizes by \^`\normalmath` or \^`\boldmath` macros.
 For example
@@ -215,7 +215,7 @@ For example
 \setmathsizes[12/8.4/6]\normalmath ... math typesetting at 12 pt is ready.
 \endtt
 
-\_endinput 
+\_endinput
 
 2020-05-06: \itfam, \ttfam removed, (Unicode math preferred)
 2020-04-14: \skewchar\fam6 added

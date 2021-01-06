@@ -787,7 +787,8 @@ with following font features provided by Lua\TeX/:
 Use font transformations mentioned above and \^`\setletterspace`,
 \^`\setwordspace` with care. The best setting of these values is the default
 setting in every font, of course. If you really need to set a different
-letter spacing then it is strongly recommended to add `\setff{-liga}` to disable ligatures. And setting a positive letter spacing probably
+letter spacing then it is strongly recommended to add `\setff{-liga}`
+to disable ligatures. And setting a positive letter spacing probably
 needs to scale interword spacing too.
 
 All mentioned font modifiers (except for `\setfontsize`) work only
