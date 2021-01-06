@@ -1,8 +1,8 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 % Version <2020-02-28>. Loaded in format and secondly on demand by \fontfam[catalog]
 
-\_famtext {Special name for printing a catalogue:}
+\_famtext {Special name for printing a catalog :}
 
 \_faminfo [Catalogue] {Catalogue of all registered font families} {fonts-catalog} {}
 \_famalias [Catalog]
@@ -72,7 +72,7 @@
 
 \_famfrom {Zygfryd Gardzielewski, Janusz M. Nowacki}
 \_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
-   { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi} 
+   { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi}
     \medium,\cond\medium, \light, \cond\light:{\rm\it} }
 \_famalias [Antt]
 
@@ -147,24 +147,23 @@
 
 \_endcode
 
-Once you have prepared a font family file with the name `f-<famname>.opm` and \TeX/ is
-able to see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
+Once you have prepared a font family file with the name `f-<famname>.opm` and \TeX/can see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
 the file is read, so the information about the font family is loaded. The name
 `<famname>` must be lowercase and without spaces in the file name
-`f-<famname>.opm`. On the other hand the `\fontfam` command is more tolerant:
-you can write uppercase letters and spaces here. The spaces are ignored and 
+`f-<famname>.opm`. On the other hand, the `\fontfam` command is more tolerant:
+you can write uppercase letters and spaces here. The spaces are ignored and
 uppercase letters are converted to lowercase.
 For example `\fontfam [LM Fonts]` is equivalent to `\fontfam [LMfonts]` and both
 commands load the file `f-lmfonts.opm`.
 
-You can use your font file in sense of previous paragraph without
+You can use your font file in sense of the previous paragraph without
 registering it. But problem is that such families are not listed when
-`\fontfam[?]` is used and it is not included in font catalogue when
-`\fontfam[catalog]` is printed. The list of families taken in the catalogue and
+`\fontfam[?]` is used and it is not included in the font catalog when
+`\fontfam[catalog]` is printed. The list of families taken in the catalog and
 listed on the terminal is declared in two files: `fams-ini.opm` and
-`fams-local.opm`. The second file is optional. User can create it and write to
+`fams-local.opm`. The second file is optional. Users can create it and write to
 it the information about user-defined families using the same syntax as in
-existed file `fams-ini.opm`. 
+existed file `fams-ini.opm`.
 
 The information from the user's `fams-local.opm` file has precedence.
 For example `fams-ini.opm` declares aliases Times$\to$Termes etc. If you
@@ -189,21 +188,21 @@ The \^`\_faminfo` commad has the syntax:
      { <mod-plus-vars> }
 \endtt
 %
-The `<mod-plus-vars>` data is used only when printing catalogue. It consists with
+The `<mod-plus-vars>` data is used only when printing the catalog. It consists of
 one or more pairs `<mods>: {<vars>}`.
-For each pair: each modifiers (separated by comma) is applied to each
+For each pair: each modifier (separated by comma) is applied to each
 variant selector in <vars>
 and prepared samples are printed. The `-` character means no modifiers
 should be applied.
 
 The \^`\_famalias` declares an alias to the last
-declared family. 
+declared family.
 
-The \^`\_famtext` writes a line to the terminal and to the log file when all
+The \^`\_famtext` writes a line to the terminal and the log file when all
 families are listed.
 
 The \^`\_famfrom` saves the information about font type foundry or
 manufacturer or designer or license owner. You can use it before `\_faminfo`
-in order to print `\_famfrom` info into the catalogue.
+to print `\_famfrom` info into the catalog.
 The `\_famfrom` data is applied to each following declared families until new
 `\_famfrom` is given. Use `\_famfrom {}` if the information is not known.

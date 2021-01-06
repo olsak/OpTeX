@@ -1,14 +1,14 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \readkv {Key-value dictionaries <2020-12-21>} % preloaded in format
 
    \_doc ----------------------------
    {\bf Implementation.}
    The \`\readkv` expands its parameter and does replace-strings in order to
-   remove spaces around equal signs and after comma. Double comma is
-   removed. Then \`\_kvscan` reads the parameters list finished by double
+   remove spaces around equal signs and after commas. Double commas are
+   removed. Then \`\_kvscan` reads the parameters list finished by the double
    comma and saves values to `\_kv:<key>` macros.\nl
-   The \`\kv``{<key>}` expands the `\_kv:<key>` macro. If this macro is not
+   The \`\kv``{<key>}` expands the `\_kv:<key>` macro. If this macro isn't
    defined then \`\_kvunknown` is processed. You can re-define it if you want.
    \_cod ----------------------------
 
@@ -18,15 +18,15 @@
    \_ea \_kvscan \_tmpb,,=,}
 \_def\_kvscan #1#2=#3,{\_ifx#1,\_else \_sdef{_kv:#1#2}{#3}\_ea\_kvscan\_fi}
 \_def\_kv#1{\_trycs{_kv:#1}{\_kvunknown}}
-\_def\_kvunknown{???} 
+\_def\_kvunknown{???}
 
 \public \readkv \kv ;
 
-\_endcode 
+\_endcode
 
-User or macro programmer can define macros with options in key=value format.
-It means a comma separated list of equations key=value. First, we give an
-example. 
+Users or macro programmers can define macros with options in key=value format.
+It means a comma-separated list of equations key=value. First, we give an
+example.
 
 Suppose that you want to define a macro `\myframe` with options: color of
 rules, color of text inside the frame, rule-width, space between text and
@@ -42,7 +42,7 @@ You can define `\myframe` as follows:
 
 \begtt
 \def\myframedefaults{%    defaults:
-   frame-color=\Black, % color of frame rules 
+   frame-color=\Black, % color of frame rules
    text-color=\Black,  % color ot text nside the frame
    rule-width=0.4pt,   % width of rules used in the frame
    margins=2pt,        % space between text inside and rules.
@@ -51,14 +51,14 @@ You can define `\myframe` as follows:
    \ea\addto\ea\myframedefaults\ea{\ea,\the\opt}%
    \readkv\myframedefaults
    \rulewidth=\kv{rule-width}
-   \hhkern=\kv{margins}\vvkern=\kv{margins}\relax 
+   \hhkern=\kv{margins}\vvkern=\kv{margins}\relax
    \kv{frame-color}\frame{\kv{text-color}\strut #1}%
    \egroup}
 \endtt
 %
-We recommend to use \^`\optdef` for defining macros with optional parameters
+We recommend using \^`\optdef` for defining macros with optional parameters
 written in `[]`. Then the optional parameters are saved in the \^`\opt` tokens
-register. First: we append the \^`\opt` (actual optional parameters) to 
+register. First: we append the \^`\opt` (actual optional parameters) to
 `\myframedefault` by \^`\addto` macro.
 Second: we read the parameters by
 \^`\readkv{<pramaters list>}` macro.
@@ -67,10 +67,10 @@ The \^`\kv{<key>}` returns `???` if such key is not declared.
 
 You can use keys without values in the parameters list too, but with
 additional care. For example, suppose `draft` option without parameter.
-If user write `\myframe [..., draft, ...]{text}` then `\myframe` should behave differently.
-We have to add `DRAFTv=0,` in `\myframedefault` macro,.
+If a user writes `\myframe [..., draft, ...]{text}` then `\myframe` should behave differently.
+We have to add `DRAFTv=0,` in `\myframedefault` macro.
 Moreover, `\myframe` macro must include preprocessing of `\myframedefault` using
-\^`\replstring` which replaces the occurence of `draft` by `DRAFTv=1`.
+\^`\replstring` which replaces the occurrence of `draft` by `DRAFTv=1`.
 \begtt
 \optdef\myframe [] #1{...
    \ea\addto\ea\myframedefaults\ea{\the\opt}%
@@ -79,4 +79,4 @@ Moreover, `\myframe` macro must include preprocessing of `\myframedefault` using
    ...
    \ifnum\kv{DRAFTv}=1 draft mode\else normal mode\fi
    ...}
-\endtt 
+\endtt

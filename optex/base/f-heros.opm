@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Heros] \Heros {TeX Gyre Heros fonts based on Helvetica}
      {\caps \cond} {\rm \bf \it \bi} {FiraMath}
@@ -23,13 +23,13 @@ Modifiers:^^J
 
 \_endcode
 
-The font family file declares the font family for selecting fonts from such
-family at arbitrary size and with various shapes. Unicode fonts (OTF)
+The font family file declares the font family for selecting fonts from this
+family at the arbitrary size and with various shapes. Unicode fonts (OTF)
 are preferred. The following example declares the Heros family:
 
 \printdoc f-heros.opm
 
-If you want to write such font file, you need to keep following rules.
+If you want to write such a font family file, you need to keep the following rules.
 
 \begitems
 * Use the \^`\_famdecl` command first. It has the following syntax:
@@ -43,35 +43,34 @@ If you want to write such font file, you need to keep following rules.
   terminal and prevents loading such file twice. Moreover, it probes
   existence of `<font-for-testing>` in your system. If it doesn't exist, the
   file loading is skipped with a warning on the terminal.
-  The \^`\_ifexistfam` macro returns false in such case.
+  The \^`\_ifexistfam` macro returns false in this case.
   The \^`\_fontnamegen` macro must be defined in the last parameter of the
   \^`\_famdecl`. More about it is documented below.
-* You can use `\_wlog{\_detokenize{...` to write additional information into
-  log file.
+* You can use `\_wlog{\_detokenize{...` to write additional information into a log file.
 * You can declare optical sizes using \~`\_regoptsizes` if there are more font files
   with different optical sizes (like in Latin Modern). See `f-lmfonts.opm`
   file for more information about this special feature.
 * Declare font modifiers using \~`\moddef` if they are present. The \`\resetmod`
   must be declared in each font family.
-* Check if all your declared modifiers does not produce any space in
-  horizontal mode. For example check: `X\caps Y`, the letters `XY` must 
-  be printed without any space. 
+* Check if all your declared modifiers do not produce any space in
+  horizontal mode. For example check: `X\caps Y`, the letters `XY` must
+  be printed without any space.
 * Optionally, declare new variants by the \^`\famvardef` macro.
-* Run `\_initfontfamily` in order to start the family (it is mandatory).
+* Run `\_initfontfamily` to start the family (it is mandatory).
 * If math font should be loaded, use `\_loadmath{<math font>}`.
 \enditems
 
-{\noindent \bf The \`\_fontnamegen` macro} 
+{\noindent \bf The \`\_fontnamegen` macro}
 (declared in the last parameter of the \^`\_famdecl`)
-must expand (at expand processor level only) to a file name of loaded font (or to its font
-name) and to optional font features appended. The Font Selection 
-System uses this macro at primitive level in the following sense:
+must expand (at the expand processor level only) to a file name of the loaded font (or to its font
+name) and to optional font features appended. The Font Selection
+System uses this macro at the primitive level in the following sense:
 
 \begtt
 \font \<selector> {\_fontnamegen} \_sizespec
 \endtt
 %
-Note that the extended `\font` syntax 
+Note that the extended `\font` syntax
 `\font\<selector> {<font name>:<font features>} <size spec.>` or
 `\font\<selector> {[<font file name>]:<font features>} <size spec.>`
 is expected here.
@@ -119,7 +118,7 @@ can use it in font modifiers. You can use the \^`\_fsetV` macro in more
 general form:
 
 \begtt \catcode`\<=13
-   \_fsetV <word-a>=<value-a>,<word-b>=<value-b>  ...etc. terminated by a space 
+   \_fsetV <word-a>=<value-a>,<word-b>=<value-b>  ...etc. terminated by a space
 \endtt
 %
 with obvious result `\def\_<word-a>V {<value-a>}\def\_<word-b>V {<value-b>}` etc.
@@ -128,7 +127,7 @@ with obvious result `\def\_<word-a>V {<value-a>}\def\_<word-b>V {<value-b>}` etc
 
 If both font modifiers `\caps`, `\cond` were applied in Heros
 family, then `\def\_capsV{+smcp;+onum}` and `\def\_condV{cn}` were processed
-by these font modifiers. If user needs the `\bf` variant at 11\,pt now then
+by these font modifiers. If a user needs the `\bf` variant at 11\,pt now then
 the
 
 \begtt
@@ -147,7 +146,7 @@ if `<word>` has `<value-a>` or `<value-b>` \dots or `<value-n>`. See
 
 Recommendation: use the \^`\_fontfeatures` macro at the end of the `\_fontnamegen`
 macro in order to the \^`\setff`, \^`\setfontcolor`, \^`\setletterspace`
-macros can work. 
+macros can work.
 
 \seccc The \code{\\moddef} macro
 
@@ -155,9 +154,9 @@ has the syntax \^`\moddef\<modifier>{<what to do>}`. It does more things than si
 
 \begitems
 * The modifier macros are defined as `\_protected`.
-* The modifier macros are defined as family-dependent. 
-* If the declared control sequence is defined already (and it is not font
-  modifier) then it is re-defined with warning.
+* The modifier macros are defined as family-dependent.
+* If the declared control sequence is defined already (and it is not a font
+  modifier) then it is re-defined with a warning.
 \enditems
 \noindent
 The \^`\famvardef` macro has the same features.
@@ -169,34 +168,34 @@ is defined by the \^`\_famdecl` macro as:
 \protected\def\<Familyselector> {%
    \_def\_currfamily {<Familyselector>}%
    \_def\_fontnamegen {...}% this is copied from 7-th parameter of \_famdecl
-   \resetmod 
+   \resetmod
    <run all family-dependent font modifiers used before Familyselector without warnings>
 \endtt
 
 {\noindent\bf The \^`\_initfontfamily`}\nl
-must be run after modifers decaration.
+must be run after modifier's decaration.
 It runs the `\<Familyselector>` and it runs `\_rm`,
-so first font from new family is loaded and it is ready to use it.
+so the first font from the new family is loaded and it is ready to use it.
 
 \seccc Name conventions
 
-Create font modifiers, new variants and the `\<Familyselector>` only as public, i.e.
-in user name space without `_` prefix. We assume that if user re-defines them then he/she needs
-not them, so we have no problems. If user's definition done before loading
-font family file is re-defined then \OpTeX/ warns about it. See the end of
+Create font modifiers, new variants, and the `\<Familyselector>` only as public, i.e.
+in user namespace without `_` prefix. We assume that if a user re-defines them then he/she needs
+not them, so we have no problems. If the user's definition was done before loading
+the font family file then it is re-defined and \OpTeX/ warns about it. See the end of
 section~\ref[fontcommands].
 
-The name of `\<Familyselector>` should begin with uppercase letter.
+The name of `\<Familyselector>` should begin with an uppercase letter.
 
 Please, look at
 \ulink[http://petr.olsak.net/ftp/olsak/optex/op-catalog.pdf]{\OpTeX/ font catalogue}
-before you will create your own font family file and use the same names for
-analogical font modifiers (like `\cond`, `\caps`, `\sans`, `\mono` etc.)\ 
+before you will create your font family file and use the same names for
+analogical font modifiers (like `\cond`, `\caps`, `\sans`, `\mono` etc.)\
 and for extra variant selectors (like `\lf`, `\li`, `\kf`, `\ki` etc.\ used in
 Roboto font family).
 
 If you are using the same font modifier names to analogical font shapes then
-such modifiers are kept when family is changend. For example:
+such modifiers are kept when the family is changed. For example:
 
 \begtt
 \fontfam [Termes] \fontfam[Heros]
@@ -210,9 +209,9 @@ unavailable in the new family).
 In this example, `\Termes` does `\resetmod` followed by `\caps\cond`.
 The `\caps` is applied and `\cond` is silently ignored in Termes family.
 
-If you need to declare your private modifier (because it is used in another
+If you need to declare your private modifier (because it is used in other
 modifiers or macros, for example), use the name `\_wordM`. You can be
-sure that such name does not influence the private name space used by \OpTeX/.
+sure that such a name does not influence the private namespace used by \OpTeX/.
 
 \seccc Additional notes
 
@@ -220,12 +219,12 @@ See the font family file `f-libertine-s.opm` which is another example where no
 font files but font names are used.
 
 See the font family file `f-lmfonts.opm` or `f-poltawski.opm` where you can find the
-the example of the optical sizes declaration including a documentation about
+the example of the optical sizes declaration including documentation about
 it.
 
-If you need to create font family file with non-Unicode font, you can do it.
-The `\_fontnamegen` must expand to the name of TFM file in such case. But we
+If you need to create a font family file with a non-Unicode font, you can do it.
+The `\_fontnamegen` must expand to the name of TFM file in this case. But we
 don't prefer such font family files, because they are usable only with
-languages with alphabet subset to ISO-8859-1 (Unicodes are equal to letter
+languages with alphabet subset to ISO-8859-1 (Unicodes are equal to letter's
 codes of such alphabets), but middle or east Europe use languages where
-such condition is not true.
+such a condition is not true.

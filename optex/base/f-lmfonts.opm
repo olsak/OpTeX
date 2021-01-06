@@ -1,7 +1,7 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
-        {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital 
+        {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital
          \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {LM}
         {[lmroman10-regular]}
         {\_def\_fontnamegen {[\_optname{lm\_subfamV.\_currV}]:\_fontfeatures}}
@@ -62,7 +62,7 @@ Sub-modifiers (selects special variants of given subfamily):^^J
 \_LMregfont lmtt.i     LMMono?-Italic         \_regoptT   % 10
 \_LMregfont lmtt.bi    LMMonoLt?-BoldOblique  \_regoptT   % 10
 \_LMregfont lmtt.isl   LMMonoSlant?-Regular   \_regoptT   % 10
-\_optfontalias {lmtt.bisl} {lmtt.bi} 
+\_optfontalias {lmtt.bisl} {lmtt.bi}
 
 \_LMregfont lmtp.r     LMMonoPropLt?-Regular      \_regoptT  % 10
 \_LMregfont lmtp.bx    LMMonoPropLt?-Bold         \_regoptT  % 10
@@ -99,12 +99,12 @@ Sub-modifiers (selects special variants of given subfamily):^^J
 
 % submodifiers (they select special vaiants in a subfamily)
 \_moddef \nbold    {\_onlyif subfam=rm,ss,tp: {\_fvars r b i bi }}
-\_moddef \bolder   {\_onlyif subfam=rm,ss,tp: {\_fvars r bx i bxi }} 
+\_moddef \bolder   {\_onlyif subfam=rm,ss,tp: {\_fvars r bx i bxi }}
 \_moddef \slant    {\_onlyif subfam=rm:       {\_fvars r bx isl bxisl }%
                     \_onlyif subfam=tt:       {\_fvars r b isl bisl }}
 \_moddef \caps     {\_onlyif subfam=rm,tt:    {\_fvars rc . ic . }}
 
-\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}} 
+\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}}
 \_private \LMfonts \ttset ; % used in \_tryloadtt
 
 \_initfontfamily % new font family must be initialized
@@ -117,19 +117,19 @@ Sub-modifiers (selects special variants of given subfamily):^^J
 
 You can use \^`\_optname` macro when `\_fontnamegen` in expanded. This macro is fully
 expandable and its input is `<internal-template>` and its output is a
-part of the font file name `<size-dependent-template>` with respect to given 
+part of the font file name `<size-dependent-template>` with respect to given
 optical size.
 
 You can declare a collection of `<size-dependent-template>`s for one
-given `<internal-template>` by the \^`\_regoptsizes` macro. 
+given `<internal-template>` by the \^`\_regoptsizes` macro.
 The syntax is shown for one real case:
 
-\begtt 
+\begtt
 \_regoptsizes lmr.r lmroman?-regular
-    5 <5.5 6 <6.5 7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <15 17 <* 
+    5 <5.5 6 <6.5 7 <7.5 8 <8.5 9 <9.5 10 <11.1 12 <15 17 <*
 \endtt
 
-In general: 
+In general:
 
 \begtt \catcode`\<=13
 \_regoptsizes <internal-template> <general-ouput-template> <resizing-data>
@@ -145,14 +145,14 @@ with zero \code{<0}, but it is not explicitly written. The right part of
 <resizing-data> must be terminated by \code{<*} which means "less than infinity".
 
 If `\_optname` gets an argument which is not registered <internal-template>
-then it expands to `\_failedoptname` which typically ends to error message
+then it expands to `\_failedoptname` which typically ends with an error message
 about missing font. You can redefine `\_failedoptname` macro to some
 existing font if you find it useful.
 
-We are using a special macro `\_LMregfont` in `f-lmfonts.opm`. 
+We are using a special macro `\_LMregfont` in `f-lmfonts.opm`.
 It sets the file names to
-lowercase and enables to use a shortcasts isntead real <resizing-data>.
-There are shortcats `\_regoptFS`, `\_regoptT`, etc. here. The collection of
+lowercase and enables us to use shortcuts instead of real <resizing-data>.
+There are shortcuts `\_regoptFS`, `\_regoptT`, etc. here. The collection of
 `<internal-templates>` are declared, each of them covers a collection of real
 file names.
 
@@ -179,7 +179,7 @@ artists are very creative people), so you need to declare more systematic
 \fontalias crea-b-bolditalic    {Creative Bold subfam Oblique}
 \endtt
 
-Another example of font family with optical sizes is Antykwa Półtawskiego.
+Another example of a font family with optical sizes is Antykwa Półtawskiego.
 The optical sizes feature is deactivated by default and it is switched on by
 `\osize` font modifier:
 

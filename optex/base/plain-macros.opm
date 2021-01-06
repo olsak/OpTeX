@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \magstep {Macros from plain TeX <2020-02-14>} % preloaded in format
 
@@ -20,16 +20,16 @@
    The shortcuts `\chardef\@one` is not defined in \OpTeX/. Use normal
    numbers instead of such obscurities.
    \nl
-   The \`\magstep` and \`\magstephalf` are 
+   The \`\magstep` and \`\magstephalf` are
    defined with `\space`, (no `\relax`), in order to be expandable.
    \_cod -----------------------------
-   
+
 \_def \_magstephalf{1095 }
 \_def \_magstep#1{\_ifcase#1 1000\_or 1200\_or 1440\_or 1728\_or 2074\_or 2488\_fi\_space}
 \_public \magstephalf \magstep ;
 
    \_doc -----------------------------
-   Plain \TeX/ basic macros and control sequences. 
+   Plain \TeX/ basic macros and control sequences.
    \`\endgraf`, \`\endline`.
    The `^^L` is not defined in \OpTeX/ because it is obsolete.
    \_cod -----------------------------
@@ -58,11 +58,11 @@
 \_public \obeylines \obeyspaces ;
 
    \_doc -----------------------------
-   Spaces. 
-   \`\thinspace`, \`\negthinspace`, \`\enspace`, \`\enskip`, 
-   \`\quad`, \`\qquad`, \`\smallskip`, 
+   Spaces.
+   \`\thinspace`, \`\negthinspace`, \`\enspace`, \`\enskip`,
+   \`\quad`, \`\qquad`, \`\smallskip`,
    \`\medskip`, \`\bigskip`, \`\nointerlineskip`, \`\offinterlineskip`,
-   \`\topglue`, \`\vglue`, \`\hglue`, \`\slash`. 
+   \`\topglue`, \`\vglue`, \`\hglue`, \`\slash`.
    \_cod -----------------------------
 
 \_protected\_def\_thinspace {\_kern .16667em }
@@ -94,8 +94,8 @@
 
    \_doc -----------------------------
    Penalties macros:
-   \`\break`, \`\nobreak`, \`\allowbreak`, \`\filbreak`, \`\goodbreak`,  
-   \`\eject`, \`\supereject`, \`\dosupereject`, 
+   \`\break`, \`\nobreak`, \`\allowbreak`, \`\filbreak`, \`\goodbreak`,
+   \`\eject`, \`\supereject`, \`\dosupereject`,
    \`\removelastskip`, \`\smallbreak`, \`\medbreak`, \`\bigbreak`.
    \_cod -----------------------------
 
@@ -121,8 +121,8 @@
 
    \_doc -----------------------------
    Boxes.
-   \`\line`, \`\leftline`, \`\rightline`, \`\centerline`, \`\rlap`, \`\llap`, 
-   \`\underbar`. 
+   \`\line`, \`\leftline`, \`\rightline`, \`\centerline`, \`\rlap`, \`\llap`,
+   \`\underbar`.
    \_cod -----------------------------
 
 \_def \_line {\_hbox to\_hsize}
@@ -172,7 +172,7 @@
 \_def \_itemitem {\_par\_indent \_hangindent2\_parindent \_textindent}
 \_def \_narrower {\_advance\_leftskip\_parindent
    \_advance\_rightskip\_parindent}
-\_def \_raggedright {\_rightskip=0pt plus2em 
+\_def \_raggedright {\_rightskip=0pt plus2em
    \_spaceskip=.3333em \_xspaceskip=.5em\_relax}
 \_def \_ttraggedright {\_tt \_rightskip=0pt plus2em\_relax} % for use with \tt only
 \_def \_leavevmode {\_unhbox\_voidbox} % begins a paragraph, if necessary
@@ -181,10 +181,10 @@
 
    \_doc -----------------------------
    Few character codes are set for backward compatibility. But old obscurities
-   (from plain TeX) based on \`\mathhexbox` 
-   are not supported -- an error message and recommendation 
-   to directly using of the desired character is implemented by the
-   \`\_usedirectly` macro). 
+   (from plain TeX) based on \`\mathhexbox`
+   are not supported -- an error message and recommendation
+   to directly using the desired character is implemented by the
+   \`\_usedirectly` macro).
    The user can re-define these control sequences of course.
    \_cod -----------------------------
 
@@ -208,7 +208,7 @@
 \_def\L{\_errmessage{\_usedirectly Ł}}
 %\def\_{\_ifmmode \kern.06em \vbox{\hrule width.3em}\else _\fi} % obsolete
 \_def\_{\_hbox{_}}
-\_def\dag{\_errmessage{\_usedirectly †}} 
+\_def\dag{\_errmessage{\_usedirectly †}}
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
 %\_def\copyright{\_errmessage{\_usedirectly ©}}
 \_def\copyright{©} % << example, what to do
@@ -220,13 +220,13 @@
 \_public \mathhexbox ;
 
    \_doc -----------------------------
-   Accents. 
+   Accents.
    The macros \`\ooalign`, \`\d`, \`\b`, \`\c`, \`\dots`,
    are defined for backward compatibility.
    \_cod -----------------------------
 
 \_def \_oalign #1{\_leavevmode\_vtop{\_baselineskip=\_zo \_lineskip=.25ex
-   \_ialign{##\_crcr#1\_crcr}}} 
+   \_ialign{##\_crcr#1\_crcr}}}
 \_def \_oalignA {\_lineskiplimit=\_zo \_oalign}
 \_def \_ooalign {\_lineskiplimit=-\_maxdimen \_oalign} % chars over each other
 \_def \_shiftx #1{\_dimen0=#1\_kern\_ea\_ignorept \_the\_fontdimen1\_font
@@ -240,11 +240,11 @@
 \_public \oalign \ooalign \d \b \c \dots ;
 
    \_doc -----------------------------
-   The accents commands like `\v`, `\.`, `\H`, etc. are not defined. Use the
-   accented characters directly -- it is best solution. But you can use the
+   The accent commands like `\v`, `\.`, `\H`, etc. are not defined. Use the
+   accented characters directly -- it is the best solution. But you can use the
    macro \`\oldaccents` which defines accented macros.
    \nl
-   Much more usable is to define these control sequences to other purposes.
+   Much more usable is to define these control sequences for other purposes.
    \_cod -----------------------------
 
 \_def \_oldaccents {%
@@ -295,7 +295,7 @@
 
    \_doc -----------------------------
    The plain \TeX/ macros
-   \`\hrulefill`, \`\dotfill`, \`\rightarrowfill`, \`\leftarrowfill`, 
+   \`\hrulefill`, \`\dotfill`, \`\rightarrowfill`, \`\leftarrowfill`,
    \`\downbracefill`, \`\upbracefill`.
    The last four are used in non-Unicode variants of `\overrightarrow`,
    `\overleftarrow`, `\overbrace` and `\underbrace` macros, see
@@ -331,7 +331,7 @@
 
 \_def \_magnification {\_afterassignment \_magA \_count255 }
 \_def \_magA {\_mag=\_count255 \_truedimen\_hsize \_truedimen\_vsize
-  \_dimen\_footins=8truein 
+  \_dimen\_footins=8truein
 }
 % only for backward compatibility, but \margins macro is preferred.
 \_public \magnification ;
