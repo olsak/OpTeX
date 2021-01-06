@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 % Run  optex optex-doc 
 % (three times) to generate OpTeX documentation including references and the index. 
@@ -45,7 +45,7 @@ The main goal of \OpTeX/ is:
 
 \begitems
 * \OpTeX/ keeps the simplicity (like in Plain \TeX/ and OPmac macros).
-* There is no old obscurities concerning with various 8-bit encodings and
+* There is no old obscurities concerning various 8-bit encodings and
   various engines.
 * \OpTeX/ provides a powerful Fonts Selection System (for Unicode font
   families, of course).
@@ -56,20 +56,18 @@ The main goal of \OpTeX/ is:
   \fnotetext{All these features are implemented by \TeX/ macros, no external
              program is needed.}
 * Macros are documented in the same place where code is.
-* User name space of control sequences is separated from internal name space
-  of \OpTeX/ and primitives (`\foo` versus `\_foo`). The name spaces for
-  macro writers are designed too.
+* User namespace of control sequences is separated from the internal namespace of \OpTeX/ and primitives (`\foo` versus `\_foo`). The namespaces for macro writers are designed too.
 \enditems
 
 If you need to customize your document or you need to use something
 very specific, then you can copy relevant parts of \OpTeX/ macros into your macro
-file and do changes of these macros here. This is significant difference from
-\LaTeX/ or ConTeXt, which are an attempt to create a new user level with a
+file and do changes to these macros here. This is a significant difference from
+\LaTeX/ or ConTeXt, which is an attempt to create a new user level with a
 plenty of non-primitive parameters and syntax hiding \TeX/ internals.
 The macros from \OpTeX/ are simple and straightforward because they solve only
-what is explicitly needed, they does not create a new user level for
-controlling your document. We have \TeX.
-You can use \OpTeX/ macros, understand them an modify them.
+what is explicitly needed, they do not create a new user level for
+controlling your document. We are using \TeX/ directly in this case.
+You can use \OpTeX/ macros, understand them, and modify them.
 
 \OpTeX/ offers a markup language for authors of texts (like \LaTeX),
 i.\,e.\ the fixed set of tags to define the structure of the document. This
@@ -80,7 +78,7 @@ The manual includes two parts: user documentation and technical
 documentation. The second part is generated directly from the sources of
 \OpTeX/. There are many hyperlinks from one part to second and vice versa.
 
-This manual describes \OpTeX/ features only. We suppose that user knows \TeX/
+This manual describes \OpTeX/ features only. We suppose that the user knows \TeX/
 basics. They are described in many books. You can see a short
 document \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]
 {\TeX/ in nutshell} too.
