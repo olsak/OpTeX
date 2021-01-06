@@ -1,7 +1,7 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 % This file is read from optex-doc.tex
-% Use: optex optex-doc  
+% Use: optex optex-doc
 % (three times) to create whole documentation including all references and the index.
 
 \load [doc.opm]
@@ -22,9 +22,9 @@ optex optex-doc.tex
 then the same `*.opm` files are read when the second chapter of this
 documentation is printed.
 
-A knowledge about \TeX/ is expected from the reader. 
-You can see a short document 
-\ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]{\TeX/ in a Nutshell} 
+A knowledge about \TeX/ is expected from the reader.
+You can see a short document
+\ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]{\TeX/ in a Nutshell}
 or more detail
 \ulink[https://eijkhout.net/texbytopic/texbytopic.html]{\TeX/ by topic}.
 
@@ -32,15 +32,15 @@ Notices about hyperlinks.
 If a control sequence is printed in red color in this documentation then
 this denotes its \"main documentation point". Typically, the listing where
 the control sequence is declared follows immediately. If a control sequence is
-printed in the blue color in the listing or in the text 
-then it is active link which points (usually) to the main documentation point. 
-The main documentation point can be active link which points to a previous 
+printed in the blue color in the listing or in the text
+then it is an active link that points (usually) to the main documentation point.
+The main documentation point can be an active link that points to a previous
 text where the control sequence was
 mentioned. Such occurrences are active links to the main documentation point.
 
 \sec[init] The main initialization file
 
-The `optex.ini` file is read as main file when the format is generated.
+The `optex.ini` file is read as the main file when the format is generated.
 
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
  \def\docfile{optex.ini}
@@ -62,8 +62,8 @@ is set as `\newlinechar`.
 
 \verbinput (27-36) optex.ini
 %
-The basic macros for macro file syntax is defined, i.\,e.\ 
-`\_endcode`, `\_doc` and `\_cod`. 
+The basic macros for macro file syntax is defined, i.\,e.\
+`\_endcode`, `\_doc` and `\_cod`.
 The `\_codedecl` will be re-defined later.
 
 \verbinput (38-42) optex.ini
@@ -77,7 +77,7 @@ It is documented in section~\ref[lua].
 
 \verbinput (89-92) optex.ini
 
-The `\everyjob` register is initialized and the format is saved by 
+The `\everyjob` register is initialized and the format is saved by
 the `\dump` command.
 
 \verbinput (94-102) optex.ini
@@ -85,12 +85,12 @@ the `\dump` command.
 }
 
 \printdoctail prefixed.opm
-\secc The implementation of the name spaces
+\secc The implementation of the namespaces
 \printdoc prefixed.opm
 
 \sec pdf\TeX/ initialization
 \printdoctail luatex-ini.opm
-\printdoc     luatex-ini.opm 
+\printdoc     luatex-ini.opm
 
 \sec Basic macros
 We define first bundle of basic macros.
@@ -116,7 +116,7 @@ The second bundle of \OpTeX/ macros is here.
 \printdoc     keyval.opm
 
 \sec Plain \TeX/ macros
-All macros from plain \TeX/ are rewritten here. 
+All macros from plain \TeX/ are rewritten here.
 Differences are mentioned in the documentation below.
 \printdoc plain-macros.opm
 
@@ -142,7 +142,7 @@ Differences are mentioned in the documentation below.
 \printdoctail math-unicode.opm
 
 \sec[opmac-fonts] Scaling fonts in document (high-level macros)
-These macros are documented in section~\ref[sizes] from user point of view.
+These macros are documented in section~\ref[sizes] from the user point of view.
 \printdoc fonts-opmac.opm
 
 \sec[output] Output routine
@@ -191,7 +191,7 @@ The `\margins` macro is documented in the section~\ref[marg].
 \printdoc verbatim.opm
 \secc[hisyntax] Listings with syntax highlighting
 \printdoctail hi-syntax.opm
-\printdoc     hi-syntax.opm 
+\printdoc     hi-syntax.opm
 
 \sec Graphics
 \printdoctail graphics.opm
@@ -228,8 +228,8 @@ The `\margins` macro is documented in the section~\ref[marg].
 
 \sec Styles
    \OpTeX/ provides three styles: `\report`, `\letter` and `\slides`.
-   Their behavior is documented in user part of the manual in the section 
-   \ref[styles] and `\slides` style (for presentations) is documented in 
+   Their behavior is documented in user part of the manual in the section
+   \ref[styles] and `\slides` style (for presentations) is documented in
    `op-slides.pdf` which is an example of the presentation.
 \secc \code{\\report} and \code{\\letter} styles
 \printdoc styles.opm
@@ -259,7 +259,7 @@ and initialized by `\everyjob`, see section~\ref[init].
 
 The file implements part of the functionality from `luatexbase` namespace,
 nowadays defined by \LaTeX/ kernel. `luatexbase` deals with modules,
-allocators and callback management. Callback management is a nice extension
+allocators, and callback management. Callback management is a nice extension
 and is actually used in \OpTeX/. Other functions are defined more or less just
 to suit luaotfload's use.
 

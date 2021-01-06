@@ -1,6 +1,6 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalbaselineskip {Parameter settings <2020-03-17>} % preloaded in format 
+\_codedecl \normalbaselineskip {Parameter settings <2020-03-17>} % preloaded in format
 
    \_doc -----------------------------
    \secc Primitive registers
@@ -9,7 +9,7 @@
 
 \_parindent=20pt     % indentation of paragraphs
 \_pretolerance=100   % parameters used in paragraph breaking algorithm
-\_tolerance=200   
+\_tolerance=200
 \_hbadness=1000
 \_vbadness=1000
 \_doublehyphendemerits=10000
@@ -28,7 +28,7 @@
 \_relpenalty=500     % between relations in math
 \_brokenpenalty=100  % after lines if they end by a broken word.
 \_displaywidowpenalty=50   % before last line of paragraph if display math follows
-\_predisplaypenalty=10000  % above display math 
+\_predisplaypenalty=10000  % above display math
 \_postdisplaypenalty=0     % below display math
 \_delimiterfactor=901 % parameter for scaling delimiters
 \_delimitershortfall=5pt
@@ -49,7 +49,7 @@
 
    \_doc -----------------------------
    Note that `\topskip` and `\splittopskip` are changed when first
-   `\typosize` sets the main values (default font size and default 
+   `\typosize` sets the main values (default font size and default
    `\baselineskip`).
    \_cod -----------------------------
 
@@ -80,10 +80,10 @@
 \_def\_nonfrenchspacing{\_sfcode`\.=3000 \_sfcode`\?=3000 \_sfcode`\!=3000
   \_sfcode`\:=2000 \_sfcode`\;=1500 \_sfcode`\,=1250 }
 
-\_public \normalbaselines \frenchspacing \nonfrenchspacing 
-   \smallskipamount \medskipamount \bigskipamount 
+\_public \normalbaselines \frenchspacing \nonfrenchspacing
+   \smallskipamount \medskipamount \bigskipamount
    \normalbaselineskip \normallineskip \normallineskiplimit
-   \jot \interdisplaylinepenalty \interfootnotelinepenalty ; 
+   \jot \interdisplaylinepenalty \interfootnotelinepenalty ;
 
    \_doc -----------------------------
    \secc Different settings than in plain \TeX/
@@ -91,8 +91,8 @@
    Default \"baseline setting" is for 10\,pt fonts (like in plain \TeX/).
    But `\typosize` and `\typoscale` macros re-declare it if another font size is used.
 
-   The \`\nonfrenchspacing` is not set by default because 
-   the author of \OpTeX/ is living in the Europe.
+   The \`\nonfrenchspacing` is not set by default because
+   the author of \OpTeX/ is living in Europe.
    If you set `\enlang` hyphenation patterns then `\nonfrenchspacing`
    is set.
    \_cod -----------------------------
@@ -100,14 +100,14 @@
 \_normalbaselines % baseline setting, 10 pt font size
 
    \_doc -----------------------------
-   Different values than in plain \TeX/ have following primitive registers.
+   Different values than in plain \TeX/ have the following primitive registers.
    We prohibit orphans, set more information for tracing boxes, set page origin
-   to upper left corner of the paper (no at 1\,in, 1\,in coordinates)
+   to the upper left corner of the paper (no at 1\,in, 1\,in coordinates)
    and set default page dimensions as A4, no letter.
    \_cod -----------------------------
 
-\_emergencystretch=20pt % we want to use third pass of aparagraph building algoritmh
-                        % we need not to keep the compatibility with old documents
+\_emergencystretch=20pt % we want to use third pass of paragraph building algoritmh
+                        % we need not keep the compatibility with old documents
 
 \_clubpenalty=10000    % after first line of paragraph
 \_widowpenalty=10000   % before last line of paragraph
@@ -118,10 +118,10 @@
 \_tracinglostchars=2   % missing chracter warnings on terminal too
 
 \_outputmode=1   % PDF ouput
-\_pdfvorigin=0pt % orgin is exatly at left upper corner 
+\_pdfvorigin=0pt % orgin is exatly at left upper corner
 \_pdfhorigin=0pt
 \_hoffset=25mm   % margins are 2.5cm, no 1in
-\_voffset=25mm   
+\_voffset=25mm
 \_hsize=160mm    % 210mm (from A4 size) - 2*25mm (default margins)
 \_vsize=244mm    % 297mm (from A4 size) - 2*25mm (default margins) -3mm baseline correction
 \_pagewidth=210 true mm
@@ -134,13 +134,13 @@
 
 \_def\_plaintexsetting{%
    \_emergencystretch=0pt
-   \_clubpenalty=150 
+   \_clubpenalty=150
    \_widowpenalty=150
    \_pdfvorigin=1in
    \_pdfhorigin=1in
    \_hoffset=0pt
    \_voffset=0pt
-   \_hsize=6.5in 
+   \_hsize=6.5in
    \_vsize=8.9in
    \_pagewidth=8.5 true in
    \_pageheight=11 true in
@@ -151,27 +151,25 @@
    \_doc -----------------------------
    \secc[oparams] \OpTeX/ parameters
 
-   The main principle how to configure \OpTeX/ is not to use only parameters.
+   The main principle of how to configure \OpTeX/ is not to use only parameters.
    A designer can copy macros from \OpTeX/ and re-define them as required.
    This is a reason why we don't implement dozens of parameters,
    but we keep \OpTeX/ macros relatively simple. Example: do you want
    another design of section titles? Copy macros `\_printsec` and
    `\_printsecc` from `sections.opm` file to your macro file and re-define them.
 
-   Notice for OPmac users: there is important difference: all "string-like"
+   Notice for OPmac users: there is an important difference: all "string-like"
    parameters are token lists in \OpTeX/ (OPmac uses macros for them). The reason of
-   this difference: if user sets parameter by unprotected control sequence,
-   an \OpTeX/ macro can read {\em the same data} using protected control sequence.
-   If user re-defines such unprotected control sequence (because he/she does
-   know about it) then nothing bad happens.
+   this difference: if a user sets parameter by unprefixed (public) control sequence,
+   an \OpTeX/ macro can read {\em the same data} using a prefixed (private) control sequence.
 
    The \`\picdir` tokens list can include a directory where image files
    (loaded by `\inspic`) are saved. Empty `\picdir` (default value) means
    that image files are in the current directory (or somewhere in the \TeX/
-   system where \LuaTeX/ is able to find them). If you set non-empty value to
+   system where \LuaTeX/can find them). If you set a non-empty value to
    the `\picdir`, then it must end by `/` character, for example
    `\picdir={img/}` means that there exists a directory `img` in your
-   current directory and the image files are stored here. 
+   current directory and the image files are stored here.
    \_cod -----------------------------
 
 \_newtoks\_picdir
@@ -184,53 +182,53 @@
    dimension of the image is used. If only `\picwidth` has a nonzero value,
    then this is the width of the image (height is calculated automatically in
    order to respect the aspect of the image). If only `\picheight` has
-   a nonzero value then height is given, width is calculated. If both
+   a nonzero value then the height is given, the width is calculated. If both
    parameters are non-zero, the height and width are given and the aspect
-   ratio of the image is (probably) broken. We recommend to set these
+   ratio of the image is (probably) broken. We recommend setting these
    parameters locally in the group where `\inspic` is used in order to not
-   influence the dimensions of another images. But there exist many
+   influence the dimensions of other images. But there exist many
    situations you need to put the same dimensions to more images,
    so you can set this parameter only once before more `\inspic` macros.
    \_cod -----------------------------
 
-\_newdimen\_picwidth   \_picwidth=0pt   \_let\picw=\_picwidth 
+\_newdimen\_picwidth   \_picwidth=0pt   \_let\picw=\_picwidth
 \_newdimen\_picheight  \_picheight=0pt
 \_public \picwidth \picheight ;
 
    \_doc -----------------------------
-   The \`\everytt` is token list used in 
+   The \`\everytt` is the token list used in
    `\begtt`...`\endtt` environment and
    in the verbatim group opened by `\verbinput` macro. You can include a
    code which is processed inside the group after basic settings were done
-   On the other hand, it is processed before scanner of verbatim text is started. 
-   Your macros should influence scanner (catcode settings) or printing 
+   On the other hand, it is processed before the scanner of verbatim text is started.
+   Your macros should influence scanner (catcode settings) or printing
    process of the verbatim code or both.
 
    The code from the line immediately after `\begtt` is processed after
    the `\everytt`. This code should overwrite `\everytt` settings. Use
    `\everytt` for all verbatim environments in your document and use a code
-   after `\begtt` locally only for this environment. 
+   after `\begtt` locally only for this environment.
 
-   The \`\everyintt` token list does similar work 
+   The \`\everyintt` token list does similar work
    but acts in the in-line verbatim
    text processed by a pair of `\activettchar` characters or by `\code{<text>}`.
    You can set `\everyintt={\Red}` for example if you want in-line verbatim
    in red color.
    \_cod -----------------------------
 
-\_newtoks\_everytt      
+\_newtoks\_everytt
 \_newtoks\_everyintt
 \_public \everytt \everyintt ;
 
    \_doc -----------------------------
-   The \`\ttline` is used 
+   The \`\ttline` is used
    in `\begtt`...`\endtt` environment or in the code
    printed by `\verbinput`. If `\ttline` is positive or zero, then the
-   verbatim code have numbered lines from `\ttline+1`. The `\ttline`
-   register is re-set to new value after a code piece is printed, so next
+   verbatim code has numbered lines from `\ttline+1`. The `\ttline`
+   register is re-set to a new value after a code piece is printed, so next
    code pieces have numbered lines continuously. If `\ttline=-1`, then
    `\begtt`...`\endtt` lines are without numbers and `\verbinput` lines
-   shows the line numbers of inputted file. If `\ttline`\code{<-1} 
+   show the line numbers of inputted file. If `\ttline`\code{<-1}
    then no line numbers are printed.
    \_cod -----------------------------
 
@@ -238,36 +236,36 @@
 \_public \ttline ;
 
    \_doc -----------------------------
-   The \`\ttindent` gives default indentation 
+   The \`\ttindent` gives default indentation
    of verbatim lines printed by `\begtt`...`\endtt` pair or by
    `\verbinput`.
    \nl
-   The \`\ttshift` gives the amount of shift of all verbatim lines to right.
-   Despite to the \^`\ttindent`, it does not shift the line numbers, only
+   The \`\ttshift` gives the amount of shift of all verbatim lines to the right.
+   Despite the \^`\ttindent`, it does not shift the line numbers, only
    the text.
    \nl
-   The \`\iindent` gives default indentations used in table of contents, 
+   The \`\iindent` gives default indentations used in the table of contents,
    captions, lists, bib references,
    \nl
    It is strongly recommended to re-set this value if you set `\parindent`
-   to another value than plain \TeX/ default 20pt. A well typeset
+   to another value than plain \TeX/ default 20pt. A well-typeset
    document should have the same dimension for all indentations, so
-   you should say `\ttindent=\parindent` and `\iindent=\parindent`. 
+   you should say `\ttindent=\parindent` and `\iindent=\parindent`.
    \_cod -----------------------------
 
 \_newdimen\_ttindent \_ttindent=\_parindent % indentation in verbatim
-\_newdimen\_ttshift  
+\_newdimen\_ttshift
 \_newdimen\_iindent  \_iindent=\_parindent
 \_public \ttindent \ttshift \iindent ;
 
    \_doc -----------------------------
-   The tabelator `^^I` has its category code like space: it behaves as a
-   space in normal text. This is normal plain \TeX/ setting. 
+   The tabulator `^^I` has its category code like space: it behaves as a
+   space in normal text. This is a common plain \TeX/ setting.
    But in the multiline verbatim environment it
    is active and expands to the `\hskip<dimen>` where `<dimen>`
-   is the width of \`\tabspaces` spaces. 
+   is the width of \`\tabspaces` spaces.
    Default `\tabspaces=3` means
-   that tabelator behaves like three spaces in multiline verbatim.
+   that tabulator behaves like three spaces in multiline verbatim.
    \_cod -----------------------------
 
 \_newcount \_tabspaces   \_tabspaces=3
@@ -278,22 +276,22 @@
    `\_hicolors<name>` declared in the file `hisyntax-<name>.opm`.
    The user can give his/her preferences about colors for
    syntax highlighting by this tokens list.
-   Full color set must be declared here.
+   The full color set must be declared here.
    \_cod -----------------------------
 
-\_newtoks\_hicolors  
+\_newtoks\_hicolors
 \_public \hicolors ;
 
    \_doc -----------------------------
-   The default item mark used between `\begitems` and `\enditems` is bullet.
-   The \`\defaultitem` tokens list declare this default item mark.
+   The default item mark used between `\begitems` and `\enditems` is the bullet.
+   The \`\defaultitem` tokens list declares this default item mark.
    \nl
    The \`\everyitem` tokens list is applied in vertical mode
    at the start of each item.
-   \nl 
-   The \`\everylist` tokens list is applied after group is opened by
    \nl
-   The \`\ilevel` keeps the value of current nesting level of the items list.
+   The \`\everylist` tokens list is applied after the group is opened by
+   \nl
+   The \`\ilevel` keeps the value of the current nesting level of the items list.
    \nl
    The \`\listskipamount` gives vertical skip above and below the items list
    if `\ilevel=1`.
@@ -317,7 +315,7 @@
    The `\begmulti` `\endmulti` pair creates more columns. The parameter
    \`\colsep` declares the space between columns. If $n$ columns are specified
    then we have $n-1$ `\colseps` and $n$ columns in total `\hsize`. This
-   gives definite result of columns width. 
+   gives the definite result of the width of the columns.
    \_cod ----------------------------
 
 \_newdimen\_colsep \_colsep=20pt  % space between columns
@@ -325,7 +323,7 @@
 
    \_doc -----------------------------
    Each line in the Table of contents is printed in a group.
-   The \`\everytocline` tokens list is processed here before 
+   The \`\everytocline` tokens list is processed here before
    the internal `\_tocl:<num>` macro which starts printing the line.
    \_cod -----------------------------
 
@@ -335,9 +333,9 @@
    \_doc -----------------------------
    The \`\bibtexhook` tokens list is used inside the group when `\usebib` command is
    processed after style file is loaded and before printing bib-entries.
-   You can re-define a behavior of style file here or you can modify the
+   You can re-define a behavior of the style file here or you can modify the
    more declaration for printing (fonts, baselineskip, etc.) or you can
-   define a specific macros used in your `.bib` file.
+   define specific macros used in your `.bib` file.
    \_cod -----------------------------
 
 \_newtoks\_bibtexhook
@@ -353,7 +351,7 @@
 
    \_doc -----------------------------
    The \`\everyii` tokens list is used before `\noindent` for each
-   Index item when printing the Index. 
+   Index item when printing the Index.
    \_cod -----------------------------
 
 \_newtoks\_everyii
@@ -363,21 +361,21 @@
    The \`\everymnote` is used in the `\mnote` group before `\noindent` which
    immediately precedes marginal note text.
    \nl
-   The \`\mnotesize` is horizontal size of the marginal notes.
+   The \`\mnotesize` is the horizontal size of the marginal notes.
    \nl
    The \`\mnoteindent` is horizontal space between body-text and marginal note.
    \_cod -----------------------------
 
-\_newtoks\_everymnote 
+\_newtoks\_everymnote
 \_newdimen\_mnotesize   \_mnotesize=20mm   % the width of the mnote paragraph
 \_newdimen\_mnoteindent \_mnoteindent=10pt % ditance between mnote and text
 \_public \everymnote \mnotesize \mnoteindent ;
 
    \_doc -----------------------------
-   The `\table` parameters follows. The \`\thistable` tokens list 
-   register should be used for giving an exception for only one `\table` 
-   which follows. It should change locally other parameters of the `\table`. 
-   It is reset to empty list after the table is printed.
+   The `\table` parameters follow. The \`\thistable` tokens list
+   register should be used for giving an exception for only one `\table`
+   which follows. It should change locally other parameters of the `\table`.
+   It is reset to an empty list after the table is printed.
    \nl
    The \`\everytable` tokens list register is applied in every table.
    There is another difference between these two registers.
@@ -386,29 +384,29 @@
    \nl
    \`\tabstrut` configures the height and depth of lines in the table.
    You can declare `\tabstrut={}`, then normal baselineskip is used in the
-   table. This can be used when you don't use horizontal nor vertical 
+   table. This can be used when you don't use horizontal nor vertical
    lines in tables.
    \nl
    \`\tabiteml` is applied before each item,
    \`\tabitemr` is applied after each item of the table.
-   \nl 
+   \nl
    \`\tablinespace` is additional vertical space between horizontal rules
    and the lines of the table.
    \nl
-   \`\hhkern` gives the space between horizontal lines if they are doubled and 
+   \`\hhkern` gives the space between horizontal lines if they are doubled and
    \`\vvkern` gives the space between such vertical lines.
    \nl
    \`\tabskipl` is `\tabskip` used before first column,
    \`\tabskipr` is `\tabskip` used after the last column.
    \nl
-   \`\tsize` is virtual unit of the width of paragraph-like table items when 
+   \`\tsize` is virtual unit of the width of paragraph-like table items when
    `\table pxto<size>` is used.
    \_cod -----------------------------
 
-\_newtoks\_everytable \_newtoks\_thistable 
+\_newtoks\_everytable \_newtoks\_thistable
 \_newtoks\_tabiteml \_newtoks\_tabitemr \_newtoks\_tabstrut
 \_newdimen\_tablinespace \_newdimen\_vvkern \_newdimen\_hhkern \_newdimen\_tsize
-\_newskip\_tabskipl  \_newskip\_tabskipr 
+\_newskip\_tabskipl  \_newskip\_tabskipr
 \_everytable={}        % code used after settings in \vbox before table processing
 \_thistable={}         % code used when \vbox starts, is is removed after using it
 \_tabstrut={\_strut}
@@ -417,26 +415,26 @@
 \_tablinespace=2pt     % additional vertical space before/after horizontal rules
 \_vvkern=1pt           % space between double vertical line and used in \frame
 \_hhkern=1pt           % space between double horizontal line and used in \frame
-\_tabskipl=0pt\_relax  % \tabskip used before first column 
+\_tabskipl=0pt\_relax  % \tabskip used before first column
 \_tabskipr=0pt\_relax  % \tabskip used after the last column
-\_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace 
+\_public \everytable \thistable \tabiteml \tabitemr \tabstrut \tablinespace
          \vvkern \hhkern \tsize \tabskipl \tabskipr ;
 
    \_doc -----------------------------
    The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
-   tokens lists. The default values are set in order this macro beahaves
-   like in Plain \TeX. The \`\eqspace` is horizontal space put 
-   between equation systems if more columns in \^`\eqalign` is used.
+   tokens lists. The default values are set in order these macro beahaves
+   as in Plain \TeX. The \`\eqspace` is horizontal space put
+   between equation systems if more columns in \^`\eqalign` are used.
    \_cod -----------------------------
 
 \_newtoks  \_eqlines  \_eqlines={\_openup\_jot}
-\_newtoks  \_eqstyle  \_eqstyle={\_strut\_displaystyle}   
+\_newtoks  \_eqstyle  \_eqstyle={\_strut\_displaystyle}
 \_newdimen \_eqspace  \_eqspace=20pt
 \_public \eqlines \eqstyle \eqspace ;
 
    \_doc -----------------------------
    \`\lmfil` is \"left matrix filler" (for `\matrix` columns). The default
-   value does centering because right matrix filler is directly set to `\hfil`.
+   value does centering because the right matrix filler is directly set to `\hfil`.
    \_cod -----------------------------
 
 \_newtoks \_lmfil   \_lmfil={\_hfil}
@@ -463,15 +461,15 @@
 \_public \headline \footline ;
 
    \_doc -----------------------------
-   The distance between the `\headline` and the top of the page-text
-   is controlled by the \`\headlinedist` register. 
-   The distance between bottom of
-   page-text and `\footline` is \`\footlinedist`. 
+   The distance between the `\headline` and the top of the page text
+   is controlled by the \`\headlinedist` register.
+   The distance between the bottom of
+   page-text and `\footline` is \`\footlinedist`.
    More precisely: baseline of
-   headline and baseline of first line in page-text have distance
+   headline and baseline of the first line in page-text have distance
    `\headlinedist+\topskip`. The baseline of the last line in page-text and
    the baseline of the footline have distance `\footlinedist`.
-   Default values are inspired from plain \TeX/.
+   Default values are inspired by plain \TeX/.
    \_cod -----------------------------
 
 \_newdimen \_headlinedist  \_headlinedist=14pt
@@ -479,8 +477,8 @@
 \_public \headlinedist \footlinedist ;
 
    \_doc -----------------------------
-   The \`\pgbottomskip` is inserted to the page bottom 
-   in the output routine. You can set a less tolerance here than
+   The \`\pgbottomskip` is inserted to the page bottom
+   in the output routine. You can set less tolerance here than
    `\raggedbotom` does. By default, no tolerance is given.
    \_cod -----------------------------
 
@@ -494,8 +492,8 @@
    processing. Example of usage:
    \begtt
    \headline={} \nexptages={\headline={\rmfixed \firstmark \hfil}}
-   \endtt 
-   This example sets current page with empty headline, but next pages have 
+   \endtt
+   This example sets current page with empty headline, but next pages have
    non-empty headlines.
    \_cod -----------------------------
 
@@ -523,9 +521,9 @@
 
 \_newtoks \_ovalparams
 \_newtoks \_circleparams
-%\_ovalparams={\_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+%\_ovalparams={\_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp
 %              \_shadow=N \_overlapmargins=N \_hhkern=0pt \_vvkern=0pt }
-%\_circleparams={\_ratio=1 \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp 
+%\_circleparams={\_ratio=1 \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp
 %                \_shadow=N \_overlapmargins=N \_hhkern=3pt \_vvkern=3pt}
 
 \_newdimen \_roundness    \_roundness=5mm % used in \clippingoval macro
@@ -542,25 +540,25 @@ controlled by {\em parameters}. The parameters are
 * registers declared and used by \OpTeX/ macros.
 \enditems
 Both groups of registers have their type: number, dimension, skip, token
-list.  
+list.
 
 The registers are represented by their names (control sequences). If the user
-re-defines such control sequence then the appropriate register exists
+re-defines this control sequence then the appropriate register exists
 steadily and build-in algorithms are using it without change. But user
-cannot access its value in such case. \OpTeX/ declares two control sequences
-for each register: prefixed and unprefixed. \OpTeX/ macros use only
-prefixed variants of control sequences. The user should use unprefixed variant
-with the same meaning and set or read values of registers using the
-unprefixed variant. If the user re-defines the unprefixed control sequence of 
+cannot access its value in this case. \OpTeX/ declares two control sequences
+for each register: prefixed (private) and unprefixed (public). \OpTeX/ macros use only
+prefixed variants of control sequences. The user should use the unprefixed variant
+with the same meaning and set or read the values of registers using the
+unprefixed variant. If the user re-defines the unprefixed control sequence of
 a register then \OpTeX/ macros still work without change.
 
-%There is only few parameters declared by \OpTeX/ macros. All of them 
-%are listed in this section. This is desired feature of the \OpTeX/. 
+%There are only a few parameters declared by \OpTeX/ macros. All of them
+%are listed in this section. This is the desired feature of the \OpTeX/.
 %If you want to do more
-%changes wich cannot be controlled by parameters listed here then you 
-%can copy the appropriate \OpTeX/ macro to your macro file and you 
+%changes which cannot be controlled by parameters listed here then you
+%can copy the appropriate \OpTeX/ macro to your macro file and you
 %can completely re-define it. The typical examples are `\_printsomething`
-%macros which declares the design of the document.
+%macros which declare the design of the document.
 
 \_endinput
 

@@ -1,16 +1,16 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \eoldef {OpTeX useful macos <2020-05-22>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
    does `\input {<file name>}` but the catcodes are set to normal catcodes
-   (like \OpTeX/ initializes them) and the catcodes setting are returned back to
+   (like \OpTeX/ initializes them) and the catcodes setting is returned back to
    the current values when the file is read. You can use `\opinput`
    in any situation inside the document and you will be sure that the file
    is read correctly with correct catcode settings.
 
-   In order to achieve this, we declare \`\optexcatcodes` catcode table
+   To achieve this, we declare \`\optexcatcodes` catcode table
    and \`\plaintexcatcodes`. They save the commonly used catcode tables.
    Note that `\catcodetable` is a part of \LuaTeX/ extension.
    The catcodetable stack is implemented by \OpTeX/ macros.
@@ -19,7 +19,7 @@
    the `<catcode table>`. The \`\restorectable` returns to the saved catcodes
    from the catcode table stack.
 
-   The `\opinput` works inside catcode table stack. It reads `\optexcatcodes`
+   The `\opinput` works inside the catcode table stack. It reads `\optexcatcodes`
    table and stores it to \`\_tmpcatcodes`  table.
    This table is actually used during `\input` (maybe catcodes are
    changed here). Finally, `\_restoretable` pops the stacks and returns
@@ -82,7 +82,7 @@
    The \`\load` `[<filename-list>]` loads files specfied in
    comma separated `<filename-list>`. The first space (after comma)
    is ignored using the trick `#1#2,`: first parameter is unseparated.
-   The `\load` macro saves the information about loaded files by setting
+   The `\load` macro saves information about loaded files by setting
    `\_load:<filename>` as a defined macro.
 
    If the \`\_afterload` macro is defined then it is run after `\_opinput`.
@@ -135,7 +135,7 @@
    The macro defined by `\eoldef` cannot be used with its parameter inside
    other macros because the catcode dancing is not possible here. But the
    \`\bracedparam``\macro{<parameter>}` can be used here. The `\bracedparam`
-   is a prefix which re-sets temporarily the `\macro` to a `\macro` with
+   is a prefix that re-sets temporarily the `\macro` to a `\macro` with
    normal one parameter.
 
    The \`\skiptoeol` macro reads the text to the end of the current line 
@@ -167,7 +167,7 @@
    Inline verbatim works in title sections.
 
    The verbatim scanner of `\scatoeol` keeps category 7 for `^` in
-   order to be able to use `^^J` as comment chracter which means that
+   order to be able to use `^^J` as comment character which means that
    the next line continues.
    \_cod -----------------------------
 
@@ -192,9 +192,9 @@
    `\_replacestringsA<foo-body>?<textA>!<textA>`.
    So, `#1` includes the first part of <foo-body> before first <textA>.
    It is saved to \`\_tmptoks` and `\_replacestringsB` is run in a loop.
-   It finishes processing or appends next part to `\_tmptoks` separated by
+   It finishes processing or appends the next part to `\_tmptoks` separated by
    <textB> and continues loop. The final part of the macro removes the last `?`
-   from resulting `\_tmptoks` and defines new version of the `\foo`.
+   from resulting `\_tmptoks` and defines a new version of the `\foo`.
    \_cod -----------------------------
 
 \_newtoks\_tmptoks
@@ -248,11 +248,11 @@
    \endtt
    You can use expandable \`\expr``{<expression>}` for analogical purposes.
    It expands to the value of the `<expression>` at expand processor level
-   with \`\_decdigits` digits after decimal point.
+   with \`\_decdigits` digits after the decimal point.
    The `<expression>` can include `+-*/()` and decimal numbers in common syntax.
 
    The usage of prefixed versions \`\_expr` or \`\_bp` is more recommended
-   because user can re-define the control sequences `\expr` or `\bp`.
+   because a user can re-define the control sequences `\expr` or `\bp`.
    \_cod -----------------------------
 
 \_def\_decdigits{3} % digits after decimal point in \_bp and \_expr outputs.

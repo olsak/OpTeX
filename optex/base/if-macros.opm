@@ -1,17 +1,17 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \newif {Special if-macros, is-macros and loops <2020-05-22>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
-   The \`\newif` macro implements boolean value. 
+   The \`\newif` macro implements boolean value.
    It works as in plain \TeX. It means that
    after `\newif\ifxxx` you can use `\xxxtrue` or
    `\xxxfalse` to set the boolean value and use `\ifxxx true\else false\fi`
    to test this value. The default value is false.
 
    The macro \`\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
-   `\_xxxfalse`. This means that it is usable for internal name space 
+   `\_xxxfalse`. This means that it is usable for the internal namespace
    (`_`prefixed macros).
    \_cod ----------------------------
 
@@ -48,7 +48,7 @@
    better (you can use `\else` clause after the `\ifsomething`).
 
    There are public version `\loop...\repeat` and private version
-   \`\_loop` ...\`\_repeat`. You cannot mix both versions in one loop. 
+   \`\_loop` ...\`\_repeat`. You cannot mix both versions in one loop.
 
    The `\loop` macro keeps its original plain TeX meaning. It is not
    expandable and nested `\loop`s are possible only in a \TeX/ group.
@@ -81,7 +81,7 @@
    private variants use \`\_do` separator instead `\do` separator.
    \_cod -----------------------------
 
-\_newcount\_frnum        % the numeric variable used in \fornum 
+\_newcount\_frnum        % the numeric variable used in \fornum
 \_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
 
 \_long\_def\_foreach #1\_do #2#{\_isempty{#2}\_iftrue
@@ -117,7 +117,7 @@
    }%
    \_fornumB{#3}{#1}%
 }
-\_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_frnum \_getforstack \_else 
+\_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_frnum \_getforstack \_else
    \_ea\_fbody\_ea{\_the\_frnum}%
    \_immediateassignment\_global\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax
    \_afterfi{\_fornumB{#1}{#2}}\_fi
@@ -132,11 +132,11 @@
    \begtt
    \foreach ABC \do {\fornum 1..5 \do {letter:#1, number: ##1. }}
    \endtt
-   Implementation note: 
+   Implementation note:
    we cannot use \TeX/-groups for nesting levels because we want to do the
    macros expandable. We must implement a special for-stack which saves the
    data needed by `\foreach` and `\fornum`. The \`\_putforstack` is used
-   when `\for*` is initialized and \`\_getforstack` is used when the 
+   when `\for*` is initialized and \`\_getforstack` is used when the
    `\for*` macro ends. The \`\_forlevel` variable keeps the current nesting
    level. If it is zero, then we need not save nor restore any data.
    \_cod ----------------------------
@@ -146,7 +146,7 @@
    \_ifnum\_forlevel>0
       \_sxdef{_frnum:\_the\_forlevel\_ea}{\_the\_frnum}%
       \_global\_slet{_fbody:\_the\_forlevel}{_fbody}%
-   \_fi 
+   \_fi
    \_global\_advance\_forlevel by1
 }}
 \_def\_getforstack{\_immediateassigned{%
@@ -186,25 +186,25 @@
    \^`\isdefined`, \^`\isinlist`, \^`\isfile` and \^`\isfont`
    with common syntax:
    \begtt \catcode`\<=13
-   \issomething <params> \iftrue <codeA> \else <codeB> \fi 
-   or 
+   \issomething <params> \iftrue <codeA> \else <codeB> \fi
+   or
    \issomething <params> \iffalse <codeB> \else <codeA> \fi
    \endtt
    The `\else` part is optional. The `<codeA>` is processed if
    `\issomething<params>` generates true condition. The `<codeB>`
    is processed if `\issomething<params>` generates false condition.
 
-   The `\iftrue` or `\iffalse` is an integral part of this syntax 
+   The `\iftrue` or `\iffalse` is an integral part of this syntax
    because we need to keep skippable nested `\if` conditions.
 
-   Implementation note: 
+   Implementation note:
    we read this `\iftrue` or `\iffalse` into unseparated parameter and repeat
    it because we need to remove an optional space before this command.
 
    \medskip\noindent
    \`\isempty` `{<text>}\iftrue`
    is true if the `<text>` is empty. This macro is expandable.\nl
-   \`\istoksempty` `<tokens variable>\iftrue` 
+   \`\istoksempty` `<tokens variable>\iftrue`
    is true if the `<tokens variable>` is empty. It is expandable.
    \_cod ----------------------------
 
@@ -213,14 +213,14 @@
 \_public \isempty \istoksempty ;
 
    \_doc ----------------------------
-   \`\isequal` `{<textA>}{<textB>}\iftrue` 
+   \`\isequal` `{<textA>}{<textB>}\iftrue`
    is true if the <textA> and <textB> are
    equal, only from strings point of view, category codes are ignored.
    The macro is expandable.
    \_cod ----------------------------
 
 \_def\_isequal#1#2#3{\_directlua{%
-   if "\_luaescapestring{\_detokenize{#1}}"=="\_luaescapestring{\_detokenize{#2}}" 
+   if "\_luaescapestring{\_detokenize{#1}}"=="\_luaescapestring{\_detokenize{#2}}"
    then else tex.print("\_nbb unless") end}#3}
 \_public \isequal ;
 
@@ -242,11 +242,11 @@
 
    \_doc ----------------------------
    \`\isinlist` `\list{<text>}\iftrue` is true if the
-   `<text>` is included the macro body of the `\list`. 
-   The category code are relevant here. The macro is not expandable.
+   `<text>` is included the macro body of the `\list`.
+   The category codes are relevant here. The macro is not expandable.
    \_cod ----------------------------
 
-\_long\_def\_isinlist#1#2{\_begingroup 
+\_long\_def\_isinlist#1#2{\_begingroup
    \_long\_def\_tmp##1#2##2\_end/_%
         {\_endgroup\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi}%
    \_ea\_tmp#1\_endlistsep#2\_end/_%
@@ -269,8 +269,8 @@
 
    \_doc -----------------------------
    \`\isfont` `{<fontname or [fontfile]>}\iftrue`
-   is true if given font exists. The result of this testing 
-   is saved to the \`\_ifexistfam`. 
+   is true if a given font exists. The result of this testing
+   is saved to the \`\_ifexistfam`.
    \_cod -----------------------------
 
 \_newifi \_ifexistfam
@@ -285,9 +285,9 @@
 \_public \isfont ;
 
    \_doc ----------------------------
-   The last macro \`\isnextchar` `<char>{<codeA>}{<codeB>}` 
-   has different syntax than all others is-macros.
-   It executes `<codeA>` if next character is equal to <char>. 
+   The last macro \`\isnextchar` `<char>{<codeA>}{<codeB>}`
+   has a different syntax than all other is-macros.
+   It executes `<codeA>` if next character is equal to <char>.
    Else the `<codeB>` is executed. The macro is not expandable.
    \_cod ----------------------------
 
@@ -299,7 +299,7 @@
 \_public \isnextchar ;
 
 
-\_endcode 
+\_endcode
 
 2020-05-22 \foreach, \fornum: all settings are global, independent on TeX group
 2020-05-06 \isnextchar: \let\tmp=#1 -> \let\tmp= #1 (bug fix, #1 should be space)

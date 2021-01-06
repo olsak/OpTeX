@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \newdimen {Allocators for registers <2020-05-12>} % loaded in format
 
@@ -31,11 +31,11 @@
 \_countdef\_famalloc=18    \_famalloc=3
 
    \_doc -----------------------------
-   The common allocation macro 
+   The common allocation macro
    \`\_allocator` `\<sequence> {<type>} \<primitive declarator>`
-   is defined. This idea was used in classical plain \TeX/ by 
-   Donald Knuth too but the macro from plain \TeX/ seems to be 
-   more complicated:). 
+   is defined. This idea was used in classical plain \TeX/ by
+   Donald Knuth too but the macro from plain \TeX/ seems to be
+   more complicated:).
    \_cod -----------------------------
 
 \_def\_allocator #1#2#3{%
@@ -49,7 +49,7 @@
 }
 
    \_doc -----------------------------
-   The allocation macros 
+   The allocation macros
    \`\newcount`, \`\newdimen`, \`\newskip`, \`\newmuskip`, \`\newbox`,
    \`\newtoks`, \`\newread`, \`\newwrite` and \`\newfam`
    are defined here.
@@ -72,7 +72,7 @@
    \_cod -----------------------------
 
 \_newcount\_insertalloc   \_insertalloc=255
-\_chardef\_insertmin = 201 
+\_chardef\_insertmin = 201
 
 \_def\_newinsert #1{%
    \_global\_advance\_insertalloc by-1
@@ -90,7 +90,7 @@
    have their counter allocated by the `\newcount` macro.
    \_cod -----------------------------
 
-\_newcount \_attributealloc  \_attributealloc=0 
+\_newcount \_attributealloc  \_attributealloc=0
 \_chardef\_maiattribute=\_maicount
 \_def\_newattribute #1{\_allocator #1{attribute}\_attributedef}
 
@@ -112,7 +112,7 @@
    A few registers are initialized like in plain\TeX/. We absolutely
    don't support the `@`category dance, so `\z@skip`
    `\z@`, `\p@` etc. are not defined in \OpTeX/. If you need such
-   control sequences then you can initailaize them by `\load[plain-at]`.
+   control sequences then you can initialize them by `\load[plain-at]`.
 
    Only the \`\_zo` and \`\_zoskip` (equivalents to `\z@` and `\z@skip`)
    are declared here and used in some internal macros of \OpTeX/
@@ -130,22 +130,22 @@
 
 \_endcode %---------------------------------------------------
 
-Like plain\TeX, the allocators `\newcount`, `\newwrite`, etc. are defined. 
+Like plain\TeX, the allocators `\newcount`, `\newwrite`, etc. are defined.
 The registers are allocated from 256 to the `\_mai<type>` which is 65535 in
 \LuaTeX/.
 
 Unlike in Plain\TeX/, the mentioned allocators are not `\outer`.
 
 User can use `\dimen0` to `\dimen200` and similarly for `\skip`,
-`\muskip`, `\box` and `\toks` directly. User can use 
+`\muskip`, `\box`, and `\toks` directly. User can use
 `\count20` to `\count200` directly too. This is the same
-philosophy like in old plain\TeX/, but the range of directly used registers
+philosophy as in old plain\TeX/, but the range of directly used registers
 is wider.
 
-Inserts are allocated form 254 to 201 using `\newinsert`.
+Inserts are allocated from 254 to 201 using `\newinsert`.
 
 You can define your own allocation concept (for example for allocation of
-arrays) from top of registers array. The example shows a definition of
+arrays) from the top of the registers array. The example shows a definition of
 the array-like declarator of counters.
 
 \nobreak
