@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \openref {File for references <2020-02-14>} % preloaded in format
 
@@ -13,16 +13,16 @@
 \_def\_inputref {%
   \_isfile{\_jobname.ref}\_iftrue
      \_input {\_jobname.ref}
-     \_gfnotenum=0 \_lfnotenum=0 \_mnotenum=0 
+     \_gfnotenum=0 \_lfnotenum=0 \_mnotenum=0
      \_openrefA{\_string\_inputref}%
   \_fi
 }
 
    \_doc --------------------------
-   If the file does not exists then it is not created by default. It means that if you
+   If the file does not exist then it is not created by default. It means that if you
    process a document without any forward references then no `\jobname.ref`
-   file is created because it is unusable. The \^`\_wref` macro is dummy in
-   such case.
+   file is created because it is unusable. The \^`\_wref` macro is a dummy in
+   this case.
    \_cod --------------------------
 
 \_def\_wrefrelax#1#2{}
@@ -31,10 +31,10 @@
    \_doc ---------------------
    If a macro needs to create and to use `.ref` file then such macro must use
    \`\openref`. When the file is created (using internal \`\_openrefA`) then
-   the \`\_wref` `\<macro>{<data>}` is redefined in order to 
+   the \`\_wref` `\<macro>{<data>}` is redefined in order to
    save the line `\<macro><data>` to the `.ref` file using asynchronous
-   `\write` primitive. Finally, the `\_openref` destroys itself, because we 
-   need not to open the file again.
+   `\write` primitive. Finally, the `\_openref` destroys itself, because we
+   need not open the file again.
    \_cod ---------------------
 
 \_def\_openref {%
@@ -42,7 +42,7 @@
   \_gdef\_openref{}%
 }
 \_def\_openrefA #1{%
-   \_immediate\_openout\_reffile="\_jobname.ref"\_relax 
+   \_immediate\_openout\_reffile="\_jobname.ref"\_relax
    \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
    \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file (#1)}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
@@ -50,17 +50,17 @@
 \def\openref{\_openref}
 
    \_doc ----------------------
-   We are using convention that the macros used in `.ref` file are named
-   `\_X<foo>`. If there is a new version of \OpTeX/ with different collection
-   of such macros then we don't want to read the `.ref` files produced by an 
-   old version of \OpTeX/ or by OPmac. So first line of `.ref` file is in 
+   We are using the convention that the macros used in `.ref` file are named
+   `\_X<foo>`. If there is a new version of \OpTeX/ with a different collection
+   of such macros then we don't want to read the `.ref` files produced by an
+   old version of \OpTeX/ or by OPmac. So the first line of `.ref` file is in
    the form
    \begtt \catcode`\<=13
    \Xrefversion{<version>}
-   \endtt 
+   \endtt
    We can check the version compatibility by this macro.
-   Because OPmac does not understand `\_Xrefversion` we use 
-   \`\Xrefversion` (with different number of `<version>` form OPmac) here.
+   Because OPmac does not understand `\_Xrefversion` we use
+   \`\Xrefversion` (with a different number of `<version>` form OPmac) here.
    The result: OPmac skips the `.ref` files produced by \OpTeX/ and vice
    versa.
    \_cod ----------------------
@@ -83,13 +83,13 @@
       \def\Xfig#1#2#3{\addto\toflist{\tofline{#1}{#2}{#3}}}
    }
    \endtt
-   We must read `<definition of your ref macros>` when catcode of `#` is 12
-   because we needn't to duplicate each `#` in the `.ref` file.
+   We must read `<definition of your ref macros>` when the catcode of `#` is 12
+   because we needn't duplicate each `#` in the `.ref` file.
    \_cod \_fin -----------------
 
 \_def\_refdecl{\_bgroup \_catcode`\#=12 \_refdeclA}
 \_def\_refdeclA #1{\egroup\_openref
-   \_immediate\_write\_reffile {\_pcent\_space \_string \refdecl:}%  
+   \_immediate\_write\_reffile {\_pcent\_space \_string \refdecl:}%
    \_immediate\_write\_reffile {\_detokenize{#1}}%
 }
 \_public \refdecl ;
@@ -97,10 +97,10 @@
 \_endcode % ================================================
 
 
-The `.ref` file has the name `\jobname.ref` and 
-it saves information about references, TOC lines, etc. 
+The `.ref` file has the name `\jobname.ref` and
+it saves information about references, TOC lines, etc.
 All data needed in next \TeX/ run are saved here.
-\OpTeX/ reads this file at the beginning of the document 
+\OpTeX/ reads this file at the beginning of the document
 (using `\everyjob`) if such file exists.
 The `.ref` file looks like:
 
@@ -116,22 +116,22 @@ The `.ref` file looks like:
 ...
 \endtt
 %
-where <gpageno> is internal page number globally numbered from one and 
-`<pageno>` is a page number (`\the\pageno`) used in pagination (they may be differ). 
+where <gpageno> is internal page number globally numbered from one and
+`<pageno>` is a page number (`\the\pageno`) used in pagination (they may differ).
 Each page begins with \^`\_Xpage`.
 The `<label>` is a label used by user in `\label[<label>]` and `<text>` is a
 text which should be referenced (the number of section or table, for
-example `2.3.14`). The `<title>` is a title of the chapter (`<level>`=1,
-`<type>`=`chap`), section (`<level>`=2, `<type>`=`sec`), subsection 
-(`<level>`=3, `<type>`=`secc`). The \^`\_Xpage` is written at begining of each
+example `2.3.14`). The `<title>` is the title of the chapter (`<level>`=1,
+`<type>`=`chap`), section (`<level>`=2, `<type>`=`sec`), subsection
+(`<level>`=3, `<type>`=`secc`). The \^`\_Xpage` is written at the beginning of each
 page, the `\_Xtoc` is written when chapter or section or subsection title
 exists on the page and `\_Xlabel` when labeled object prefixed by
-`\label[<label>]` exists on the page. 
+`\label[<label>]` exists on the page.
 
 The `.ref` file is read when the processing of the document starts using
-`\everyjob`. It is read, removed and opened to writing immediately.
-But the `.ref` file should be missing. If none forward references are needed 
+`\everyjob`. It is read, removed, and opened to writing immediately.
+But the `.ref` file should be missing. If none forward references are needed
 in the document then `.ref` file is not created. For example, you only want
 to test a simple plain \TeX/ macro, you create `test.tex` file, you do
-`optex test` and you don't need to see empty `test.ref` file in your directory. 
+`optex test` and you don't need to see an empty `test.ref` file in your directory.
 

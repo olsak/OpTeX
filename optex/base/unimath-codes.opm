@@ -382,26 +382,16 @@
 
 \_endcode
 
-\secc A few observations
+\secc More Unicode-math examples
 
-\medskip\noindent{\bf 1.}
-XITSmath-bold needs correction: the norm symbol $\|x\|$ is missing here.
-So, you can define:
+Example of using additional math font is in section 5.3 in the
+\ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]{\tt optex-math.pdf} documentation
 
-\begtt
-\def\_boldmath{%
-   \loadumathfamily 1 {[xitsmath-bold]}{} % Base font
-   \loadmathfamily  4 rsfs                % script
-   \loadumathfamily 5 {[xitsmath-regular]}{}
-   \def\|{\Udelimiter 0 5 "02016 }%       % norm delimiter from family 5
-   \setmathdimens
-}
-\endtt
-
-\noindent{\bf 2.} You can combine more Unicode math fonts in single formula using
+You can combine more Unicode math fonts in single formula simply
+by the `\addUmathfont` macro, see
 \ulink[http://petr.olsak.net/optex/optex-tricks.html#addumathfont]{\OpTeX/ trick 0030}.
 
-\medskip\noindent{\bf 3.} See \url{http://tex.stackexchange.com/questions/308749/}
+See \url{http://tex.stackexchange.com/questions/308749}
 for technical details about Unicode-math.
 
 \_endinput

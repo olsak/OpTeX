@@ -1,6 +1,6 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2020-04-22>} % preloaded in format 
+\_codedecl \ulink {Hyperlinks <2020-04-22>} % preloaded in format
 
    \_doc ----------------------------
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
@@ -8,9 +8,9 @@
    command in not used, then `\dest` does nothing else it is set to `\_destactive`.
    The \`\_destactive` is implemented by `\_pdfdest` primitive. It creates a box
    in which the destination is shifted by \`\_destheight`. The reason is that
-   the destination is exactly at top border of the PDF viewer but we want to see
-   the line where destination is. The destination box is positioned by
-   different way dependent on current vertical or horizontal mode.
+   the destination is exactly at the top border of the PDF viewer but we want to see
+   the line where the destination is. The destination box is positioned by a
+   different way dependent on the current vertical or horizontal mode.
    \_cod ----------------------------
 
 \_def\_destheight{1.4em}
@@ -28,7 +28,7 @@
    \`\link``[<type>:<spec>]{<color>}{<text>}` creates an internal link to \^`\dest`
    with the same `<type>:<spec>`. You can have more links with the same
    `<type>:<spec>` but only one `\dest` in the document. If \^`\hyperlinks`
-   command is not used, then `\link` only prints `<text>` else it is set to 
+   command is not used, then `\link` only prints `<text>` else it is set to
    `\_linkactive`.
    The \`\_linkactive` is implemented by `\_pdfstartlink...\_pdfendlink`
    primitives.
@@ -48,7 +48,7 @@
    \`\ulink``[<url>]{<text>}` creates external link. It prints only the `<text>` by default but
    the \^`\hyperlinks` declaration defines it as \`\_urlactive``[url:<url>]{<text>}`.
    The external link is created by the `\_pdfstartlink...\pdfendlink` primitives.
-   The `<url>` is detokenized with `\escapechar=-1` before it is used, so 
+   The `<url>` is detokenized with `\escapechar=-1` before it is used, so
    `\%`, `\#` etc. can be used in the `<url>`.
    \_cod ----------------------------
 
@@ -67,7 +67,7 @@
    expands to `attr{/C[? ? ?] /Border[0 0 .6]}` if the
    `\_<type>border` (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
    \`\_pgborder`, \`\_urlborder`, \`\_fntborder` or \`\_fnfborder`)
-   is defined. User can define it in
+   is defined. Users can define it in
    order to create colored frames around active links. For example
    `\def\_tocborder{1 0 0}` causes red frames in TOC (not printed, only visible
    in PDF viewers).
@@ -96,9 +96,9 @@
    \`\url``{<url>}` does approximately the same as \^`\ulink``[<url>]{<url>}`, but
    more work is done before the `\ulink` is processed. The link-version of <url>
    is saved to `\_tmpa` and the printed version in `\_tmpb`. The printed
-   version is modified in order to set a breakpoints to special places of the
-   `<url>`. For example `//` is replaced by `\_urlskip/\_urlskip/\_urlbskip` 
-   where `\urlskip` adds a small nobreakable glue between these two slashes and
+   version is modified in order to set breakpoints to special places of the
+   `<url>`. For example `//` is replaced by `\_urlskip/\_urlskip/\_urlbskip`
+   where `\urlskip` adds a small nonbreakable glue between these two slashes and
    before them and `\_urlbskip` adds a breakable glue after them.
    \nl
    The text version of the `<url>` is printed in \`\_urlfont`.
@@ -127,27 +127,27 @@
 \_endcode % ----------------------------------------
 
 
-There are four types of the internal links and one type of external link:
+There are four types of internal links and one type of external link:
 
 \begitems
-* `ref:<label>`     -- the destination is created when `\label[<label>]` is used, 
+* `ref:<label>`     -- the destination is created when `\label[<label>]` is used,
                        see also the section \ref[references].
-* `toc:<tocrefnum>` -- the destination is created at chap/sec/secc titles, 
+* `toc:<tocrefnum>` -- the destination is created at chap/sec/secc titles,
                        see also the section \ref[maketoc].
 * `pg:<gpageno>`    -- the destination is created at beginning of each page,
                        see also the section \ref[output].
-* `cite:<bibnum>`   -- the destination is created in bibliography reference, 
+* `cite:<bibnum>`   -- the destination is created in bibliography reference,
                        see also the section \ref[bib].
 * `url:<url>`       -- used by `\url` or `\ulink`,
                        see also the end of this section.
 \enditems
 
-The `<tocrefnum>`, `<gpageno>` and `<bibnum>` are numbers starting from one and
-globally incremented by one in whole document. The registers \^`\tocrefnum`,
+The `<tocrefnum>`, `<gpageno>`, and `<bibnum>` are numbers starting from one and
+globally incremented by one in the whole document. The registers \^`\tocrefnum`,
 \^`\gpageno` and \^`\bibnum` are used for these numbers.
 
 When a chap/sec/secc title is prefixed by `\label[<label>]`, then both types
-of internal links are created at the same destination place: 
+of internal links are created at the same destination place:
 `toc:<tocrefnum>` and `ref:<label>`.
 
 \_endinput
