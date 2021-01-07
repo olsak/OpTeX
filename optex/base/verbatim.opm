@@ -1,11 +1,11 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \begtt {Verbatim <2020-11-13>} % preloaded in format
 
    \_doc ----------------------------
-   The internal parameters 
+   The internal parameters
    \`\_ttskip`, \`\_ttpenalty`, \`\_viline`, \`\_vifile` and \`\_ttfont`
-   for verbatim macros are set. 
+   for verbatim macros are set.
    \_cod ----------------------------
 
 \_def\_ttskip{\_medskip}           % space above and below \begtt, \verbinput
@@ -21,7 +21,7 @@
    does the real work.
 
    The \`\_printinverbatim``{<text>}` macro is used for `\code{<text>}` printing and for
-   \code{`}<text>\code{`} printing. It is defined as `\hbox`, so the in-verbatim <text> 
+   \code{`}<text>\code{`} printing. It is defined as `\hbox`, so the in-verbatim <text>
    will be never broken. But you can re-define this macro.
 
    When `\code` occurs in PDF outlines then it does the same as `\detokenize`.
@@ -29,12 +29,12 @@
    \^`\_regoul` token list before `\edef`.
 
    The `\code` is not `\proteced` because we want it expands to
-   `\unexpanded{\code<space>{<text>}}` in `\write` parameters. This protect the 
+   `\unexpanded{\code<space>{<text>}}` in `\write` parameters. This protect the
    expansions of the `\code` parameter (like `\\`, `\^` etc.).
    \_cod ----------------------------
 
 \_def\_code#1{\_unexpanded\_ea{\_csname _code \_endcsname{#1}}}
-\_protected\_sdef{_code }#1{{\_escapechar=-1 \_ttfont \_the\_everyintt \_relax 
+\_protected\_sdef{_code }#1{{\_escapechar=-1 \_ttfont \_the\_everyintt \_relax
    \_ea\_printinverbatim\_ea{\_detokenize{#1}}}}
 \_def\_printinverbatim#1{\_leavevmode\_hbox{#1}}
 
@@ -42,7 +42,7 @@
 \_public \code ;
 
    \_doc ----------------------------
-   The \`\_setverb` macro sets all catcodes to \"verbatim mode". It should be used only 
+   The \`\_setverb` macro sets all catcodes to \"verbatim mode". It should be used only
    in a group, so we prepare a new catcode table with \"verbatim" catcodes and we define
    it as\nl `\_catcodetable`\`\_verbatimcatcodes`. After the group is finished then
    original catcode table is restored.
@@ -51,7 +51,7 @@
 \_newcatcodetable \_verbatimcatcodes
 \_def\_setverb{\_begingroup
    \_def\do##1{\_catcode`##1=12 }
-   \_dospecials   
+   \_dospecials
    \_savecatcodetable\_verbatimcatcodes % all characters are normal
    \_endgroup
 }
@@ -62,9 +62,9 @@
    \`\activettchar``<char>` saves original catcode of previously declared `<char>` (if
    such character was declared) using \`\_savedttchar` and \`\_savedttcharc`
    values. Then new such values are stored. The declared character is activated
-   by `\_adef` as a macro (active character) which opens a group, 
-   does `\_setverb` and other settings and reads its parameter until second the same 
-   character. This is done by the \`\_readverb` macro. Finally it prints scanned
+   by `\_adef` as a macro (active character) which opens a group,
+   does `\_setverb` and other settings and reads its parameter until second the same
+   character. This is done by the \`\_readverb` macro. Finally, it prints scanned
    `<text>` by \^`\_printinverbatim` and closes group. Suppose that `\activettchar"` is
    used. Then the following work is schematically done:
    \begtt
@@ -85,13 +85,13 @@
 \_public \activettchar ;
 
    \_doc ----------------------------
-   \`\begtt` is defined only as public. We don't need private `\_begtt` variant.
-   This macro is defined by `\eoldef`, so user can put a parameter at the
+   \`\begtt` is defined only as public. We don't need a private `\_begtt` variant.
+   This macro is defined by `\eoldef`, so users can put a parameter at the
    same line where `\begtt` is. This `#1` parameter is used after `\_everytt`
-   parameters settings, so user can change them locally.
+   parameters settings, so users can change them locally.
 
    The `\begtt` macro opens group, does \^`\_setverb` and another preprocessing, sets
-   `\endlinechar` to `^^J` and reads the following text in verbatim mode 
+   `\endlinechar` to `^^J` and reads the following text in verbatim mode
    until \`\endtt` occurs. This scanning is done by \`\_startverb` macro which is
    defined as:
    \begtt \adef/{\bslash}
@@ -99,25 +99,25 @@
    \endtt
    We must to ensure that the backslash in `\endtt` has category 12 (this is a
    reason of the `\ea` chain in real code).
-   The `#2` is something between `\endtt` and end of the same line and it is simply
+   The `#2` is something between `\endtt` and the end of the same line and it is simply
    ignored.
 
    The `\_startverb` puts the scanned data to \`\_prepareverbdata`. It sets the data
    to `\_tmpb` without changes by default, but you should re-define it in order
-   to do special changes, if you want. (For example, \^`\hisyntax` redefines
+   to do special changes if you want. (For example, \^`\hisyntax` redefines
    this macro.) The scanned data have `^^J` at each end of line and all spaces are
-   active characters (defined as {\visiblesp`\ `}). 
-   Other characters have normal category 11 or 12.  
+   active characters (defined as {\visiblesp`\ `}).
+   Other characters have normal category 11 or 12.
 
    When `\_prepareverbdata` finishes then `\_startverb` runs `\_printverb` loop
    over each line of the data and does a final work: last skip plus `\noindent`
-   in the next paragraph. 
+   in the next paragraph.
    \_cod ---------------------------
 
 \_eoldef \begtt#1{\_par \_wipeepar \_setxhsize
    \_vskip\_parskip \_ttskip
    \_begingroup
-   \_setverb 
+   \_setverb
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
@@ -141,12 +141,12 @@
    `\begtt...\endtt` and from `\verbinput` too.
 
    The \^`\_testcommentchars` replaces the following `\_iftrue` to
-   `\_iffalse` by default unless the \~`\commentchars` are set. So, main body
-   of the loop is written in `\_else` part of the `\_iftrue` condition.
+   `\_iffalse` by default unless the \~`\commentchars` are set. So, the main body
+   of the loop is written in the `\_else` part of the `\_iftrue` condition.
    The \^`\_printverbline``{<line>}` is called here.
 
    The \`\_printverbline``{<line>}` expects that it starts in vertical mode and it must
-   do `\par` in order to return the vertical mode. The \`\_printverblinenum`
+   do `\par` to return the vertical mode. The \`\_printverblinenum`
    is used here: it does nothing when `\_ttline`\code{<0} else it prints the line
    number using `\_llap`.
 
@@ -179,11 +179,11 @@
    \_doc ----------------------------
    Macro \`\verbinput` uses a file read previously or opens the given file. Then
    it runs the parameter scanning by \`\_viscanparameter` and \`\_viscanminus`.
-   Finally the \`\_doverbinput` is run. At begining of `\_doverbinput`, we have
+   Finally the \`\_doverbinput` is run. At the beginning of `\_doverbinput`, we have
    `\_viline`= number of lines already read using previous `\verbinput`,
    `\_vinolines`= the number of lines we need to skip and `\_vidolnes`= the
    number of lines we need to print.
-   Similar preparation is done as in `\begtt` after the group is opened. Then
+   A similar preparation is done as in `\begtt` after the group is opened. Then
    we skip \`\_vinolines` lines in a loop a and we read \`\_vidolines` lines. The
    read data is accumulated into `\_tmpb` macro. The next steps are equal to
    the steps done in \^`\_startverb` macro: data are processed via
@@ -253,7 +253,7 @@
    \_ifnum\_vidolines=0 \_tmpnum=-1 \_fi
    \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_fi
    \_loop \_ifnum\_tmpnum<\_vidolines\_space
-            \_vireadline 
+            \_vireadline
             \_ifnum\_vidolines=0 \_else\_advance\_tmpnum by1 \_fi
             \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_else \_visaveline \_fi %% save line
             \_repeat
@@ -274,13 +274,13 @@
    \_doc -----------------------------
    If the language of your code\label[commentchars]\wlabel{}
    printed by \^`\verbinput` supports the
-   format of comments started by two characters from beginning of the
+   format of comments started by two characters from the beginning of the
    line then you can set these characters by \^`\commentchars``<first><second>`.
-   Such comments are printed in non-verbatim mode without these two
-   characters and they look like the verbatim printing is interrupred
+   Such comments are printed in the non-verbatim mode without these two
+   characters and they look like the verbatim printing is interrupted
    at the places where such comments are.
    See the section~\ref[lua] for good illustration.
-   The file `optex.lua` is read by single command
+   The file `optex.lua` is read by a single command
    `\verbinput (4-) optex.lua` here and the `\commentchars --` was set before it.
 
    If you need to set a special character by \^`\commentchars` then you must
@@ -293,10 +293,10 @@
    \endtt
 
    There is one limitation when \TeX/ interprets the comments declared by
-   \^`\commentchars`. Each block of comments are accummulated to one line
+   \^`\commentchars`. Each block of comments is accumulated to one line
    and then it is re-interpreted by \TeX. So, the ends of lines in the
    comments block are lost. You cannot use macros which
-   need to scan end of lines, for example `\begtt...\endtt` inside comments
+   need to scan end of lines, for example `\begtt...\endtt` inside the comments
    block does not work. The character `%` is ignored in comments but you can use `\%`
    for printing or `%` alone for de-activating `\_endpar` from empty
    comment lines.
@@ -304,7 +304,7 @@
    Implementation: The \`\commentchars``<first><second>` redefines the \`\_testcommentchars`
    used in \^`\_printverb` in order to it removes the following `\_iftrue`
    and returns `\_iftrue` or `\_iffalse` depending on the fact that
-   the comment characters are or aren't present at the beginning ot tested line.
+   the comment characters are or aren't present at the beginning of tested line.
    If it is true (`\ifnum` expands to `\ifnum 10>0`) then the rest of the
    line is added to the \`\_vcomments` macro.
 
@@ -314,7 +314,7 @@
 
    The accumulated comments are printed whenever the non-comment line
    occurs. This is done by \`\_printcomments` macro.
-   You can re-define it, but main idea must be kept: it is printed in the
+   You can re-define it, but the main idea must be kept: it is printed in the
    group, `\_reloding \_rm` initializes normal font, `\catcodetable0`
    returns to normal catcode table used before `\verbinput` is started, and
    the text accumulated in `\_vcomments` must be printed by
@@ -354,7 +354,7 @@
 
 \_public \visiblesp ;
 
-\_endcode 
+\_endcode
 
 \_endinput
 

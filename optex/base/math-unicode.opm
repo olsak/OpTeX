@@ -101,7 +101,7 @@
    \begtt
    \loadmath{[xitsmath-regular]}
    \def\_boldmath{%
-      \_loadumathfamily 1 {[XITSmath-Bold]}{} % Base font
+      \_loadumathfamily 1 {[xitsmath-bold]}{} % Base font
       \_loadmathfamily 4  rsfs % script
       \_loadumathfamily 5 {[xitsmath-regular]}{}
       \_def\|{\_Udelimiter 0 5 "02016 }%      % norm delimiter from family 5
@@ -212,7 +212,7 @@ if `<normal-font>` was sucessully loaded by the previous `\loadmath`. For exampl
 \endtt
 There are very few Unicode-math fonts with full \^`\boldmath` support.
 I know only XITSMath-Bold and KpMath-Bold. If \^`\loadboldmath` is not used
-then \"faked bold" of \^`\normalmath` is used by default.
+then \"faked bold" created from \^`\normalmath` is used by default.
 
 The \^`\loadmath` macro was succesfully tested on:
 

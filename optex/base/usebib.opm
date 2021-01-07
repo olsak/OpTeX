@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \MakeReference {Reading bib databases <2020-03-13>} % loaded on demand by \usebib
 
@@ -43,7 +43,7 @@
         \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
         \_global\_let\_addcitelist=\_writeXcite
         \_def\_tmp##1[*]##2\_relax{\_def\_tmp{##2}}\_expandafter\_tmp\_citelist[*]\_relax
-        \_ifx\_tmp\_empty\_else % there was \nocite[*] used. 
+        \_ifx\_tmp\_empty\_else % there was \nocite[*] used.
            \_setbox0=\_vbox{\_hsize=\_maxdimen \_def\_citelist{}\_adef@{\_readbibentry}%
            \_input #3.bib
            \_expandafter}\_expandafter\_def\_expandafter\_citelist\_expandafter{\_citelist}%
@@ -91,7 +91,7 @@
 \_def\lb@compare#1\lb@eoe#2\lb@eoe{% SpecialSort:
   \_ifx\lb@sorttype\lb@namestring
      \_ifx\_sortfield\_undefined \lb@compareA#1\lb@eoe#2\lb@eoe
-     \_else 
+     \_else
         \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@entrykey\lb@temp
         \_ifx\lb@temp\_empty \_toks1={#1\lb@eoe}\_else \_toks1=\_ea{\lb@temp\lb@eoe}\_fi
         \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@currententry\lb@temp
@@ -113,7 +113,7 @@
 \_catcode`\@=\_tmpnum
 
    \_doc -----------------------------
-   Main action per every entry.
+   Main action per each entry.
    \_cod -----------------------------
 
 \_def\MakeReference{\_par \_bibskip
@@ -123,33 +123,33 @@
      \_bibmark=\_ea{\_tmpb}%
   \_else \_bibmark={}\_fi
   \_edef\_tmpb{\EntryKey}%
-  \_noindent \_dest[cite:\_the\_bibnum]\_printlabel\EntryKey 
-  \_printbib 
-  {%  
+  \_noindent \_dest[cite:\_the\_bibnum]\_printlabel\EntryKey
+  \_printbib
+  {%
      \_RetrieveFieldIn{entrytype}\_entrytype
      \_csname _print:BEGIN\_endcsname
-     \_isdefined{_print:\_entrytype}\_iftrue 
+     \_isdefined{_print:\_entrytype}\_iftrue
         \_csname _print:\_entrytype\_endcsname
-     \_else 
+     \_else
         \_ifx\_entrytype\_empty \_else
            \_opwarning{Entrytype @\_entrytype\_space from [\EntryKey] undefined}%
            \_csname _print:misc\_endcsname
      \_fi\_fi
      \_csname _print:END\_endcsname
-     \_ifx\_wref\_wrefrelax\_else 
+     \_ifx\_wref\_wrefrelax\_else
          \_immediate\_wref\_Xbib{{\EntryKey}{\_the\_bibnum}{\_the\_bibmark}}\_fi
   }\_par
 }
 
    \_doc -----------------------------
-   The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv` 
+   The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv`
    commands used in the style files:
    \_cod -----------------------------
 
 \_def\_bprinta {\_bprintb*}
 \_def\_bprintb #1[#2#3]{%
    \_def\_bibfieldname{#2#3}%
-   \_if!#2\_relax 
+   \_if!#2\_relax
       \_def\_bibfieldname{#3}%
       \_RetrieveFieldIn{#3}\_bibfield
       \_ifx\_bibfield\_empty\_else
@@ -177,12 +177,12 @@
 \_def\_bprintvA #1,{%
    \_if^#1^\_tmpb\_else
       \_RetrieveFieldIn{#1}\_tmp
-      \_ifx \_tmp\_empty 
+      \_ifx \_tmp\_empty
       \_else \_tmpa \_def\_tmpb{}\_def\_tmpa{}%
       \_fi
    \_ea \_bprintvA
    \_fi
-} 
+}
 \_sdef{_pp:author}{\_letNames\_authorname}
 \_sdef{_pp:editor}{\_letNames\_editorname}
 \_def\_letNames{\_let\_Firstname=\Firstname \_let\_Lastname=\Lastname
@@ -190,7 +190,7 @@
 }
 
    \_doc -----------------------------
-   Various macros + multilinguas. Note that \`\_nobibwarnlist` is used in
+   Various macros + multilingual. Note that \`\_nobibwarnlist` is used in
    \`\_bibwarning` and it is set by \^`\nobibwarning` macro.
    \_cod -----------------------------
 
@@ -205,7 +205,7 @@
 The file `usebib.opm` implements the command
 \~`\usebib/<sorttype> (<style>) <bibfiles>`
 where `<sorttype>` is one letter `c` (references ordered by citation order in
-the text) or `s` (references ordered by key in the style file), 
+the text) or `s` (references ordered by key in the style file),
 `<style>` is the part of the name `bib-<style>.opm` of the style file
 and `<bibfiles>` are one or more `.bib` file names without suffix separated by
 comma without space. Example:
@@ -215,27 +215,27 @@ comma without space. Example:
 \endtt
 
 This command reads the `<bibfiles>` directly and creates the list of
-bibliographics references (only those declared by by \~`\cite[]` or
+bibliographic references (only those declared by \~`\cite[]` or
 \~`\nocite[]` in the text). The formatting of such references is defined in the style
 file.
 
 The principle \"first entry wins" is used. Suppose `\usebib/s (simple) local,global`.
 If an entry with the same label is declared in `local.bib` and in
-`global.bib` too then the first wins. So, you can set an exceptions in your
+`global.bib` too then the first wins. So, you can set exceptions in your
 `local.bib` file for your document.
 
 The `bib-<style>.opm` declares entry types (like `@BOOK`, `@ARTICLE`) and declares
-their mandatory and optionals fields (like `author`, `title`). When
-mandatory field is missing in an entry in the `.bib` file then warning is printed on the
+their mandatory and optional fields (like `author`, `title`). When
+a mandatory field is missing in an entry in the `.bib` file then a warning is printed on the
 terminal about it. You can suppress such warnings by command
-\^`\nobibwarning`~`[<bib-labels>]`, where <bib-labels> is comma separated list
+\^`\nobibwarning`~`[<bib-labels>]`, where <bib-labels> is a comma-separated list
 of labels (without spaces) where missing mandatory fields will be no warned.
 
-Old `.bib` files may use obscure notation for accents like `{\"o}`.
+Old `.bib` files may use the obscure notation for accents like `{\"o}`.
 Recommendation: convert such old files to Unicode encoding. If you are
 unable to do this then you can set \^`\bibtexhook={`\^`\oldaccents}`.
 
-\secc Notes for bib style writers
+\secc Notes for bib-style writers
 
 The `.bib` files include records in the format:
 
@@ -255,22 +255,22 @@ reading by \LaTeX. It has worked with a set of <entry-types>, see the www
 page \url{http://en.wikipedia.org/wiki/BibTeX}. The set of entry types
 listed on this www page is de facto the Bib\TeX/ standard. The \OpTeX/ bib
 style writer must \"declare" all such entry types and more non-standard
-entry types can be declared too, if there is a good reason for doing it. The
-word \"declare" used in previous sentence means that bib style writer must
+entry types can be declared too if there is a good reason for doing it. The
+word \"declare" used in the previous sentence means that a bib-style writer must
 define the printing rules for each <entry-type>.
 The printing rules for <entry-type> include: which fields will be printed, in
-what oder, by what format they will printed on (italic, caps, etc.),
-which fields are mandatory, which are optional and which are ingnored in
+what order, by what format they will be printed on (italic, caps, etc.),
+which fields are mandatory, which are optional, and which are ignored in
 `.bib` records.
 
-The style writer can be inspired by two styles alredy done: `bib-simple.opm`
+The style writer can be inspired by two styles already done: `bib-simple.opm`
 and `bib-iso690.opm`. The second one is documented in detail in
 section~\ref[isobib].
 
 The printing rules for each <entry-type> must be declared by
 `\_sdef{_print:<entry-type>}` in `bib-<style>.opm` file.
-The `<entry-type>` have to be lowercase here. \OpTeX/ supports following
-macros for more comfortable setting of printing rules:
+The `<entry-type>` has to be lowercase here. \OpTeX/ supports following
+macros for a more comfortable setting of printing rules:
 
 \begitems
 * \^`\_bprinta` `[<field-name>]  {<if defined>} {<if not defined>}`. The part <if defined>
@@ -285,7 +285,7 @@ macros for more comfortable setting of printing rules:
     parameter can be used more than once and can be enclosed in nested
     braces. The `*` parameter can be used at most once and cannot be enclosed
     in braces. Warning: if the `\_bprintb` commands are nested (`\_bprintb` in
-    `\_bprintb`), then you need to write `####1` parameter for internal `\_bprintb`.
+    `\_bprintb`), then you need to write the `####1` parameter for internal `\_bprintb`.
     But if `\_bprinta` commands are nested then the parameter is not duplicated.
 * \^`\_bprintc` `\macro {<if non-empty>}`. The <if non-empty> part is executed if
     `\macro` is non-empty. The `*` parameter can be used, it is replaced by
@@ -293,45 +293,45 @@ macros for more comfortable setting of printing rules:
 * \^`\_bprintv` `[<field1>,<field2>,...] {<if defined>} {<if not defined>}`.
     The part <if defined> is executed if <field1> or <filed2> or ...
     is defined, else the second part <if not defined> is executed.
-    There is one filed name or the list field names separated by commas.  
-    The parts cannot include any parameter.
+    There is one filed name or the list field names separated by commas.
+    The parts cannot include any parameters.
 \enditems
 
 There are two special field-names: `!author` and `!editor`. The processed list of
 authors or editors are printed here instead of raw data, see the commands
 \~`\_authorname` and \~`\_editorname` below.
 
-The bib style writer can define `_print:BEGIN` and/or `_print:END`.
-They are executed at the begin or
+The bib-style writer can define `_print:BEGIN` and/or `_print:END`.
+They are executed at the beginning or
 end of each `<entry-type>`. The formatting does not solve the numbering and
 paragraph indentation of the entry. This is processed by \^`\_printbib` macro
 used in \OpTeX/ (and may be redefined by the author or document designer).
 
 The \^`\bibmark={something}` can be declared, for instance in the `_print:END` macro.
-Such bibmark is saved to the `.ref` file and used in next \TeX/ run as
+Such \"bibmark" is saved to the `.ref` file and used in next \TeX/ run as
 `\cite` marks when `\nonumcitations` is set.
 
-Moreover, the bib style writer must declare the format of
-printing of special fields `author` and `editor`. These fields include a
+Moreover, the bib-style writer must declare the format of
+special fields `author` and `editor`. These fields include a
 list of names, each name is precessed individually in a loop. The
-\^`\_authorname` or \^`\_editorname` is called for each name in the list.
-The bib style writer must define
+\^`\_authorname` or \^`\_editorname` is called for each name on the list.
+The bib-style writer must define
 the \`\_authorname` and \`\_editorname` commands
 in order to declare the format of printing each individual name.
 The following control sequences can be used in these macros:
 
 \begitems
-* `\_NameCount`: the number of currently processed author in the list
+* `\_NameCount`: the number of the currently processed author in the list
 * `\_namecont`: the total number of the authors in the list
 * `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior`: the parts of the name.
 \enditems
 
-The whole style file is read in the group during `\usebib` command is executed
+The whole style file is read in the group during the `\usebib` command is executed
 before typesetting the reference list. Each definition or setting is local
 here.
 
 The auto-generated phrases (dependent on current language) can be used in
-bib style files by `\_mtext{bib.<identifier>}`, where <ident> is an identifier of
+bib-style files by `\_mtext{bib.<identifier>}`, where <ident> is an identifier of
 the phrase and the phrase itself is defined by
 `\_sdef{_mt:bib.<identifier>:<language>}{<phrase>}`. See section~\ref[langphrases]
 for more detail. Phrases for <identifiers>:
@@ -339,12 +339,12 @@ and, etal, edition, citedate, volume, number, prepages, postpages, editor,
 editors, available, availablealso, bachthesis, masthesis, phdthesis
 are defined already, see the end of section~\ref[langphrases].
 
-If you are using non-standard field-names in .bib database and bib style,
+If you are using non-standard field-names in .bib database and bib-style,
 you have to declare them by `\_CreateField {<fieldname>}`.
 
 You can declare `\_SortingOrder` in the manner documented by librarian package.
 
-User or author of the bib style can create the hidden field which has a
+User or author of the bib-style can create the hidden field which has a
 precedence while sorting names. Example:
 
 \begtt
@@ -361,7 +361,7 @@ sortedby = "Hzzadima Jan",
 Now, this author is sorted between H and I, because the Ch digraph in this
 name has to be sorted by this rule.
 
-If you need (for example) to place the autocitations before other citations,
+If you need (for example) to place the auto-citations before other citations,
 then you can mark your entries in `.bib` file by `sortedby = "@"`, because this
 character is sorted before `A`.
 
@@ -392,5 +392,5 @@ Feb. 2018:  \input librarian does not create \jobname.lbr
 %    \input opmac-bib
 % before using the command \usebib.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end
 

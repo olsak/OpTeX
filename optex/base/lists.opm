@@ -1,14 +1,14 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \begitems {Lists: begitems, enditems <2020-04-21>} % preloaded in format
 
    \_doc -----------------------------
-   \`\_aboveliskip` is used above the list of items,\nl 
-   \`\_belowliskip` is used below the list of items and\nl 
+   \`\_aboveliskip` is used above the list of items,\nl
+   \`\_belowliskip` is used below the list of items and\nl
    \`\_interliskip` is used between items.\nl
    \`\_listskipA` is used as `\listskipamount` at level 1 of items.\nl
    \`\_listskipB` is used as `\listskipamount` at other levels.\nl
-   \`\_setlistskip` sets the skip dependent on the current level of items 
+   \`\_setlistskip` sets the skip dependent on the current level of items
    \_cod -----------------------------
 
 \_def\_aboveliskip {\_removelastskip \_penalty-100 \_vskip\_listskipamount}
@@ -19,18 +19,18 @@
 
 \_def\_setlistskip {%
    \_ifnum \_ilevel = 1 \_listskipamount = \_listskipA \_relax
-   \_else  \_listskipamount = \_listskipB \_relax 
+   \_else  \_listskipamount = \_listskipB \_relax
    \_fi}
 
    \_doc -----------------------------
    The \`\itemnum` is locally reset to zero in each group declared by
-   `\begitems`. So nested lists are numbered independently. User can set
-   initial value of `\itemnum` to another value after `\beitems` if he/she want.
+   `\begitems`. So nested lists are numbered independently. Users can set
+   initial value of `\itemnum` to another value after `\beitems` if they want.
    \nl
-   Each level of nested lists is indented by new `\iindent` from left.
-   Default item mark is `\_printitem`.
+   Each level of nested lists is indented by the new `\iindent` from left.
+   The default item mark is `\_printitem`.
    \nl
-   The \`\begitems` runs `\_aboveliskip` only if we are not near below a title, 
+   The \`\begitems` runs `\_aboveliskip` only if we are not near below a title,
    where a vertical skip is placed already and where the `\penalty` 11333 is.
    It activates `*` and defines it as \`\_startitem`.
    \nl
@@ -42,7 +42,7 @@
 \_newcount\_itemnum  \_itemnum=0
 \_newtoks\_printitem
 
-\_def\_begitems{\_par 
+\_def\_begitems{\_par
   \_bgroup
   \_advance \_ilevel by1
   \_setlistskip
@@ -93,13 +93,13 @@
 
    \_doc -----------------------------
    \`\_athe``{<num>}` returns the `<num>`s lowercase letter from the alphabet.\nl
-   \`\_fullrectangle``{<dimen>}` prints full rectangle with given `<dimen>`.  
-   \_cod ----------------------------- 
+   \`\_fullrectangle``{<dimen>}` prints full rectangle with given `<dimen>`.
+   \_cod -----------------------------
 
 \_def\_fullrectangle#1{\_hbox{\_vrule height#1 width#1}}
 
-\_def\_athe#1{\_ifcase#1?\_or a\_or b\_or c\_or d\_or e\_or f\_or g\_or h\_or 
-   i\_or j\_or k\_or l\_or m\_or n\_or o\_or p\_or q\_or r\_or s\_or t\_or 
+\_def\_athe#1{\_ifcase#1?\_or a\_or b\_or c\_or d\_or e\_or f\_or g\_or h\_or
+   i\_or j\_or k\_or l\_or m\_or n\_or o\_or p\_or q\_or r\_or s\_or t\_or
    u\_or v\_or w\_or x\_or y\_or z\_else ?\_fi
 }
 \_public \style ;

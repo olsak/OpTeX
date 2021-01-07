@@ -1,10 +1,10 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \table {Basic macros for OpTeX <2020-05-26>} % preloaded in format
 
    \_doc -----------------------------
-   The result of the \`\table``{<declaration>}{<data>}` macro is inserted into 
-   `\_tablebox`. You can change default value if you want by 
+   The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
+   `\_tablebox`. You can change default value if you want by
    `\let\_tablebox=\vtop` or `\let\_tablebox=\relax`.
    \_cod -----------------------------
 
@@ -12,20 +12,20 @@
 
    \_doc -----------------------------
    We save the `to<size>` or `pxto<size>` to `#1` and \`\_tableW` sets the
-   `to<size>` to the \`\_tablew` macro. 
+   `to<size>` to the \`\_tablew` macro.
    If `pxto<size>` is used then `\_tablew` is empty and `\_tmpdim` includes
    given <size>. The `\_ifpxto` returns true in this case.
 
    The `\table` continues by reading `{<declaration>}` in the \^`\_tableA` macro.
-   Catcodes (for example the `|` character) have to be normal when reading 
+   Catcodes (for example the `|` character) have to be normal when reading
    `\table` parameters. This is the reason why we use `\catcodetable` here.
    \_cod -----------------------------
 
 \_newifi \_ifpxto
-\_def\_table#1#{\_tablebox\_bgroup \_tableW#1\_empty\_end 
+\_def\_table#1#{\_tablebox\_bgroup \_tableW#1\_empty\_end
    \_bgroup \_catcodetable\_optexcatcodes \_tableA}
-\_def\_tableW#1#2\_end{\_pxtofalse 
-   \_ifx#1\_empty \_def\_tablew{}\_else 
+\_def\_tableW#1#2\_end{\_pxtofalse
+   \_ifx#1\_empty \_def\_tablew{}\_else
    \_ifx#1p \_def\_tablew{}\_tableWx#2\_end \_else \_def\_tablew{#1#2}\_fi\_fi}
 \_def\_tableWx xto#1\_end{\_tmpdim=#1\_relax \_pxtotrue}
 \_public \table ;
@@ -46,12 +46,12 @@
    \_ea\_ifx\_ea^\_the\_tabstrut^\_setbox\_tstrutbox=\_null
    \_else \_setbox\_tstrutbox=\_hbox{\_the\_tabstrut}%
           \_setbox\_tstrutbox=\_hbox{\_vrule width\_zo
-              height\_dimexpr\_ht\_tstrutbox+\_tablinespace 
+              height\_dimexpr\_ht\_tstrutbox+\_tablinespace
               depth\_dimexpr\_dp\_tstrutbox+\_tablinespace}%
           \_offinterlineskip
           \_lineskip=-2\_tablinespace
    \_fi
-   \_colnum=0 \_let\_addtabitem=\_addtabitemx 
+   \_colnum=0 \_let\_addtabitem=\_addtabitemx
    \_def\_tmpa{}\_tabdata={\_colnum1\_relax}\_scantabdata#1\_relax
    \_the\_everytable \_afterassignment\_tableB \_tmptoks=%
 }
@@ -59,9 +59,9 @@
    \_doc -----------------------------
    The \`\_tableB` saves `<data>` to `\_tmpb`
    and does four \^`\replstring`s to prefix each macro \^`\crl` (etc.)
-   by `\_crcr`. The reason is: we want to use macros which scan its parameter 
-   to the delimiter written in right part of table item declaration.
-   See \^`\fS` for example. The `\crcr` cannot be hidden in other macro in such case.
+   by `\_crcr`. The reason is: we want to use macros that scan its parameter
+   to the delimiter written in the right part of the table item declaration.
+   See \^`\fS` for example. The `\crcr` cannot be hidden in another macro in this case.
 
    The `\tabskip` value is saved for places between columns
    into the \`\_tabskipmid` macro. Then it runs
@@ -69,22 +69,22 @@
    \tabskip=\tabskipl \halign{<converted declaration>\tabskip=\tabskipr \cr <data>\crcr}
    \endtt
    This sets the desired boundary values of `\tabskip`. The
-   \"between-columns" values are set as `\tabskip=`\^`\_tabskipmid` in the 
+   \"between-columns" values are set as `\tabskip=`\^`\_tabskipmid` in the
    `<converted declaration>` immediately after each column declarator.
 
    If `pxto` keyword was used, then we set the virtual unit \^`\tsize` to
    `\hsize` first. Then the first attempt of the table is created in box 0.
-   Then the \^`\tsize` is re-calculated using `\wd0` and the real table is 
-   printed by `\halign` in the second pass. 
+   Then the \^`\tsize` is re-calculated using `\wd0` and the real table is
+   printed by `\halign` in the second pass.
 
    If no `pxto` keyword was used, then we print the table using `\halign`
    directly. The \^`\_tablew` macro is nonempty if the `to` keyword was used.
 
    Because the color selector with `\aftergroup` can be used inside the
-   table item, we must to create second real group for each table item.
+   table item, we must create the second real group for each table item.
    This is reason why we start `<converted declaration>` by `\bgroup` and we
    end it by `\egroup` in the \`\_tableC` macro. Each `&` character
-   is stored as `\egroup&\bgroup` in `<converted declaration>`. The 
+   is stored as `\egroup&\bgroup` in `<converted declaration>`. The
    `\halign\_tablew\_tableC` really does:
    \begtt \catcode`\<=13
    \halign\_tablew{\bgroup<converted declaration>\egroup\tabskip=\tabskipr \cr<data>\crcr}
@@ -111,15 +111,15 @@
 \_newtoks\_tabdata   % the \halign declaration line
 
    \_doc -----------------------------
-   The \`\_scantabdata` macro converts `\table`'s `<declaration>` to 
+   The \`\_scantabdata` macro converts `\table`'s `<declaration>` to
    `\halign` `<converted declaration>`.
-   The result is stored into \`\_tabdata` tokens list. 
-   For example, the 
+   The result is stored into \`\_tabdata` tokens list.
+   For example, the
    following result is generated when `<declaration>=|cr||cl|`.
    \begtt
-   tabdata: \_vrule\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA 
-      &\_the\_tabiteml\_hfil#\_unsskip\_the\_tabitemr 
-                                             \_vrule\_kern\_vvkern\_vrule\_tabstrutA 
+   tabdata: \_vrule\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA
+      &\_the\_tabiteml\_hfil#\_unsskip\_the\_tabitemr
+                                             \_vrule\_kern\_vvkern\_vrule\_tabstrutA
       &\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA
       &\_the\_tabiteml#\_unsskip\_hfil\_the\_tabitemr\_vrule\_tabstrutA
    ddlinedata: &\_dditem &\_dditem\_vvitem &\_dditem &\_dditem
@@ -156,18 +156,18 @@
    The \`\_addtabitemx` adds the boundary code (used between columns)
    to the <converted declaration>. This code is
    `\egroup &\bgroup \colnum=<value>\relax`. You can get the current number of
-   column from the \`\colnum` register, but you cannot write 
-   `\the\colnum` as the first object in a <data> item because `\halign` 
+   column from the \`\colnum` register, but you cannot write
+   `\the\colnum` as the first object in a <data> item because `\halign`
    first expands the front of the item and the left part of the declaration
    is processed after this. Use `\relax\the\colnum` instead. Or you can
-   write: 
+   write:
    \begtt
    \def\showcolnum{\ea\def\ea\totcolnum\ea{\the\colnum}\the\colnum/\totcolnum}
    \table{ccc}{\showcolnum & \showcolnum & \showcolnum}
    \endtt
    This example prints 1/3 \ 2/3 \ 3/3, because the value of the `\colnum` is
    equal to the total number of columns before left part of the column declaration
-   is processed. 
+   is processed.
    \_cod -----------------------------
 
 \_newcount\_colnum     % number of current column in the table
@@ -197,7 +197,7 @@
    The default \"declaration letters" `c`, `l`, `r` and `p` are declared
    by setting \`\tabdeclarec`, \`\tabdeclarel`, \`\tabdeclarer` and
    \`\paramtabdeclarep` macros. In general, define
-   `\def\_tabdeclare<letter>{...}` for a non-parametric 
+   `\def\_tabdeclare<letter>{...}` for a non-parametric
    letter and `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.
    You can declare more such \"declaration letters" if you want.
@@ -207,42 +207,42 @@
 \_def\_tabdeclarel{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}
 \_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
 \_def\_paramtabdeclarep#1{\_the\_tabiteml
-   \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip 
+   \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
    \_lineskiplimit=\_zo \_noindent##\_unsskip
    \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}\_the\_tabitemr}
 
    \_doc -----------------------------
-   User puts optional spaces around the table item typically, i.e.\ he/she writes
-   `& text &` instead `&text&`. The left space is ignored by internal \TeX/ algorithm but 
+   Users put optional spaces around the table item typically, i.e.\ they write
+   `& text &` instead `&text&`. The left space is ignored by the internal \TeX/ algorithm but
    the right space must be removed by macros. This is a reason why we recommend to
    use \`\_unsskip` after each `##` in your definition of \"declaration letters".
-   This macro isn't only the primitive `\unskip` because we allow usage of plain \TeX/ 
+   This macro isn't only the primitive `\unskip` because we allow usage of plain \TeX/
    `\hideskip` macro: `&\hideskip text\hideskip&`.
    \_cod -----------------------------
 
 \_def\_unsskip{\_ifmmode\_else\_ifdim\_lastskip>\_zo \_unskip\_fi\_fi}
 
    \_doc -----------------------------
-   The \`\fL`, \`\fR`, \`\fC` and \`\fX` macros only does a special parameters settings
+   The \`\fL`, \`\fR`, \`\fC` and \`\fX` macros only do special parameters settings
    for paragraph building algorithm. The \`\fS` prints the paragraph into
    box 0 first, measures the number of lines by the `\prevgraf` primitive
-   and use (or don't use) `\hfil` (for centering) before the first line. 
+   and use (or don't use) `\hfil` (for centering) before the first line.
    \_cod -----------------------------
 
-\_let\_fL=\_raggedright 
-\_def\_fR{\_leftskip=0pt plus 1fill \_relax} 
-\_def\_fC{\_leftskip=0pt plus1fill \_rightskip=0pt plus 1fill \_relax} 
-\_def\_fX{\_leftskip=0pt plus1fil  \_rightskip=0pt plus-1fil \_parfillskip=0pt plus2fil \_relax} 
+\_let\_fL=\_raggedright
+\_def\_fR{\_leftskip=0pt plus 1fill \_relax}
+\_def\_fC{\_leftskip=0pt plus1fill \_rightskip=0pt plus 1fill \_relax}
+\_def\_fX{\_leftskip=0pt plus1fil  \_rightskip=0pt plus-1fil \_parfillskip=0pt plus2fil \_relax}
 \_long\_def\_fS #1\_unsskip{\_noindent \_setbox0 =\_vbox{\_noindent #1\_endgraf \_ea}%
    \_ifnum\_prevgraf=1 \_hfil \_fi #1\_unsskip
 }
 \_public \fL \fR \fC \fX \fS ;
 
    \_doc -----------------------------
-   The family of `\_cr*` macros 
-   \`\crl`, \`\crll`, \`\crli`, \`\crlli`, \`\crlp` and 
-   \`\tskip` `<dimen>` is implemented here. 
-   The \`\_zerotabrule` is used in order to suppress the negative `\lineskip` 
+   The family of `\_cr*` macros
+   \`\crl`, \`\crll`, \`\crli`, \`\crlli`, \`\crlp` and
+   \`\tskip` `<dimen>` is implemented here.
+   The \`\_zerotabrule` is used to suppress the negative `\lineskip`
    declared by \^`\tablinespace`.
    \_cod -----------------------------
 
@@ -250,7 +250,7 @@
 \_def\_crll{\_crcr\_noalign{\_hrule\_kern\_hhkern\_hrule}}
 \_def\_zerotabrule {\_noalign{\_hrule height\_zo width\_zo depth\_zo}}
 
-\_def\_crli{\_crcr \_zerotabrule \_omit 
+\_def\_crli{\_crcr \_zerotabrule \_omit
    \_gdef\_dditem{\_omit\_tablinefil}\_gdef\_vvitem{\_kern\_vvkern\_vrule}\_gdef\_vvitemA{\_vrule}%
    \_vvleft\_tablinefil\_ddlinedata\_crcr \_zerotabrule}
 \_def\_crlli{\_crli\_noalign{\_kern\_hhkern}\_crli}
@@ -263,7 +263,7 @@
    \_vvleft\_crlpD\_ddlinedata \_global\_tmpnum=0 \_crcr \_zerotabrule}
 \_def\_crlpA#1,{\_ifx\_end#1\_else \_crlpB#1-\_end,\_expandafter\_crlpA\_fi}
 \_def\_crlpB#1#2-#3,{\_ifx\_end#3\_xdef\_crlplist{\_crlplist#1#2,}\_else\_crlpC#1#2-#3,\_fi}
-\_def\_crlpC#1-#2-#3,{\_tmpnum=#1\_relax 
+\_def\_crlpC#1-#2-#3,{\_tmpnum=#1\_relax
    \_loop \_xdef\_crlplist{\_crlplist\_the\_tmpnum,}\_ifnum\_tmpnum<#2\_advance\_tmpnum by1 \_repeat}
 \_def\_crlpD{\_global\_advance\_tmpnum by1
    \_edef\_tmpa{\_noexpand\_isinlist\_noexpand\_crlplist{,\_the\_tmpnum,}}%
@@ -271,7 +271,7 @@
 
 \_def\_tskip{\_afterassignment\_tskipA \_tmpdim}
 \_def\_tskipA{\_gdef\_dditem{}\_gdef\_vvitem{}\_gdef\_vvitemA{}\_gdef\_tabstrutA{}%
-    \_vbox to\_tmpdim{}\_ddlinedata \_crcr 
+    \_vbox to\_tmpdim{}\_ddlinedata \_crcr
     \_zerotabrule \_noalign{\_gdef\_tabstrutA{\_copy\_tstrutbox}}}
 
 \_public \crl \crll \crli \crlli \crlp \tskip ;
@@ -292,18 +292,18 @@
 \_public \mspan ;
 
    \_doc -----------------------------
-   The \`\vspan``{<number>}{<text>}` implementaiton is here.
+   The \`\vspan``{<number>}{<text>}` implementation is here.
    We need to lower the box by
    \begtt \catcode`\<=13
    (<number>-1)*(\ht+\dp of \tabstrut) / 2.
    \endtt
-   The `#1` parameter must be one-digit number. If you want to set more digits 
-   then use braces. 
+   The `#1` parameter must be a one-digit number. If you want to set more digits
+   then use braces.
    \_cod -----------------------------
 
 \_def\_vspan#1#2{\_vtop to\_zo{\_hbox{\_lower \_dimexpr
    #1\_dimexpr(\_ht\_tstrutbox+\_dp\_tstrutbox)/2\_relax
-    -\_dimexpr(\_ht\_tstrutbox+\_dp\_tstrutbox)/2\_relax \_hbox{#2}}\_vss}} 
+    -\_dimexpr(\_ht\_tstrutbox+\_dp\_tstrutbox)/2\_relax \_hbox{#2}}\_vss}}
 \_public \vspan ;
 
    \_doc -----------------------------
@@ -370,43 +370,43 @@ If the boundary declarator `:` is not used then
 the boundaries of columns are just before each column declarator
 with exception of the first one.
 For example, the declaration  `{|c||c(xx)(yy)c}`
-should be written more exactly using the boundary declarator `:` 
+should be written more exactly using the boundary declarator `:`
 by `{|c||:c(xx)(yy):c}`. But you can set these boundaries to
-another places using the boundary declarator~`:` explicitly, 
-for example `{|c:||c(xx):(yy)c}`. The boundary declarator `:` 
-can be used only once between each two column declarators. 
+other places using the boundary declarator~`:` explicitly,
+for example `{|c:||c(xx):(yy)c}`. The boundary declarator `:`
+can be used only once between each pair of column declarators.
 
-Each table item has its own group. The `(<cmd>)` are parts of the given
+Each table item has its group. The `(<cmd>)` are parts of the given
 table item (depending on the boundary declarator position).
-If you want to apply a special setting for given column, you can do this by
-`(<setting>)` followed by column declarator. But if such column is not
+If you want to apply a special setting for a given column, you can do this by
+`(<setting>)` followed by column declarator. But if the column is not
 first, you must use `:(<setting>)`. Example. We have three centered columns,
-the second one have to be in bold font and the third one have to be in red: 
+the second one have to be in bold font and the third one have to be in red:
 `\table{c:(\bf)c:(\Red)c}{<data>}`
 
 \secc Usage of the \code{\\tabskip} primitive
 
 The value of `\tabskip` primitive is used between all columns of the table.
-It is glue-type, so it can be stretchable or shrinkable, see next 
+It is glue-type, so it can be stretchable or shrinkable, see next
 section~\ref[table.w].
 
 By default, `\tabskip` is 0\,pt. It means that only \^`\tabiteml`,
 \^`\tabitemr` and `(<cmds>)` can generate visual spaces between columns. But they
-are not real spaces between columns because they are in fact the part of 
-the total column width. 
+are not real spaces between columns because they are in fact the part of
+the total column width.
 
 The `\tabskip` value declared before the \^`\table` macro (or in
-\^`\everytable` or in \^`\thistable`) is used between all columns in the table. 
-This value is equal for all spaces between columns. But you can set each such space
-individualy if you use `(\tabskip=<value>)` in the <declaration> immediately
+\^`\everytable` or in \^`\thistable`) is used between all columns in the table.
+This value is equal to all spaces between columns. But you can set each such space
+individually if you use `(\tabskip=<value>)` in the <declaration> immediately
 before boundary character. The boundary character represents the column pair for
-which the `\tabskip` have individual value. For example
-`c(\tabskip=5pt):r` gives `\tabskip` value betwen `c` and `r` columns. 
-You need not to use boundary character explicitly, so `c(\tabskip=5pt)r` gives
+which the `\tabskip` has individual value. For example
+`c(\tabskip=5pt):r` gives `\tabskip` value between `c` and `r` columns.
+You need not use boundary character explicitly, so `c(\tabskip=5pt)r` gives
 the same result.
 
-The space before first column is given by the \^`\tabskipl` 
-and the space after last column is equal to \^`\tabskipr`. 
+Space before the first column is given by the \^`\tabskipl`
+and space after the last column is equal to \^`\tabskipr`.
 Default values are 0\,pt.
 
 Use nonzero `\tabskip` only in special applications. If `\tabskip` is
@@ -422,9 +422,9 @@ There are two possibilities how to create tables to given width:
 * `\table to<size>{<declaration>}{<data>}` uses stretchability or
   shrinkability of all spaces between columns generated by `\tabskip` value and
   eventually by \^`\tabskipl`, \^`\tabskipr` values. See example below.
-* `\table pxto<size>{<declaration>}{<data>}` expands the columns declared 
+* `\table pxto<size>{<declaration>}{<data>}` expands the columns declared
   by `p{<size>}`, if the `<size>` is given by a virtual \^`\tsize` unit.
-  See example below.
+  See the example below.
 \enditems
 
 Example of `\table to<size>`:
@@ -434,11 +434,11 @@ Example of `\table to<size>`:
 \table to\hsize {lr}{<data>}
 \endtt
 %
-This table has its width `\hsize`. First column starts at the left boundary of
-this table and it is justified left (to the boundary). Second column ends at
+This table has its width `\hsize`. The first column starts at the left boundary of
+this table and it is justified left (to the boundary). The second column ends at
 the right boundary of the table and it is justified right (to the boundary).
-The space between them are stretchable and shrinkable in order to reach
-given width `\hsize`.
+The space between them is stretchable and shrinkable to reach
+the given width `\hsize`.
 
 \medskip
 Example of `\table pxto<size>` (means \"{\bf p}aragraphs e{\bf x}panded {\bf to}"):
@@ -446,7 +446,7 @@ Example of `\table pxto<size>` (means \"{\bf p}aragraphs e{\bf x}panded {\bf to}
 \begtt
 \table pxto\hsize {|c|p{\tsize}|}{\crl
  aaa         & Ddkas jd dsjds ds cgha sfgs dd fddzf dfhz xxz
-               dras ffg hksd kds d sdjds h sd jd dsjds ds cgha 
+               dras ffg hksd kds d sdjds h sd jd dsjds ds cgha
                sfgs dd fddzf dfhz xxz. \crl
  bb ddd ggg  & Dsjds ds cgha sfgs dd fddzf dfhz xxz
                ddkas jd dsjds ds cgha sfgs dd fddzf. \crl }
@@ -454,26 +454,26 @@ Example of `\table pxto<size>` (means \"{\bf p}aragraphs e{\bf x}panded {\bf to}
 
 \noindent\table pxto\hsize {|c|p{\tsize}|}{\crl
  aaa         & Ddkas jd dsjds ds cgha sfgs dd fddzf dfhz xxz
-               dras ffg hksd kds d sdjds h sd jd dsjds ds cgha 
+               dras ffg hksd kds d sdjds h sd jd dsjds ds cgha
                sfgs dd fddzf dfhz xxz. \crl
  bb ddd ggg  & Dsjds ds cgha sfgs dd fddzf dfhz xxz
                ddkas jd dsjds ds cgha sfgs dd fddzf. \crl }
 \medskip
 
-The first `c` colum is variable width (it gets the width of most wide item)
+The first `c` column is variable width (it gets the width of the most wide item)
 and the resting space to given `\hsize` is filled by the `p` column.
 
-You can declare more than one `p{<coefficient>\tsize}` columns in the table 
-when `pxto` keyword is used. The total sum of <coefficinets> must be exactly one. 
-For example, 
+You can declare more than one `p{<coefficient>\tsize}` columns in the table
+when `pxto` keyword is used. The total sum of <coefficinets> must be exactly one.
+For example,
 
 \begtt \catcode`\<=13
-\table pxto13cm {r p{.3\tsize} p{.5\tsize} p{.2\tsize} l}{<data>} 
+\table pxto13cm {r p{.3\tsize} p{.5\tsize} p{.2\tsize} l}{<data>}
 \endtt
 %
 This gives the ratio of widths of individual paragraphs in the table.
 
-\secc `\eqbox`: boxes with equal width acros the whole document
+\secc `\eqbox`: boxes with equal width across the whole document
 
 The \^`\eqbox` `[<label>]{<text>}` behaves like `\hbox{<text>}` in the first
 run of \TeX. But the widths of all boxes with the same label are saved to
@@ -487,12 +487,12 @@ labeled by the same `[<label>]`. The documentation of the \LaTeX/ package
 The \^`\eqboxsize` `[<label>]{<dimen>}` expands to <dim:label> if this value is known,
 else it expands to the given <dimen>.
 
-The optional parameter `r` or `l` can be writen before `[<label>]` (for example
+The optional parameter `r` or `l` can be written before `[<label>]` (for example
 `\eqbox r[label]{text}`) if you want to put the text to the right or to the
 left side of the box width.
 
 Try the following example and watch what happens after first \TeX/ run and
-after second one.
+after the second one.
 
 \begtt
 \def\leftitem#1{\par
@@ -512,7 +512,7 @@ after second one.
            \vspan implemented.
 2020-05-19 \fL, \fR ets defined.
            \table to, \table pxto implemented.
-2020-05-10 \bgroup &\egroup added to tabdata (in order to \aftergroup from colors)  
+2020-05-10 \bgroup &\egroup added to tabdata (in order to \aftergroup from colors)
            boundary declarator : introduced
            \_unsskip: \ifmmode added.
 2020-04-10 second group for items in order to \localcolors

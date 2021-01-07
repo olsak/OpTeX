@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \cite {Cite, Biblioraphy <2020-03-09>} % loaded in format
 
@@ -11,23 +11,23 @@
 \_newcount\_bibnum                       % the bibitem counter
 \_newtoks\_bibmark                       % the bibmark used if \nonumcitations
 \_newcount\_lastcitenum \_lastcitenum=0  % for \shortcitations
-\_public \bibnum \bibmark ; 
+\_public \bibnum \bibmark ;
 
    \_doc -----------------------------
-   \`\cite` `[<label>,<label>,...,<label>]` manages <labes> using `\_citeA` 
+   \`\cite` `[<label>,<label>,...,<label>]` manages <labes> using `\_citeA`
    and prints `[<bib-marks>]` using `\_printsavedcites`.
    \nl
    \`\nocite` `[<label>,<label>,...,<label>]` only manages <labels> but prints nothing.
    \nl
    \`\rcite` `[<label>,<label>,...,<label>]` behaves like `\cite` but prints
-    <bib-marks> without brackets. 
+    <bib-marks> without brackets.
    \nl
    \`\ecite` `[<label>]{<text>}` behaves like `\rcite [<label>]` but prints
    <text> instead <bib-mark>. The <text> is hyperlinked like <bib-marks>
-   when `\cite` or `\rcite` is used. 
+   when `\cite` or `\rcite` is used.
    The empty internal macro \`\_savedcites` will include the `<bib-marks>` list to
-   be printed. This list is set by `\_citeA` inside group and it is used by
-   `\_printsavedcites` in the same group. Each `\cite`/`\rcite`/`\ecite`  macro 
+   be printed. This list is set by `\_citeA` inside a group and it is used by
+   `\_printsavedcites` in the same group. Each `\cite`/`\rcite`/`\ecite`  macro
    starts from empty list of <bib-marks> because new group is opened.
    \_cod -----------------------------
 
@@ -58,10 +58,10 @@
    \_if^#3^\_else\_sdef{_bim:#2}{#3}\_fi\_def\_lastbibnum{#2}}
 
    \_doc -----------------------------
-   \`\_citeA` `<label>,` processes one label from list of labels given in the
+   \`\_citeA` `<label>,` processes one label from the list of labels given in the
    parameter of `\cite`, `\nocite`, `\rcite` or `\ecite` macros. It adds the
    <label> to global list `\_citelist` which will be used by `\usebib` (it
-   must to know what <labels> are used in the document in order to pick-up
+   must know what <labels> are used in the document to pick-up
    only relevant bib-entries from the database. Because we want to save
    space and not to save the same <label> to `\_citelist` twice, we
    distinguish four cases:
@@ -76,15 +76,15 @@
    * `<label>` was declared by \^`\_Xbib` and it is first such <label> in the
      document: Then `\_bin:<label>` includes `\_bibnn{<number>}&` and we
      test this case by `\if &\_bibnn{<number>}&`. This is true when `\_bibnn{<number>}`
-     expands to empty. The <label> is saved by `\_addcitelist` and 
+     expands to empty. The <label> is saved by `\_addcitelist` and
      `\_bib:<label>` is re-defined directly as <number>.
    * `<label>` was declared by \^`\_Xbib` and it was used previously in the
      document. Then we do nothing (only data to `\_savedcites` are saved.
    \enditems
-   The `\_citeA` macro runs repeatedly over whole list of <labels>.
+   The `\_citeA` macro runs repeatedly over the whole list of <labels>.
    \_cod -----------------------------
 
-\_def\_citeA #1#2,{\_if#1,\_else 
+\_def\_citeA #1#2,{\_if#1,\_else
    \_if *#1\_addcitelist{*}\_ea\_skiptorelax \_fi
    \_ifcsname _bib:#1#2\_endcsname \_else
       \_addcitelist{#1#2}%
@@ -97,7 +97,7 @@
       \_addto\_savedcites{?,}\_def\_sortcitesA{}\_lastcitenum=0
       \_ea\_skiptorelax \_fi
    \_def\_bibnn##1{}%
-   \_if &\_csname _bib:#1#2\_endcsname 
+   \_if &\_csname _bib:#1#2\_endcsname
       \_def\_bibnn##1##2{##1}%
       \_addcitelist{#1#2}%
       \_sxdef{_bib:#1#2}{\_csname _bib:#1#2\_endcsname}%
@@ -107,23 +107,23 @@
    \_ea\_citeA\_fi
 }
 \_def\_addcitelist#1{\_global\_addto\_citelist{\_citeI[#1]}}
-\_def\_citelist{} 
+\_def\_citelist{}
 
    \_doc -----------------------------
    The `<bib-marks>` (in numeric or text form) are saved in \^`\_savedcites`
    macro separated by commas.
    The \`\_printsavedcites` prints them by normal order or sorted if
    \`\sortcitations` is specified or condensed if \`\shordcitations` is
-   specified.\nl 
-   The `\sortcitations` appends the dummy number 300000 and we suppose that normal 
-   numbers of bib-entries are less than this constant. 
-   This constant is removed after sorting algorithm.
+   specified.\nl
+   The `\sortcitations` appends the dummy number 300000 and we suppose that normal
+   numbers of bib-entries are less than this constant.
+   This constant is removed after the sorting algorithm.
    The \`\shortcitations` sets simply `\_lastcitenum=1`.
    The macros for <bib-marks> printing follows (sorry, without detail
    documentation). They are documented in `opmac-d.pdf` (but only in Czech).
    \_cod -----------------------------
 
-\_def\_printsavedcites{\_sortcitesA 
+\_def\_printsavedcites{\_sortcitesA
    \_chardef\_tmpb=0 \_ea\_citeB\_savedcites,%
    \_ifnum\_tmpb>0 \_printdashcite{\_the\_tmpb}\_fi
 }
@@ -136,10 +136,10 @@
   \_else
      \_mathchardef\_tmpa=#1
      \_edef\_savedcites{\_ea}\_ea\_sortcitesC \_savedcites\_end
-     \_ea\_sortcitesB 
+     \_ea\_sortcitesB
   \_fi
 }
-\_def\_sortcitesC#1,{\_ifnum\_tmpa<#1\_edef\_tmpa{\_the\_tmpa,#1}\_ea\_sortcitesD 
+\_def\_sortcitesC#1,{\_ifnum\_tmpa<#1\_edef\_tmpa{\_the\_tmpa,#1}\_ea\_sortcitesD
                    \_else\_edef\_savedcites{\_savedcites#1,}\_ea\_sortcitesC\_fi}
 \_def\_sortcitesD#1\_end{\_edef\_savedcites{\_savedcites\_tmpa,#1}}
 
@@ -173,7 +173,7 @@
 
 \_def\_nonumcitations{\_lastcitenum=0\_def\_sortcitesA{}\_def\_etalchar##1{$^{##1}$}%
    \_def\_citelinkA##1{\_isdefined{_bim:##1}\_iftrue \_csname _bim:##1\_endcsname
-      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib style}\_fi}
+      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib-style}\_fi}
 }
 \_def\_citelinkA{}
 
@@ -184,7 +184,7 @@
    without reading any database. The bib-enty follows after this command.
    This command counts the used `\bib`s from one by `\bibnum` counter and
    saves \^`\_Xbib``{<label>}{\_the\_bibnum}{\_the\_bibmark}` into `.ref` file
-   immediately using `\_wbib`. This is the core of creation of mapping from 
+   immediately using `\_wbib`. This is the core of creation of mapping from
    `<labels>` to `<bib-marks>`.
    \_cod -----------------------------
 
@@ -204,14 +204,14 @@
 
    \_doc -----------------------------
    The \`\_printbib` prints the bib-entry itself. You can re-define it if you
-   want different design. The `\_pritbib` starts in horizontal mode after
+   want a different design. The `\_pritbib` starts in horizontal mode after
    `\noindent` and after the eventual hyperlink destination is inserted.
    By default, the `\_printbib` sets the indentation
    by `\hangindent` and prints numeric <bib-marks> by
    `\llap{[\the\bibnum]}` If `\nonumcitations` then the `\_citelinkA` is not
-   empty and <bib-marks> (`\the\bibnum` nor `\the\bibmark`) are not printed. 
-   The text of bib-entry follows. User can create this text manually 
-   using `\bib` command or it is generated automatically from a `.bib` database 
+   empty and <bib-marks> (`\the\bibnum` nor `\the\bibmark`) are not printed.
+   The text of bib-entry follows. User can create this text manually
+   using `\bib` command or it is generated automatically from a `.bib` database
    by `\usebib` command.
 
    The vertical space between bib-entries is controlled by \`\_bibskip` macro.
@@ -224,7 +224,7 @@
 
    \_doc -----------------------------
    The \`\usebib` command is implemented in `usebib.opm` file which is loaded
-   when the `\usebib` command is firstly used. 
+   when the `\usebib` command is used first.
    The `usebib.opm` file loads the `librarian.tex` for scanning the `.bib`
    files. See the section~\ref[usebib], where the file `usebib.opm` is
    documented.
@@ -237,7 +237,7 @@
    \_forwardlink\`\nobibwarning` `[<list of bib-labels>]`
    declares a list of bib labels
    which are not fully declared in `.bib` file but we want to suppress the
-   warning about it. List of bib labels are comma separated case sensitive
+   warning about it. List of bib labels are comma-separated case sensitive
    list without spaces.
    \_cod ------------------------------
 
@@ -267,5 +267,5 @@ See end of the `usebib.opm` file for documentation about creating style
 files `bib-<style>.opm`.
 
 See end of the `bib-iso690.opm` file for large documentation about `.bib` files
-structure and about usage of `iso690` bib-style.
+structure and about the usage of `iso690` bib-style.
 

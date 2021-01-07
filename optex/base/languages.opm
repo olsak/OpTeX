@@ -180,7 +180,7 @@
            {Bakalárska práca} {Diplomová práca} {Dizertačná práca}
 
 % \_<lang>dateformat year/month/day\relax, for example: \_csdateformat 2020/05/21\relax
-% This is used in iso690 bib style when the the field "citedate" is used.
+% This is used in iso690 bib-style when the the field "citedate" is used.
 
 \_def\_endateformat #1/#2/#3\relax{#1-#2-#3}
 % \_csdateformat 2020/05/21\relax -> \hbox{21. 5. 2020}

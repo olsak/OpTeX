@@ -1,19 +1,19 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \begmulti {Balanced columns <2020-03-26>} % preloaded in format
 
    \_doc -----------------------------
    This code is documented in detail in the \"\TeX/book naruby", pages 244--246,
    free available, \url{http://petr.olsak.net/tbn.html}, but in Czech.
-   Roughly speaking, macros complete all material between 
+   Roughly speaking, macros complete all material between
    \`\begmulti``<num-columns>` and \`\endmulti`
-   into one `\vbox 6`. Then the macro measures the amount of free space at the current 
-   page using `\pagegoal` and `\pagtotal` and does `\vsplit` of `\vbox 6` to 
-   columns with height of such free space. This is done only if we have
-   enought amount of material in `\vbox 6` to fill full page by columns.
-   This is repeated in loop until we have less amount of material in `\vbox 6`.
-   Then we run `\_balancecolumns` which balances the last part of columns.
-   Each part of printed material is distributed to main vertical list as
+   into one `\vbox 6`. Then the macro measures the amount of free space at the current
+   page using `\pagegoal` and `\pagtotal` and does `\vsplit` of `\vbox 6` to
+   columns with a height of such free space. This is done only if we have
+   enough amount of material in `\vbox 6` to fill the full page by columns.
+   This is repeated in a loop until we have less amount of material in `\vbox 6`.
+   Then we run `\_balancecolumns` which balances the last part of the columns.
+   Each part of printed material is distributed to the main vertical list as
    `\hbox{<columns>}` and we need not do any change in the output routine.
 
    If you have paragraphs in `\begmulti`... `\endmulti` environment then
@@ -34,8 +34,8 @@
    \_def\par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
 }
 \_def\_endmulti{\_vskip-\_prevdepth\_vfil
-   \_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax 
-   \_dimen0=.8\_maxdimen \_tmpnum=\_dimen0 \_divide\_tmpnum by\_baselineskip 
+   \_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax
+   \_dimen0=.8\_maxdimen \_tmpnum=\_dimen0 \_divide\_tmpnum by\_baselineskip
    \_splittopskip=\_baselineskip
    \_setbox1=\_vsplit6 to0pt
    %% \dimen1 := the free space on the page
@@ -53,7 +53,7 @@
 
    \_doc -----------------------------
    Splitting columns...
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_def\_makecolumns{\_bgroup % full page, destination height: \dimen1
    \_vbadness=20000 \_setbox1=\_hbox{}\_tmpnum=0
