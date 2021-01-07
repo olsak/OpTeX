@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \uv {Miscenaleous <2020-05-22>} % preloaded in format
 
@@ -10,7 +10,7 @@
 
     \_doc ----------------------------
     The \`\lastpage` and \`\totalpages` get the information from the
-    \^`\_currpage`. The \^`\_Xpage` from `.ref` file sets the \^`\_currpage`.  
+    \^`\_currpage`. The \^`\_Xpage` from `.ref` file sets the \^`\_currpage`.
     \_cod ----------------------------
 
 \_def\_totalpages {\_openref\_ea\_lastpageA\_currpage}
@@ -22,8 +22,8 @@
 
     \_doc ----------------------------
     We need \`\uv`, \`\clqq`, \`\crqq`, \`\flqq`, \`\frqq`, \`\uslang`, \`\ehyph`
-    \`\chyph`, \`\shyph`, for backward compatibility with \csplain.  
-    Codes are set according to Unicode, because we are using Czech only in Unicode
+    \`\chyph`, \`\shyph`, for backward compatibility with \csplain.
+    Codes are set according to Unicode because we are using Czech only in Unicode
     when \LuaTeX/ is used.
     \_cod ----------------------------
 
@@ -36,18 +36,18 @@
 
 \_def\uv#1{\clqq#1\crqq}
 
-\_let\uslang=\enlang  \_let\ehyph=\enlang  
+\_let\uslang=\enlang  \_let\ehyph=\enlang
 \_let\chyph=\cslang   \_let\shyph=\sklang
 \_let\csUnicode=\csPatt \_let\czUnicode=\csPatt \_let\skUnicode=\skPatt
 
     \_doc ----------------------------
-    The \`\letfont` was used in \csplain/ instead of `\fontlet`. 
+    The \`\letfont` was used in \csplain/ instead of `\fontlet`.
     \_cod ----------------------------
 
 \_let \letfont = \_fontlet
 
     \_doc ----------------------------
-    Non breaking space in Unicode.
+    Non-breaking space in Unicode.
     \_cod ----------------------------
 
 \let ^^a0=~
@@ -63,7 +63,7 @@
     We don't want to read `opmac.tex` unless `\input opmac` is specified.
     \_cod ----------------------------
 
-\_def\OPmacversion{OpTeX}  
+\_def\OPmacversion{OpTeX}
 
     \_doc ----------------------------
     We allow empty lines in math formulae. It is more comfortable.
@@ -82,7 +82,7 @@
     usages of `\lipsum` are fully expandable. If you want to have all
     printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
 
-    `\lipsum` adds `\par` after each printed paragraph. I you don't need
+    `\lipsum` adds `\par` after each printed paragraph. If you don't need
     such `\par` here, use \`\lipsumtext``[<number>]`.
     This macro prints only one selected paragraph <number> and does not add `\par`.
     \_cod ----------------------------

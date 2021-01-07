@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \makeindex {Makeindex and sorting <2020-04-26>} % loaded in format
 
@@ -6,19 +6,19 @@
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
    You need not any external program.
 
-   There are two passes in sorting algorithm. Primary pass does not
-   distinguish between a group o letters (typically non-accented and
+   There are two passes in the sorting algorithm. The primary pass does not
+   distinguish between a group of letters (typically non-accented and
    accented). If the result of comparing two string is equal in primary pass
-   then secondary pass is started. It distinguish between variously accented
-   letters. Czech rules, for example says: not accented before dieresis
+   then the secondary pass is started. It distinguishes between variously accented
+   letters. Czech rules, for example, says: not accented before dieresis
    before acute before circumflex before ring. At less priority: lowercase
-   letters must be before uppercase letters. 
+   letters must be before uppercase letters.
 
    The \`\_sortingdata``<iso-code>` implements these rules for the language
    <iso-code>. The groups between commas are not distinguished in the first
    pass. The second pass distinguishes all characters mentioned in the
-   `\_sortingdata<iso-code>` (commas are ignored). The order of letters 
-   in the `\_sortingdata<iso-code>` macro is significant for sorting algorithm. 
+   `\_sortingdata<iso-code>` (commas are ignored). The order of letters
+   in the `\_sortingdata<iso-code>` macro is significant for the sorting algorithm.
    The Czech rules (`cs`) are implemented here:
    \_cod -----------------------------
 
@@ -59,19 +59,19 @@
 }
 
    \_doc -----------------------------
-   Characters ignored by sorting algorithm are declared in \`\_ignoredchars``<iso-code>`.
+   Characters ignored by the sorting algorithm are declared in \`\_ignoredchars``<iso-code>`.
    The compound characters (two or more characters interpreted as one
-   character in sorting algorithm) is mapped to single invisible characters
-   in \`\_compoundchars``<iso-code>`. Czech rules declares ch or Ch or CH as
+   character in the sorting algorithm) are mapped to single invisible characters
+   in \`\_compoundchars``<iso-code>`. Czech rules declare ch or Ch or CH as
    a single letter sorted between H and I. See \`\_sortingdatacs` above where
    these declared characters are used.
 
-   The characters declared in `\_ignoredchars` are ignored in first pass
+   The characters declared in `\_ignoredchars` are ignored in the first pass
    without additional condition. All characters are taken into account in
    second pass: ASCII characters with code $\lq65$ are sorted first if they
-   are not mentioned in the `\_sortingdata<iso-code>` macro. 
+   are not mentioned in the `\_sortingdata<iso-code>` macro.
    Others not mentioned characters have undefined behavior during sorting.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_def \_ignoredcharscs  {.,;?!:'"|()[]<>=+}
 \_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V} % DZ etc. are sorted normally
@@ -80,13 +80,13 @@
    Slovak sorting rules are the same as Czech. The macro `\_sortingdatacs`
    includes Slovak letters too. Compound characters are the same.
    English sorting rules can be defined by `\_sortingdatacs` too because
-   English alphabet is subset of Czech and Slovak alphabets. Only
-   difference: \`\_compoundcharsen` is empty in English rules. 
+   English alphabet is a subset of the Czech and Slovak alphabets. Only
+   difference: \`\_compoundcharsen` is empty in English rules.
 
-   You can declare these macros for more languages, if you wish to use
-   `\makeindex` with sorting rules in respect to your language.
-   Note: if you need to map compound characters to a character, don't use 
-   `^^I` or `^^M` because these characters have very specific category code.
+   You can declare these macros for more languages if you wish to use
+   `\makeindex` with sorting rules with respect to your language.
+   Note: if you need to map compound characters to a character, don't use
+   `^^I` or `^^M` because these characters have very specific category codes.
    And use space to separate more mappings, like in \`\_compoundcharscs` above.
    \_cod -----------------------------
 
@@ -98,7 +98,7 @@
 \_let \_ignoredcharsen = \_ignoredcharscs
 
    \_doc -----------------------------
-   Preparing to primary pass is implemented by the \`\_setprimarysorting` macro. 
+   Preparing to primary pass is implemented by the \`\_setprimarysorting` macro.
    It is called from `\makeindex` macro and all processing of sorting is in a group.
    \_cod -----------------------------
 
@@ -121,7 +121,7 @@
    \_tmpnum=65 \_ea\_act \_sortingdata \_relax
    \_def \_act ##1{\_ifx##1\_relax \_else
       \_lccode`##1=`\^^I
-      \_ea\_act \_fi}% 
+      \_ea\_act \_fi}%
    \_ea\_act \_ignoredchars \_relax
 }
 
@@ -133,13 +133,13 @@
    \_def \_act ##1{\_ifx##1\_relax \_else
       \_ifx##1,\_else \_advance\_tmpnum by1 \_lccode`##1=\_tmpnum \_fi
       \_ea\_act \_fi}%
-  \_tmpnum=65 \_ea\_act \_sortingdata \_relax 
+  \_tmpnum=65 \_ea\_act \_sortingdata \_relax
 }
 
    \_doc -----------------------------
-   Strings to be sorted are prepared in `\,<string>` control sequences 
-   (in order to save `\TeX` memory).
-   The \`\_preparesorting` `\,<string>` converts `<string>` to `\_tmpb` 
+   Strings to be sorted are prepared in `\,<string>` control sequences
+   (to save `\TeX` memory).
+   The \`\_preparesorting` `\,<string>` converts `<string>` to `\_tmpb`
    with respect to the data initialized in \^`\_setprimarysorting` or
    \^`\_setsecondarysorting`.\nl
    The compoud characters are converted to single characters by the
@@ -148,7 +148,7 @@
 
 \_def \_preparesorting #1{%
    \_edef \_tmpb {\_ea\_ignorefirst\_csstring #1}% \,<string> -> <string>
-   \_ea \_docompound \_compoundchars \_relax:{}       % replace compound characters 
+   \_ea \_docompound \_compoundchars \_relax:{}       % replace compound characters
    \_lowercase \_ea{\_ea\_def \_ea\_tmpb \_ea{\_tmpb}}% convert in respect to \_sortingdata
    \_ea\_replstring \_ea\_tmpb \_ea{\_csstring\^^I}{}% remove ignored characters
 }
@@ -158,18 +158,18 @@
 \_def \_ignorefirst#1{}
 
    \_doc -----------------------------
-   Macro \`\_isAleB` `\,<string1> \,<string2>` returns the result of comparison 
+   Macro \`\_isAleB` `\,<string1> \,<string2>` returns the result of comparison
    of given two strings to \`\_ifAleB` control sequence. Usage:
    `\isAleB \,<string1> \,<string2> \_ifAleB ... \_else ... \_fi`
    The converted strings (in respect of the data prepared for first pass)
    must be saved as values of `\,<string1>` and `\,<string2>` macros.
-   The reason is speed:  we don't want to convert them repeatedly in each 
+   The reason is speed:  we don't want to convert them repeatedly in each
    comparison.
    \nl
    The macro
    \`\_testAleB` `<converted string1>&\_relax<converted-string2>\_relax \,<string1>\,<string2>`\nl
-   does the real work. It reads first character from both converted strings, compares them
-   and if it is equal then calls itself recursively else gives result.
+   does the real work. It reads the first character from both converted strings, compares them
+   and if it is equal then calls itself recursively else gives the result.
    \_cod -----------------------------
 
 \_newifi \_ifAleB
@@ -203,7 +203,7 @@
    Merge sort is very effectively implemented by \TeX/ macros. The following
    code is created by my son Miroslav.
    The \`\_mergesort` macro expects that all items in `\_iilist` are separated
-   by comma when it starts. It ends with sorted items in `\_iilist` without commas.
+   by a comma when it starts. It ends with sorted items in `\_iilist` without commas.
    So `\_dosorting` macro must prepare commas between items.
    \_cod -----------------------------
 
@@ -239,24 +239,24 @@
    \_doc -----------------------------
    The \`\_dosorting` `\list` macro redefines `\list` as sorted `\list`.
    The `\list` have to include control sequences in the form `\<c><string>`.
-   These control sequences will be sorted in respect to <strings> without
+   These control sequences will be sorted with respect to <strings> without
    change of meanings of these control sequences. Their meanings are
    irrelevant when sorting. The first character <c> in `\<c><string>` should
    be whatever. It does not influence the sorting. \OpTeX/ uses comma at
    this place for sorting indexes: `\,<word1> \,<word2> \,<word3> ...`.
 
-   The actual language (chosen for hyphenation patterns) is used for 
-   sorting data. If the `\_sortinglang` macro 
-   is defined as `<iso-code>`(for example `\def\sortinglang{de}`) 
+   The actual language (chosen for hyphenation patterns) is used for
+   sorting data. If the `\_sortinglang` macro
+   is defined as `<iso-code>`(for example `\def\sortinglang{de}`)
    then this has precedence and actual language is not used.
-   Moreover, if you specify \`\_asciisortingtrue` then ASCII 
-   sorting will be processed and all language sorting data will be ignored. 
+   Moreover, if you specify \`\_asciisortingtrue` then ASCII
+   sorting will be processed and all language sorting data will be ignored.
    \_cod -----------------------------
 
 \_newifi \_ifasciisorting  \_asciisortingfalse
 \_def\_dosorting #1{%
    \_begingroup
-     \_def\_nold{}% 
+     \_def\_nold{}%
      \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
       \_ifasciisorting
           \_edef\_sortinglang{ASCII}%
@@ -264,7 +264,7 @@
           \_let \_setsecondarysorting=\_relax
       \_else
          \_setprimarysorting
-      \_fi        
+      \_fi
       \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
       \_ifx\_nold\_empty\_else \_opwarning{Missing\_nold\_space for language (\_sortinglang)}\_fi
       \_def \_act##1{\_preparesorting ##1\_edef##1{\_tmpb}}%
@@ -278,7 +278,7 @@
 
    \_doc -----------------------------
    The \`\makeindex` prints the index. First, it sorts the `\_iilist`
-   second, it prints the sorted `\_iilist`, each item is printed 
+   second, it prints the sorted `\_iilist`, each item is printed
    using \^`\_printindexitem`.
    \_cod -----------------------------
 
@@ -286,7 +286,7 @@
   \_ifx\_iilist\_empty \_opwarning{index data-buffer is empty. TeX me again}%
   \_incr\_unresolvedrefs
   \_else
-    \_dosorting \_iilist % sorting \_iilist   
+    \_dosorting \_iilist % sorting \_iilist
     \_bgroup
        \_rightskip=0pt plus1fil \_exhyphenpenalty=10000 \_leftskip=\_iindent
        \_ea\_xargs \_ea\_printindexitem \_iilist ;\_par
@@ -300,15 +300,15 @@
    If `\_,<word>` is defined then this is used instead real <word>
    (this exception is declared by `\iis` macro). Else <word> is printed by
    \^`\_printii`. Finally, \^`\_printiipages` prints the value of `\,<word>`,
-   i.e. the list of pages. 
-   \_cod -----------------------------  
+   i.e. the list of pages.
+   \_cod -----------------------------
 
 \_def\_printindexitem #1{%
    \_ifcsname _\_csstring #1\_endcsname
       \_ea\_ea\_ea \_printii \_csname _\_csstring #1\_endcsname &%
    \_else
       \_ea\_ea\_ea\_printii \_ea\_ignorefirst \_csstring #1&%
-   \_fi   
+   \_fi
    \_ea\_printiipages #1&
 }
 
@@ -347,12 +347,12 @@
    \`\_printiipages` `<pglist>&` gets `<pglist>` in the form
    `<pg>:<type>,<pg>:<type>,...<pg>:<type>` and it converts them to
    `<pg>, <pg>, <from>--<to>, <pg>` etc. The same pages must be printed only once
-   and continuous consequences of pages must be compressed to the form <from>-<to>. 
+   and continuous consequences of pages must be compressed to the form <from>-<to>.
    Moreover, the consequence is continuous only if all pages have the same <type>.
    Empty <type> is most common, pages with `b` <type> must be printed as bold
    and with `i` `<type>` as italics.
    Moreover, the `<pg>` mentioned here are <gpageno>, but we have to print
-   <pageno>. The following macros solves these tasks.
+   <pageno>. The following macros solve these tasks.
    \_cod -----------------------------
 
 \_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0 \_printpages #1,:,\_par}
@@ -360,7 +360,7 @@
    \_ifx,#1,\_uselastpgnum
    \_else \_def\_tmpa{#2}%
       \_ifx\_pgtype\_tmpa \_else
-         \_let\_pgtype=\_tmpa 
+         \_let\_pgtype=\_tmpa
          \_uselastpgnum \_usepgcomma \_pgprint#1:{#2}%
          \_tmpnum=#1 \_returnfi \_fi
       \_ifnum\_tmpnum=#1 \_returnfi \_fi
@@ -374,22 +374,22 @@
    \_ea\_printpages \_fi
 }
 \_def\_returnfi #1\_relax{\_fi}
-\_def\_uselastpgnum{\_ifx\_lastpgnum\_undefined 
+\_def\_uselastpgnum{\_ifx\_lastpgnum\_undefined
    \_else \_ea\_pgprint\_lastpgnum \_let\_lastpgnum=\_undefined \_fi
 }
 \_def\_usepgcomma{\_ifnum\_tmpnum>0, \_fi} % comma+space between page numbers
 \_def\_usepgdash{\_hbox{--}}               % dash in the <from>--<to> form
 
    \_doc -----------------------------
-   You can re-define \`\_pgprint` `<gpageno>:{<iitype>}` 
+   You can re-define \`\_pgprint` `<gpageno>:{<iitype>}`
    if you need to implement more <iitypes>.
    \_cod -----------------------------
 
 \_def\_pgprint #1:#2{%
    \_ifx ,#2,\_pgprintA{#1}\_returnfi \_fi
-   \_ifx b#2{\_bf \_pgprintA{#1}}\_returnfi \_fi   
-   \_ifx i#2{\_it \_pgprintA{#1}}\_returnfi \_fi   
-   \_ifx u#2\_pgu{\_pgprintA{#1}}\_returnfi \_fi   
+   \_ifx b#2{\_bf \_pgprintA{#1}}\_returnfi \_fi
+   \_ifx i#2{\_it \_pgprintA{#1}}\_returnfi \_fi
+   \_ifx u#2\_pgu{\_pgprintA{#1}}\_returnfi \_fi
   \_pgprintA{#1}\_relax
 }
 \_def\_pgprintA #1{\_ilink[pg:#1]{\_cs{_pgi:#1}}} % \ilink[pg:<gpageno>]{<pageno>}
@@ -397,8 +397,8 @@
 
    \_doc -----------------------------
    The \`\iindex``{<word>}` puts one <word> to the index. It writes
-   \^`\_Xindex``{<word>}{<iitype>}` to the `.ref` file. 
-   All othes variants of indexing macros expands internally to `\iindex`.
+   \^`\_Xindex``{<word>}{<iitype>}` to the `.ref` file.
+   All other variants of indexing macros expand internally to `\iindex`.
    \_cod -----------------------------
 
 \_def\_iindex#1{\_isempty{#1}\_iffalse\_openref{\def~{ }%
@@ -407,8 +407,8 @@
 
    \_doc -----------------------------
    The \`\_Xindex``{<word>}{<iitype>}` stores `\,<word>` to the `\_iilist` if
-   there is first occurrence of the <word>. The list of pages where `<word>`
-   occurs, is the value of the macro `\,<word>`, so the `<gpageno>:<iitype>` 
+   there is the first occurrence of the <word>. The list of pages where `<word>`
+   occurs, is the value of the macro `\,<word>`, so the `<gpageno>:<iitype>`
    is appended to this list.
    Moreover, we need a mapping from <gpageno> to `<pageno>`, because we print
    `<pageno>` in the index, but hyperlinks are implemented by `<gpageno>`.
@@ -427,7 +427,7 @@
 
    \_doc -----------------------------
    The implementation of macros \`\ii`, \`\iid`, \`\iis` follows.
-   Note that `\ii` works in horizontal mode on order to the `\write` whatsit 
+   Note that `\ii` works in the horizontal mode in order to the `\write` whatsit
    is not broken from the following word. If you need to keep vertical mode,
    use \^`\iindex``{<word>}` directly.
    \nl

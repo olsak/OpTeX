@@ -1,11 +1,11 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \TeX {Logos TeX, LuaTeX, etc. <2020-02-28>} % preloaded in format
 
    \_doc ----------------------------
-   Despite plain \TeX/ each macro for logos ends by \`\ignoreslash`. 
-   This macro ignores next slash if it is present. 
-   You can `use \TeX/ like this` for protecting the space following the logo. 
+   Despite plain \TeX/ each macro for logos ends by \`\ignoreslash`.
+   This macro ignores the next slash if it is present.
+   You can `use \TeX/ like this` for protecting the space following the logo.
    This is visually more comfortable.
    The macros \`\TeX`, \`\OpTeX`, \`\LuaTeX`, \`\XeTeX` are defined.
    \_cod ----------------------------
@@ -22,8 +22,8 @@
 \_public \TeX \OpTeX \LuaTeX \XeTeX \ignoreslash ;
 
    \_doc -----------------------------
-   The \`\_slantcorr` macro expands to slant-correction of current font. It is
-   used to shifting A if the \`\LaTeX` logo is in italic. 
+   The \`\_slantcorr` macro expands to the slant-correction of the current font. It is
+   used to shifting A if the \`\LaTeX` logo is in italic.
    \_cod -----------------------------
 
 \_protected\_def \_LaTeX{\_tmpdim=.42ex L\_kern-.36em \_kern \_slantcorr % slant correction
@@ -45,7 +45,7 @@
 \_public \OPmac \CS \csplain ;
 
    \_doc ----------------------------
-   The expandable versions of logos used in Outlines needs the expandable
+   The expandable versions of logos used in Outlines need the expandable
    \`\ingnslash` (instead of the \^`\ignoreslash`).
    \_cod \_fin ----------------------
 

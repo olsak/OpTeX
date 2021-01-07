@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \printdoc {Macros for documentation printing <2020-04-28>}
 
@@ -25,27 +25,27 @@
 \_let\enddocument=\_bye
 
    \_doc -----------------------------
-   Full page of listing causes underfill `\vbox` in output routine.
+   A full page of listing causes underfull `\vbox` in output routine.
    We need to add a small tolerance.
    \_cod -----------------------------
 
 \_pgbottomskip=0pt plus10pt minus2pt
 
    \_doc -----------------------------
-   The listing mode is implemented here. The \`\maxlines` 
+   The listing mode is implemented here. The \`\maxlines`
    is maximal lines of code printed in the listing mode.
    \_cod -----------------------------
 
 \_newcount \_maxlines   \_maxlines=100000
 \_public \maxlines ;
 
-\_eoldef\_cod#1{\_par \_wipeepar 
+\_eoldef\_cod#1{\_par \_wipeepar
    \_vskip\_parskip \_medskip \_ttskip
    \_begingroup
-   \_typosize[8/10] 
+   \_typosize[8/10]
    \_let\_printverbline=\_printcodeline
    \_ttline=\_inputlineno
-   \_setverb 
+   \_setverb
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_relax \_ttfont
@@ -100,8 +100,8 @@
 \_def\_remfirstunderscoreA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi}
 
    \_doc -----------------------------
-   The lines in the listing mode have Yellow background.
-   \_cod -----------------------------   
+   The lines in the listing mode have a yellow background.
+   \_cod -----------------------------
 
 \_def\Yellow{\_setcmykcolor{0.0 0.0 0.3 0.03}}
 
@@ -124,16 +124,16 @@
    \_doc -----------------------------
    `\docfile` is currently documented file.\nl
    \`\printdoc` and \`\printdoctail` macros are defined here.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_def\docfile{}
 \_def\_printdoc #1 {\_par \_def\docfile{#1}%
    \_everytt={\_ttshift=-15pt \_let\_printverblinenum=\_relax}%
-   \_ea\_cod \input #1 
+   \_ea\_cod \input #1
    \_everytt={\_let\_printverblinenum=\_relax}%
    \_def\docfile{}%
 }
-\_def\_printdoctail #1 {\_bgroup 
+\_def\_printdoctail #1 {\_bgroup
    \_everytt={}\_ttline=-1 \_ea\_printdoctailA \_input #1 \_egroup}
 {\_long\_gdef\_printdoctailA#1\_endcode{}}
 
@@ -142,17 +142,17 @@
    \_doc -----------------------------
    You can do `\verbinuput \vitt{<filename>} (<from>-<to>) <filename>`
    if you need analogical design like in listing mode.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
-\_def\_vitt#1{\_def\docfile{#1}\_ttline=-1 
+\_def\_vitt#1{\_def\docfile{#1}\_ttline=-1
    \_everytt={\_typosize[8/10]\_let\_printverbline=\_printcodeline \_medskip}}
 
 \_public \vitt ;
 
    \_doc -----------------------------
-   The Index entries are without the trailing backslash. We must to add it
+   The Index entries are without the trailing backslash. We must add it
    when printing Index.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_addto \_ignoredcharsen {_}  % \foo, \_foo is the same in the fist pass of sorting
 \_def\_printii #1#2&{%
@@ -160,15 +160,15 @@
    \_gdef\_currii{#1#2}\_the\_everyii\_noindent
    \_hskip-\_iindent \_ignorespaces\_printiiA\bslash#1#2//}
 
-\_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0 
+\_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0
    {\_rm\_printpages #1,:,\_par}}
 
-\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip 
+\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip
    \_bf\_llaptoclink{#1}{#2}\_hfill \_pgn{#3}\_tocpar\_medskip}
 
    \_doc -----------------------------
    The \code{<something>} will be print as <something>.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_let\lt=<
 \_catcode`\<=13
@@ -184,21 +184,21 @@
 \_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 }
 
    \_doc -----------------------------
-   Main documentation point and hyperlinks to/from it.
+   Main documentation points and hyperlinks to/from it.
    Main documentation point: \code{\\`\\foo`}.
    User-level documentation point: \code{\\^`\\foo}, first occurence only.
-   Next occurences are only links to main documentation point.
+   The next occurrences are only links to the main documentation point.
    Link to user-level documentation point: \code{\\~`\\foo}.
    If user-level documentation point follows the main documentation point
    then use \code{\\_forwardlink\\`\\foo`}.
-   \_cod -----------------------------   
+   \_cod -----------------------------
 
 \_activettchar`
 
 \_def\`#1`{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_ifcsname cs:\_tmp\_endcsname\_else \_dest[cs:\_tmp]\_fi
    \_sxdef{cs:\_tmp}{}%
-   \_hbox{\_ifcsname cs:^\_tmp\_endcsname 
+   \_hbox{\_ifcsname cs:^\_tmp\_endcsname
             \_link[cs:^\_tmp]{\Red}{\_tt\_csstring\\\_tmp}\_else
             {\_tt\Red\_csstring\\\_tmp}\_fi}%
 }
@@ -219,34 +219,34 @@
 \_endcode %-------------------------------------------
 
 \noindent
-The \^`\printdoc` `<filename><space>` and \^`\printdoctail` `<filename><space>` 
-commands are defined after the file `doc.opm` is load by \^`\load`~`[doc]`. 
+The \^`\printdoc` `<filename><space>` and \^`\printdoctail` `<filename><space>`
+commands are defined after the file `doc.opm` is load by \^`\load`~`[doc]`.
 
 The `\printcoc` starts reading of given `<filename>` from the second line.
-The file is read in {\em the listing mode}. 
+The file is read in {\em the listing mode}.
 The `\prindoctail` starts reading given `<filename>` from the
-first occurrence of the `\_encode`. The file is read 
+first occurrence of the `\_encode`. The file is read
 in normal mode (like `\input <filename>`).
 
-The {\em listing mode} prints the lines as listing of a code. This mode is
+The {\em listing mode} prints the lines as a listing of a code. This mode is
 finished when first {\visiblesp`  \_doc`} occurs or first `\_endcode`
 occurs. At least two spaces must precede before such `\_doc`. On the other
-hand, the `\_encode` must be at the left edge of the line without spaces. 
+hand, the `\_encode` must be at the left edge of the line without spaces.
 If this rule is not met then the listing mode continues.
 
 If the first line or the last line of the listing mode is empty then such
 lines are not printed. The maximal number of printed lines in the listing
-mode is \^`\maxlines`. Is is set to almost infinity (100000). You can set it
-to a more sensible value. Such setting is valid only for the first following
+mode is \^`\maxlines`. It is set to almost infinity (100000). You can set it
+to a more sensible value. Such a setting is valid only for the first following
 listing mode.
 
-When the listing mode is finished by `\_doc` then next lines are read in the
-normal way, but the material between `\begtt` ... `\endtt` pair 
-is shifted by three letters left. The reason is that the three spaces of 
+When the listing mode is finished by `\_doc` then the next lines are read in the
+normal way, but the material between `\begtt` ... `\endtt` pair
+is shifted by three letters left. The reason is that the three spaces of
 indentation is recommended in the `\_doc` ... `\_cod` pair and this shifting
-is a compensation of this indentation.
+is compensation for this indentation.
 
-The `\_cod` macro ignores the rest of current line and starts the listing
+The `\_cod` macro ignores the rest of the current line and starts the listing
 mode again.
 
 When the listing mode is finished by the `\_endcode` then the `\endinput` is
@@ -256,17 +256,17 @@ You cannot reach the end of the file (without `\_endcode`) in the listing
 mode.
 
 The listing mode creates all control sequences which are listed in the
-index as active link to the main documentation point of such control sequence
-and prints them in blue. Other text is printed in black.
+index as an active link to the main documentation point of such control sequence
+and prints them in blue. Another text is printed in black.
 
 The main documentation point is denoted by \code{\\`\\}`<sequence>`\code{`}
 in red, for example \code{\\`\\foo`}.
-The user documentation point is the first occurrence of 
+The user documentation point is the first occurrence of
 \code{\\^`\\}`<sequence>`\code{`}, for example \code{\\^`\\foo`}.
 There can be more such markups, all of them are hyperlinks to the main
-documentation point. 
-And main documentation point is hyperlink to the user documentation point,
-if such point exists. Finally, the 
+documentation point.
+And main documentation point is a hyperlink to the user documentation point
+if this point exists. Finally, the
 \code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
 hyperlinks to the user documentation point.
 

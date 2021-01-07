@@ -1,32 +1,32 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \langlist {Initialization of hypenation patterns <2020-03-10>} % preloaded in format  
+\_codedecl \langlist {Initialization of hypenation patterns <2020-03-10>} % preloaded in format
 
    \_doc -----------------------------
    The <iso-code> means a shortcut of language name (mostly by ISO 639-1).
    The following control sequences are used for language switching:
    \begitems
    * `\_lan:<number>` expands to `<iso-code>` of the language.
-     The number is internal number of languages used as a value of
+     The <number> is an internal number of languages used as a value of
      `\language` register.
    * `\_ulan:<long-lang>` expands to `<iso-code>` too. This is transformation
      from long name of language (lowercase letters) to <iso-code>.
    * `\_<iso-code>Patt` (for example `\_csPatt`) is the language `<number>` declared by `\chardef`.
-   * `\<iso-code>lang` 
-     (for example \`\enlang`, \`\cslang`, \`\sklang`, \`\delang`, \`\pllang`) 
+   * `\<iso-code>lang`
+     (for example \`\enlang`, \`\cslang`, \`\sklang`, \`\delang`, \`\pllang`)
      is language selector.  It exists in two states
      \begitems
      * Initialization state: when `\<iso-code>lang` is used first then it
-       must load the patterns into memory using Lua code. If it is done then 
-       the `\<iso-code>lang` re-defines itself to processing state.
+       must load the patterns into memory using Lua code. If it is done then
+       the `\<iso-code>lang` re-defines itself to the processing state.
      * Processing state: it only sets `\language=\_<iso-code>Patt`, i.e it
        selects the hyphenation patterns. It does a little more
        language-dependent work, as mentioned below.
      \enditems
    * `\_langspecific:<isocode>` is processed by `\<iso-code>lang` and it
-     should include language-specific macros declared by user or macro designer.
+     should include language-specific macros declared by the user or macro designer.
    \enditems
-   The USenglish patters are preloaded first: 
+   The USenglish patters are preloaded first:
    \_cod -----------------------------
 
 \_chardef\_enPatt=0
@@ -57,7 +57,7 @@
    \def\<iso-code>lang {\_<iso-code>lang} % public version \<iso-code>lang
    \endtt
    You can see that `\<iso-code>lang` runs \^`\_loadpattrs` and
-   \^`\_uselang` first (in initialization state) and it runs 
+   \^`\_uselang` first (in initialization state) and it runs
    only \^`\_uselang` when it is called again (in processing state).
    \_cod -----------------------------
 
@@ -83,7 +83,7 @@
    `hyph-<hyph-file-spec>.tex`. The patterns and hyphenation exceptions
    are saved here in UTF-8 encoding.
    The <hyph-file-spec> should be a list of individual <hyph-file-spec>'s
-   separated by comma, see the language Serbian below for example.
+   separated by commas, see the language Serbian below for an example.
    \_cod -----------------------------
 
 \_def\_loadpattrs#1 #2 #3 {%
@@ -102,7 +102,7 @@
 }
 
    \_doc -----------------------------
-   \`\_uselang``{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>`\nl 
+   \`\_uselang``{<iso-code>}\_<iso-code>Patt <pre-hyph><post-hyph>`\nl
    sets `\language`, `\lefthyphenmin`, `\righthyphenmin` and runs
    `\frenchspacing`. This default language-dependent settings
    should be re-declared by `\_langspecific:<iso-code>` which is run
@@ -115,16 +115,16 @@
    \_cs{_langspecific:#1}%
 }
    \_doc -----------------------------
-   The \`\uselanguage` `{<long-lang>}` is defined here 
+   The \`\uselanguage` `{<long-lang>}` is defined here
    (for compatibility with e-plain users).
    \_cod -----------------------------
 
 \_def\_uselanguage#1{\_lowercase{\_cs{_\_cs{_ulan:#1}lang}}}
-\_public \uselanguage ; 
+\_public \uselanguage ;
 
    \_doc -----------------------------
    The numbers for languages are declared as fixed constants (no
-   auto-generated). This concept is inspired from CSplain. 
+   auto-generated). This concept is inspired by CSplain.
    There are typical numbers of languages in CSplain: 5=Czech in IL2,
    15=Czech in T1 and 115=Czech in Unicode. We keep these constants
    but we load only Unicode patterns (greater than 100), of course.
@@ -211,8 +211,8 @@
 
    \_doc -----------------------------
    The \`\langlist` includes names of all languages which are ready to load
-   and use their hyphenation patterns. This list is printed to terminal and
-   to log at ini\TeX/ state here. It can be used when processing document too.
+   and use their hyphenation patterns. This list is printed to the terminal and
+   to log at ini\TeX/ state here. It can be used when processing documents too.
    \_cod -----------------------------
 
 \_message{Language hyph.patterns ready to load: \_langlist.
@@ -224,12 +224,12 @@
 \_endcode % ---------------------------------------------
 
 
-Maybe, you need to do more language specific actions than just switching
-hyphenation patterns. For example you need to load a specific font with a
-specific script used in selected language, you can define a macros for
-quotation marks depending on the language etc.
+Maybe, you need to do more language-specific actions than just switching
+hyphenation patterns. For example, you need to load a specific font with a
+specific script used in the selected language, you can define macros for
+quotation marks depending on the language, etc.
 
-The example shows how to declare such language specific things.
+The example shows how to declare such language-specific things.
 
 \begtt
 \def\langset #1 #2{\sdef{_langspecific:#1}{#2}}
@@ -237,9 +237,9 @@ The example shows how to declare such language specific things.
 \langset fr {... declare French quotation marks}
 \langset de {... declare German quotation marks}
 \langset gr {... switch to Greek fonts family}
-... etc. 
+... etc.
 \endtt
 
-Note that you need not to set language specific phrases (like `\today`) 
-by this code. Another concept is used for such tasks. See the 
+Note that you need not set language-specific phrases (like `\today`)
+by this code. Another concept is used for such tasks. See the
 section~\ref[langphrases] for more details.

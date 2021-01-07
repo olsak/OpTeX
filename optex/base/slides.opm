@@ -1,9 +1,9 @@
-% This is part of OpTeX project, see http://petr.olsak.net/optex
+% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \slideshow {Slides style for OpTeX <2020-03-19>} % loaded on demand by \slides
 
    \_doc -----------------------------
-   Default margins and design is declared here. 
+   Default margins and design is declared here.
    The `\_ttfont` is scaled by `mag1.15` in order to balance the
    ex height of Helvetica (Heros) and LM fonts Typewriter.
    The `\begtt`...`\endtt` verbatim is printed by smaller text.
@@ -31,11 +31,11 @@
 \_onlyrgb   % RGB color space is better for presentations
 
    \_doc -----------------------------
-   The bottom margin is set to 3\,mm. If we use 1\,mm, then baseline of
-   `\footline` is 2\,mm from the bottom page. This is depth of the `\Grey`
+   The bottom margin is set to 3\,mm. If we use 1\,mm, then the baseline of
+   `\footline` is 2\,mm from the bottom page. This is the depth of the `\Grey`
    rectangle used for page numbers. It is r-lapped to `\hoffset` width because left
    margin = `\hoffset` = right margin. It is 14\,mm for narrow pages or
-   16\,mm for wide pages. 
+   16\,mm for wide pages.
    \_cod -----------------------------
 
 \_footlinedist=1mm
@@ -52,13 +52,13 @@
 
    \_doc -----------------------------
    The \`\pshow``<num>` prints the text in invisible
-   (transparent) font when \^`\layernum`\code{<}`<num>`. 
-   The trasparency is set by by `\pdfpageresoyrces` primitive.
+   (transparent) font when \^`\layernum`\code{<}`<num>`.
+   The transparency is set by `\pdfpageresoyrces` primitive.
    \_cod -----------------------------
 
-\pdfpageresources{/ExtGState << /Invisible << /Type /ExtGState /ca 0 /CA 0 >> 
+\pdfpageresources{/ExtGState << /Invisible << /Type /ExtGState /ca 0 /CA 0 >>
                                 /Visible   << /Type /ExtGState /ca 1 /CA 1 >> >>}
-\addto\_morepgresources{/Invisible << /Type /ExtGState /ca 0 /CA 0 >> 
+\addto\_morepgresources{/Invisible << /Type /ExtGState /ca 0 /CA 0 >>
                         /Visible   << /Type /ExtGState /ca 1 /CA 1 >>}
 \def\Invisible {\_pdfliteral{/Invisible gs}}
 \def\Visible   {\_pdfliteral{/Visible gs}}
@@ -68,13 +68,13 @@
 \_def\_pshow#1{\_use{=#1}\Red \_use{<#1}\Transparent \_ignorespaces}
 
    \_doc -----------------------------
-   The main level list of items is activated here. The `\_item:X` and 
+   The main level list of items is activated here. The `\_item:X` and
    `\_item:x` are used and are re-defined here.
-   If we are in nested level of items and `\pg+` is used then
+   If we are in a nested level of items and `\pg+` is used then
    `\egroups` macro expands to the right number of `\egroup`s
-   in order to close page correctly. The level of nested item lists
-   is saved to the `\_ilevel` register and used when we start again 
-   the next text after `\pg+`. 
+   to close the page correctly. The level of nested item lists
+   is saved to the `\_ilevel` register and used when we start again
+   the next text after `\pg+`.
    \_cod -----------------------------
 
 \_newcount\_gilevel
@@ -101,10 +101,10 @@
    The \`\_endslides` is defined as `\_end` primitive, but
    slide-designer can redefine it. For example,
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#slider]{OpTeX trick 0029}
-   shows how to define a clickable navigation to the pages and how to check
-   the data integrity at the end of document using `\_endslides`.
+   shows how to define clickable navigation to the pages and how to check
+   the data integrity at the end of the document using `\_endslides`.
 
-   The `\bye` macro is re-defined here as an alternative to `\pg.`.
+   The `\bye` macro is redefined here as an alternative to `\pg.`.
    \_cod -----------------------------
 
 \_def\_endslides{\_end}
@@ -113,7 +113,7 @@
    \_doc -----------------------------
    We need no numbers and no table of contents when using slides.
    The \^`\_printsec` macro is redefined in order the title is centered
-   and typeset in `\Blue`. 
+   and typeset in `\Blue`.
    \_cod -----------------------------
 
 \_def\_titfont{\_typosize[42/60]\_bf \Blue}
@@ -121,27 +121,27 @@
 \_def\_secfont{\_typosize[25/30]\_bf \Blue}
 
 \_nonum \_notoc \_let\_resetnonumnotoc=\_relax
-\_def\_printsec#1{\_par 
+\_def\_printsec#1{\_par
    \_abovetitle{\_penalty-400}\_bigskip
-   {\_secfont \_noindent \_leftskip=0pt plus1fill \_rightskip=\_leftskip 
+   {\_secfont \_noindent \_leftskip=0pt plus1fill \_rightskip=\_leftskip
      \_printrefnum[@\_quad]#1\_nbpar}\_insertmark{#1}%
-   \_nobreak \_belowtitle{\_medskip}% 
+   \_nobreak \_belowtitle{\_medskip}%
 }
 
    \_doc -----------------------------
-   When \`\slideshow` is active then each page is opened 
+   When \`\slideshow` is active then each page is opened
    by `\setbox\_slidepage=\vbox\bgroup` (roughly speaking)
    and closed by `\egroup`. The material is
    `\unvbox`ed and saved for the usage in the next usage if `\pg+` is in process.
    The \`\_slidelayer` is incremented instead `\pageno` if `\pg+`.
    This counter is equal to `\count1`, so it is printed to the terminal and
-   log file next to `\pageno`. 
+   log file next to `\pageno`.
 
    The code is somewhat more complicated when \^`\layers` is used. Then
    `<layered-text>` is saved to the \`\_layertext` macro, the material before
    it is in \`\_slidepage` box and the material after it is in `\_slidepageB`
    box. The pages are completed in the `\loop` which increments the
-   \`\layernum` register.   
+   \`\layernum` register.
    \_cod -----------------------------
 
 \_newbox\_slidepage  \_newbox\_slidepageB
@@ -159,20 +159,20 @@
 }
 \_def\_destboxslide{\_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}}
 
-\_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup \_setilevel 
+\_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup \_setilevel
    \_ifvoid\_slidepage \_else \_unvbox\_slidepage \_nointerlineskip\_lastbox \_fi}
 \_def\_setilevel{\_loop \_decr\_gilevel \_ifnum\_gilevel<0 \_else \_begitems \_repeat}
 
-\_def\_closepage{\_egroups  
+\_def\_closepage{\_egroups
    \_ifnum \_maxlayers=0 \_unvcopy\_slidepage \_vfil\_break
-   \_else \_begingroup \_setwarnslides \_layernum=0 
-      \_loop 
+   \_else \_begingroup \_setwarnslides \_layernum=0
+      \_loop
          \_ifnum\_layernum<\_maxlayers \_advance\_layernum by1
             \_printlayers \_vfil\_break
-            \_ifnum\_layernum<\_maxlayers \_incr\_slidelayer \_decr\_pageno \_fi 
+            \_ifnum\_layernum<\_maxlayers \_incr\_slidelayer \_decr\_pageno \_fi
       \_repeat
       \_global\_maxlayers=0
-      \_incr\_layernum \_global\_setbox\_slidepage=\_vbox{\_printlayers}%  
+      \_incr\_layernum \_global\_setbox\_slidepage=\_vbox{\_printlayers}%
       \_endgroup
    \_fi}
 \_def\_resetpage{%
@@ -217,10 +217,10 @@
 
    \_doc -----------------------------
    We must to redefine \`\fnotenumpages` because the data from `.ref` file
-   are less usable for implementing such feature: the
-   footnote should be in more layers repeatedly. But we can suppose that 
+   are less usable for implementing such a feature: the
+   footnote should be in more layers repeatedly. But we can suppose that
    each page starts by `\pg;` macro, so we can reset the footnote counter by
-   this macro. 
+   this macro.
    \_cod -----------------------------
 
 \_def \_fnotenumpages {\_def\_fnotenum{\_the\_lfnotenum}\_pgfnotefalse

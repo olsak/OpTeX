@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \slides   % OpTeX slides style activated
 
@@ -27,7 +27,7 @@
 
 * The the simple document looks like:
 
-\begtt 
+\begtt
 \slides       % style initialized
 %\wideformat  % 16:9
 \slideshow    % partially uncovering ideas
@@ -41,12 +41,12 @@ text
 \pg.
 \endtt
 
-* If `\slideshow` is missing or commented out then 
-  \"partially uncovering ideas" (see later) are deactivated. It is useful 
+* If `\slideshow` is missing or commented out then
+  \"partially uncovering ideas" (see later) are deactivated. It is useful
   for printing.
 * The `\slideshow` must be the last command in the declaration part of the
   document.
-* By default, the slides have A5 landscape format. 
+* By default, the slides have A5 landscape format.
   You can declare `\wideformat`. Then the height is the same
   but width is 263\,mm, i.\,e.~the ratio width:height is 16:9.
 
@@ -58,31 +58,31 @@ text
   by `\tit Title` (terminated by end of line).
 * The `\subtit Author name etc.`\ (terminated by end of line)
   can be used after `\tit` at the first slide.
-* You can use `\nl` for new line in paragraphs or titles.
+* You can use `\nl` for a new line in paragraphs or titles.
 
 \sec Default design
 
 * The paragraph texts are ragged right.
-* Titles, subtitles and section titles are centered.
+* Titles, subtitles, and section titles are centered.
 * The `\sec` and `\secc` are printed without numbers.
 * No paragraph indentation, a little vertical space between paragraphs.
-* The Heros font family (aka Helvetica) is initialized as default.\nl 
+* The Heros font family (aka Helvetica) is initialized as default.\nl
   Sans-serif FiraMath font for math typesetting is used.\nl
   If `\fontfam[<famname>]` precedes `\slides` then it rewrites default.
-* The items in lists are started by blue square (`\type X` and `\type x` ).
+* The items in lists are started by a blue square (`\type X` and `\type x` ).
 
 \pg; %------------------------------------------------------------------
 
 \sec One slide (one page)
 
-* Top level item list is activated by default. The asterisk `*` opens 
-  new item at the top level list.
+* Top-level item list is activated by default. The asterisk `*` opens
+  new item at the top-level list.
 * Nested items lists (second and more level) should be created in
   the `\begitems`\dots`\enditems` environments.
 * Each slide (page) must be terminated by `\pg;` command.
 * The last slide must be terminated by `\pg.` command or by `\bye`.
 
-\begtt 
+\begtt
 \sec My ideas
 
 * First idea
@@ -94,7 +94,7 @@ text
 * Final idea
 \endtt
 
-* Note: each page is processed in a group, so: put your own definitions 
+* Note: each page is processed in a group, so: put your own definitions
   (if~exist) before `\slideshow` or use `\global` assignment.
 
 \pg; %------------------------------------------------------------------
@@ -106,14 +106,14 @@ text
 * the character `;` -- normal next page,\pg+
 * the character `.` -- the end of the document,\pg+
 * the character `+` -- next page keeps the same text
-  and a next text is added (usable for partially uncovering of ideas).\pg+ 
+  and a next text is added (usable for partially uncovering of ideas).\pg+
 \enditems
 
 * Summary:
 \begtt
 \pg;    ... next page
 \pg.    ... the end of the document
-\pg+    ... uncover next text at the same page
+\pg+    ... uncover next text on the same page
 \endtt
 \pg+
 
@@ -140,9 +140,9 @@ The previous page was created by:
 
 * Summary
 ...
-* When `\slideshow` is not declared 
+* When `\slideshow` is not declared
   then `\pg+` is deactivated.\pg+
-* The `\pg+` creates a new \"virtual page", 
+* The `\pg+` creates a new \"virtual page",
   so the current paragraph is terminated.
 \pg;
 \endtt
@@ -151,16 +151,16 @@ The previous page was created by:
 
 \sec Notes
 
-* When `\slideshow` is active then you cannot reference sections by 
+* When `\slideshow` is active then you cannot reference sections by
   hyperlinked `\ref`. Only `\pgref` works (and goes to the last layer
   of the referenced page).
 * If the text overfull the page (slide) then it follows to the next page without
-  saying explicitly `\pg;`. But `\slideshow` cannot work in such case.\pg+
+  saying explicitly `\pg;`. But `\slideshow` cannot work in this case.\pg+
 
 \sec More about design
 
-* You can use `\backgroundpic{<image-file>}` for putting an image to the backgroud.
-* You can re-declare `\footline` or re-define internal macros for design as 
+* You can use `\backgroundpic{<image-file>}` for putting an image to the background.
+* You can re-declare `\footline` or re-define internal macros for design as
   you wish.
 * You can put the images or text wherever using `\putimege` or `\puttext`
   macros...
@@ -182,14 +182,14 @@ The previous page was created by:
   prints red HELLO, as shown here.\pg+
 
 * `\putpic <right> <up> <width> <height> {<image-file>}`
-  puts the image with desired <width> and <height> at the position like 
+  puts the image with desired <width> and <height> at the position like
   `\puttext` puts the text.
 
   \putpic .8\hsize 20mm 30mm \nospec {op-ring.png}
-* The ring above is the result of 
+* The ring above is the result of
 
 \begtt
-\putpic .8\hsize 20mm 30mm \nospec {op-ring.png} 
+\putpic .8\hsize 20mm 30mm \nospec {op-ring.png}
 \endtt
   %
   used at beginning of this paragraph.\pg+
@@ -204,22 +204,22 @@ The previous page was created by:
   a~group.
 * The exception is the nested environment `\begitems...\enditems`.
 * The `\pg+` always finalizes the current paragraph.
-  It is impossible to hide only a part of horizontal mode.\pg+
+  It is impossible to hide only a part of the horizontal mode.\pg+
 
 \sec The \code{\\layers}\,...\code{\\endlayers} environment
 
-If you really need something unsupported by `\pg+` then you can use 
+If you really need something unsupported by `\pg+` then you can use
 
 \begtt \catcode`\<=13
 \layers <number>
 <layered text>
 \endlayers
-\endtt 
+\endtt
 
 * The <layered text> should include conditions like
-  `\ifnum\layernum...` or `\ifcase\layernum`. 
+  `\ifnum\layernum...` or `\ifcase\layernum`.
   It is printed <number> times to more slide pages (layers) with the same
-  surrounding text. See next page... 
+  surrounding text. See next page...
 
 \pg; %------------------------------------------------------------------
 
@@ -240,7 +240,7 @@ The transparent (invisible) text is used in other cases.
 
 The following dance:
 \layers 3
-{\pshow2 Second text.} {\pshow3 Third text.} {\pshow1 First text.} 
+{\pshow2 Second text.} {\pshow3 Third text.} {\pshow1 First text.}
 \endlayers
 \pg+
 
@@ -248,13 +248,13 @@ was generated by
 
 \begtt
 \layers 3
-{\pshow2 Second text.} {\pshow3 Third text.} {\pshow1 First text.} 
+{\pshow2 Second text.} {\pshow3 Third text.} {\pshow1 First text.}
 \endlayers
 \endtt
 
 \pg+
-* The <layered text> is treated as macro parameter. So, you cannot use verbatim
-  nor `\sec` titles here. Maximal one `\layers` environment can be per one 
+* The <layered text> is treated as a macro parameter. So, you cannot use verbatim
+  nor `\sec` titles here. Maximal one `\layers` environment can be per one
   page (terminated by `\pg+` or `\pg;` or `\pg.`
 
 \pg; %------------------------------------------------------------------
@@ -264,15 +264,15 @@ was generated by
 The \LaTeX{} package {\bf\Blue Beamer} gives much more features and many themes
 are prepared for Beamer, {\bf\Red but}
 \pg+
-* the user of Beamer is forced to {\em program} his/her document using 
+* the user of Beamer is forced to {\em program} his/her document using
   dozens of \code{\\begin{foo}} and \code{\\end{foo}} and many another
   programming constructions,\pg+
-* plain \TeX{} gives you a possibility to simply 
+* plain \TeX{} gives you a possibility to simply
   {\em write} your document with minimal markup. The result is more compact.
-  You can concentrate to the contents of your document, not to the
+  You can concentrate on the contents of your document, not on the
   programming syntax.\pg+
 * User needs to read 250 pages of doc for understanding Beamer,\pg+
-* on the other hand, you need to read only ten 
+* on the other hand, you need to read only ten
   slides\fnote{this eleventh slide isn't counted}
   and you are ready to use {\bf\Blue\OpTeX/ slides}.
 

@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Schola] \Schola {TeX Gyre Schola fonts based on New Century}
         {\caps} {\rm \bf \it \bi} {Schola}

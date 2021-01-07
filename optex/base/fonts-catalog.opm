@@ -1,9 +1,9 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \_undefined {Font catalogue <2020-02-26>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
-\_initunifonts  
+\_initunifonts
 \_begingroup
 
 \_istoksempty\_catalogmathsample \_iftrue \_noloadmath \_fi
@@ -24,7 +24,7 @@
 \_fi
 
 \_def\_faminfo [#1]#2#3#4{%
-   \_bgroup   
+   \_bgroup
        \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
        \_edef\_act{\_noexpand\_isinlist{,\_cataloglist,}{,\_famname,}}\_act
        \_iftrue \def\_cataloglist{}\_fi
@@ -32,11 +32,11 @@
        \_iftrue \def\_cataloglist{.}\_fi
        \_ifx\_cataloglist\_empty
        \_ifx^#4^\_else
-          \_bigskip {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}          
+          \_bigskip {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}
           \_input #3.opm
           \_ifexistfam \_nobreak\_medskip \_dosamples #4:{}
-              \_ifx\_mathfaminfo\_empty 
-              \_else \_istoksempty\_catalogmathsample 
+              \_ifx\_mathfaminfo\_empty
+              \_else \_istoksempty\_catalogmathsample
                   \_iftrue {\_ttfixed \$Default math font\$: \_mathfaminfo \_par}
                   \_else Default math font (\_mathfaminfo): \_the\_catalogmathsample \_par
               \_fi\_fi
@@ -50,7 +50,7 @@
    \_ea\_dosamples\_fi
 }
 \_def\_dosamplesA#1,{%
-   \_ifx^#1^\_else 
+   \_ifx^#1^\_else
       \_ifx-#1\_def\_usemodifiers{}\_else \_def\_usemodifiers{#1}\_fi
       \_ea \_dosamplesB \_printvars \_relax
       \_ea \_dosamplesA \_fi
@@ -58,8 +58,8 @@
 \_def\_dosamplesB#1{%
    \_ifx\_relax#1 \_else
       {\_ttfixed \_detokenize\_ea{\_usemodifiers}\_detokenize{#1}\_unskip:}
-      {\_usemodifiers #1\_ea\_ifx\_the\_font \_nullfont 
-          \_ttfixed ... This font isn't available in your system.% 
+      {\_usemodifiers #1\_ea\_ifx\_the\_font \_nullfont
+          \_ttfixed ... This font isn't available in your system.%
       \_else \_the\_catalogsample \_fi }\_par
       \_ea \_dosamplesB \_fi
 }
@@ -87,7 +87,7 @@
 
 \parindent=0pt
 
-\nonum\sec Customization of the catalogue
+\nonum\sec Customization of the catalog
 
 
 You can redeclare the printed sample of each font by:
@@ -110,7 +110,7 @@ The \code{\\catalogmathsample} is empty by default, so math fonts are not loaded
 only the family of default math font is listed.
 
 \bigskip
-You can restrict the families to be printed in catalogue by:
+You can restrict the families to be printed in the catalog by:
 
 \begtt
 \catalogonly={Termes, Latin Modern, Heros}
@@ -128,10 +128,9 @@ The \code{\\cataogexclude} is empty by default.
 \bigskip The font families printed in the catalogue must be declared by the
 \code{\\_faminfo} command in the file \code{fams-ini.opm} (declarations used
 as default for \OpTeX/) or in the file \code{fams-local.opm}. The second file
-does not exist by default but user can create it. The syntax rules are
+does not exist by default but users can create it. The syntax rules are
 described in the \code{fams-ini.opm} file.
 
 
 \_endcode % -------------------------------------
 
- 

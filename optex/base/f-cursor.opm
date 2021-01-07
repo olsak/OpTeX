@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Cursor] \Cursor {TeX Gyre Cursor fonts based on Courier}
         {\caps} {\rm \bf \it \bi} {}

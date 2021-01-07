@@ -1,4 +1,4 @@
-%% This is part of OpTeX project, see http://petr.olsak.net/optex
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \report {Basic styles of OpTeX <2020-03-28>} % preloaded in format
 
@@ -17,7 +17,7 @@
    \_def\_boxlinesE{\_ifhmode\_egroup\_empty\_fi}%
    \_def\_nl{\_boxlinesE}%
    \_bgroup \_lccode`\~=`\^^M\_lowercase{\_egroup\_let~}\_boxlinesE
-   \_everypar{\_setbox0=\_lastbox\_endgraf 
+   \_everypar{\_setbox0=\_lastbox\_endgraf
       \_hbox\_bgroup \_catcode`\^^M=13 \_let\par=\_nl \_aftergroup\_boxlinesC}%
 }
 \_def\_boxlinesC{\_futurelet\_next\_boxlinesD}
@@ -29,7 +29,7 @@
    The \`\report` and \`\letter` style initialization macros are defined here.
    \nl
    The `\letter` defines \`\address` and \`\subject` macros.
-   \_cod ----------------------------- 
+   \_cod -----------------------------
 
 \_def\_report{
    \_typosize[11/13.2]
@@ -89,18 +89,18 @@ The example of `\letter` style document follows:
 
 Vážený pane řediteli
 
-na základě Vašeho dopisu č.j.~123456/78-dat a elektronické výzvy si dovoluji 
-Vás požádat o prozkoumání mé možnosti další možnosti. 
+na základě Vašeho dopisu č.j.~123456/78-dat a elektronické výzvy si dovoluji
+Vás požádat o prozkoumání mé možnosti další možnosti.
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-commodo consequat. 
+commodo consequat.
 
 Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
 veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
 commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-esse cillum dolore eu fugiat nulla pariatur. 
+esse cillum dolore eu fugiat nulla pariatur.
 
 S úctou
 
