@@ -1,0 +1,193 @@
+% This is the macro package used by OpTeX, see http://petr.olsak.net/optex
+
+% vlna.opm, Petr Olšák <petr@olsak.net>, 2021
+
+% Vlna prevents breaks in spaces after single-letter prepositions, after (or
+% before) degrees, and between value and SI units. It enables or disables
+% split hyphens too. All folks are done at the postprocessing phase before TeX splits
+% the typesetting material into the paragraph lines.
+
+% vlna.opm is based on Lua code from the package `luavlna` (by Michal Hoftich
+% and Miro Hrončok). See `texdoc luavlna` or end of this file for more information.
+
+\_namespace{vlna}
+
+\_codedecl \.singlechars {Preventing single-chars prepositions and more <2021-01-08>}
+
+   \_doc -----------------------------
+   We declare new attribute, register callbacks, and define Lua functions that
+   point to Lua functions from `luavlna.lua` package.
+   We need this package installed.
+
+   We need not `require ltluatex` because `luatexbase.callbaks` are defined
+   in the `optex.lua` file and it is part of the OpTeX format.
+   \_cod -----------------------------
+
+\_newattribute \.preventsinglestatus
+
+\_directlua{%
+   luavlna = require "luavlna"
+
+   luatexbase.add_to_callback("pre_linebreak_filter", luavlna.preventsingle,"LuaVlna")
+   luatexbase.add_to_callback("hyphenate", luavlna.split_hyphens, "allow hyphen breaks")
+   luavlna.preventsingleid = \_the\_attributealloc
+
+   set_singlechars = function(lang,chars)
+     if (lang == "") then return nil end
+     local utf_gmatch = unicode.utf8.gmatch
+     local chars = chars  or ""
+     local singlechars = {}
+     for char in unicode.utf8.gmatch(chars,"(\_csstring\%a)") do
+       singlechars[char] = true
+     end
+     luavlna.singlechars(lang,singlechars)
+   end
+
+   set_compounds = function(lang, compounds)
+     if (lang == "") then return nil end
+     local c = compounds:explode(",+") % match multiple colons as one
+     local  compoundstable = {}
+     for _, compound in pairs(c) do
+       compoundstable[compound] = true
+     end
+     luavlna.initials(lang, compoundstable)
+   end
+
+   set_main_language = function(lang)
+     if (lang == "") then return nil end
+     luavlna.set_main_language(tonumber(lang))
+   end	
+
+   enable_split_hyphens = function(lang)
+     if (lang == "") then return nil end
+     luavlna.split_hyphen_langs[tonumber(lang)] = true
+   end
+
+   disable_split_hyphens = function(lang)
+     if (lang == "") then return nil end
+     luavlna.split_hyphen_langs[tonumber(lang)] = nil
+   end
+}
+
+   \_doc -----------------------------
+   We need not `require luavlna-langno` because of the conversion from
+   language name to the `\language` number is done by the macro
+   `\.langtonum``<sequence>={<langname>}` defined here.
+   It does `\def<sequence>{<langnumber>}` or `\def\sequence{}` if <langname>
+   is unknown. The <langname> is case insensitive and these names are
+   declared in the hyphen-lan.opm file, section 2.37.2 in OpTeX documentation.
+   \_cod -----------------------------
+
+\_def\.langtonum#1=#2{\_lowercase{\_edef#1{\_trycs{_ulan:#2}{}}}%
+   \_ifx#1\_empty \_opwarning{vlna: unknown language "#2", ignored}%
+   \_else \_edef#1{\_the\_cs{_#1Patt}}\_fi}
+
+   \_doc -----------------------------
+   `\singlechars``{<langname>}{<prepositions>}` sets <prepositions> for
+   given language.\nl
+   `\compoundinitials``{<langname>}{<comma-separated-list>}` sets
+   compound characters from the list for given language. 
+   \_cod -----------------------------
+
+\_def\.singlechars#1#2{\.langtonum\.l={#1}\_directlua{set_singlechars("\.l","#2")}}
+\_def\.compoundinitials#1#2{\.langtonum\.l={#1}\_directlua{set_compounds("\.l","#2")}}
+
+   \_doc -----------------------------
+   `\enablesplithyphens` and `\disablesplithyphens` are dependent on the language.
+   \_cod -----------------------------
+
+\_def\.enablesplithyphens#1{\.langtonum\.l={#1}\_directlua{enable_split_hyphens("\.l")}}
+\_def\.disablesplithyphens#1{\.langtonum\.l={#1}\_directlua{disable_split_hyphens("\.l")}}
+
+   \_doc -----------------------------
+   By default, the language-dependent features of the `luavlna` depend on
+   the current `\language` value, i.e. on the currently selected hyphenation.
+   `\preventsinglelang``{<langname>}` activates the language-dependent
+   features regardless of the current `\language` value.
+   \_cod -----------------------------
+
+\_def\.preventsinglelang#1{\.langtonum\.l={#1}\_directlua{set_main_language("\.l")}}
+
+   \_doc -----------------------------
+   Switching on/off `luavlna` preposition features should be done using attribute
+   setting. It will allow you to switch them on/off in the middle of the paragraph.
+   \_cod -----------------------------
+
+\_def\.preventsingleon{\.preventsinglestatus=2 }
+\_def\.preventsingleoff{\.preventsinglestatus=1 }
+
+   \_doc -----------------------------
+   Switching on/off the other `luavlna` features is implemented only by
+   setting a special `luavlna` variable.
+   \_cod -----------------------------
+
+\_def\.preventsingledebugon{\_directlua{luavlna.debug(true)}}
+\_def\.preventsingledebugoff{\_directlua{luavlna.debug(false)}}
+
+\_def\.nopredegrees{\_directlua{luavlna.no_predegrees = true}}
+\_def\.nosufdegrees{\_directlua{luavlna.no_sufdegrees = true}}
+\_def\.nounits{\_directlua{luavlna.no_unit = true}}
+\_def\.noinitials{\_directlua{luavlna.no_initials = true}}
+
+\_nspublic
+   \singlechars            % declare single-letter prepositions per language
+   \compoundinitials       % declare compound characters per language
+   \enablesplithyphens     % enable split hyphens per language
+   \disablesplithyphens    % disable split hyphens per language
+   \preventsinglelang      % declare main language independent of current hyphenation
+   \preventsingleon        % switch on the prepositions feature (default)
+   \preventsingleoff       % switch off the prepositions feature
+   \nopredegrees           % switch off pre-degrees feature (default is on)
+   \nosufdegrees           % switch off post-degrees feature (default is on)
+   \nounits                % switch off SI units feature (default is on)
+   \noinitials             % switch off initials feature (default is on)
+   \preventsingledebugon   % switch on debug printing (purple squares)
+   \preventsingledebugoff  % switch off debug printing (default)
+   ;
+
+\_endnamespace
+
+% Default values:
+\singlechars{Czech}{AIiVvOoUuSsZzKk}
+\singlechars{Slovak}{AIiVvOoUuSsZzKk}
+\compoundinitials{Czech}{Ch,CH}  % doesn't work in version v0.1g of luavlna
+\enablesplithyphens{Czech}
+\enablesplithyphens{Slovak}
+% + predegrees, sufdegrees, units, initials (they are independent of language value)
+
+\_endcode
+
+What should be done automatically after `\load[vlna]`:
+
+   Prepositions feature: v lese -> v~lese,  (A taky zde) -> (A~taky zde).
+
+   Pre-degrees feature: Mgr. Bown -> Mgr.~Brown.
+
+   Post-degrees feature: John Brown, PhD. -> John Brown,~PhD.
+
+   SI units feature: 42 cm -> 42~cm (with thin space)
+
+   Initials feature:  J. Brown -> J.~Brown
+
+   Split hyphens feature: propan-butan -> propan\discretionary{-}{-}{-}butan.
+
+The prepositions and split-hyphens features are language-dependent, the other
+features are language-independent.
+
+A testing file:
+
+\begtt
+\load[vlna]
+\fontfam[LMfonts]
+\cslang
+\preventsingledebugon
+
+Mgr. J. Brown, PhD., zkusí v lese (A taky v závorce) zkontrolovat rozměr 42 m.
+Obejde se bez propan-butanových lahví.
+\bye
+\endtt
+
+Note, that versinon v0.1g 2020-06-02 of the luavlna package is an
+experimental code. It seems that `\compoundinitials` does not work in this
+version and when you use `\hbox{-}` in a paragraph when
+`\enablesplithyphens` then LuaTeX hangs.
