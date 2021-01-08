@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2020-02-14>} % loaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2021-01-08>} % loaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
@@ -75,7 +75,7 @@
    \`\opwarning` `{<text>}` prints warning on the terminal and to the log file.
    \_cod ------------------------------
 
-\_def \_opwarning #1{\_wterm{l.\_the\_inputlineno> WARNING: #1.}}
+\_def \_opwarning #1{\_wterm{WARNING l.\_the\_inputlineno: #1.}}
 \_public \opwarning ;
 
    \_doc ------------------------------
@@ -104,4 +104,6 @@
 
 \_endcode % -------------------------------------
 
-
+2021-01-08: \opwarning format changed (secondly, hope that conclusively)
+2020-10-12: \opwarning: line numbers added
+2020-02-14: introduced
