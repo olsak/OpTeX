@@ -99,7 +99,7 @@
 
 \_def\_byehook{%
    \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
-   \_ifnum\_unresolvedrefs>0 \_opwarning{Rerun to get references right}\_fi
+   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}\_fi
 }
 
 \_endcode % -------------------------------------

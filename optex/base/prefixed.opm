@@ -100,7 +100,10 @@
 }
 
 \_def \_nspublic {\_xargs \_nspublicA}
-\_def \_nspublicA #1{\_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname}
+\_def \_nspublicA #1{%
+   \_unless\_ifx #1\_undefined
+      \_opwarning{\_ea\_ignoreit\_pkglabel\_space redefines the meaning of \_string#1}\_fi
+   \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname}
 
 \_def \_nsprivate {\_xargs \_nsprivateA}
 \_def \_nsprivateA #1{\_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1}
@@ -237,8 +240,9 @@ or when another \^`\_namespace` is used. This command checks
 if the same package label is not declared by the \^`\_namespace` twice.
 
 The \^`\_nspublic` macro does `\let\foo = \_<pkg>_foo` when
-\^`\_namespace{<pkg>}` is declared. And the \^`\_nsprivate` macro does reverse
-operation to it. Example: you can define `\def\.macro{...}` and then
+\^`\_namespace{<pkg>}` is declared. Moreover, it prints a warning if `\foo` is
+defined already. The \^`\_nsprivate` macro does reverse
+operation to it without warnings. Example: you can define `\def\.macro{...}` and then
 set it to the user name space by `\_nspublic \macro;`.
 
 Don't load other packages (which are using their own namespace) inside your
