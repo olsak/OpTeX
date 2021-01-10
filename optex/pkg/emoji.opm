@@ -1,0 +1,57 @@
+% This is the macro package used by OpTeX, see http://petr.olsak.net/optex
+
+% emoji.opm, Petr Olšák <petr@olsak.net>, 2021
+
+% Emoji allows us to use colored emoticons as characters from the font.
+% The \emoji{<name>} command is available, see texdoc emoji (from
+% corresponding LaTeX package).
+
+\_namespace{emoji}
+
+\_codedecl \.emoji {Emotikons from the TwemojiMozilla.ttf font}
+
+   \_doc -----------------------------
+   Font TwemojiMozilla.ttf is loaded. The font feature +colr is needed.
+   The `\emojifont` is implemented using `\_resizethefont` as size-dependent.
+   \_cod -----------------------------
+
+\_initunifonts
+\_font\.tenemoji=[TwemojiMozilla]:+colr
+\_def\.emojifont{\.tenemoji\_resizethefont}
+\_def\.emoji#1{{\.emojifont\_cs{_emoji_:#1}}}
+
+   \_doc -----------------------------
+   The mapping from names or aliases to the codes are declared in the
+   `emoji-table.def` file from the \LaTeX/ package emoji.
+   \_cod -----------------------------
+
+\_bgroup
+   \_def\__emoji_def #1 #2#3#4#5#6{% #1=n, #2=data, #3=name, #4=alias, #5=descr, #6=versi
+      \_sxdef{_emoji_:#3}{#2}%
+      \_ifx^#4^\_else \_global\_slet{_emoji_:#4}{_emoji_:#3}\_fi
+   }
+   \_def\ProvidesExplFile#1#2#3#4{}
+   \_def\__emoji_group#1 #2{}
+   \_def\__emoji_subgroup#1 #2{}
+   \_catcode`\#=12
+   \_input {emoji-table.def}% defining emoji names
+\_egroup
+
+\_nspublic \emoji \emojifont ;
+
+\_endnamespace
+
+\_endcode
+
+Testing file:
+
+\begtt
+\load[emoji]
+We can use \emoji{grinning} or directly: {\emojifont 😀} too.
+\bye
+\endtt
+
+More than 3000 emoticons are available.
+
+If you want black-and-white pictograms, see another font:
+\url{http://petr.olsak.net/optex/optex-tricks.html\#fawesome}
