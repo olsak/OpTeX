@@ -18,7 +18,7 @@
 \_initunifonts
 \_font\.tenemoji=[TwemojiMozilla]:+colr
 \_def\.emojifont{\.tenemoji\_resizethefont}
-\_def\.emoji#1{{\.emojifont\_cs{_emoji_:#1}}}
+\_def\.emoji#1{{\.emojifont\_trycs{_emoji_:#1}{\_opwarning{uknown emoji "#1"}}}}
 
    \_doc -----------------------------
    The mapping from names or aliases to the codes are declared in the
@@ -26,9 +26,9 @@
    \_cod -----------------------------
 
 \_bgroup
-   \_def\__emoji_def #1 #2#3#4#5#6{% #1=n, #2=data, #3=name, #4=alias, #5=descr, #6=versi
+   \_def\__emoji_def #1 #2#3#4#5#6{% #1=n, #2=data, #3=name, #4=aliases, #5=descr, #6=versi
       \_sxdef{_emoji_:#3}{#2}%
-      \_ifx^#4^\_else \_global\_slet{_emoji_:#4}{_emoji_:#3}\_fi
+      \_ifx^#4^\_else \_foreach #4, \_do ##1, {\_global\_slet{_emoji_:##1}{_emoji_:#3}}\_fi
    }
    \_def\ProvidesExplFile#1#2#3#4{}
    \_def\__emoji_group#1 #2{}
@@ -43,13 +43,11 @@
 
 \_endcode
 
-Testing file:
-
-\begtt
+\begtt % ----------------------- Testing file ---------------------------
 \load[emoji]
 We can use \emoji{grinning} or directly: {\emojifont 😀} too.
 \bye
-\endtt
+\endtt % ----------------------------------------------------------------
 
 More than 3000 emoticons are available.
 
