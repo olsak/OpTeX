@@ -530,6 +530,27 @@
 
 \_public \ovalparams \circleparams \roundness ;
 
+   \_doc -----------------------------
+   \OpTeX/ defines \"Standard \OpTeX/ markup language"%
+   \fnote{Will be developed in 2021.}
+   which lists selected commands from chapter~1 and gives their behavior when a
+   converter from \OpTeX/ document to HTML or Markdown or \LaTeX/ is used.
+   The structure-oriented commands are selected here, but the commands which
+   declare typographical appearance (page layout, dimensions, selected font
+   family) are omitted. More information for such a converter should be
+   given in \`\cnvinfo``{<data>}`.
+   \OpTeX/ simply ignores this but the converter can read its configuration
+   from here. For example, a user can write:
+   \begtt
+   \cnvinfo {type=html, <cnv-to-html-data>}
+   \cnvinfo {type=markdown, <cnv-to-markdown-data>}
+   \endtt
+   and the document can be processed by \OpTeX/ to create PDF, or by a
+   converter to create HTML, or by another converter to create Markdown.
+   \_cod -----------------------------
+
+\_long\_def \cnvinfo #1{}
+
 
 \_endcode %----------------------------------------------------
 
