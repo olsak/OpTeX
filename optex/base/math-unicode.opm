@@ -65,7 +65,7 @@
    You can combine more fonts if you register them to another
    math families (5, 6, 7, etc.) in the \^`\normalmath` macro.
    \nl
-   The default value of \^`\normalunimath` shows a combination of base Unicode-math
+   The default value of \^`\_normalunimath` shows a combination of base Unicode-math
    font with 8bit Math font at family 4. See definition of `\script` macro where
    `\fam4` is used.
    \_cod -----------------------------

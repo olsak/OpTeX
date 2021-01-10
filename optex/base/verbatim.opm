@@ -86,11 +86,14 @@
 
    \_doc ----------------------------
    \`\begtt` is defined only as public. We don't need a private `\_begtt` variant.
-   This macro is defined by `\eoldef`, so users can put a parameter at the
-   same line where `\begtt` is. This `#1` parameter is used after `\_everytt`
+   This macro opens a group and sets `%` as an active character (temporary).
+   This will allow it to be used as the comment character at the same line after
+   `\begtt`. Then \`\_begtti` is run. It is defined by \^`\eoldef`,
+   so users can put a parameter at the
+   same line where `\begtt` is. This `#1` parameter is used after \^`\everytt`
    parameters settings, so users can change them locally.
 
-   The `\begtt` macro opens group, does \^`\_setverb` and another preprocessing, sets
+   The \^`\_begtti` macro does \^`\_setverb` and another preprocessing, sets
    `\endlinechar` to `^^J` and reads the following text in verbatim mode
    until \`\endtt` occurs. This scanning is done by \`\_startverb` macro which is
    defined as:
@@ -114,9 +117,9 @@
    in the next paragraph.
    \_cod ---------------------------
 
-\_eoldef \begtt#1{\_par \_wipeepar \_setxhsize
+\_def\begtt{\_par \_begingroup \_adef\%##1\_relax{\_relax}\_begtti}
+\_eoldef \_begtti#1{\_wipeepar \_setxhsize
    \_vskip\_parskip \_ttskip
-   \_begingroup
    \_setverb
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
