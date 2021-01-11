@@ -1765,59 +1765,61 @@ put it as the first command in your document:
 \sec Summary
 %%%%%%%%%%%%
 
-\begtt     \typosize[9/11]\adef!{\string\endtt}\adef&{\kern.25em}
-\tit Title (terminated by end of line)
-\chap Chapter Title (terminated by end of line)
-\sec Section Title (terminated by end of line)
-\secc Subsection Title (terminated by end of line)
+\def\ttref#1'{\ea\~\ea`\csname#1\endcsname`}
 
-\maketoc         % table of contents generation
-\ii item1,item2  % insertion the items to the index
-\makeindex       % the index is generated
+\begtt \typosize[9/11]\adef&{\kern.25em}\adef~#1'{\ea\~\ea`\csname#1\endcsname`}
+~tit' Title (terminated by end of line)
+~chap' Chapter Title (terminated by end of line)
+~sec' Section Title (terminated by end of line)
+~secc' Subsection Title (terminated by end of line)
 
-\label [labname]  % link target location
-\ref [labname]    % link to the chapter, section, subsection, equation
-\pgref [labname]  % link to the page of the chapter, section, ...
+~maketoc'         % table of contents generation
+~ii' item1,item2  % insertion the items to the index
+~makeindex'       % the index is generated
 
-\caption/t  % a numbered table caption
-\caption/f  % a numbered caption for the picture
-\eqmark     % a numbered equation
+~label' [labname]  % link target location
+~ref' [labname]    % link to the chapter, section, subsection, equation
+~pgref' [labname]  % link to the page of the chapter, section, ...
 
-\begitems       % start list of the items
-\enditems       % end of list of the items
-\begtt          % start verbatim text
-!          % end verbatim text
-\activettchar X % initialization character X for in-text verbatim
-\code           % another alternative for in-text verbatim
-\verbinput      % verbatim extract from the external file
-\begmulti num   % start multicolumn text (num columns)
-\endmulti       % end multicolumn text
+~caption'/t  % a numbered table caption
+~caption'/f  % a numbered caption for the picture
+~eqmark'     % a numbered equation
 
-\cite [labnames]  % refers to the item in the lits of references
-\rcite [labnames] % similar to \cite but [] are not printed.
-\sortcitations \shortcitations \nonumcitations % cite format
-\bib [labname]  % an item in the list of references
-\usebib/? (style) bib-base % direct using of .bib file, ? in {s,c}
+~begitems'       % start a list of the items
+~enditems'       % end of list of the items
+~begtt'          % start a verbatim text
+~endtt'          % end verbatim text
+~activettchar' X % initialization character X for in-text verbatim
+~code'           % another alternative for in-text verbatim
+~verbinput'      % verbatim extract from the external file
+~begmulti' num   % start multicolumn text (num columns)
+~endmulti'       % end multicolumn text
 
-\load [<filenames>]   % loadaing macro files
-\fontfam [FamilyName] % selection of font family
-\typosize [font-size/baselineskip] % size setting of typesetting
-\typoscale [factor-font/factor-baselineskip] % size scaling
-\thefontsize [size] \thefontscale [factor]   % current font size
+~cite' [labnames]  % refers to the item in the lits of references
+~rcite' [labnames] % similar to \cite but [] are not printed.
+~sortcitations' ~shortcitations' ~nonumcitations' % cite format
+~bib' [labname]  % an item in the list of references
+~usebib'/? (style) bib-base % direct using of .bib file, ? in {s,c}
 
-\inspic file.ext    % insert a picture, extensions: jpg, png, pdf
-\table {rule}{data} % macro for the tables like in LaTeX
+~load' [filenames]     % loadaing macro files
+~fontfam' [FamilyName] % selection of font family
+~typosize' [font-size/baselineskip] % size setting of typesetting
+~typoscale' [factor-font/factor-baselineskip] % size scaling
+~thefontsize' [size] ~thefontscale' [factor]   % current font size
 
-\fnote {text}   % footnote (local numbering on each page)
-\mnote {text}   % note in the margin (left or right by page number)
+~inspic' file.ext    % insert a picture, extensions: jpg, png, pdf
+~table' {rule}{data} % macro for the tables like in LaTeX
 
-\hyperlinks {color-in}{color-out} % PDF links activate as clickable
-\outlines {level}   % PDF will have a table of contents in the left tab
+~fnote' {text}   % footnote (local numbering on each page)
+~mnote' {text}   % note in the margin (left or right by page number)
 
-\magscale[factor]  % resize typesetting, line/page breaking unchanged
-\margins/pg format (left, right, top, bottom)unit % margins setting
+~hyperlinks' {color-in}{color-out} % PDF links activate as clickable
+~outlines' {level}   % PDF will have a table of contents in the left tab
 
-\report \letter \slides  % style declaration macros
+~magscale'[factor]  % resize typesetting, line/page breaking unchanged
+~margins'/pg format (left, right, top, bottom)unit % margins setting
+
+~report' ~letter' ~slides'  % style declaration macros
 \endtt
 
 \sec API for macro writers
