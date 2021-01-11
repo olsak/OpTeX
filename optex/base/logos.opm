@@ -16,8 +16,7 @@
 \_protected\_def \_XeTeX {X\_kern-.125em\_phantom E%
    \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
 
-\_def\_ignoreslash {\_futurelet\_next \_ignoreslashA}
-\_def\_ignoreslashA {\_ifx\_next/\_ea\_ignoreit\_fi}
+\_def\_ignoreslash {\_isnextchar/\_ignoreit{}}
 
 \_public \TeX \OpTeX \LuaTeX \XeTeX \ignoreslash ;
 

@@ -1238,7 +1238,7 @@ is linked to the references list.
 
 You can define alternative formating of \^`\cite` command. Example:
 
-\begtt
+\begtt \catcode`\<=13
 \def\cite[#1]{(\rcite[#1])}    % \cite[<label>] creates (27)
 \def\cite[#1]{$^{\rcite[#1]}$} % \cite[<label>] creates^{27}
 \endtt
@@ -1282,7 +1282,7 @@ equal sign are mandatory. Example:
 This macro reads and uses macro package `librarian.tex` by Paul Isambert.
 The usage is:
 
-\begtt
+\begtt \catcode`\<=13
 \usebib/c (<style>) <bib-base> % sorted by \cite-order (c=cite),
 \usebib/s (<style>) <bib-base> % sorted by style (s=style).
 % example:

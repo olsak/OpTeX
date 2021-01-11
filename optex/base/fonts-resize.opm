@@ -234,9 +234,9 @@ The \^`\resizethefont` resizes the currently selected font to the size given by 
 \^`\setfontsize`. For example
 
 \begtt
-                     Here is 10 pt text,
-\setfontsize{at12pt} 10 pt text here unchanged...
-\resizethefont       and 12 pt text is here.
+                     The 10 pt text is here,
+\setfontsize{at12pt} the 10 pt text is here unchanged...
+\resizethefont       and the 12 pt text is here.
 \endtt
 %
 The \^`\setfontsize` command acts like {\em font modifier}. It means that it
@@ -262,9 +262,9 @@ create a size-dependent selector for such font then you can use
 \font\tencomfortaa=Comfortaa-Regular-T1 at10pt
 \def\comfortaa{\tencomfortaa\resizethefont}
 
-\comfortaa Here is 10 pt text
+\comfortaa The 10 pt text is here
 \setfontsize{at12pt}
-\comfortaa Here is 12 pt text
+\comfortaa The 12 pt text is here
 \endtt
 %
 The example above uses the 8\,bit `tfm` font. You can use Unicode font too, of
@@ -278,9 +278,9 @@ these features by the \^`\initunifonts` command explicitly, for example:
 \font\tencyklop=[cyklop-regular] at10pt % the font cyklop-regular.otf is loaded
 \def\cyklop{\tencyklop\resizethefont}
 
-\cyklop Here is 10 pt text
+\cyklop The 10 pt text is here
 \setfontsize{at12pt}
-\cyklop Here is 12 pt text
+\cyklop The 12 pt text is here
 \endtt
 
 \secc[fontdef] The \code{\\fontdef} declarator

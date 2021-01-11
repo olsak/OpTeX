@@ -239,7 +239,7 @@ unable to do this then you can set \^`\bibtexhook={`\^`\oldaccents}`.
 
 The `.bib` files include records in the format:
 
-\begtt
+\begtt \catcode`\<=13
 @<entry-type>{<label>,
    <field-name> = "<field-data>",
    <field-name> = "<field-data>",

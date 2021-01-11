@@ -66,7 +66,7 @@ must expand (at the expand processor level only) to a file name of the loaded fo
 name) and to optional font features appended. The Font Selection
 System uses this macro at the primitive level in the following sense:
 
-\begtt
+\begtt \catcode`\<=13
 \font \<selector> {\_fontnamegen} \_sizespec
 \endtt
 %

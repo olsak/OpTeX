@@ -40,7 +40,7 @@
    appends `\_nobreak \_hskip-2\_iindent\_null \_par`. This causes
    that the last line of the record is shifted outside the margin given by
    `\_rightskip`. A typical record (with long `<title>`) looks like this:
-   \begtt
+   \begtt \catcode`\<=13
                   |                        |
    \llap{<number>} text text text text text
                    text text text text text

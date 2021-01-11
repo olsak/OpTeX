@@ -140,7 +140,7 @@ something like `\makealetter` from \LaTeX/.
 \OpTeX/ defines all new macros as prefixed. For public usage of such macros,
 we need to set non-prefixed version. This is done by
 
-\begtt
+\begtt \catcode`\<=13
 \public <list of control sequences> ;
 \endtt
 

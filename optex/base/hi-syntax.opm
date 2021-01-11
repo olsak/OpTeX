@@ -162,9 +162,7 @@ It has precedence before `\_hicolors<name>` (with the `_` prefix) declared in
 the `hicolors-<name>.opm` file.
 This is useful when there are more hi-syntax languages used in one document.
 
-\medskip
-\noindent{\bf Notes for hi-syntax macro writers}
-
+\secl4 Notes for hi-syntax macro writers
 The file `hisyntax-<name>.opm` is read only once in the \TeX/ group.
 If there are definitions then they must be declared as global.
 

@@ -301,6 +301,26 @@
       \fi
    }
    \endtt
+
+   The \`\secl``<number> <title-text><eol>`
+   should be used for various levels of sections (for example, when
+   converting from Markdown to \OpTeX/). `\secl1` is `\chap`, `\secl2` is `\sec`,
+   `\secl3` is `\secc` and all more levels (for <number>$>3$)
+   are printed by the common \`\_seclp` macro. It declares only a simple design.
+   If there is a requirement to use such more levels then the book designer can
+   define something different here.
+   \_cod -----------------------------
+
+\_def\_secl{\_afterassignment\_secla \_sectionlevel=}
+\_def\_secla{\_ifcase\_sectionlevel
+   \_or\_ea\_chap\_or\_ea\_sec\_or\_ea\_secc\_else\_ea\_seclp\_fi}
+\_eoldef\_seclp#1{\_par \_ifnum\_lastpenalty=0 \_removelastskip\_medskip\_fi
+   \_noindent{\_bf #1}\_vadjust{\_nobreak}\_nl\_ignorepars}
+\_def\_ignorepars{\_isnextchar\_par{\_ignoresecond\_ignorepars}{}}
+
+\_public \secl ;
+
+   \_doc -----------------------------
    The \`\caption``/<letter>` uses `\_<letter>num` counter.
    The group opened by `\caption` is finalized by first `\par` from
    an empty line or from `\vskip` or from `\endinsert`.
@@ -412,6 +432,7 @@
 
 \_endcode % -------------------------------------
 
+2021-01-11 \secl introduced
 2021-01-05 \_thednum printed in text mode in its both occurences.
 2020-04-28 \_secfonts etc: \_boldify is last.
 2020-04-22 \_chapx, \_secx, \_seccx rewritten

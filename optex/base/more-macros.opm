@@ -228,15 +228,12 @@
    \nl
    The 	`\_ea`\`\ignorept``\the<dimen>` expands to a decimal
    number `\the<dimen>` but without `pt` unit.
-   \nl
-   The \`\ignoreit``<token>` just ignores the `<token>`.
    \_cod -----------------------------
 
 \_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
 \_ea\_def \_ea\_ignorept \_ea#\_ea1\_detokenize{pt}{#1}
-\_def\_ignoreit#1{}
 
-\public \removespaces \ignorept \ignoreit ;
+\public \removespaces \ignorept ;
 
    \_doc -----------------------------
    You can use expandable \`\bp``{<dimen>}` convertor from
@@ -268,7 +265,7 @@
    \_doc ------------------
    The pair {\`\_doc` ... \`\_cod`} is used for documenting macros and to
    printing the technical documentation of the \OpTeX/. The syntax is:
-   {\begtt
+   {\begtt \catcode`\<=13
    \_doc <ignored text>
    <documentation>
    \_cod <ignored text>

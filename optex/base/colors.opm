@@ -188,8 +188,8 @@
    It expands <data> in the group where color selectors have
    special meaning, then it adjusts the resulting string by \^`\replstring`
    and runs it. Example shows how the <data> are processed:
-   \begtt
-   input <data>: ".3\Blue + .6^\KhakiC \useK -\Black"
+   \begtt \catcode`\<=13
+   input <data>:  ".3\Blue + .6^\KhakiC \useK -\Black"
    expanded to:  ".3 !=K 1 1 0 0 +.6^!=R .804 .776 .45 \_useK -!=G 0"
    adjusted to:  "\_addcolor .3!=K 1 1 0 0 \_addcolor .6!^R .804 .776 .45
                   \_useK \_addcolor -1!=G 0"

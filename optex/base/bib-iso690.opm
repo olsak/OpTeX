@@ -888,16 +888,16 @@ url       ... URL
 
 \seccc Summary of options
 
-\begtt
+\begtt \catcode`\<=13
 aumax:<number>       ... maximum number of printed authors
 aumin:<number>       ... number of printed authors if aumax exceeds
 autrim:<number>      ... full Firstnames iff number of authors are less than this
-auprint:{<value>}    ... text instead authors list (\AU macro may be used)
+auprint:{<value>}     ... text instead authors list (\AU macro may be used)
 edmax, edmin, edtrim ... similar as above for editors list
-edprint:{<value>}    ... text instead editors list (\ED macro may be used)
-titlepost:{<value>}  ... text after title
-yearprint:{<value>}  ... text instead real year (\YEAR macro may be used)
-editionprint:{<value>} . text instead of real edition (\EDN macro may be used)
+edprint:{<value>}     ... text instead editors list (\ED macro may be used)
+titlepost:{<value>}   ... text after title
+yearprint:{<value>}   ... text instead real year (\YEAR macro may be used)
+editionprint:{<value>} .. text instead of real edition (\EDN macro may be used)
 urlalso      ... the ``available also from'' is used instead ``available from''
 unpublished  ... the publisher etc. fields are not mandatory
 nowarn       ... no mandatory fields

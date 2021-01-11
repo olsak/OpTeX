@@ -79,8 +79,8 @@ For example, when section (level 2) is processed in the first step then we do:
 \begtt
    \advance \count2 by 1
                     % increases the mapping pointer of the type
-                    % \_ol:<\_count0:\_count1:\_count2> of this section
-   \advance \<_ol:\_count0:\_count1> by 1
+                    % \_ol:\_count0:\_count1:\_count2 of this section
+   \advance \_ol:\_count0:\_count1 by 1
                     % increases the number of descendants connected
                     % to the parent of this section.
 \endtt
