@@ -748,6 +748,10 @@ and below the list. The nested item list is without vertical spaces
 automatically. More information about the design of lists of items should be
 found in the section~\ref[lists].
 
+A \"selected block of text" can be surrounded by
+\^`\begblock`\dots\^`\endblock`. The default design of blocks of text is
+indented text in smaller font. The blocks of text can be nested.
+
 \secc Tables
 %%%%%%%%%%%
 
@@ -1787,6 +1791,8 @@ put it as the first command in your document:
 
 ~begitems'       % start a list of the items
 ~enditems'       % end of list of the items
+~begblock'       % start a block of text
+~endblock'       % end of block of text
 ~begtt'          % start a verbatim text
 ~endtt'          % end verbatim text
 ~activettchar' X % initialization character X for in-text verbatim

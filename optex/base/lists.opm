@@ -104,6 +104,21 @@
 }
 \_public \style ;
 
+   \_doc -----------------------------
+   The \`\begblock` macro selects fonts from footnotes \^`\_fnset`
+   and opens new indentation in a group.
+   \`\endblock` closes the group.
+   This is implemented as an counterpart
+   of Markdown's Blockquotes. Redefine these macros if you want to declare
+   different design.
+   \_cod -----------------------------
+
+\_def\_begblock{\_bgroup\_fnset \_medskip \_advance\_leftskip by\_iindent \_firstnoindent}
+\_def\_endblock{\_par\_medskip\_egroup\_isnextchar\_par{}{\_noindent}}
+
+\_public \begblock \endblock ;
+
+
 \_endcode % -------------------------------------
 
 2020-04-21 \isnextchar\par added to \enditems
