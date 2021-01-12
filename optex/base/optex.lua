@@ -20,10 +20,9 @@ alloc = alloc or {}
 --
 -- An attribute allocator in Lua that cooperates with normal \OpTeX/ allocator.
 local attributes = {}
-local attribute_max = registernumber("_maiattribute")
 function alloc.new_attribute(name)
     local cnt = tex.count["_attributealloc"] + 1
-    if cnt > attribute_max then
+    if cnt > 65534 then
         tex.error("No room for a new attribute")
     else
         tex.setcount("global", "_attributealloc", cnt)
@@ -32,6 +31,9 @@ function alloc.new_attribute(name)
         return cnt
     end
 end
+--
+-- `provides_module` is needed by older version of luaotfload
+provides_module = function() end
 --
 -- CALLBACKS
 callback = callback or {}
@@ -341,6 +343,7 @@ end)
 luatexbase = {
     registernumber = registernumber,
     attributes = attributes,
+    provides_module = provides_module,
     new_attribute = alloc.new_attribute,
     callback_descriptions = callback.callback_descriptions,
     create_callback = callback.create_callback,
