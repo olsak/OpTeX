@@ -111,6 +111,8 @@
    This is implemented as an counterpart
    of Markdown's Blockquotes. Redefine these macros if you want to declare
    different design.
+   The \ulink[http://petr.olsak.net/optex/optex-tricks.html\#greyblock]{\OpTeX/ trick 0031}
+   shows how to create blocks with grey background splittable to more pages.
    \_cod -----------------------------
 
 \_def\_begblock{\_bgroup\_fnset \_medskip \_advance\_leftskip by\_iindent \_firstnoindent}
