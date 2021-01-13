@@ -109,7 +109,7 @@
    \_fi \_egroup
 }
 \_def\_tableC{\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_tabskip=\_tabskipr\_cr
-   \_scantextokens\_ea{\_tmpb}\_crcr}}
+   \_scantextokens\_ea{\_tmpb} \_crcr}}
 
 \_newbox\_tstrutbox  % strut used in table rows
 \_newtoks\_tabdata   % the \halign declaration line
