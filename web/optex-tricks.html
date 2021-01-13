@@ -136,6 +136,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
     <li><a href="#greyblock">Text blocks with grey background splittable to more pages</a>
+    <li><a href="#blocksum">The checksum of the text blocks</a>
 </ul>
 
 <li>Slides
@@ -1355,11 +1356,11 @@ the implementation is this splitting problem:
 \def\begblock{\par\bgroup
    \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
    \medskip
-   \savepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\lastypos}}
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
    \nobreak \medskip
 }
 \def\endblock{\par\nobreak\medskip
-   \savepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\lastypos}}
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
    \medskip \egroup
 }
 \refdecl{%
@@ -1392,7 +1393,7 @@ the implementation is this splitting problem:
 
 <p>The main idea of the implementation. The \begblock writes its vertical
 position to the .ref file in the format \Xblock{level}B{position} using
-\savepos and \lastypos. The \endblock writes analogical information in the format
+\pdfsavepos and \pdflastypos. The \endblock writes analogical information in the format
 \Xblock{level}E{position}. We restore this information (only first nesting level)
 from the .ref file like
 
@@ -1432,9 +1433,52 @@ of the next page looks like B{top-pos}E{pos}...B{0}E{pos}.
 \lipsum[4-5]
 </pre>
 
-<p>and run OpTeX twice.
+<p>and run OpTeX twice. See also the next OpTeX trick.
 
 <p CLASS=datum>(0031) -- P. O., 2021-01-13<p>
+<hr>
+
+<h2><a name="blocksum"></a>The checksum of text blocks</h2>
+
+<p>We get the right position of the grey background of text blocks (from
+the previous trick) after the second run of OpTeX. We add another code to
+the code of the previous trick which prints the "WARNING: Rerun to get text
+blocks right" whenever the block positions are changed and we need the second
+TeX run.
+
+<p>First of all, we need to add the
+
+<pre>
+\global\advance\blocksumcheck by\pagetotal
+</pre>
+
+<p>to both macros \begblock and \endblock (for example just before \pdfsavepos).
+Then we can add the following code:
+
+<pre>
+\newcount\blocksumcheck
+\def\_byehook{%
+   \immediate\_wref\def{\string\blocksumsaved{\the\blocksumcheck}}
+   \ifx\blocksumsaved\undefined \def\blocksumsaved{0}\fi
+   \ifnum\blocksumsaved=\blocksumcheck \else \opwarning{Rerun to get text blocks right}\fi
+   % these lines are copied from original \_byehook macro:
+   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}\_fi
+   \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
+}
+</pre>
+
+<p>The checksum \blocksumcheck is calculated using \pagetotal of block
+positions. After that, it is checked with the \blocksumsaved
+(from previous TeX run) and finally, a new value of \blocksumcheck
+is saved to the .ref file as \def\blocksumsaved{value of \blocsumcheck}.
+The warning is printed if \blocksumsaved is not equal to \blocsumcheck.
+
+<p>Notices: 1. The arithmetic overflow (when \advance\checksum by\pagetotal) does
+not matter: the register skips to negative values and the sum is calculated
+again. 2. The exact position values calculated from \pdfsavepos \pdflastypos are
+unused because we can compare them reasonably only after the third TeX run.
+
+<p CLASS=datum>(0032) -- P. O., 2021-01-13<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>
