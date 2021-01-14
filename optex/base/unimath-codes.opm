@@ -235,7 +235,8 @@
 \_let\|=\Vert
 \_mathcode`\_="8000
 
-\_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass.txt says that it is Rel
+\_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass says that it is Rel
+\_global\_Umathcode    "002E         = 0 1 "002E % mathclass says that dot is Punct
 \_global\_Umathchardef \unicodecdots = 0 1 "22EF
 
 \_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.

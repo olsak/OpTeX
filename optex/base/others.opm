@@ -13,10 +13,8 @@
     \^`\_currpage`. The \^`\_Xpage` from `.ref` file sets the \^`\_currpage`.
     \_cod ----------------------------
 
-\_def\_totalpages {\_openref\_ea\_lastpageA\_currpage}
-\_def\_lastpage   {\_openref\_ea\_lastpageB\_currpage}
-\_def\_lastpageA #1#2{#1}
-\_def\_lastpageB #1#2{#2}
+\_def\_totalpages {\_openref\_ea\_ignoresecond\_currpage}
+\_def\_lastpage   {\_openref\_ea\_usesecond\_currpage}
 \_def\_currpage {{0}{?}}
 \_public \lastpage \totalpages ;
 

@@ -4,9 +4,7 @@
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
-   are classical macros from plain \TeX/.\nl
-   \`\ignoreit` ignores next token or `{<text>}`, \`\ignoresecond`
-   keeps first, ignores second.
+   are classical macros from plain \TeX/.
    \_cod ------------------------------
 
 \_let\_bgroup={  \_let\_egroup=}
@@ -14,10 +12,20 @@
 \_def \_space { }
 \_def \_null {\_hbox{}}
 \_def \_wlog {\_immediate\_write-1 } % write on log file (only)
+
+\_public \bgroup \egroup \empty \space \null \wlog ;
+
+   \_doc ------------------------------
+   \`\ignoreit` ignores next token or `{<text>}`, \`\ignoresecond`
+   uses first, ignores second parameter and \`\usesecond`
+   ignores first, uses second parameter.
+   \_cod ------------------------------
+
 \_long\_def \_ignoreit #1{}
 \_long\_def \_ignoresecond #1#2{#1}
+\_long\_def \_usesecond #1#2{#2}
 
-\_public \bgroup \egroup \empty \space \null \wlog \ignoreit \ignoresecond ;
+\_public \ignoreit \ignoresecond \usesecond ;
 
    \_doc ------------------------------
    \`\bslash` is \"normal backslash" with category code 12.

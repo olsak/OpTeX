@@ -101,26 +101,26 @@
    \`\fornumstep` `<num>: <from>..<to>` \`\do` `{<what>}`
    repeats `<what>` for each number from `<from>` to `<to>` (with step `<num>`
    or with step one). The `<what>` can include `#1` which is substituted by
-   current number. The sequence `<from>..<to>` can be decreasing too.
-   The macro is expandable.
+   current number. The <from>, <to>, <step> parameters can be numeric expressions.
+   The macro is expandable.\nl
+   The test in the \`\_fornumB` says: if (<to> $\string<$ <current number>
+   AND <step> is positive) or if (<to> $>$ <current number> AND <step> is
+   negative) then close loop by `\_getforstack`. Sorry, the condition is
+   writen by somewhat cryptoid \TeX/ language.
    \_cod -----------------------------
 
 \_def\_fornum#1..#2\_do{\_fornumstep 1:#1..#2\_do}
 \_long\_def\_fornumstep#1:#2..#3\_do#4{\_putforstack
    \_immediateassigned{%
       \_gdef\_fbody##1{#4}%
-      \_gdef\_fornumsgn{}%
-      \_gdef\_fornumrel{<}%
       \_global\_frnum=\_numexpr#2\_relax
-      \_ifnum\_numexpr#3<\_frnum \_gdef\_fornumrel{>}\_fi %decreasing sequence
-      \_ifnum\_numexpr#1\_fornumrel0 \_gdef\_fornumsgn{-}\_fi % correction
    }%
-   \_fornumB{#3}{#1}%
+   \_ea\_fornumB\_ea{\_the\_numexpr#3\_ea}\_ea{\_the\_numexpr#1}%
 }
-\_def\_fornumB #1#2{\_ifnum\_numexpr#1\_fornumrel\_frnum \_getforstack \_else
-   \_ea\_fbody\_ea{\_the\_frnum}%
-   \_immediateassignment\_global\_advance\_frnum by\_numexpr\_fornumsgn#2\_relax
-   \_afterfi{\_fornumB{#1}{#2}}\_fi
+\_def\_fornumB #1#2{\_ifnum#1\_ifnum#2>0<\_else>\_fi \_frnum \_getforstack
+   \_else \_ea\_fbody\_ea{\_the\_frnum}%
+      \_immediateassignment\_global\_advance\_frnum by#2
+      \_afterfi{\_fornumB{#1}{#2}}\_fi
 }
 \_def\fornum#1..#2\do{\_fornumstep 1:#1..#2\_do}
 \_def\fornumstep#1:#2..#3\do{\_fornumstep #1:#2..#3\_do}
