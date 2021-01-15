@@ -139,6 +139,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#blocksum">The checksum of the text blocks</a>
 </ul>
 
+<li>Sections
+<ul>
+    <li><a href="#seccc">New level o sections</a>
+</ul>
+
 <li>Slides
 <ul>
     <li><a href="#slider">Navigation bar for selecting pages</a>
@@ -1479,6 +1484,87 @@ again. 2. The exact position values calculated from \pdfsavepos \pdflastypos are
 unused because we can compare them reasonably only after the third TeX run.
 
 <p CLASS=datum>(0032) -- P. O., 2021-01-13<p>
+<hr>
+
+<p CLASS="lmarg">Sections</p>
+
+<h2><a name="seccc"></a>New level o sections</h2>
+
+<p>OpTeX defines \chap, \sec and \secc. A new level \seccc is not defined, but
+we can do it as an exercise of sections programming in OpTeX.
+The \chap ahs level 1, \sec has level 2, \secc has level 3. So, we will
+declare the 4th level of sections.
+
+<p>Note that OpTeX declares \secl4, \secl5, etc. but all these levels of
+sections are unnumbered, without copying to table of contents and with an only
+very simple design.
+
+<p>We can define \seccc analogical like \secc already defined in OpTeX:
+
+<pre>
+\newcount \_secccnum
+\def \_thesecccnum {\_othe\_chapnum.\_the\_secnum.\_the\_seccnum.\_the\_secccnum}
+
+\_optdef\_seccc[]{\_trylabel \_scantoeol\_inseccc}
+
+\_def\_inseccc #1{\_par \_sectionlevel=4
+   \_def \_savedtitle {#1}% saved to .ref file
+   \_ifnonum \_else {\_globaldefs=1 \_incr\_secccnum \_secccx}\_fi
+   \_edef \_therefnum {\_ifnonum \_space \_else \_thesecccnum \_fi}%
+   \_printseccc{\_scantextokens{#1}}%
+   \_resetnonumnotoc
+}
+\public \seccc ;
+</pre>
+
+<p>We must implement resetting new counter at \secc level. All concept of
+reseting counters are copied here for greater clarity.
+
+<pre>
+\_def \_chapx {\_secx   \_secnum=0   \_lfnotenum=0 }
+\_def \_secx  {\_seccx  \_seccnum=0  \_tnum=0 \_fnum=0 \_dnum=0 \_resetABCDE }
+\_def \_seccx {\_secccx \_secccnum=0 }
+\_def \_secccx {}
+</pre>
+
+<p>Finally, we must declare a design of the \seccc:
+
+<pre>
+\_def\_printseccc#1{\_par
+   \_abovetitle{\_penalty-100}{\_medskip}
+   {\_bf \_noindent \_raggedright \_printrefnum[@\_quad]#1\_nbpar}%
+   \_nobreak \_belowtitle{\_smallskip}%
+   \_firstnoindent
+}
+</pre>
+
+<p>If we want to see \seccc in the table of contents, then we must declare the
+printing rule of the 4th level of sections:
+
+<pre>
+\_sdef{_tocl:4}#1#2#3{\_advance\_leftskip by2\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
+</pre>
+
+<p>Now, \seccc works in the table of contents and in PDF outlines too:
+
+<pre>
+\hyperlinks \Green \Green
+\outlines0
+
+\maketoc
+
+\chap  My chapter
+\sec   Special section
+\secc  This is subsection
+\seccc New level of sub-subsection
+Text.
+\seccc Next text
+Text.
+
+\end
+</pre>
+
+<p CLASS=datum>(0033) -- P. O., 2021-01-14<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>

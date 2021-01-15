@@ -97,7 +97,8 @@
    * `\_sectionlevel=1` -- chapters (used in `\chap`)
    * `\_sectionlevel=2` -- sections (used in `\sec`)
    * `\_sectionlevel=3` -- subsections (used in `\secc`)
-   * `\_sectionlevel=4` -- subsubsections (unused by default)
+   * `\_sectionlevel=4` -- subsubsections (unused by default, see the
+     \ulink[http://petr.olsak.net/optex/optex-tricks.html\#seccc]{\OpTeX/ trick 0033})
    \enditems
    \_cod --------------------------
 

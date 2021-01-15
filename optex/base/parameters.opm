@@ -166,7 +166,7 @@
    The \`\picdir` tokens list can include a directory where image files
    (loaded by `\inspic`) are saved. Empty `\picdir` (default value) means
    that image files are in the current directory (or somewhere in the \TeX/
-   system where \LuaTeX/can find them). If you set a non-empty value to
+   system where \LuaTeX/ can find them). If you set a non-empty value to
    the `\picdir`, then it must end by `/` character, for example
    `\picdir={img/}` means that there exists a directory `img` in your
    current directory and the image files are stored here.
