@@ -137,6 +137,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
     <li><a href="#greyblock">Text blocks with grey background splittable to more pages</a>
     <li><a href="#blocksum">The checksum of the text blocks</a>
+    <li><a href="#import">The import package</a>
 </ul>
 
 <li>Sections
@@ -1484,6 +1485,27 @@ again. 2. The exact position values calculated from \pdfsavepos \pdflastypos are
 unused because we can compare them reasonably only after the third TeX run.
 
 <p CLASS=datum>(0032) -- P. O., 2021-01-13<p>
+<hr>
+
+<h2><a name="import"></a>The import package</h2>
+
+<p>We implement the LaTeX import package (see texdoc import)
+by three lines of the code.
+
+<pre>
+\def\import#1#2{\def\tmp{\gtoksapp\picdir{#1/}\input{#2}}%
+   \ea\tmp\ea\global\ea\picdir\ea{\the\picdir}}
+\def\input#1{\_input{\the\picdir#1}}
+</pre>
+
+<p>The \input is redefined as primitive input applied to "\the\picdir
+filename". The \import macro redeclares \picdir and does the \input. When
+input is finished, then \picdir returns to its previous value.
+
+<p>Unlike the import LaTeX package, the \import macro can be used recursively
+in imported files. So, we need not to define \subimport.
+
+<p CLASS=datum>(0034) -- P. O., 2021-01-14<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
