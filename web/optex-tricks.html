@@ -129,6 +129,13 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tablevcent">Vertically centered paragraphs in table</a>
 </ul>
 
+<li>Text blocks
+<ul>
+    <li><a href="#greyblock">Text blocks with grey background splittable to more
+    <li><a href="#blocksum">The checksum of the text blocks</a>
+    <li><a href="#blockoval">Text blocks in ovals</a>
+</ul>
+
 <li>Macro tricks
 <ul>
     <li><a href="#condi">Structured conditionals</a>
@@ -1119,6 +1126,171 @@ for example "V":
 <p CLASS=datum>(0023) -- P. O. 2020-06-01<p>
 <hr>
 
+
+<p CLASS="lmarg">Text blocks</p>
+
+<h2><a name="greyblock"></a>Text blocks with grey background splittable to more pages</h2>
+
+<p>We implement another design of \begblock...\endblock than the default from OpTeX.
+The text blocks will have a grey background. They can split into more pages. The
+grey background continues to the next pages in this case. The main issue of
+the implementation is this splitting problem:
+
+<pre>
+\newcount\blocklevel  % nesting level of blocks
+\def\begblock{\par\bgroup
+   \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
+   \medskip
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
+   \nobreak \medskip
+}
+\def\endblock{\par\nobreak\medskip
+   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
+   \medskip \egroup
+}
+\refdecl{%
+   \def\Xblock#1#2#3{\ifnum#1=1 \edef\tmp{frm:\ea\ignoresecond\_currpage}^^J
+      \unless\ifcsname \tmp \endcsname \sxdef{\tmp}{}\fi^^J
+      \sxdef{\tmp}{\cs{\tmp}#2{#3}}\fi}
+}
+\newdimen\frtop \newdimen\frbottom % positions of top and bottom text on the pages
+\def\frcolor{.8 g } % light grey -- color of blocks.
+\pgbackground={%
+   \slet{tmp}{frm:\the\pageno}
+   \ifx\tmp\relax \def\tmp{}\fi
+   \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
+   \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
+   \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
+   \ea\printframes \tmp B{0}E{\number\frbottom}
+   \ifx\frameslist\empty \else
+   \pdfliteral{q \frcolor 1 0 0 1 0 \bp{-\pdfpageheight} cm \frameslist Q}\fi
+}
+\def\printframes B#1#2E#3{\ifnum#1=0 \else
+   \printframe {\hoffset}{#3sp}{\_xhsize}{\ifnum#1=-1 \number\frtop\else#1\fi sp-#3sp}
+   \ifx^#2^\else \global\let\frnext=y \let\printframes=\relax \fi
+   \expandafter\printframes\fi
+}
+\def\frameslist{}
+\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
+    \bp{#1} \bp{#2} \bp{#3} \bp{#4} re f }%
+}
+</pre>
+
+<p>The main idea of the implementation. The \begblock writes its vertical
+position to the .ref file in the format \Xblock{level}B{position} using
+\pdfsavepos and \pdflastypos. The \endblock writes analogical information in the format
+\Xblock{level}E{position}. We restore this information (only first nesting level)
+from the .ref file like
+
+<pre>
+\def\frm:gpageno{B{pos}E{pos}B{pos}E{pos}...B{pos}E{pos}}
+</pre>
+
+<p>for each page number gpageno. The grey rectangles are drawn in the
+\pgbackground when output routine is processed in the second TeX run.
+This is done by
+
+<pre>
+\printframes B{pos}E{pos}...B{pos}E{pos}B{0}E{bottom-pos}
+</pre>
+
+<p>This macro reads B{}E{} in pairs in a loop and creates the frame for each
+pair. When B{0}E{bootom-pos} is read, the loop is finished and the last
+frame is not created. This is "normal" behavior when all blocks begin and
+end on the same page. If we have an opened block at a page (but not closed),
+then the data looks like
+
+<pre>
+\printframes B{pos}E{pos}...B{pos}B{0}E{bottom-pos}
+</pre>
+
+<p>The last pair B{pos}#2E{bottom-pos} is processed now (#2 is ignored) and the
+status about the continued block is saved as \frnext=y. Then the data
+of the next page looks like B{top-pos}E{pos}...B{0}E{pos}.
+
+<p>You can test it:
+
+<pre>
+\lipsum[1]
+\begblock
+  \lipsum[2-3]
+\endblock
+\lipsum[4-5]
+</pre>
+
+<p>and run OpTeX twice. See also the next OpTeX trick.
+
+<p CLASS=datum>(0031) -- P. O., 2021-01-13<p>
+<hr>
+
+<h2><a name="blocksum"></a>The checksum of text blocks</h2>
+
+<p>We get the right position of the grey background of text blocks (from
+the previous trick) after the second run of OpTeX. We add another code to
+the code of the previous trick which prints the "WARNING: Rerun to get text
+blocks right" whenever the block positions are changed and we need the second
+TeX run.
+
+<p>First of all, we need to add the
+
+<pre>
+\global\advance\blocksumcheck by\pagetotal
+</pre>
+
+<p>to both macros \begblock and \endblock (for example just before \pdfsavepos).
+Then we can add the following code:
+
+<pre>
+\newcount\blocksumcheck
+\def\_byehook{%
+   \immediate\_wref\def{\string\blocksumsaved{\the\blocksumcheck}}
+   \ifx\blocksumsaved\undefined \def\blocksumsaved{0}\fi
+   \ifnum\blocksumsaved=\blocksumcheck \else \opwarning{Rerun to get text blocks right}\fi
+   % these lines are copied from original \_byehook macro:
+   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}\_fi
+   \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
+}
+</pre>
+
+<p>The checksum \blocksumcheck is calculated using \pagetotal of block
+positions. After that, it is checked with the \blocksumsaved
+(from previous TeX run) and finally, a new value of \blocksumcheck
+is saved to the .ref file as \def\blocksumsaved{value of \blocsumcheck}.
+The warning is printed if \blocksumsaved is not equal to \blocsumcheck.
+
+<p>Notices: 1. The arithmetic overflow (when \advance\checksum by\pagetotal) does
+not matter: the register skips to negative values and the sum is calculated
+again. 2. The exact position values calculated from \pdfsavepos \pdflastypos are
+unused because we can compare them reasonably only after the third TeX run.
+
+<p CLASS=datum>(0032) -- P. O., 2021-01-13<p>
+<hr>
+
+<h2><a name="blockoval"></a>Text blocks in ovals</h2>
+
+<p>The trick 0032 above (text blocks splitting to more pages) should be
+modified with respect to various different designs. The example below puts
+these blocks to yellow ovals with red borders.
+
+<p>We have to modify the \frcolor macro:
+
+<pre>
+\def\frcolor{1 1 0 rg 1 0 0 RG } % yellow background, red borders
+</pre>
+
+<p>and the \printframe macro in order to print the oval with desired sizes.
+The diameter or rounded corners is set to 10bp.
+
+<pre>
+\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
+    q 1 0 0 1 \bp{\hoffset+10bp} \bp{#2+10bp} cm    % origin shifted to the left-bottom
+    \_oval{\bp{\_xhsize-20bp}}{\bp{#4-20bp}}{10} B Q }%
+}
+</pre>
+
+<p CLASS=datum>(0034) -- P. O., 2021-01-14<p>
+<hr>
+
 <p CLASS="lmarg">Macro tricks</p>
 
 <h2><a name="condi"></a>Structured conditionals</h2>
@@ -1348,143 +1520,6 @@ is processed.
 </pre>
 
 <p CLASS=datum>(0025) -- Matteo Caoduro. 2020-06-05<p>
-<hr>
-
-<h2><a name="greyblock"></a>Text blocks with grey background splittable to more pages</h2>
-
-<p>We implement another design of \begblock...\endblock than the default from OpTeX.
-The text blocks will have a grey background. They can split into more pages. The
-grey background continues to the next pages in this case. The main issue of
-the implementation is this splitting problem:
-
-<pre>
-\newcount\blocklevel  % nesting level of blocks
-\def\begblock{\par\bgroup
-   \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
-   \medskip
-   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
-   \nobreak \medskip
-}
-\def\endblock{\par\nobreak\medskip
-   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
-   \medskip \egroup
-}
-\refdecl{%
-   \def\Xblock#1#2#3{\ifnum#1=1 \edef\tmp{frm:\ea\ignoresecond\_currpage}^^J
-      \unless\ifcsname \tmp \endcsname \sxdef{\tmp}{}\fi^^J
-      \sxdef{\tmp}{\cs{\tmp}#2{#3}}\fi}
-}
-\newdimen\frtop \newdimen\frbottom % positions of top and bottom text on the pages
-\def\frcolor{.8 g } % light grey -- color of blocks.
-\pgbackground={%
-   \slet{tmp}{frm:\the\pageno}
-   \ifx\tmp\relax \def\tmp{}\fi
-   \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
-   \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
-   \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
-   \ea\printframes \tmp B{0}E{\number\frbottom}
-   \ifx\frameslist\empty \else
-   \pdfliteral{q \frcolor 1 0 0 1 0 \bp{-\pdfpageheight} cm \frameslist Q}\fi
-}
-\def\printframes B#1#2E#3{\ifnum#1=0 \else
-   \printframe {\hoffset}{#3sp}{\_xhsize}{\ifnum#1=-1 \number\frtop\else#1\fi sp-#3sp}
-   \ifx^#2^\else \global\let\frnext=y \let\printframes=\relax \fi
-   \expandafter\printframes\fi
-}
-\def\frameslist{}
-\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
-    \bp{#1} \bp{#2} \bp{#3} \bp{#4} re f }%
-}
-</pre>
-
-<p>The main idea of the implementation. The \begblock writes its vertical
-position to the .ref file in the format \Xblock{level}B{position} using
-\pdfsavepos and \pdflastypos. The \endblock writes analogical information in the format
-\Xblock{level}E{position}. We restore this information (only first nesting level)
-from the .ref file like
-
-<pre>
-\def\frm:gpageno{B{pos}E{pos}B{pos}E{pos}...B{pos}E{pos}}
-</pre>
-
-<p>for each page number gpageno. The grey rectangles are drawn in the
-\pgbackground when output routine is processed in the second TeX run.
-This is done by
-
-<pre>
-\printframes B{pos}E{pos}...B{pos}E{pos}B{0}E{bottom-pos}
-</pre>
-
-<p>This macro reads B{}E{} in pairs in a loop and creates the frame for each
-pair. When B{0}E{bootom-pos} is read, the loop is finished and the last
-frame is not created. This is "normal" behavior when all blocks begin and
-end on the same page. If we have an opened block at a page (but not closed),
-then the data looks like
-
-<pre>
-\printframes B{pos}E{pos}...B{pos}B{0}E{bottom-pos}
-</pre>
-
-<p>The last pair B{pos}#2E{bottom-pos} is processed now (#2 is ignored) and the
-status about the continued block is saved as \frnext=y. Then the data
-of the next page looks like B{top-pos}E{pos}...B{0}E{pos}.
-
-<p>You can test it:
-
-<pre>
-\lipsum[1]
-\begblock
-  \lipsum[2-3]
-\endblock
-\lipsum[4-5]
-</pre>
-
-<p>and run OpTeX twice. See also the next OpTeX trick.
-
-<p CLASS=datum>(0031) -- P. O., 2021-01-13<p>
-<hr>
-
-<h2><a name="blocksum"></a>The checksum of text blocks</h2>
-
-<p>We get the right position of the grey background of text blocks (from
-the previous trick) after the second run of OpTeX. We add another code to
-the code of the previous trick which prints the "WARNING: Rerun to get text
-blocks right" whenever the block positions are changed and we need the second
-TeX run.
-
-<p>First of all, we need to add the
-
-<pre>
-\global\advance\blocksumcheck by\pagetotal
-</pre>
-
-<p>to both macros \begblock and \endblock (for example just before \pdfsavepos).
-Then we can add the following code:
-
-<pre>
-\newcount\blocksumcheck
-\def\_byehook{%
-   \immediate\_wref\def{\string\blocksumsaved{\the\blocksumcheck}}
-   \ifx\blocksumsaved\undefined \def\blocksumsaved{0}\fi
-   \ifnum\blocksumsaved=\blocksumcheck \else \opwarning{Rerun to get text blocks right}\fi
-   % these lines are copied from original \_byehook macro:
-   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}\_fi
-   \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
-}
-</pre>
-
-<p>The checksum \blocksumcheck is calculated using \pagetotal of block
-positions. After that, it is checked with the \blocksumsaved
-(from previous TeX run) and finally, a new value of \blocksumcheck
-is saved to the .ref file as \def\blocksumsaved{value of \blocsumcheck}.
-The warning is printed if \blocksumsaved is not equal to \blocsumcheck.
-
-<p>Notices: 1. The arithmetic overflow (when \advance\checksum by\pagetotal) does
-not matter: the register skips to negative values and the sum is calculated
-again. 2. The exact position values calculated from \pdfsavepos \pdflastypos are
-unused because we can compare them reasonably only after the third TeX run.
-
-<p CLASS=datum>(0032) -- P. O., 2021-01-13<p>
 <hr>
 
 <h2><a name="import"></a>The import package</h2>
