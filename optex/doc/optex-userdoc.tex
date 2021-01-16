@@ -650,7 +650,7 @@ The \^`\url` macro prints its parameter in \~`\tt` font and creates a potential
 breakpoints in it (after slash or dot, for example). If the \^`\hyperlinks`
 declaration is used then the parameter of \^`\url` is treated as an external URL link.
 An example: `\url{http://www.olsak.net}` creates \url{http://www.olsak.net}.
-The characters \code{\%}, `\`, `#`, `{` and `}` have to be protected by
+The characters \code{\%}, `\`, `#`, `{`, and `}` have to be protected by
 backslash in the \^`\url` argument, the other special characters `~`,
 `^`, `&` can be written as single character\fnote
 {More exactly, there are the same rules as for `\code` command, see
@@ -663,6 +663,8 @@ If the linked text have to be different than the URL, you can use
 `\ulink[http://petr.olsak.net/optex]{\OpTeX/ page}`
 outputs to the text
 \ulink[http://petr.olsak.net/optex]{\OpTeX/ page}.
+The characters \code{\%}, `\`, `#`, `{`, and `}` must by escaped in
+the <url> parameter.
 
 The PDF format provides {\em outlines} which are notes placed in the special frame of
 the PDF viewer. These notes can be managed as a structured and hyperlinked
