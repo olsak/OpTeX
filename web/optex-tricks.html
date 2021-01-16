@@ -1817,6 +1817,14 @@ directory. Try the buttom "Recompile" and wait a while
 you see the PDF result: "Demonstration", congratulations! The
 first run gives the result without TOC, second "Recompile" gives TOC too.
 
+<p>If you have additional OpenType fonts not installed at OverLeaf, then you
+can save them into fonts/ directory in your project and modify the
+<b>latexmkrc</b> file:
+
+<pre>
+$lualatex = 'TEXINPUTS=./optex//:$TEXINPUTS OPENTYPEFONTS=./fonts// luatex -fmt=optex %O %S';
+</pre>
+
 <p CLASS=datum>(0022) -- P. O. 2020-05-29<p>
 <hr>
 
