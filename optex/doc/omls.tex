@@ -1,6 +1,9 @@
 \fontfam[lm]
 \activettchar`
 \enlang
+\enquotes
+\def\labitem[#1]{\label[#1]\wlabel{\the\_itemnum}}
+\let\_narrowlastlinecentered=\ignoreit
 
 \tit \OpTeX/ Markup Language Standard
 
@@ -14,8 +17,10 @@ sequences are {\it unknown}.
 The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
-`texcount` or color highlighting in editors. These converters and applications
-are called {\it cnv-programs} in this document.
+`texcount` or color highlighting in editors\fnote
+{or advanced editor features: hidding/uncovering sections/chapers,
+ auto-completions, etc.}.
+These converters and applications are called {\it cnv-programs} in this document.
 
 We suppose that if you need absolute control over the typography of the
 document when it is converted to PDF pages, then you use \OpTeX/ itself. If
@@ -25,14 +30,14 @@ typographical instructions like dimensions of pages, margins, paginations
 and headers, selection of a font-family, dimensions of the fonts, etc.\ You can
 imagine the result of such a conversion as one Html page where more
 typographical features can be controlled in a different way, for example by
-an external CSS file. For example, control sequences `\fontfam` or
+an external CSS file. This is a reason why control sequences like `\fontfam` or
 `\margins` are ignored by cnv-programs.
 
 Obviously, \TeX/ and \OpTeX/ itself gives possibility to declare various
 input formats for various purposes. Sometimes (in very special cases) there
 exists a good reason to declare a different and special input format by
 \TeX/ macros. But if the source of the document respects the OMLS then it is
-reasonably convertible to other formats by cnv-programs. We hope that
+reasonably transformable to other formats by cnv-programs. We hope that
 OMLS-ready documents cover a very large set of typical documents used these
 days.
 
@@ -49,13 +54,87 @@ exactly described in \TeX/book, for example).
 
 \sec Syntactical elements
 
-... todo
+The syntactical elements are described as strings here. No \TeX/'s tokenization is
+taken into account. The rule with a smaller number has a precedence.
+It means for example, that `\%` is <singlechar-control sequence> by rule~\ref[singlecs]
+and it does not start the comment by rule~\ref[commentline].
+
+\begitems \style n
+* <eol> is end of line.
+* `%%:` at beginning of the line means a <cnv-declarator>, see section~\ref[cnv-decl].
+* <cnv-declarator><text><eol> is interpreted specially.
+* <space> is a space or a tab-character.
+* <spaces> is a non-empty sequence of <space>s.
+* a line only with <spaces> is <empty-line>.
+* <letter> is a character `a`--`z` or `A`--`Z`.
+* <specletter> is a  <letter> or `_`.
+* <singlechar-control-sequence> is `\`<non-specletter>.\labitem[singlecs]
+* <letters-seq> is a non-empty sequence of <specletter>s.
+* <multiletter-control-sequence> is `\`<letters-seq> finalized by a <non-specletter> is
+* <comment> is `%`<text><eol> and it should be ignored including <eol>.\labitem[commentline]
+* <spaces> at beginning of the line says that the line is {\it indented}.
+* <spaces><eol> or <eol> should be interpreted as a single <space>, <eol> is removed.
+* If a <multileter-control-sequence> is finalized by <space>, the <space> is ignored.
+* <control-sequence> is <multiletter-control-sequence> or <singlechar-control-sequence>
+* `{`<balanced text>`}` is text where each next inner `{` must match with an inner `}`.
+* `{`<balanced text>`}` is interpreted as a parameter followed by a <control-sequence>.
+* The single `{` not used by previous rule opens a group and the single `}` closes the same group.
+* There are two modes: h-mode, v-mode\fnote
+  {this is great simplification of real \TeX/ modes.}.
+  The document processing starts in v-mode.
+* The swithing from v-mode to h-mode means: a paragraph begins.
+* The swithnig from h-mode to v-mode means: the current paragraph ends.
+* The <spaces> between words in h-mode should be replaced by single space.
+* In v-mode: a single <non-space> character or control sequences listed
+  in table~\ref[vtohmode] swithes to h-mode.
+* In h-mode: an empty line or control sequences listed in
+  table~\ref[htovmode] switches to v-mode.
+* <number> is a non-empty sequence of digits with optional + or $-$ in the front.
+* <decimal-number> is <number> with optional dot inside the sequence of digits.
+* <tex-unit> is a pair of letters listed in the table~\ref[tex-units]
+  preceded by an optional <space>.
+* <dimen> is <decimal-number><tex-unit>.
+* <unknown-control-sequence> is <control-sequence> not listed in section~\ref[listcs].
+* <unknown-control-sequence>`=`<number> should be ignored including its parameter.
+* <unknown-control-sequence>`=`<dimen> should be ignored including its parameter.
+* <unknown-control-sequence>`={`<blanced-text>`}` should be ignored including its parameter.
+* The optional <space> can be present immediately after `=` in previous three rules.
+* <unknown-control-sequence>`{`<blanced-text>`}` is processed as <blanced-text> alone.
+
+\enditems
+
+\bigskip
+\label[vtohmode]\caption/t
+List of control sequences which switch from v-mode to h-mode.
+\cskip
+\begblock
+`\indent`, `\noindent`, `\leavevmode`, `\hskip`, `\hfil`, `\hfill`, `\hss`,
+`\`<space>, `\vrule`.
+\endblock
+
+\bigskip
+\label[htovmode]\caption/t
+List of control sequences which switch from h-mode to v-mode.
+\cskip
+\begblock
+`\par`, `\vskip`, `\vfil`, `\hrule`, `\bigskip`, `\medskip`, `\smallskip`,
+`\chap`, `\sec`, `\secc`, `\secl`, `\end`, `\bye`, `\begitems`, `\begtt`,
+`\begblock`, `\enditems`, `\endblock`.
+\endblock
+
+\bigskip
+\label[tex-units]\caption/t
+List of \TeX/ units.
+\cskip
+\begblock
+`pt`, `pc`, `bp`, `dd`, `cc`, `in`, `cm`, `mm`, `sp`, `em`, `ex`.
+\endblock
 
 \sec Declaration and text parts of the document
 
 ... todo
 
-\sec List of known control sequences
+\sec[listcs] List of known control sequences
 
 ... todo
 
@@ -63,7 +142,11 @@ exactly described in \TeX/book, for example).
 
 ... todo
 
-\sec Configuration possibilities of cnv-programs
+\sec[cnv-decl] The `%%:` declarators
+
+... todo
+
+\sec Notes on various conversions
 
 ... todo
 
