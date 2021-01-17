@@ -1,0 +1,70 @@
+\fontfam[lm]
+\activettchar`
+\enlang
+
+\tit \OpTeX/ Markup Language Standard
+
+{\it\hfil Petr Olšák, 2021}\bigskip
+
+The \OpTeX/ markup language standard (OMLS) declares a list of control
+sequences used in \OpTeX/ documents including their syntax and sematic. The
+listed control sequences in OMLS are called {\it known} and other control
+sequences are {\it unknown}.
+
+The main reason for OMLS is to give instructions on how to program convertors
+from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
+to interpret the \OpTeX/ document sources in such applications as
+`texcount` or color highlighting in editors. These converters and applications
+are called {\it cnv-programs} in this document.
+
+We suppose that if you need absolute control over the typography of the
+document when it is converted to PDF pages, then you use \OpTeX/ itself. If
+you need to create other formats of the same document then you use a
+cnv-program which accepts this OMLS. The result is a document without
+typographical instructions like dimensions of pages, margins, paginations
+and headers, selection of a font-family, dimensions of the fonts, etc.\ You can
+imagine the result of such a conversion as one Html page where more
+typographical features can be controlled in a different way, for example by
+an external CSS file. For example, control sequences `\fontfam` or
+`\margins` are ignored by cnv-programs.
+
+Obviously, \TeX/ and \OpTeX/ itself gives possibility to declare various
+input formats for various purposes. Sometimes (in very special cases) there
+exists a good reason to declare a different and special input format by
+\TeX/ macros. But if the source of the document respects the OMLS then it is
+reasonably convertible to other formats by cnv-programs. We hope that
+OMLS-ready documents cover a very large set of typical documents used these
+days.
+
+We suppose that cnv-programs work internally with strings of source lines
+without tokenization. This is one of the great difference in processing the
+document directly by \OpTeX/ and using a cnv-program. The second difference is
+that the expansion process of macros is not implemented in cnv-programs in
+its full range. We respect that the result of cnv-programs will be different
+than from processing directly by \OpTeX/. But this is not a bug, this is
+the feature. We concentrate on the fixed syntax and sematic given by OMLS of the
+\OpTeX/ document and we throw behind the head the typographical
+exactness of the document which can be done only directly by \TeX/ (and it is
+exactly described in \TeX/book, for example).
+
+\sec Syntactical elements
+
+... todo
+
+\sec Declaration and text parts of the document
+
+... todo
+
+\sec List of known control sequences
+
+... todo
+
+\sec Math mode processing
+
+... todo
+
+\sec Configuration possibilities of cnv-programs
+
+... todo
+
+\bye
