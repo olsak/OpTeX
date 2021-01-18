@@ -1,8 +1,11 @@
 \fontfam[lm]
+\adef<#1>{$\langle$\hbox{\it#1\/}$\rangle$}
+\everyintt={\catcode`<=13}
 \activettchar`
 \enlang
 \enquotes
-\def\labitem[#1]{\label[#1]\wlabel{\the\_itemnum}}
+\def\r[#1]{\label[#1]\wlabel{\the\_itemnum}}
+\def\:{$\to$}
 \let\_narrowlastlinecentered=\ignoreit
 
 \tit \OpTeX/ Markup Language Standard
@@ -18,7 +21,7 @@ The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
 `texcount` or color highlighting in editors\fnote
-{or advanced editor features: hidding/uncovering sections/chapers,
+{Or advanced editor features: hiding/uncovering sections/chapters,
  auto-completions, etc.}.
 These converters and applications are called {\it cnv-programs} in this document.
 
@@ -55,52 +58,53 @@ exactly described in \TeX/book, for example).
 \sec Syntactical elements
 
 The syntactical elements are described as strings here. No \TeX/'s tokenization is
-taken into account. The rule with a smaller number has a precedence.
-It means for example, that `\%` is <singlechar-control sequence> by rule~\ref[singlecs]
-and it does not start the comment by rule~\ref[commentline].
+taken into account. The rule with a smaller number has precedence.
 
 \begitems \style n
-* <eol> is end of line.
-* `%%:` at beginning of the line means a <cnv-declarator>, see section~\ref[cnv-decl].
-* <cnv-declarator><text><eol> is interpreted specially.
-* <space> is a space or a tab-character.
-* <spaces> is a non-empty sequence of <space>s.
-* a line only with <spaces> is <empty-line>.
-* <letter> is a character `a`--`z` or `A`--`Z`.
-* <specletter> is a  <letter> or `_`.
-* <singlechar-control-sequence> is `\`<non-specletter>.\labitem[singlecs]
-* <letters-seq> is a non-empty sequence of <specletter>s.
-* <multiletter-control-sequence> is `\`<letters-seq> finalized by a <non-specletter> is
-* <comment> is `%`<text><eol> and it should be ignored including <eol>.\labitem[commentline]
-* <spaces> at beginning of the line says that the line is {\it indented}.
-* <spaces><eol> or <eol> should be interpreted as a single <space>, <eol> is removed.
-* If a <multileter-control-sequence> is finalized by <space>, the <space> is ignored.
-* <control-sequence> is <multiletter-control-sequence> or <singlechar-control-sequence>
-* `{`<balanced text>`}` is text where each next inner `{` must match with an inner `}`.
-* `{`<balanced text>`}` is interpreted as a parameter followed by a <control-sequence>.
-* The single `{` not used by previous rule opens a group and the single `}` closes the same group.
-* There are two modes: h-mode, v-mode\fnote
+* end of line \: `<eol>`.
+* `%%:` at beginning of the line \: <cnv-declarator>, see section~\ref[cnv-decl].
+* `<cnv-declarator><text><eol>` is interpreted specially.
+* space or a tab-character \: `<space>`.
+* non-empty sequence of `<space>`s \: `<spaces>`.
+* a line only with `<spaces>` \: `<empty-line>`.
+* a character `a`--`z` or `A`--`Z` \: `<letter>`.
+* a  `<letter>` or `_` \: `<specletter>`.
+* `\`<non-specletter> \: `<singlechar-control-sequence>`.\r[scs]
+* a non-empty sequence of `<specletter>`s \: `<letters-seq>`.
+* `\<letters-seq><non-specletter>` \: `<multiletter-control-sequence><non-specletter>`.
+* `%<text><eol>` \: `<comment>` and it is completely ignored including `<eol>`.\r[com]
+* `<spaces>` at beginning of the line marks that the line as {\it indented}.
+* `<spaces>` at beginning of the line \: are ignored.\r[bspace]
+* `<spaces><eol>` or `<eol>` \: `<space>`.\r[eol]
+* `<multileter-control-sequence><spaces>` \: `<multileter-control-sequence>`.\r[csspace]
+* `<multiletter-control-sequence>` or `<singlechar-control-sequence>` \: `<control-sequence>`.\r[cs]
+* `<spaces>` \: `<space>`.\r[sspace]
+* `~` \: non-breakable space.
+* text where all pairs `{` and `}` match at arbitrary level \: `<balanced text>`.
+* `{<balanced text>}` can be interpreted as a parameter followed by a <control-sequence>, see section~\ref[listcs].
+* The `{` alone not used by previous rule opens a group and the `}` alone closes the same group.
+* There are two main modes: h-mode, v-mode\fnote
   {this is great simplification of real \TeX/ modes.}.
   The document processing starts in v-mode.
-* The swithing from v-mode to h-mode means: a paragraph begins.
-* The swithnig from h-mode to v-mode means: the current paragraph ends.
-* The <spaces> between words in h-mode should be replaced by single space.
-* In v-mode: a single <non-space> character or control sequences listed
+* In v-mode: a single `<non-space>` character or control sequences listed
   in table~\ref[vtohmode] swithes to h-mode.
-* In h-mode: an empty line or control sequences listed in
-  table~\ref[htovmode] switches to v-mode.
-* <number> is a non-empty sequence of digits with optional + or $-$ in the front.
-* <decimal-number> is <number> with optional dot inside the sequence of digits.
-* <tex-unit> is a pair of letters listed in the table~\ref[tex-units]
-  preceded by an optional <space>.
-* <dimen> is <decimal-number><tex-unit>.
-* <unknown-control-sequence> is <control-sequence> not listed in section~\ref[listcs].
-* <unknown-control-sequence>`=`<number> should be ignored including its parameter.
-* <unknown-control-sequence>`=`<dimen> should be ignored including its parameter.
-* <unknown-control-sequence>`={`<blanced-text>`}` should be ignored including its parameter.
-* The optional <space> can be present immediately after `=` in previous three rules.
-* <unknown-control-sequence>`{`<blanced-text>`}` is processed as <blanced-text> alone.
-
+* In h-mode: an empty line or control sequences listed in table~\ref[htovmode] switches to v-mode.\r[htov]
+* The switching from v-mode to h-mode \: a paragraph begins.
+* The switching from h-mode to v-mode \: the current paragraph ends.
+* `$<text>$` or `$$<text>$$` \: process `<text>` in math-mode, see section~\ref[math].
+* a non-empty sequence of digits with optional `+` or `-` in the front \: `<number>`.
+* `<number>` with optional dot inside the sequence of digits \: `<decimal-number>`.
+* a pair of letters listed in the table~\ref[tex-units] \: `<tex-unit>`.
+* optional space, i.e.\ `<space>` or nothing \: `<o-space>`.
+* `<decimal-number><o-space><tex-unit><o-space>` \: `<dimen>`.
+* `<control-sequence>` not listed in section~\ref[listcs] nor in configuration \: `<unknown-control-sequence>`.\r[unkncs]
+* `=<o-space>` or `<o-space>` \: `<o-equal>`.
+* `<unknown-control-sequence><o-equal><dimen>` \: should be completely ignored.\r[eqdim]
+* `<unknown-control-sequence><o-equal><number>` \: should be completely ignored.
+* `<unknown-control-sequence>=<o-space>{<balanced-text>}` \: should be completely ignored.
+* `<unknown-control-sequence>{<balanced-text>}` \: `<balanced-text>` alone.\r[ibrt]
+* `<unknown-control-sequence>[<balanced-text>]` \: should be completely ignored.\r[ibkt]
+* `<unknown-control-sequence>` \: should be ignored.
 \enditems
 
 \bigskip
@@ -130,19 +134,106 @@ List of \TeX/ units.
 `pt`, `pc`, `bp`, `dd`, `cc`, `in`, `cm`, `mm`, `sp`, `em`, `ex`.
 \endblock
 
+\nonum\secc Examples
+
+\begitems
+* `\%` is `<control-sequence>` by rules \ref[scs], \ref[cs]. It does not start
+  comment, because rule \ref[scs] has precedence before rule \ref[com].
+* `\%<space>`: the `<space>` is kept, but `\foo<space>`: the space is removed
+  by rule~\ref[csspace].
+* `wordA<spaces><eol><spaces>wordB` is `wordA<space>wordB` by rules~\ref[bspace],
+  \ref[eol], and~\ref[sspace].
+* `\kern-3pt` should be ignored, because `\kern` is `<unknown-control-sequence>` and rule
+  \ref[eqdim] is applied.
+* `\vskip42mm` should finalize paragraph in h-mode by rule~\ref[htov] and then it
+  is ignored by rule~\ref[eqdim] because `\vskip` is not listed in section~\ref[listcs].
+* `\typosize[12/16]` is ignored by rule~\ref[ibkt].
+* `\foo{text}` is `text` by rule~\ref[ibrt].
+\enditems
+
 \sec Declaration and text parts of the document
 
-... todo
+A typical \OpTeX/ document has two parts. A declaration part, where
+macros are defined by `\def` and friends, fonts and sizes are declared, etc.
+This part should be ignored by cnv-programs.
+The second part includes the document text with a markup using well-declared control
+sequences. The cnv-program has to interpret the second part.
+
+So, the cnv-program starts in declaration-skipping mode and it switches to
+the text mode later.
+
+When cnv-program is in declaration-skipping mode then all indented lines are
+ignored. And lines which begins by `}` or by a <control-sequence> not listed
+in table~\ref[textopen] are ignored too.
+
+If the line begins by a character other than `}` or by a <control-sequence>
+listed in table~\ref[textopen] then cnv-program switches to text mode. All
+texts are interpreted from this line including this one.
+
+User can say explicitly where the second part of the document starts by
+`%%:text` given at beginning of a line. Moreover, if `%%:decl` is given at
+beginning of a line, then all text between `%%:decl` and `%%:text` is
+ignored, only other possible `<cnv-declarator>`s are processed here.
+The declaration part and the text part of the document can be fully determined
+by `%%:decl` and `%%:text`.
+
+\bigskip
+\label[textopen]\caption/t
+List of control sequences which switch starts the text mode.
+\cskip
+\begblock \raggedright
+`\tit`, `\sec`, `\secc`, `\secl`, `\fnote`, `\mnote`, `\rm`, `\bf`, `\it`,
+`\bi`, `\table`, `\inspic`, `\caption`, `\begitems`, `\begblock`, `\begtt`,
+`\verbinput`, `\maketoc`, `\ii`, `\iid`, `\begmulti`, `\cite`, `\rcite`,
+`\ecite`, `\bib`, `\usebib`, `\inkinspic`, `\frame`, `\rotbox`, `\inoval`,
+`\incircle`, `\clipinoval`, `\clipincircle`, `\puttext`, `\putpic`,
+`\address`, `\lorem`, `\lipsum`, `\TeX`, `\OpTeX`, `\LaTeX`.
+\endblock
+
+
+\sec[cnv-decl] The `%%:` declarators
+
+The `%%:` declarators are ignored when the document is processed by \TeX/
+but they can give instructions to cnv-programs. The `%%:` must be placed at
+beginning of the line. The list of `%%:` declarators follows:
+
+\begitems
+* `%%:decl` -- the following text is ignored until `%%:text` occurs. Only
+  other `%%:` declarators are interpreted.
+* `%%:text` -- the following text must be interpreted in text mode.
+* `%%:to <format> <config-file>` -- if the cnv-program converts to the
+  <format> then it has to use the <config-file>. For example:
+  \begtt
+  %%:to html html-mydocument.cfg
+  %%:to markdown markdown-mydocument.cfg
+  %%:to latex preamble-mydocument.cfg
+  \endtt
+  The language of the config files are not a part of this standard, we
+  suppose something to be natural for used cnv-program. The config file should
+  give additional rules for interpreting control sequences not listed in the
+  section~\ref[listcs] (see rule~\ref[unkncs]). For example a simple alternative
+  of `\def` commands can be here. Users can declare more control sequences
+  depending on the converted document and on the output format by the
+  configuration files. For example, a special \LaTeX/ preamble should be declared
+  here when conversion to \LaTeX/ is processed.
+* `%%:app <application> <config-file>` -- behaves like `%%;to` but the application
+  name instead output format is given here.
+* `%%:skip <formats or apps>` ignores all following lines until another `%%:` occurs
+  if the output format or application name is included in the <formats or apps>
+  list (separated by space). Example:
+  \begtt
+  %%:skip html markdown
+  This text is not interpreted when Html or Markdown output is generated.
+  %%:
+  \endtt
+
+\enditems
 
 \sec[listcs] List of known control sequences
 
 ... todo
 
-\sec Math mode processing
-
-... todo
-
-\sec[cnv-decl] The `%%:` declarators
+\sec[math] Math mode processing
 
 ... todo
 
