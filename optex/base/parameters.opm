@@ -185,10 +185,10 @@
    a nonzero value then the height is given, the width is calculated. If both
    parameters are non-zero, the height and width are given and the aspect
    ratio of the image is (probably) broken. We recommend setting these
-   parameters locally in the group where `\inspic` is used in order to not
+   parameters locally in the group where \^`\inspic` is used in order to not
    influence the dimensions of other images. But there exist many
    situations you need to put the same dimensions to more images,
-   so you can set this parameter only once before more `\inspic` macros.
+   so you can set this parameter only once before more \^`\inspic` macros.
    \_cod -----------------------------
 
 \_newdimen\_picwidth   \_picwidth=0pt   \_let\picw=\_picwidth
@@ -197,21 +197,21 @@
 
    \_doc -----------------------------
    The \`\everytt` is the token list used in
-   `\begtt`...`\endtt` environment and
-   in the verbatim group opened by `\verbinput` macro. You can include a
+   \^`\begtt`...\^`\endtt` environment and
+   in the verbatim group opened by \^`\verbinput` macro. You can include a
    code which is processed inside the group after basic settings were done
    On the other hand, it is processed before the scanner of verbatim text is started.
    Your macros should influence scanner (catcode settings) or printing
    process of the verbatim code or both.
 
-   The code from the line immediately after `\begtt` is processed after
-   the `\everytt`. This code should overwrite `\everytt` settings. Use
-   `\everytt` for all verbatim environments in your document and use a code
-   after `\begtt` locally only for this environment.
+   The code from the line immediately after \^`\begtt` is processed after
+   the \^`\everytt`. This code should overwrite \^`\everytt` settings. Use
+   \^`\everytt` for all verbatim environments in your document and use a code
+   after \^`\begtt` locally only for this environment.
 
    The \`\everyintt` token list does similar work
    but acts in the in-line verbatim
-   text processed by a pair of `\activettchar` characters or by `\code{<text>}`.
+   text processed by a pair of \^`\activettchar` characters or by \^`\code``{<text>}`.
    You can set `\everyintt={\Red}` for example if you want in-line verbatim
    in red color.
    \_cod -----------------------------
@@ -222,12 +222,12 @@
 
    \_doc -----------------------------
    The \`\ttline` is used
-   in `\begtt`...`\endtt` environment or in the code
-   printed by `\verbinput`. If `\ttline` is positive or zero, then the
+   in \^`\begtt`...\^`\endtt` environment or in the code
+   printed by \^`\verbinput`. If `\ttline` is positive or zero, then the
    verbatim code has numbered lines from `\ttline+1`. The `\ttline`
    register is re-set to a new value after a code piece is printed, so next
    code pieces have numbered lines continuously. If `\ttline=-1`, then
-   `\begtt`...`\endtt` lines are without numbers and `\verbinput` lines
+   \^`\begtt`...\^`\endtt` lines are without numbers and \^`\verbinput` lines
    show the line numbers of inputted file. If `\ttline`\code{<-1}
    then no line numbers are printed.
    \_cod -----------------------------
@@ -237,8 +237,8 @@
 
    \_doc -----------------------------
    The \`\ttindent` gives default indentation
-   of verbatim lines printed by `\begtt`...`\endtt` pair or by
-   `\verbinput`.
+   of verbatim lines printed by \^`\begtt`...\^`\endtt` pair or by
+   \^`\verbinput`.
    \nl
    The \`\ttshift` gives the amount of shift of all verbatim lines to the right.
    Despite the \^`\ttindent`, it does not shift the line numbers, only
@@ -283,13 +283,13 @@
 \_public \hicolors ;
 
    \_doc -----------------------------
-   The default item mark used between `\begitems` and `\enditems` is the bullet.
+   The default item mark used between \^`\begitems` and \^`\enditems` is the bullet.
    The \`\defaultitem` tokens list declares this default item mark.
    \nl
    The \`\everyitem` tokens list is applied in vertical mode
    at the start of each item.
    \nl
-   The \`\everylist` tokens list is applied after the group is opened by
+   The \`\everylist` tokens list is applied after the group is opened by \^`\begitems`
    \nl
    The \`\ilevel` keeps the value of the current nesting level of the items list.
    \nl
@@ -305,14 +305,14 @@
 \_public \defaultitem \everyitem \everylist \listskipamount \ilevel ;
 
    \_doc -----------------------------
-   The `\tit` macro includes `\vglue`\`\titskip` above the title of the document.
+   The \^`\tit` macro includes `\vglue`\`\titskip` above the title of the document.
    \_cod -----------------------------
 
 \_newskip\_titskip   \_titskip=40pt \_relax  % \vglue above title printed by \tit
 \_public \titskip ;
 
    \_doc ----------------------------
-   The `\begmulti` `\endmulti` pair creates more columns. The parameter
+   The \^`\begmulti` and \^`\endmulti` pair creates more columns. The parameter
    \`\colsep` declares the space between columns. If $n$ columns are specified
    then we have $n-1$ `\colseps` and $n$ columns in total `\hsize`. This
    gives the definite result of the width of the columns.
@@ -358,7 +358,7 @@
 \_public \everyii ;
 
    \_doc -----------------------------
-   The \`\everymnote` is used in the `\mnote` group before `\noindent` which
+   The \`\everymnote` is used in the \^`\mnote` group before `\noindent` which
    immediately precedes marginal note text.
    \nl
    The \`\mnotesize` is the horizontal size of the marginal notes.
@@ -372,7 +372,7 @@
 \_public \everymnote \mnotesize \mnoteindent ;
 
    \_doc -----------------------------
-   The `\table` parameters follow. The \`\thistable` tokens list
+   The \^`\table` parameters follow. The \`\thistable` tokens list
    register should be used for giving an exception for only one `\table`
    which follows. It should change locally other parameters of the `\table`.
    It is reset to an empty list after the table is printed.

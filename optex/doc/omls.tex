@@ -1,12 +1,20 @@
 \fontfam[lm]
-\adef<#1>{$\langle$\hbox{\it#1\/}$\rangle$}
-\everyintt={\catcode`<=13}
+\adef<#1>{{\Blue$\langle$\hbox{\it#1\/}$\rangle$}}
+\everyintt={\catcode`<=13 \Red}
 \activettchar`
 \enlang
 \enquotes
 \def\r[#1]{\label[#1]\wlabel{\the\_itemnum}}
 \def\:{$\to$}
 \let\_narrowlastlinecentered=\ignoreit
+%\parindent=15pt \iindent=\parindent \ttindent=\parindent
+%\ttindent=0pt
+\everylist={\advance\ttindent by-1em}
+\hyperlinks \Green \Green
+\def\cskip{\par\nobreak}
+\def\begblock{\medskip\hbox\bgroup\vrule\vbox\bgroup\hrule
+   \_fnset\leftskip=\parindent \rightskip=\parindent \medskip\noindent}
+\def\endblock{\smallskip\hrule\egroup\vrule\egroup}
 
 \tit \OpTeX/ Markup Language Standard
 
@@ -14,8 +22,8 @@
 
 The \OpTeX/ markup language standard (OMLS) declares a list of control
 sequences used in \OpTeX/ documents including their syntax and sematic. The
-listed control sequences in OMLS are called {\it known} and other control
-sequences are {\it unknown}.
+listed control sequences in OMLS in section~\ref[listcs]
+are called {\it known} and other control sequences are {\it unknown}.
 
 The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
@@ -27,8 +35,8 @@ These converters and applications are called {\it cnv-programs} in this document
 
 We suppose that if you need absolute control over the typography of the
 document when it is converted to PDF pages, then you use \OpTeX/ itself. If
-you need to create other formats of the same document then you use a
-cnv-program which accepts this OMLS. The result is a document without
+you need to create other formats of the same document then you can use a
+cnv-program which accepts OMLS. The result is a document without
 typographical instructions like dimensions of pages, margins, paginations
 and headers, selection of a font-family, dimensions of the fonts, etc.\ You can
 imagine the result of such a conversion as one Html page where more
@@ -55,13 +63,18 @@ the feature. We concentrate on the fixed syntax and sematic given by OMLS of the
 exactness of the document which can be done only directly by \TeX/ (and it is
 exactly described in \TeX/book, for example).
 
-\sec Syntactical elements
+\notoc\nonum\sec Contents
+
+\maketoc
+\vfil\break
+
+\sec Syntactical rules
 
 The syntactical elements are described as strings here. No \TeX/'s tokenization is
 taken into account. The rule with a smaller number has precedence.
 
 \begitems \style n
-* end of line \: `<eol>`.
+* end of line or end of file \: `<eol>`.
 * `%%:` at beginning of the line \: <cnv-declarator>, see section~\ref[cnv-decl].
 * `<cnv-declarator><text><eol>` is interpreted specially.
 * space or a tab-character \: `<space>`.
@@ -69,7 +82,8 @@ taken into account. The rule with a smaller number has precedence.
 * a line only with `<spaces>` \: `<empty-line>`.
 * a character `a`--`z` or `A`--`Z` \: `<letter>`.
 * a  `<letter>` or `_` \: `<specletter>`.
-* `\`<non-specletter> \: `<singlechar-control-sequence>`.\r[scs]
+* a character different from previous rule or `<eol>` or `<spaces>` \: `<non-spec-letter>`
+* `\<non-specletter>` \: `<singlechar-control-sequence>`.\r[scs]
 * a non-empty sequence of `<specletter>`s \: `<letters-seq>`.
 * `\<letters-seq><non-specletter>` \: `<multiletter-control-sequence><non-specletter>`.
 * `%<text><eol>` \: `<comment>` and it is completely ignored including `<eol>`.\r[com]
@@ -105,6 +119,8 @@ taken into account. The rule with a smaller number has precedence.
 * `<unknown-control-sequence>{<balanced-text>}` \: `<balanced-text>` alone.\r[ibrt]
 * `<unknown-control-sequence>[<balanced-text>]` \: should be completely ignored.\r[ibkt]
 * `<unknown-control-sequence>` \: should be ignored.
+* `<control-sequence>`s are processed as described in section~\ref[listcs] or
+  by a configuration of the cnv-program.
 \enditems
 
 \bigskip
@@ -179,7 +195,7 @@ by `%%:decl` and `%%:text`.
 
 \bigskip
 \label[textopen]\caption/t
-List of control sequences which switch starts the text mode.
+List of control sequences which start the text mode.
 \cskip
 \begblock \raggedright
 `\tit`, `\sec`, `\secc`, `\secl`, `\fnote`, `\mnote`, `\rm`, `\bf`, `\it`,
@@ -218,16 +234,45 @@ beginning of the line. The list of `%%:` declarators follows:
   here when conversion to \LaTeX/ is processed.
 * `%%:app <application> <config-file>` -- behaves like `%%;to` but the application
   name instead output format is given here.
-* `%%:skip <formats or apps>` ignores all following lines until another `%%:` occurs
-  if the output format or application name is included in the <formats or apps>
-  list (separated by space). Example:
+* `%%:skip <formats-or-apps>` -- ignores all following lines until another `%%:` occurs
+  if the output format or application name is included in the `<formats-or-apps>`
+  space-separated list. Example:
   \begtt
   %%:skip html markdown
   This text is not interpreted when Html or Markdown output is generated.
   %%:
   \endtt
-
+  If the `<formats-or-apps>` is empty then the `%%:skip` is applied for
+  each cnv-program and for each output.
+* `%%:if <formats-or-apps>` -- processes following lines until another `%%:`
+  only if the output format or application name is included in the
+  `<formats-or-apps>` space-separated list. Other cnv-programs or otput
+  formats not mentioned here are skipped. Note that \TeX/ processes such
+  lines always. But you can use `\ignoreit{<text>}` which is processed as
+  `<text>` by cnv-programs (see rule~\ref[ibrt]) but it is ignored by \OpTeX.
+  Example:
+  \begtt
+  %%:if html latex
+  \ignoreit{\input{file.tex}}
+  %%:
+  \endtt
+  The `file.tex` in this example is processed only if \LaTeX/ or Html output is generated.
+* `%%:verbchar <character>` -- declares `<character>` as boundary character
+  for inline verbatim.\nl
+  Default: `%%:verbchar `\code{`}.
+  Note that default setting is different from \OpTeX/ defaults where the
+  `\activettchar` is undeclared by default.
+  You can undeclare this character by `%%:verbchar` without parameter.
+* `%%:quotes <qql> <qqr> <ql> <qr>` -- declares `<qql>` and `<qqr>`: left
+  and right double quotation marks, `<ql>` and `<qr>`: left and right single
+  quotation mark. They are used when `\"` or `\'` control sequences are
+  processed. Default: `%%:quotes “ ” ‘ ’`.
+  Note that default setting is different from \OpTeX/ defaults where the
+  `\<lang>quotes` are undeclared and `\"`, `\'` are undefined by default.
+  You ca undeclare this feature by `%%:quotes` without parameters. Then the
+  control sequences `\"` and `\'` are interpreted as unknown.
 \enditems
+
 
 \sec[listcs] List of known control sequences
 
