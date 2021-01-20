@@ -28,7 +28,7 @@ are called {\it known} and other control sequences are {\it unknown}.
 The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
-`texcount` or color highlighting in editors\fnote
+{\tt texcount} or color highlighting in editors\fnote
 {Or advanced editor features: hiding/uncovering sections/chapters,
  auto-completions, etc.}.
 These converters and applications are called {\it cnv-programs} in this document.
@@ -74,12 +74,12 @@ The syntactical elements are described as strings here. No \TeX/'s tokenization 
 taken into account. The rule with a smaller number has precedence.
 
 \begitems \style n
-* end of line or end of file \: `<eol>`.
+* end of line or end of file \: `<eol>`.\r[eol]
 * `%%:` at beginning of the line \: <cnv-declarator>, see section~\ref[cnv-decl].
 * `<cnv-declarator><text><eol>` is interpreted specially.
 * space or a tab-character \: `<space>`.
 * non-empty sequence of `<space>`s \: `<spaces>`.
-* a line only with `<spaces>` \: `<empty-line>`.
+* a line only with `<spaces>` \: `<empty-line>`.\r[spcs]
 * a character `a`--`z` or `A`--`Z` \: `<letter>`.
 * a  `<letter>` or `_` \: `<specletter>`.
 * a character different from previous rule or `<eol>` or `<spaces>` \: `<non-spec-letter>`
@@ -89,12 +89,12 @@ taken into account. The rule with a smaller number has precedence.
 * `%<text><eol>` \: `<comment>` and it is completely ignored including `<eol>`.\r[com]
 * `<spaces>` at beginning of the line marks that the line as {\it indented}.
 * `<spaces>` at beginning of the line \: are ignored.\r[bspace]
-* `<spaces><eol>` or `<eol>` \: `<space>`.\r[eol]
+* `<spaces><eol>` or `<eol>` \: `<space>`.\r[eolrm]
 * `<multileter-control-sequence><spaces>` \: `<multileter-control-sequence>`.\r[csspace]
 * `<multiletter-control-sequence>` or `<singlechar-control-sequence>` \: `<control-sequence>`.\r[cs]
 * `<spaces>` \: `<space>`.\r[sspace]
 * `~` \: non-breakable space.
-* text where all pairs `{` and `}` match at arbitrary level \: `<balanced text>`.
+* text where all pairs `{` and `}` match at arbitrary level \: `<balanced text>`.\r[balt]
 * `{<balanced text>}` can be interpreted as a parameter followed by a <control-sequence>, see section~\ref[listcs].
 * The `{` alone not used by previous rule opens a group and the `}` alone closes the same group.
 * There are two main modes: h-mode, v-mode\fnote
@@ -158,7 +158,7 @@ List of \TeX/ units.
 * `\%<space>`: the `<space>` is kept, but `\foo<space>`: the space is removed
   by rule~\ref[csspace].
 * `wordA<spaces><eol><spaces>wordB` is `wordA<space>wordB` by rules~\ref[bspace],
-  \ref[eol], and~\ref[sspace].
+  \ref[eolrm], and~\ref[sspace].
 * `\kern-3pt` should be ignored, because `\kern` is `<unknown-control-sequence>` and rule
   \ref[eqdim] is applied.
 * `\vskip42mm` should finalize paragraph in h-mode by rule~\ref[htov] and then it
@@ -166,6 +166,38 @@ List of \TeX/ units.
 * `\typosize[12/16]` is ignored by rule~\ref[ibkt].
 * `\foo{text}` is `text` by rule~\ref[ibrt].
 \enditems
+
+\sec Scaning parameters
+
+If a control sequence listed in rules above or in the section~\ref[listcs]
+has a parameter, the parameter is scanned
+as a string with interpreatation only those rules which are needed to
+determine the boundary of the parameters. For example `\tit <title><eol>`
+applies only rule~\ref[eol] during scanning the parameter, i.e.\ `<title>`
+is a string delimetered by the end of line or the end of file.
+Or `\mnote{<balanced-text>}` applies only rule~\ref[balt].
+
+If the parameter is in the format `{<something>}` then the `<something>` is
+always `<balanced-text>`. We don't specify the type `<balanced-text>`
+explicitly here, so we refer `\mnote{<text>}`, for example.
+
+The spaces before scanned parameter or before `{<text>}` are optional
+and they are ignored. Spaces inside `{`...`}` are not ignored.
+
+If the parameter is in the format `{<something>}` and the first non-space
+character is not `{` then the parameter is this first non-space character or
+a `<control-sequence>` if the first non-space character is~`\`. For example
+`\mnote a` is equal to `\mnote{a}`. The difference from this rule is given
+for `\input`, `\verbinput`,`\inspic` and `\inkinspic`.
+
+If the parameter is scanned as a string already then
+the all syntactical rules are applied when it is used. For example:
+\begtt
+\tit    This is   a title
+\endtt
+the parameter is scaned as `This is   a title` and the rule~\ref[spcs] is
+applied when the prameter is used.
+
 
 \sec Declaration and text parts of the document
 
@@ -275,6 +307,53 @@ beginning of the line. The list of `%%:` declarators follows:
 
 
 \sec[listcs] List of known control sequences
+
+The phrase \"should be" is used very often when the interpretation of
+control sequences are declared here. It means that this is aonly a common
+interpretation, but differeces are possible due to the type of the output
+format and used cnv-program. For example, when we convert to \LaTeX\, then
+`\-` and `\/` are not ignored but they are re-written without change to the
+output of the \LaTeX/ source file.
+
+\secc Character-like control sequences
+
+\begitems
+* `\%`, `\$`, `\&`,`\#` respectively \: should be normal characters `%`, `$`, `&`, `#` respectively.
+* `\bslash` \: normal character `\`.
+* `\space`, `\<space>`, `\<eol>` \: space.
+* `\,` \: should be small space or space.
+* `\quad`, `\qquad` \: should be bigger space or more spaces.
+* `\-`, `\/` \: should be ignored.
+\enditems
+
+\secc Input files
+
+\begitems
+* `\input {<file-name>}` or `\input <file-name><space>` should redirect the
+  input to given file. At the end of input-ed file or at `\endinput` the
+  reading of current file continues.
+* `\inspic {<file-name>}` or `\inspic <file-name><space>` should include the
+  given picture from the `<file-name>`.
+* `\inkinspic {<file-name>}` or `\inkinspic <file-name><space>` behaves like
+  `\inspic`.
+* `\verinput <ignore> (<lines>) <file-name><space>` should include the
+  <file-name> (only given lines) as a verbatim text, i.\,e. without any
+  syntactical interpretation.
+\enditems
+
+\secc Titles
+
+\begitems
+* `\tit <title><eof>` should be a title of the document.
+* `\chap <title><eof>` or `\chap [<label>] <title><eof>` is the title of
+  first level.
+* `\sec <title><eof>` or `\sec [<label>] <title><eof>` is the title of
+  second level.
+* `\secc <title><eof>` or `\secc [<label>] <title><eof>` is the title of
+  third level.
+* `\secl<level> <title><eof>` is the title of given level.
+\enditems
+
 
 ... todo
 
