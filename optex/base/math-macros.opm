@@ -594,7 +594,7 @@
    \_cod -----------------------------
 
 \_protected\_def\_matrix#1{\_null\_thinsk
-    \_edef\_mtstylenum{\_the\_numexpr\_mathstyle/2\_relax}%
+    \_edef\_mtstylenum{\_the\_numexpr(\_mathstyle-1)/2\_relax}% -1 behaves like 0 in next \ifcase
     \_vcenter{\_matrixbaselines\_math
     \_ialign{\_the\_lmfil$\_matrixstyle##$\_hfil&&\_quad\_the\_lmfil$\_matrixstyle##$\_hfil\_crcr
       \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
@@ -1054,7 +1054,7 @@
 
 \_endcode %---------------------------------------------------
 
-2020-01-22 bad use of \_stylenum in \matrix (bug fix: \_stylenum->\_mtstylenum)
+2020-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
 2020-12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
 2020-06-13 \adots introduced, \matrix smaller in T mode too.
