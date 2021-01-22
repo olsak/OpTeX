@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2020-06-13>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-01-22>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -594,7 +594,7 @@
    \_cod -----------------------------
 
 \_protected\_def\_matrix#1{\_null\_thinsk
-    \_edef\_stylenum{\_the\_numexpr\_mathstyle/2\_relax}%
+    \_edef\_mtstylenum{\_the\_numexpr\_mathstyle/2\_relax}%
     \_vcenter{\_matrixbaselines\_math
     \_ialign{\_the\_lmfil$\_matrixstyle##$\_hfil&&\_quad\_the\_lmfil$\_matrixstyle##$\_hfil\_crcr
       \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
@@ -602,7 +602,7 @@
 
 \_def\_matrixbaselines{\_normalbaselines \_def\_matrixstyle{}%
    \_let\_matrixbaselines=\_relax % \matrix inside matrix does not change size again
-   \_ifcase\_stylenum \_or \_matrixscriptbaselines \_or \_matrixscriptbaselines
+   \_ifcase\_mtstylenum \_or \_matrixscriptbaselines \_or \_matrixscriptbaselines
    \_or
        \_baselineskip=.5\_baselineskip
        \_def\_quad {\_hskip.5em\_relax}%
@@ -1054,7 +1054,8 @@
 
 \_endcode %---------------------------------------------------
 
-2020=12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
+2020-01-22 bad use of \_stylenum in \matrix (bug fix: \_stylenum->\_mtstylenum)
+2020-12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
 2020-06-13 \adots introduced, \matrix smaller in T mode too.
 2020-06-03 \notin corrected
