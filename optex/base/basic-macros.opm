@@ -58,7 +58,7 @@
    \_doc ------------------------------
    \`\adef` `{<char>}{<body>}` puts the <char> as active character and defines it
    as `{<body>}`. You can declare a macro with parameters too. For example
-   `\adef @#1{...$1...}`.
+   `\adef @#1{...#1...}`.
    \_cod ------------------------------
 
 \_def \_adef #1{\_catcode`#1=13 \_begingroup \_lccode`\~=`#1\_lowercase{\_endgroup\_def~}}

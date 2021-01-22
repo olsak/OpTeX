@@ -26,11 +26,15 @@
    Then \`\_removeoutbraces` converts `..{x}..` to `..x..`.
    Finally, the <text> is detokenized, spaces are preprocessed using \^`\replstring`
    and then the \`\_pdfunidefB` is repeated on each character. It calls the
-   `\directlua` chunk to print octal numbers in the macro \^`\_octalprint`.
+   `\directlua` chunk to print octal numbers in the macro \^`\_octalprint`.\nl
+   Characters for quotes (and separators for quotes) are activated by first
+   `\_scatextokens` and they are defined as the same non-active characters.
+   But `\_regoul` can change this definition.
    \_cod -----------------------------
 
 \_def\_pdfunidef#1#2{%
    \_begingroup
+      \_catcodetable\_optexcatcodes \_adef"{"}\_adef'{'}%
       \_the\_regoul \_relax % \_regmacro alternatives of logos etc.
       \_ifx\_savedttchar\_undefined \_def#1{\_scantextokens{\_unexpanded{#2}}}%
       \_else \_lccode`\;=\_savedttchar \_lowercase{\_prepinverb#1;}{#2}\fi
