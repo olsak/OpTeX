@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2021-01-08>} % loaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2021-01-22>} % loaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
@@ -73,7 +73,7 @@
    \_cod ------------------------------
 
 \_def \_cs #1{\_csname#1\_endcsname}
-\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_endcsname \_else #2\_fi}
+\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_ea\_endcsname \_else #2\_fi}
 \_public \cs \trycs ;
 
    \_doc ------------------------------
@@ -116,6 +116,7 @@
 
 \_endcode % -------------------------------------
 
+2021-01-22: \trycs: \ea added in order to be able to use cs with parameters
 2021-01-08: \opwarning format changed (secondly, hope that conclusively)
 2020-10-12: \opwarning: line numbers added
 2020-02-14: introduced
