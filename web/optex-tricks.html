@@ -157,6 +157,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#slider">Navigation bar for selecting pages</a>
 </ul>
 
+<li>Languages
+<ul>
+    <li><a href="#ngerman">The german.sty and ngerman.sty implementation</a>
+</ul>
+
 <li>Others
 <ul>
     <li><a href="#diff">Showing differences between versions of the document</a>
@@ -1693,6 +1698,83 @@ and \_byehook will write the "WARNING: Rerun to get references right".
 macro is used).
 
 <p CLASS=datum>(0029) -- P. O., 2020-11-19<p>
+<hr>
+
+
+<p CLASS="lmarg">Languages</p>
+
+<h2><a name="ngerman"></a>The (n)german.sty implementation</h2>
+
+<p>Old TeX german documents use shorthands with active " character for
+
+<ul>
+<li>dieresis: "a is ä, "U is Ü, etc.
+    (comes from old days where ancient 7bit fonts were used),
+<li>double es: "s is ß, "S is SS, "z is ẞ, etc.,
+<li>quoutation marks: "`text"' is „text“,
+<li>special hyphenations: Zu"cker is Zucker or Zuk-/ker,
+    Ro"ller is Roller or Roll-/ler,
+<li>special marks for hyphenations: "-, "|, "", "~ and "=.
+</ul>
+
+<p>See `texdoc ngerman` for more information.
+
+<p>The first three types seem to be obsolette today (but maybe you want to
+process an old TeX document or you have an unconfigured keyboard).
+The last two types can be usable. You can do
+this markup with following definitions:
+
+<pre>
+\def\germanTeX   {\deolang \activeqq} % starts old German hyphens 1901 + "shorthands
+\def\ngermanTeX  {\delang  \activeqq} % starts new German hyphens 1996 + "shorthands
+\def\originalTeX {\enlang  \catcode`"=12 } % English hyphens + deactivates "shorthands
+
+\def\activeqq{\adef"##1{\ifcsname qq:"\string##1\endcsname \cs{qq:"\string##1\_ea}\else
+                        \opwarning{"\string##1 not declared}\string##1\fi}}
+\def\qqdef"#1{\sdef{qq:"\string#1}}
+\qqdef "a{ä} \qqdef "o{ö} \qqdef "u{ü} \qqdef "s{ß}  \qqdef "z{ẞ}  \qqdef "e{ë} \qqdef "i{ï}
+\qqdef "A{Ä} \qqdef "O{Ö} \qqdef "U{Ü} \qqdef "S{SS} \qqdef "Z{SZ} \qqdef "E{Ë} \qqdef "I{Ï}
+
+\qqdef "ck{\nobreak\discretionary{k-}{}{c}\allowhyphens k}
+\qqdef "CK{\nobreak\discretionary{K-}{}{C}\allowhyphens K}
+\qqdef "ll{\specdiscr l} \qqdef "mm{\specdiscr m} \qqdef "nn{\specdiscr n}
+\qqdef "LL{\specdiscr L} \qqdef "MM{\specdiscr M} \qqdef "NN{\specdiscr N}
+\qqdef "pp{\specdiscr p} \qqdef "rr{\specdiscr r} \qqdef "tt{\specdiscr t}
+\qqdef "PP{\specdiscr P} \qqdef "RR{\specdiscr R} \qqdef "TT{\specdiscr T}
+\qqdef "ff{\specdiscr f}
+\qqdef "FF{\specdiscr F}
+\qqdef "`{„} \qqdef "'{“} \qqdef "&lt;{«} \qqdef ">{»}
+
+\qqdef "-{\nobreak\-\allowhyphen}
+\qqdef "|{\nobreak\discretionary{-}{}{\kern.03em}\allowhyphens}
+\qqdef ""{\hskip0pt\relax}
+\qqdef "~{\leavevmode\hbox{-}}
+\qqdef "={\nobreak-\hskip0pt\relax}
+
+\def\specdiscr#1{\nobreak\discretionary{#1#1-}{}{#1}\allowhyphens#1}
+\def\allowhyphens{\nobreak \hskip0pt\relax}
+</pre>
+
+<p>The German environment is opened by
+\germanTeX or \ngermanTeX (as described in german.sty and ngerman.sty doc).
+You have to load Unicode font (\fontfam[lmfonts], for example)
+because preloaded EC fonts have bad encoding for ß, for example. Now, you
+can try (text from gerdoc.tex):
+
+<pre>
+\fontfam[lmfonts]
+\ngermanTeX
+
+Der beim 6.~Treffen der deutschen \TeX-Interessenten in M"unster
+festgelegte Befehlssatz wurde nach"-tr"aglich um einige Befehle
+erweitert.
+\bye
+</pre>
+
+<p>Note that usage of these macros are incompatible with \dequotes, i.e. with
+quotation marks used by \"text" and preferred in OpTeX.
+
+<p CLASS=datum>(0035) -- P. O., 2021-01-22<p>
 <hr>
 
 <p CLASS="lmarg">Others</p>
