@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2020-11-13>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-01-23>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -241,6 +241,11 @@
 
 \_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
 
+% compressed dots in S and SS styles (usable in \matrix when it is in T, S and SS style)
+\_protected\_def \vdots {\_relax \_ifnum \_mathstyle>3 \_unicodevdots \_else \_vdots \_fi}
+\_protected\_def \ddots {\_relax \_ifnum \_mathstyle>3 \_unicodeddots \_else \_ddots \_fi}
+\_protected\_def \adots {\_relax \_ifnum \_mathstyle>3 \_unicodeadots \_else \_adots \_fi}
+
    \_doc -----------------------------
    Aliases are declared here. They are names not mentioned in the `unimath-table.opm` file
    but commonly used in \TeX.
@@ -379,7 +384,7 @@
    \ldotp \cdotp \bullet \triangleleft \trianglerigt \mapstochar \rightarrow
    \prime \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
    \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
-   \longrightarrow \Longleftrightarrow \vdots \ddots ;
+   \longrightarrow \Longleftrightarrow \unicodevdots \unicodeddots \unicodeadots ;
 
 \_endcode
 
@@ -398,6 +403,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-01-23  Compressed \vdots, \ddots, \adots in script(script)style.
 2020-11-13  Bug fix: \colon declared
 2020-06-13  Umathcode of / declared as in Plain TeX
 2020-06-07  \_itgreek \_itGreek, \_rmgreek \_rmGreek etc. introduced, names changed

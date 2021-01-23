@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-01-22>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-01-23>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -594,7 +594,7 @@
    \_cod -----------------------------
 
 \_protected\_def\_matrix#1{\_null\_thinsk
-    \_edef\_mtstylenum{\_the\_numexpr(\_mathstyle-1)/2\_relax}% -1 behaves like 0 in next \ifcase
+    \_edef\_tmpa{\_the\_numexpr \_mathstyle/4\_relax}% 0 0 1 1 1 1 2 2
     \_vcenter{\_matrixbaselines\_math
     \_ialign{\_the\_lmfil$\_matrixstyle##$\_hfil&&\_quad\_the\_lmfil$\_matrixstyle##$\_hfil\_crcr
       \_mathstrut\_crcr\_noalign{\_kern-\_baselineskip}
@@ -602,15 +602,13 @@
 
 \_def\_matrixbaselines{\_normalbaselines \_def\_matrixstyle{}%
    \_let\_matrixbaselines=\_relax % \matrix inside matrix does not change size again
-   \_ifcase\_mtstylenum \_or \_matrixscriptbaselines \_or \_matrixscriptbaselines
+   \_ifcase\_tmpa \_or
+       \_baselineskip=.7\_baselineskip \_def\_quad {\_hskip.7em\_relax}%
+       \_let\_matrixstyle=\_scriptstyle
    \_or
-       \_baselineskip=.5\_baselineskip
-       \_def\_quad {\_hskip.5em\_relax}%
+       \_baselineskip=.5\_baselineskip \_def\_quad {\_hskip.5em\_relax}%
        \_let\_matrixstyle=\_scriptscriptstyle
    \_fi
-}
-\_def\_matrixscriptbaselines{\_baselineskip=.7\_baselineskip
-   \_def\_quad {\_hskip.7em\_relax}\_let\_matrixstyle=\_scriptstyle
 }
 \_protected\_def\_pmatrix#1{\_left(\_matrix{#1}\_right)}
 
@@ -1054,6 +1052,7 @@
 
 \_endcode %---------------------------------------------------
 
+2020-01-23 better expession for math styles in \matrix
 2020-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
 2020-12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
