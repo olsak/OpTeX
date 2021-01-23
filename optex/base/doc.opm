@@ -193,7 +193,7 @@
    then use \code{\\_forwardlink\\`\\foo`}.
    \_cod -----------------------------
 
-\_activettchar`
+\_verbchar`
 
 \_def\`#1`{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_ifcsname cs:\_tmp\_endcsname\_else \_dest[cs:\_tmp]\_fi

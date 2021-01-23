@@ -1,7 +1,7 @@
 \fontfam[lm]
 \adef<#1>{{\Blue$\langle$\hbox{\it#1\/}$\rangle$}}
 \everyintt={\catcode`<=13 \Red}
-\activettchar`
+\verbchar`
 \enlang
 \enquotes
 \def\r[#1]{\label[#1]\wlabel{\the\_itemnum}}
@@ -293,7 +293,7 @@ beginning of the line. The list of `%%:` declarators follows:
   for inline verbatim.\nl
   Default: `%%:verbchar `\code{`}.
   Note that default setting is different from \OpTeX/ defaults where the
-  `\activettchar` is undeclared by default.
+  `\verbchar` is undeclared by default.
   You can undeclare this character by `%%:verbchar` without parameter.
 * `%%:quotes <qql> <qqr> <ql> <qr>` -- declares `<qql>` and `<qqr>`: left
   and right double quotation marks, `<ql>` and `<qr>`: left and right single

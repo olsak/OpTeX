@@ -214,7 +214,7 @@
    The \`\catcode` primitive is redefined here. Why?
    There is very common cases like \code{\\catcode`}`<something>`
    or `\catcode"<number>` but these characters
-   \code{\`} or \code{"} can be set as active (typically by `\activettchar` macro).
+   \code{\`} or \code{"} can be set as active (typically by `\verbchar` macro).
    Nothing problematic happens if re-defined `\catcode` is used in this case.
 
    If you really need primitive `\catcode` then you can use `\_catcode`.

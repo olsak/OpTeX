@@ -937,7 +937,7 @@ The display verbatim text have to be surrounded by the \^`\begtt` and
 \^`\endtt` couple.
 The in-line verbatim have to be tagged (before and after)
 by a character which is declared by
-\^`\activettchar``<char>`. For example \code{\\activettchar`}
+\^`\verbchar``<char>`. For example \code{\\verbchar`}
 declares the character \code{`}
 for in-line verbatim markup.
 And you can use \code{`\\relax`} for
@@ -976,7 +976,7 @@ the parameter of \^`\everytt` is read. So you don't have to worry about active
 categories in this parameter.
 
 There is an alternative to \^`\everytt` named \^`\everyintt` which is used for
-in-line verbatim surrounded by an \^`\activettchar` or processed by the \~`\code`
+in-line verbatim surrounded by an \^`\verbchar` or processed by the \~`\code`
 command.
 
 The \^`\everytt` is applied to all \^`\begtt...`\^`\endtt` environments (if it is not
@@ -999,7 +999,7 @@ Each occurrence of ? will be changed to ! and vice versa.
 @
 \endtt
 
-The in-line verbatim surrounded by an `\activettchar` doesn't work in
+The in-line verbatim surrounded by an `\verbchar` doesn't work in
 parameter of macros and macro definitions. (It works in titles declared by
 \~`\chap`, \~`\sec` etc. and in \~`\fnote`s, because these macros are
 specially defined in \OpTeX/).
@@ -1797,7 +1797,7 @@ put it as the first command in your document:
 ~endblock'       % end of block of text
 ~begtt'          % start a verbatim text
 ~endtt'          % end verbatim text
-~activettchar' X % initialization character X for in-text verbatim
+~verbchar' X     % initialization character X for in-text verbatim
 ~code'           % another alternative for in-text verbatim
 ~verbinput'      % verbatim extract from the external file
 ~begmulti' num   % start multicolumn text (num columns)

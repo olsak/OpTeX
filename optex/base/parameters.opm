@@ -211,7 +211,7 @@
 
    The \`\everyintt` token list does similar work
    but acts in the in-line verbatim
-   text processed by a pair of \^`\activettchar` characters or by \^`\code``{<text>}`.
+   text processed by a pair of \^`\verbchar` characters or by \^`\code``{<text>}`.
    You can set `\everyintt={\Red}` for example if you want in-line verbatim
    in red color.
    \_cod -----------------------------

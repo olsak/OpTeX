@@ -112,7 +112,7 @@
    The `\"` is defined as `\_qqA\_qqB<lqq><rqq>` and `\'` as `\_qqA\_qqC<lq><rq>`.
    The \`\_qqA``\_qqB<clqq><crqq>` runs \`\_qqB``<lqq><rqq><text>"`.\nl
    The \`\_regquotes``\""<L><R>` does `\def\"#1"{<L>#1<R>}` for outlines but the `"`
-   separator is active (because `"` and `'` are active in \^`\_pdfunidef`).
+   separator is active (because `"` and `'` are active in \^`\pdfunidef`).
    \_cod -----------------------------
 
 \_def \_quoteschars #1#2#3#4{\_def\_altquotes{\_quoteschars#3#4#1#2}\_public\altquotes;%
