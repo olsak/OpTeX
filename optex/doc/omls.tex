@@ -96,7 +96,7 @@ taken into account. The rule with a smaller number has precedence.
 * `~` \: non-breakable space.
 * text where all pairs `{` and `}` match at arbitrary level \: `<balanced text>`.\r[balt]
 * `{<balanced text>}` can be interpreted as a parameter followed by a <control-sequence>, see section~\ref[listcs].
-* The `{` alone not used by previous rule opens a group and the `}` alone closes the same group.
+* The `{` alone not used by previous rule opens a group and the `}` alone closes the same group.\r[group]
 * There are two main modes: h-mode, v-mode\fnote
   {this is great simplification of real \TeX/ modes.}.
   The document processing starts in v-mode.
@@ -116,9 +116,8 @@ taken into account. The rule with a smaller number has precedence.
 * `<unknown-control-sequence><o-equal><dimen>` \: should be completely ignored.\r[eqdim]
 * `<unknown-control-sequence><o-equal><number>` \: should be completely ignored.
 * `<unknown-control-sequence>=<o-space>{<balanced-text>}` \: should be completely ignored.
-* `<unknown-control-sequence>{<balanced-text>}` \: `<balanced-text>` alone.\r[ibrt]
 * `<unknown-control-sequence>[<balanced-text>]` \: should be completely ignored.\r[ibkt]
-* `<unknown-control-sequence>` \: should be ignored.
+* `<unknown-control-sequence>` \: should be ignored.\r[ignore]
 * `<control-sequence>`s are processed as described in section~\ref[listcs] or
   by a configuration of the cnv-program.
 \enditems
@@ -164,10 +163,10 @@ List of \TeX/ units.
 * `\vskip42mm` should finalize paragraph in h-mode by rule~\ref[htov] and then it
   is ignored by rule~\ref[eqdim] because `\vskip` is not listed in section~\ref[listcs].
 * `\typosize[12/16]` is ignored by rule~\ref[ibkt].
-* `\foo{text}` is `text` by rule~\ref[ibrt].
+* `\foo{text}` is `{text}` (i.e. `text` in group) by rules~\ref[ignore] and~\ref[group].
 \enditems
 
-\sec Scaning parameters
+\sec Scanning parameters
 
 If a control sequence listed in rules above or in the section~\ref[listcs]
 has a parameter, the parameter is scanned
@@ -175,11 +174,11 @@ as a string with interpreatation only those rules which are needed to
 determine the boundary of the parameters. For example `\tit <title><eol>`
 applies only rule~\ref[eol] during scanning the parameter, i.e.\ `<title>`
 is a string delimetered by the end of line or the end of file.
-Or `\mnote{<balanced-text>}` applies only rule~\ref[balt].
+Or `\fnote{<balanced-text>}` applies only rule~\ref[balt].
 
 If the parameter is in the format `{<something>}` then the `<something>` is
 always `<balanced-text>`. We don't specify the type `<balanced-text>`
-explicitly here, so we refer `\mnote{<text>}`, for example.
+explicitly here, so we refer `\fnote{<text>}`, for example.
 
 The spaces before scanned parameter or before `{<text>}` are optional
 and they are ignored. Spaces inside `{`...`}` are not ignored.
@@ -187,7 +186,7 @@ and they are ignored. Spaces inside `{`...`}` are not ignored.
 If the parameter is in the format `{<something>}` and the first non-space
 character is not `{` then the parameter is this first non-space character or
 a `<control-sequence>` if the first non-space character is~`\`. For example
-`\mnote a` is equal to `\mnote{a}`. The difference from this rule is given
+`\fnote a` is equal to `\fnote{a}`. The difference from this rule is given
 for `\input`, `\verbinput`,`\inspic` and `\inkinspic`.
 
 If the parameter is scanned as a string already then
@@ -281,7 +280,7 @@ beginning of the line. The list of `%%:` declarators follows:
   `<formats-or-apps>` space-separated list. Other cnv-programs or otput
   formats not mentioned here are skipped. Note that \TeX/ processes such
   lines always. But you can use `\ignoreit{<text>}` which is processed as
-  `<text>` by cnv-programs (see rule~\ref[ibrt]) but it is ignored by \OpTeX.
+  `{<text>}` by cnv-programs (see rule~\ref[ignore]) but it is ignored by \OpTeX.
   Example:
   \begtt
   %%:if html latex
@@ -289,12 +288,16 @@ beginning of the line. The list of `%%:` declarators follows:
   %%:
   \endtt
   The `file.tex` in this example is processed only if \LaTeX/ or Html output is generated.
-* `%%:verbchar <character>` -- declares `<character>` as boundary character
-  for inline verbatim.\nl
-  Default: `%%:verbchar `\code{`}.
-  Note that default setting is different from \OpTeX/ defaults where the
-  `\verbchar` is undeclared by default.
-  You can undeclare this character by `%%:verbchar` without parameter.
+* `%%:use` -- the next single line is fully interpreted unless cnv-program ignores
+  declarations by `%%:decl` or because it is in declaration-skipping mode.
+  Example:
+  \begtt
+  %%:use
+  \verbchar` \picdir={img/}
+  \endtt
+  The example shows how cnv-program is able to read `\verbchar` or
+  `\picdir` settings in declaration-skipping mode although these control
+  sequences are not listed in table~\ref[textopen].
 * `%%:quotes <qql> <qqr> <ql> <qr>` -- declares `<qql>` and `<qqr>`: left
   and right double quotation marks, `<ql>` and `<qr>`: left and right single
   quotation mark. They are used when `\"` or `\'` control sequences are
@@ -331,9 +334,15 @@ output of the \LaTeX/ source file.
 \begitems
 * `\input {<file-name>}` or `\input <file-name><space>` should redirect the
   input to given file. At the end of input-ed file or at `\endinput` the
-  reading of current file continues.
+  reading of current file continues. The file is read from current
+  directory, but the <file-name> shoud include the full path to the file
+  or relative path starting from current directory. First, the file
+  `<file-name>.tex` is tried to read and if it doesn't exist then
+  the file `<file-name>` is read.
+* `\picdir <o-equal>{<text>}` saves `<text>` to `<picdir-value>`. By
+  default, `<picdir-value>` is empty.
 * `\inspic {<file-name>}` or `\inspic <file-name><space>` should include the
-  given picture from the `<file-name>`.
+  given picture from the `<picdir-value><file-name>`.
 * `\inkinspic {<file-name>}` or `\inkinspic <file-name><space>` behaves like
   `\inspic`.
 * `\verinput <ignore> (<lines>) <file-name><space>` should include the
@@ -352,6 +361,102 @@ output of the \LaTeX/ source file.
 * `\secc <title><eof>` or `\secc [<label>] <title><eof>` is the title of
   third level.
 * `\secl<level> <title><eof>` is the title of given level.
+\enditems
+
+\secc Fonts
+
+`\rm` selects upright normal font (it is selected by default), `\it` selects
+italic, `\bf` selects upright bold font, `\bi` selects bold italic and `\tt` selects
+monospaced font, `\em` select italic (if upright is current) or upright
+(if italic is current). The font sizes or other font features are typically ignored
+by cnv-programs. The actual font selection is closed at the end of current group.
+The groups are given:
+\begitems
+* explicitly by `{` and `}` characters (which are not delimiters of
+  parameters of known control sequences),
+* implicitly: parameters of control sequences listed in table~\ref[groupcs]
+  are processed in a group and blocks of text enclosed by
+  `\begitems`...`\enditems`, `\begblock`...`\endblock`, `\begmulti`...`\endmulti`
+  are processed in a group.
+  Each item in `\table` is in a group.
+\enditems
+
+\label[groupcs]
+\caption/t Parameters of following control sequences are processed in a group.
+\cskip
+\begblock
+`\tit`, `\chap`, `\sec`, `\secc`, `\fnote`, `\mnote`, `\caption`.
+\endblock
+
+\secc Blockquotes
+
+The blockquote\fnote
+{The terminology is borrowed from Markdown.}
+is opened by `\begblock` and closed by `\endblock`.
+Blockquotes can contain multiple paragraphs and can contain nested
+blockquotes.
+
+\secc Lists
+
+The list is opened by `\begitems` and closed by `\enditems`. The `*` starts
+new item in this environment. Nested lists are allowed.
+
+The type of items (ordered/unordered)
+is given by `\style <character>`, see section 1.4.5 in the
+\OpTeX/ documentation. Default type is unordered (bullets are used).
+
+
+\secc Code blocks (verbatim texts)
+
+Code blocks are inline verbatim or display verbatim.
+
+\begitems
+* `\begtt <ignored><eol><text>\endtt<ignored><eol>` processes `<text>` in
+  \"display verbatim mode", i.\,e. there are no special characters, each character
+  is processed without special interpretation, the <eol>s are end of lines.
+  The text at the same line after `\begtt` and after `\endtt` (if any) is
+  ignored.
+* `\verbchar <character>` declares `<verbchar>`. By default, it is undeclared.\nl
+  New `\verbchar <character>` rewrites previous setting. The setting is
+  local in the group.
+* Inline verbatim is enclosed in the pairs of `<verbchar>`s.
+  The text between two verbchars is processed without
+  special interpretation. Only possibly <eol>s are replaced by space.
+  Example:
+  \begtt
+  %%:use
+  \verbchar`
+  Now `$this %text   ~\` is processed as inline verbatim.
+  \endtt
+  gives: Now `$this %text   ~\` is processed as inline verbatim.
+* `\code{<text>}` processes `<text>` like inline verbatim, but
+  all `\<character>` are processed as `<character>`, specially `\{` and `\}`
+  are `{` and `}` but without taking them into `<balanced-text>` rule,
+  `\\` is `\` but do not create a `<control-sequence>`, etc.
+\enditems
+
+
+\secc Links
+
+\begitems
+* `\url{<text>}` creates `<text>` as an external link which points to `<text>`.
+  The `\<character>` is interpreted as `<character>` in `<text>` with one
+  exception: `\|` is ignored.
+* `\ulink[<url>]{<text>}` creates `<text>` as an external link which points
+  to `<url>`. THe `\<character>` is interpreted as `<character>` only in
+  `<url>` parameter.
+* `\ref[<label>]` should create an interlnal link to the place given by
+  `\chap`, `\sec`, `\secc`, `\caption` or `\eqmark`,
+  if `\label[<label>]` precedes this control sequence or `[<label>]` is used
+  as the parameter of this control sequence. The visual aspect of the link
+  is not declared by OMLS because we don't suppose that the chaptes,
+  sections, equations, etc.\ are automatially numbered by exactly the same way as in
+  \OpTeX/. A recommedation should be: create simple sequence of numbers over
+  all interlnal links.
+* `\pgref[<label>]` should be replaced by `??` if cnv-program generates single-page
+  output (like Html, Markdown). Unfortunatelly, we get the irrelevant phrases in the output:
+  \"{\tt The problem is shown at the page ??}", but better solution
+  probably does not exist.
 \enditems
 
 
