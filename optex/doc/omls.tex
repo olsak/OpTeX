@@ -31,6 +31,7 @@
      \global\ea\addto\ea\knowncslist\ea{\csname,\csstring#1\endcsname}%
   }
 }
+\sdef{_item:c}{\pdfsave\llap{\pdfscale{1.3}{1.3}$\circ$\enspace}\pdfrestore}
 
 %\parindent=15pt \iindent=\parindent \ttindent=\parindent
 %\ttindent=0pt
@@ -56,7 +57,7 @@ The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
 {\tt texcount} or color highlighting in editors\fnote
-{Or advanced editor features: hiding/uncovering sections/chapters,
+{Or advanced editor features: sections/chapters folding,
  auto-completions, etc.}.
 These converters and applications are called {\it cnv-programs} in this document.
 
@@ -155,7 +156,7 @@ List of control sequences which switch from v-mode to h-mode.
 \cskip
 \begblock
 `\indent`, `\noindent`, `\leavevmode`, `\hskip`, `\hfil`, `\hfill`, `\hss`,
-`\`<space>, `\vrule`.
+`\`<space>, `\vrule`, `\caption`, `\bib`
 \endblock
 
 \bigskip
@@ -165,7 +166,7 @@ List of control sequences which switch from h-mode to v-mode.
 \begblock
 `\par`, `\vskip`, `\vfil`, `\hrule`, `\bigskip`, `\medskip`, `\smallskip`,
 `\chap`, `\sec`, `\secc`, `\secl`, `\end`, `\bye`, `\begitems`, `\begtt`,
-`\begblock`, `\enditems`, `\endblock`.
+`\begblock`, `\enditems`, `\endblock`, `\caption`, `\cskip`, `\bib`.
 \endblock
 
 \bigskip
@@ -290,8 +291,11 @@ beginning of the line. The list of `%%:` declarators follows:
   depending on the converted document and on the output format by the
   configuration files. For example, a special \LaTeX/ preamble should be declared
   here when conversion to \LaTeX/ is processed.
-* `%%:app <application> <config-file>` -- behaves like `%%;to` but the application
-  name instead output format is given here.
+* `%%:app <application> <config-file>` -- behaves like `%%;to` but the
+  cnv-program name instead output format is given here.
+* `%%:do <format-or-app> <action>` -- does an `<action>` if `<format-or-app>`
+  is output format or used cnv-program name. The `<action>` syntax depends
+  on used cnv-program and it typicaly does a change in its configuration.
 * `%%:skip <formats-or-apps>` -- ignores all following lines until another `%%:` occurs
   if the output format or application name is included in the `<formats-or-apps>`
   space-separated list. Example:
@@ -328,11 +332,8 @@ beginning of the line. The list of `%%:` declarators follows:
 * `%%:quotes <qql> <qqr> <ql> <qr>` -- declares `<qql>` and `<qqr>`: left
   and right double quotation marks, `<ql>` and `<qr>`: left and right single
   quotation mark. They are used when `\"` or `\'` control sequences are
-  processed. Default: `%%:quotes “ ” ‘ ’`.
-  Note that default setting is different from \OpTeX/ defaults where the
-  `\<lang>quotes` are undeclared and `\"`, `\'` are undefined by default.
-  You ca undeclare this feature by `%%:quotes` without parameters. Then the
-  control sequences `\"` and `\'` are interpreted as unknown.
+  processed. Default: unset. It emans that `\"` and `\'` are interpreted as
+  unknown control sequences.
 \enditems
 
 
@@ -362,6 +363,8 @@ output of the \LaTeX/ source file.
 * `\,` \: should be small space or space.
 * \.`\quad`, \.`\qquad` \: should be bigger space or more spaces.
 * \.`\-`, \.`\/` \: should be ignored.
+* \.`\"<text>"` or \.`\'<text>'` \: `<clqq><text><crqq>` or `<clq><text><crq>`,
+  only if `%%:quotes` are set.
 \enditems
 
 \secc Input files
@@ -383,6 +386,14 @@ output of the \LaTeX/ source file.
 * \.`\verinput <ignore> (<lines>) <file-name><space>` should include the
   <file-name> (only given lines) as a verbatim text, i.\,e. without any
   syntactical interpretation.
+* \.`\usebib/<letter> (<style>) <file-names>` should use files from
+  `<file-names>` to generate the list of bib references. The `<file-names>`
+  is comma separated list (the `.bib` extension must be appended to
+  each such file name). Only cited bib records should be used in this
+  bib-references, i.e. their label must be used in a `\cite[<labels>]`.
+  What part of bib data are used in bib records depends on cnv-program and
+  on its configuration. Maybe, simple cnv-programs should genereate nothing
+  here.
 \enditems
 
 \secc Titles
@@ -484,7 +495,7 @@ Code blocks are inline verbatim or display verbatim.
   The `\<character>` is interpreted as `<character>` in `<text>` with one
   exception: `\|` is ignored.
 * \.`\ulink[<url>]{<text>}` creates `<text>` as an external link which points
-  to `<url>`. THe `\<character>` is interpreted as `<character>` only in
+  to `<url>`. The `\<character>` is interpreted as `<character>` only in
   `<url>` parameter.
 * \.`\label[<label>]` sets the `<label>` to the `<label-register>`. It is
   empty by default. Each occurence of `\chap`, `\sec`, `\secc`, `\caption`
@@ -502,6 +513,17 @@ Code blocks are inline verbatim or display verbatim.
   output (like Html, Markdown). Unfortunatelly, we get the irrelevant phrases in the output:
   \"{\tt The problem is shown at the page ??}", but better solution
   probably does not exist.
+* \.`\bib[<label>]` or `\bib[<label>]<o-space>=<o-space>{<ignored>}` should open the new bib
+  record. More exactly, it closes previous paragraph (if h-mode is current)
+  and opens new h-mode. Then prints an auto-generated number. Followng text
+  is interpreted as a bib record until the h-mode ends.
+* \.`\cite[<labels>]` should create an internal links to corresponding bib
+  record generated by `\usebib` or by `\bib`. The `<labels>` is comma
+  separated list of labels used in `.bib` files or in `\bib` commands to indicate
+  the corresponding bib record. The labels should be replaced by auto-generated
+  numbers used in bib records encloded by `[...]`. These numbers are
+  internal links. If the cnv-program does not implement this complicated
+  bib machinery then `\cite[<labels>]` should print only `[<labels>]`.
 * \.`\maketoc` should create a list of titles from all `\chap`, `\sec` and `\secc`
   used in the document if they are not preceded by `\notoc`. All lines in
   this list should include internal links to the place where the corresponding title
@@ -510,13 +532,59 @@ Code blocks are inline verbatim or display verbatim.
 
 \secc Tables
 
-\secc Footnotes
+\begitems
+* \.`\caption/<letter>` opens a caption. More exactly, if current mode is
+  h-mode, then switch to v-mode first (i.e.\ close the current paragraph).
+  Then switch from v-mode to h-mode and put a <caption-head>. The following
+  text should be interpreted as the caption text until h-mode ends.
+  If <letter> is `t` then <caption-head> is `Table` followed
+  by an auto-generated number. If the <letter> is `f` then <caption-head> is
+  `Figure` followed by an auto-generated number. The configuration of
+  cnv-programs shoud allow different words than default `Table` or `Figure` (for
+  example, if different language is used).
+* \.`\table<ignored>{<declaration>}{<data>}` should create a table. The fidelity
+  rate of created output depends heavily on the used cnv-program and the output
+  format. We don't suppose that all aspects of \OpTeX/ tables are imeplemented.
+  The following features are listed in their priority of implementation.
+  \begitems \style c
+  * Items in `<data>` are separated by `&`.
+    The last item in each row is separated by end-row separator: \.`\cr`, \.`\crl`, \.`\crll`,
+    \.`\crli`, \.`\crlli`, or \.`\crlp{<list>}`. If there are $n$ columns then we
+    have $n-1$ `&` separators and one end-row separator.
+    There should be optional end-row separator ad first item in `<data>` and
+    it should be ignored. The `<data>` should end without end-seprator, it
+    should be added here.
+  * Spaces around `&` and before end-line separator are ignored.
+  * \.`\noalign{<text>}` and \.`\tskip <dimen>` should be ignored.
+  * Colum declarators in <data> should be interpreted: `l` (left aligned), `c` (center
+    aligned), `r` (right aligned) or `p{<ignored>}` (paragraph-like item).
+  * \.`\vspan<number>{<text>}` or `\vspan{<number>}{<text>}` in a item should
+    be only `<text>`.
+  * \.`\mspan<number>[<decl>]{<text>}` should create `<text>` as an item which
+    spans over `<number>` columns.
+  * Rules in the table should be interpreted, i.e. `|` in <declaration>
+    should be not ignored and
+    various end-row separators should be distinguished (see \OpTeX/ manual,
+    section 1.4.6.
+  * The aligning of `p{<p-data>}` columns should be interpreded by reading
+    \.`\fL`, \.`\fR`, \.`\fC`, \.`\fS` and \.`\fX` control sequences in `<p-data>`.
+    See \OpTeX/ documentation.
+  \enditems
+\enditems
+
+\secc Footnotes, marginal notes
+
+\begitems
+* \.`\fnote{<text>}` should create a footnote as an auto-generated number.
+  The `<text>` should be appended at the end of the document labeled by this
+  number. The link to this appended text should be created. Another
+  alternative (for Html output, for example): the auto-generated number
+  riases an auto-popup `<text>`.
+* \.`\mnote{<text>}` should be created as auto-popup `<text>` or the `<text>`
+  is inserted at the margin.
+\enditems
 
 
-
-
-
-... todo
 
 \sec[math] Math mode processing
 

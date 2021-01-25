@@ -926,7 +926,7 @@ See the definition of the \^`\tabdeclarec` macro, for example.
 
 The `:` columns boundary declarator is described in section~\ref[table.bound].
 The tables with given width can be declared by `to<size>` or `pxto<size>`.
-More about it is in section~\ref[table.w]
+More about it is in section~\ref[table.w].
 Many tips about tables can be seen on the site
 \url{http://petr.olsak.net/optex/optex-tricks.html}.
 
@@ -1558,10 +1558,11 @@ coordinates `<x>`, `<y>`. More exactly the left edge of its baseline is at that
 position.
 
 \new
-The \^`\putpic` `<x> <y> <width> <height> {<image>}` puts the `<image>` of given
+The \^`\putpic` `<x> <y> <width> <height> {<image-file>}` puts an image
+given by `<image-file>` (including extension) of given
 `<width>` and `<height>` at given position (its left-bottom corner).
-You can write \^`\nospec` instead `<width>` or `<height>` if this parameter is
-not given.
+You can write \^`\nospec` instead `<width>` or `<height>` if this parameter
+is not specified.
 
 \sec Others
 %%%%%%%%%%%
