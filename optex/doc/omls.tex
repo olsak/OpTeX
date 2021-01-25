@@ -7,14 +7,41 @@
 \def\r[#1]{\label[#1]\wlabel{\the\_itemnum}}
 \def\:{$\to$}
 \let\_narrowlastlinecentered=\ignoreit
+\_def\_printsecc#1{\_par
+   \_abovetitle{\_penalty-200}{\_medskip\_smallskip}
+   {\_seccfont \_noindent \_raggedright \_printrefnum[@\_quad]%
+       \_label[\the\_secnum.\the\_seccnum]\_wlabel{\the\_secnum.\the\_seccnum}#1\_nbpar}%
+   \_nobreak \_belowtitle{\_medskip}%
+   \_firstnoindent
+}
+\def\.`{\bgroup\catcode`\ =12 \scancs}
+\def\scancs#1{\egroup
+   \immediate\_wref\Xknowncs{\string#1{\the\_secnum.\the\_seccnum}}%
+   \ea`\string#1%
+}
+\def\printcs#1{\ea\printcsred\csstring#1;~\ref[#1] \ }
+\def\printcsred,#1;{{\Red\tt \bslash#1}}
+\def\printknowncs{\ifx\knowncslist\empty TeX me again...\else
+   \_dosorting\knowncslist \ea\xargs \ea\printcs \knowncslist;\fi}
+
+\refdecl{
+  \def\knowncslist{}^^J
+  \def\Xknowncs#1#2{%
+     \sxdef{,\csstring#1}{#2}%
+     \global\ea\addto\ea\knowncslist\ea{\csname,\csstring#1\endcsname}%
+  }
+}
+
 %\parindent=15pt \iindent=\parindent \ttindent=\parindent
 %\ttindent=0pt
 \everylist={\advance\ttindent by-1em}
 \hyperlinks \Green \Green
 \def\cskip{\par\nobreak}
-\def\begblock{\medskip\hbox\bgroup\vrule\vbox\bgroup\hrule
+\def\begblock{\medskip\hbox\bgroup\vrule\vbox\bgroup\hrule\smallskip
    \_fnset\leftskip=\parindent \rightskip=\parindent \medskip\noindent}
-\def\endblock{\smallskip\hrule\egroup\vrule\egroup}
+\def\endblock{\medskip\hrule\egroup\vrule\egroup}
+
+\titskip=1cm
 
 \tit \OpTeX/ Markup Language Standard
 
@@ -312,40 +339,48 @@ beginning of the line. The list of `%%:` declarators follows:
 \sec[listcs] List of known control sequences
 
 The phrase \"should be" is used very often when the interpretation of
-control sequences are declared here. It means that this is aonly a common
+control sequences are declared here. It means that this is only a common
 interpretation, but differeces are possible due to the type of the output
 format and used cnv-program. For example, when we convert to \LaTeX\, then
 `\-` and `\/` are not ignored but they are re-written without change to the
 output of the \LaTeX/ source file.
 
+\bigskip
+\caption/t List of known control sequences alphabeticaly sorted.
+\cskip
+\begblock
+\rightskip=10pt plus1fil \relax \printknowncs
+\endblock
+
+
 \secc Character-like control sequences
 
 \begitems
-* `\%`, `\$`, `\&`,`\#` respectively \: should be normal characters `%`, `$`, `&`, `#` respectively.
-* `\bslash` \: normal character `\`.
-* `\space`, `\<space>`, `\<eol>` \: space.
+* \.`\%`, \.`\$`, \.`\&`,\.`\#` respectively \: should be normal characters `%`, `$`, `&`, `#` respectively.
+* \.`\bslash` \: normal character `\`.
+* \.`\space`, `\<space>`, `\<eol>` \: space.
 * `\,` \: should be small space or space.
-* `\quad`, `\qquad` \: should be bigger space or more spaces.
-* `\-`, `\/` \: should be ignored.
+* \.`\quad`, \.`\qquad` \: should be bigger space or more spaces.
+* \.`\-`, \.`\/` \: should be ignored.
 \enditems
 
 \secc Input files
 
 \begitems
-* `\input {<file-name>}` or `\input <file-name><space>` should redirect the
-  input to given file. At the end of input-ed file or at `\endinput` the
+* \.`\input {<file-name>}` or `\input <file-name><space>` should redirect the
+  input to given file. At the end of input-ed file or at \.`\endinput` the
   reading of current file continues. The file is read from current
   directory, but the <file-name> shoud include the full path to the file
   or relative path starting from current directory. First, the file
   `<file-name>.tex` is tried to read and if it doesn't exist then
   the file `<file-name>` is read.
-* `\picdir <o-equal>{<text>}` saves `<text>` to `<picdir-value>`. By
+* \.`\picdir <o-equal>{<text>}` saves `<text>` to `<picdir-value>`. By
   default, `<picdir-value>` is empty.
-* `\inspic {<file-name>}` or `\inspic <file-name><space>` should include the
+* \.`\inspic {<file-name>}` or `\inspic <file-name><space>` should include the
   given picture from the `<picdir-value><file-name>`.
-* `\inkinspic {<file-name>}` or `\inkinspic <file-name><space>` behaves like
+* \.`\inkinspic {<file-name>}` or `\inkinspic <file-name><space>` behaves like
   `\inspic`.
-* `\verinput <ignore> (<lines>) <file-name><space>` should include the
+* \.`\verinput <ignore> (<lines>) <file-name><space>` should include the
   <file-name> (only given lines) as a verbatim text, i.\,e. without any
   syntactical interpretation.
 \enditems
@@ -353,21 +388,21 @@ output of the \LaTeX/ source file.
 \secc Titles
 
 \begitems
-* `\tit <title><eof>` should be a title of the document.
-* `\chap <title><eof>` or `\chap [<label>] <title><eof>` is the title of
+* \.`\tit <title><eof>` should be a title of the document.
+* \.`\chap <title><eof>` or `\chap [<label>] <title><eof>` is the title of
   first level.
-* `\sec <title><eof>` or `\sec [<label>] <title><eof>` is the title of
+* \.`\sec <title><eof>` or `\sec [<label>] <title><eof>` is the title of
   second level.
-* `\secc <title><eof>` or `\secc [<label>] <title><eof>` is the title of
+* \.`\secc <title><eof>` or `\secc [<label>] <title><eof>` is the title of
   third level.
-* `\secl<level> <title><eof>` is the title of given level.
+* \.`\secl<level> <title><eof>` is the title of given level.
 \enditems
 
 \secc Fonts
 
-`\rm` selects upright normal font (it is selected by default), `\it` selects
-italic, `\bf` selects upright bold font, `\bi` selects bold italic and `\tt` selects
-monospaced font, `\em` select italic (if upright is current) or upright
+\.`\rm` selects upright normal font (it is selected by default), \.`\it` selects
+italic, \.`\bf` selects upright bold font, \.`\bi` selects bold italic and
+\.`\tt` selects monospaced font, \.`\em` select italic (if upright is current) or upright
 (if italic is current). The font sizes or other font features are typically ignored
 by cnv-programs. The actual font selection is closed at the end of current group.
 The groups are given:
@@ -388,21 +423,27 @@ The groups are given:
 `\tit`, `\chap`, `\sec`, `\secc`, `\fnote`, `\mnote`, `\caption`.
 \endblock
 
+\secc Colors
+
+\.`\Red`, \.`\Green`, \.`\Blue`, \.`\Cyan`, \.`\Magenta`, \.`\Yellow`, \.`\White`,
+\.`\Black`, and \.`\Brown` should select given color of the font. The selection
+is closed at the end of current group (like font selectors).
+
 \secc Blockquotes
 
 The blockquote\fnote
 {The terminology is borrowed from Markdown.}
-is opened by `\begblock` and closed by `\endblock`.
+is opened by \.`\begblock` and closed by \.`\endblock`.
 Blockquotes can contain multiple paragraphs and can contain nested
 blockquotes.
 
 \secc Lists
 
-The list is opened by `\begitems` and closed by `\enditems`. The `*` starts
+The list is opened by \.`\begitems` and closed by \.`\enditems`. The `*` starts
 new item in this environment. Nested lists are allowed.
 
 The type of items (ordered/unordered)
-is given by `\style <character>`, see section 1.4.5 in the
+is given by \.`\style <character>`, see section 1.4.5 in the
 \OpTeX/ documentation. Default type is unordered (bullets are used).
 
 
@@ -411,12 +452,12 @@ is given by `\style <character>`, see section 1.4.5 in the
 Code blocks are inline verbatim or display verbatim.
 
 \begitems
-* `\begtt <ignored><eol><text>\endtt<ignored><eol>` processes `<text>` in
+* \.`\begtt <ignored><eol><text>\endtt<ignored><eol>` processes `<text>` in
   \"display verbatim mode", i.\,e. there are no special characters, each character
   is processed without special interpretation, the <eol>s are end of lines.
   The text at the same line after `\begtt` and after `\endtt` (if any) is
   ignored.
-* `\verbchar <character>` declares `<verbchar>`. By default, it is undeclared.\nl
+* \.`\verbchar <character>` declares `<verbchar>`. By default, it is undeclared.\nl
   New `\verbchar <character>` rewrites previous setting. The setting is
   local in the group.
 * Inline verbatim is enclosed in the pairs of `<verbchar>`s.
@@ -429,7 +470,7 @@ Code blocks are inline verbatim or display verbatim.
   Now `$this %text   ~\` is processed as inline verbatim.
   \endtt
   gives: Now `$this %text   ~\` is processed as inline verbatim.
-* `\code{<text>}` processes `<text>` like inline verbatim, but
+* \.`\code{<text>}` processes `<text>` like inline verbatim, but
   all `\<character>` are processed as `<character>`, specially `\{` and `\}`
   are `{` and `}` but without taking them into `<balanced-text>` rule,
   `\\` is `\` but do not create a `<control-sequence>`, etc.
@@ -439,25 +480,40 @@ Code blocks are inline verbatim or display verbatim.
 \secc Links
 
 \begitems
-* `\url{<text>}` creates `<text>` as an external link which points to `<text>`.
+* \.`\url{<text>}` creates `<text>` as an external link which points to `<text>`.
   The `\<character>` is interpreted as `<character>` in `<text>` with one
   exception: `\|` is ignored.
-* `\ulink[<url>]{<text>}` creates `<text>` as an external link which points
+* \.`\ulink[<url>]{<text>}` creates `<text>` as an external link which points
   to `<url>`. THe `\<character>` is interpreted as `<character>` only in
   `<url>` parameter.
-* `\ref[<label>]` should create an interlnal link to the place given by
+* \.`\label[<label>]` sets the `<label>` to the `<label-register>`. It is
+  empty by default. Each occurence of `\chap`, `\sec`, `\secc`, `\caption`
+  or `\eqmark` uses non-empty `<label-register>` and sets it empty again.
+* \.`\ref[<label>]` should create an interlnal link to the place given by
   `\chap`, `\sec`, `\secc`, `\caption` or `\eqmark`,
-  if `\label[<label>]` precedes this control sequence or `[<label>]` is used
-  as the parameter of this control sequence. The visual aspect of the link
+  if `[<label>]` is used as the parameter of this control sequence
+  else if `<label>` is equal to the used `<label-register>` here.
+  The visual aspect of the link
   is not declared by OMLS because we don't suppose that the chaptes,
   sections, equations, etc.\ are automatially numbered by exactly the same way as in
   \OpTeX/. A recommedation should be: create simple sequence of numbers over
   all interlnal links.
-* `\pgref[<label>]` should be replaced by `??` if cnv-program generates single-page
+* \.`\pgref[<label>]` should be replaced by `??` if cnv-program generates single-page
   output (like Html, Markdown). Unfortunatelly, we get the irrelevant phrases in the output:
   \"{\tt The problem is shown at the page ??}", but better solution
   probably does not exist.
+* \.`\maketoc` should create a list of titles from all `\chap`, `\sec` and `\secc`
+  used in the document if they are not preceded by `\notoc`. All lines in
+  this list should include internal links to the place where the corresponding title
+  is used.
 \enditems
+
+\secc Tables
+
+\secc Footnotes
+
+
+
 
 
 ... todo

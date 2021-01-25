@@ -707,9 +707,9 @@ macros follows:
    \global\chardef #1=\famaddress
    \global\addto\_normalmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{#3} }%
    \ifx\relax#4\relax
-      \global\addto\_boldmath{\_corrmsize#6\_ptunit \_loadumathfamily #1 {#2}{embolden=1.7;} }%
+      \global\addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{embolden=1.7;} }%
    \else
-      \global\addto\_boldmath{\_corrmsize#6\_ptunit \_loadumathfamily #1 {#4}{#5} }%
+      \global\addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#4}{#5} }%
    \fi
    \_normalmath
    \wterm{MATH-FONT: added #1=\the#1, normal: "#2", \ifx"#4"\else bold: "#4"\fi}
