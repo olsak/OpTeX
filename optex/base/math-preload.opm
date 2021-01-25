@@ -134,28 +134,34 @@
    These parameters are given in the \`\ptmunit` unit, it is set to
    1\`\ptunit` and it is set to 1\,pt by  default.
    \nl
-   \`\_corrmsizes` should be used in the \^`\normalmath` and \^`\boldmath`
-   macros if you need a size correction when a selected math family is
-   loaded. It is similar to ex-height correction but for math fonts.
+   \`\_corrmsize` `<factor><space>` can be used just before
+   `\_loadmathfamily` or `\_setmathfamily`.
+   The `<factor>` is decimal number, it denotes
+   scale-factor \"size of loaded math font in `\textstyle` : size of text font".
+   You can use it in `\_normalmath` or `\_boldmath` macros if you want to do a
+   corrections (for example due to different ex-height in text and math
+   font). The `\_corrmsize` is applied only to one following
+   `\_loadmathfamily` or `\_setmathfamily`. If it is missing
+   then the `<factor>` is 1 for such math family (i.e.\ no size corrections).
    \_cod -----------------------------
 
-\_def\_corrmsizes{\_ptmunit=1\_ptunit\_relax} % for corrections of sizes in diferent fomts
+\_def\_corrmsize#1 {\_ptmunit=#1\_ptunit} % for corrections of sizes in diferent fonts
 
-\_def\_loadmathfamily #1 #2 {\_chardef\_tmp#1\_corrmsizes
+\_def\_loadmathfamily #1 #2 {%
   \_edef\_optsizesave{\_the\_optsize}%
   \_optsize=\_sizemtext    \_font\_mF=\_whichtfm{#2} at\_optsize \_textfont#1=\_mF
   \_optsize=\_sizemscript  \_font\_mF=\_whichtfm{#2} at\_optsize \_scriptfont#1=\_mF
   \_optsize=\_sizemsscript \_font\_mF=\_whichtfm{#2} at\_optsize \_scriptscriptfont#1=\_mF
-  \_optsize=\_optsizesave \_relax
+  \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
-\_def\_setmathfamily #1 #2{\_let\_mF=#2\_chardef\_tmp#1\_corrmsizes
+\_def\_setmathfamily #1 #2{\_let\_mF=#2%
   \_edef\_optsizesave{\_the\_optsize}%
   \_optsize=\_sizemtext    \_fontlet#2=#2 at\_optsize \_textfont#1=#2%
   \_optsize=\_sizemscript  \_fontlet#2=#2 at\_optsize \_scriptfont#1=#2%
   \_optsize=\_sizemsscript \_fontlet#2=#2 at\_optsize \_scriptscriptfont#1=#2%
-  \_optsize=\_optsizesave \_let#2=\_mF
+  \_optsize=\_optsizesave \_ptmunit=\_ptunit \_let#2=\_mF
 }
-\_def\_setmathsizes[#1/#2/#3]{%
+\_def\_setmathsizes[#1/#2/#3]{\_ptmunit=\_ptunit
    \_def\_sizemtext{#1\_ptmunit}\_def\_sizemscript{#2\_ptmunit}%
    \_def\_sizemsscript{#3\_ptmunit}%
 }

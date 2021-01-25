@@ -666,8 +666,8 @@ re-declare \triangleq in order this additional font is used for such
 character. Example:
 
 <pre>
-\loadfam [EBGaramond]  % Garamond family including Garamond-Math is loaded
-\addUmathfont \stix {[STIXMath-Regular]}{} {}{} % additional font STIX loaded
+\fontfam [EBGaramond]  % Garamond family including Garamond-Math is loaded
+\addUmathfont \stix {[STIXMath-Regular]}{} {}{} {} % additional font STIX loaded
 \resetUmathchar \stix \triangleq  % \triangleq will use STIX
 
 Test: $a \triangleq b$. % All is in Garamond only \triangleq in STIX.
@@ -676,7 +676,7 @@ Test: $a \triangleq b$. % All is in Garamond only \triangleq in STIX.
 <p>You can load more than one additional Unicode math font (use more than
 one \addUmathfont command). Each additional font declares a new math-font
 family (its name is given in the first parameter) and you can use this name for
-re-declaring math characters. You can use \resetUmathchars (instead
+re-declaring math characters. You can use \resetUmathchars (instead of
 \resetUmathchar) in order to re-declare more than one math character.
 The list of character sequences must be terminated by colon in such case.
 For example:
@@ -701,15 +701,15 @@ macros follows:
 }
 \def\resetUmathchars #1{\def\tmp{\resetUmathchar#1}\xargs\tmp}
 
-\def\addUmathfont #1#2#3#4#5{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
+\def\addUmathfont #1#2#3#4#5#6{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
    \ifx\_ncharrmA\undefined \errmessage{basic Unicode math font must be loaded first}\fi
    \global\advance \famaddress by1
    \global\chardef #1=\famaddress
-   \global\addto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
+   \global\addto\_normalmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{#3} }%
    \ifx\relax#4\relax
-      \global\addto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
+      \global\addto\_boldmath{\_corrmsize#6\_ptunit \_loadumathfamily #1 {#2}{embolden=1.7;} }%
    \else
-      \global\addto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
+      \global\addto\_boldmath{\_corrmsize#6\_ptunit \_loadumathfamily #1 {#4}{#5} }%
    \fi
    \_normalmath
    \wterm{MATH-FONT: added #1=\the#1, normal: "#2", \ifx"#4"\else bold: "#4"\fi}
@@ -717,9 +717,10 @@ macros follows:
 \newcount\famaddress  \famaddress=100
 </pre>
 
-<p>The \addUmathfont has five parameters:
-family-name {normal-font}{features} {bold-font}{features}.
+<p>The \addUmathfont has six parameters:
+family-name {normal-font}{features} {bold-font}{features} {factor}.
 If "bold-font" is empty then faked bold constructed from normal-font is used.
+The factor is decimal number for size corrections. If it is empty then factor=1.
 The math families are allocated from 101, 102 etc., i.e. macro programmer can
 use the numbers 5..99 for direct addressing (note that 0..4 are reserved by
 TeX and OpTeX).

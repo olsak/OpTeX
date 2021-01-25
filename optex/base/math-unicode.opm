@@ -118,7 +118,9 @@
    If the math family 1 is loaded then the family 2 and 3 are set by the same
    font because \TeX/ needs to read dimension information about generating
    math formulae from these three math families. All information needed by
-   \TeX/ is collected in single Unicode-math font.
+   \TeX/ is collected in single Unicode-math font.\nl
+   The \^`\_corrmsize` `<factor><space>` can be used just before
+   `\_loadumathfamily`, see section~\ref[math-preload] for more information.
    \_cod -----------------------------
 
 \_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
@@ -132,7 +134,7 @@
   \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
   \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{+ssty=1;#3} at\_optsize\_scriptscriptfont#1=\_mF
   \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi
-  \_optsize=\_optsizesave \_relax
+  \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
 
    \_doc -----------------------------
