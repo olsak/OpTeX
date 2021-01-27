@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2020-12-12>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2020-01-27>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
@@ -19,10 +19,7 @@
 \_def\_initunifonts {%
    \directlua{%
       require('luaotfload-main')
-      print_bak = print
-      print = function () end
       luaotfload.main()
-      print = print_bak % "print hack" until luaotfload will be corrected
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont
@@ -837,6 +834,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2021-01-27  lua hack (print function) removed because luaotfload 3.17 removes bug.
 2020-12-12  \_modlist added, doc improved
 2020-04-18  \_tryloadfamslocal introduced
             \_fontdecl -> \_famdecl with different concept

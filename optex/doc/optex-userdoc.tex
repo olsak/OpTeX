@@ -904,21 +904,20 @@ You can use this for creating tables like in the following example:
                 & Exclusive & \mspan3[c|]{} &\mspan3[c|] X \crl
    \vspan2{II}  & Informal  & \mspan3[c|] X &\mspan3[c|] X \crlp{2-8}
                 & Formal    & \mspan6[c|] X \crl
-   \vspan2{III} & Informal  & \vspan2 O & X & X &\mspan2[c|] X & \vspan2 O \crlp{2,4-7}
+   \vspan2{III} & Informal  & \vspan2{O} & X & X &\mspan2[c|] X & \vspan2{O} \crlp{2,4-7}
                 & Formal    & &\mspan4[c|] X & \crl
 }}\pdfrestore}
 
 \hangindent=-7.5cm \hangafter=0
-The <number> parameter of \^`\vspan` must be one-digit number.
-If you want to set more digits then use braces.
-You can use non-integer values too if you feel that the
-result is better, for example \^`\vspan{2.1}{text}`.
+You can use \^`\vspan` with non-integer parameter too if you feel that the
+result looks better, for example \^`\vspan2.1{text}`.
 
 \hangindent=-7.5cm \hangafter=0
 The rule width of tables and implicit width of all `\vrule`s and `\hrule`s
 can be set by the command \^`\rulewidth=<dimen>`. The default value given
 by \TeX/ is 0.4\,pt.
 
+\hangindent=-7.5cm \hangafter=-2
 The `c`, `l`, `r` and `p` are default \"declaration letters" but you can define
 more such letters by `\def\_tabdeclare<letter>{<left>##<right>}`.
 More about it is in technical documentation in section~\ref[table.impl].
