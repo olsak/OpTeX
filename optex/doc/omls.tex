@@ -1,16 +1,20 @@
 \fontfam[lm]
-\adef<#1>{{\Blue$\langle$\hbox{\it#1\/}$\rangle$}}
+
+\adef<#1>{\ifcsname s:#1\endcsname
+   \link[s:#1]{}{\Blue$\langle$\hbox{\it#1\/}$\rangle$}%
+   \else {\Blue$\langle$\hbox{\it#1\/}$\rangle$}\fi}
 \everyintt={\catcode`<=13 \Red}
 \verbchar`
 \enlang
 \enquotes
+
 \def\r[#1]{\label[#1]\wlabel{\the\_itemnum}}
 \def\:{$\to$}
 \let\_narrowlastlinecentered=\ignoreit
 \_def\_printsecc#1{\_par
    \_abovetitle{\_penalty-200}{\_medskip\_smallskip}
    {\_seccfont \_noindent \_raggedright \_printrefnum[@\_quad]%
-       \_label[\the\_secnum.\the\_seccnum]\_wlabel{\the\_secnum.\the\_seccnum}#1\_nbpar}%
+       \_label[\the\_secnum.\the\_seccnum]\wlabel{\the\_secnum.\the\_seccnum}#1\_nbpar}%
    \_nobreak \_belowtitle{\_medskip}%
    \_firstnoindent
 }
@@ -21,8 +25,11 @@
 }
 \def\printcs#1{\ea\printcsred\csstring#1;~\ref[#1] \ }
 \def\printcsred,#1;{{\Red\tt \bslash#1}}
-\def\printknowncs{\ifx\knowncslist\empty TeX me again...\else
+\def\printknowncs{\ifx\knowncslist\undefined \let\knowncslist=\empty \fi
+   \ifx\knowncslist\empty TeX me again...\else
    \_dosorting\knowncslist \ea\xargs \ea\printcs \knowncslist;\fi}
+
+\def\~`<#1>`{<#1>\sxdef{s:#1}{}\dest[s:#1]}
 
 \refdecl{
   \def\knowncslist{}^^J
@@ -42,7 +49,12 @@
    \_fnset\leftskip=\parindent \rightskip=\parindent \medskip\noindent}
 \def\endblock{\medskip\hrule\egroup\vrule\egroup}
 
+\def\raggedright{\rightskip=10pt plus1fil\relax}
+\def\optexmanual{\ulink[http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf]{\OpTeX/ manual}}
+
 \titskip=1cm
+
+\hfill Version 0.1
 
 \tit \OpTeX/ Markup Language Standard
 
@@ -50,14 +62,14 @@
 
 The \OpTeX/ markup language standard (OMLS) declares a list of control
 sequences used in \OpTeX/ documents including their syntax and sematic. The
-listed control sequences in OMLS in section~\ref[listcs]
+listed control sequences in OMLS in section~\ref[listcs] in table~\ref[alistcs]
 are called {\it known} and other control sequences are {\it unknown}.
 
 The main reason for OMLS is to give instructions on how to program convertors
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
-{\tt texcount} or color highlighting in editors\fnote
-{Or advanced editor features: sections/chapters folding,
+{\tt texcount} or text editors\fnote
+{We suppose advanced editor features: color highlighting, sections/chapters folding,
  auto-completions, etc.}.
 These converters and applications are called {\it cnv-programs} in this document.
 
@@ -67,7 +79,7 @@ you need to create other formats of the same document then you can use a
 cnv-program which accepts OMLS. The result is a document without
 typographical instructions like dimensions of pages, margins, paginations
 and headers, selection of a font-family, dimensions of the fonts, etc.\ You can
-imagine the result of such a conversion as one Html page where more
+imagine the result of such a conversion as a single Html page where more
 typographical features can be controlled in a different way, for example by
 an external CSS file. This is a reason why control sequences like `\fontfam` or
 `\margins` are ignored by cnv-programs.
@@ -81,7 +93,7 @@ OMLS-ready documents cover a very large set of typical documents used these
 days.
 
 We suppose that cnv-programs work internally with strings of source lines
-without tokenization. This is one of the great difference in processing the
+without tokenization. This is one of the great differences in processing the
 document directly by \OpTeX/ and using a cnv-program. The second difference is
 that the expansion process of macros is not implemented in cnv-programs in
 its full range. We respect that the result of cnv-programs will be different
@@ -91,9 +103,11 @@ the feature. We concentrate on the fixed syntax and sematic given by OMLS of the
 exactness of the document which can be done only directly by \TeX/ (and it is
 exactly described in \TeX/book, for example).
 
-\notoc\nonum\sec Contents
+\notoc\nonum\sec Table of contents
 
+\begmulti 2
 \maketoc
+\endmulti
 \vfil\break
 
 \sec Syntactical rules
@@ -102,45 +116,45 @@ The syntactical elements are described as strings here. No \TeX/'s tokenization 
 taken into account. The rule with a smaller number has precedence.
 
 \begitems \style n
-* end of line or end of file \: `<eol>`.\r[eol]
-* `%%:` at beginning of the line \: <cnv-declarator>, see section~\ref[cnv-decl].
+* end of line or end of file \: \~`<eol>`.\r[eol]
+* `%%:` at beginning of the line \: \~`<cnv-declarator>`, see section~\ref[cnv-decl].
 * `<cnv-declarator><text><eol>` is interpreted specially.
-* space or a tab-character \: `<space>`.
-* non-empty sequence of `<space>`s \: `<spaces>`.
-* a line only with `<spaces>` \: `<empty-line>`.\r[spcs]
-* a character `a`--`z` or `A`--`Z` \: `<letter>`.
-* a  `<letter>` or `_` \: `<specletter>`.
-* a character different from previous rule or `<eol>` or `<spaces>` \: `<non-spec-letter>`
-* `\<non-specletter>` \: `<singlechar-control-sequence>`.\r[scs]
-* a non-empty sequence of `<specletter>`s \: `<letters-seq>`.
-* `\<letters-seq><non-specletter>` \: `<multiletter-control-sequence><non-specletter>`.
+* space or a tab-character \: \~`<space>`.
+* non-empty sequence of `<space>`s \: \~`<spaces>`.\r[spcs]
+* an empty line or a line only with `<spaces>` \: \~`<empty-line>`.
+* a character `a`--`z` or `A`--`Z` \: \~`<letter>`.
+* a  `<letter>` or `_` \: \~`<specletter>`.
+* a character different from previous rule or `<eol>` or `<spaces>` \: \~`<non-specletter>`
+* `\<non-specletter>` \: \~`<singlechar-control-sequence>`.\r[scs]
+* a non-empty sequence of `<specletter>`s \: \~`<letters-seq>`.
+* `\<letters-seq><non-specletter>` \: \~`<multiletter-control-sequence>``<non-specletter>`.
 * `%<text><eol>` \: `<comment>` and it is completely ignored including `<eol>`.\r[com]
 * `<spaces>` at beginning of the line marks that the line as {\it indented}.
 * `<spaces>` at beginning of the line \: are ignored.\r[bspace]
-* `<spaces><eol>` or `<eol>` \: `<space>`.\r[eolrm]
+* `<spaces><eol>` or `<eol>` \: `<spaces>`.\r[eolrm]
 * `<multileter-control-sequence><spaces>` \: `<multileter-control-sequence>`.\r[csspace]
-* `<multiletter-control-sequence>` or `<singlechar-control-sequence>` \: `<control-sequence>`.\r[cs]
+* `<multiletter-control-sequence>` or `<singlechar-control-sequence>` \: \~`<control-sequence>`.\r[cs]
 * `<spaces>` \: `<space>`.\r[sspace]
 * `~` \: non-breakable space.
-* text where all pairs `{` and `}` match at arbitrary level \: `<balanced text>`.\r[balt]
-* `{<balanced text>}` can be interpreted as a parameter followed by a <control-sequence>, see section~\ref[listcs].
+* text where all pairs `{` and `}` match at arbitrary level \: \~`<balanced-text>`.\r[balt]
+* `{<balanced-text>}` can be interpreted as a parameter of a `<control-sequence>`, see section~\ref[listcs].
 * The `{` alone not used by previous rule opens a group and the `}` alone closes the same group.\r[group]
 * There are two main modes: h-mode, v-mode\fnote
   {this is great simplification of real \TeX/ modes.}.
   The document processing starts in v-mode.
-* In v-mode: a single `<non-space>` character or control sequences listed
+* In v-mode: a `<non-space>` character or a control sequence listed
   in table~\ref[vtohmode] swithes to h-mode.
-* In h-mode: an empty line or control sequences listed in table~\ref[htovmode] switches to v-mode.\r[htov]
+* In h-mode: an `<empty-line>` or a control sequence listed in table~\ref[htovmode] switches to v-mode.\r[htov]
 * The switching from v-mode to h-mode \: a paragraph begins.
 * The switching from h-mode to v-mode \: the current paragraph ends.
 * `$<text>$` or `$$<text>$$` \: process `<text>` in math-mode, see section~\ref[math].
-* a non-empty sequence of digits with optional `+` or `-` in the front \: `<number>`.
-* `<number>` with optional dot inside the sequence of digits \: `<decimal-number>`.
-* a pair of letters listed in the table~\ref[tex-units] \: `<tex-unit>`.
-* optional space, i.e.\ `<space>` or nothing \: `<o-space>`.
-* `<decimal-number><o-space><tex-unit><o-space>` \: `<dimen>`.
-* `<control-sequence>` not listed in section~\ref[listcs] nor in configuration \: `<unknown-control-sequence>`.\r[unkncs]
-* `=<o-space>` or `<o-space>` \: `<o-equal>`.
+* a non-empty sequence of digits with optional `+` or `-` in the front \: \~`<number>`.
+* `<number>` with optional dot inside the sequence of digits \: \~`<decimal-number>`.
+* a pair of letters listed in the table~\ref[tex-units] \: \~`<tex-unit>`.
+* optional space, i.e.\ `<space>` or nothing \: \~`<o-space>`.
+* `<decimal-number><o-space><tex-unit><o-space>` \: \~`<dimen>`.
+* `<control-sequence>` not listed in table~\ref[alistcs] nor in configuration \: \~`<unknown-control-sequence>`.\r[unkncs]
+* `=<o-space>` or `<o-space>` \: \~`<o-equal>`.
 * `<unknown-control-sequence><o-equal><dimen>` \: should be completely ignored.\r[eqdim]
 * `<unknown-control-sequence><o-equal><number>` \: should be completely ignored.
 * `<unknown-control-sequence>=<o-space>{<balanced-text>}` \: should be completely ignored.
@@ -155,8 +169,17 @@ taken into account. The rule with a smaller number has precedence.
 List of control sequences which switch from v-mode to h-mode.
 \cskip
 \begblock
-`\indent`, `\noindent`, `\leavevmode`, `\hskip`, `\hfil`, `\hfill`, `\hss`,
-`\`<space>, `\vrule`, `\caption`, `\bib`
+`\`<space>,
+`\hfil`,
+`\hfill`,
+`\hskip`,
+`\hss`,
+`\indent`,
+`\leavevmode`,
+`\noindent`,
+`\quad`,
+`\qquad`,
+`\vrule`.
 \endblock
 
 \bigskip
@@ -164,9 +187,29 @@ List of control sequences which switch from v-mode to h-mode.
 List of control sequences which switch from h-mode to v-mode.
 \cskip
 \begblock
-`\par`, `\vskip`, `\vfil`, `\hrule`, `\bigskip`, `\medskip`, `\smallskip`,
-`\chap`, `\sec`, `\secc`, `\secl`, `\end`, `\bye`, `\begitems`, `\begtt`,
-`\begblock`, `\enditems`, `\endblock`, `\caption`, `\cskip`, `\bib`.
+`\begblock`,
+`\begitems`,
+`\begmulti`,
+`\begtt`,
+`\bib`,
+`\bigskip`,
+`\bye`,
+`\caption`,
+`\chap`,
+`\cskip`,
+`\end`,
+`\endblock`,
+`\enditems`,
+`\endmulti`
+`\hrule`,
+`\medskip`,
+`\par`,
+`\sec`,
+`\secc`,
+`\secl`,
+`\smallskip`,
+`\vfil`,
+`\vskip`.
 \endblock
 
 \bigskip
@@ -174,7 +217,17 @@ List of control sequences which switch from h-mode to v-mode.
 List of \TeX/ units.
 \cskip
 \begblock
-`pt`, `pc`, `bp`, `dd`, `cc`, `in`, `cm`, `mm`, `sp`, `em`, `ex`.
+`bp`,
+`cc`,
+`cm`,
+`dd`,
+`em`,
+`ex`,
+`in`,
+`mm`,
+`pc`,
+`pt`,
+`sp`.
 \endblock
 
 \nonum\secc Examples
@@ -189,41 +242,44 @@ List of \TeX/ units.
 * `\kern-3pt` should be ignored, because `\kern` is `<unknown-control-sequence>` and rule
   \ref[eqdim] is applied.
 * `\vskip42mm` should finalize paragraph in h-mode by rule~\ref[htov] and then it
-  is ignored by rule~\ref[eqdim] because `\vskip` is not listed in section~\ref[listcs].
+  is ignored by rule~\ref[eqdim] because `\vskip` is
+  `<unknown-control-sequence>` not listed in table~\ref[alistcs].
 * `\typosize[12/16]` is ignored by rule~\ref[ibkt].
-* `\foo{text}` is `{text}` (i.e. `text` in group) by rules~\ref[ignore] and~\ref[group].
+* `\foo{text}` is `{text}` (i.e. `text` in a group) by rules~\ref[ignore] and~\ref[group].
 \enditems
 
 \sec Scanning parameters
 
 If a control sequence listed in rules above or in the section~\ref[listcs]
 has a parameter, the parameter is scanned
-as a string with interpreatation only those rules which are needed to
+as a string with interpretation only those rules which are needed to
 determine the boundary of the parameters. For example `\tit <title><eol>`
 applies only rule~\ref[eol] during scanning the parameter, i.e.\ `<title>`
-is a string delimetered by the end of line or the end of file.
+is a string telemetered by the end of the line or the end of the file.
 Or `\fnote{<balanced-text>}` applies only rule~\ref[balt].
 
 If the parameter is in the format `{<something>}` then the `<something>` is
-always `<balanced-text>`. We don't specify the type `<balanced-text>`
-explicitly here, so we refer `\fnote{<text>}`, for example.
+always meant as `<balanced-text>`. We don't specify the type `<balanced-text>`
+explicitly here, so we refer to `\fnote{<text>}` and not
+`\fnote{<balanced-text>}`, for example.
 
-The spaces before scanned parameter or before `{<text>}` are optional
+The spaces before the scanned parameter are optional
 and they are ignored. Spaces inside `{`...`}` are not ignored.
 
 If the parameter is in the format `{<something>}` and the first non-space
 character is not `{` then the parameter is this first non-space character or
 a `<control-sequence>` if the first non-space character is~`\`. For example
 `\fnote a` is equal to `\fnote{a}`. The difference from this rule is given
-for `\input`, `\verbinput`,`\inspic` and `\inkinspic`.
+for `\input`, `\verbinput`,`\inspic` and `\inkinspic` control sequences in
+section~\ref[listcs].
 
 If the parameter is scanned as a string already then
-the all syntactical rules are applied when it is used. For example:
+all syntactical rules are applied when it is used. For example:
 \begtt
 \tit    This is   a title
 \endtt
-the parameter is scaned as `This is   a title` and the rule~\ref[spcs] is
-applied when the prameter is used.
+the parameter is scanned as `This is   a title` and the rules~\ref[spcs]
+and~\ref[sspace] are applied when it is used.
 
 
 \sec Declaration and text parts of the document
@@ -249,20 +305,56 @@ User can say explicitly where the second part of the document starts by
 `%%:text` given at beginning of a line. Moreover, if `%%:decl` is given at
 beginning of a line, then all text between `%%:decl` and `%%:text` is
 ignored, only other possible `<cnv-declarator>`s are processed here.
-The declaration part and the text part of the document can be fully determined
-by `%%:decl` and `%%:text`.
+It means that the declaration part and the text part of the document can be
+simply determined by the pair `%%:decl` and `%%:text`.
 
 \bigskip
 \label[textopen]\caption/t
 List of control sequences which start the text mode.
 \cskip
 \begblock \raggedright
-`\tit`, `\sec`, `\secc`, `\secl`, `\fnote`, `\mnote`, `\rm`, `\bf`, `\it`,
-`\bi`, `\table`, `\inspic`, `\caption`, `\begitems`, `\begblock`, `\begtt`,
-`\verbinput`, `\maketoc`, `\ii`, `\iid`, `\begmulti`, `\cite`, `\rcite`,
-`\ecite`, `\bib`, `\usebib`, `\inkinspic`, `\frame`, `\rotbox`, `\inoval`,
-`\incircle`, `\clipinoval`, `\clipincircle`, `\puttext`, `\putpic`,
-`\address`, `\lorem`, `\lipsum`, `\TeX`, `\OpTeX`, `\LaTeX`.
+`\address`,
+`\begblock`,
+`\begitems`,
+`\begmulti`,
+`\begtt`,
+`\bf`,
+`\bi`,
+`\bib`,
+`\caption`,
+`\cite`,
+`\clipinoval`,
+`\clipincircle`,
+`\ecite`,
+`\fnote`,
+`\frame`,
+`\hfil`,
+`\hfill`,
+`\ii`,
+`\iid`,
+`\incircle`,
+`\inkinspic`,
+`\inoval`,
+`\inspic`,
+`\it`,
+`\LaTeX`,
+`\LuaTeX`,
+`\maketoc`,
+`\mnote`,
+`\OpTeX`,
+`\putpic`,
+`\puttext`,
+`\rcite`,
+`\rm`,
+`\rotbox`,
+`\sec`,
+`\secc`,
+`\secl`,
+`\table`,
+`\TeX`,
+`\tit`,
+`\usebib`,
+`\verbinput`.
 \endblock
 
 
@@ -286,16 +378,16 @@ beginning of the line. The list of `%%:` declarators follows:
   The language of the config files are not a part of this standard, we
   suppose something to be natural for used cnv-program. The config file should
   give additional rules for interpreting control sequences not listed in the
-  section~\ref[listcs] (see rule~\ref[unkncs]). For example a simple alternative
-  of `\def` commands can be here. Users can declare more control sequences
-  depending on the converted document and on the output format by the
-  configuration files. For example, a special \LaTeX/ preamble should be declared
-  here when conversion to \LaTeX/ is processed.
+  section~\ref[listcs] (see rule~\ref[unkncs]). For example a tool for
+  defining a behavior of unknown control sequences can be here.
+  These definitions can depend on the converted document and on the output
+  format and they can be given in the configuration files.
 * `%%:app <application> <config-file>` -- behaves like `%%;to` but the
   cnv-program name instead output format is given here.
 * `%%:do <format-or-app> <action>` -- does an `<action>` if `<format-or-app>`
-  is output format or used cnv-program name. The `<action>` syntax depends
-  on used cnv-program and it typicaly does a change in its configuration.
+  is output format or used cnv\hbox{-}program name. The `<action>` syntax depends
+  on used cnv-program and it typicaly does a change in its configuration or
+  give a command to it.
 * `%%:skip <formats-or-apps>` -- ignores all following lines until another `%%:` occurs
   if the output format or application name is included in the `<formats-or-apps>`
   space-separated list. Example:
@@ -308,9 +400,9 @@ beginning of the line. The list of `%%:` declarators follows:
   each cnv-program and for each output.
 * `%%:if <formats-or-apps>` -- processes following lines until another `%%:`
   only if the output format or application name is included in the
-  `<formats-or-apps>` space-separated list. Other cnv-programs or otput
-  formats not mentioned here are skipped. Note that \TeX/ processes such
-  lines always. But you can use `\ignoreit{<text>}` which is processed as
+  `<formats-or-apps>` space-separated list. Other cnv-programs or output formats
+  not mentioned here skip these lines. Note that \TeX/ processes such lines always.
+  But you can use `\ignoreit{<text>}` which is processed as
   `{<text>}` by cnv-programs (see rule~\ref[ignore]) but it is ignored by \OpTeX.
   Example:
   \begtt
@@ -327,12 +419,12 @@ beginning of the line. The list of `%%:` declarators follows:
   \verbchar` \picdir={img/}
   \endtt
   The example shows how cnv-program is able to read `\verbchar` or
-  `\picdir` settings in declaration-skipping mode although these control
+  `\picdir` settings in the declaration\hbox{-}skipping mode although these control
   sequences are not listed in table~\ref[textopen].
-* `%%:quotes <qql> <qqr> <ql> <qr>` -- declares `<qql>` and `<qqr>`: left
-  and right double quotation marks, `<ql>` and `<qr>`: left and right single
-  quotation mark. They are used when `\"` or `\'` control sequences are
-  processed. Default: unset. It emans that `\"` and `\'` are interpreted as
+* `%%:quotes <qql> <qqr> <ql> <qr>` -- declares \~`<qql>` and \~`<qqr>` (left
+  and right double quotation marks), \~`<ql>` and \~`<qr>` (left and right single
+  quotation mark). They are used when `\"` or `\'` control sequences are
+  processed. Default: unset, i.e.\ `\"` and `\'` are interpreted as
   unknown control sequences.
 \enditems
 
@@ -340,24 +432,26 @@ beginning of the line. The list of `%%:` declarators follows:
 \sec[listcs] List of known control sequences
 
 The phrase \"should be" is used very often when the interpretation of
-control sequences are declared here. It means that this is only a common
-interpretation, but differeces are possible due to the type of the output
+control sequences is declared here. It means that this is only a common
+interpretation, but differences are possible due to the type of the output
 format and used cnv-program. For example, when we convert to \LaTeX\, then
 `\-` and `\/` are not ignored but they are re-written without change to the
 output of the \LaTeX/ source file.
 
 \bigskip
+\label[alistcs]
 \caption/t List of known control sequences alphabeticaly sorted.
 \cskip
 \begblock
-\rightskip=10pt plus1fil \relax \printknowncs
+\raggedright \printknowncs
 \endblock
 
 
 \secc Character-like control sequences
 
 \begitems
-* \.`\%`, \.`\$`, \.`\&`,\.`\#` respectively \: should be normal characters `%`, `$`, `&`, `#` respectively.
+* \.`\%`, \.`\$`, \.`\&`,\.`\#` respectively \: should be normal characters
+  `%`, `$`, `&`, `#` respectively.
 * \.`\bslash` \: normal character `\`.
 * \.`\space`, `\<space>`, `\<eol>` \: space.
 * `\,` \: should be small space or space.
@@ -371,10 +465,10 @@ output of the \LaTeX/ source file.
 
 \begitems
 * \.`\input {<file-name>}` or `\input <file-name><space>` should redirect the
-  input to given file. At the end of input-ed file or at \.`\endinput` the
-  reading of current file continues. The file is read from current
-  directory, but the <file-name> shoud include the full path to the file
-  or relative path starting from current directory. First, the file
+  input to given file. At the end of the input-ed file or at \.`\endinput` the
+  reading of the current file continues. The file is read from the current
+  directory, but the <file-name> should include the full path to the file
+  or relative path starting from the current directory. First, the file
   `<file-name>.tex` is tried to read and if it doesn't exist then
   the file `<file-name>` is read.
 * \.`\picdir <o-equal>{<text>}` saves `<text>` to `<picdir-value>`. By
@@ -388,12 +482,12 @@ output of the \LaTeX/ source file.
   syntactical interpretation.
 * \.`\usebib/<letter> (<style>) <file-names>` should use files from
   `<file-names>` to generate the list of bib references. The `<file-names>`
-  is comma separated list (the `.bib` extension must be appended to
+  is comma separated list (the `.bib` extension is appended to
   each such file name). Only cited bib records should be used in this
-  bib-references, i.e. their label must be used in a `\cite[<labels>]`.
-  What part of bib data are used in bib records depends on cnv-program and
-  on its configuration. Maybe, simple cnv-programs should genereate nothing
-  here.
+  bib-references, i.e. their label must be used in a `\cite[<labels>]` or
+  `\rcite[<labels>]` or `\ecite[<label>]`.
+  What bib fields are used in bib records depends on the cnv-program and
+  on its configuration. Maybe, simple cnv-programs should generate nothing here.
 \enditems
 
 \secc Titles
@@ -413,9 +507,9 @@ output of the \LaTeX/ source file.
 
 \.`\rm` selects upright normal font (it is selected by default), \.`\it` selects
 italic, \.`\bf` selects upright bold font, \.`\bi` selects bold italic and
-\.`\tt` selects monospaced font, \.`\em` select italic (if upright is current) or upright
+\.`\tt` selects a monospaced font, \.`\em` select italic (if upright is current) or upright
 (if italic is current). The font sizes or other font features are typically ignored
-by cnv-programs. The actual font selection is closed at the end of current group.
+by cnv-programs. The actual font selection is closed at the end of the current group.
 The groups are given:
 \begitems
 * explicitly by `{` and `}` characters (which are not delimiters of
@@ -431,14 +525,20 @@ The groups are given:
 \caption/t Parameters of following control sequences are processed in a group.
 \cskip
 \begblock
-`\tit`, `\chap`, `\sec`, `\secc`, `\fnote`, `\mnote`, `\caption`.
+`\caption`,
+`\chap`,
+`\fnote`,
+`\mnote`,
+`\sec`,
+`\secc`,
+`\tit`.
 \endblock
 
 \secc Colors
 
 \.`\Red`, \.`\Green`, \.`\Blue`, \.`\Cyan`, \.`\Magenta`, \.`\Yellow`, \.`\White`,
-\.`\Black`, and \.`\Brown` should select given color of the font. The selection
-is closed at the end of current group (like font selectors).
+\.`\Black`, and \.`\Brown` should select the given color of the font. The selection
+is closed at the end of the current group (like font selectors).
 
 \secc Blockquotes
 
@@ -451,11 +551,11 @@ blockquotes.
 \secc Lists
 
 The list is opened by \.`\begitems` and closed by \.`\enditems`. The `*` starts
-new item in this environment. Nested lists are allowed.
+a new item in this environment. Nested lists are allowed.
 
 The type of items (ordered/unordered)
 is given by \.`\style <character>`, see section 1.4.5 in the
-\OpTeX/ documentation. Default type is unordered (bullets are used).
+\optexmanual. Default type is unordered (bullets are used).
 
 
 \secc Code blocks (verbatim texts)
@@ -472,20 +572,28 @@ Code blocks are inline verbatim or display verbatim.
   New `\verbchar <character>` rewrites previous setting. The setting is
   local in the group.
 * Inline verbatim is enclosed in the pairs of `<verbchar>`s.
-  The text between two verbchars is processed without
-  special interpretation. Only possibly <eol>s are replaced by space.
+  The text between two `<verbchar>`s is processed without special interpretation.
+  Only possibly <eol>s are replaced by space.
   Example:
   \begtt
   %%:use
   \verbchar`
-  Now `$this %text   ~\` is processed as inline verbatim.
+  Now, `$this %text   ~\` is processed as inline verbatim.
   \endtt
-  gives: Now `$this %text   ~\` is processed as inline verbatim.
+  gives: Now, `$this %text   ~\` is processed as inline verbatim.
 * \.`\code{<text>}` processes `<text>` like inline verbatim, but
   all `\<character>` are processed as `<character>`, specially `\{` and `\}`
   are `{` and `}` but without taking them into `<balanced-text>` rule,
   `\\` is `\` but do not create a `<control-sequence>`, etc.
 \enditems
+
+
+\secc Multiclolumns
+
+\.`\begmulti <number><space>` opens the group and \.`\endmulti`
+closes the group. If output format allows multi-columns then
+the text enclosed between `\begmulti <number><space>` and matching
+`\endmulti` should be printed in `<number>` balanced columns.
 
 
 \secc Links
@@ -497,36 +605,41 @@ Code blocks are inline verbatim or display verbatim.
 * \.`\ulink[<url>]{<text>}` creates `<text>` as an external link which points
   to `<url>`. The `\<character>` is interpreted as `<character>` only in
   `<url>` parameter.
-* \.`\label[<label>]` sets the `<label>` to the `<label-register>`. It is
-  empty by default. Each occurence of `\chap`, `\sec`, `\secc`, `\caption`
-  or `\eqmark` uses non-empty `<label-register>` and sets it empty again.
-* \.`\ref[<label>]` should create an interlnal link to the place given by
+* \.`\label[<label>]` sets the `<label>`. First following occurence of `\chap`, `\sec`,
+  `\secc`, `\caption` or `\eqmark` sets this `<label>` as bounded to its
+  position in the document.
+* \.`\ref[<label>]` should create an internal link to the position given by
   `\chap`, `\sec`, `\secc`, `\caption` or `\eqmark`,
   if `[<label>]` is used as the parameter of this control sequence
-  else if `<label>` is equal to the used `<label-register>` here.
+  else if `<label>` is bounded here by previous `\label[<label>]`
   The visual aspect of the link
-  is not declared by OMLS because we don't suppose that the chaptes,
-  sections, equations, etc.\ are automatially numbered by exactly the same way as in
-  \OpTeX/. A recommedation should be: create simple sequence of numbers over
-  all interlnal links.
+  is not declared by OMLS because we don't suppose that the chapters,
+  sections, equations, etc.\ are automatically numbered by exactly the same way as in
+  \OpTeX/. A recommendation should be: create a simple sequence of numbers over
+  all internal links.
 * \.`\pgref[<label>]` should be replaced by `??` if cnv-program generates single-page
-  output (like Html, Markdown). Unfortunatelly, we get the irrelevant phrases in the output:
-  \"{\tt The problem is shown at the page ??}", but better solution
-  probably does not exist.
+  output (like Html, Markdown). Unfortunately, we get the irrelevant phrases in the output:
+  \"{\tt The problem is shown at the page ??}".
+  Users can declare `%%:skip` for such cases.
 * \.`\bib[<label>]` or `\bib[<label>]<o-space>=<o-space>{<ignored>}` should open the new bib
   record. More exactly, it closes previous paragraph (if h-mode is current)
-  and opens new h-mode. Then prints an auto-generated number. Followng text
-  is interpreted as a bib record until the h-mode ends.
-* \.`\cite[<labels>]` should create an internal links to corresponding bib
-  record generated by `\usebib` or by `\bib`. The `<labels>` is comma
-  separated list of labels used in `.bib` files or in `\bib` commands to indicate
+  and opens new h-mode. Then prints an auto-generated reference number in
+  `[...]`. Following text is interpreted as a bib record until the h-mode ends.
+* \.`\cite[<labels>]` should create internal links to corresponding bib
+  records generated by `\usebib` or by `\bib`. The `<labels>` is a comma-separated list
+  of labels used in `.bib` files or in `\bib` commands to indicate
   the corresponding bib record. The labels should be replaced by auto-generated
-  numbers used in bib records encloded by `[...]`. These numbers are
+  reference numbers used in bib records. All reference numbers created by
+  single `\cite` should be enclosed by single `[...]`. These numbers are
   internal links. If the cnv-program does not implement this complicated
   bib machinery then `\cite[<labels>]` should print only `[<labels>]`.
+* \.`\rcite[<labels>]` does the same as `\cite[<labels>]` but doesn't print
+  outer `[...]`.
+* \.`\ecite[<label>]{<text>}` creates the link to corresponding bib record,
+  `<text>` is is hyperlinked (no the auto-generated reference number).
 * \.`\maketoc` should create a list of titles from all `\chap`, `\sec` and `\secc`
-  used in the document if they are not preceded by `\notoc`. All lines in
-  this list should include internal links to the place where the corresponding title
+  used in the document if they are not preceded by \.`\notoc`. All lines in
+  this list should include internal links to the position where the corresponding title
   is used.
 \enditems
 
@@ -541,57 +654,178 @@ Code blocks are inline verbatim or display verbatim.
   by an auto-generated number. If the <letter> is `f` then <caption-head> is
   `Figure` followed by an auto-generated number. The configuration of
   cnv-programs shoud allow different words than default `Table` or `Figure` (for
-  example, if different language is used).
+  example, if another language is used).
 * \.`\table<ignored>{<declaration>}{<data>}` should create a table. The fidelity
   rate of created output depends heavily on the used cnv-program and the output
-  format. We don't suppose that all aspects of \OpTeX/ tables are imeplemented.
+  format. We don't suppose that all aspects of \OpTeX/ tables are implemented.
   The following features are listed in their priority of implementation.
   \begitems \style c
   * Items in `<data>` are separated by `&`.
     The last item in each row is separated by end-row separator: \.`\cr`, \.`\crl`, \.`\crll`,
-    \.`\crli`, \.`\crlli`, or \.`\crlp{<list>}`. If there are $n$ columns then we
-    have $n-1$ `&` separators and one end-row separator.
-    There should be optional end-row separator ad first item in `<data>` and
-    it should be ignored. The `<data>` should end without end-seprator, it
+    \.`\crli`, \.`\crlli`, or \.`\crlp{<list>}`. If there are $n$ columns in
+    the table then we have $n-1$ `&` separators and one end-row separator
+    for each table row.
+    There can be an optional end-row separator at the first item in `<data>` and
+    it should be ignored. The `<data>` can end without the end-row separator, it
     should be added here.
-  * Spaces around `&` and before end-line separator are ignored.
+  * Spaces around `&` and before end-row separator are ignored.
   * \.`\noalign{<text>}` and \.`\tskip <dimen>` should be ignored.
-  * Colum declarators in <data> should be interpreted: `l` (left aligned), `c` (center
+  * Colum declarators in <declaration> should be interpreted: `l` (left aligned), `c` (center
     aligned), `r` (right aligned) or `p{<ignored>}` (paragraph-like item).
-  * \.`\vspan<number>{<text>}` or `\vspan{<number>}{<text>}` in a item should
-    be only `<text>`.
+  * The `<number><letter>` or `<number>{<text>}` should be interpreted as
+    `<number>`-times repeated `<letter>` or `<text>` in `<declaration>`.
+  * \.`\vspan<decimal-number>{<text>}` should be an item with only `<text>`.
   * \.`\mspan<number>[<decl>]{<text>}` should create `<text>` as an item which
-    spans over `<number>` columns.
+    spans over `<number>` columns. It is used instead `<number>` real
+    items, i.e.\ `<number>`$-1$ separators `&` aren't used here.
   * Rules in the table should be interpreted, i.e. `|` in <declaration>
     should be not ignored and
-    various end-row separators should be distinguished (see \OpTeX/ manual,
-    section 1.4.6.
+    various end-row separators should be distinguished (see \optexmanual,
+    section 1.4.6).
   * The aligning of `p{<p-data>}` columns should be interpreded by reading
     \.`\fL`, \.`\fR`, \.`\fC`, \.`\fS` and \.`\fX` control sequences in `<p-data>`.
-    See \OpTeX/ documentation.
+    See \optexmanual, section 1.4.6.
   \enditems
 \enditems
 
 \secc Footnotes, marginal notes
 
 \begitems
-* \.`\fnote{<text>}` should create a footnote as an auto-generated number.
+* \.`\fnote{<text>}` should create a footnote link as an auto-generated
+  reference number.
   The `<text>` should be appended at the end of the document labeled by this
-  number. The link to this appended text should be created. Another
-  alternative (for Html output, for example): the auto-generated number
-  riases an auto-popup `<text>`.
-* \.`\mnote{<text>}` should be created as auto-popup `<text>` or the `<text>`
+  reference number. Another alternative (for Html output, for example): the mouse over
+  the reference number riases an auto-popup `<text>`.
+* \.`\fnotemark<number>` should create a pointer to a next declared
+  footnote as auto-generated reference number. The `<text>` of the footnote is
+  declared after that by \.`\fnotetext{<text>}`. Exact behavior: if the
+  reference number of the last processed `\fnote` is $n$ then
+  `\fnotemark<number>` uses the value
+  $n+{}$`<number>` as its reference number. A set of `\fnotemark`s
+  is followed by an equally large set of `\fnotetext{<text>}`. First one
+  have reference number $n+1$, second $n+2$, etc. When whole set of `\fnotetext{<text>}`
+  is processed then $n$ is reset to the last reference number used  here.
+* \.`\mnote <ignored>{<text>}` should be created as auto-popup `<text>` or the `<text>`
   is inserted at the margin.
 \enditems
 
+\secc Tagging for index
+
+We don't suppose that the cnv-program can generate the alphabetically sorted
+index. So, the markup for creating the index should be ignored:
+
+\begitems
+* \.`\ii <word><space>` (where `<word>` is a sequence of non-space characters)
+  should be ignored.
+* \.`\iid <word><space>` is `<word><space>` by default, but
+  if `,` or `.` follows after `<space>` then the `<space>` is removed.
+\enditems
+
+\secc Logos
+
+\.`\TeX`, \.`\LuaTeX`, \.`\OpTeX`, \.`\LaTeX`, respectively \:
+`TeX`, `LuaTeX`, `OpTeX`, `LaTeX`, respectively. If `/` follows
+these control sequences then it is ignored. Other logos should be declared
+in the configuration of the cnv-program.
+
+\secc What should be ignored
+
+\begitems
+* \.`\def<text>{<text>}` and other variants with \.`\gdef`, \.`\edef`, \.`\xdef`.
+  Reason: user can insert a special definition in the `%%:text` part of the
+  document in order to solve a problem. But cnv-program should ignore~it.
+\enditems
 
 
 \sec[math] Math mode processing
 
-... todo
+There are two math modes, inline: `$<formula>$` or display: `$$<formula>$$`.
+We suppose that `<formula>` will be processed by MathJax or similar
+software. So, the `<formula>` should be kept without changes in cnv-program
+output, but there are exceptions:
+
+\begitems
+* `$<sign><decimal-number>$` should be transformed to non-math text
+  `<sign><decimal-number>`. The `<sign>` is~`+` or~`-` or nothing.
+  The `<decimal-number>` can include `,` (comma) instead `.` (period).
+  If the `<sign>` is~`-` (character U+002D) then
+  it must be converted to `−` (character U+2212, math minus).
+* `{\bbchar <text>}` should be converted to `\mathbb{<text>}`, because
+  MathJax doesn't understand `\bbchar`. `$\bbchar <text>$` should be
+  converted to `$\mathbb{<text>}$`.
+* `{\frak <text>}` or `$\frak <text>$` \:
+  `\mathfrak{<text>}` or `$\mathfrak{<text>}$`.
+* `{\script <text>}` or `$\script <text>$` \:
+  `\mathscr{<text>}` or `$\mathscr{<text>}$`.
+* `\eqmark`, `\eqmark[<label>]` \: `\leqno (<num>)`, where `<num>` is
+  auto-generated number. Or it should be completely ignored.
+* It is strongly recommended to allow users to declare another replacement
+  rules over `<formula>` in configuration files of cnv-programs.
+\enditems
+
 
 \sec Notes on various conversions
 
-... todo
+The cnv-programs behave differently because output formats have different
+concepts and are intended for different purposes. The following sections
+mention the main differences for typical conversions.
+
+\secc To Html
+
+The Html document is one single page. If we want to split the document to more
+pages, then we can use `%%:do html <action>` in positions where the document
+should be split (the syntax of `<action>` depends on the used cnv-program.)
+
+The design of Html pages should be declared by CSS files.
+
+Pictures inserted by `\inspic` should be inserted into the Html page as
+\code{<img src="...">}, so the picture files must be installed in
+the webserver to render the Html page correctly in a web browser.
+
+The `\maketoc` used in the \OpTeX/ document means that the Table of contents should
+be here. It should be generated by the cnv-program, two-pass processing is
+needed because the cnv-program needs to read all titles of `\chap`, `\sec` and
+`\secc`. Another approach is to read the `.ref` file produced by \OpTeX/.
+
+
+\secc To Markdown
+
+Markdown source file is \"one-page document" too. The principles a
+re similar to conversion to Html.
+
+\secc From Markdown
+
+The cnv-program which does such a reverse conversion should be very useful for
+people they prefer even clearer markup than in \OpTeX/.
+
+\secc To \LaTeX
+
+\LaTeX/ gives the same main feature as \OpTeX/: it can generate PDF
+output from a source file. But different macros, a different concept, and
+a different markup are used.
+
+The main reason for such conversion is that journal editors
+require \LaTeX/ source file, but user want to prepare their real document in
+more comfortable (\OpTeX/) markup and with more simple macros.
+
+This conversion should keep almost all features. For example, the
+`\pgref[<label>]` is converted to `\pageref{<label>}`. The cnv-program
+needs not to generate a Table of contents, bibliography references, etc. Only
+appropriate \LaTeX/ markup must be used.
+
+The contents of generated \LaTeX/ preamble should be configurable.
+
+
+\secc From \LaTeX
+
+The reverse conversion from \LaTeX/ to \OpTeX/ can be usable
+for people, they want to switch to creating their documents in \OpTeX/.
+
+The cnv-program must solve additional problem in this type of conversion.
+There are various math \LaTeX/ environments, they must be converted to
+plain~\TeX/ syntax of math typesetting. For example:\nl
+`\begin{array}...\end{array}` \: `\matrix{...}`,\nl
+`\begin{align*}...\end{align*}` \: `$$\eqalign{...}$$`\nl
+`\frac{...}{...}` \: `{...\over...}`.
 
 \bye
