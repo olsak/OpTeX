@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-01-23>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-01-31>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -158,7 +158,7 @@
    }
    \_catcode`#=14
    \_everypar={\_setbox0=\_lastbox \_par \_p}
-   \_input mathclass.opm
+   \_setbox0=\_vbox{\_input mathclass.opm }
 \_endgroup
 
    \_doc -----------------------------
@@ -170,7 +170,9 @@
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
-      \_global\_Umathcharnumdef#2=\_Umathcodenum#1\_relax
+      \_ifnum#1=\_Umathcodenum#1 % the code isn't set by mathclass.opm
+          \_global\_Umathchardef#2=0 1 #1 \_global\_Umathcode#1=0 1 #1
+      \_else \_global\_Umathcharnumdef#2=\_Umathcodenum#1 \_fi
       \_ifx#3\_mathopen   \_gdef#2{\_Udelimiter 4 1 #1 }\_fi
       \_ifx#3\_mathclose  \_gdef#2{\_Udelimiter 5 1 #1 }\_fi
       \_ifx#3\_mathaccent \_gdef#2{\_Umathaccent fixed 7 1 #1 }\_fi
@@ -187,9 +189,20 @@
 
 \_mit % default math alphabets setting
 
+% hyphen character is transformed to minus:
 \_Umathcode `- = 2 1 "2212
-%\_Umathcode`: = 3 1 "3A  % mathclass defines it as 6 1 "3A (punctuation)
+
+% mathclass defines : as Punct, plain.tex as Rel, we keep mathclass,
+% i.e. there is difference from plain.tex, you can use $f:A\to B$.
+
 \_let\{=\lbrace \_let\}=\rbrace
+
+% mathclas defines ! as Ord, plain.tex as Close
+\_Umathcode `! = 5 1 `!  % keep plain.tex declaration
+\_Umathchardef \mathexclam = 5 1 `!
+% mathclas defines ? as Punct, plain.tex as Close
+\_Umathcode `? = 5 1 `?  % keep plain.tex declaration
+\_Umathchardef \mathquestion = 5 1 `?
 
 \_protected\_def \_sqrt       {\_Uradical 1 "0221A }
 \_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
@@ -403,6 +416,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-01-31  Mathcode of ! ? set to Close, codes undeclared in mathclass set correctly
 2021-01-23  Compressed \vdots, \ddots, \adots in script(script)style.
 2020-11-13  Bug fix: \colon declared
 2020-06-13  Umathcode of / declared as in Plain TeX

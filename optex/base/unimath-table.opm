@@ -3,6 +3,7 @@
 
 % Only \ddots, \adots and \vdots are called differently:
 % \unicodeddots, \unicodeadots and \unicodevdots
+% \mathquestion: Ord -> Close (because plain.tex declares it as Close)
 
 \UnicodeMathSymbol{"00021}{\mathexclam               }{\mathclose}{exclamation mark}%
 \UnicodeMathSymbol{"00023}{\mathoctothorpe           }{\mathord}{number sign}%
@@ -20,7 +21,7 @@
 \UnicodeMathSymbol{"0003C}{\less                     }{\mathrel}{less-than sign r:}%
 \UnicodeMathSymbol{"0003D}{\equal                    }{\mathrel}{equals sign r:}%
 \UnicodeMathSymbol{"0003E}{\greater                  }{\mathrel}{greater-than sign r:}%
-\UnicodeMathSymbol{"0003F}{\mathquestion             }{\mathord}{question mark}%
+\UnicodeMathSymbol{"0003F}{\mathquestion             }{\mathclose}{question mark}%
 \UnicodeMathSymbol{"00040}{\mathatsign               }{\mathord}{commercial at}%
 \UnicodeMathSymbol{"0005B}{\lbrack                   }{\mathopen}{left square bracket}%
 \UnicodeMathSymbol{"0005C}{\backslash                }{\mathord}{reverse solidus}%
