@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2020-04-26>} % loaded in format
+\_codedecl \makeindex {Makeindex and sorting <2021-02-01>} % loaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -68,7 +68,7 @@
 
    The characters declared in `\_ignoredchars` are ignored in the first pass
    without additional condition. All characters are taken into account in
-   second pass: ASCII characters with code $\lq65$ are sorted first if they
+   second pass: ASCII characters with code $\string<65$ are sorted first if they
    are not mentioned in the `\_sortingdata<iso-code>` macro.
    Others not mentioned characters have undefined behavior during sorting.
    \_cod -----------------------------
@@ -133,7 +133,7 @@
    \_def \_act ##1{\_ifx##1\_relax \_else
       \_ifx##1,\_else \_advance\_tmpnum by1 \_lccode`##1=\_tmpnum \_fi
       \_ea\_act \_fi}%
-  \_tmpnum=65 \_ea\_act \_sortingdata \_relax
+  \_tmpnum=64 \_ea\_act \_sortingdata \_relax
 }
 
    \_doc -----------------------------
@@ -457,5 +457,6 @@
 
 \_endcode % -------------------------------------
 
+2021-02-01 secodary sorting: start from code 65
 2020-04-21 \isempty \iffalse ... \fi added to \iindex
 2020-03-26 introduced
