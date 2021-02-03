@@ -259,7 +259,7 @@
 \_protected\_def \ddots {\_relax \_ifnum \_mathstyle>3 \_unicodeddots \_else \_ddots \_fi}
 \_protected\_def \adots {\_relax \_ifnum \_mathstyle>3 \_unicodeadots \_else \_adots \_fi}
 
-% Unicode superscripts (²) and subscripts (₃) as simple macros with \mathcode"8000
+% Unicode superscripts (²) and subscripts as simple macros with \mathcode"8000
 \_bgroup
    \_def\_tmp#1#2{\_global\_mathcode#1="8000 \_lccode`\~=#1 \_lowercase{\_gdef~}{#2}}
    \_fornum 0..1 \_do {\_tmp{"207#1}{{^#1}}}

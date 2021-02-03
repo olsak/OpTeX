@@ -322,7 +322,10 @@
 \_public \secl ;
 
    \_doc -----------------------------
-   The \`\caption``/<letter>` uses `\_<letter>num` counter.
+   The \`\caption``/<letter>` increases `\_<letter>num` counter,
+   edefines \`\_thecapnum` as `\_the<letter>num` and
+   defines \`\_thecaptitle` as language-dependent word using \^`\_mtext`,
+   runs the `\_everycaption<letter>` tokens register.
    The group opened by `\caption` is finalized by first `\par` from
    an empty line or from `\vskip` or from `\endinsert`.
    The `\_printcaption<letter>` is called, it starts with
@@ -351,9 +354,9 @@
    They switch to horizontal mode and use `\_wlabel\_thecapnum` (in order to
    make reference and hyperlink destination) a they can use:
    \begitems
-   * `\_thecaptitle` ... expands to the word Table or Figure (depending on
-                         the current language).
-   * `\_thecapnum` ...   expands to `\the<letter>num` (caption number).
+   * \^`\_thecaptitle` ... expands to the word Table or Figure (depending on
+                           the current language).
+   * \^`\_thecapnum` ...   expands to `\the<letter>num` (caption number).
    \enditems
    \_cod -----------------------------
 
@@ -364,6 +367,15 @@
 \_let \_printcaptionf = \_printcaptiont % caption of figures = caption of tables
 
    \_doc -----------------------------
+   If you want to declare a new type of `\caption` with independent counter,
+   you can use following lines, where `\caption/a` for Algorithms are
+   declared:
+   \begtt
+   \let\_printcaptiona = \_printcaptionf  \let\_everycaptiona = \_everycaptionf
+   \newcount\_anum  \addto\_secx {\_anum=0 }
+   \def\_theanum {\_othe\_chapnum.\_the\_secnum.\_the\_anum}
+   \sdef{_mt:a:en}{Algorithm}  \sdef{_mt:a:cs}{Algoritmus} % + your language...
+   \endtt
    The default format of `\caption` text is a paragraph in block narrower by
    `\_iindent` and with the last line is centered. This setting is done by
    the \`\_narrowlastlinecentered` macro.
