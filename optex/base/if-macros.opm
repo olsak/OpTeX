@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2020-05-22>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2021-02-03>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -55,7 +55,7 @@
    \_cod ----------------------------
 
 \_long\_def \_loop #1\_repeat{\_def\_body{#1}\_iterate}
-\_def \loop #1\repeat{\_def\_body{#1}\_iterate}
+\_long\_def \loop #1\repeat{\_def\_body{#1}\_iterate}
 \_let \_repeat=\_fi % this makes \loop...\if...\repeat skippable
 \_let \repeat=\_fi
 \_def \_iterate {\_body \_ea \_iterate \_fi}
@@ -93,7 +93,7 @@
 \_def\_testparam#1#2#3\_iftrue{\_ifx###1\_empty\_ea\_finbody\_else}
 \_def\_finbody#1\_finbody{}
 
-\_def\foreach #1\do#2#{\_isempty{#2}\_iftrue
+\_long\_def\foreach #1\do#2#{\_isempty{#2}\_iftrue
    \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
 
    \_doc -----------------------------
@@ -301,6 +301,7 @@
 
 \_endcode
 
+2021-02-03 public version of \loop and \foreach are \long
 2020-05-22 \foreach, \fornum: all settings are global, independent on TeX group
 2020-05-06 \isnextchar: \let\tmp=#1 -> \let\tmp= #1 (bug fix, #1 should be space)
 2020-05-02 \newif bug fix

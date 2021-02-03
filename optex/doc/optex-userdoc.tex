@@ -1875,7 +1875,7 @@ documentation.
 \^`\foreach` `<list>\do <parameters>{<what>}` is exapandable loop over <list>.\nl
 \^`\foreachdef` `\macro <parameters>{<what>}` declares expandable `\macro` as loop over <list>.\nl
 \^`\fornum` `<from>..<to>\do {<what>}` is expanadable loop with numeric variable.\nl
-\^`\ignoreit` `<one>`, \^`\ignoresecond` `<one><two>`, \^`\usesecond` `<one><two>` ignores parameters.\nl
+\^`\ignoreit` `<one>`, \^`\ignoresecond` `<one><two>` ignores given parameter.\nl
 `\expandafter` \^`\ignorept` `\the<dimen>` expands to decimal number <dimen> without `pt`.\nl
 \~`\isempty`, \~`\istoksempty`, \~`\isequal`, \~`\ismacro`, \~`\isdefined`, \~`\isinlist`
 \~`\isfile`, \~`\isfont` do various tests. Example: \~`\isinlist\list{<text>}\iftrue` does
@@ -1901,6 +1901,7 @@ documentation.
 \^`\slet` `{<stringA>}{<stringB>}` behaves like `\let\<stringA>=\<stringB>`\nl
 \^`\sxdef` `{<string>}<parameters>{<body>}` behaves like `\xdef\<string><parameters>{<body>}`.\nl
 \^`\trycs`` {<string>}{<text>}` expands `\<string>` if it is defined else expands <text>.\nl
+\^`\useit` `<one>`, \^`\usesecond` `<one><two>` uses given parameter.\nl
 \^`\wlog`` {<text>}` writes <text> to .log file.\nl
 \^`\wterm`` {<text>}` writes <text> to the terminal and .log file.\nl
 \^`\xargs`` <what> <token> <token> ... ;` repeats <what><token> for each <token>.\nl

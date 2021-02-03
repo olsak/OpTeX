@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2021-01-22>} % loaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2021-02-03>} % loaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
@@ -12,31 +12,31 @@
 \_def \_space { }
 \_def \_null {\_hbox{}}
 \_def \_wlog {\_immediate\_write-1 } % write on log file (only)
-
 \_public \bgroup \egroup \empty \space \null \wlog ;
 
    \_doc ------------------------------
-   \`\ignoreit` ignores next token or `{<text>}`, \`\ignoresecond`
-   uses first, ignores second parameter and \`\usesecond`
-   ignores first, uses second parameter.
+   \`\ignoreit` ignores next token or `{<text>}`,
+   \`\useit``{<text>}` expands to `<text>` (removes outer braces),
+   \`\ignoresecond` uses first, ignores second parameter and
+   \`\usesecond` ignores first, uses second parameter.
    \_cod ------------------------------
 
 \_long\_def \_ignoreit #1{}
+\_long\_def \_useit #1{#1}
 \_long\_def \_ignoresecond #1#2{#1}
 \_long\_def \_usesecond #1#2{#2}
-
-\_public \ignoreit \ignoresecond \usesecond ;
+\_public \ignoreit \useit \ignoresecond \usesecond ;
 
    \_doc ------------------------------
    \`\bslash` is \"normal backslash" with category code 12.
-   \`\nbb` and \`\pcent` are double backslash and normal~`%`,
-   they should be used in Lua codes, for example.
+   \`\nbb` is double backslash
+   and \`\pcent` is normal~`%`.
+   They can be used in Lua codes, for example.
    \_cod ------------------------------
 
 \_edef \_bslash {\_csstring\\}
 \_edef \_nbb {\_bslash\_bslash}
 \_edef \_pcent{\_csstring\%}
-
 \_public \bslash \nbb \pcent ;
 
    \_doc ------------------------------
@@ -52,7 +52,6 @@
 \_def \_sdef #1{\_ea\_def \_csname#1\_endcsname}
 \_def \_sxdef #1{\_ea\_xdef \_csname#1\_endcsname}
 \_def \_slet #1#2{\_ea\_let \_csname#1\_ea\_endcsname \_csname#2\_endcsname}
-
 \_public \sdef \sxdef \slet ;
 
    \_doc ------------------------------
@@ -101,7 +100,6 @@
   \_tracingparagraphs=1 \_tracingrestores=1 \_tracingscantokens=1
   \_tracingifs=1 \_tracinggroups=1 \_tracingassigns=1 }
 \_def\_tracingall{\_tracingonline=1 \_loggingall}
-
 \_public \loggingall \tracingall ;
 
    \_doc ------------------------------
@@ -116,6 +114,7 @@
 
 \_endcode % -------------------------------------
 
+2021-02-03: \useit defined.
 2021-01-22: \trycs: \ea added in order to be able to use cs with parameters
 2021-01-08: \opwarning format changed (secondly, hope that conclusively)
 2020-10-12: \opwarning: line numbers added
