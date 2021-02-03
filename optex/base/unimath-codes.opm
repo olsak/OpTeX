@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-01-31>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-02-03>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -259,6 +259,15 @@
 \_protected\_def \ddots {\_relax \_ifnum \_mathstyle>3 \_unicodeddots \_else \_ddots \_fi}
 \_protected\_def \adots {\_relax \_ifnum \_mathstyle>3 \_unicodeadots \_else \_adots \_fi}
 
+% Unicode superscripts (²) and subscripts (₃) as simple macros with \mathcode"8000
+\_bgroup
+   \_def\_tmp#1#2{\_global\_mathcode#1="8000 \_lccode`\~=#1 \_lowercase{\_gdef~}{#2}}
+   \_fornum 0..1 \_do {\_tmp{"207#1}{{^#1}}}
+   \_tmp{"B2}{{^2}}\_tmp{"B3}{{^3}}
+   \_fornum 4..9 \_do {\_tmp{"207#1}{{^#1}}}
+   \_fornum 0..9 \_do {\_tmp{"208#1}{{_#1}}}
+\_egroup
+
    \_doc -----------------------------
    Aliases are declared here. They are names not mentioned in the `unimath-table.opm` file
    but commonly used in \TeX.
@@ -416,6 +425,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-02-03  Unicode superscripts, subscripts declared
 2021-01-31  Mathcode of ! ? set to Close, codes undeclared in mathclass set correctly
 2021-01-23  Compressed \vdots, \ddots, \adots in script(script)style.
 2020-11-13  Bug fix: \colon declared
