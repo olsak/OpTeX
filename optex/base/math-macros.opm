@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-01-23>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-02-04>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -615,7 +615,9 @@
 \_public \matrix \pmatrix ;
 
    \_doc -----------------------------
-   The \`\cases` and `\bordermatrix` macros are identical from plain \TeX/.
+   The \`\cases` and \`\bordermatrix` macros are almost identical as in plain \TeX/.
+   You can simply re-define `\bordermatrix` with other delimiters
+   using the common \`\_bordermatrixwithdelims` macro.
    \_cod -----------------------------
 
 \_protected\_long\_def\_cases#1{\_left\{\_thinsk\_vcenter{\_normalbaselines\_math
@@ -623,13 +625,14 @@
 
 \_newdimen\_ptrenwd
 \_ptrenwd=8.75pt % width of the big left (
-\_protected\_def\_bordermatrix#1{\_begingroup \_math
-  \_setbox0=\_vbox{\_bordermatrixA #1\_stopbmatrix}%
+\_protected\_def\_bordermatrix{\_bordermatrixwithdelims()}
+\_def\_bordermatrixwithdelims#1#2#3{\_begingroup \_math
+  \_setbox0=\_vbox{\_bordermatrixA #3\_stopbmatrix}%
   \_setbox2=\_vbox{\_unvcopy0 \_global\_setbox1=\_lastbox}%
   \_setbox2=\_hbox{\_unhbox1 \_unskip\_global\_setbox1=\_lastbox}%
-  \_setbox2=\_hbox{$\_kern\_wd1 \_kern-\_ptrenwd\_left(\_kern-\_wd1
+  \_setbox2=\_hbox{$\_kern\_wd1 \_kern-\_ptrenwd\_left#1\_kern-\_wd1
     \_global\_setbox1=\_vbox{\_box1 \_kern.2em}%
-    \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right)$}%
+    \_vcenter{\_kern-\_ht1 \_unvbox0 \_kern-\_baselineskip}\_thinsk\_right#2$}%
   \_null\_thicksk\_vbox{\_kern\_ht1 \_box2}\_endgroup}
 \_def\_bordermatrixA #1\cr#2\_stopbmatrix{%
     \_ialign{$##$\_hfil\_kern.2em\_kern\_ptrenwd&\_thinspace\_hfil$##$\_hfil
@@ -1052,8 +1055,9 @@
 
 \_endcode %---------------------------------------------------
 
-2020-01-23 better expession for math styles in \matrix
-2020-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
+2021-02-04 \_bordermatrixwithdelims introduced.
+2021-01-23 better expession for math styles in \matrix
+2021-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
 2020-12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
 2020-06-13 \adots introduced, \matrix smaller in T mode too.
