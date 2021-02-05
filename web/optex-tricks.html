@@ -107,6 +107,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Graphics
 <ul>
     <li><a href="#gradients">Color gradients</a>
+    <li><a href="#carrows">Curved arrows</a>
 </ul>
 
 <li>Math
@@ -445,6 +446,75 @@ smaller white oval is drawn over it. Only the boundary remains visible.
 Finally, the text is printed in it.
 
 <p CLASS=datum>(0024) -- P. O. 2020-06-05<p>
+<hr>
+
+<h2><a name="carrows"></a>Curved arrows</h2>
+
+<p>We prepare the macro
+
+<pre>
+\arrowcc x0 y0 {cx0 cy0 cx1 cy1} x1 y1 (dx1 dy1) {Text}
+</pre>
+
+<p>which draws the curve from x0 y0 to x1 y1 ended by arrow spike. The part
+{cx0 cy0 cx1 cy1} can be empty, i. e. {}. The line is drawn in such case.
+The numbers {cx0 cy0 cx1 cy1} gives the control points of a Bézier curve. At
+the end of the arrow is printed the "Text" shifted by dx1 dy1. The numbers
+cx0 cy0 cx1 cy1 x1 y1 are relative to the origin x0 y0. This origin is
+relative to the current typesetting point. All numbers are in bp units by
+default. The macro \arrowccparams can include the additional settings
+(color, line width, etc.). The macro \arrowccspike includes the drawing of
+the arrow spike and you can redefine it.
+
+<pre>
+\vglue5cm
+\def\arrowccparams{1 0 0 rg 1 0 0 RG}  % red color is initialized
+
+Pokus \arrowcc 0 10 {-30 20 -30 50} 20 50 (3 -3) {Text 1}
+dále \arrowcc 0 -3 {} 40 -30 (3 -3) {Text 2}
+a ještě \arrowcc 0 2 {10 20 20 30} 40 40 (3 -2) {Text 3}.
+</pre>
+
+<p>creates:
+
+<p><IMG SRC="../img/sipky-ukazka.png" ALT="Code blocks" border=0>
+
+<p>The implementation is exacltly the same as in
+<a href="http://petr.olsak.net/opmac-tricks-e.html#sipky">OPmac trick 0062</a>
+but the calculation of direction of the spikes is re-implemented using more
+simple and straightforward lua code.
+
+<pre>
+\def\arrowccspike{2 0 m -5 2 l -5 -2 l h f}
+\def\arrowcc #1 #2 #3 #4 #5 (#6)#7{%
+   \if^#3^\preparerotdata(0 0) (#4 #5)\else \preparedirection #3 (#4 #5)\fi
+   % x0 y0 {cx1 cy1 cx2 cy2} x1 y1 (dx1 dy1) {Text}
+   \pdfsave\rlap{\pdfliteral{%
+   .7 w \arrowccparams\space 1 0 0 1 #1 #2 cm 0 0 m
+   \if ^#3^#4 #5 l \else #3 #4 #5 c \fi S
+   1 0 0 1 #4 #5 cm  q \rotdata\space 0 0 cm \arrowccspike\space Q}%
+   \if^#7^\else\pdfliteral{1 0 0 1 #6 cm}\hbox{#7}\fi}\pdfrestore
+}
+\def\preparedirection #1 #2 #3 #4 {\preparerotdata(#3 #4) }
+\def\arrowccparams{}
+
+\def\preparerotdata (#1 #2) (#3 #4){\edef\rotdata{\directlua{%
+   local x=(#3)-(#1)
+   local y=(#4)-(#2)
+   local norm = math.sqrt(x*x+y*y)
+   if norm==0 then tex.print('1 0 0 1')
+   else tex.print(string.format('\_pcent.3f \_pcent.3f \_pcent.3f \_pcent.3f',%
+                                 x/norm, y/norm, -y/norm, x/norm))
+   end
+}}}
+</pre>
+
+<p>The macro \preparerotdata takes vector (#3,#4)-(#1#2) and prepares cm
+matrix data for rotation in the direction of given vector.
+The data are stored in \rotdata macro and they are used inside
+\pdfliteral parameter.
+
+<p CLASS=datum>(0037) -- P. O. 2021-02-05<p>
 <hr>
 
 
@@ -1546,7 +1616,7 @@ input is finished, then \picdir returns to its previous value.
 <p>Unlike the import LaTeX package, the \import macro can be used recursively
 in imported files. So, we need not to define \subimport.
 
-<p CLASS=datum>(0034) -- P. O., 2021-01-14<p>
+<p CLASS=datum>(0035) -- P. O., 2021-01-14<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
@@ -1775,7 +1845,7 @@ erweitert.
 <p>Note that usage of these macros are incompatible with \dequotes, i.e. with
 quotation marks used by \"text" and preferred in OpTeX.
 
-<p CLASS=datum>(0035) -- P. O., 2021-01-22<p>
+<p CLASS=datum>(0036) -- P. O., 2021-01-22<p>
 <hr>
 
 <p CLASS="lmarg">Others</p>
