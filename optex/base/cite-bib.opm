@@ -173,7 +173,7 @@
 
 \_def\_nonumcitations{\_lastcitenum=0\_def\_sortcitesA{}\_def\_etalchar##1{$^{##1}$}%
    \_def\_citelinkA##1{\_isdefined{_bim:##1}\_iftrue \_csname _bim:##1\_endcsname
-      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib-style}\_fi}
+      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib-style}\_fi}%
 }
 \_def\_citelinkA{}
 

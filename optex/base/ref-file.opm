@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \openref {File for references <2020-02-14>} % preloaded in format
+\_codedecl \openref {File for references <2021-02-05>} % preloaded in format
 
    \_doc --------------------------
    The \`\_inputref` macro is used in `\everyjob`. It reads `\jobname.ref` file
@@ -34,7 +34,10 @@
    the \`\_wref` `\<macro>{<data>}` is redefined in order to
    save the line `\<macro><data>` to the `.ref` file using asynchronous
    `\write` primitive. Finally, the `\_openref` destroys itself, because we
-   need not open the file again.
+   need not open the file again.\nl
+   The `\_wref``<csname>{<params>}` does exactly `\write\_reffile{\string<csname><params>}`
+   in this case and \`\_ewref``<csname>{<params>}` does
+   `\write\_reffile{\string<csname><expanded-params>}`.
    \_cod ---------------------
 
 \_def\_openref {%
@@ -47,7 +50,8 @@
    \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file (#1)}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
 }
-\def\openref{\_openref}
+\_def\_ewref #1#2{\_edef\_ewrefA{#2}\_ea\_wref\_ea#1\_ea{\_ewrefA}}
+\_def\openref{\_openref}
 
    \_doc ----------------------
    We are using the convention that the macros used in `.ref` file are named

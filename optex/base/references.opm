@@ -39,8 +39,7 @@
   \_ifx\_lastlabel\_undefined \_else
      \_dest[ref:\_lastlabel]%
      \_printlabel\_lastlabel
-     \_edef\_tmp{{\_lastlabel}{#1}}%
-     \_ea\_wref \_ea\_Xlabel \_ea{\_tmp}%
+     \_ewref \_Xlabel {{\_lastlabel}{#1}}%
      \_sxdef{_lab:\_lastlabel}{#1}\_sxdef{l0:\_lastlabel}{}%
      \_global\_let\_lastlabel=\_undefined
   \_fi

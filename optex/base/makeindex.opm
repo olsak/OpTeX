@@ -401,8 +401,8 @@
    All other variants of indexing macros expand internally to `\iindex`.
    \_cod -----------------------------
 
-\_def\_iindex#1{\_isempty{#1}\_iffalse\_openref{\def~{ }%
-   \edef\_act{\_noexpand\_wref\_noexpand\_Xindex{{#1}{\_iitypesaved}}}\_act}\_fi}
+\_def\_iindex#1{\_isempty{#1}\_iffalse
+   \_openref{\_def~{ }\_ewref\_Xindex{{#1}{\_iitypesaved}}}\_fi}
 \_public \iindex ;
 
    \_doc -----------------------------

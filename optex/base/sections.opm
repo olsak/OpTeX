@@ -205,12 +205,11 @@
 
    \_doc ----------------------------
    The \`\_printrefnum``[<pre>@<post>]` macro is used in `\_print*` macros.
-   \nl
-   The \`\_wtotoc` `{<level>}{<info>}{<ref-num>}{<title-text>}`
-   macro expands its parameters and does \^`\_wref`.
 
    Note that the `<tite-text>` is `\detokenize`d before `\_wref`, so the
    problem of \"fragile macros" from old \LaTeX/ never occurs.
+   This fourth parameter is not delimited by `{...}` but by end of line.
+   This gives possibility to have unbalanced braces in inline verbatim in titles.
    \_cod ----------------------------
 
 \_def \_printrefnum [#1@#2]{\_leavevmode % we must be in horizontal mode
@@ -218,12 +217,10 @@
    \_wlabel \_therefnum  % references, if `\label[<label>]` is declared
    \_ifnotoc \_else \_incr \_tocrefnum
        \_dest[toc:\_the\_tocrefnum]%
-       \_wtotoc{\_the\_sectionlevel}{\_secinfo}%
-               {\_therefnum}{\_detokenize\_ea{\_savedtitle}}%
+       \_ewref\_Xtoc{{\_the\_sectionlevel}{\_secinfo}%
+                     {\_therefnum}\_detokenize\_ea{\_savedtitle}}%
    \_fi
 }
-\_def \_wtotoc #1#2#3#4{\_edef\_tmp{{#1}{#2}{#3}{#4}}\_ea\_wtotocA\_tmp}
-\_def \_wtotocA #1#2#3#4{\_wref\_Xtoc{{#1}{#2}{#3}#4}}
 
    \_doc -----------------------------
    The \`\_abovetitle``{<penaltyA>}{<skipA>}` and \`\_belowtitle``{<skipB>}` pair
