@@ -108,6 +108,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#carrows">Curved arrows</a>
+    <li><a href="#circletext">Text around a circle</a>
 </ul>
 
 <li>Math
@@ -323,6 +324,7 @@ hyphenation patterns cannot work properly when such fonts are used.
 <p CLASS=datum>(0018) -- P. O. 2020-05-25<p>
 <hr>
 
+
 <p CLASS="lmarg">Verbatim</p>
 
 <h2><a name="inttinoval"></a>Code blocks like in Markdown</h2>
@@ -412,7 +414,7 @@ solution.
 <h2><a name="gradients"></a>Color gradients</h2>
 
 <p>We can use \input tikz and color gradients support from this package.
-But there is another approach: create a color gradient in interactive vector
+But there is another approach: create a color gradient in an interactive vector
 editor (Inkscape, for example) and use it. You can create arbitrary rectangle
 with color gradient in it and save such image to (say) my-gradient.pdf.
 
@@ -515,6 +517,74 @@ The data are stored in \rotdata macro and they are used inside
 \pdfliteral parameter.
 
 <p CLASS=datum>(0037) -- P. O. 2021-02-05<p>
+<hr>
+
+<h2><a name="circletext"></a>Text around a circle</h2>
+
+<p>We create a macro \circletext {radius}{angle}{TEXT}{correction} which
+prints TEXT around a circle with given radius. First letter of the TEXT
+starts at given angle. The fourth parameter declares a corrections between
+letter pairs because the standard kerning table is deactivated when printing
+around circle. The TEXT runs clockwise when the radius is positive (the
+center of the circle is below the letters). When the radius parameter is
+negative then TEXT runs anticlockwise and the center of the circle is above
+the letters. The macro creates a typesetting material with zero dimensions,
+the center of the circle is at the actual typesetting point. For example
+
+<p><IMG SRC="../img/uni-ukazka.png" ALT="Code blocks" border=0>
+
+<pre>
+\hbox{%
+\circletext {1.7cm} {212}  {{$\bullet$} UNIVERSITAS CAROLINA PRAGENSIS {$\bullet$}}
+                           {\spaceskip=.5em \kpcirc TA{-.1}\kpcirc NA{-.05}}
+\circletext {-1.7cm} {237} {Facultas MFF}
+                           {\kpcirc Fa{-.1}}
+}
+</pre>
+
+<p>The fourth parameter correction can include the declaration of word space
+(using \spaceskip=...) and the space corrections between declared pairs of
+letters using \kpcirc AB{num}: the \kern num (in em units) is inserted
+between each pair of letters AB. Note that the example includes the
+"composed object" $\bullet$. Such object must be enclosed by braces.
+
+<p>The letterspacing can be set by \def\circletextS{\kern value}. The zero
+letterspacing is set by default.
+
+<p>The \circletext macro can be defined by
+
+<pre>
+\def\circletext#1#2#3#4{\hbox\bgroup
+    \edef\tmpc{\expr{-57.295779/\bp{#1}}}% -(Pi/180)/R
+    \setbox0=\hbox{\ifdim#1&lt;0pt X\fi}% lap letters by X height if R&lt;0
+    \def\l{0}\baselineskip=#1 \advance\baselineskip by-\ht0 \lineskiplimit=-\maxdimen
+    \edef\tmpa{\expr{\ifdim#1&lt;0pt \else-\fi90+#2}}%
+    \def\tmpb{{}#3}\replstring\tmpb{ }{{ }}#4% spaces => {spaces}
+    \pdfsave \pdfrotate{\tmpa}%
+    \expandafter\circletextA\tmpb\relax
+}
+\def\circletextA#1{\ifx#1\relax\pdfrestore\egroup\ignorespaces\else
+    \ifx^#1^\else \setbox0=\hbox{#1\circletextS}%
+       \ismacro\l{0}\iffalse
+          \edef\l{\expr{\l+\bp{.5\wd0}}}%
+          \pdfrotate{\expr{\tmpc*\l}}%
+       \fi
+       \edef\l{\bp{.5\wd0}}%
+       \vbox to0pt{\vss\hbox to0pt{\hss#1\hss}\null}%
+    \fi
+    \expandafter\circletextA\fi
+}
+\def\kpcirc#1#2#3{\replstring\tmpb{#1#2}{#1{\kern#3em}#2}}
+\def\circletextS{}
+</pre>
+
+<p>The code from
+<a href="http://petr.olsak.net/opmac-tricks-e.html#circletext">OPmac trick 0109</a>
+is re-implemeted here. The calculation is done by \expr and \bp macros. The
+\l macro means the lenght of typeset text and \tmpc is coefficinet which
+converts such length to the angular measure in degrees.
+
+<p CLASS=datum>(0038) -- P. O. 2021-02-05<p>
 <hr>
 
 
@@ -1426,8 +1496,8 @@ TeX job. If these vaules are not known then mentioned macros expand to 0sp,
 \refdecl{
    \def\Xpos#1#2#3{\sxdef{pos:#1}{{#2}{#3}\_currpage}}
 }
-\def\setpos[#1]{\openref\pdfsavepos \edef\next{\noexpand\setposA{#1}}\next}
-\def\setposA#1{\_wref\Xpos{{#1}{\the\pdflastxpos}{\the\pdflastypos}}}
+\def\setpos[#1]{\openref\pdfsavepos
+   \_ewref\Xpos{{#1}\unexpanded{{\the\pdflastxpos}{\the\pdflastypos}}}}
 
 \def\posx [#1]{\_ea \posi   \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
 \def\posy [#1]{\_ea \posii  \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
@@ -1438,7 +1508,7 @@ TeX job. If these vaules are not known then mentioned macros expand to 0sp,
 \def\posiii #1#2#3#4{#3}
 </pre>
 
-<p>The coordinates are saved to the .ref file in the format \Xpos{x-pos}{y-pos}. 
+<p>The coordinates are saved to the .ref file in the format \Xpos{label}{x-pos}{y-pos}.
 The \Xpos macro defines \pos:label as {x-pos}{y-pos}{total-pg}{rel-pg}.
 We need to read only given parameter by \posi, \posii or \posiii auxiliary
 macros. The \romannumeral-`\. trick does (empty) expansion of \trycs until first {
