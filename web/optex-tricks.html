@@ -143,6 +143,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#condi">Structured conditionals</a>
     <li><a href="#setpos">Absolute positions on the page<a>
+    <li><a href="#anodes">Drawing to given nodes</a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
     <li><a href="#import">The import package</a>
@@ -1560,6 +1561,39 @@ Text text\setpos[A]\pdfliteral{q 0 0 m -\bp{\posx[A]} -\bp{\posy[A]} l S Q}
 
 <p CLASS=datum>(0020) -- P. O. 2020-05-27<p>
 <hr>
+
+<h2><a name="anodes"></a>Drawing to given nodes</h2>
+
+<p>We show the application of the previous
+<a href="#setpos">OpTeX trick 0020</a>. We connect two points at the single
+page by a line. These points are declared by the position of the current point.
+For example the last word of the first paragraph is connected to the last word of
+the second paragraph by a line:
+
+<pre>
+This is first paragraph.\setorigin[begin1]\pdfliteral{0 0 m \bpx[end1] \bpy[end1] l S}
+
+This is second paragraph connected by a line.\setpos[end1]
+</pre>
+
+<p>One position must be set by \setorigin[label]. Other positions at the
+same page can be set by \setpos[label]. Then you can draw something at origin
+position by \pdfliteral primitive. The coordinates of the origin is 0,0, the
+coordinates of a point with label [label] (in big points) is given by
+\bpx[label],\bpy[label].
+
+<p>Use macros from previous <a href="#setpos">OpTeX trick 0020</a>
+and these macros:
+
+<pre>
+\def\setorigin[#1]{\def\origin{#1}\setpos[#1]}
+\def\bpx[#1]{\expr{\bp{\posx[#1]}-\bp{\posx[\origin]}}}
+\def\bpy[#1]{\expr{\bp{\posy[#1]}-\bp{\posy[\origin]}}}
+</pre>
+
+<p CLASS=datum>(0041) -- P. O. 2021-02-06<p>
+<hr>
+
 
 <h2><a name="tabs"></a>Tabbing macros</h2>
 
