@@ -199,8 +199,8 @@
 
    \_doc -----------------------------
    The default \"declaration letters" `c`, `l`, `r` and `p` are declared
-   by setting \`\tabdeclarec`, \`\tabdeclarel`, \`\tabdeclarer` and
-   \`\paramtabdeclarep` macros. In general, define
+   by setting \`\_tabdeclarec`, \`\_tabdeclarel`, \`\_tabdeclarer` and
+   \`\_paramtabdeclarep` macros. In general, define
    `\def\_tabdeclare<letter>{...}` for a non-parametric
    letter and `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.

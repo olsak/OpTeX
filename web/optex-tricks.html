@@ -129,6 +129,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#decdigits">Decimal digits aligned by the decimal point</a>
     <li><a href="#longtable">Long table across multiple pages</a>
     <li><a href="#tablevcent">Vertically centered paragraphs in table</a>
+    <li><a href="#dnaligned">The decimal point aligned in the table</a>
 </ul>
 
 <li>Text blocks
@@ -144,9 +145,8 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#setpos">Absolute positions on the page<a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
-    <li><a href="#greyblock">Text blocks with grey background splittable to more pages</a>
-    <li><a href="#blocksum">The checksum of the text blocks</a>
     <li><a href="#import">The import package</a>
+    <li><a href="#num">Numbers printed in three-digits groups</a>
 </ul>
 
 <li>Sections
@@ -1229,14 +1229,14 @@ line. The following testing code shows one approach:
 
 \table{|p{1.5cm}|p{4cm}|}{ % top alignment (default)
  \crl
- d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &amp;
  ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
  \crl
 }
 
 \table{|(\vcent)p{1.5cm}|:(\vcent)p{4cm}|}{ % vertically centered paragraphs
  \crl
- d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &amp;
  ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
  \crl
 }
@@ -1270,6 +1270,40 @@ for example "V":
 </pre>
 
 <p CLASS=datum>(0023) -- P. O. 2020-06-01<p>
+<hr>
+
+<h2><a name="dnaligned"></a>The decimal point aligned in the table</h2>
+
+<p>We create table column declarator Nn which can be used for decimal
+numbers aligned by decimal point.
+
+<pre>
+\table{|c|Nn|}{\crl
+   first:   &amp; 23433.1       \cr
+   second:  &amp;    55.131415  \crl
+}
+</pre>
+
+<p>In fact, there are two clumns N and n with following declarations:
+
+<pre>
+\def\_tabdeclareN{\the\tabiteml \hfil \scannum ##\_unsskip}
+\def\_tabdeclaren{##\_unsskip \hfil \the\tabitemr}
+
+\def\scannum#1 {\isinlist{#1}.\iftrue \ea\scannumA \else \ea\scannumB\fi #1\relax}
+\def\scannumA#1.#2\relax{#1&amp\decimaldot#2}
+\def\scannumB#1\relax{#1&amp}
+\def\decimaldot{.}
+</pre>
+
+<p>First column N is right aligned and second colum n is left aligned. The
+first column runs the scanner \scannum which reads the number separated by
+space. It means that we must write space after numbers and before &amp; or \cr.
+
+<p>There exists more powerfull macro \num which can be used in tables
+too, see <a href="#num">OpTeX trick 0040</a>.
+
+<p CLASS=datum>(0039) -- P. O. 2021-02-06<p>
 <hr>
 
 
@@ -1687,6 +1721,59 @@ input is finished, then \picdir returns to its previous value.
 in imported files. So, we need not to define \subimport.
 
 <p CLASS=datum>(0035) -- P. O., 2021-01-14<p>
+<hr>
+
+<h2><a name="num"></a>Numbers printed in three-digits groups</h2>
+
+<p>The long number should be printed with spaces (or another symbol
+depending on used language) with three-digits groups. For example:
+
+<pre>
+  2 365 121
+     10 115.16
+         25.145 17
+</pre>
+
+<p>We can write \num 2365121 or \num 10115.1 or \num 25.14517 and the
+grouping will be calculated by the macro.
+
+<pre>
+\def\num#1 {\isinlist{#1}{.}\iftrue \ea\numG \else \ea\numH\fi#1\relax}
+\def\numG#1.#2\relax{\numH#1\relax\decimaldot\numC#2\relax\relax\relax\relax\relax}
+\def\numH#1\relax{\tmpnum=0 \numA #1\relax \numB#1\relax\relax\relax\relax\relax}
+\def\numA#1{\ifx\relax#1\empty \else \incr\tmpnum \ea\numA \fi}
+\def\numB{\edef\tmp{\the\tmpnum}\divide\tmpnum by3 \multiply\tmpnum by3
+   \ifcase \numexpr\tmp-\tmpnum\relax \ea\numC \or \ea\numD \or \ea\numE\fi}
+\def\numC#1#2#3{#1#2#3\ifx\relax#3\empty\else\ea\numF\fi}
+\def\numD#1{#1\numF}
+\def\numE#1#2{#1#2\numF}
+\def\numF#1#2#3{\ifx\relax#1\empty \else \numsep #1#2#3\ea\numF\fi}
+\def\numsep{\,}
+\def\decimaldot{.}
+</pre>
+
+<p>The macro \num reads the number separated by space. If it incudes period
+then the front part is processed by \numH and the decimal part by \numC.
+The front part is processed in two steps. First, the macro counts the number of
+digits by \numA and then it inserts spaces by \numB,...\numF.
+
+<p>We can use this macro in tables with Nn declarator
+(see <a href="#dnaligned">OpTeX trick 0039</a>), but we must add the &amp;
+symbol at the end of the \numH macro:
+
+<pre>
+\def\numH#1\relax{\tmpnum=0 \numA #1\relax \numB#1\relax\relax\relax\relax\relax&amp;}
+
+\def\_tabdeclareN{\the\tabiteml \hfil \num ##\_unsskip}
+\def\_tabdeclaren{##\_unsskip\hfil\the\tabitemr}
+
+\table{|c|Nn|}{\crl
+   first:   &amp; 23433.1       \cr
+   second:  &amp;    55.131415  \crl
+}
+</pre>
+
+<p CLASS=datum>(0040) -- P. O., 2021-02-06<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
