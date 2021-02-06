@@ -159,7 +159,7 @@
    \_cod ----------------------------
 
 \_def\_printverb #1^^J#2{%
-   \_ifx\_printverblinenum\_relax \_else \_global\_advance\_ttline by1 \_fi
+   \_ifx\_printverblinenum\_relax \_else \_incr\_ttline \_fi
    \_testcommentchars #1\_relax\_relax\_relax
    \_iftrue
       \_ifx\_end#2 \_printcomments\_fi
@@ -270,7 +270,7 @@
    \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
-\_def\_vireadline{\_read\_vifile to \_tmp \_global\_advance\_viline by1 }
+\_def\_vireadline{\_read\_vifile to \_tmp \_incr\_viline }
 \_def\_visaveline{\_ea\_addto\_ea\_tmpb\_ea{\_tmp}}
 
 \_public \verbinput ;

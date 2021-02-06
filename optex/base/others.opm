@@ -92,7 +92,7 @@
 \_def\_lipsumload{{%
    \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
-      \_def\NewLipsumPar{\_advance\_tmpnum by1 \_sxdef{_lip:\_the\_tmpnum}}%
+      \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
       \_opinput {lipsum.ltd.tex}%
       \_global\_let\_lipsumload=\_empty
    }}}

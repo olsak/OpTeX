@@ -131,7 +131,6 @@
    subsections <num>.<num>. On the other hand, if chapter is used in the
    document then `\_chapnum>0` and sections have numbers` <num>.<num>`
    and subsections have numbers `<num>.<num>.<num>`.
-
    \_cod --------------------------
 
 \_newcount \_chapnum  % chapters
@@ -153,7 +152,6 @@
 \_def \_thednum    {(\_the\_dnum)}
 
 \_def\_othe #1.{\_ifnum#1>0 \_the#1.\_fi}
-\_def\_incr #1{\_global\_advance#1by1 }
 
    \_doc ----------------------------
    The \`\notoc` and \`\nonum` prefixes are implemented by

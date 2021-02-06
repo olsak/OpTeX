@@ -82,6 +82,15 @@
 \_long\_def \_addto #1#2{\_ea\_def\_ea#1\_ea{#1#2}}
 \_public \addto ;
 
+   \_doc -----------------------------
+   \`\incr``<counter>` increases `<counter>` by one globally.
+   \`\decr``<counter>` decreases `<counter>` by one globally.
+   \_cod -----------------------------
+
+\_def\_incr #1{\_global\_advance#1by1 }
+\_def\_decr #1{\_global\_advance#1by-1 }
+\_public \incr \decr ;
+
    \_doc ------------------------------
    \`\opwarning` `{<text>}` prints warning on the terminal and to the log file.
    \_cod ------------------------------

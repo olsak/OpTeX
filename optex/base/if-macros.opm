@@ -147,10 +147,10 @@
       \_sxdef{_frnum:\_the\_forlevel\_ea}{\_the\_frnum}%
       \_global\_slet{_fbody:\_the\_forlevel}{_fbody}%
    \_fi
-   \_global\_advance\_forlevel by1
+   \_incr\_forlevel
 }}
 \_def\_getforstack{\_immediateassigned{%
-   \_global\_advance\_forlevel by-1
+   \_decr\_forlevel
    \_ifnum\_forlevel>0
       \_global\_slet{_fbody}{_fbody:\_the\_forlevel}%
       \_global\_frnum=\_cs{_frnum:\_the\_forlevel}\_space
