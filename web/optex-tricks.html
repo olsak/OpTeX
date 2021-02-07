@@ -501,7 +501,8 @@ simple and straightforward lua code.
 \def\preparedirection #1 #2 #3 #4 {\preparerotdata(#3 #4) }
 \def\arrowccparams{}
 
-\def\preparerotdata (#1 #2) (#3 #4){\edef\rotdata{\directlua{%
+\def\preparerotdata (#1 #2) (#3 #4){\edef\rotdata{\rotcm (#1 #2) (#3 #4)}}
+\def\rotcm (#1 #2) (#3 #4){\directlua{%
    local x=(#3)-(#1)
    local y=(#4)-(#2)
    local norm = math.sqrt(x*x+y*y)
@@ -509,12 +510,13 @@ simple and straightforward lua code.
    else tex.print(string.format('\_pcent.3f \_pcent.3f \_pcent.3f \_pcent.3f',%
                                  x/norm, y/norm, -y/norm, x/norm))
    end
-}}}
+}}
 </pre>
 
-<p>The macro \preparerotdata takes vector (#3,#4)-(#1#2) and prepares cm
+<p>The macro \rotcm takes vector (#3,#4)-(#1,#2) and prepares cm
 matrix data for rotation in the direction of given vector.
-The data are stored in \rotdata macro and they are used inside
+The data are stored in \rotdata macro using \preparerotdata (for lines)
+or \preparedirection (for Bézier curves). Then the \rotdata is used inside
 \pdfliteral parameter.
 
 <p CLASS=datum>(0037) -- P. O. 2021-02-05<p>
@@ -1564,19 +1566,19 @@ Text text\setpos[A]\pdfliteral{q 0 0 m -\bp{\posx[A]} -\bp{\posy[A]} l S Q}
 
 <h2><a name="anodes"></a>Drawing to given nodes</h2>
 
-<p>We show the application of the previous
-<a href="#setpos">OpTeX trick 0020</a>. We connect two points at the single
-page by a line. These points are declared by the position of the current point.
-For example the last word of the first paragraph is connected to the last word of
-the second paragraph by a line:
+<p>We show the application of the previous <a href="#setpos">OpTeX trick 0020</a>.
+We can connect two (or more) points at the single page by a line
+(more lines, curves). These points are declared by the position of the current
+point. For example the last word of the first paragraph is connected to the
+last word of the second paragraph by a line:
 
 <pre>
-This is first paragraph.\setorigin[begin1]\pdfliteral{0 0 m \bpx[end1] \bpy[end1] l S}
+This is first paragraph.\setorigin\pdfliteral{0 0 m \bpx[end1] \bpy[end1] l S}
 
 This is second paragraph connected by a line.\setpos[end1]
 </pre>
 
-<p>One position must be set by \setorigin[label]. Other positions at the
+<p>One position must be set by \setorigin. Other positions at the
 same page can be set by \setpos[label]. Then you can draw something at origin
 position by \pdfliteral primitive. The coordinates of the origin is 0,0, the
 coordinates of a point with label [label] (in big points) is given by
@@ -1586,10 +1588,27 @@ coordinates of a point with label [label] (in big points) is given by
 and these macros:
 
 <pre>
-\def\setorigin[#1]{\def\origin{#1}\setpos[#1]}
+\newcount\posorigin
+\def\setorigin{\incr\posorigin\xdef\origin{ori:\the\posorigin}\setpos[ori:\the\posorigin]}
 \def\bpx[#1]{\expr{\bp{\posx[#1]}-\bp{\posx[\origin]}}}
 \def\bpy[#1]{\expr{\bp{\posy[#1]}-\bp{\posy[\origin]}}}
 </pre>
+
+<p>We can add arrows using macro \arrowccspike and \rotcm from
+<a href="#carrows">OpTeX trick 0037</a>:
+
+<pre>
+This is first paragraph.\setorigin
+\pdfliteral{q 0 0 m 1 0 0 RG 1 0 0 rg
+   100 40 \expr{\bpx[end1]+50} \expr{\bpy[end1]+30} \bpx[end1] \bpy[end1] c S
+   q \rotcm (0 0) (-100 -40) 0 0 cm \arrowccspike\space Q
+   q \rotcm (0 0) (-50 -30) \bpx[end1] \bpy[end1] cm \arrowccspike\space Q
+   Q}
+
+This is second paragraph connected by a line.\setpos[end1]
+</pre>
+
+<p><IMG SRC="../img/sipky2-ukazka.png" ALT="Code blocks" border=0>
 
 <p CLASS=datum>(0041) -- P. O. 2021-02-06<p>
 <hr>
