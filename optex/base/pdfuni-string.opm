@@ -1,23 +1,29 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2020-03-12>} % preloaded in format
+\_codedecl \pdfunidef {PDFunicode strings for outlines <2021-02-07>} % preloaded in format
 
    \_doc -----------------------------
-   The \`\_octalprint` is a Lua script that prints the character code in the
-   octal notation.
+   \`\_hexprint` is a command defined in Lua, that scans a number and expands
+   to its UTF-16 Big Endian encoded form for use in PDF hexadecimal strings.
    \_cod -----------------------------
 
-\_edef\_octalprint#1#2{\_noexpand\_directlua{% #1=character-code #2=character
-    if ('#2'>='A' and '#2'<='Z') or ('#2'>='a' and '#2'<='z') then
-      tex.print(string.format('000\_pcent s',"#2"))
-    else
-      local num=#1\_pcent256
-      tex.print(string.format('\_pcent 03o\_nbb\_pcent03o',(#1-num)/256,num))
-    end
+\bgroup
+\_catcode`\&=12 \_catcode`\%=12
+\_gdef\_hexprint{\_directlua{
+   local num = token.scan_int()
+   if num <= 0x10000 then
+      tex.print(string.format("%04X", num))
+   else
+      num = num - 0x10000
+      local high = (num >> 10) + 0xD800
+      local low = (num & 0x3FF) + 0xDC00
+      tex.print(string.format("%04X%04X", high, low))
+   end
 }}
+\egroup
 
    \_doc -----------------------------
-   \`\pdfunidef``\macro{<text>}` does more things than only converting to octal notation.
+   \`\pdfunidef``\macro{<text>}` does more things than only converting to hexadecimal PDF string.
    The <text> can be scanned in verbatim mode (it is true becuase \^`\_Xtoc`
    reads the <text> in verbatim mode). First `\edef` do
    `\_scantextokens\unexpanded` and second `\edef` expands the parameter
@@ -26,7 +32,7 @@
    Then \`\_removeoutbraces` converts `..{x}..` to `..x..`.
    Finally, the <text> is detokenized, spaces are preprocessed using \^`\replstring`
    and then the \`\_pdfunidefB` is repeated on each character. It calls the
-   `\directlua` chunk to print octal numbers in the macro \^`\_octalprint`.\nl
+   `\directlua` chunk to print hexadecimal numbers in the macro \^`\_hexprint`.\nl
    Characters for quotes (and separators for quotes) are activated by first
    `\_scatextokens` and they are defined as the same non-active characters.
    But `\_regoul` can change this definition.
@@ -47,19 +53,17 @@
       \_edef#1{\_detokenize\_ea{#1}}%
       \_replstring#1{ }{{ }}%  text text -> text{ }text
       \_catcode`\\=12 \_let\\=\_bslash
-      \_edef\_out{\\376\\377}%
+      \_edef\_out{<FEFF}
       \_ea\_pdfunidefB#1^%  text -> \_out in octal
       \_ea
    \_endgroup
-   \_ea\_def\_ea#1\_ea{\_out}
+   \_ea\_def\_ea#1\_ea{\_out>}
 }
 \_def\_pdfunidefB#1{%
    \_ifx^#1\_else
-      \_tmpnum=`#1
-      \_pdfunidefC{\_luaescapestring{#1}}%
+      \_edef\_out{\_out \_hexprint `#1}
    \_ea\_pdfunidefB \_fi
 }
-\_def\_pdfunidefC #1{\_edef\_out{\_out \\\_ea\_octalprint\_ea{\_the\_tmpnum}{#1}}}
 
 \_def\_removeoutbraces #1#{#1\_removeoutbracesA}
 \_def\_removeoutbracesA #1{\_ifx\_end#1\_else #1\_ea\_removeoutbraces\_fi}
@@ -95,22 +99,24 @@
 
 \_endcode % --------------------------------
 
-There are only two encodings for PDF strings (used in PDFoutlines, PDFinfo
-, etc.). The first one is PDFDocEncoding which is one-byte encoding, but most
-Czech or Slovak characters are missing here.
+There are only two encodings for PDF strings (used in PDFoutlines, PDFinfo,
+etc.). The first one is PDFDocEncoding which is single-byte encoding, but it
+misses most international characters.
 
-The second encoding is PDFunicode encoding which is implemented in this file.
+The second encoding is Big Endian UTF-16 which is implemented in this file. It
+encodes a single character in either two or four bytes.
 This encoding is \TeX/-discomfortable because it looks like
 
 \begtt
-\376\377\000C\000v\000i\001\015\000e\000n\000\355\000\040\000j\000e\000\040
-\000z\000\341\000t\001\033\001\176
+<FEFF 0043 0076 0069 010D 0065 006E 00ED 0020 006A 0065 0020 007A 00E1 0074
+011B 017E 0020 0061 0020 0078 2208 D835DD44>
 \endtt
 
-This example is the real encoding of the string "Cvičení je zátěž". You can see
-that this is UTF-16 encoding (two bytes per character) with two starting
-bytes FEFF. Moreover, each byte is encoded by three octal digits preceded by
-a backslash. The only exception is the visible ASCII character encoding: such
-a character is encoded by its real byte preceded by `\000`.
-
-
+This example shows a hexadecimal PDF string (enclosed in \code{<>} as opposed
+to the literal PDF string enclosed in `()`). In these strings each byte is
+represented by two hexadecimal characters (`0-9`, `A-F`). You can tell the
+encoding is UTF-16BE, becuase it starts with \"Byte order mark" `FEFF`. Each
+unicode character is then encoded in one or two byte pairs. The example string
+corresponds to the text \"Cvičení je zátěž a ${\rm x} ∈ 𝕄$". Notice the 4 bytes
+for the last character, $𝕄$. (Even the whitespace would be OK in a PDF file,
+because it should be ignored by PDF viewers, but \LuaTeX\ doesn't allow it.)
