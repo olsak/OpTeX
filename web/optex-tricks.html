@@ -96,6 +96,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#scaleto">Text size changed to the desired width</a>
     <li><a href="#fawesome">More than 1300 icons from Awesome5 fonts</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
+    <li><a href="#ul">Marking parts of text</a>
 </ul>
 
 <li>Verbatim
@@ -327,6 +328,32 @@ hyphenation patterns cannot work properly when such fonts are used.
 <p CLASS=datum>(0018) -- P. O. 2020-05-25<p>
 <hr>
 
+<h2><a name="ul"></a>Marking parts of text</h2>
+
+<p>We can use standard marking by {\it italic}, {\bf bold}, {\bi bold italic}
+or {\em emphasized text}.
+If you want to do something more special, then the following OPmac macros work
+without any change in OpTeX:
+
+<ul>
+<li>\ul{text} for underlining text (splittable to more lines)
+    like in the soul LaTeX package, see
+    <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>
+<li>Overlining can be done by the same macro when \uline macro is redefined.
+<li>Leterspacing referred in
+    <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>
+    need not be done by this macro
+    because we have more robust lettersacing implemented as font feature.
+<li>\hyphenprocess from
+    <a href="http://petr.olsak.net/opmac-tricks-e.html#hyphprocess">OPmac trick 0065</a>
+    can be used to implement hyphenation feature to the \ul macro.
+<li>Background colored (splitabble to more lines) text by
+    <a href="http://petr.olsak.net/opmac-tricks-e.html#coltext">OPmac trick 0085</a>
+    can be printed. Use \coltext\ColorA\ColorB{text}.
+</ul>
+
+<p CLASS=datum>(0044) -- P. O. 2021-02-08<p>
+<hr>
 
 <p CLASS="lmarg">Verbatim</p>
 
