@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2021-02-07>} % preloaded in format
+\_codedecl \pdfunidef {PDFunicode strings for outlines <2021-02-08>} % preloaded in format
 
    \_doc -----------------------------
    \`\_hexprint` is a command defined in Lua, that scans a number and expands
@@ -11,12 +11,12 @@
 \_catcode`\%=12
 \_gdef\_hexprint{\_directlua{
    local num = token.scan_int()
-   if num <= 0x10000 then
+   if num < 0x10000 then
       tex.print(string.format("%04X", num))
    else
       num = num - 0x10000
-      local high = (num/1024) + 0xD800
-      local low =  (num%1024) + 0xDC00
+      local high = bit32.rshift(num, 10) + 0xD800
+      local low = bit32.band(num, 0x3FF) + 0xDC00
       tex.print(string.format("%04X%04X", high, low))
    end
 }}
@@ -120,3 +120,8 @@ unicode character is then encoded in one or two byte pairs. The example string
 corresponds to the text \"Cvičení je zátěž a ${\rm x} ∈ 𝕄$". Notice the 4 bytes
 for the last character, $𝕄$. (Even the whitespace would be OK in a PDF file,
 because it should be ignored by PDF viewers, but \LuaTeX\ doesn't allow it.)
+
+\_endinput
+
+2021-02-08 \_octalprint -> \_hexprint
+2020-03-12 Released
