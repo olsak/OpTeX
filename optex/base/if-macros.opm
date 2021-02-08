@@ -156,6 +156,9 @@
       \_global\_frnum=\_cs{_frnum:\_the\_forlevel}\_space
    \_fi
 }}
+\_ifx\_immediateassignment\_undefined % for compatibility with older LuaTeX
+   \_let\_immediateassigned=\_useit \_let\_immediateassignment=\_empty
+\_fi
 
    \_doc ----------------------------
    User can define own expandable \"foreach" macro by

@@ -8,15 +8,15 @@
    \_cod -----------------------------
 
 \bgroup
-\_catcode`\&=12 \_catcode`\%=12
+\_catcode`\%=12
 \_gdef\_hexprint{\_directlua{
    local num = token.scan_int()
    if num <= 0x10000 then
       tex.print(string.format("%04X", num))
    else
       num = num - 0x10000
-      local high = (num >> 10) + 0xD800
-      local low = (num & 0x3FF) + 0xDC00
+      local high = (num/1024) + 0xD800
+      local low =  (num%1024) + 0xDC00
       tex.print(string.format("%04X%04X", high, low))
    end
 }}
