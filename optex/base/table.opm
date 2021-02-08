@@ -4,7 +4,7 @@
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
-   `\_tablebox`. You can change default value if you want by
+   \`\_tablebox`. You can change default value if you want by
    `\let\_tablebox=\vtop` or `\let\_tablebox=\relax`.
    \_cod -----------------------------
 
