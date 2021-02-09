@@ -97,6 +97,29 @@
 \_def\_tocpar{\_nobreak \_hskip-2\_iindent\_null \_par}
 
    \_doc -----------------------------------
+   If you want a special formating of TOC with adding more
+   special lines (no generated as titles from `\chap`, `\sec`, `\secc`), you
+   can define `\addtotoc{<level>}{<type>}{<number>}{<o-title>}{<title>}` macro:
+   \begtt
+   \def\addtotoc#1#2#3#4#5{%
+      \incr\_tocrefnum
+      \_dest[toc:\_the\_tocrefnum]%
+      \_ewref\_Xtoc{{#1}{#2}{#3}{#4}#5}%
+   }
+   \endtt
+   and you can declare special lines (or something else)
+   as an unused level (10 in the following example):
+   \begtt
+      \sdef{_tocl:10}#1#2#3{\medskip\hbox{\Blue #2}\medskip}
+   \endtt
+   Now, users can add a blue line into TOC by
+   \begtt \catcode`\<=13
+      \addtotoc{10}{blue-line}{}{\relax}{<blue text to be added in the TOC>}
+   \endtt
+   anywhere in the document. Note that `\relax` in the fourth parameter
+   means that outline will be not generated. And second parameter
+   `blue-line` is only a comment (unused in macros).
+
    \`\maketoc` prints warning if TOC data is empty, else it creates TOC by
    running \^`\_toclist`
    \_cod ----------------------------------
