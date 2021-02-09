@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2021-01-26>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2021-02-09>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -450,6 +450,7 @@
 
 \_endcode % -------------------------------------
 
+2021-02-09 \thisoutline implemented
 2021-01-26 \_nl: \unskip added
 2021-01-11 \secl introduced
 2021-01-05 \_thednum printed in text mode in its both occurences.

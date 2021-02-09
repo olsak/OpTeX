@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \outlines {PDF outlines <2020-03-12>} % preloaded in format
+\_codedecl \outlines {PDF outlines <2021-02-09>} % preloaded in format
 
 \_def\_outlines#1{\_pdfcatalog{/PageMode/UseOutlines}\_openref
    \_ifx\_toclist\_empty
@@ -17,12 +17,14 @@
    \_fi
 }
 \_def\_outlinesA#1#2#3#4#5#6#7{%
-   \_advance\_count#1 by1
-   \_ifcase#1\_or
-      \_addoneol{_ol:\_the\_count0}\_or
-      \_addoneol{_ol:\_the\_count0:\_the\_count1}\_or
-      \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2}\_or
-      \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}\_fi
+   \_isequal{\relax}{#4}\_iffalse
+      \_advance\_count#1 by1
+      \_ifcase#1\_or
+         \_addoneol{_ol:\_the\_count0}\_or
+         \_addoneol{_ol:\_the\_count0:\_the\_count1}\_or
+         \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2}\_or
+         \_addoneol{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}\_fi
+   \_fi
 }
 \_def\_addoneol#1{%
    \_ifcsname #1\_endcsname
@@ -32,18 +34,20 @@
    \_fi
 }
 \_def\_outlinesB#1#2#3#4#5#6#7{%
-   \_advance\_count#1 by1
-   \_ifcase#1%
-      \_tmpnum=\_trycs{_ol:\_the\_count0}{0}\_or
-      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1}{0}\_relax\_or
-      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2}{0}\_relax\_or
-      \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}{0}\_relax\_or
-      \_tmpnum = 0\_relax\_fi
-   \_isempty{#4}\_iftrue \_pdfunidef\_tmp{#5}\_else \_pdfunidef\_tmp{#4}\_fi
    \_advance\_tocrefnum by1
-   \_outlinesC{#1}{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
+   \_isequal{\relax}{#4}\_iffalse
+      \_advance\_count#1 by1
+      \_ifcase#1%
+         \_tmpnum=\_trycs{_ol:\_the\_count0}{0}\_or
+         \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1}{0}\_relax\_or
+         \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2}{0}\_relax\_or
+         \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}{0}\_relax\_or
+         \_tmpnum = 0\_relax\_fi
+      \_isempty{#4}\_iftrue \_pdfunidef\_tmp{#5}\_else \_pdfunidef\_tmp{#4}\_fi
+      \_outlinesC{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
+   \_fi
 }
-\_def\_outlinesC#1#2#3#4#5{\_pdfoutline goto name{#2} count #3#4{#5}\_relax}
+\_def\_outlinesC#1#2#3#4{\_pdfoutline goto name{#1} count #2#3{#4}\_relax}
 
 \_newcount\_oulnum
 \_def\_insertoutline#1{\_global\_advance\_oulnum by1

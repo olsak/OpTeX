@@ -685,8 +685,10 @@ the main level~0. These entries can be placed before the table of contents (crea
 by \^`\outlines`) or after it. Their hyperlink destination is in the place
 where the \^`\insertoutline` macro is used.
 
-The command \^`\thisoutline{<text>}` uses <text> in the outlines instead default
+The command \^`\thisoutline{<text>}` uses <text> in the outline instead of default
 title text for the first following `\chap`, `\sec`, or `\secc`.
+Special case: \^`\thisoutline{\relax}` doesn't create any outline for the following
+`\chap`, `\sec`, or `\secc`.
 
 \secc Lists
 %%%%%%%%%%
@@ -773,9 +775,9 @@ These letters can be combined by the `|` character (vertical line). Example
    July     & yacht      & k\$ 170 \crl}
 \endtt
 %
-generates the following result:
+generates the result:
 
-\medskip
+\vskip-\medskipamount
 \noindent\hfil\table{||lc|r||}{    \crl
    Month    & commodity  & price   \crli \tskip2pt
    January  & notebook   &  \$ 700 \cr
