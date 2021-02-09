@@ -16,7 +16,7 @@
       \_toclist}% create outlines
    \_fi
 }
-\_def\_outlinesA#1#2#3#4#5#6{%
+\_def\_outlinesA#1#2#3#4#5#6#7{%
    \_advance\_count#1 by1
    \_ifcase#1\_or
       \_addoneol{_ol:\_the\_count0}\_or
@@ -31,7 +31,7 @@
    \_else \_sxdef{#1}{1}%
    \_fi
 }
-\_def\_outlinesB#1#2#3#4#5#6{%
+\_def\_outlinesB#1#2#3#4#5#6#7{%
    \_advance\_count#1 by1
    \_ifcase#1%
       \_tmpnum=\_trycs{_ol:\_the\_count0}{0}\_or
@@ -39,7 +39,7 @@
       \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2}{0}\_relax\_or
       \_tmpnum=\_trycs{_ol:\_the\_count0:\_the\_count1:\_the\_count2:\_the\_count3}{0}\_relax\_or
       \_tmpnum = 0\_relax\_fi
-   \_pdfunidef\_tmp{#4}%
+   \_isempty{#4}\_iftrue \_pdfunidef\_tmp{#5}\_else \_pdfunidef\_tmp{#4}\_fi
    \_advance\_tocrefnum by1
    \_outlinesC{#1}{toc:\_the\_tocrefnum}{\_ifnum#1<\_outlinelevel\_space\_else-\_fi}{\_tmpnum}{\_tmp}%
 }

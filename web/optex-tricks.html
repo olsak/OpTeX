@@ -1893,14 +1893,18 @@ Second, \scantokenlistC converts spaces to spaces surrounded in { }.
 Third, \scantokenlistD applies \dotoken to each token in the preprocessed
 token list.
 
-<p>If you want to return to the original token list ({,} have catcodes 1,2)
-then you can define
+<p>If you want to return converted token list to the the original
+token list ({,} have catcodes 1,2) then you can define
 
 <pre>
-\def\dotoken#1{\if\string{#1{\else\if\string}#1}\else#1\fi\fi}
+\def\dotoken#1{\ea\ifx\string{#1{\else\ea\ifx\string}#1}\else\noexpand#1\fi\fi}
 </pre>
 
-<p>and run \scantokenlist, for example \edef\mylist{\ea\scantokenlist\ea{\mylist}}.
+<p>and run \scantokenlist in \edef, for example
+
+<pre>
+\edef\mylist{\ea\scantokenlist\ea{\mylist}}
+</pre>
 
 <p CLASS=datum>(0042) -- P. O., 2021-02-06<p>
 <hr>

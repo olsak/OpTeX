@@ -216,9 +216,19 @@
    \_ifnotoc \_else \_incr \_tocrefnum
        \_dest[toc:\_the\_tocrefnum]%
        \_ewref\_Xtoc{{\_the\_sectionlevel}{\_secinfo}%
-                     {\_therefnum}\_detokenize\_ea{\_savedtitle}}%
+                     {\_therefnum}{\_theoutline}\_detokenize\_ea{\_savedtitle}}%
    \_fi
+   \_gdef\_theoutline{}%
 }
+
+   \_doc -----------------------------
+   \`\thisoutline``{<text>}` saves text to the \`\_theoutline` macro.
+   \^`\_printrefnum` uses it and removes it.
+   \_cod -----------------------------
+
+\_def\_theoutline{}
+\_def\_thisoutline#1{\_gdef\_theoutline{#1}}
+\_public \thisoutline ;
 
    \_doc -----------------------------
    The \`\_abovetitle``{<penaltyA>}{<skipA>}` and \`\_belowtitle``{<skipB>}` pair
