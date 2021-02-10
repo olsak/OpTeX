@@ -50,7 +50,7 @@
 \_def\_outlinesC#1#2#3#4{\_pdfoutline goto name{#1} count #2#3{#4}\_relax}
 
 \_newcount\_oulnum
-\_def\_insertoutline#1{\_global\_advance\_oulnum by1
+\_def\_insertoutline#1{\_incr\_oulnum
    \_pdfdest name{oul:\_the\_oulnum} xyz\_relax
    \_pdfunidef\_tmp{#1}%
    \_pdfoutline goto name{oul:\_the\_oulnum} count0 {\_tmp}\_relax
