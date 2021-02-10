@@ -39,7 +39,7 @@
    \_cod -----------------------------
 
 \_def\_allocator #1#2#3{%
-   \_global\_advance\_cs{_#2alloc}by1
+   \_incr{\_cs{_#2alloc}}
    \_ifnum\_cs{_#2alloc}>\_cs{_mai#2}%
       \_errmessage{No room for a new \_ea\_string\_csname #2\_endcsname}%
    \_else
@@ -75,7 +75,7 @@
 \_chardef\_insertmin = 201
 
 \_def\_newinsert #1{%
-   \_global\_advance\_insertalloc by-1
+   \_decr\_insertalloc
    \_ifnum\_insertalloc <\_insertmin
       \_errmessage {No room for a new \_string\insert}%
    \_else
