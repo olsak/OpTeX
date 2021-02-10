@@ -146,7 +146,6 @@
 
 \_newbox\_slidepage  \_newbox\_slidepageB
 \_countdef\_slidelayer=1
-\_def\_decr#1{\_global\_advance#1 by-1 }
 
 \_def\_slideshow{\_slidelayer=1 \_slideshowactive \_setbox\_slidepage=\_vbox\_bgroup}
 
