@@ -130,7 +130,7 @@
 \_def \_folio {\_ifnum\_pageno<0 \_romannumeral-\_pageno \_else \_number\_pageno \_fi}
 \_def \_nopagenumbers {\_footline={}}
 \_def \_advancepageno {%
-   \_ifnum\_pageno<0 \_global\_advance\_pageno by-1 \_else \_incr\_pageno \_fi
+   \_ifnum\_pageno<0 \_decr\_pageno \_else \_incr\_pageno \_fi
 } % increase |pageno|
 \_def \_raggedbottom {\_topskip=\_dimexpr\_topskip plus60pt \_pgbottomskip=0pt plus1fil\_relax}
 \_def \_normalbottom {\_topskip=\_dimexpr\_topskip \_pgbottomskip=0pt\_relax}
