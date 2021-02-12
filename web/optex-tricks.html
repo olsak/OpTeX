@@ -120,6 +120,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#textinmath">Text fonts in math mode</a>
     <li><a href="#torighteq">Equation marks in atypical cases</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
+    <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
 </ul>
 
 <li>Tables
@@ -909,6 +910,50 @@ signs from STIX doesn't look good in single formula.
 <p CLASS=datum>(0030) -- P. O. 2020-12-02<p>
 <hr>
 
+<h2><a name="dots"></a>Intelligent \dots like in AMSTeX</h2>
+
+<p>AMSTeX provides \dots macro which works by the context. If it is surrounded
+by symbols like + - = then it works like \cdots, if it is surrounded by
+comma or similar symbols then it works like \ldots.
+The <a href="http://petr.olsak.net/opmac-tricks-e.html#dots">OPmac trick 0084</a>
+shows one implementation of this feature, but it works only in
+non-Unicode math. So, we show another solution.
+
+<pre>
+\def\declbasemathchars#1{\foreach#1\do{\sxdef{dots:\meaning##1}{}}}
+\def\dots{\relax \ifmmode \ea\specdots \else \_dots \fi}
+\def\specdots{\futurelet\next\specdotsA}
+\def\specdotsA{\ifcsname dots:\meaning\next\endcsname \ldots
+   \else \ischaracter\next \iftrue \cdots
+   \else \ea\specdotsB\scantextokens\ea{\meaning\next}\sepU\Umathchar\sepU\end \fi\fi}
+\def\specdotsB#1\Umathchar#2\sepU#3\end{\ifx^#1^\specdotsC#2\sepU \else \ldots \fi}
+\def\specdotsC"#1"#2"#3\sepU{%
+   \ifcase#1 \ldots\or \cdots\or \cdots\or \cdots\or \cdots\or \cdots\else \ldots \fi}
+\def\ischaracter#1\iftrue{\ea\ischaracterA\scantextokens\ea{\meaning#1}character {}\end}
+\def\ischaracterA#1character #2#3\end{%
+   \ifx\relax#2\relax \cs{iffalse\ea}\else \cs{iftrue\ea}\fi}
+
+\declbasemathchars{, . ; :}
+
+% Test:
+$a_1,\dots,a_n$\quad $a_1+\dots+a_n$
+\bye
+</pre>
+
+<p>The macro \dots is re-defined here in math mode. It reads the following
+token and does \cdots or \ldots. If the following token is a single letter
+then it uses \ldots. If the following token is a single character not
+listed in the \declbasemathchars parameter then it uses \cdots. If it is listed
+in \declbasemathchars paremater then it uses \ldots. If the next token is
+a control sequence declared by \Umathchardef then it uses \cdots for classes
+Op, Bin, Rel, Open, Close and \ldots for other classes. In other cases,
+it uses \ldots.
+
+<p>The \declbasemathchars can be used more than once, the list of declared
+characters are appended when second and more \declbasemathchars is used.
+
+<p CLASS=datum>(0045) -- P. O. 2021-02-12<p>
+<hr>
 
 <p CLASS="lmarg">Tables</p>
 
