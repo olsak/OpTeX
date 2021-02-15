@@ -120,7 +120,10 @@
    math formulae from these three math families. All information needed by
    \TeX/ is collected in single Unicode-math font.\nl
    The \^`\_corrmsize` `<factor><space>` can be used just before
-   `\_loadumathfamily`, see section~\ref[math-preload] for more information.
+   `\_loadumathfamily`, see section~\ref[math-preload] for more information.\nl
+   The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are additional font
+   features for text, script and sscript sizes respectively. They are
+   locally re-defined in \^`\mathbox` macro.
    \_cod -----------------------------
 
 \_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
@@ -128,14 +131,15 @@
 
 \_def\_loadumathfamily #1 #2#3 {%
   \_edef\_optsizesave{\_the\_optsize}%
-  \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{#3} at\_optsize \_textfont#1=\_mF
-  \_ifnum#1=1 \_textfont2=\_mF \_textfont3=\_mF \_fi
-  \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{+ssty=0;#3} at\_optsize \_scriptfont#1=\_mF
-  \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
-  \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{+ssty=1;#3} at\_optsize\_scriptscriptfont#1=\_mF
-  \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi
+  \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{\_textmff #3} at\_optsize
+  \_textfont#1=\_mF \_ifnum#1=1 \_textfont2=\_mF \_textfont3=\_mF \_fi
+  \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{\_scriptmff #3} at\_optsize
+  \_scriptfont#1=\_mF \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
+  \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{\_sscriptmff #3} at\_optsize
+  \_scriptscriptfont#1=\_mF \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi
   \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
+\_def\_textmff{} \_def\_scriptmff{+ssty=0;} \_def\_sscriptmff{+ssty=1;}
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs not to
@@ -253,6 +257,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2021-02-15 \_textmff, \_scriptmff and \_sscriptmff introduced
 2021-02-15 \_expandafter -> \_ea
 2020-06-07 \Umathfractiondelsize (for \choose brackets) corrected, see https://tug.org/pipermail/luatex/2020-June/007365.html
 2020-04-15 \_setmathdimens -> \_setuniathdimens

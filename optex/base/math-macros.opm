@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-02-04>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-02-15>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -1044,17 +1044,26 @@
    \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
    It behaves like `\hbox{<text>}` but the `<text>` is scaled to a smaller
-   size if it is used in scriptstyle or scriptscript style.
+   size if it is used in scriptstyle or scriptscript style.\nl
+   The \^`\_textmff` and \^`\_scriptmff` are redefined in order to
+   respect optical sizes. If we are in script style then the math mode
+   starts in text style, but optical size is given to script style.
+   The `\mathbox` in non-Unicode math respects optical sizes
+   using different principle.
    \_cod -----------------------------
 
 \_def\_mathbox#1{{\_mathstyles{\_hbox{%
    \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
-   \_else \_typoscale[\_dobystyle{}{}{700}{500}/]\_fi #1}}}%
+   \_else
+      \_ifnum\_stylenum=2 \_def\_textmff{+ssty=0;}\_fi
+      \_ifnum\_stylenum=3 \_def\_textmff{+ssty=1;}\_def\_scriptmff{+ssty=1;}\_fi
+      \_typoscale[\_dobystyle{}{}{700}{500}/]\_fi #1}}}%
 }
 \_public \mathbox ;
 
 \_endcode %---------------------------------------------------
 
+2021-02-15 \_mathbox redefines \_textmff etc. in order to respect optical sizes
 2021-02-04 \_bordermatrixwithdelims introduced.
 2021-01-23 better expession for math styles in \matrix
 2021-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
