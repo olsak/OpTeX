@@ -132,6 +132,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#longtable">Long table across multiple pages</a>
     <li><a href="#tablevcent">Vertically centered paragraphs in table</a>
     <li><a href="#dnaligned">The decimal point aligned in the table</a>
+    <li><a href="#tnote">Table notes</a>
 </ul>
 
 <li>Text blocks
@@ -1383,6 +1384,39 @@ too, see <a href="#num">OpTeX trick 0040</a>.
 <p CLASS=datum>(0039) -- P. O. 2021-02-06<p>
 <hr>
 
+<h2><a name="tnote"></a>Table notes</h2>
+
+<p>We create the macro \tnote{text} which can be used in tables. Each
+occurrence prints only a mark in the form ^a, ^b, etc. and saves {text} into
+the memory. When the table is printed then user write \tnoteprint
+and the marks are repeated again with the appropriate texts. This is similar
+as footnotes, but works locally for each table.
+
+<pre>
+\newcount\tnotenum
+\def\tnotelist{}
+\def\tnote#1{\incr\tnotenum $\Red^{\rm\lowletter\tnotenum}$\global\addto\tnotelist{{#1}}}
+\def\tnoteprint{\par\noindent \tnotenum=0
+   \ea\foreach\tnotelist \do{\advance\tnotenum by1 $\Red^{\rm\lowletter\tnotenum}$##1 }\par
+   \global\tnotenum=0 \gdef\tnotelist{}%
+}
+\def\lowletter#1{\ifcase#1 \or a\or b\or c\or d\or e \or f\or g\or h\or i\or j%
+   \or k\or l\or m\or n\or o\or p\or q\or r\or s\or t\or u\or v\or w\or x\or y\or z\else ?\fi}
+
+%test:
+\table{|c|c|}{\crl
+  m\tnote{meters}      & s\tnote{seconds} \crl
+  kg\tnote{kilograms}  & A\tnote{ampers} \crl
+}
+\tnoteprint
+</pre>
+
+<p>The format of \tnoteprint is single paragraph with \noindent and with note
+marks in \Red. You can create a different \tnoteprint macro with different
+formating, of course.
+
+<p CLASS=datum>(0046) -- P. O. 2021-02-14<p>
+<hr>
 
 <p CLASS="lmarg">Text blocks</p>
 
