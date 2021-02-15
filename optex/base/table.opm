@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-01-27>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-02-15>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -261,11 +261,11 @@
 \_def\_tablinefil{\_leaders\_hrule\_hfil}
 
 \_def\_crlp#1{\_crcr \_zerotabrule \_noalign{\_kern-\_drulewidth}%
-   \_omit \_xdef\_crlplist{#1}\_xdef\_crlplist{,\_expandafter}\_expandafter\_crlpA\_crlplist,\_end,%
+   \_omit \_xdef\_crlplist{#1}\_xdef\_crlplist{,\_ea}\_ea\_crlpA\_crlplist,\_end,%
    \_global\_tmpnum=0 \_gdef\_dditem{\_omit\_crlpD}%
    \_gdef\_vvitem{\_kern\_vvkern\_kern\_drulewidth}\_gdef\_vvitemA{\_kern\_drulewidth}%
    \_vvleft\_crlpD\_ddlinedata \_global\_tmpnum=0 \_crcr \_zerotabrule}
-\_def\_crlpA#1,{\_ifx\_end#1\_else \_crlpB#1-\_end,\_expandafter\_crlpA\_fi}
+\_def\_crlpA#1,{\_ifx\_end#1\_else \_crlpB#1-\_end,\_ea\_crlpA\_fi}
 \_def\_crlpB#1#2-#3,{\_ifx\_end#3\_xdef\_crlplist{\_crlplist#1#2,}\_else\_crlpC#1#2-#3,\_fi}
 \_def\_crlpC#1-#2-#3,{\_tmpnum=#1\_relax
    \_loop \_xdef\_crlplist{\_crlplist\_the\_tmpnum,}\_ifnum\_tmpnum<#2\_advance\_tmpnum by1 \_repeat}
@@ -511,6 +511,7 @@ after the second one.
 
 \_endinput
 
+2021-02-15 \_expandafter -> \_ea
 2021-01-27 \_tableB: \long\def added, \vspan syntax improved
 2020-05-26 \eqbox implemented
 2020-05-20 \colnum implemented.

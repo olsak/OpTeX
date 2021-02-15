@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2020-06-06>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2021-02-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -194,7 +194,7 @@
 \_def\_greekdef#1{\_ifx#1\_relax \_else
    \_begingroup \_lccode`X=\_umathnumB \_lowercase{\_endgroup \_def#1{X}}%
    \_advance\_umathnumB by 1
-   \_expandafter\_greekdef \_fi
+   \_ea\_greekdef \_fi
 }
 
 \_endcode
@@ -253,6 +253,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2021-02-15 \_expandafter -> \_ea
 2020-06-07 \Umathfractiondelsize (for \choose brackets) corrected, see https://tug.org/pipermail/luatex/2020-June/007365.html
 2020-04-15 \_setmathdimens -> \_setuniathdimens
 2020-02-25 implemented

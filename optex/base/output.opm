@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2020-03-28>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2021-02-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another...
@@ -130,7 +130,7 @@
 \_def \_folio {\_ifnum\_pageno<0 \_romannumeral-\_pageno \_else \_number\_pageno \_fi}
 \_def \_nopagenumbers {\_footline={}}
 \_def \_advancepageno {%
-   \_ifnum\_pageno<0 \_global\_advance\_pageno by-1 \_else \_incr\_pageno \_fi
+   \_ifnum\_pageno<0 \_decr\_pageno \_else \_incr\_pageno \_fi
 } % increase |pageno|
 \_def \_raggedbottom {\_topskip=\_dimexpr\_topskip plus60pt \_pgbottomskip=0pt plus1fil\_relax}
 \_def \_normalbottom {\_topskip=\_dimexpr\_topskip \_pgbottomskip=0pt\_relax}
@@ -260,5 +260,6 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2021-02-15 \_advance -> \_decr
 2020-05-12 \vfootB: \uskip -> \unskip bug fixed
 2020-03-28 Released

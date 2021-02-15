@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newdimen {Allocators for registers <2020-05-12>} % loaded in format
+\_codedecl \newdimen {Allocators for registers <2021-02-15>} % loaded in format
 
    \_doc -----------------------------
    The limits are set first.
@@ -39,7 +39,7 @@
    \_cod -----------------------------
 
 \_def\_allocator #1#2#3{%
-   \_global\_advance\_cs{_#2alloc}by1
+   \_incr{\_cs{_#2alloc}}%
    \_ifnum\_cs{_#2alloc}>\_cs{_mai#2}%
       \_errmessage{No room for a new \_ea\_string\_csname #2\_endcsname}%
    \_else
@@ -75,7 +75,7 @@
 \_chardef\_insertmin = 201
 
 \_def\_newinsert #1{%
-   \_global\_advance\_insertalloc by-1
+   \_decr\_insertalloc
    \_ifnum\_insertalloc <\_insertmin
       \_errmessage {No room for a new \_string\insert}%
    \_else
@@ -168,5 +168,6 @@ the array-like declarator of counters.
 
 \_endinput
 
+2021-02-15  \_advance -> \_incr, \_decr
 2020-05-12  \newmath -> \newfam  bug fixing
 2020-01-23  released

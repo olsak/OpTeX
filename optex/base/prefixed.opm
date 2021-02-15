@@ -56,7 +56,7 @@
 
 \_def \_codedecl #1#2{%
    \_ifx #1\_undefined \_wterm{#2}%
-   \_else \_expandafter \_endinput \_fi
+   \_else \_ea \_endinput \_fi
 }
 \_def \_wterm {\_immediate \_write16 }
 
@@ -292,3 +292,7 @@ the \^`\load` macro is used.
 The `qrcode.opm` is the first example of how an external macro file for \OpTeX/
 can look like.
 
+\endinput
+
+2021-02-15 \_expandafter -> \_ea in \_codedecl
+2020-02-14 released

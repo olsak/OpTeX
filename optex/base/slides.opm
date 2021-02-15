@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2021-01-16>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2021-02-15>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -146,7 +146,6 @@
 
 \_newbox\_slidepage  \_newbox\_slidepageB
 \_countdef\_slidelayer=1
-\_def\_decr#1{\_global\_advance#1 by-1 }
 
 \_def\_slideshow{\_slidelayer=1 \_slideshowactive \_setbox\_slidepage=\_vbox\_bgroup}
 
@@ -232,5 +231,6 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2021-02-15 \_def\_decr removed
 2021-01-16 \layers at empty page raises error: problem fixed
 2020-03-19 slides introduced
