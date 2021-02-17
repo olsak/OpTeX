@@ -99,6 +99,12 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ul">Marking parts of text</a>
 </ul>
 
+<li>Lists
+<ul>
+    <li><a href="#multilist">List items multi-numbered at arbitrary level</a>
+    <li><a href="#easylist">Depth of the list given by number of *</a>
+</ul>
+
 <li>Verbatim
 <ul>
     <li><a href="#inttinoval">Code blocks like in Markdown</a>
@@ -356,6 +362,96 @@ without any change in OpTeX:
 
 <p CLASS=datum>(0044) -- P. O. 2021-02-08<p>
 <hr>
+
+<p CLASS="lmarg">Lists</p>
+
+<h2><a name="multilist"></a>List items multi-numbered at arbitrary level</h2>
+
+<p>We declare the \style m (multi-numbered) of the list. The items are
+numbered similarly as sections, i.e. 1., 2. 2.1, 2.2, 2.2.1, 2.2.2, 2.2.3
+etc. We create macro \keepstyle which propagates the current style to all
+sub-levels. So:
+
+<pre>
+\begitems \style m \keepstyle  % prints:
+* First                        % 1. First
+* Second                       % 2. Second
+  \begitems
+  * Second-A                   %   2.1 Second-A
+  * Second-B                   %   2.2 Second-B
+  \enditems
+* Third                        % 3. Third
+\enditems
+</pre>
+
+<p>The implementation:
+
+<pre>
+\def\iprefix#1{}
+\addto\_setlistskip{\ifnum\ilevel>1 \edef\iprefix{\iprefix.\the\itemnum}\fi}
+\sdef{_item:m}{\iprefix.\the\itemnum. }
+\def\keepstyle{\_defaultitem=\_printitem}
+</pre>
+
+<p>The \iprefix is saved at the start of \begitems (in the \_setlistskip macro)
+and it is used in deeper levels of lists. There can be arbitrary nesting
+levels.
+
+<p CLASS=datum>(0047) -- P. O. 2021-02-17<p>
+<hr>
+
+<h2><a name="easylist"></a>Depth of the list given by number of *</h2>
+
+<p>We daclere the macro \easylist which enables to give the list level
+simply by the number of * used as a prefix. We need not to specify nesting
+\begitems...\enditems. So, if we use the \style m and \keepstyle
+from previous <a href="multilist">OpTeX trick 0047</a>, then the following
+input:
+
+<pre>
+\begitems \easylist \style m \keepstyle
+* First proposition.
+** Interesting comment.
+*** A note on the comment.
+*** Another note.
+**** By the way...
+***** This is a subsub...-proposition.
+* Let’s start something new...
+\enditems
+</pre>
+
+<p>gives exactly the same output as documented at the page 2 of the LaTeX
+package easylist (see texdoc easylist).
+
+<p>The implementation:
+
+<pre>
+\def\countlist{\tmpnum=1 \countlistA}
+\def\countlistA{\futurelet\next\countlistB}
+\def\countlistB{\ifx\next\aast \ea\countlistC\else \ea\countlistD \fi}
+\def\countlistC#1{\incr\tmpnum \countlistA}
+\def\countlistD{%
+   \ifnum\tmpnum&gt;\ilevel \fornum \ilevel..\tmpnum-1 \do{\_begitems\easylist}\else
+   \ifnum\tmpnum&lt;\ilevel \fornum \tmpnum..\ilevel-1 \do{\_enditems}\fi\fi
+   \_startitem}
+\def\enditems{\fornum 1..\ilevel \do{\_enditems}}
+</pre>
+
+<p>Another application. We set given style for each used level:
+
+<pre>
+\everylist={\ifcase\ilevel\or \style X \or \style x \else \style - \fi}
+\begitems \easylist
+* Main one
+* Main two
+** sub-item
+*** sub-sub-item
+\enditems
+</pre>
+
+<p CLASS=datum>(0048) -- P. O. 2021-02-17<p>
+<hr>
+
 
 <p CLASS="lmarg">Verbatim</p>
 
