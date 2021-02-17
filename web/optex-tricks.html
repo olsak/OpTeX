@@ -1491,13 +1491,11 @@ as footnotes, but works locally for each table.
 <pre>
 \newcount\tnotenum
 \def\tnotelist{}
-\def\tnote#1{\incr\tnotenum $\Red^{\rm\lowletter\tnotenum}$\global\addto\tnotelist{{#1}}}
+\def\tnote#1{\incr\tnotenum $\Red^{\rm\_athe\tnotenum}$\global\addto\tnotelist{{#1}}}
 \def\tnoteprint{\par\noindent \tnotenum=0
-   \ea\foreach\tnotelist \do{\advance\tnotenum by1 $\Red^{\rm\lowletter\tnotenum}$##1 }\par
+   \ea\foreach\tnotelist \do{\advance\tnotenum by1 $\Red^{\rm\_athe\tnotenum}$##1 }\par
    \global\tnotenum=0 \gdef\tnotelist{}%
 }
-\def\lowletter#1{\ifcase#1 \or a\or b\or c\or d\or e \or f\or g\or h\or i\or j%
-   \or k\or l\or m\or n\or o\or p\or q\or r\or s\or t\or u\or v\or w\or x\or y\or z\else ?\fi}
 
 %test:
 \table{|c|c|}{\crl
