@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2021-02-15>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2021-02-25>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another...
@@ -214,10 +214,10 @@
    \_global\_let\_draftfont=\_draftfont
 }
 \_def \_draftbox #1{\_setbox0=\_hbox{#1}%
-   \_kern.5\_vsize \_kern4.5\_wd0
-   \_hbox to0pt{\_kern.5\_xhsize \_kern-1\_wd0
+   \_kern.5\_vsize \_kern\_voffset \_kern4.5\_wd0
+   \_hbox to0pt{\_kern.5\_xhsize \_kern\_hoffset \_kern-2\_wd0
    \_pdfsave \_pdfrotate{55}\_pdfscale{10}{10}%
-   \_hbox to0pt{\_localcolor\LightGrey \_box0\_hss}%
+   \_hbox to0pt{\_setgreycolor{.8}\_box0\_hss}%
    \_pdfrestore
    \_hss}%
 }
@@ -260,6 +260,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2021-02-25 \_draftbox improved
 2021-02-15 \_advance -> \_decr
 2020-05-12 \vfootB: \uskip -> \unskip bug fixed
 2020-03-28 Released

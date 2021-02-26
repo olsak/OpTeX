@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2020-01-27>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2021-02-25>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
@@ -13,7 +13,9 @@
    macro \`\_doresizeunifont`. This mode includes
    a fallback to TFM mode if \^`\_fontnamegen` is not defined.
    Finally, `\initunifonts` sets itself to relax because we don't want to do
-   this work twice.
+   this work twice.\nl
+   \`\_ttunifont` is default font for `\tt` variant if
+   `f-lmfonts.opm` (or another font file where `\tt` is declared) is not loaded.
    \_cod -----------------------------
 
 \_def\_initunifonts {%
@@ -23,7 +25,7 @@
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont
-   \_gdef\_tryloadtt {\_fontdef\_tentt{\_def\_fontnamegen{[lmmono10-regular]}\_rm}}%
+   \_gdef\_tryloadtt {\_fontdef\_tentt{\_let\_fontnamegen=\_ttunifont\_rm}}%
    \_global\_let \_initunifonts=\_relax % we need not to do this work twice
    \_global\_let \initunifonts=\_relax
 }
@@ -32,6 +34,8 @@
        \_font#1={\_fontnamegen} \_sizespec \_relax \_setwsp#1\_relax
    \_fi
 }
+\_def\_ttunifont{[lmmono10-regular]:\_fontfeatures-tlig;}
+
 \_public \initunifonts ;
 
    \_doc -----------------------------
@@ -834,6 +838,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2021-02-25  \_ttunifont introduced
 2021-01-27  lua hack (print function) removed because luaotfload 3.17 removes bug.
 2020-12-12  \_modlist added, doc improved
 2020-04-18  \_tryloadfamslocal introduced

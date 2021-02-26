@@ -1013,7 +1013,7 @@
      depending on the current math style when \^`\mathstyles` was opened.
    \enditems
    Example of usage of \^`\mathstyles`:
-   `\def\mathframe#1{\mathstyles{\frame{$\currstyle#1$}}}`.
+   `\def\mathframe#1{\mathstyles{\frame{$\currstyle{#1}$}}}`.
    \_cod -----------------------------
 
 \_newcount\_stylenum
