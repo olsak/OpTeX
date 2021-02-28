@@ -92,6 +92,7 @@ local callback_types = {
     process_input_buffer  = "data",
     process_output_buffer = "data",
     process_jobname       = "data",
+    input_level_string    = "data",
 
     -- node list processing
     contribute_filter      = "simple",

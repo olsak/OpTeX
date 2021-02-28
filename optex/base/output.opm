@@ -217,7 +217,7 @@
    \_kern.5\_vsize \_kern\_voffset \_kern4.5\_wd0
    \_hbox to0pt{\_kern.5\_xhsize \_kern\_hoffset \_kern-2\_wd0
    \_pdfsave \_pdfrotate{55}\_pdfscale{10}{10}%
-   \_hbox to0pt{\_setgreycolor{.8}\_box0\_hss}%
+   \_hbox to0pt{\_localcolor\_setgreycolor{.8}\_box0\_hss}%
    \_pdfrestore
    \_hss}%
 }
