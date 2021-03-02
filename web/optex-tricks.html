@@ -178,6 +178,7 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Others
 <ul>
+    <li><a href="#version">Version number of the format</a>
     <li><a href="#diff">Showing differences between versions of the document</a>
     <li><a href="#overleaf">How to run OpTeX at Overleaf</a>
 </ul>
@@ -2372,7 +2373,30 @@ quotation marks used by \"text" and preferred in OpTeX.
 <p CLASS=datum>(0036) -- P. O., 2021-01-22<p>
 <hr>
 
+
 <p CLASS="lmarg">Others</p>
+
+<h2><a name="version"></a>Version number of the format</h2>
+
+<p>The \optexversion macro expands to "x.yz Mon.Year" or "x.yz+ Mon.Year".
+The first one means official released version (uploaded to the CTAN) and the
+second one denotes versions of the format patched and uploaded to github.com
+but not released. When I decide to release next version, I add one to the minor
+number yz, upgrade the date information Mon.Year and remove the + mark. When
+I do first new commit to the released version, I add the + mark at
+github.com. Next commits do not change \optexversion.
+
+<p>We create an expandable macro \numversion which expands to xyz0 for
+released versions and xyz5 for patched versions. You can use it in the context
+\ifnum\numversion>number do something\else do something else\fi.
+
+<pre>
+\def\numversion{\ea\numversionA\optexversion\relax}
+\def\numversionA#1.#2#3#4#5\relax{#1#2#3\ifx+#45\else0\fi}
+</pre>
+
+<p CLASS=datum>(0049) -- P. O., 2021-03-02<p>
+<hr>
 
 <h2><a name="diff"></a>Showing differences between versions of the document</h2>
 
