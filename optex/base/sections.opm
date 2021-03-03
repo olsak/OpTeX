@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2021-02-09>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2021-03-03>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -147,8 +147,8 @@
 \_def \_thechapnum {\_the\_chapnum}
 \_def \_thesecnum  {\_othe\_chapnum.\_the\_secnum}
 \_def \_theseccnum {\_othe\_chapnum.\_the\_secnum.\_the\_seccnum}
-\_def \_thetnum    {\_othe\_chapnum.\_the\_secnum.\_the\_tnum}
-\_def \_thefnum    {\_othe\_chapnum.\_the\_secnum.\_the\_fnum}
+\_def \_thetnum    {\_othe\_chapnum.\_othe\_secnum.\_the\_tnum}
+\_def \_thefnum    {\_othe\_chapnum.\_othe\_secnum.\_the\_fnum}
 \_def \_thednum    {(\_the\_dnum)}
 
 \_def\_othe #1.{\_ifnum#1>0 \_the#1.\_fi}
@@ -363,12 +363,21 @@
                            the current language).
    * \^`\_thecapnum` ...   expands to `\the<letter>num` (caption number).
    \enditems
+   The \`\_captionsep` inserts a separator between auto-generated
+   caption number and the following caption text. Default separator
+   is \^`\_enspace` but if the caption text starts with dot or colon, then
+   the space is not inserted. A user can wite `\caption/t: My table`
+   and \"{\bf Table 1.1:} My table" is printed. You can re-define
+   the \^`\_captionsep` macro if you want to use another separator.
    \_cod -----------------------------
 
 \_def \_printcaptiont {%
-   \_noindent \_wlabel\_thecapnum {\_bf\_thecaptitle~\_thecapnum}\_enspace
-   \_narrowlastlinecentered\_iindent
+   \_noindent \_wlabel\_thecapnum {\_bf\_thecaptitle~\_thecapnum}%
+   \_narrowlastlinecentered\_iindent \_futurelet\_next\_captionsep
 }
+\_def\_captionsep{\_ifx\_next.\_ea\_bfnext \_else\_ifx\_next:\_ea\_ea\_ea\_bfnext
+   \_else \_enspace \_fi\_fi}
+\_def\_bfnext#1{{\_bf#1}}
 \_let \_printcaptionf = \_printcaptiont % caption of figures = caption of tables
 
    \_doc -----------------------------
@@ -450,6 +459,7 @@
 
 \_endcode % -------------------------------------
 
+2021-03-03 \_captionsep introduced, \_othe used in \_thetnum, \_thefnum.
 2021-02-09 \thisoutline implemented
 2021-01-26 \_nl: \unskip added
 2021-01-11 \secl introduced
