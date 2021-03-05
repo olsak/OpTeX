@@ -1,0 +1,22 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [LibreCaslon] \Librecaslon {Libre Caslon Text, inspired by Caslon}
+        {\onum} {\rm \bf \it \bi} {Termes}
+        {[LibreCaslonText-Regular]}
+        {\_def\_fontnamegen {[Libre\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \onum ...... oldstyle figures^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},csl={CaslonText} 
+                    \_fvars \_cslV-Regular \_cslV-Bold \_cslV-Italic Csln-Bolditalic }
+\_moddef \onum     {\_fsetV caps=+onum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyretermes-math]}
+
+\_endcode
+

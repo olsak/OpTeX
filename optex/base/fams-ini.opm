@@ -99,6 +99,11 @@
    { -,\caps: {\rm\bf\it\bi} \swash: {\it\bi} }
 \_famalias [GaramondL]
 
+\_famfrom {Pablo Impallari, Rodrigo Fuenzalida}
+\_faminfo [LibreCaslon] {Libre Caslon Text, inspired by Caslon} {f-librecaslon}
+   { -,\onum: {\rm\bf\it\bi} }
+\_famalias [Caslon]
+
 \_famfrom {Adobe, Paul D. Hunt}
 \_faminfo [Source Pro] {Adobe SourceSerifPro, SourceSansPro, SourceCodePro} {f-sourcepro}
    { \elight,\light,-,\bolder: {\rm\it} -,\bolder: {\bf\bi}
