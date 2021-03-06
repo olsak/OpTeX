@@ -142,6 +142,7 @@ local callback_types = {
 
     -- undocumented
     glyph_stream_provider = "exclusive",
+    provide_charproc_data = "exclusive",
 }
 --
 -- Return a list containing descriptions of added callback functions for
