@@ -139,6 +139,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tablevcent">Vertically centered paragraphs in table</a>
     <li><a href="#dnaligned">The decimal point aligned in the table</a>
     <li><a href="#tnote">Table notes</a>
+    <li><a href="#tnodes">Positioning in the table</a>
 </ul>
 
 <li>Text blocks
@@ -1511,6 +1512,120 @@ marks in \Red. You can create a different \tnoteprint macro with different
 formating, of course.
 
 <p CLASS=datum>(0046) -- P. O. 2021-02-14<p>
+<hr>
+
+<h2><a name="tnodes"></a>Positioning in the table</h2>
+
+<p>We craete macro \tabnodes which creates nodes in the table when
+\thistable{\tabnodes} is declared. You can put graphics or text at these
+nodes before or after the table using \tablebefore or \tableafter macros.
+Example:
+
+<pre>
+\tablebefore
+   \pdfliteral{q 1 0 0 RG \icc[1,1] m \icc[2,3] l S \icc[2,1] m \icc[1,3] l S Q}%
+
+\thistable{\tabnodes \tablinespace=0pt}
+\table{ccc}{
+   first & second & third \cr
+   A     & B      & C
+}
+</pre>
+
+<p>This example connects the center of "first" with the center of "C" and the
+center of "third" with the center of "A" by red line. The macro is based on
+absolute positions on the page <a href="#setpos">OpTeX trick 0020</a>,
+so the material from \tablebefore and \tableafter is placed at given positions
+after second run of TeX.
+
+<p>The \tablebefore or \tableafter set the position of the current point as
+origin of coodinate system and following \pdfliteral's can use the macro \icc
+(and others). They give the positions of table items in bp unit and in
+the current coordinate system. The \tablebefore must be used before \table
+(the graphics act as background of the real table) and \tableafter should be
+used after \table with the same meaning, but the graphics owerwrite the table.
+You can use both of them or only one of them at the same page where the
+\table is.
+
+<p>When \tabnodes is used then \tablinespace=0pt is recommended in order to
+correct vertical positioning of the nodes.
+
+<p>There are macros \itl, \icl, \ibl, \itc, \icc, \ibc, \itr, \icr, \ibr. Their
+syntax is \itl[row,column] and they expand to the
+coordinates (separated by space) of the table item given by [row,column].
+These macros expand to top-left, center-left, bottom-left, top-center, center,
+bottom-center, top-right, center-right, bottom-right coordinates of the item
+respectively. Moreover the macros \iht[row,column] or \iwd[row,column]
+expand to the total height or width of the item respectively.
+
+<p>\ishift\itl[row,col][right,up] expands to the \itl coordinates of the
+point shifted by given amount right and up, for example
+\ishift\itl[2,3][1pt,1pt]. The same can be applied to other macros
+\icl, \ibl, \itc, \icc, \ibc, \itr, \icr, \ibr.
+
+<p>You can use resuls from \icc (etc.) macros as argument of \puttext and
+\putpic macros too, but you have to re-define \expru for this case:
+
+<pre>
+\tablebefore
+   ...
+   {\def\expru#1{\expr{#1}bp}\puttext\ibl[2,2]{HELLO}}
+</pre>
+
+<p>The implementation follows. Copy macros fom the
+<a href="#setpos">OpTeX trick 0020</a>
+and add following macros:
+
+<pre>
+\def\tablebefore{\ifvmode \nointerlineskip\null \fi
+   \incr\tndnum \setpos[t\the\tndnum:ori:b]\ea\tbpxpy\ea{\the\tndnum}{b}\decr\tndnum
+}
+\def\tableafter {\setpos[t\the\tndnum:ori:e]\ea\tbpxpy\ea{\the\tndnum}{e}}
+\def\tbpxpy#1#2{%
+   \def\tbpx[##1]{\expr{\bp{\posx[t#1:##1]}-\bp{\posx[t#1:ori:#2]}}}%
+   \def\tbpy[##1]{\expr{\bp{\posy[t#1:##1]}-\bp{\posy[t#1:ori:#2]}}}%
+}
+\newcount\tndnum \newcount\tablerownum
+\def\putnodeh#1{\omit\relax
+   \setpos[t\the\tndnum:l#1]\hskip0pt plus1fill\relax \setpos[t\the\tndnum:r#1]}
+\def\putnodelr{\fornum 1..\colnum-1\do{\putnodeh{##1}&}\putnodeh{\the\colnum}%
+   \gdef\putnode{\noalign{\putnodev}}\cr}
+\def\putnodev{\setpos[t\the\tndnum:v\the\tablerownum]\incr\tablerownum}
+\def\tabnodes{\incr\tndnum \tablerownum=0
+   \def\_tablepxpreset{\everycr{}}\let\putnode=\putnodelr \everycr={\putnode}}
+
+\def\itl[#1,#2]{\expru{\tbpx[l\enum{#2}]} \expru{\tbpy[v\enum{#1-1}]}}
+\def\icl[#1,#2]{\expru{\tbpx[l\enum{#2}]}
+                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibl[#1,#2]{\expru{\tbpx[l\enum{#2}]} \expru{\tbpy[v\enum{#1}]}}
+\def\itc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expru{\tbpy[v\enum{#1-1}]}}
+\def\icc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expru{\tbpy[v\enum{#1}]}}
+\def\itr[#1,#2]{\expru{\tbpx[r\enum{#2}]} \expru{\tbpy[v\enum{#1-1}]}}
+\def\icr[#1,#2]{\expru{\tbpx[r\enum{#2}]}
+                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibr[#1,#2]{\expru{\tbpx[r\enum{#2}]} \expru{\tbpy[v\enum{#1}]}}
+\def\iwd[#1,#2]{\expru{\tbpx[r\enum{#2}]-(\tbpx[l\enum{#2}])}}
+\def\iht[#1,#2]{\expru{\tbpy[v\enum{#1-1}]-(\tbpy[v\enum{#1}])}}
+
+\def\enum#1{\number\numexpr#1\relax}
+\def\ishift #1{\ea\ishifta#1}  %  \ishift[2,3][1pt,2.5pt]
+\def\ishifta \expru#1 \expru#2#3#4,#5]{\expru{#1+(\bp{#4})} \expru{#2+(\bp{#5})}}
+\let\expru=\expr
+</pre>
+
+<p>The nodes t(tab-num):v(row-num) are created for vertical positioning,
+t(tab-num):l(con-num) and t(tab-num):r(col-num) are created for horizontal
+positioning (left side and right side of given column).
+The t(tab-num):ori:b and t(tab-num):ori:e are nodes for origins at
+\tablebefore and \taleafter respectively. See .ref file for real example.
+Note that t(tab-num):l(col-num) can differ from t(tab-num):r(col-num -1)
+if \tabskip is non-zero.
+
+<p CLASS=datum>(0050) -- P. O. 2021-03-09<p>
 <hr>
 
 <p CLASS="lmarg">Text blocks</p>
