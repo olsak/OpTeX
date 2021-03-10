@@ -149,19 +149,52 @@ The previous page was created by:
 
 \pg; %------------------------------------------------------------------
 
-\sec Notes
+\sec Notes to `\slideshow`
 
 * When `\slideshow` is active then you cannot reference sections by
   hyperlinked `\ref`. Only `\pgref` works (and goes to the last layer
   of the referenced page).
 * If the text overfull the page (slide) then it follows to the next page without
   saying explicitly `\pg;`. But `\slideshow` cannot work in this case.\pg+
+* If `\slideshow` then each part of page between two `\pg`'s or between
+  `\slideshow` and the first `\pg` is processed in a local group.
+* If not `\slideshow` then the document is not separated to groups.
+  This can lead to different results. So, you can put `\slideopen` command
+  instead of `\slideshow`. Then local groups are opened exactly as when
+  `\slideshow` is used but `\slideshow` is not activated. Example:
+
+\begtt
+\slides
+\def\foo...{...} % global definitions.
+%\slideshow      % printing version, no slide show.
+\slideopen       % opens group for first page.
+... first page
+\pg;             % closes group and opens group for second page.
+... second page
+\pg.             % closes group of the last page.
+\endtt
+
+\pg; %------------------------------------------------------------------
 
 \sec More about design
 
 * You can use `\backgroundpic{<image-file>}` for putting an image to the background.
 * You can re-declare `\footline` or re-define internal macros for design as
   you wish.
+* The TeXGyre Heros font is used as default text font, the FiraMath is used
+  for math.
+* If you want to use another text font fmaily, use `\fontfam`
+  {\em before} `\slides` command.
+* If you want to use different math font, use
+  `\loadmath{[font]}` before `\fontfam` (if used) and before `\slides`. For example:
+
+\begtt
+\loadmath{[Asana-Math]} % Math font: Asana
+\fontfam[Termes]        % Text font: Termes
+\slides
+...
+\endtt
+
 * You can put the images or text wherever using `\putimege` or `\puttext`
   macros...
 
@@ -272,8 +305,8 @@ are prepared for Beamer, {\bf\Red but}
   You can concentrate on the contents of your document, not on the
   programming syntax.\pg+
 * User needs to read 250 pages of doc for understanding Beamer,\pg+
-* on the other hand, you need to read only ten
-  slides\fnote{this eleventh slide isn't counted}
+* on the other hand, you need to read only eleven
+  slides\fnote{this twelfth slide isn't counted}
   and you are ready to use {\bf\Blue\OpTeX/ slides}.
 
 \pg; %------------------------------------------------------------------

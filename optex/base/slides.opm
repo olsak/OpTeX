@@ -147,7 +147,9 @@
 \_newbox\_slidepage  \_newbox\_slidepageB
 \_countdef\_slidelayer=1
 
-\_def\_slideshow{\_slidelayer=1 \_slideshowactive \_setbox\_slidepage=\_vbox\_bgroup}
+\_def\_slideshow{\_slidelayer=1 \_slideshowactive
+   \_let\slideopen=\_relax  % first wins
+   \_setbox\_slidepage=\_vbox\_bgroup\_bgroup}
 
 \_def\_slideshowactive{%
    \_sdef{_spg:;}{\_closepage \_global\_slidelayer=1 \_resetpage \_openslide}
@@ -158,11 +160,11 @@
 }
 \_def\_destboxslide{\_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}}
 
-\_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup \_setilevel
+\_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup\_bgroup \_setilevel
    \_ifvoid\_slidepage \_else \_unvbox\_slidepage \_nointerlineskip\_lastbox \_fi}
 \_def\_setilevel{\_loop \_decr\_gilevel \_ifnum\_gilevel<0 \_else \_begitems \_repeat}
 
-\_def\_closepage{\_egroups
+\_def\_closepage{\_egroups \_egroup
    \_ifnum \_maxlayers=0 \_unvcopy\_slidepage \_vfil\_break
    \_else \_begingroup \_setwarnslides \_layernum=0
       \_loop
@@ -201,7 +203,14 @@
    \_global\_maxlayers=#1
    \_setbox\_slidepageB=\_vbox\_bgroup
 }
-\_public \subtit \slideshow \pg \wideformat \use \pshow \layernum ;
+\_def\_slideopen{\_let\slideshow=\_relax % first wins
+   \_sdef{_spg:;}{\_egroups\_vfil\_break \_lfnotenumreset\_bgroup \_setilevel}
+   \_sdef{_spg:.}{\_egroups\_endslides}
+   \_sdef{_spg:+}{\_egroups\_bgroup \_setilevel}
+   \_bgroup
+}
+
+\_public \subtit \slideshow \slideopen \pg \wideformat \use \pshow \layernum ;
 
    \_doc -----------------------------
    Default \`\layers` `<num>` macro (when \^`\slideshow` is not activated) is simple.
@@ -231,6 +240,7 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2021-03-10 \slideopen introduced, bug with colors in \setbox fixed
 2021-03-10 \ifmmode* added to \adef*
 2021-02-15 \_def\_decr removed
 2021-01-16 \layers at empty page raises error: problem fixed
