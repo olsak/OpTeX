@@ -365,7 +365,7 @@
    \enditems
    The \`\_captionsep` inserts a separator between auto-generated
    caption number and the following caption text. Default separator
-   is \^`\_enspace` but if the caption text starts with dot or colon, then
+   is `\_enspace` but if the caption text starts with dot or colon, then
    the space is not inserted. A user can wite `\caption/t: My table`
    and \"{\bf Table 1.1:} My table" is printed. You can re-define
    the \^`\_captionsep` macro if you want to use another separator.

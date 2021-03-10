@@ -1,12 +1,12 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \typosize {Font managing macros from OPmac <2020-12-12>} % loaded in format
+\_codedecl \typosize {Font managing macros from OPmac <2021-03-10>} % loaded in format
 
    \_doc -----------------------------
    \`\typosize` `[<font-size>/<baselineskip>]` sets given parameters.
    It sets text font size by the \^`\setfontsize` macro and math font sizes
    by setting internal macros \^`\_sizemtext`, \^`\_sizemscript` and
-   \^`\_sizemsscript`. It uses common concept font thes sizes: 100\,\%,
+   \^`\_sizemsscript`. It uses common concept font sizes: 100\,\%,
    70\,\% and 50\,\%.
    The \^`\_setmainvalues` sets the parameters as main values when
    the `\_typosize` is called first.
@@ -23,7 +23,7 @@
     \_edef\_sizemtext{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
     \_tmpdim=0.7\_tmpdim
     \_edef\_sizemscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
-   \_tmpdim=#1\_ptunit \_tmpdim=0.5\_tmpdim
+    \_tmpdim=#1\_ptunit \_tmpdim=0.5\_tmpdim
     \_edef\_sizemsscript{\_ea\_ignorept \_the\_tmpdim \_ptmunit}%
     \_fi
 }
@@ -71,26 +71,49 @@
 
    \_doc -----------------------------
    \`\_setmainvalues` sets the current font size and `\baselineskip`
-   values to the \`\mainfosize` and \hbox{\`\mainbaselineskip`} registers.
-   It redefines itself to set the main values only first.
+   values to the \`\mainfosize` and \hbox{\`\mainbaselineskip`} registers
+   and loads fonts at given sizes.
+   It redefines itself as \`\_setmainvaluesL`
+   to set the main values only first. The \^`\_setmainvaluesL` does only
+   fonts loading.
    \nl
    \`\scalemain` returns to these values if they were set. Else they are set
    to 10/12\,pt.
+   \nl
+   \`\mfontsrule` gives the rule how math fonts are loaded when \^`\typosize`
+   or \^`\typoscale` are used. The value of \^`\mfontsrule` can be:
+   \begitems
+   * 0: no math fonts are loaded. User must use \^`\normalmath` or \^`\boldmath` explicitly.
+   * 1: `\_normalmath` is run if \^`\typosize`/\^`\typoscale` are used
+        first or they are run at outer group level. No
+        `\everymath`/`\everydisplay` are set in this case. If
+        \^`\typosize`/\^`\typoscale` are run repeatedly in a group then `\_normalmath` is
+        run only when math formula occurs. This is done using
+        `\everymath`/`\everydisplay` and \^`\_setmathfonts`.
+        \^`\mfontsrule=1` is default.
+   * 2: `\_normalmath` is run whenever \^`\typosize`/\^`\typoscale` are used.
+        `\everymath`/`\everydisplay` registers are untouched.
+   \enditems
    \_cod -----------------------------
 
 \_newskip   \_mainbaselineskip   \_mainbaselineskip=0pt \_relax
 \_newdimen  \_mainfosize         \_mainfosize=0pt
+\_newcount  \_mfontsrule         \_mfontsrule=1
 
 \_def\_setmainvalues {%
    \_mainbaselineskip=\_baselineskip
    \_mainfosize=\_optsize
    \_topskip=\_mainfosize \_splittopskip=\_topskip
    \_ifmmode \_else \_bf \_it \_bi \_rm \_fi % load all basic variants of the family
-   \_normalmath  % load fonts if \typosize is running first
+   \_ifnum \_mfontsrule>0 \_normalmath \_fi  % load math fonts first
    \_let \_setmainvalues =\_setmainvaluesL
 }
-\_def\_setmainvaluesL {\_ifmmode \_normalmath \_else
-   \_rm \_everymath={\_normalmath}\_everydisplay={\_normalmath}\_fi}
+\_def\_setmainvaluesL {\_relax \_ifmmode \_else \_rm \_fi % load text font
+   \_ifcase \_mfontsrule                                  % load math fonts
+   \_or \_ifnum\_currentgrouplevel=0 \_normalmath
+        \_else \_everymath={\_setmathfonts}\_everydisplay={\_normalmath}%
+               \_let\_runboldmath=\_relax \_fi
+   \_or \_normalmath \_fi}
 \_def\_scalemain {%
    \_ifdim \_mainfosize=\_zo
        \_mainfosize=10pt  \_mainbaselineskip=12pt
@@ -98,7 +121,21 @@
     \_fi
    \_optsize=\_mainfosize  \_baselineskip=\_mainbaselineskip
 }
-\_public \scalemain \mainfosize \mainbaselineskip ;
+\_public \scalemain \mainfosize \mainbaselineskip \mfontsrule ;
+
+   \_doc -----------------------------
+   Suppose following example:
+   `{\typosize[13/15] Let $M$ be a subset of $R$ and $x\in M$...}`
+   If \^`\mfontsrule=1` then \^`\typosize` does not load math fonts
+   immediatelly but at the first math formula. It is done by `\everymath`
+   register, but the contents of this register is processed inside the math
+   group. If we do `\everymath={\_normalmath}` then this complicated macro
+   will be processed three times in your example above. We want only one
+   pocessing, so we do `\everymath={`\`\_setmathfonts``}` and
+   this macro closes math mode first, loads fonts and opens math mode again.
+   \_cod -----------------------------
+
+\_def\_setmathfonts{$\_normalmath\_everymath{}\_everydisplay{}$}
 
    \_doc -----------------------------
    \`\thefontsize` `[<size>]` and \`\thefontscale` `[<factor>]`
@@ -141,13 +178,25 @@
 \_let\_italcorr=\/
 
    \_doc -----------------------------
-   The \`\boldify` macro does `\let\it\bi` and `\let\normalmath=\boldmath`.
+   The \`\boldify` macro does `\let\rm\bf`, `\let\it\bi` and
+   `\let\normalmath=\boldmath`. All following text will be in bold.
+   If should be used after \^`\typosize` or \^`\typoscale` macros.\nl
+   The internal \`\_runboldmath` macro runs `\_boldmath` immediatelly
+   if no delay of the math font loading is set by \^`\_setmainvaluesL`.\nl
+   The `\rm`, `\it` in math mode must keep its original meaning.
    \_cod -----------------------------
 
 \_protected\_def \_boldify {%
    \_let \_setmainvalues=\_setmainvaluesL
    \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath \_bf
+   \_runboldmath
+   \_ifx\_ncharrmA\_undefined \_protected\_addto\rm{\_fam0 }\_protected\_addto\it{\_fam1 }%
+   \_else \_protected\_def\rm {\_tryloadbf \_tenbf \_inmath{\_rmvariables \_rmdigits}}%
+          \_protected\_def\it {\_tryloadbi \_tenbi \_inmath{\_itvariables}}%
+   \_fi
 }
+\_def\_runboldmath{\_boldmath}
+
 \_public \em \boldify ;
 
    \_doc -----------------------------
@@ -169,6 +218,8 @@
 \_endcode % -------------------------------------
 
 History:
+2021-03-10 \boldify corrected
+2021-03-09 \mfontsrule and \_setmathfonts introduced
 2020-12-12 \_rmfixed fixed
 2020-04-28 \boldify: removed \let\_rm=\_bf
 2020-04-14 \_setmainvaluesL: \_ifmmode test added
