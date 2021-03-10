@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \report {Basic styles of OpTeX <2020-03-28>} % preloaded in format
+\_codedecl \report {Basic styles of OpTeX <2021-03-10>} % preloaded in format
 
    \_doc -----------------------------
    We define auxiliary macro first (used by the \^`\address` macro)
@@ -61,7 +61,7 @@
 
 \_def\_slides{\_par
   \_opinput{slides.opm}
-  \_adef*{\_startitem}
+  \_adef*{\_relax\_ifmmode*\_else\_ea\_startitem\_fi}
 }
 \_public \slides ;
 
@@ -114,3 +114,7 @@ S úctou
 
 \endtt %---------------------------------------------------------------------
 
+\endinput
+
+2021-03-10 \ifmmode* added to \adef*
+2020-03-28 released
