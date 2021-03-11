@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-02-03>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-03-11>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -203,6 +203,8 @@
 % mathclas defines ? as Punct, plain.tex as Close
 \_Umathcode `? = 5 1 `?  % keep plain.tex declaration
 \_Umathchardef \mathquestion = 5 1 `?
+
+\_Umathcode `* = 2 1 "02217  % equivalent to \ast, like in plain TeX
 
 \_protected\_def \_sqrt       {\_Uradical 1 "0221A }
 \_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
@@ -425,6 +427,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-03-11  Umathcode `* declaed as \ast
 2021-02-03  Unicode superscripts, subscripts declared
 2021-01-31  Mathcode of ! ? set to Close, codes undeclared in mathclass set correctly
 2021-01-23  Compressed \vdots, \ddots, \adots in script(script)style.
