@@ -19,7 +19,14 @@ Modifiers:^^J
 
 \_initfontfamily % new font family must be initialized
 
-\_loadmath {[FiraMath-Regular]}
+\_ifmathloading
+   \_loadmath {[FiraMath-Regular]}
+   \_addto\_normalmath{\_loadumathfamily 5 {xitsmath-regular}{} }
+   \_addto\_boldmath  {\_loadumathfamily 5 {xitsmath-bold}{} }
+   \_addto\frak{\_fam5 }\_addto\cal{\_fam5 }
+   \_normalmath
+   \_wterm{MATH-FONT(5): "[XITSMath-Regular/Bold]" -- used for \_string\cal, \_string\frak}
+\_fi
 
 \_endcode
 
