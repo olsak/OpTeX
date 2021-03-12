@@ -926,7 +926,7 @@ shift it to the right margin.
 <h2><a name="addumathfont"></a>Loading additional Unicode math fonts</h2>
 
 <p>Unicode math font should include all math characters needed in the document.
-But it is not really true: try to load a Unicode math font using
+But it is not generally true. Try to load a Unicode math font using
 \loadmath{math-font} followed by \input print-unimath.opm and you can see empty
 slots. They are not supported by loaded math font.
 
@@ -943,6 +943,13 @@ character. Example:
 \resetUmathchar \stix \triangleq  % \triangleq will use STIX
 
 Test: $a \triangleq b$. % All is in Garamond only \triangleq in STIX.
+</pre>
+
+<p>If you want to set whole math alphabet to be used from additional font,
+you can modify \cal, \frak, \bbchar etc. macros:
+
+<pre>
+\addto\cal{\fam\stix} % calligraphic will be used from STIX
 </pre>
 
 <p>You can load more than one additional Unicode math font (use more than
@@ -994,8 +1001,8 @@ family-name {normal-font}{features} {bold-font}{features} {factor}.
 If "bold-font" is empty then faked bold constructed from normal-font is used.
 The factor is decimal number for size corrections. If it is empty then factor=1.
 The math families are allocated from 101, 102 etc., i.e. macro programmer can
-use the numbers 5..99 for direct addressing (note that 0..4 are reserved by
-TeX and OpTeX).
+use the numbers 16..99 for direct addressing (note that 0..4 are reserved by
+TeX, 5..15 are reserved by OpTeX).
 
 <p>The \resetUmathchar re-sets the appropriate Umathcode too (using
 \setUmathcode macro).
