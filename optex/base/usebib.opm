@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \MakeReference {Reading bib databases <2021-02-15>} % loaded on demand by \usebib
+\_codedecl \MakeReference {Reading bib databases <2021-03-12>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    Loading the `librarian.tex` macro package. See `texdoc librarian`
@@ -24,6 +24,8 @@
    \_cod -----------------------------
 
 \_def\_usebib/#1 (#2) #3 {%
+  \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
+  \_global\_let\_addcitelist=\_writeXcite
   \_ifx\_citelist\_empty
      \_opwarning{No cited items. \_noexpand\usebib ignored}%
   \_else
@@ -40,8 +42,6 @@
                        "\_cs{_lan:\_the\_language}" (using "en")}%
            \_language=0 \_chardef\_documentlanguage=0
         \_fi
-        \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
-        \_global\_let\_addcitelist=\_writeXcite
         \_def\_tmp##1[*]##2\_relax{\_def\_tmp{##2}}\_ea\_tmp\_citelist[*]\_relax
         \_ifx\_tmp\_empty\_else % there was \nocite[*] used.
            \_setbox0=\_vbox{\_hsize=\_maxdimen \_def\_citelist{}\_adef@{\_readbibentry}%
@@ -370,6 +370,7 @@ character is sorted before `A`.
 History:
 --------
 
+2021-03-12  \_citelistB added before first test.
 2021-02-15  \_expandafter -> \_ea
 Apr. 2014:  released in OPmac
 Jan. 2016:  "first entry wins" implemented
