@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \margins {Macros for margins setting <2020-03-14>} % preloaded in format
+\_codedecl \margins {Macros for margins setting <2021-03-15>} % preloaded in format
 
     \_doc ----------------------------
     \`\margins``/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>`
@@ -25,6 +25,7 @@
       \_else  \_if$#4$\_hoffset = #3\_tmp \_relax  % only left margin
               \_else  \_hsize =\_dimexpr \_pgwidth - #3\_tmp - #4\_tmp \_relax % left+right margin
                       \_hoffset = #3\_tmp \_relax
+                      \_xhsize =\_hsize \_setxhsize % \_xhsize used by \output routine
       \_fi\_fi
       \_if$#5$\_if$#6$\_voffset =\_dimexpr (\_pgheight -\_vsize)/2 \_relax
               \_else  \_voffset =\_dimexpr \_pgheight -\_vsize - #6\_tmp \_relax % only bottom margin
@@ -75,4 +76,5 @@
 
 \_endcode % -----------------------------------------
 
-
+2021-03-15 \_setxhsize added
+2020-03-14 released
