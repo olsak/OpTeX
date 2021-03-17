@@ -26,6 +26,13 @@ Modifiers:^^J
    \_addto\frak{\_fam5 }\_addto\cal{\_fam5 }
    \_normalmath
    \_wterm{MATH-FONT(5): "[XITSMath-Regular/Bold]" -- used for \_string\cal, \_string\frak}
+   % \bf, \bi from FiraMath:
+   \_let\_bsansvariables=\_bfvariables
+   \_let\_bsansGreek=\_bfGreek
+   \_let\_bsansgreek=\_bfgreek
+   \_let\_bsansdigits=\_bfdigits
+   \_let\_bisansvariables=\_bivariables
+   \_let\_bisansgreek=\_bigreek
 \_fi
 
 \_endcode
