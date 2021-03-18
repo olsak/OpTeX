@@ -19,6 +19,13 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.01> Mar. 2021
+       Minor code fixes (thanks to reports from users).
+       LibreCaslon font file added.
+       two new callbacks from new LuaTeX 1.13 added to optex.lua
+       active * (in lists) works as normal in math mode.
+       f-heros(\slides): additional font XITSMath loaded (to the base FiraMath font).
+       \_xhsize seting added to \margins.
 <1.00> Feb. 2021
        The OMLS (OpTeX Markup Language Standard) was developed. It helps to create
        convertors from/to OpTeX documents and similar applications.
