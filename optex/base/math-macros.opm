@@ -515,8 +515,10 @@
 \_protected\_def\backslash{\_delimiter"26E30F } % for double coset G\_backslash H
 \_protected\_def\rangle{\_delimiter"526930B }
 \_protected\_def\langle{\_delimiter"426830A }
-\_protected\_def\rbrace{\_delimiter"5267309 } \_let\}=\rbrace \_let\_rbrace=\rbrace
-\_protected\_def\lbrace{\_delimiter"4266308 } \_let\{=\lbrace \_let\_lbrace=\lbrace
+\_protected\_def\rbrace{\_delimiter"5267309 } \_let\_rbrace=\rbrace
+\_protected\_def\}{\_ifmmode \_rbrace\_else\_char`\}\_fi}
+\_protected\_def\lbrace{\_delimiter"4266308 } \_let\_lbrace=\lbrace
+\_protected\_def\{{\_ifmmode \_lbrace\_else\_char`\{\_fi}
 \_protected\_def\rceil{\_delimiter"5265307 }
 \_protected\_def\lceil{\_delimiter"4264306 }
 \_protected\_def\rfloor{\_delimiter"5263305 }

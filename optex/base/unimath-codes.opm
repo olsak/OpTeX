@@ -195,7 +195,8 @@
 % mathclass defines : as Punct, plain.tex as Rel, we keep mathclass,
 % i.e. there is difference from plain.tex, you can use $f:A\to B$.
 
-\_let\{=\lbrace \_let\}=\rbrace
+\_protected\_def\}{\_ifmmode \rbrace\_else\_char`\}\_fi}
+\_protected\_def\{{\_ifmmode \lbrace\_else\_char`\{\_fi}
 
 % mathclas defines ! as Ord, plain.tex as Close
 \_Umathcode `! = 5 1 `!  % keep plain.tex declaration
