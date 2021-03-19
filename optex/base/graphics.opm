@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2020-04-12>} % preloaded in format
+\_codedecl \inspic {Graphics <2021-03-19>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -441,6 +441,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2021-03-19: \inkinspic: pictures in subdirectories, bug fixed
 2020-12-21: \puttext: \box0 in goup, bugfix
 2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed
 

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-02-15>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-03-19>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -513,10 +513,13 @@
 \_protected\_def\Downarrow{\_delimiter"322B37F }
 \_protected\_def\Updownarrow{\_delimiter"326D377 }
 \_protected\_def\backslash{\_delimiter"26E30F } % for double coset G\_backslash H
-\_protected\_def\rangle{\_delimiter"526930B }
 \_protected\_def\langle{\_delimiter"426830A }
-\_protected\_def\rbrace{\_delimiter"5267309 } \_let\}=\rbrace \_let\_rbrace=\rbrace
-\_protected\_def\lbrace{\_delimiter"4266308 } \_let\{=\lbrace \_let\_lbrace=\lbrace
+\_protected\_def\rangle{\_delimiter"526930B }
+\_protected\_def\lbrace{\_delimiter"4266308 } \_let\_lbrace=\lbrace
+\_protected\_def\rbrace{\_delimiter"5267309 } \_let\_rbrace=\rbrace
+\_protected\_def\{{\_ifmmode \_lbrace\_else\_char`\{ \_fi}
+\_protected\_def\}{\_ifmmode \_rbrace\_else\_char`\} \_fi}
+
 \_protected\_def\rceil{\_delimiter"5265307 }
 \_protected\_def\lceil{\_delimiter"4264306 }
 \_protected\_def\rfloor{\_delimiter"5263305 }
@@ -1063,6 +1066,7 @@
 
 \_endcode %---------------------------------------------------
 
+2021-03-19 allow text mode \{ and \}
 2021-02-15 \_mathbox redefines \_textmff etc. in order to respect optical sizes
 2021-02-04 \_bordermatrixwithdelims introduced.
 2021-01-23 better expession for math styles in \matrix
