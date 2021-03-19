@@ -40,13 +40,14 @@
 \_def\_inkinspicA #1 {\_inkinspicB {#1}}
 \_def\_inkinspicB #1{%
   \_ifdim\_picwidth=0pt \_setbox0=\_hbox{\_inspic{#1}}\_picwidth=\_wd0 \_fi
+  \_tmptoks={#1}%
   \_the\_inkdefs
   \_opinput {\_the\_picdir #1_tex}% file with labels
   \_egroup}
 
 \_newtoks\_inkdefs  \_inkdefs={%
   \_def\makeatletter#1\makeatother{}%
-  \_def\includegraphics[#1]#2{\_inkscanpage#1,page=,\_end \_inspic{#2}\_hss}%
+  \_def\includegraphics[#1]#2{\_inkscanpage#1,page=,\_end \_inspic{\_the\_tmptoks}\_hss}%
   \_def\_inkscanpage#1page=#2,#3\_end{\_ifx,#2,\_else\_def\_picparams{page#2}\_fi}%
   \_def\put(#1,#2)#3{\_nointerlineskip\_vbox to\_zo{\_vss\_hbox to\_zo{\_kern#1\_picwidth
       \_pdfsave\_hbox to\_zo{#3}\_pdfrestore\_hss}\_kern#2\_picwidth}}%
