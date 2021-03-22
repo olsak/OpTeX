@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-03-19>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-03-22>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -719,12 +719,12 @@
 \_long\_def\_eqalignno#1{\_display \_tabskip=\_centering
   \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip\_centering
-    &\_llap{$\_elign##$}\_tabskip\_zoskip\_crcr
+    &\_hbox to\_zo{\_hss$\_elign##$}\_tabskip\_zoskip\_crcr
     #1\_crcr}}
 \_long\_def\_leqalignno#1{\_display \_tabskip=\_centering
   \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
     &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip=\_centering
-    &\_kern-\_displaywidth\_rlap{$\_elign##$}\_tabskip\_displaywidth\_crcr
+    &\_kern-\_displaywidth\_hbox to\_zo{$\_elign##$\_hss}\_tabskip\_displaywidth\_crcr
     #1\_crcr}}
 \_public \openup \eqalignno \leqalignno ;
 
@@ -1066,6 +1066,7 @@
 
 \_endcode %---------------------------------------------------
 
+2021-03-22 \(l)eqalignno: \hbox instead \llap, \rlap (\par error suppressed)
 2021-03-19 allow text mode \{ and \}
 2021-02-15 \_mathbox redefines \_textmff etc. in order to respect optical sizes
 2021-02-04 \_bordermatrixwithdelims introduced.
