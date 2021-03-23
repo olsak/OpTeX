@@ -905,18 +905,21 @@ $$ f(x) = \cases{0 &amp; for $x&lt;0$\toright\eqmark \cr
 </pre>
 
 <p>This puts the equation marks to the right margin in each line generated
-by the \case macro. The \toright\eqmark is used here.
+by the \case macro. The \toright\eqmark is used here. Analogically,
+\toleft\eqmark puts the equation mark to the left margin.
 
-The \toright macro is based on the <a href="#setpos">OpTeX trick 0020</a>
+The \toright, \toleft macrs are based on the <a href="#setpos">OpTeX trick 0020</a>
 where the \setpos and \posx macros are defined.
 
 <pre>
-\newcount\torightnum
-\def\toright#1{\_incr\torightnum \setpos[tr:\the\torightnum]%
-   \rlap{\kern-\posx[tr:\the\torightnum]\kern\hoffset\kern\hsize\llap{#1}}}
+\newcount\tomarginno
+\def\toright#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\kern\hsize\llap{#1}}}}
+\def\toleft#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\rlap{#1}}}}
 </pre>
 
-<p>The parameter #1 is shifted to the right margin in the second run of TeX
+<p>The parameter #1 is shifted to the right/left margin in the second run of TeX
 because we need to know the absolute position of the current point and we
 shift it to the right margin.
 
