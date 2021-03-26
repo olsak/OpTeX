@@ -49,6 +49,13 @@
 
 \_famtext {Other fonts:}
 
+\_famfrom{Antonis Tsolomitis}
+\_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Gree} {f-newcm}
+   { -: {\rm\bf\it\bi} \book: {\rm\it} \ttset: {\rm\bf\it\bi} \book\ttset: {\rm\it}
+     \sans: {\rm\bf\it\bi} \book\sans: {\rm\it}
+     \caps: {\rm\bf} \book\caps: {\rm} }
+\_famalias [NewCM] \_famalias [NewCMfonts]
+
 \_famfrom {Philipp H. Poll}
 \_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
    { -: {\rm\bf\it\bi} \semibold: {\bf\bi}

@@ -21,7 +21,9 @@ Sub-modifiers (selects special variants of given subfamily):^^J
  \caps ...... caps & small caps (available only at limited shapes)^^J
  \slant ..... slanted (default in some subfamilies)^^J
  \nbold ..... normal bold (extended bold is default)^^J
- \bolder .... extended bold^^J
+ \bolder .... extended bold^^J%
+Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.^^J
+ Use another CM-like family if optical sizes not wanted: \fontfam[NewCM].
 }}
 
 \_def\_LMregfont #1 #2 #3{%
