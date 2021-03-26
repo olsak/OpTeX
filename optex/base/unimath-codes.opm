@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-03-19>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-03-26>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -114,7 +114,7 @@
 % \bf and \bi behave as sans serif in math, ...
 
 \_protected\_def\_rm {\_tryloadrm \_tenrm \_inmath{\_rmvariables \_rmdigits}}
-\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_itvariables}}
+\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_itvariables \_itGreek}}
 \_protected\_def\_bf
    {\_tryloadbf \_tenbf \_inmath{\_bsansvariables \_bsansgreek \_bsansGreek \_bsansdigits}}
 \_protected\_def\_bi
@@ -425,6 +425,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-03-26  \it does \_itGreek
 2021-03-19  \{, \} are defined as mode independent macros in math-macros.opm
 2021-03-11  Umathcode `* declaed as \ast
 2021-02-03  Unicode superscripts, subscripts declared
