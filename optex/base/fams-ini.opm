@@ -50,7 +50,7 @@
 \_famtext {Other fonts:}
 
 \_famfrom{Antonis Tsolomitis}
-\_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Gree} {f-newcm}
+\_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Greek} {f-newcm}
    { -: {\rm\bf\it\bi} \book: {\rm\it} \ttset: {\rm\bf\it\bi} \book\ttset: {\rm\it}
      \sans: {\rm\bf\it\bi} \book\sans: {\rm\it}
      \caps: {\rm\bf} \book\caps: {\rm} }
