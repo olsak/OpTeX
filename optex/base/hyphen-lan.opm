@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \langlist {Initialization of hypenation patterns <2020-03-10>} % preloaded in format
+\_codedecl \langlist {Initialization of hypenation patterns <2021-03-29>} % preloaded in format
 
    \_doc -----------------------------
    The <iso-code> means a shortcut of language name (mostly by ISO 639-1).
@@ -208,6 +208,7 @@
 \_preplang sv    Swedish         sv                239 22
 \_preplang th    Thai            th                240 23
 \_preplang ethi  Ethiopic        mul-ethi          241 11
+\_preplang fis   schoolFinnish   fi-x-school       242 11
 
    \_doc -----------------------------
    The \`\langlist` includes names of all languages which are ready to load
@@ -243,3 +244,9 @@ The example shows how to declare such language-specific things.
 Note that you need not set language-specific phrases (like `\today`)
 by this code. Another concept is used for such tasks. See the
 section~\ref[langphrases] for more details.
+
+\_endinput
+
+2021-03-29 \_preplang schoolFinnish added
+2020-11-11 load patterns without lua code
+2020-03-10 released
