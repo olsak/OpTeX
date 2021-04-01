@@ -160,6 +160,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#num">Numbers printed in three-digits groups</a>
     <li><a href="#scantok">Expandable token-per-token scanner</a>
     <li><a href="#balancing">Nested brackets of another type than {}</a>
+    <li><a href="#perpage">PerPage package features</a>
 </ul>
 
 <li>Sections
@@ -2267,6 +2268,96 @@ pair. It. means that balancing of {...} has higher priority.
 <p>The \readnextbal reads next part of the text until next ] occurs.
 
 <p CLASS=datum>(0043) -- P. O., 2021-02-06<p>
+<hr>
+
+<h2><a name="perpage"></a>PerPage package features</h2>
+
+<p>We implement the functionality from LaTeX perpage.sty package.
+User can declare \newcount\mycounter and then the \mycounter can be used by
+following macros:
+
+<uL>
+<li>\incrpp\mycounter increments \mycounter by one and resets (or increments)
+the internal counter counted from initial value (usually from one) per
+each page.
+
+<li>\thepp\mycounter prints (expands to) the value of the internal
+counter prepared by \incrpp.
+
+<li>\truepp expands to the true page number if it is used immediatelly after
+\incrpp\mycounter.
+
+<li>\thepplast\mycounter{pageno} expands to the last value of the internal
+counter at given page {pageno}. This can be used in the \output routine if
+you want to count the number of objects at given page.
+</ul>
+
+<p>Typically, the \incrpp\mycounter \thepp\mycounter are used in this couple.
+Or use: \incrpp\mycounter \truepp/\thepp\mycounter.
+
+<p>You must run TeX twice to get references right.
+
+<p>The internal counter is reset to 1 at begin of each page. If you like other
+value, use \sdef{resetpp:mycounter}{2} for example. Note that "mycounter" is
+the name you our counter without backslash.
+
+<p>Example:
+
+<pre>
+\newcount\mycounter
+\headline={The number of objects: \thepplast\mycounter{\the\pageno}\hss}
+
+xx: \incrpp\mycounter \thepp\mycounter,
+yy: \incrpp\mycounter \thepp\mycounter.
+\vfil\break
+zz: \incrpp\mycounter \thepp\mycounter,
+uu: \incrpp\mycounter \thepp\mycounter,
+vv: \incrpp\mycounter \thepp\mycounter.
+\bye
+</pre>
+
+<p>Implementation:
+
+<pre>
+\openref
+\def\thepp#1{\trycs{pp:\csstring#1}{?\the#1}}
+\def\thepplast#1#2{\trycs{lastpp:\csstring#1:#2}{?\the#1}}
+\def\truepp{?\the\pageno}
+\def\incrpp#1{\incr#1%
+   \isdefined{_pgref:pp:\csstring#1:\the#1}\iftrue
+      \edef\tmp{\cs{_pgref:pp:\csstring#1:\the#1}}%
+      \ea\ifx\csname currpp:\csstring#1\endcsname\tmp
+         \sxdef{pp:\csstring#1}{\the\numexpr\cs{pp:\csstring#1}+1\relax}%
+      \else \sxdef{pp:\csstring#1}{\trycs{resetpp:\csstring#1}{1}}%
+         \sxdef{currpp:\csstring#1}{\tmp}\fi
+      \xdef\truepp{\ea\ea\ea\extractpp \csname currpp:\csstring#1\endcsname}%
+      \sxdef{lastpp:\csstring#1:\truepp}{\cs{pp:\csstring#1}}%
+   \else \incr\_unresolvedrefs \openref \fi
+   \_ewref \_Xlabel {{pp:\csstring#1:\the#1}{}}%
+}
+\def\extractpp[#1]#2{#2}
+</pre>
+
+<p>The \incrpp does whole work. It increments the counter and saves the label
+in the form "pp:counter-name:counter-value" using \_ewref to the ref file.
+The effect is the same as when the normal \label[...] is saved to the ref
+file. The \incrpp knows the actual page (where the labes was saved) in the
+second TeX run using \cs{_pgref:label}. The effect is the same as when
+\pgref is used. If the actual page is new then \incrpp sets the
+internal macro \cs{pp:counter-name} to the initial value, else it increments
+the value of the internal macro. The \cs{currpp:counter-name}
+includes the page where last
+\incrpp\countername was used. The \cs{lastpp:counter-name:pageno} includes
+the last internal number from \cs{pp:counter-name}.
+The \truepp is defined by \incrpp too as expanded \cs{currpp:counter-name} where
+the real pageno is extracted, because \cs{currpp:counter-name} has the format
+[pg:gpageno]{pageno} (see section 2.22, sequence \_Xlabel, in the OpTeX manual).
+
+<p>The \thepp expands to the \cs{pp:counter-name} and \thepplast expands to
+the \cs{lastpp:counter-name:pageno}.
+
+
+<p CLASS=datum>(0051) -- P. O., 2021-04-01<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
