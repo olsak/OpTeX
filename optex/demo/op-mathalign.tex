@@ -1,0 +1,366 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+% Math alignment examples inspired by https://www.ntg.nl/maps/34/06.pdf 
+
+\fontfam[newcm]
+\margins/1 a4 (2,2,2,2)cm
+\hyperlinks\Blue\Blue
+
+\refdecl{
+   \def\Xpos#1#2#3{\sxdef{pos:#1}{{#2}{#3}\_currpage}}
+}
+\def\setpos[#1]{\openref\pdfsavepos
+   \_ewref\Xpos{{#1}\unexpanded{{\the\pdflastxpos}{\the\pdflastypos}}}}
+
+\def\posx [#1]{\_ea \posi   \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
+\def\posy [#1]{\_ea \posii  \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
+\def\pospg[#1]{\_ea \posiii \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}}
+
+\def\posi   #1#2#3#4{#1}
+\def\posii  #1#2#3#4{#2}
+\def\posiii #1#2#3#4{#3}
+
+\newcount\tomarginno
+\def\toright#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\kern\hsize\llap{#1}}}}
+\def\toleft#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\rlap{#1}}}}
+
+\def\eqm{\toright\eqmark}
+
+\def\\{\begingroup
+   \_setverb \obeylines \scanlatex
+}
+\def\scanlatex#1//{\tt #1\endgroup \scanoptex}
+\long\def\scanoptex#1$${\begingroup
+   \_setverb \obeylines \scanoptexA
+}
+\ea\def\ea\scanoptexA\ea#\ea1\detokenize{$$}{\bigskip \tt
+   \detokenize{$$}#1\detokenize{$$}\endgroup
+   $$\catcode`\^^M=9 \scantextokens{#1}$$
+   \bigskip
+}
+
+\tit Math alignment examples
+
+The document \url{https://www.ntg.nl/maps/34/06.pdf} shows examples how to
+do special math alignments in display mode in ConTeXt (and in \LaTeX/ for
+comparison). We present the same examples here. They are created in
+\OpTeX/ and the \LaTeX/ source is shown for comparison.
+
+Note that several examples here use the macro \code{\\eqm} for placing 
+an equation mark. The macro is defined~by
+
+\begtt
+\def\eqm{\toright\eqmark}
+\endtt
+%
+and the \code{\\toright} macro is defined in
+\ulink[http://petr.olsak.net/optex/optex-tricks.html#torighteq]{\OpTeX/ trick 0028}
+which is based on 
+\ulink[http://petr.olsak.net/optex/optex-tricks.html#setpos]{\OpTeX/ trick 0020}.
+I.e. the following macros are used here:
+
+\begtt
+\refdecl{
+   \def\Xpos#1#2#3{\sxdef{pos:#1}{{#2}{#3}\_currpage}}
+}
+\def\setpos[#1]{\openref\pdfsavepos
+   \_ewref\Xpos{{#1}\unexpanded{{\the\pdflastxpos}{\the\pdflastypos}}}}
+
+\def\posx [#1]{\_ea \posi   \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
+\def\posy [#1]{\_ea \posii  \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
+\def\pospg[#1]{\_ea \posiii \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}}
+
+\def\posi   #1#2#3#4{#1}
+\def\posii  #1#2#3#4{#2}
+\def\posiii #1#2#3#4{#3}
+
+\newcount\tomarginno
+\def\toright#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\kern\hsize\llap{#1}}}}
+\def\toleft#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
+   \rlap{\kern-\posx[tr:\the\tomarginno]\kern\hoffset\rlap{#1}}}}
+\endtt
+%
+and we have to run \TeX/ twice.
+
+\notoc\nonum\sec Contents
+
+\centerline{\vbox{\hsize=.5\hsize
+\maketoc
+}}
+
+\vfil\break
+
+\let\_firstnoindent=\relax
+
+\sec Gather
+
+\\
+\begin{gather}
+   v = u  + at,           \\
+   d = ut + \frac12 at^2.
+\end{gather}
+//
+
+$$
+  \displaylines{
+     v = u  + at,              \eqm \cr
+     d = ut + {1\over2} at^2.  \eqm
+  }  
+$$
+
+\sec Left gather
+
+\\
+\begin{align}
+  & v = u + at,            \\
+  & d = ut + \frac12 at^2.
+\end{align}
+//
+
+$$
+  \eqalignno{
+     & v = u + at,               & \eqmark \cr
+     & d = ut + {1\over2} at^2.  & \eqmark 
+  }
+$$
+
+\sec Right gather
+
+\\
+\begin{align}
+  v = u + at ,           & \\
+  d = ut + \frac12 atˆ2. &
+\end{align}
+//
+
+$$
+  \eqalignno{
+     v = u + at,               && \eqmark \cr
+     d = ut + {1\over2} at^2.  && \eqmark 
+  }  
+$$
+
+\sec Align
+
+\\
+\begin{align}
+  v &= u + at,            \\
+  d &= ut + \frac12 at^2.
+\end{align}
+//
+
+$$
+  \eqalignno{
+    v &= u + at,               & \eqmark \cr
+    d &= ut + {1\over2} at^2.  & \eqmark
+  }
+$$
+
+\sec Split
+
+\\
+\begin{equation} \begin{split}
+  (x+1)^8 ={} & x^8 + 8 x^7 + 28 x^6 + 56 x^5 + 70 x^4 \\
+              & + 56 x^3 + 28 x^2 + 8 x + 1.
+\end{split} \end{equation}
+//
+
+$$
+  \eqalign{
+       (x+1)^8 = {}& x^8 + 8 x^7 + 28 x^6 + 56 x^5 + 70 x^4 \cr
+                   & + 56 x^3 + 28 x^2 + 8 x + 1.
+  } \eqmark
+$$
+
+\sec Alignat
+
+\\
+\begin{alignat}{2}
+  \nabla\cdot \mathbf  E &= \frac{\rho}{\varepsilon_0}, \qquad
+& \nabla\times \mathbf E &= -\frac{\partial \mathbf B}{\partial t},\\
+  \nabla\cdot \mathbf  B &= 0,
+& \nabla\times \mathbf B &= \mu_0{\mathbf j}+\varepsilon_0\mu_0
+                            \frac{\partial \mathbf E}{\partial t}.
+\end{alignat}
+//
+
+$$
+  \eqalign{
+     \nabla\cdot {\bf E}     &= {\rho\over\varepsilon_0}, \qquad
+     && \nabla\times {\bf E} &= -{\partial {\bf B}\over\partial t}, \eqm\cr
+     \nabla\cdot {\bf B}     &= 0,
+     && \nabla\times {\bf B} &= \mu_0{\bf j}+\varepsilon_0\mu_0
+                                {\partial {\bf E}\over \partial t}. \eqm
+  }
+$$
+
+\sec Flalign
+
+\\
+\begin{flalign*}
+  \nabla\cdot \mathbf  E &= \frac{\rho}{\varepsilon_0},
+& \nabla\times \mathbf E &= -\frac{\partial \mathbf B}{\partial t}.\\
+  \nabla\cdot \mathbf  B &= 0,
+& \nabla\times \mathbf B &= \mu_0{\mathbf j}+\varepsilon_0\mu_0
+                              \frac{\partial \mathbf E}{\partial t}.
+\end{flalign*}
+//
+
+$$
+  \eqspace=10em
+  \eqalign{
+     \nabla\cdot {\bf E}     &= {\rho\over\varepsilon_0}, \qquad
+     && \nabla\times {\bf E} &= -{\partial {\bf B}\over\partial t}, \cr
+     \nabla\cdot {\bf B}     &= 0,
+     && \nabla\times {\bf B} &= \mu_0{\bf j}+\varepsilon_0\mu_0
+                                {\partial {\bf E}\over \partial t}.     
+  }
+$$
+
+\sec Intertext
+
+\\
+\begin{align*}
+  \cos 2\theta &= \cos^2 \theta + \sin^2 \theta \\
+  \intertext{replace $\sin^2 \theta$ by $1 - \cos^2 \theta$}
+  &= 2\cos^2 \theta - 1
+\end{align*}
+//
+
+$$
+  \eqalignno{
+     \cos 2\theta &= \cos^2 \theta + \sin^2 \theta \cr
+      \noalign{\hbox{replace $\sin^2 \theta$ by $1 - \cos^2 \theta$}}
+                  &= 2\cos^2 \theta - 1
+  }
+$$
+
+\sec Linear equations
+
+\\
+\begin{alignat}{5}
+    x_1 & {} + {}& x_2    &{} + {}& 6x_3 &{} = {}& 170, \\
+   3x_1 & {} - {}& 110x_2 &{} - {}& x_3   &{} = {}& 4,  \\
+  14x_1 & {} + {}& 13x_2  &{} + {}& 10x_3 &{} = {}& 25.
+\end{alignat}
+//
+
+$$
+  \thistable{\tablinespace=0pt \tabiteml={${}}\tabitemr={{}$}
+             \tabstrut={\lower1.5ex\vbox to3.5ex{}}}
+  \table{3{rc}r}{
+     x_1 &+&    x_2  &+&  6x_3  &=& 170, \eqm \cr
+    3x_1 &-& 110x_2  &-&   x_3  &=& 4,   \eqm \cr
+   14x_1 &+&  13x_2  &+& 10x_3  &=& 25.  \eqm
+  }    
+$$
+
+\sec Matrix and Arrays
+
+\\
+\begin{equation*}
+\setlength{\arraycolsep}{1em}
+  \begin{array}{ccc}
+    A   &   B & C \\
+    AA  &  BB & CC \\
+    AAA & BBB & CCC
+  \end{array}
+\end{equation*}
+//
+
+$$
+  \matrix{
+    A   &   B & C    \cr
+    AA  &  BB & CC   \cr
+    AAA & BBB & CCC
+  }
+$$
+
+\\
+\begin{equation*}
+\setlength{\arraycolsep}{1em}
+  \begin{array}{lcr}
+    A   &   B & C \\
+    AA  &  BB & CC \\
+    AAA & BBB & CCC
+  \end{array}
+\end{equation*}
+//
+
+$$
+  \thistable{\tabstrut{}\tabiteml={\kern.5em${}}\tabitemr={{}$\kern.5em}}
+  \table{lcr}{
+    A   &   B & C  \cr
+    AA  &  BB & CC \cr
+    AAA & BBB & CCC
+  }
+$$
+
+\sec Pmatrix
+
+\\
+\begin{equation*}
+  A = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix}
+\end{equation*}
+//
+
+$$
+  \pmatrix {1\cr 2\cr 3}
+$$
+
+\sec Delarray package
+
+\\
+\begin{equation*}
+  \begin{array}[b]({c}) 1 \\ 2 \\ 3 \end{array}
+  \begin{array}[c]({c}) 1 \\ 2 \\ 3 \end{array}
+  \begin{array}[t]({c}) 1 \\ 2 \\ 3 \end{array}
+\end{equation*}
+//
+
+$$
+  \def\mybox#1{\hbox{$\displaystyle{#1}$}}
+  \raise3ex\mybox{\pmatrix {1\cr 2\cr 3}}
+  \pmatrix {1\cr 2\cr 3}
+  \lower3ex\mybox{\pmatrix {1\cr 2\cr 3}}
+$$
+
+\sec Cases
+
+\\
+\begin{equation*}
+  |x| =
+  \begin{cases}
+     x, & \text{if $x \ge 0$;} \\
+    -x, & \text{otherwise.}
+  \end{cases}
+\end{equation*}
+//
+
+$$
+  |x| = \cases {  x & if $x \ge 0$; \cr
+                 -x & otherwise }
+$$
+
+\\
+\begin{equation*}
+  f(x) =
+  \begin{dcases}
+    \int_0ˆx g(y)\,dy,    & \text{if $x \ge 0$;} \\
+    \int_{-x}ˆ0 g(y)\,dy, & \text{otherwise.}
+  \end{dcases}
+\end{equation*}
+//
+
+$$
+  \let\ds=\displaystyle
+  f(x) = \cases { \ds \int_0^x g(y)\,dy,    & if $x \ge 0$; \cr \noalign{\medskip}
+                  \ds \int_{-x}^0 g(y)\,dy, & otherwise. }
+$$
+
+
+
+\end
