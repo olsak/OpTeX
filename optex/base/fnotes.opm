@@ -50,9 +50,9 @@
 \_def \_printfnotemarkB {\_printfnotemark}  % footnote marks used in front of footnotes
 
 \_def \_fnotelinks#1#2{% <inText color> <inFootnote color>
-   \_def\_printfnotemarkA{\_link[fnt:\_the\_gfnotenum]{\_localcolor#1}{\_printfnotemark}%
+   \_def\_printfnotemarkA{\_link[fnt:\_the\_gfnotenum]{#1}{\_printfnotemark}%
                           \_dest[fnf:\_the\_gfnotenum]}%
-   \_def\_printfnotemarkB{\_link[fnf:\_the\_gfnotenum]{\_localcolor#2}{\_printfnotemark}%
+   \_def\_printfnotemarkB{\_link[fnf:\_the\_gfnotenum]{#2}{\_printfnotemark}%
                           \_dest[fnt:\_the\_gfnotenum]}%
 }
 \public \fnotelinks ;
