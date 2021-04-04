@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2021-03-09>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2021-04-05>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -88,9 +88,9 @@
   \_delimitershortfall=0.5\_fontdimen6\_textfont3
   \_nulldelimiterspace=0.12\_fontdimen6\_textfont3
   \_scriptspace=0.05\_fontdimen6\_textfont3
-  \_begingroup % correction for \choose
-      \_everymath{}\_global\_setbox0=\_hbox{$\_fam1\_displaystyle{0\_atop0}$}\_endgroup
+  \_setbox0=\_hbox{\_everymath{}$\_fam1\_displaystyle{0\_atop0}$}%
   \_Umathfractiondelsize\_displaystyle = \_dimexpr(\_ht0-\_Umathaxis\_displaystyle)*2\_relax
+  \_setbox0=\_box\_voidbox
 }
 
    \_doc -----------------------------
@@ -258,6 +258,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2021-04-04 \_setunimathdimens: \setbox0=\box\voidbox added
 2021-03-09 \_setunimathdimes: \_begin/end/group instead {}, bug fixed
 2021-02-15 \_textmff, \_scriptmff and \_sscriptmff introduced
 2021-02-15 \_expandafter -> \_ea

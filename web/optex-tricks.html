@@ -116,6 +116,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#circletext">Text around a circle</a>
+    <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
 </ul>
 
 <li>Math
@@ -721,6 +722,64 @@ converts such length to the angular measure in degrees.
 <p CLASS=datum>(0038) -- P. O. 2021-02-05<p>
 <hr>
 
+<h2><a name="ignoreinspic"></a>Ignoring pictures when \inspic is processed</h2>
+
+<p>Pictures may take more size in the resulting PDF. We can want to disable their
+loading when a draft of our document is created. Or we can want to sent the
+source code to a colleague to experimenting with it but without picture
+files. Both cases can be solve by \ignoreinspic macro. When it is used at the
+beginning of the document then all pictures loaded by \inspic have following
+features:
+
+<ul>
+<li>If the given picture file exists then \inspic loads it only in order to
+get its natural sizes (height and width) but the picture is not printed. The gray
+rectangle with the same sizes (calculated from \picwidth, \picheight values and
+from the natural sizes) is printed instead and the name of the picture file is appended.
+The real picture is not embedded to the PDF file, so the file keeps its small size.
+
+<li>If the given picture file does not exist then the virtual natural sizes of
+a non-existent image are taken from \nopicw and \nopicratio macros. The
+\nopicw gives the natural width and the \nopicratio gives the ratio
+width/height. The real sizes are calculated from \picwidth, \picheight and
+the virtual natural sizes (as \inspic normally does it) and the gray rectangle is
+printed. The "NONE: file-name" is appended, where the file-name is the non
+existent picture file name given by the argument of \inspic.
+</ul>
+
+<p>Implementation:
+
+<pre>
+\def\nopicw{5cm}
+\def\nopicratio{1.7}
+
+\let\inspicBori=\_inspicB
+\def\inspicBnew#1{%
+   \isfile{#1}\iftrue
+      \edef\filename{\the\picdir#1}%
+      \setbox0=\hbox\bgroup\inspicBori{#1}% \egroup is in \inspicBori
+   \else
+      \edef\filename{NONE: \the\picdir#1}%
+      \ifdim\picheight=0pt \picheight=\expr{1/\nopicratio}\picwidth \fi
+      \ifdim\picwidth=0pt \picwidth=\nopicratio\picheight \fi
+      \ifdim\picwidth=0pt \picwidth=\nopicw\relax \picheight=\expr{1/\nopicratio}\picwidth \fi
+      \setbox0=\hbox to\picwidth{\vbox to\picheight{}\hss}%
+   \fi
+   {\LightGrey \vrule height\ht0 width\wd0\Black\raise1ex\llap{\filename\ }}\egroup
+}
+\def\ignoreinspic{\let\_inspicB=\inspicBnew}
+</pre>
+
+<p>
+The internal \_inspicB macro is re-defined when \ingnoreinspic is used.
+It loads the image by orginal \inspic to the box0 and use only its
+dimensions. The contents of box0 is thrown away when the group is leaved.
+Note, that \inspic starts with \hbox\bgroup, so the final \egroup leaves its
+group. When the file does not exists then a more calculaton is done and the
+box0 is constructed with given dimensions.
+
+<p CLASS=datum>(0053) -- P. O. 2021-04-04<p>
+<hr>
 
 <p CLASS="lmarg">Math</p>
 
