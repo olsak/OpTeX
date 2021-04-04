@@ -165,6 +165,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#perpage">PerPage package features</a>
 </ul>
 
+<li>Lua matters
+<ul>
+    <li><a href="#beglua">Processing lua code with normal characters</a>
+</ul>
+
 <li>Sections
 <ul>
     <li><a href="#seccc">New level o sections</a>
@@ -2439,6 +2444,63 @@ the \cs{lastpp:counter-name:pageno}.
 
 <p CLASS=datum>(0051) -- P. O., 2021-04-01<p>
 <hr>
+
+
+<p CLASS="lmarg">Lua matters</p>
+
+<h2><a name="beglua"></a>Processing lua code with normal characters</h2>
+
+<p>The \directlua primitive processes its argument with current category
+codes of characters. It means that you probably cannot directly use characters
+\, %, and you cannot use -- as prefix of lua comments because the whole
+parameter of \directlua is interpreted as only single line.
+
+<p>Of course, you can create a *.lua file and use it by "loadfile" or
+"require" functions.
+But sometimes, it can be practical to have a native lua code in a TeX macro file.
+We implement the pair \beglua ...\endlua. The lua code between them can
+include % and \ as normal characters, more consecutive spaces are really
+more spaces and the lines are interpreted by lua interpreter, so
+lua comments prefixed by -- are possible.
+
+<p>Moreover, you can use \logginglua at the begining of your document
+to see the processed lua codes from \beglua...\endlua in the log file.
+
+<p>The \beglua...\endlua pair is equivalent to \begin{luacode*}...\end{luacode*}
+from the LaTeX package luacode.
+
+<p>The \beglua...\endlua is based on changing category codes. So, it cannot
+be used in macro bodies. Typical usage is:
+
+<pre>
+\beglua
+function myfunction (...) -- lua comments are possible
+  ...
+  tex.print(string.format("%04X", num)) -- normal % can be used here
+  ...                                   -- TeX comments by % are not allowed here
+  end
+\endlua
+
+\def\mymacro{...\directlua{myfunction(parameters)}...}
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\beglua{\edef\tmp{\the\numexpr\inputlineno+1}\bgroup \_setverb \endlinechar=`^^J \begluaA}
+\ea\def\ea\begluaA\ea#\ea1\csstring\\endlua{\egroup\maybedebuglua{#1}\directlua{#1}}
+\let\maybedebuglua=\ignoreit
+\def\printloglua#1{\wlog{lua code processed (l.\tmp):^^J#1-------------}}
+\def\logginglua{\let\maybedebuglua=\printloglua}
+</pre>
+
+<p>The parameter separated by \endlua is read in verbatim mode (initialized
+by \_setverb) and when \endlinechar=`\^^J. Then this parameter is processed by
+the \directlua primitive.
+
+<p CLASS=datum>(0054) -- P. O., 2021-04-04<p>
+<hr>
+
 
 <p CLASS="lmarg">Sections</p>
 
