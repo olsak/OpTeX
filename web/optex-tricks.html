@@ -2463,14 +2463,16 @@ include % and \ as normal characters, more consecutive spaces are really
 more spaces and the lines are interpreted by lua interpreter, so
 lua comments prefixed by -- are possible.
 
-<p>Moreover, you can use \logginglua at the begining of your document
-to see the processed lua codes from \beglua...\endlua in the log file.
-
 <p>The \beglua...\endlua pair is equivalent to \begin{luacode*}...\end{luacode*}
-from the LaTeX package luacode.
+from the LaTeX package luacode. The \begLUA...\endLUA pair is equivalent to
+\begin{luacode}...\end{luacode}, i.e. the macros \foo can be inside the lua
+code and they are fully expanded before lua interpreter reads the code.
 
-<p>The \beglua...\endlua is based on changing category codes. So, it cannot
-be used in macro bodies. Typical usage is:
+<p>Moreover, you can use \logginglua at the begining of your document
+to see the processed lua codes in the log file.
+
+<p>The \beglua...\endlua, \begLUA...\endLUA are based on changing category
+codes. They cannot be used in macro bodies. Typical usage is:
 
 <pre>
 \beglua
@@ -2487,16 +2489,22 @@ function myfunction (...) -- lua comments are possible
 <p>Implementation:
 
 <pre>
-\def\beglua{\edef\tmp{\the\numexpr\inputlineno+1}\bgroup \_setverb \endlinechar=`^^J \begluaA}
-\ea\def\ea\begluaA\ea#\ea1\csstring\\endlua{\egroup\maybedebuglua{#1}\directlua{#1}}
-\let\maybedebuglua=\ignoreit
+\newtoks\luamacros
+\luamacros={\let\\=\nbb \edef\%{\csstring\%}\edef\#{\csstring\#}\let\n=\relax}
+\def\beglua{\savelineno\bgroup \_setverb \endlinechar=`\^^J \begluaA}
+\ea\def\ea\begluaA\ea#\ea1\csstring\\endlua{\egroup\debuglua{#1}\directlua{#1}}
+\def\begLUA{\savelineno\bgroup \_setverb \endlinechar=`\^^J \catcode`\\=0 \begLUAA}
+\def\begLUAA#1\endLUA{\the\luamacros\debuglua{#1}\directlua{#1}\egroup}
+\def\savelineno{\edef\tmp{\the\numexpr\inputlineno+1}}
+\let\debuglua=\ignoreit
 \def\printloglua#1{\wlog{lua code processed (l.\tmp):^^J#1-------------}}
-\def\logginglua{\let\maybedebuglua=\printloglua}
+\def\logginglua{\let\debuglua=\printloglua}
 </pre>
 
 <p>The parameter separated by \endlua is read in verbatim mode (initialized
 by \_setverb) and when \endlinechar=`\^^J. Then this parameter is processed by
-the \directlua primitive.
+the \directlua primitive. The \luamacros token list is used by
+\begLUA...\endLUA pair, you can add more macros here.
 
 <p CLASS=datum>(0054) -- P. O., 2021-04-04<p>
 <hr>
