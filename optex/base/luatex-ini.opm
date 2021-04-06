@@ -49,9 +49,7 @@
 \_protected\_def \_pdflastobj        {\_numexpr\_pdffeedback lastobj\_relax}
 \_protected\_def \_pdflastannot      {\_numexpr\_pdffeedback lastannot\_relax}
            \_def \_pdfxformname      {\_pdffeedback xformname}
-{\_outputmode=1
-           \_xdef\_pdfcreationdate   {\_pdffeedback creationdate}
-}
+           \_def \_pdfcreationdate   {\_pdffeedback creationdate}
            \_def \_pdffontname       {\_pdffeedback fontname}
            \_def \_pdffontobjnum     {\_pdffeedback fontobjnum}
            \_def \_pdffontsize       {\_pdffeedback fontsize}

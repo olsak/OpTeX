@@ -2515,16 +2515,16 @@ the \directlua primitive. The \luamacros token list is used by
 <h2><a name="dayw"></a>Printing time, date</h2>
 
 <p>The current date and time are saved in the TeX primitive registers
-\year (current year), \month (current month), \day (day in the month) and
+\year (current year), \month (current month), \day (the day of the the month) and
 \time (minutes from the last midnight) when TeX is started. That is all.
 The following macro code declares non-primitive registers \hours, \minutes,
-\seconds and \dayw. The values of these registers can be initialized by:
+\seconds and \weekday. The values of these registers can be initialized by:
 
 <pre>
 \sethours   % sets current \hours and \munutes from \time
 \setminutes % equivalent to \sethours
 \setseconds % sets \seconds from OS time
-\setdayw    % sets \dayw as current day in the week (0=Sun...6=Sat)
+\setweekday % sets \weekday as current day in the week (0=Sun...6=Sat)
             % from \day, \month, \year
 </pre>
 
@@ -2536,9 +2536,9 @@ expands to 07. Examples:
 \sethours \setseconds
 Current time is \the\hours:\Othe\minutes:\Othe\seconds.
 
-\setdayw
+\setweekday
 Current day in the week is
-\ifcase\dayw Sun\or Mon\or Tue\or Wed\or Thu\or Fri\or Sat\fi.
+\ifcase\weekday Sun\or Mon\or Tue\or Wed\or Thu\or Fri\or Sat\fi.
 
 Today is
 \ifcase\month\or Jan\or Feb\or Mar\or Apr\or May\or Jun\or Jul\or
@@ -2555,23 +2555,23 @@ section 2.37.3 of OpTeX documentation where the multilingual
 is defined.
 
 <p>You can set \year, \month, \day to arbitrary values (not necessarily
-current) and then you can process your macros for printing or use \setdayw
+current) and then you can process your macros for printing or use \setweekday
 to get the day in the week in given date.
 
 <p>Implementation is based on calculations at lua level:
 
 <pre>
-\newcount\hours \newcount\minutes \newcount\seconds \newcount\dayw
+\newcount\hours \newcount\minutes \newcount\seconds \newcount\weekday
 
 \def\setminutes{%
    \minutes=\directlua{tex.sprint(\the\time\pcent 60)}\relax
    \hours=\directlua{tex.sprint(math.floor(\the\time/60))}\relax
 }
 \let\sethours=\setminutes
-\def\setseconds{%
-   \seconds=\directlua{tex.print(os.date('\pcent S'))}\relax
-}
-\def\setdayw{\dayw=\directlua{% Zeller's algorithm:
+\def\setseconds{\ea\setsecondsA\pdffeedback creationdate\relax}
+\def\setsecondsA#1#2#3#4#5#6#7#8#9{\setsecondsB}
+\def\setsecondsB#1#2#3#4#5#6#7#8\relax{\seconds=#6#7\relax}
+\def\setweekday{\weekday=\directlua{% Zeller's algorithm:
       local m, y, K, J
       m = \the\month \ifnum\month&lt;3 +12 \fi
       y = \the\year  \ifnum\month&lt;3 -1 \fi
