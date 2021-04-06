@@ -2437,7 +2437,9 @@ includes the page where last
 the last internal number from \cs{pp:counter-name}.
 The \truepp is defined by \incrpp too as expanded \cs{currpp:counter-name} where
 the real pageno is extracted, because \cs{currpp:counter-name} has the format
-[pg:gpageno]{pageno} (see section 2.22, sequence \_Xlabel, in the OpTeX manual).
+[pg:gpageno]{pageno} (see section 2.22,
+<a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:_Xlabel">sequence \_Xlabel</a>,
+in the OpTeX manual).
 
 <p>The \thepp expands to the \cs{pp:counter-name} and \thepplast expands to
 the \cs{lastpp:counter-name:pageno}.
@@ -2513,9 +2515,9 @@ the \directlua primitive. The \luamacros token list is used by
 <h2><a name="dayw"></a>Printing time, date</h2>
 
 <p>The current date and time are saved in the TeX primitive registers
-\year (current year), \month (current month) and
+\year (current year), \month (current month), \day (day in the month) and
 \time (minutes from the last midnight) when TeX is started. That is all.
-The following macros declares non-primitive registers \hours, \minutes,
+The following macro code declares non-primitive registers \hours, \minutes,
 \seconds and \dayw. The values of these registers can be initialized by:
 
 <pre>
@@ -2548,7 +2550,8 @@ Today is
 as shown in the example above. You are free to create your macros with
 arbitrary format and/or language. You can use \_mtext if you want to create
 a multilingual document or multilingual macros. You can get inspiration from
-section 2.37.3 of OpTeX documentation where the multilingual \today macro
+section 2.37.3 of OpTeX documentation where the multilingual
+<a href=http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:today>\today macro</a>
 is defined.
 
 <p>You can set \year, \month, \day to arbitrary values (not necessarily
