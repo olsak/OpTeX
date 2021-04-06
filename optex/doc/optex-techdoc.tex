@@ -57,33 +57,33 @@ Other category codes are set as in plain \TeX/.
 %
 The \`\optexversion` and \`\fmtname` are defined.
 
-\verbinput (22-25) optex.ini
+\verbinput (22-26) optex.ini
 %
 We check if \LuaTeX/ engine is used at `-ini` state. And the `^^J` character
 is set as `\newlinechar`.
 
-\verbinput (27-36) optex.ini
+\verbinput (28-37) optex.ini
 %
 The basic macros for macro file syntax is defined, i.\,e.\
 `\_endcode`, `\_doc` and `\_cod`.
 The `\_codedecl` will be re-defined later.
 
-\verbinput (38-42) optex.ini
+\verbinput (39-43) optex.ini
 %
 Individual `*.opm` macro files are read.
 
-\verbinput (44-87) optex.ini
+\verbinput (45-89) optex.ini
 %
 The file `optex.lua` is embedded into the format as byte-code.
 It is documented in section~\ref[lua].
 
-\verbinput (89-92) optex.ini
+\verbinput (91-94) optex.ini
 
 The `\everyjob` register is initialized and the format is saved by
 the `\dump` command.
 
 \mathsboff
-\verbinput (94-102) optex.ini
+\verbinput (96-104) optex.ini
 \mathsbon
 
 }
