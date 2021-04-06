@@ -51,7 +51,7 @@ The `optex.ini` file is read as the main file when the format is generated.
 %
 Category codes are set first. Note that the `_` is set to category code
 \"letter", it can be used as a part of control sequence names.
-Other category codes are set as in the plain \TeX/.
+Other category codes are set as in plain \TeX/.
 
 \verbinput (6-20) optex.ini
 %
@@ -82,7 +82,9 @@ It is documented in section~\ref[lua].
 The `\everyjob` register is initialized and the format is saved by
 the `\dump` command.
 
+\mathsboff
 \verbinput (94-102) optex.ini
+\mathsbon
 
 }
 
