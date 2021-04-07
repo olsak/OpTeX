@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2021-01-22>} % preloaded in format
+\_codedecl \begtt {Verbatim <2021-04-07>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters
@@ -127,13 +127,13 @@
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt \_relax #1\_relax \_ttfont
    \_def\_testcommentchars##1\_iftrue{\_iffalse}\_let\_hicomments=\_relax
-   \_endlinechar=`^^J
+   \_savemathsb \_endlinechar=`^^J
    \_startverb
 }
 \_ea\_def\_ea\_startverb \_ea#\_ea1\_csstring\\endtt#2^^J{%
    \_prepareverbdata\_tmpb{#1^^J}%
    \_ea\_printverb \_tmpb\_end
-   \_par
+   \_par \_restoremathsb
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
@@ -247,7 +247,7 @@
    \_setverb \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_the\_everytt\_relax \_tmpb\_relax \_ttfont
-   \_endlinechar=`^^J \_tmpnum=0
+   \_savemathsb \_endlinechar=`^^J \_tmpnum=0
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
          \_ifnum\_tmpnum<\_vinolines\_space
          \_vireadline \_advance\_tmpnum by1 \_repeat      %% skip lines
@@ -265,7 +265,7 @@
    \_catcode`\ =10 \_catcode`\%=9 % used in \commentchars comments
    \_ea\_printverb \_tmpb\_end
    \_global\_ttlinesave
-   \_par
+   \_par \_restoremathsb
    \_endgroup
    \_ttskip
    \_isnextchar\_par{}{\_noindent}%
@@ -274,6 +274,17 @@
 \_def\_visaveline{\_ea\_addto\_ea\_tmpb\_ea{\_tmp}}
 
 \_public \verbinput ;
+
+   \_doc -----------------------------
+   \`\_savemathsb`, \`\_restoremathsb` pair is used
+   in \^`\begtt`...\^`\endtt` or in \^`\verbinput` to temporary suppress
+   the \^`\mathsbon` because we don't need to print `\int _a`
+   in verbatim mode if `\int``_a` is really written. The \^`\_restoremathsb`
+   is defined locally as \^`\mathsbon` only if it is needed.
+   \_cod -----------------------------
+
+\_def\_savemathsb{\_ifmathsb \_mathsboff \_def\_restoremathsb{\_mathsbon}\_fi}
+\_def\_restoremathsb{}
 
    \_doc -----------------------------
    If the language of your code\label[commentchars]\wlabel{}
@@ -363,7 +374,8 @@
 \_endinput
 
 History:
-2020-01-22 ... \activettchar changed to \verbchar
+2021-04-07 ... \_savemathsb, \_restoremathsb introduced
+2021-01-22 ... \activettchar changed to \verbchar
 2020-12-30 ... \secc followed by \begtt must be unbreakable
 2020-11-13 ... \commentchars implemented
 2020-04-22 ... \ttshift introduced

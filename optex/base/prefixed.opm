@@ -172,7 +172,7 @@ example `\my_control_sequence`, but with the following exceptions:
 \begitems
 * Control sequences which begin with `_` are reserved for \TeX/ primitives,
   \OpTeX/ internal macros and packages internal macros.
-* Control sequences (terminated by non-letter) in the form
+* Multiletter control sequences in the form
   `\<word>_` or `\<word>_<one-letter>`, where
   <word> is a sequence of letters, are inaccessible, because they
   are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
@@ -279,8 +279,8 @@ If you are writing a macro file that is intended to be published for
   twice if another macro or the user needs it explicitly too.
 * Use \^`\_codedecl` as your first command in the macro file and
   \^`\_endcode` to close the text of macros.
-* Use \^`\_doc` ... \^`\_cod` pairs for documenting the code pieces and/or writing
-  more documentation after the \^`\_endcode` command.
+* Use \^`\_doc` ... \^`\_cod` pairs for documenting the code pieces.
+* You can write more documentation after the \^`\_endcode` command.
 \enditems
 
 If the macro file accepts these recommendations then it should be
