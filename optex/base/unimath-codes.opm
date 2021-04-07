@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-03-26>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-04-07>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -68,12 +68,30 @@
 \_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia}
 \_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna}
 \_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia}
-\_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA}
-\_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA}
-\_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA}
-\_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA}
-\_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA}
-\_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA}
+\_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA \_setnablait}
+\_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA \_setnablarm}
+\_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA \_setnablabf}
+\_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA \_setnablabi}
+\_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA \_setnablabsans}
+\_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA \_setnablabisans}
+
+   \_doc -----------------------------
+   \`\_setnabla` is used in order to `\nabla` behaves like uppercase Greek
+   letter, similar like `\Delta`. It depends on `\bf`, `\it` etc. selectors.
+   If you want to deactivate this behavior, use `\def\_setnabla#1 {}`.
+   \_cod -----------------------------
+
+\_def \_setnabla {\_Umathcode"2207 = 7 1}
+\_def \_setnablarm     {\_setnabla"02207 }
+\_def \_setnablabf     {\_setnabla"1D6C1 }
+\_def \_setnablait     {\_setnabla"1D6FB }
+\_def \_setnablabi     {\_setnabla"1D735 }
+\_def \_setnablabsans  {\_setnabla"1D76F }
+\_def \_setnablabisans {\_setnabla"1D7A9 }
+
+   \_doc -----------------------------
+   Digits are configured like math alphabets.
+   \_cod -----------------------------
 
 \_chardef\_digitrmO=`0
 \_chardef\_digitbfO="1D7CE
@@ -90,8 +108,7 @@
 \_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
 
    \_doc -----------------------------
-   The  \`\cal`, \`\bbchar`, \`\frak`, \`\script`
-   and
+   The  \`\cal`, \`\bbchar`, \`\frak`, \`\script` and
    the \`\rm`, \`\bf`, \`\it`, \`\bi`, \`\tt` are defined here.
    Their \"8bit definitions" from the file `math-preload.opm`
    (section~\ref[math-preload]) are removed.\nl
@@ -207,6 +224,8 @@
 \_protected\_def \_sqrt       {\_Uradical 1 "0221A }
 \_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
 \_protected\_def \_fourthroot {\_Uradical 1 "0221C }
+
+\_def \nabla {^^^^2207} % \nabla behaves as uppercase Gereek letter, see \_setnabla
 
 \_public \sqrt \cuberoot \fourthroot ;
 
@@ -425,6 +444,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-04-07  \_setnabla introduced, \nabla as uppercase Greek letter
 2021-03-26  \it does \_itGreek
 2021-03-19  \{, \} are defined as mode independent macros in math-macros.opm
 2021-03-11  Umathcode `* declaed as \ast
