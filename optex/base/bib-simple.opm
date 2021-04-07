@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-% bibliography style (simple), version <2020-03-10>, loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (simple) <2020-03-10>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (simple) bibfiles command only}

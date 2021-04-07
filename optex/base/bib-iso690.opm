@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-% bibliography style (iso690), version <2020-03-10>, loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2021-04-07>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
@@ -33,8 +33,6 @@
    \_toks1=\_ea{\_biboptionsi}%
    \_edef\_biboptionsi{\_space \_the\_toks1 \_space \_the\_biboptions \_space}%
 }
-\_newtoks\_biboptions
-\_public \biboptions ;
 
    \_doc -----------------------------
    Formating of Author/Editor lists.
@@ -399,12 +397,12 @@ If `aumin` is unused then `aumax` authors are printed in this case.
 
 All authors are printed if `aumax:<number>` option isn't given.
 There is no internal limit. But you can set the global options in
-your document by setting the `\biboptions` tokens list. For example:
+your document by setting the \^`\biboptions` tokens list. For example:
 
 \begtt
 \biboptions={aumax:7 aumin:1}
 % if there are 8 or more authors then only the first author is printed.
-\entdd
+\endtt
 
 Examples:
 \begtt
@@ -904,3 +902,8 @@ nowarn       ... no mandatory fields
 \endtt
 
 Other options in the option field are silently ignored.
+
+\_endinput
+
+2021-04-07 ... \biboptions toks declaration moved, bug fixed.
+2020-03-10 ... released
