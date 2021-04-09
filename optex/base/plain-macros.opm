@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2020-02-14>} % preloaded in format
+\_codedecl \magstep {Macros from plain TeX <2021-04-09>} % preloaded in format
 
    \_doc -----------------------------
    The \`\dospecials` works like in plain TeX but does nothing with `_`.
@@ -340,7 +340,9 @@
   \_pretolerance=-1 \tolerance=-1 \hbadness=0 \showboxdepth=0 \ #1}}
 
 \_def \_bye {\_par \_vfill \_supereject \_byehook \_end}
-\_public \bye ;
+\_public \showhyphens \bye ;
 
 \_endcode % -------------------------------------
 
+2021-04-09 ... \_public\showhyphens, bug fixed
+2020-02-14 ... released
