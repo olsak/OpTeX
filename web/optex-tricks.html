@@ -186,6 +186,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ngerman">The german.sty and ngerman.sty implementation</a>
 </ul>
 
+<li>Features of PDF viewers
+<ul>
+    <li><a href="#pagelabels">Page labels shown in PDF viewer</a>
+</ul>
+
 <li>Others
 <ul>
     <li><a href="#version">Version number of the format</a>
@@ -2816,6 +2821,82 @@ quotation marks used by \"text" and preferred in OpTeX.
 <p CLASS=datum>(0036) -- P. O., 2021-01-22<p>
 <hr>
 
+<p CLASS="lmarg">Features of PDF viewer</p>
+
+<h2><a name="pagelabels"></a>Page labels shown in PDF viewer</h2>
+
+<p>OpTeX uses \gpageno as a counter which counts pages globally
+from one to the last page in the document. Moreover, plain TeX
+(and OpTeX too) declares \pageno and use it as page counter
+printed in footlines or headlines of the pages. There can be
+more separate sections in the document, each such a section has its
+own \pageno range and they can be printed in various format.
+For example, setting \pageno=-1 starts a page range printed in
+roman numerals: i, ii, iii, iv, etc.
+
+<p>If none is specified then PDF viewer knows nothing about \pageno
+ranges and their format. PDF viewer shows only \gpageno in its status bar.
+But you can do specification of \pageno ranges using \pdfcatalog:
+
+<pre>
+\pdfcatalog{/PageLabels &lt;&lt; /Nums [ index &lt;&lt;spec>> index &lt;&lt;spec>> ...etc. ] >>}
+</pre>
+
+<p>where index is \gpageno-1 and spec is specification of the format of the
+\pageno range. It informs the PDF viewer that given ranges start at
+index+1 global page and have given format. This format is used in
+the PDF viewer status bar. The spec can be:
+
+<pre>
+/S/r   ... lowercase roman numerals
+/S/R   ... uppercase roman numerals
+/S/D   ... decimal arabic numerals
+/S/A   ... letters A..Z
+/S/a   ... letters a..z
+</pre>
+
+<p>Additional specification can be
+
+<pre>
+/P (string) ... optional prefix used before the counter in given queue
+/St number  ... starting number in given \pageno range (default is 1)
+</pre>
+
+<p>The following example is taken from PDF manual:
+
+<pre>
+\pdfcatalog{/Pagelabels &lt;&lt; /Nums [
+      0 &lt;&lt; /S/r >>
+      4 &lt;&lt; /S/D >>
+      7 &lt;&lt; /S/D /P (A-) /St 8 >>
+   ] >>
+}
+</pre>
+
+<p>which gives page labels: i, ii, iii, iv, 1, 2, 3, A-8, A-9, ...
+
+<p>You can accumulate your page specifications in your macro \pagespecs
+and use it at the end of your document (or when the last page range is started).
+For example:
+
+<pre>
+\def\pagespecs{}
+\pageno=-1 % Front matter
+\edef\pagespecs{\pagepsecs \the\numexpr\gpageno-1 &lt;&lt;/S/r>>}
+...
+\vfil\break
+\pageno=1 % Main matter
+\edef\pagespecs{\pagepsecs \the\numexpr\gpageno-1 &lt;&lt;/S/D>>}
+...
+\vfil\break
+\def\_folio{App-\the\pageno}  % Appendices
+\edef\pagespecs{\pagepsecs
+   \the\numexpr\gpageno-1 &lt;&lt;/S/D /P (App-) /St \the\pageno >>}
+\pdfcatalog {/PageLabels &lt;&lt; /Nums [ \pagespecs ] >>}
+</pre>
+
+<p CLASS=datum>(0056) -- P. O., 2021-04-09<p>
+<hr>
 
 <p CLASS="lmarg">Others</p>
 
