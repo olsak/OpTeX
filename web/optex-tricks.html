@@ -163,6 +163,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#balancing">Nested brackets of another type than {}</a>
     <li><a href="#addallowbreak">Breaking URL at any point</a>
     <li><a href="#perpage">PerPage package features</a>
+    <li><a href="#begfile">Filecontents package features</a>
 </ul>
 
 <li>Lua matters
@@ -2449,8 +2450,42 @@ in the OpTeX manual).
 <p>The \thepp expands to the \cs{pp:counter-name} and \thepplast expands to
 the \cs{lastpp:counter-name:pageno}.
 
-
 <p CLASS=datum>(0051) -- P. O., 2021-04-01<p>
+<hr>
+
+<h2><a name="begfile"></a>Filecontents package features</h2>
+
+<p>We implement something similar to filecontents.sty LaTeX package. A user
+can write:
+
+<pre>
+\begfile {filename.tex}
+% file generated from source
+\macros \macros \macros ...
+   Text text text.
+\endfile
+</pre>
+
+<p>and the filename.tex is written to the current directory with given
+contents.
+
+<p>Implementation:
+
+<pre>
+\newwrite\outfile
+\def\begfile #1 {\immediate\openout\outfile={#1}%
+   \begingroup \_setverb \endlinechar=`\^^J \begfileA
+}
+\ea\def\ea\begfileA\ea#\ea1\ea^^J\csstring\\endfile#2^^J{\endgroup
+   \immediate\write\outfile{#1}\immediate\closeout\outfile
+}
+</pre>
+
+<p>The \_setverb sets the reading of the argument to verbatim mode. And the
+\endlinechar is set. Then the parameter is read and written to the given
+file. Elementary my dear Watson.
+
+<p CLASS=datum>(0056) -- P. O., 2021-04-10<p>
 <hr>
 
 
