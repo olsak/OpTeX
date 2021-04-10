@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2021-03-10>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2021-04-10>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -187,7 +187,7 @@
 \_def\_layersenv{cannot be inside \_string\layers...\_string\endlayers, ignored}
 
 \_def\_printlayers{\_unvcopy\_slidepage \_nointerlineskip\_lastbox
-   \_layertext \_endgraf
+   \_vskip\_parskip \_layertext \_endgraf
    \_ifdim\_prevdepth>-1000pt \_kern-\_prevdepth \_kern\_dp\_strutbox \_fi
    \_vskip\_parskip
    \_unvcopy\_slidepageB
@@ -198,17 +198,19 @@
 \_maxlayers=0
 
 \_long\_def\_layersactive #1 #2\endlayers{%
-   \_par\_penalty0\_egroup
+   \_par\_penalty0\_egroup\_egroup
    \_gdef\_layertext{#2}%
    \_global\_maxlayers=#1
-   \_setbox\_slidepageB=\_vbox\_bgroup
+   \_setbox\_slidepageB=\_vbox\_bgroup\_bgroup
 }
 \_def\_slideopen{\_let\slideshow=\_relax % first wins
    \_sdef{_spg:;}{\_egroups\_vfil\_break \_lfnotenumreset\_bgroup \_setilevel}
    \_sdef{_spg:.}{\_egroups\_endslides}
    \_sdef{_spg:+}{\_egroups\_bgroup \_setilevel}
+   \_let\_layersopen=\_egroup \_let\_layersclose\_bgroup
    \_bgroup
 }
+\_let\_layersopen=\_relax
 
 \_public \subtit \slideshow \slideopen \pg \wideformat \use \pshow \layernum ;
 
@@ -218,8 +220,9 @@
    result after last layer is processed.
    \_cod -----------------------------
 
-\_def\_layers #1 {\_par\_layernum=\_numexpr#1+1\_relax}
-\_let\endlayers=\_relax
+\_long\_def\_layers #1 #2\endlayers{\_par
+   \_layersopen\_layernum=\_numexpr#1+1\_relax #2\_layersclose}
+\_let\_layersclose=\_relax
 
 \_def\layers{\_layers}
 
@@ -240,6 +243,8 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2021-04-10 \layers: bug with \setbox\_slidepageB fixed
+2021-04-10 \layers: \veskip\parskip added after \unvcopy\_slidepage
 2021-03-10 \slideopen introduced, bug with colors in \setbox fixed
 2021-03-10 \ifmmode* added to \adef*
 2021-02-15 \_def\_decr removed
