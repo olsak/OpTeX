@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-03-09>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-04-12>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -213,7 +213,7 @@
 \_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
 \_def\_paramtabdeclarep#1{\_the\_tabiteml
    \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
-   \_lineskiplimit=\_zo \_noindent##\_unsskip
+   \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax ##\_unsskip
    \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}\_the\_tabitemr}
 
    \_doc -----------------------------
@@ -512,6 +512,7 @@ after the second one.
 
 \_endinput
 
+2021-04-12 p declarator: \hskip0pt added to allow first word hyphenated
 2021-03-09 \_tablepxpreset introduced
 2021-02-15 \_expandafter -> \_ea
 2021-01-27 \_tableB: \long\def added, \vspan syntax improved
