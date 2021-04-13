@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \cite {Cite, Biblioraphy <2020-03-09>} % loaded in format
+\_codedecl \cite {Cite, Biblioraphy <2020-03-13>} % loaded in format
 
    \_doc -----------------------------
    Registers used by `\cite`, `\bib` macros are declared here.
@@ -184,21 +184,25 @@
    without reading any database. The bib-enty follows after this command.
    This command counts the used `\bib`s from one by `\bibnum` counter and
    saves \^`\_Xbib``{<label>}{\_the\_bibnum}{\_the\_bibmark}` into `.ref` file
-   immediately using `\_wbib`. This is the core of creation of mapping from
-   `<labels>` to `<bib-marks>`.
+   immediately using \`\_wbib`. This is the core of creation of mapping from
+   `<labels>` to `<bib-marks>`.\nl
+   \`\_bibA` and \`\_bibB` implement the scanner of the optional argument
+   with the \^`\bibmark`.\nl
+   \`\_bibgl` is `\relax` by default but \^`\slides` do `\let\_bibgl=\_global`.
    \_cod -----------------------------
 
 \_def\_bib[#1]{\_def\_tmp{\_isnextchar={\_bibA[#1]}{\_bibmark={}\_bibB[#1]}}%
    \_ea\_tmp\_romannumeral-`\.} % ignore optional space
 \_def\_bibA[#1]=#2{\_bibmark={#2}\_bibB[#1]}
 \_def\_bibB[#1]{\_par \_bibskip
-   \_advance\_bibnum by1
+   \_bibgl\_advance\_bibnum by1
    \_noindent \_def\_tmpb{#1}\_wbib{#1}{\_the\_bibnum}{\_the\_bibmark}%
    \_printlabel{#1}%
    \_printbib \_ignorespaces
 }
 \_def\_wbib#1#2#3{\_dest[cite:\_the\_bibnum]%
    \_ifx\_wref\_wrefrelax\_else \_immediate\_wref\_Xbib{{#1}{#2}{#3}}\_fi}
+\_let\_bibgl=\_relax
 
 \_public \bib ;
 
@@ -269,3 +273,6 @@ files `bib-<style>.opm`.
 See end of the `bib-iso690.opm` file for large documentation about `.bib` files
 structure and about the usage of `iso690` bib-style.
 
+History:
+2021-04-13 ... \_bibgl introduced (used in \slides)
+2020-03-09 ... released

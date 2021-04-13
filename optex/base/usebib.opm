@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \MakeReference {Reading bib databases <2021-03-12>} % loaded on demand by \usebib
+\_codedecl \MakeReference {Reading bib databases <2021-04-13>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    Loading the `librarian.tex` macro package. See `texdoc librarian`
@@ -117,7 +117,7 @@
    \_cod -----------------------------
 
 \_def\MakeReference{\_par \_bibskip
-  \_advance\_bibnum by1
+  \_bibgl\_advance\_bibnum by1
   \_isdefined{_bim:\_the\_bibnum}\_iftrue
      \_edef\_tmpb{\_csname _bim:\_the\_bibnum\_endcsname}%
      \_bibmark=\_ea{\_tmpb}%
@@ -370,6 +370,7 @@ character is sorted before `A`.
 History:
 --------
 
+2021-04-13  \_bibgl introduced (used by \slides)
 2021-03-12  \_citelistB added before first test.
 2021-02-15  \_expandafter -> \_ea
 Apr. 2014:  released in OPmac

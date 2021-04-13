@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ref {References <2020-03-03>} % preloaded in format
+\_codedecl \ref {References <2020-04-13>} % preloaded in format
 
    \_doc ----------------------------
    \`\_Xpage` `{<gpageno>}{<pageno>}` saves the parameter pair into \`\_currpage`.
@@ -32,9 +32,10 @@
 
 \_def\_label[#1]{\_isempty{#1}\_iftrue \_global\_let \_lastlabel=\_undefined
   \_else \_isdefined{l0:#1}%
-     \_iftrue \_opwarning{duplicated label [#1], ignored}\_else \_xdef\_lastlabel{#1}\_fi
+     \_iftrue \_slideshook\_opwarning{Duplicated label [#1], ignored}\_else \_xdef\_lastlabel{#1}\_fi
   \_fi \_ignorespaces
 }
+\_let \_slideshook=\_relax % redefined if \slides + \slideshow.
 \_def\_wlabel#1{%
   \_ifx\_lastlabel\_undefined \_else
      \_dest[ref:\_lastlabel]%
@@ -92,3 +93,7 @@ is created later) or if the reference text is page number then we must read
 `.ref` file first in order to get appropriate information.
 See section \ref[ref-file] for more information about `.ref` file concept.
 
+\_endinput
+
+2021-04-13 ... \_slideshook introduced (used by \slides)
+2020-03-03 ... released

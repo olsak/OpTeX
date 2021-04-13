@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2021-04-10>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2021-04-13>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -139,9 +139,9 @@
 
    The code is somewhat more complicated when \^`\layers` is used. Then
    `<layered-text>` is saved to the \`\_layertext` macro, the material before
-   it is in \`\_slidepage` box and the material after it is in `\_slidepageB`
+   it is in \`\_slidepage` box and the material after it is in \`\_slidepageB`
    box. The pages are completed in the `\loop` which increments the
-   \`\layernum` register.
+   \`\layernum` register and prints page by the \`\_printlayers`
    \_cod -----------------------------
 
 \_newbox\_slidepage  \_newbox\_slidepageB
@@ -156,10 +156,8 @@
    \_sdef{_spg:.}{\_closepage \_endslides}
    \_sdef{_spg:+}{\_closepage \_incr\_slidelayer \_decr\_pageno \_openslide}
    \_let\_layers=\_layersactive
-   \_destboxslide % to prevent hyperlink-dests duplication
+   \_slidelinks % to prevent hyperlink-dests duplication
 }
-\_def\_destboxslide{\_def\_destbox[##1:##2]{\_isequal{##1}{ref}\_iffalse \_destboxori[##1:##2]\_fi}}
-
 \_def\_openslide{\_setbox\_slidepage=\_vbox\_bgroup\_bgroup \_setilevel
    \_ifvoid\_slidepage \_else \_unvbox\_slidepage \_nointerlineskip\_lastbox \_fi}
 \_def\_setilevel{\_loop \_decr\_gilevel \_ifnum\_gilevel<0 \_else \_begitems \_repeat}
@@ -198,11 +196,18 @@
 
 \_long\_def\_layersactive #1 #2\endlayers{%
    \_par\_penalty0\_egroup\_egroup
-   \_gdef\_layertext{#2}%
+   \_gdef\_layertext{\_settinglayer#2}%
    \_global\_maxlayers=#1
    \_setbox\_slidepageB=\_vbox\_bgroup\_bgroup
-      \_setbox0=\_vbox{{\_layernum=1 \_layertext\_endgraf}}\_prevdepth=\_dp0
+      \_setbox0=\_vbox{{\_layernum=1 \_globaldefs=-1 \_layertext\_endgraf}}\_prevdepth=\_dp0
 }
+\_public \subtit \slideshow \pg \wideformat \use \pshow \layernum ;
+
+   \_doc -----------------------------
+   \`\slideopen` should be used instead \^`\slideshow` to deactivate it
+   but keep the borders of groups.
+   \_cod -----------------------------
+
 \_def\_slideopen{\_let\slideshow=\_relax % first wins
    \_sdef{_spg:;}{\_egroups\_vfil\_break \_lfnotenumreset\_bgroup \_setilevel}
    \_sdef{_spg:.}{\_egroups\_endslides}
@@ -210,7 +215,57 @@
    \_let\_layersopen=\_egroup \_let\_layersclose\_bgroup
    \_bgroup
 }
-\_public \subtit \slideshow \slideopen \pg \wideformat \use \pshow \layernum ;
+\_public \slideopen ;
+
+   \_doc -----------------------------
+   When \^`\slideshow` is active then the destinations of internal hyperlinks
+   cannot be duplicated to more \"virtual" pages because
+   hyperlink destinations have to be unique in the whole document.
+
+   The \^`\slideshow` creates boxes of typesetting material and copies them to
+   more pages. So, we have to suppress creating destinations in these boxes.
+   This is done in the \`\_slidelinks` macro. We
+   can move creating these destinations to the output routine. \`\_sdestbox` is
+   saved value of the original `\_destbox` which is redefined to do only
+   `\addto\_destboxes{\_sdestbox[<label>]}`. All destinations saved to
+   \`\_destboxes` are created at the start of the next output routine in the
+   \^`\_pagedest` macro. The output routine removes `\_destboxes`, so each
+   destination is created only once.
+
+   Limitations of this solution: destinations are only at the start of the
+   page, no at the real place where \^`\wlabel` was used. The first \"virtual"
+   page where \^`\wlabel` is used includes its destination. If you want to
+   go to the final page of the partially uncovering ideas then
+   use \^`\label``[<label>]`\^`\wlabel``{text}` in the last part of
+   the page (before `\pg;`) o use \^`\pgref` instead \^`\ref`.
+   \_cod -----------------------------
+
+\_def\_slidelinks{%
+   \_def \_destbox[##1]{\_edef\_tmp{\_noexpand\_sdestbox[##1]}%
+      \_global\_ea\_addto\_ea\_destboxes\_ea{\_tmp}}%
+   \_def \_pagedest {%
+      \_hbox{\_def\_destheight{25pt}\_sdestbox[pg:\_the\_gpageno]\_destboxes}%
+      \_nointerlineskip \_gdef\_destboxes{}%
+   }%
+   \_ifx \_dest\_destactive \_else \_let\_pagedest=\_relax \_fi
+}
+\_let\_sdestbox = \_destbox
+\_def\_destboxes{}    % initial value of \_destboxes
+\_let\_bibgl=\_global % \advance\bibnum must be global if they are at more pages
+
+   \_doc -----------------------------
+   The \`\_settinglayer` is used in the \^`\_layertext` macro to prevent
+   printing \"Duplicate label" warning when it is expanded. It is done
+   by special value of \`\_slideshook` (used by the \^`\label` macro).
+   Moreower, the warning about illegal use of `\bib`, `\usebib` in `\layers`
+   environment is activated.
+   \_cod -----------------------------
+
+\_def\_settinglayer{%
+   \_def\_slideshook ##1##2{}%
+   \_def\_bibB[##1]{\_nousebib}\_def\_usebib/##1 (##2) ##3 {\_nousebib}%
+}
+\_def\_nousebib{\_opwarning{Don't use \noexpand\bib nor \noexpand\usebib in \string\layers}}
 
    \_doc -----------------------------
    Default \`\layers` `<num>` macro (when \^`\slideshow` is not activated) is simple.
@@ -242,6 +297,7 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2021-04-13 hyperlinks destinations are moved to the output routine when \slideshow
 2021-04-10 \layers: \prevdepth calculation added, {\_layertext} group added
 2021-04-10 \layers: bug with \setbox\_slidepageB fixed
 2021-04-10 \layers: \vskip\parskip added after \unvcopy\_slidepage
