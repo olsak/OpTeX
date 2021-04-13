@@ -24,14 +24,13 @@
    \_cod -----------------------------
 
 \_def\_usebib/#1 (#2) #3 {%
-  \_let\_citeI=\_relax \_xdef\_citelist{\_citelist\_citelistB}%
-  \_global\_let\_addcitelist=\_writeXcite
+  \_let\_citeI=\_relax \_xdef\_citelist{\_trycs{_ctlst:\_bibp}{}\_trycs{_ctlstB:\_bibp}{}}%
+  \_global \_ea\_let \_csname _ctlst:\_bibp\_endcsname =\_write
   \_ifx\_citelist\_empty
      \_opwarning{No cited items. \_noexpand\usebib ignored}%
   \_else
      \_bgroup \_par
         \_emergencystretch=.3\_hsize
-        \_ifx\_bibpart\_undefined \_def\_bibpart{none}\_fi
         \_def\_optexbibstyle{#2}%
         \_setctable\_optexcatcodes
         \_ea \_skiptoendinput \_input languages.opm
@@ -48,10 +47,10 @@
            \_input #3.bib
            \_ea}\_ea\_def\_ea\_citelist\_ea{\_citelist}%
         \_fi
-        \_def\_citeI[##1]{\_csname lb@cite\_endcsname{##1}{\_bibpart}{}{}}\_citelist
+        \_def\_citeI[##1]{\_csname lb@cite\_endcsname{##1}{\_bibp}{}{}}\_citelist
         \_BibFile{#3}%
-        \_if s#1\_SortList{\_bibpart}\_fi
-        \_ReadList{\_bibpart}%
+        \_if s#1\_SortList{\_bibp}\_fi
+        \_ReadList{\_bibp}%
         \_restorectable
      \_egroup
   \_fi
@@ -118,12 +117,12 @@
 
 \_def\MakeReference{\_par \_bibskip
   \_bibgl\_advance\_bibnum by1
-  \_isdefined{_bim:\_the\_bibnum}\_iftrue
-     \_edef\_tmpb{\_csname _bim:\_the\_bibnum\_endcsname}%
+  \_isdefined{_bim:\_bibp\_the\_bibnum}\_iftrue
+     \_edef\_tmpb{\_csname _bim:\_bibp\_the\_bibnum\_endcsname}%
      \_bibmark=\_ea{\_tmpb}%
   \_else \_bibmark={}\_fi
   \_edef\_tmpb{\EntryKey}%
-  \_noindent \_dest[cite:\_the\_bibnum]\_printlabel\EntryKey
+  \_noindent \_dbib\EntryKey
   \_printbib
   {%
      \_RetrieveFieldIn{entrytype}\_entrytype
@@ -136,8 +135,7 @@
            \_csname _print:misc\_endcsname
      \_fi\_fi
      \_csname _print:END\_endcsname
-     \_ifx\_wref\_wrefrelax\_else
-         \_immediate\_wref\_Xbib{{\EntryKey}{\_the\_bibnum}{\_the\_bibmark}}\_fi
+     \_wbib \EntryKey {\_the\_bibnum}{\_the\_bibmark}%
   }\_par
 }
 
@@ -369,7 +367,7 @@ character is sorted before `A`.
 
 History:
 --------
-
+2021-04-13  \bibpart implemented
 2021-04-13  \_bibgl introduced (used by \slides)
 2021-03-12  \_citelistB added before first test.
 2021-02-15  \_expandafter -> \_ea

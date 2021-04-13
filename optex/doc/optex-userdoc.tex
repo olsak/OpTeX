@@ -1309,6 +1309,29 @@ nothing. It tells only that the mentioned bib-record should be printed in the
 reference list. If \^`\nocite[*]` is used then all records from <bib-base>
 are printed.
 
+You can create more independent lists of references (you are creating proceedings,
+for example). Use \^`\bibpart` `{<name>}` to set the scope where \~`\cite`s
+and references list are printed (and interconnected) independent of another
+parts of your document. The \~`\cite` labels used in different parts can be
+the same and they are not affected. References lists can be created manualy
+by \^`\bib` or from a database by `\usebib`.
+Example:
+
+\begtt \typosize[10/12]
+\bibpart {AA}
+...\cite[labelX] ... \cite[labelY] ... % They belong to AA bib-list
+\usebib/c (simple) file.bib            % generates AA bib-list numbered 1, 2, ...
+                                       % \cite prints [1], [2], ... by bib-list AA
+\bibpart {BB}
+...\cite[labelZ] ... \cite[labelX] ... % They belong to BB bib-list
+\bibnum=0 \usebib/c (simple) my.bib    % generates BB bib-list numbered 1, 2, ...
+                                       % \cite prints [1], [2], ... by bib-list BB
+\endtt
+%
+By default, \^`\bibpart` is empty. So \~`\cite`s and the references list are conneted
+using this empty internal name.
+
+
 \sec Graphics
 %%%%%%%%%%%%%
 

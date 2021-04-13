@@ -145,8 +145,8 @@ There are four types of internal links and one type of external link:
                        see also the section \ref[maketoc].
 * `pg:<gpageno>`    -- the destination is created at beginning of each page,
                        see also the section \ref[output].
-* `cite:<bibnum>`   -- the destination is created in bibliography reference,
-                       see also the section \ref[bib].
+* `cite:<bibpart>/<bibnum>`   -- the destination is created in bibliography reference,
+                       see section \ref[bib].
 * `url:<url>`       -- used by `\url` or `\ulink`,
                        see also the end of this section.
 \enditems

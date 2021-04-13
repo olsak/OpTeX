@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalbaselineskip {Parameter settings <2021-04-07>} % preloaded in format
+\_codedecl \normalbaselineskip {Parameter settings <2021-04-13>} % preloaded in format
 
    \_doc -----------------------------
    \secc Primitive registers
@@ -337,12 +337,15 @@
    more declaration for printing (fonts, baselineskip, etc.) or you can
    define specific macros used in your `.bib` file.\nl
    The \`\biboptions` is used in the `iso690` bib-style for global options,
-   see section~\ref[isobib].
+   see section~\ref[isobib].\nl
+   The \`\bibpart` saves the name of bib-list if there are more bib-lists in
+   single document, see section~\ref[bib].
    \_cod -----------------------------
 
 \_newtoks\_bibtexhook
 \_newtoks\_biboptions
-\_public \bibtexhook \biboptions ;
+\_newtoks\_bibpart
+\_public \bibtexhook \biboptions \bibpart ;
 
    \_doc -----------------------------
    \`\everycapitonf` is used before printing caption in figures and
@@ -587,6 +590,7 @@ a register then \OpTeX/ macros still work without change.
 \_endinput
 
 History:
+2021-04-13 ... \bibpart added
 2021-04-07 ... \biboptions added, bug from iso690 fixed
 2020-04-04 ... \tabspaces added
 2020-04-03 ... \hicolors added

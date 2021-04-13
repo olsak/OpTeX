@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \cite {Cite, Biblioraphy <2020-03-13>} % loaded in format
+\_codedecl \cite {Cite, Biblioraphy <2021-04-13>} % loaded in format
 
    \_doc -----------------------------
    Registers used by `\cite`, `\bib` macros are declared here.
@@ -12,6 +12,15 @@
 \_newtoks\_bibmark                       % the bibmark used if \nonumcitations
 \_newcount\_lastcitenum \_lastcitenum=0  % for \shortcitations
 \_public \bibnum \bibmark ;
+
+   \_doc -----------------------------
+   \`\_bibp` expands to \^`\bibpart``/`.
+   By default, \^`\bibpart` is empty, so internal links are in the form
+   `cite:/<number>`. If \^`\bibpart` is set to `<bibpart>`, then internal
+   links are `cite:<bibpart>/<number>`.
+   \_cod -----------------------------
+
+\_def\_bibp{\_the\_bibpart/}             % unique name for each bibliography list
 
    \_doc -----------------------------
    \`\cite` `[<label>,<label>,...,<label>]` manages <labes> using `\_citeA`
@@ -35,7 +44,7 @@
 \_def\_nocite[#1]{{\_citeA#1,,,}}
 \_def\_rcite[#1]{{\_citeA#1,,,\_printsavedcites}}
 \_def\_ecite[#1]{\_bgroup\_citeA#1,,,\_ea\_eciteB\_savedcites;}
-\_def\_eciteB#1,#2;#3{\_if?#1\_relax #3\_else \_ilink[cite:#1]{#3}\_fi\_egroup}
+\_def\_eciteB#1,#2;#3{\_if?#1\_relax #3\_else \_ilink[cite:\_bibp#1]{#3}\_fi\_egroup}
 \_def\_savedcites{}
 
 \_public \cite \nocite \rcite \ecite ;
@@ -45,39 +54,42 @@
    It depends on \`\nonumcitations` and on used bib-style. The mapping from
    <label> to <bib-mark> is done when `\bib` or `\usebib` is processed.
    These macros store the information to
-   \`\_Xbib``{<label>}{<number>}{<nonumber>}` where <number> and <nonumber> are
+   \`\_Xbib``{<bibpart>}{<label>}{<number>}{<nonumber>}`
+   where <number> and <nonumber> are
    two variants of <bib-mark> (numbered or text-like). This information is
    read from `.ref` file and it is saved to macros
-   `\_bib:<label>` and `\_bibm:<number>`. First one includes number and second
-   one includes <nonumber>. The `\_lastbibnum` macro includes last number of
-   bib-entry used in the document. A designer can use it to set appropriate
+   `\_bib:<bibpart>/<label>` and `\_bim:<bibpart>/<number>`.
+   First one includes <number> and second one includes <nonumber>.
+   The `\_lastbn:<bibpart>` macro includes last number of
+   bib-entry used in the document with given <bibpart>.
+   A designer can use it to set appropriate
    indentation when printing the list of all bib-entries.
    \_cod -----------------------------
 
-\_def\_Xbib#1#2#3{\_sdef{_bib:#1}{\_bibnn{#2}&}%
-   \_if^#3^\_else\_sdef{_bim:#2}{#3}\_fi\_def\_lastbibnum{#2}}
+\_def\_Xbib#1#2#3#4{\_sxdef{_bib:#1/#2}{\_bibnn{#3}&}%
+   \_if^#4^\_else\_sxdef{_bim:#1/#3}{#4}\_fi\_sxdef{_lastbn:#1}{#3}}
 
    \_doc -----------------------------
    \`\_citeA` `<label>,` processes one label from the list of labels given in the
    parameter of `\cite`, `\nocite`, `\rcite` or `\ecite` macros. It adds the
-   <label> to global list `\_citelist` which will be used by `\usebib` (it
+   <label> to a global list `\_ctlst:<bibpart>/` which will be used by `\usebib` (it
    must know what <labels> are used in the document to pick-up
    only relevant bib-entries from the database. Because we want to save
-   space and not to save the same <label> to `\_citelist` twice, we
+   space and to avoid duplications of <label> in the `\_ctlst:<bibpart>/`, we
    distinguish four cases:
    \begitems
-   * `<label>` was not declared by \^`\_Xbib` and it is first such <label> in the
-     document: Then `\_bib:<label>` is undefined and we save label using
-     `\_addcitlist`, write warning on the terminal and define
-     `\_bib:<label>` as empty.
-   * `<label>` was not declared by \^`\_Xbib` but it was used previously in the
-     document: Then `\_bib:<label>` is empty and we do nothing (only data to
+   * `<label>` was not declared by \^`\_Xbib` before and it is first such a <label> in the
+     document: Then `\_bib:<bibpart>/<label>` is undefined and we save label using
+     \^`\_addcitelist`, write warning on the terminal and define
+     `\_bib:<bibpart>/<label>` as empty.
+   * `<label>` was not declared by \^`\_Xbib` before but it was used previously in the
+     document: Then `\_bib:<bibpart>/<label>` is empty and we do nothing (only data to
      `\_savedcites` are saved).
-   * `<label>` was declared by \^`\_Xbib` and it is first such <label> in the
-     document: Then `\_bin:<label>` includes `\_bibnn{<number>}&` and we
-     test this case by `\if &\_bibnn{<number>}&`. This is true when `\_bibnn{<number>}`
-     expands to empty. The <label> is saved by `\_addcitelist` and
-     `\_bib:<label>` is re-defined directly as <number>.
+   * `<label>` was declared by \^`\_Xbib` before and it is first such <label>
+     used in the document: Then `\_bib:<bibpart>/<label>` includes \`\_bibnn``{<number>}&` and we
+     test this case by the command `\if &\_bibnn{<number>}&`. This is true when `\_bibnn{<number>}`
+     expands to empty. The <label> is saved by \^`\_addcitelist` and
+     `\_bib:<bibpart>/<label>` is re-defined directly as <number>.
    * `<label>` was declared by \^`\_Xbib` and it was used previously in the
      document. Then we do nothing (only data to `\_savedcites` are saved.
    \enditems
@@ -86,28 +98,53 @@
 
 \_def\_citeA #1#2,{\_if#1,\_else
    \_if *#1\_addcitelist{*}\_ea\_skiptorelax \_fi
-   \_ifcsname _bib:#1#2\_endcsname \_else
+   \_ifcsname _bib:\_bibp#1#2\_endcsname \_else
       \_addcitelist{#1#2}%
-      \_opwarning{\_noexpand\cite [#1#2] unknown. Try to TeX me again}\_openref
+      \_opwarning{{\_the\_bibpart} \_noexpand\cite [#1#2] unknown. Try to TeX me again}\_openref
       \_incr\_unresolvedrefs
       \_addto\_savedcites{?,}\_def\_sortcitesA{}\_lastcitenum=0
-      \_ea\_gdef \_csname _bib:#1#2\_endcsname {}%
+      \_ea\_gdef \_csname _bib:\_bibp#1#2\_endcsname {}%
       \_ea\_skiptorelax \_fi
-   \_ea\_ifx \_csname _bib:#1#2\_endcsname \_empty
+   \_ea\_ifx \_csname _bib:\_bibp#1#2\_endcsname \_empty
       \_addto\_savedcites{?,}\_def\_sortcitesA{}\_lastcitenum=0
       \_ea\_skiptorelax \_fi
    \_def\_bibnn##1{}%
-   \_if &\_csname _bib:#1#2\_endcsname
+   \_if &\_csname _bib:\_bibp#1#2\_endcsname
       \_def\_bibnn##1##2{##1}%
       \_addcitelist{#1#2}%
-      \_sxdef{_bib:#1#2}{\_csname _bib:#1#2\_endcsname}%
+      \_sxdef{_bib:\_bibp#1#2}{\_csname _bib:\_bibp#1#2\_endcsname}%
    \_fi
-   \_edef\_savedcites{\_savedcites \_csname _bib:#1#2\_endcsname,}%
+   \_edef\_savedcites{\_savedcites \_csname _bib:\_bibp#1#2\_endcsname,}%
    \_relax
    \_ea\_citeA\_fi
 }
-\_def\_addcitelist#1{\_global\_addto\_citelist{\_citeI[#1]}}
-\_def\_citelist{}
+\_let\_bibnn=\_relax
+
+   \_doc ----------------------------
+   Because we implement possibility of more independent bibliography lists
+   distinguished by <bibpart>, the \`\_addcitelist``{<label>}` macro
+   must add the <label> to given `\_ctlst:<bibpart>/`.\nl
+   When `\_addcitelist` is processed before \^`\usebib`,
+   then \`\_citeI``[<label>]` is added. \^`\usebib` will use this list for selecting
+   right records from `.bib` file. Then \^`\usebib` sets
+   `\_ctlst:<bibpart>/` to `\_write`.\nl
+   If `\_addcitelist` is processed after \^`\usebib`, then
+   \`\_Xcite``{<bibpart>/}{<label>}` is saved to the `.ref`
+   file. The `\_Xcite` creates `\_ctlstB:<bibpart>/` as a list of saved
+   `\_citeI[<label>]`. Finally, \^`\usebib` concats boths lists `\_ctlst:<bibpart>/`
+   and `\_ctlstB:<bibpart>/` in the second \TeX/ run.
+   \_cod ----------------------------
+
+\_def\_addcitelist#1{%
+   \_unless \_ifcsname _ctlst:\_bibp\_endcsname \_sxdef{_ctlst:\_bibp}{}\_fi
+   \_ea \_ifx \_csname _ctlst:\_bibp\_endcsname \_write
+       \_openref \_immediate\_wref\_Xcite{{\_bibp}{#1}}%
+   \_else \_global \_ea\_addto \_csname _ctlst:\_bibp\_endcsname {\_citeI[#1]}\_fi
+}
+\_def\_Xcite#1#2{%
+   \_unless \_ifcsname _ctlstB:#1\_endcsname \_sxdef{_ctlstB:#1}{}\_fi
+   \_global \_ea\_addto \_csname _ctlstB:#1\_endcsname {\_citeI[#2]}%
+}
 
    \_doc -----------------------------
    The `<bib-marks>` (in numeric or text form) are saved in \^`\_savedcites`
@@ -167,28 +204,31 @@
 }
 \_def\_shortcitations{\_lastcitenum=1 }
 
-\_def\_printcite#1{\_citesep\_ilink[cite:#1]{\_citelinkA{#1}}\_def\_citesep{,\_hskip.2em\_relax}}
-\_def\_printdashcite#1{\_ifmmode-\_else\_hbox{--}\_fi\_ilink[cite:#1]{\_citelinkA{#1}}}
+\_def\_printcite#1{\_citesep
+   \_ilink[cite:\_bibp#1]{\_citelinkA{#1}}\_def\_citesep{,\_hskip.2em\_relax}}
+\_def\_printdashcite#1{\_ifmmode-\_else\_hbox{--}\_fi\_ilink[cite:\_bibp#1]{\_citelinkA{#1}}}
 \_def\_citesep{}
 
 \_def\_nonumcitations{\_lastcitenum=0\_def\_sortcitesA{}\_def\_etalchar##1{$^{##1}$}%
-   \_def\_citelinkA##1{\_isdefined{_bim:##1}\_iftrue \_csname _bim:##1\_endcsname
-      \_else ##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib-style}\_fi}%
+   \_def\_citelinkA##1{\_trycs{_bim:\_bibp##1}
+       {##1\_opwarning{\_noexpand\nonumcitations + empty bibmark. Maybe bad bib-style}}}%
 }
 \_def\_citelinkA{}
 
 \_public \nonumcitations \sortcitations \shortcitations ;
 
    \_doc -----------------------------
-   The \`\bib` `[<label>] {<optional bib-mark>}` prints one bib-entry
-   without reading any database. The bib-enty follows after this command.
+   The \`\bib` `[<label>]` or `\bib [<label>] ={<bib-mark>}` prints one bib-entry
+   without reading any database. The bib-entry follows after this command.
    This command counts the used `\bib`s from one by `\bibnum` counter and
-   saves \^`\_Xbib``{<label>}{\_the\_bibnum}{\_the\_bibmark}` into `.ref` file
-   immediately using \`\_wbib`. This is the core of creation of mapping from
-   `<labels>` to `<bib-marks>`.\nl
+   saves \^`\_Xbib``{<bibpart>}{<label>}{<number>}{<nonumber>}` into `.ref` file
+   immediately using \`\_wbib``{<label>}{<number>}{<nonumber>}`.
+   This is the core of creation of mapping from `<labels>` to `<number>` and
+   `<nonumber>`.\nl
    \`\_bibA` and \`\_bibB` implement the scanner of the optional argument
    with the \^`\bibmark`.\nl
-   \`\_bibgl` is `\relax` by default but \^`\slides` do `\let\_bibgl=\_global`.
+   \`\_bibgl` is `\relax` by default but \^`\slides` do `\let\_bibgl=\_global`.\nl
+   \`\_dbib``{<label>}` creates destination for hyperlinks.
    \_cod -----------------------------
 
 \_def\_bib[#1]{\_def\_tmp{\_isnextchar={\_bibA[#1]}{\_bibmark={}\_bibB[#1]}}%
@@ -196,12 +236,14 @@
 \_def\_bibA[#1]=#2{\_bibmark={#2}\_bibB[#1]}
 \_def\_bibB[#1]{\_par \_bibskip
    \_bibgl\_advance\_bibnum by1
-   \_noindent \_def\_tmpb{#1}\_wbib{#1}{\_the\_bibnum}{\_the\_bibmark}%
-   \_printlabel{#1}%
+   \_noindent \_def\_tmpb{#1}\_dbib{#1}\_wbib{#1}{\_the\_bibnum}{\_the\_bibmark}%
    \_printbib \_ignorespaces
 }
-\_def\_wbib#1#2#3{\_dest[cite:\_the\_bibnum]%
-   \_ifx\_wref\_wrefrelax\_else \_immediate\_wref\_Xbib{{#1}{#2}{#3}}\_fi}
+\_def\_dbib#1{\_dest[cite:\_bibp\_the\_bibnum]\_printlabel{#1}}
+\_def\_wbib#1#2#3{%
+   \_ifx\_wref\_wrefrelax\_else \_immediate\_wref\_Xbib{{\_the\_bibpart}{#1}{#2}{#3}}\_fi
+   \_unless \_ifcsname bib:\_bibp#1\_endcsname \_Xbib{\_the\_bibpart}{#1}{#2}{#3}\_fi
+}
 \_let\_bibgl=\_relax
 
 \_public \bib ;
@@ -249,22 +291,6 @@
 \_def\_nobibwarning[#1]{\_global\_addto\_nobibwarnlist{#1,}}
 \_public \nobibwarning ;
 
-   \_doc -----------------------------
-   The macros above works if all `\cite` (or similar) commands are used
-   before the `\usebib` command is used because `\usebib` prints only such
-   bib-entries their <labels> are saved in the `\_citelist`. But if some
-   `\cite` is used after `\usebib`, then `\usebib` sets `\_addcitelist` to
-   \`\_writeXcite`, so such `\cite` saves the information to the
-   `.ref`file in the format \`\_Xcite``{<label>}`. Such information are copied
-   to `\_citelistB` during reading `.ref` file and `\usebib` concats two
-   lists of <labels> from `\_citelist` and `\_citelistB` and
-   uses this concatenated list.
-   \_cod -----------------------------
-
-\_def\_Xcite#1{\_addto\_citelistB{\_citeI[#1]}}
-\_def\_writeXcite#1{\_openref\_immediate\_wref\_Xcite{{#1}}}
-\_def\_citelistB{}
-
 \_endcode % -------------------------------------
 
 See end of the `usebib.opm` file for documentation about creating style
@@ -274,5 +300,6 @@ See end of the `bib-iso690.opm` file for large documentation about `.bib` files
 structure and about the usage of `iso690` bib-style.
 
 History:
+2021-04-13 ... \bibpart implemented
 2021-04-13 ... \_bibgl introduced (used in \slides)
 2020-03-09 ... released
