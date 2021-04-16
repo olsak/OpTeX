@@ -93,6 +93,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
 <li>Fonts
 <ul>
+    <li><a href="#fontexpand">Micro-typography: font expanding, hanging punctuation</a>
     <li><a href="#scaleto">Text size changed to the desired width</a>
     <li><a href="#fawesome">More than 1300 icons from Awesome5 fonts</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
@@ -204,6 +205,55 @@ The important OPmac tricks will be re-implemented here soon.
 <br><hr>
 
 <p CLASS="lmarg">Fonts</p>
+
+<h2><a name="fontexpand"></a>Micro-typography: font expanding, hanging punctuation</h2>
+
+<p>LuaTeX supports "microtypography features": slight font expanding when
+the paragraph line is stretched and hanging punctuation. You can enable this
+using primitives \pdffontexpand+\pdfadjustspacing and
+\rpcode,\lpcode+\pdfprotrudechars. Example:
+
+<pre>
+\pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm
+\pdfadjustspacing=2             % font expandnig activated
+
+\chardef\hyph=\hyphenchar\_tenrm
+\rpcode\_tenrm\hyph=310  \rpcode\_tenrm`\.=200 \rpcode\_tenrm`\,=200
+\lpcode\_tenrm`\“=400 \rpcode\_tenrm`\”=400  % hanging punctuation configured for \_tenrm
+\pdfprotrudechars=2                          % hanging puctuation activated
+</pre>
+
+<p>See <a href="http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf">TeX in a Nutshell,
+page 23</a> for more information about parameters of used primitives.
+
+<p>You can start from this example and modify it for your needs.
+Note, that you must use these commands after \fontfam, \typosize, or other
+font-reloading macros are used. These font-reloading macros load fonts and set
+their internal font selectors \_tenrm, \_tenit, \_tenbf and \_tenbi. The commands
+from the example above configure features of fonts using these font selectors.
+
+<p>If you are using different sizes in your document, you can set your
+micro-typography configuration for all such sizes. Example:
+
+<pre>
+% Declaration:
+\pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm at main size
+\pdfadjustspacing=2
+...
+{\typosize[8/10]
+ \pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm at 8pt
+ \rpcode\_tenrm`\.=200 ...       % hanging punctuation for \_tenrm at 8pt
+ ...
+}
+
+% Document:
+The text at main size with configured extensions...
+
+{\typosize[8/10] The text at footnote size with configured extensions...}
+</pre>
+
+<p CLASS=datum>(0058) -- P. O. 2020-04-16<p>
+<hr>
 
 <h2><a name="scaleto"></a>Text size changed to the desired width</h2>
 
@@ -2485,7 +2535,7 @@ contents.
 \endlinechar is set. Then the parameter is read and written to the given
 file. Elementary my dear Watson.
 
-<p CLASS=datum>(0056) -- P. O., 2021-04-10<p>
+<p CLASS=datum>(0057) -- P. O., 2021-04-10<p>
 <hr>
 
 
