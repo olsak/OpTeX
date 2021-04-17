@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2021-04-03>} % preloaded in format
+\_codedecl \ulink {Hyperlinks <2021-04-17>} % preloaded in format
 
    \_doc ----------------------------
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
@@ -46,7 +46,7 @@
    \_cod ----------------------------
 
 \_protected\_def\_linkactive[#1:#2]#3#4{\_leavevmode\_pdfstartlink \_linkdimens
-      \_pdfborder{#1} goto name{#1:#2}\_relax
+      attr{\_pdfborder{#1}} goto name{#1:#2}\_relax
       {\_localcolor\_trycs{_#1linkcolor}{#3}#4}\_pdfendlink
 }
 \_protected\_def\_link[#1]#2#3{\_leavevmode{#3}}
@@ -63,7 +63,7 @@
    \_cod ----------------------------
 
 \_protected\_def\_urlactive[#1:#2]#3#4{\_leavevmode{\_escapechar=-1
-   \_pdfstartlink \_linkdimens \_pdfborder{#1}%
+   \_pdfstartlink \_linkdimens attr{\_pdfborder{#1}}%
       user{/Subtype/Link/A <</Type/Action/S/URI/URI(\_detokenize{#2})>>}\_relax
       {\_localcolor\_trycs{_#1linkcolor}{#3}#4}\_pdfendlink}%
 }
@@ -71,9 +71,9 @@
 \_public \ulink ;
 
    \_doc ----------------------------
-   The `\_pdfstartlink` primitive uses `\_pdfborder{<type>}` in its parameter
+   The `\_pdfstartlink` primitive uses `attr{\_pdfborder{<type>}}` in its parameter
    (see \^`\_linkactive` or \^`\_urlactive` macros). The \`\_pdfborder``{<type>}`
-   expands to `attr{/C[? ? ?] /Border[0 0 .6]}` if the
+   expands to `/C[? ? ?] /Border[0 0 .6]` if the
    `\_<type>border` (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
    \`\_pgborder`, \`\_urlborder`, \`\_fntborder` or \`\_fnfborder`)
    is defined. Users can define it in
@@ -83,8 +83,7 @@
    \_cod ----------------------------
 
 \_def\_pdfborder#1{\_ifcsname _#1border\_endcsname
-       attr{/C[\_csname _#1border\_endcsname] /Border[0 0 .6]}%
-   \_else attr{/Border[0 0 0]}\_fi
+     /C [\_csname _#1border\_endcsname] /Border [0 0 .6]\_else  /Border [0 0 0]\_fi
 }
 
    \_doc ----------------------------
@@ -161,6 +160,7 @@ of internal links are created at the same destination place:
 
 \_endinput
 
+2021-04-17 attr{\_pdfborder{...}} instead expanding \_pdfborder to attr{...}
 2021-04-02 The possibility of \def\_toclinkcolor introduced, \localcolor moved
 2021-01-27 \public \link added to \hyperlinks, bug fixed.
 2020-04-22 \| in \url: bug fixed
