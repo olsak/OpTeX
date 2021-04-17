@@ -73,8 +73,8 @@
    \_doc ----------------------------
    The `\_pdfstartlink` primitive uses `attr{\_pdfborder{<type>}}` in its parameter
    (see \^`\_linkactive` or \^`\_urlactive` macros). The \`\_pdfborder``{<type>}`
-   expands to `/C[? ? ?] /Border[0 0 .6]` if the
-   `\_<type>border` (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
+   macro expands to `/C[? ? ?] /Border[0 0 .6]` if the
+   `\_<type>border` macro (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
    \`\_pgborder`, \`\_urlborder`, \`\_fntborder` or \`\_fnfborder`)
    is defined. Users can define it in
    order to create colored frames around active links. For example

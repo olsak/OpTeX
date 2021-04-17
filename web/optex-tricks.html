@@ -94,6 +94,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Fonts
 <ul>
     <li><a href="#fontexpand">Micro-typography: font expanding, hanging punctuation</a>
+    <li><a href="#setpcodes">Micro-typography: parameters setting</a>
     <li><a href="#scaleto">Text size changed to the desired width</a>
     <li><a href="#fawesome">More than 1300 icons from Awesome5 fonts</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
@@ -227,33 +228,98 @@ using primitives \pdffontexpand+\pdfadjustspacing and
 page 23</a> for more information about parameters of used primitives.
 
 <p>You can start from this example and modify it for your needs.
-Note, that you must use these commands after \fontfam, \typosize, or other
-font-reloading macros are used. These font-reloading macros load fonts and set
-their internal font selectors \_tenrm, \_tenit, \_tenbf and \_tenbi. The commands
-from the example above configure features of fonts using these font selectors.
 
-<p>If you are using different sizes in your document, you can set your
-micro-typography configuration for all such sizes. Example:
+<p>If you want to apply your settings to all fonts in all sizes used in the
+font selection system, re-define the macro \_newfontloaded. It is empty by
+default and it is called for each new loaded font from OpTeX font selection
+system (version Apr. 17 2021 or newer). The parameter #1 is font-switch of
+just loaded font.
 
 <pre>
-% Declaration:
-\pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm at main size
-\pdfadjustspacing=2
-...
-{\typosize[8/10]
- \pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm at 8pt
- \rpcode\_tenrm`\.=200 ...       % hanging punctuation for \_tenrm at 8pt
- ...
+\def\_newfontloaded#1{%
+   %\wterm{Microtype setting for: #1=\fontname#1}% logging font settings
+   \pdffontexpand#1 30 20 5
+   \rpcode#1\hyphenchar#1=310 \rpcode\_tenrm`\.=200 \rpcode\_tenrm`\,=200
+   \lpcode\_tenrm`\“=400 \rpcode\_tenrm`\”=40
 }
-
-% Document:
-The text at main size with configured extensions...
-
-{\typosize[8/10] The text at footnote size with configured extensions...}
+\pdfadjustspacing=2
+\pdfprotrudechars=2
 </pre>
+
+<p>You have to put this definition before \fontfam or \typosize.
+
+<p>If you want to set the parameters more comfortably, try to use next
+<a href="#setpcodes">OpTeX trick 0059</a>
 
 <p CLASS=datum>(0058) -- P. O. 2020-04-16<p>
 <hr>
+
+<h2><a name="setpcodes"></a>Micro-typography: parameters setting</h2>
+
+<p>The previous <a href="#fontexpand">OpTeX trick 0058</a> shows how to set
+micro-typographical parameters to all loaded fonts. But the setting using
+primitives is not comfortable, because values of \lpcode and \rpcode are in
+promiles of em size but we want to set them as promiles of character size.
+Moreover, we want to copy and paste default values from microtype.cfg file
+(from microtype LaTeX package), so we want to use the same format of
+setting.
+
+<p>We implement macros:
+
+<pre>
+\setpcodes font  { data } ... sets \lpcode's, \rpcode's, promiles of character are given
+\setecodes font  { data } ... sets \efcode's (expansion coefficient in promiles)
+\equalcodes font { data } ... sets equal \lpcode's, \rpcode's, \efcode's for more characters
+</pre>
+
+<p>The { data } of \setpcodes and \setecodes have equal syntax as in macros
+\SetProtrusion, \SetExpansion used in the microtype.sty LaTeX package. The { data } of
+\equalcodes are comma separated list of char = characters.
+Example:
+
+<pre>
+\def\_newfontloaded #1{
+   \pdffontexpand #1 30 20 5
+   \setpcodes  #1 { A = {50,50}, T = {50,50}, . = { ,700}, {,} = { ,500}, }
+   \setecodes  #1 { A = 500, B = 700, C = 700, D = 500 }
+   \equalcodes #1 { A = ÁÁÂÃÄÅ, C = ĆĈĊČ, E = ĒĔĖĘĚ }
+}
+\pdfadjustspacing=2
+\pdfprotrudechars=2
+</pre>
+
+<p>If you create more complete data, please, inform me about it. I'll put
+the internet URL here to this.
+
+<p>Implementation:
+
+<pre>
+def\setpcodes#1#2{\let\tmpf=#1\edef\tmp{\number\fontdimen6#1}\setpcodesA#2,,={},}
+\def\setpcodesA#1#2=#3#4{\ifx^#3^\else
+   \afterfi{\setbox0=\hbox{#1}\tmpnum=`#1 \setpcodesB#3,\setpcodesA}\fi}
+\def\setpcodesB#1,#2,{%
+   \ifnum#10=0 \else \lpcode\tmpf\tmpnum=\numexpr #1*\number\wd0/\tmp\relax \fi
+   \ifnum#20=0 \else \rpcode\tmpf\tmpnum=\numexpr #2*\number\wd0/\tmp\relax \fi
+}
+\def\setecodes#1#2{\let\tmpf=#1\setecodesA#2,,={},}
+\def\setecodesA#1#2=#3#4,{\ifx^#3^\else
+   \afterfi{\tmpnum=`#1 \efcode\tmpf`#1=#3#4 \setecodesA}\fi
+}
+\def\equalcodes#1#2{\let\tmpf=#1\equalcodesA#2,,={},}
+\def\equalcodesA#1#2=#3#4,{\ifx^#3^\else
+   \afterfi{\tmpnum=`#1 \equalcodesB#3#4\end\equalcodesA}\fi}
+\def\equalcodesB#1{\ifx\end#1\else
+   \lpcode\tmpf`#1=\lpcode\tmpf\tmpnum
+   \rpcode\tmpf`#1=\rpcode\tmpf\tmpnum
+   \efcode\tmpf`#1=\efcode\tmpf\tmpnum
+   \ea\equalcodesB\fi
+}
+</pre>
+
+
+<p CLASS=datum>(0059) -- P. O. 2020-04-17<p>
+<hr>
+
 
 <h2><a name="scaleto"></a>Text size changed to the desired width</h2>
 
