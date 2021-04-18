@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2021-04-07>} % preloaded in format
+\_codedecl \begtt {Verbatim <2021-04-18>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters
@@ -125,6 +125,7 @@
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
+   \_protrudechars=0 % disable protrusion
    \_the\_everytt \_relax #1\_relax \_ttfont
    \_def\_testcommentchars##1\_iftrue{\_iffalse}\_let\_hicomments=\_relax
    \_savemathsb \_endlinechar=`^^J
@@ -246,6 +247,7 @@
    \_ifnum\_ttline<-1 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_setverb \_adef{ }{\_dsp}\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
+   \_protrudechars=0 % disable protrusion
    \_the\_everytt\_relax \_tmpb\_relax \_ttfont
    \_savemathsb \_endlinechar=`^^J \_tmpnum=0
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
@@ -374,6 +376,7 @@
 \_endinput
 
 History:
+2021-04-18 ... \_protrudechars=0 added
 2021-04-07 ... \_savemathsb, \_restoremathsb introduced
 2021-01-22 ... \activettchar changed to \verbchar
 2020-12-30 ... \secc followed by \begtt must be unbreakable
