@@ -95,6 +95,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#fontexpand">Micro-typography: font expanding, hanging punctuation</a>
     <li><a href="#setpcodes">Micro-typography: parameters setting</a>
+    <li><a href="#microtypeex">Micro-typography: exceptions for selected fonts</a>
     <li><a href="#scaleto">Text size changed to the desired width</a>
     <li><a href="#fawesome">More than 1300 icons from Awesome5 fonts</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
@@ -211,17 +212,17 @@ The important OPmac tricks will be re-implemented here soon.
 
 <p>LuaTeX supports "microtypography features": slight font expanding when
 the paragraph line is stretched and hanging punctuation. You can enable this
-using primitives \pdffontexpand+\pdfadjustspacing and
-\rpcode,\lpcode+\pdfprotrudechars. Example:
+using primitives \pdffontexpand+\adjustspacing and
+\rpcode,\lpcode+\protrudechars. Example:
 
 <pre>
 \pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm
-\pdfadjustspacing=2             % font expandnig activated
+\adjustspacing=2                % font expandnig activated
 
 \chardef\hyph=\hyphenchar\_tenrm
 \rpcode\_tenrm\hyph=310  \rpcode\_tenrm`\.=200 \rpcode\_tenrm`\,=200
 \lpcode\_tenrm`\“=400 \rpcode\_tenrm`\”=400  % hanging punctuation configured for \_tenrm
-\pdfprotrudechars=2                          % hanging puctuation activated
+\protrudechars=2                             % hanging puctuation activated
 </pre>
 
 <p>See <a href="http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf">TeX in a Nutshell,
@@ -242,11 +243,16 @@ just loaded font.
    \rpcode#1\hyphenchar#1=310 \rpcode\_tenrm`\.=200 \rpcode\_tenrm`\,=200
    \lpcode\_tenrm`\“=400 \rpcode\_tenrm`\”=40
 }
-\pdfadjustspacing=2
-\pdfprotrudechars=2
+\adjustspacing=2
+\protrudechars=2
 </pre>
 
-<p>You have to put this definition before \fontfam or \typosize.
+<p>You have to put this definition before \fontfam or \typosize or apply
+\_reloading\rm after the definition.
+
+<p>The \_newfontloaded is run only once for each new font. All settings here
+must be global. This is true for micro-typography settings: values of \rpcode
+etc. are stored globally into the font table.
 
 <p>If you want to set the parameters more comfortably, try to use next
 <a href="#setpcodes">OpTeX trick 0059</a>
@@ -259,16 +265,16 @@ just loaded font.
 <p>The previous <a href="#fontexpand">OpTeX trick 0058</a> shows how to set
 micro-typographical parameters to all loaded fonts. But the setting using
 primitives is not comfortable, because values of \lpcode and \rpcode are in
-promiles of em size but we want to set them as promiles of character size.
-Moreover, we want to copy and paste default values from microtype.cfg file
-(from microtype LaTeX package), so we want to use the same format of
-setting.
+per mille units (1/1000) of em size but we want to set them as per mille of
+character size. Moreover, we want to copy and paste default values from
+microtype.cfg file (from microtype LaTeX package), so we want to use the
+same format of setting.
 
 <p>We implement macros:
 
 <pre>
-\setpcodes font  { data } ... sets \lpcode's, \rpcode's, promiles of character are given
-\setecodes font  { data } ... sets \efcode's (expansion coefficient in promiles)
+\setpcodes font  { data } ... sets \lpcode's, \rpcode's, per mille of character are given
+\setecodes font  { data } ... sets \efcode's (expansion coefficient in per mille)
 \equalcodes font { data } ... sets equal \lpcode's, \rpcode's, \efcode's for more characters
 </pre>
 
@@ -278,28 +284,30 @@ setting.
 Example:
 
 <pre>
-\def\_newfontloaded #1{
+\def\_newfontloaded #1{%
    \pdffontexpand #1 30 20 5
-   \setpcodes  #1 { A = {50,50}, T = {50,50}, . = { ,700}, {,} = { ,500}, }
-   \setecodes  #1 { A = 500, B = 700, C = 700, D = 500 }
-   \equalcodes #1 { A = ÁÁÂÃÄÅ, C = ĆĈĊČ, E = ĒĔĖĘĚ }
+   \setpcodes  #1 { A = {50,50}, T = {50,50}, . = { ,700}, {,} = { ,500}, }%
+   \setecodes  #1 { A = 500, B = 700, C = 700, D = 500 }%
+   \equalcodes #1 { A = ÁÁÂÃÄÅ, C = ĆĈĊČ, E = ĒĔĖĘĚ }%
 }
-\pdfadjustspacing=2
-\pdfprotrudechars=2
+\adjustspacing=2
+\protrudechars=2
 </pre>
 
 <p>If you create more complete data, please, inform me about it. I'll put
-the internet URL here to this.
+the internet URL here to this. Next
+<a href="#microtypeex">OpTeX trick 0060</a> shows how to implement
+exceptions from default setting.
 
-<p>Implementation:
+<p>Implementation of \setpcodes, \setecodes and \equalcodes:
 
 <pre>
 def\setpcodes#1#2{\let\tmpf=#1\edef\tmp{\number\fontdimen6#1}\setpcodesA#2,,={},}
 \def\setpcodesA#1#2=#3#4{\ifx^#3^\else
    \afterfi{\setbox0=\hbox{#1}\tmpnum=`#1 \setpcodesB#3,\setpcodesA}\fi}
 \def\setpcodesB#1,#2,{%
-   \ifnum#10=0 \else \lpcode\tmpf\tmpnum=\numexpr #1*\number\wd0/\tmp\relax \fi
-   \ifnum#20=0 \else \rpcode\tmpf\tmpnum=\numexpr #2*\number\wd0/\tmp\relax \fi
+   \if\relax\useit#1\relax\else \lpcode\tmpf\tmpnum=\numexpr #1*\number\wd0/\tmp\relax \fi
+   \if\relax\useit#2\relax\else \rpcode\tmpf\tmpnum=\numexpr #2*\number\wd0/\tmp\relax \fi
 }
 \def\setecodes#1#2{\let\tmpf=#1\setecodesA#2,,={},}
 \def\setecodesA#1#2=#3#4,{\ifx^#3^\else
@@ -316,10 +324,90 @@ def\setpcodes#1#2{\let\tmpf=#1\edef\tmp{\number\fontdimen6#1}\setpcodesA#2,,={},
 }
 </pre>
 
+<p>Sometimes we want to suppress the protrusion. Th \begtt...\endtt
+environments disable protrusion by default by setting \protrudechars=0.
+You can disable it at more places, for example use {\protrudechars=0 \maketoc}.
+The \protrudechars value is valid when paragraph is finished by \par
+(similarly as \baselineskip). If you want to disable only a single character,
+you can define
+
+<pre>
+\def\noprotrude{\vrule height1spdepth0ptwidth0pt\relax}
+</pre>
+
+<p>and use \noprotrude just before/after the character which must not be protruded.
 
 <p CLASS=datum>(0059) -- P. O. 2020-04-17<p>
 <hr>
 
+<h2><a name="microtypeex"></a>Micro-typography: exceptions for selected fonts</h2>
+
+<p>Suppose that we have complete data for setting default microtype
+parameters in the format described in previous
+<a href="#setpcodes">OpTeX trick 0059</a>. Now, we have to set exceptions
+for various font families and fonts. We can use following code:
+
+<pre>
+\def\_newfontloaded #1{%
+   \let\tmpf=#1%
+   \microtypedefault
+   \trycs{microtype-fam:\_currfamily}{}%
+   \trycs{microtype-font:\ea\fontfile\fontname#1\relax}{}%
+}
+\def\fontfile#1{\ifx[#1\ea\fontfileA\else\ea\fontfileB\fi#1}
+\def\fontfileA [#1]#2\relax{#1}
+\def\fontfileB#1\relax{unknown}
+
+\def\microtypedefault {% Default micro-type setting:
+   \pdffontexpand\tmpf 30 20 5
+   \setpcodes  \tmpf { A = {50,50}, B = {50, }, }%   ... etc.
+   \setecodes  \tmpf { A = 500, B = 700, C = 700, }% ... etc.
+   \equalcodes \tmpf { A = ÁÁÂÃÄÅ, C = ĆĈĊČ, }%      ... etc.
+}
+</pre>
+
+<p>If macros \microtype-fam:currfamily and \microtype-fam:currfont
+do not exist then only \microtypedefaut is processed. If these macros exist
+then they are processed after \microtypedefault. So, selected data can be
+overwritten. For example, you can define
+
+<pre>
+\sdef{microtype-fam:Dejavu}{% extra settings for Dejavu family:
+   \setpcodes  \tmpf { B = {30, }, }%   ... etc.
+   \setecodes  \tmpf { B = 400, }%  ... etc.
+}
+\sdef{microtype-font:DejaVuSerif-Italic}{% extra settings for DejaVuSerif-Italic:
+   \setpcodes  \tmpf { B = {10, }, }%   ... etc.
+   \setecodes  \tmpf { B = 200, }% ... etc.
+}
+... etc.
+</pre>
+
+<p>The font name used in microtype-font: identifier is the part of full
+\fontname enclosed to brackets [...]. It is font file name without features
+and without size specification.
+
+<p>The names are case sensitive here, be aware to use right names. You can
+add tracing. For example use
+
+<pre>
+\wterm{fam: "\_currfamily", font: "\ea\fontfile\fontname#1"}
+</pre>
+
+<p>in the \_newfontload macro.
+
+<p>You can create a package with complete microtype data using these OpTeX
+tricks. If you do it, please, let us know about it. I am ready to add an URL
+for such package here. But I have no mental force to create this package, sorry.
+
+<p>There is one conceptual question: where to put the exceptions described
+here? One possibility is to put them to one big configuration file included in
+the (theoretical) microtype package. Second option is to put them into the
+font family files. I am ready to use second option if an author of
+(theoretical) microtype package decides it as good choice.
+
+<p CLASS=datum>(0060) -- P. O. 2020-04-17<p>
+<hr>
 
 <h2><a name="scaleto"></a>Text size changed to the desired width</h2>
 
