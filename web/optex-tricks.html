@@ -131,6 +131,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#torighteq">Equation marks in atypical cases</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
+    <li><a href="#avert">Vertical bars and more math shortcuts</a>
 </ul>
 
 <li>Tables
@@ -1344,6 +1345,52 @@ it uses \ldots.
 characters are appended when second and more \declbasemathchars is used.
 
 <p CLASS=datum>(0045) -- P. O. 2021-02-12<p>
+<hr>
+
+<h2><a name="avert"></a>Vertical bars and more math shortcuts</h2>
+
+<p>Writing $|x|$ in the source code works but $|-1|$ or $|\sin x|$
+gives bad spaces, because | is Ord and it should be Open at the left and Close
+at the right side. But typing something more complicated in the math source is
+annoying. We define | as math active character which gives right spacing.
+Moreover, we can type $||x||$ for norm with righ spacing.
+
+<pre>
+\mathcode`|="8000
+\def\autovert{\isnextchar|{\autoVertA}{\autovertA}}
+\def\autoVertA|#1||{\mathopen{}\mathclose{\left\Vert #1\right\Vert}}
+\def\autovertA#1|{\mathopen{}\mathclose{\left\vert #1\right\vert}}
+{\catcode`|=13 \global\let|=\autovert}
+</pre>
+
+<p>You can try to write $|-1|$ or $||x-y||$. Moreover, the vertical bars are
+resizable because the |#1| is defined as
+
+<pre>
+\mathopen{}\mathclose{\left\vert#1\right\vert}.
+</pre>
+
+<p>Do you want more shortcuts?
+For example, if you write &lt;= then it should be automatically
+transformed to Unicode character ≤ in your text editor.
+Then OpTeX is able to read it and your math source keeps clear.
+But, if such a feature is not available in your text editor then you
+can implement this intelligence at macro level.
+You write
+
+<pre>
+$$ a &lt;= b &lt;= c ==> a &lt;= c $$
+</pre>
+
+<p>and you get:
+
+<p><IMG SRC="../img/mspecdef.png" ALT="Code blocks" border=0>
+
+<p>You can use macos from
+<a href="http://petr.olsak.net/opmac-tricks-e.html#mspecdef">OPmac trick 0149</a>,
+they are working in OpTeX too.
+
+<p CLASS=datum>(0061) -- P. O. 2021-04-19<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
