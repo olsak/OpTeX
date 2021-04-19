@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2021-02-25>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2021-04-19>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
@@ -359,7 +359,7 @@
    \_doc -----------------------------
    The \`\setfontcolor` and \`\setletterspace` are macros based on the
    special font features provided by \LuaTeX/ (and by \XeTeX/ too but it is not
-   our business). The \`\setwordspace` recalulates the `\fontdimen2,3,4`
+   our business). The \`\setwordspace` recalculates the `\fontdimen2,3,4`
    of the font using the \`\setwsp` macro which is used by the
    \^`\_doresizeunifont` macro. It activates a dummy font feature `+Ws` too in
    order the font is reloded by the `\font` primitive (with independent
@@ -381,12 +381,14 @@
 }
 \_def \_setwordspace #1{%
    \_if^#1^\_def\_setwsp##1{}\_removefeature{+Ws}%
-   \_else \_def\_setwsp{\_setwspA{#1}}\_setff{+Ws}\_fi
+   \_else \_def\_setwsp{\_setwspA#1/}\_setff{+Ws}\_fi
    \_reloading
 }
 \_def\_setwsp #1{}
-\_def\_setwspA #1#2{\_fontdimen2#2=#1\_fontdimen2#2%
-   \_fontdimen3#2=#1\_fontdimen3#2\_fontdimen4#2=#1\_fontdimen4#2}
+\_def\_setwspA #1{\_ifx/#1\_ea\_setwspB \_else\_afterfi{\_setwspC#1}\_fi}
+\_def\_setwspB #1/#2/#3/#4{\_fontdimen2#4=#1\_fontdimen2#4%
+   \_fontdimen3#4=#2\_fontdimen3#4\_fontdimen4#4=#3\_fontdimen4#4}
+\_def\_setwspC #1/{\_setwspB #1/#1/#1/}
 
 \_def\_calculatefontcolor#1{\_trycs{_fc:#1}{#1}} % you can define more smart macro ...
 \_sdef{_fc:red}{FF0000FF}    \_sdef{_fc:green}{00FF00FF} \_sdef{_fc:blue}{0000FFFF}
@@ -774,6 +776,9 @@ empty parameter `<number>` means no letter spacing which is the default.
 \^`\setwordspace` `{<scaling>}` scales the default interword space (defined in the
 font) and its stretching and shrinking parameters by given `<scaling>`
 factor. For example `\setwordspace{2.5}` multiplies interword space by 2.5.
+\^`\setwordspace` can use different multiplication factors if its parameter is in the
+format `{/<default>/<stretching>/<shrinking>}`. For example,
+`\setwordspace{/1/2.5/1}` enlarges only stretching 2.5~times.
 
 If you need another font transformations, you can use `\setff`
 with following font features provided by Lua\TeX/:
@@ -838,6 +843,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2021-04-19  \setwordspace: parameter format {/A/B/C} implemented.
 2021-02-25  \_ttunifont introduced
 2021-01-27  lua hack (print function) removed because luaotfload 3.17 removes bug.
 2020-12-12  \_modlist added, doc improved
