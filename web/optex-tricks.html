@@ -247,8 +247,8 @@ just loaded font.
 \protrudechars=2
 </pre>
 
-<p>You have to put this definition before \fontfam or \typosize or apply
-\_reloading\rm after the definition.
+<p>You have to put this definition before \fontfam and \typosize or apply
+\foreach \_tenrm\_tenit\_tenbf\_tenbi \do{\_newfontloaded#1} after the definition.
 
 <p>The \_newfontloaded is run only once for each new font. All settings here
 must be global. This is true for micro-typography settings: values of \rpcode
@@ -394,17 +394,20 @@ add tracing. For example use
 \wterm{fam: "\_currfamily", font: "\ea\fontfile\fontname#1"}
 </pre>
 
-<p>in the \_newfontload macro.
+<p>in the \_newfontload macro. You can do more tests of the loaded font type.
+There are tips:
+
+<pre>
+\ifnum 0\ifx\tmpf\_tenit 1\fi \ifx\tmpf\_tenbi 1\fi =1 ... it or bi variants...\fi
+\def\tmp{Sans}\ifx\_subfamV\tmp ... sans variants...\fi
+</pre>
 
 <p>You can create a package with complete microtype data using these OpTeX
 tricks. If you do it, please, let us know about it. I am ready to add an URL
 for such package here. But I have no mental force to create this package, sorry.
-
-<p>There is one conceptual question: where to put the exceptions described
-here? One possibility is to put them to one big configuration file included in
-the (theoretical) microtype package. Second option is to put them into the
-font family files. I am ready to use second option if an author of
-(theoretical) microtype package decides it as good choice.
+I am ready to put family-dependent exceptions to font family files if
+a) default data were created in a package and
+b) someone send me the good family-exceptions.
 
 <p CLASS=datum>(0060) -- P. O. 2020-04-17<p>
 <hr>
@@ -572,7 +575,9 @@ without any change in OpTeX:
 <li>Leterspacing referred in
     <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>
     need not be done by this macro
-    because we have more robust lettersacing implemented as font feature.
+    because we have more robust letterspacing implemented as font feature,
+    se <a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#ref:specff">section 2.13.10</a>
+    in the OpTeX documentation.
 <li>\hyphenprocess from
     <a href="http://petr.olsak.net/opmac-tricks-e.html#hyphprocess">OPmac trick 0065</a>
     can be used to implement hyphenation feature to the \ul macro.
@@ -2795,7 +2800,7 @@ as shown in the example above. You are free to create your macros with
 arbitrary format and/or language. You can use \_mtext if you want to create
 a multilingual document or multilingual macros. You can get inspiration from
 section 2.37.3 of OpTeX documentation where the multilingual
-<a href=http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:today>\today macro</a>
+<a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:today">\today macro</a>
 is defined.
 
 <p>You can set \year, \month, \day to arbitrary values (not necessarily
