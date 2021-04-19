@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2021-04-13>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2021-04-19>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -98,7 +98,7 @@
 \_sdef{_spg:+}{\_par}
 
    \_doc -----------------------------
-   The \`\_endslides` is defined as `\_end` primitive, but
+   The \`\_endslides` is defined as `\_end` primitive (preceeded by `\_byehook`), but
    slide-designer can redefine it. For example,
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#slider]{OpTeX trick 0029}
    shows how to define clickable navigation to the pages and how to check
@@ -107,7 +107,7 @@
    The `\bye` macro is redefined here as an alternative to `\pg.`.
    \_cod -----------------------------
 
-\_def\_endslides{\_end}
+\_def\_endslides{\_byehook \_end}
 \_def\bye{\_pg.}
 
    \_doc -----------------------------
@@ -297,6 +297,7 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2021-04-19 \_byehook added to \_endslides.
 2021-04-13 hyperlinks destinations are moved to the output routine when \slideshow
 2021-04-10 \layers: \prevdepth calculation added, {\_layertext} group added
 2021-04-10 \layers: bug with \setbox\_slidepageB fixed

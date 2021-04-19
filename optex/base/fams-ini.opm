@@ -160,7 +160,7 @@
 \_endcode
 
 Once you have prepared a font family file with the name `f-<famname>.opm` and
-\TeX/can see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
+\TeX/ can see it in your filesystem then you can type \^`\fontfam``[<famname>]` and
 the file is read, so the information about the font family is loaded. The name
 `<famname>` must be lowercase and without spaces in the file name
 `f-<famname>.opm`. On the other hand, the `\fontfam` command is more tolerant:
@@ -185,7 +185,7 @@ declaration of Adobe's Times family in `fams-local.opm`. When a user writes
 `\fontfam[Times]` then the original Times (not Termes) is used.
 
 The `fams-ini.opm` and `fams-local.opm` files use the macros
-`\_famifo`, `\_famalias` and `\_famtext`. See the example from
+\~`\_faminfo`, \~`\_famalias` and \~`\_famtext`. See the example from
 `fams-ini.tex`:
 
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
