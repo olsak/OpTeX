@@ -2791,9 +2791,9 @@ function myfunction (...) -- lua comments are possible
 \newtoks\luamacros
 \luamacros={\let\\=\nbb \edef\%{\csstring\%}\edef\#{\csstring\#}\let\n=\relax}
 \def\beglua{\savelineno\bgroup \_setverb \endlinechar=`\^^J \begluaA}
-\ea\def\ea\begluaA\ea#\ea1\csstring\\endlua{\egroup\debuglua{#1}\directlua{#1}}
+\ea\def\ea\begluaA\ea#\ea1\csstring\\endlua^^J{\egroup\debuglua{#1}\directlua{#1}}
 \def\begLUA{\savelineno\bgroup \_setverb \endlinechar=`\^^J \catcode`\\=0 \begLUAA}
-\def\begLUAA#1\endLUA{\the\luamacros\debuglua{#1}\directlua{#1}\egroup}
+\def\begLUAA#1\endLUA^^J{\the\luamacros\debuglua{#1}\directlua{#1}\egroup}
 \def\savelineno{\edef\tmp{\the\numexpr\inputlineno+1}}
 \let\debuglua=\ignoreit
 \def\printloglua#1{\wlog{lua code processed (l.\tmp):^^J#1-------------}}

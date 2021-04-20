@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-04-07>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-04-20>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -149,33 +149,28 @@
 
    \_doc -----------------------------
    Each Unicode slot carries information about math type. This is saved in
-   the file `mathclass.txt` which is copied to `mathclass.opm` The file
+   the file `MathClass-15.txt` which is copied to `mathclass.opm` The file
    has the following format:
    {\vitt{mathclass.opm}\verbinput (70-85) mathclass.opm }
    We have to read this information and convert it to the `\Umathcode`s.
    \_cod -----------------------------
 
 \_begingroup  % \input mathclass.opm  (which is a copy of MathClass.txt):
-   \_def\_p#1;#2{\_edef\_tmp{\_pB#2}\_ifx\_tmp\_empty \_else\_pA#1....\_end#2\_fi}
+   \_long\_def\_p#1;#2 {\_ifx^#2^\_else
+      \_edef\_tmp{\_csname _c:#2\_endcsname}\_if\_relax\_tmp\_else \_pA#1....\_end#2\_fi
+      \_ea\_p \_fi }
    \_def\_pA#1..#2..#3\_end#4{%
-      \_ifx\_relax#2\_relax \_pset{"#1}{#4}\_else
-         \_umathnumA="#1
-         \_loop
-            \_pset{\_umathnumA}{#4}%
-            \_ifnum\_umathnumA<"#2 \_advance\_umathnumA by1
-         \_repeat
-      \_fi
+      \_ifx\_relax#2\_relax \_pset{"#1}{#4}\_else \_fornum "#1.."#2\_do{\_pset{##1}{#4}}\_fi
    }
-   \_def\_pB#1{\_if#1L1\_fi \_if#1B2\_fi \_if#1V2\_fi \_if#1R3\_fi \_if#1N0\_fi \_if#1U0\_fi
-             \_if#1F0\_fi \_if#1O4\_fi \_if#1C5\_fi \_if#1P6\_fi \_if#1A7\_fi}
-   \_def\_pset#1#2{\_global\_Umathcode#1=\_tmp\_space 1 #1\_relax
-      \_if#2O\_global\_Udelcode#1=1 #1\_relax\_fi
-      \_if#2C\_global\_Udelcode#1=1 #1\_relax\_fi
-      \_if#2F\_global\_Udelcode#1=1 #1\_relax\_fi
+   \_sdef{_c:L}{1}\_sdef{_c:B}{2}\_sdef{_c:V}{2}\_sdef{_c:R}{3}\_sdef{_c:N}{0}\_sdef{_c:U}{0}
+   \_sdef{_c:F}{0}\_sdef{_c:O}{4}\_sdef{_c:C}{5}\_sdef{_c:P}{6}\_sdef{_c:A}{7}
+   \_def\_pset#1#2{\_Umathcode#1=\_tmp\_space 1 #1\_relax
+      \_if#2O\_Udelcode#1=1 #1\_relax\_fi
+      \_if#2C\_Udelcode#1=1 #1\_relax\_fi
+      \_if#2F\_Udelcode#1=1 #1\_relax\_fi
    }
-   \_catcode`#=14
-   \_everypar={\_setbox0=\_lastbox \_par \_p}
-   \_setbox0=\_vbox{\_input mathclass.opm }
+   \_catcode`#=14 \_everyeof={;{} } \_def\par{}
+   \_globaldefs=1 \_ea \_p \_input mathclass.opm
 \_endgroup
 
    \_doc -----------------------------
@@ -188,13 +183,13 @@
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
       \_ifnum#1=\_Umathcodenum#1 % the code isn't set by mathclass.opm
-          \_global\_Umathchardef#2=0 1 #1 \_global\_Umathcode#1=0 1 #1
-      \_else \_global\_Umathcharnumdef#2=\_Umathcodenum#1 \_fi
-      \_ifx#3\_mathopen   \_gdef#2{\_Udelimiter 4 1 #1 }\_fi
-      \_ifx#3\_mathclose  \_gdef#2{\_Udelimiter 5 1 #1 }\_fi
-      \_ifx#3\_mathaccent \_gdef#2{\_Umathaccent fixed 7 1 #1 }\_fi
+          \_Umathchardef#2=0 1 #1 \_Umathcode#1=0 1 #1
+      \_else \_Umathcharnumdef#2=\_Umathcodenum#1 \_fi
+      \_ifx#3\_mathopen   \_def#2{\_Udelimiter 4 1 #1 }\_fi
+      \_ifx#3\_mathclose  \_def#2{\_Udelimiter 5 1 #1 }\_fi
+      \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
    }
-   \_input unimath-table.opm
+   \_globaldefs=1 \_input unimath-table.opm
 \_endgroup
 
    \_doc -----------------------------
@@ -444,6 +439,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-04-20  reading mathclass.opm improved
 2021-04-07  \_setnabla introduced, \nabla as uppercase Greek letter
 2021-03-26  \it does \_itGreek
 2021-03-19  \{, \} are defined as mode independent macros in math-macros.opm
