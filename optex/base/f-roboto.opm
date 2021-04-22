@@ -40,7 +40,7 @@ Extended variants:^^J
                     \_onlyif sub=Slab: {\_fvars Regular Bold . . }}
 \_moddef \bolder   {\_onlyif sub={}: {\_fsetV w=b \_fvars Medium Black MediumItalic BlackItalic }}
 
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
 \_famvardef \tf    {\_thinM \_rm}

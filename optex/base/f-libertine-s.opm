@@ -19,7 +19,7 @@ Special variants:^^J
 \_moddef \resetmod {\_fsetV mainfam=Libertine,subfam={},caps={} \_fvars {} B I BI }
 \_moddef \sans     {\_fsetV mainfam=Biolinum,subfam={} }
 \_moddef \mono     {\_fsetV mainfam=Libertine,subfam={Mono } \_fvars {} . . . }
-\_moddef \caps     {\_fsetV caps=+smcp; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
 \_famvardef \initials {\_fsetV mainfam=Libertine,subfam={Initials } \_fvars {} . . . \rm}

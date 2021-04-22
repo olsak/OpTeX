@@ -11,7 +11,7 @@ Modifier:^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={} \_fvars {} Bold It BoldIt }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
 

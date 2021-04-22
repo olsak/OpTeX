@@ -25,7 +25,7 @@ Modifiers:^^J
 \_moddef \elight   {\_fvars ExtraLight Regular ExtraLightIt RegularIt }
 \_moddef \bolder   {\_fvars Semibold Black SemiboldIt BlackIt }
 \_moddef \medium   {\_fsetV typf=Code \_fvars Medium Bold MediumIt BoldIt }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
 \_initfontfamily % new font family must be initialized

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2021-04-19>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2021-04-22>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
@@ -114,7 +114,10 @@
    `<value-b>` or ... or `<value-z>`.
    \nl
    \`\_prepcommalist` `ab,{},cd,\_end,` expands to `ab,,cd,` (auxiliary macro
-   used in `\_onlyif`).
+   used in `\_onlyif`).\nl
+   \`\_ffonum` is a shortcut for oldstyle digits font features used in
+   font family files. You can do `\let\_ffonum=\ignoreit` if you don't want
+   to set old digits together with `\caps`.
    \_cod -----------------------------
 
 \_def\_fvars #1 #2 #3 #4 {%
@@ -137,6 +140,7 @@
     \_iftrue #3\_fi
 }
 \_def\_prepcommalist#1,{\_ifx\_end#1\_empty\_else #1,\_ea\_prepcommalist\_fi}
+\_def\_ffonum {+onum;+pnum}
 
    \_doc -----------------------------
    The \`\moddef` `\<modifier> {<data>}` simply speaking does
@@ -843,6 +847,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2021-04-22  \_ffonum introduced
 2021-04-19  \setwordspace: parameter format {/A/B/C} implemented.
 2021-02-25  \_ttunifont introduced
 2021-01-27  lua hack (print function) removed because luaotfload 3.17 removes bug.

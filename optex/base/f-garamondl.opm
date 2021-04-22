@@ -13,7 +13,7 @@ Modifiers:^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={},swa={} \_fvars Regular Bold Italic Bolditalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum;-liga; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum;-liga; }
 \_moddef \nocaps   {\_fsetV caps={} }
 \_moddef \swash    {\_fsetV swa=+swsh; }
 \_moddef \noswash  {\_fsetV swa={} }

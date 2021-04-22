@@ -20,7 +20,7 @@ Special variants:^^J
 \_moddef \resetmod {\_fsetV subfam=Serif,caps={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \semibold {\_fsetV subfam=Serif \_fvars Regular Semibold Italic SemiboldItalic }
 \_moddef \sans     {\_fsetV subfam=Sans \_fvars Regular Bold Italic . }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
 \_famvardef \mono     {\_fsetV subfam=Mono \_fvars Regular . . . \_rm}

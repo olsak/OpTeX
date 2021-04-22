@@ -21,7 +21,7 @@ Special variants:^^J
 \_moddef \sans     {\_fsetV subfam=Biolinum \_fvars R RB RI RBO }
 \_moddef \mono     {\_fsetV subfam=Libertine \_fvars M MB MO MBO }
 \_moddef \semibold {\_fsetV subfam=Libertine \_fvars R RZ RI RZI }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 
 \_famvardef \initials {\_fsetV subfam=Libertine \_fvars I . . . \rm}

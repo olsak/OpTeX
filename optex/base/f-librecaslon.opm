@@ -12,7 +12,7 @@ Modifier:^^J
 
 \_moddef \resetmod {\_fsetV caps={},csl={CaslonText} 
                     \_fvars \_cslV-Regular \_cslV-Bold \_cslV-Italic Csln-Bolditalic }
-\_moddef \onum     {\_fsetV caps=+onum; }
+\_moddef \onum     {\_fsetV caps=\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
 

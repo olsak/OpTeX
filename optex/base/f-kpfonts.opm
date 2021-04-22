@@ -19,7 +19,7 @@ Modifiers:^^J
 \_moddef \sans     {\_fsetV subfam=Sans \_RBIfvars }
 \_moddef \mono     {\_fsetV subfam=Mono \_RBIfvars }
 \_moddef \light    {\_fsetV subfam=Roman \_fvars Light Semibold LightItalic SemiboldItalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 \_moddef \swash    {\_fsetV swa=+swsh; }
 \_moddef \noswash  {\_fsetV swa={} }

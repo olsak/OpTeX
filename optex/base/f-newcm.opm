@@ -19,7 +19,7 @@ Note: use \book\normalmath if you want Math in book-style too.
                     \_def\_unimathfont{NewCMMath-Book}}
 \_moddef \ttset    {\_fsetV typf=Mono10 }
 \_moddef \sans     {\_fsetV typf=Sans10 }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_def\_ncmtyprm{10}
 \_def\_ncmtypsans{Sans10}

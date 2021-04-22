@@ -17,7 +17,7 @@ Special variant:^^J
 \_moddef \resetmod {\_fsetV stencil={},caps={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \light    {\_fsetV stencil={} \_fvars Light Regular LightItalic Italic }
 \_moddef \book     {\_fsetV stencil={} \_fvars Book Bold BookItalic BoldItalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp\_ffonum; }
 
 \_famvardef \stencil {\_fsetV stencil=Stencil \_fvars Bold . Bold . \rm}
 

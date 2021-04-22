@@ -18,7 +18,7 @@ Variant:^^J
 \_moddef \resetmod {\_fsetV caps={},swa={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \medium   {\_fvars Medium ExtraBold MediumItalic ExtraBoldItalic }
 \_moddef \semibold {\_fvars Regular SemiBold Italic SemiBoldItalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 \_moddef \swash    {\_fsetV swa=+swsh; }
 \_moddef \noswash  {\_fsetV swa={} }

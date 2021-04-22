@@ -17,7 +17,7 @@ Extended variants:^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={},sans={} \_fvars Regular Bold Italic BoldItalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 \_moddef \sans     {\_fsetV sans=Sans }
 \_moddef \serif    {\_fsetV sans={} }

@@ -12,7 +12,7 @@ Modifiers:^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={},cond={} \_fvars regular bold italic bolditalic }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \nocaps   {\_fsetV caps={} }
 \_moddef \cond     {\_fsetV cond=cn }
 \_moddef \nocond   {\_fsetV cond={} }
@@ -140,12 +140,12 @@ with obvious result `\def\_<word-a>V {<value-a>}\def\_<word-b>V {<value-b>}` etc
 \seccc Example 3
 
 If both font modifiers `\caps`, `\cond` were applied in Heros
-family, then `\def\_capsV{+smcp;+onum}` and `\def\_condV{cn}` were processed
+family, then `\def\_capsV{+smcp;\_ffonum;}` and `\def\_condV{cn}` were processed
 by these font modifiers. If a user needs the `\bf` variant at 11\,pt now then
 the
 
 \begtt
-  \font {[texgyreheroscn-bold]:+smcp;+onum;+tlig;} at11pt
+  \font {[texgyreheroscn-bold]:+smcp;+onum;+pnum;+tlig;} at11pt
 \endtt
 %
 is processed. We assume that a font file `texgyreheroscn-bold.otf` is present

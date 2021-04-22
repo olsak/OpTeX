@@ -13,7 +13,7 @@ Modifiers:^^J
 
 \_moddef \resetmod {\_fsetV caps={} \_fvars Roman Bold Italic BoldItalic }
 \_moddef \slant    {\_fvars Roman Bold Slanted BoldSlanted }
-\_moddef \caps     {\_fsetV caps=+smcp;+onum; }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
 
