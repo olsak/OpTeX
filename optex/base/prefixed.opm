@@ -281,6 +281,11 @@ If you are writing a macro file that is intended to be published for
   \^`\_endcode` to close the text of macros.
 * Use \^`\_doc` ... \^`\_cod` pairs for documenting the code pieces.
 * You can write more documentation after the \^`\_endcode` command.
+* The \OpTeX/ catcodes are set when \^`\load` your package (i.e. plain \TeX/
+  catcodes plus catcode of `_` is 11). If a catcode is changed during
+  loading your package then it is forgot because \^`\load` returns to catcodes
+  used before loading package. If you want to offer a catcode changing for
+  users then insert it to a macro which can be used after loading.
 \enditems
 
 If the macro file accepts these recommendations then it should be
