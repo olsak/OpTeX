@@ -75,7 +75,7 @@
    \_cod -----------------------------
 
 \_def\_normalcatcodes {\_catcodetable\_optexcatcodes \_savecatcodetable0 \_catcodetable0 }
-\_public \normalcatodes ; 
+\_public \normalcatcodes ;
 
    \_doc -----------------------------
    The \`\load` `[<filename-list>]` loads files specfied in

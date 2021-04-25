@@ -417,7 +417,7 @@
    \_cod -----------------------------
 
 \_private
-   \ldotp \cdotp \bullet \triangleleft \trianglerigt \mapstochar \rightarrow
+   \ldotp \cdotp \bullet \triangleleft \triangleright \mapstochar \rightarrow
    \prime \lhook \rightarrow \leftarrow \rhook \triangleright \triangleleft
    \rbrace \lbrace \Relbar \Rightarrow \relbar \rightarrow \Leftarrow \mapstochar
    \longrightarrow \Longleftrightarrow \unicodevdots \unicodeddots \unicodeadots ;

@@ -218,7 +218,7 @@
 \_mathchardef\smallint="1273
 
 \_mathchardef\triangleleft="212F   \_private \triangleleft;
-\_mathchardef\triangleright="212E  \_private \trianglerigt;
+\_mathchardef\triangleright="212E  \_private \triangleright;
 \_mathchardef\bigtriangleup="2234
 \_mathchardef\bigtriangledown="2235
 \_mathchardef\wedge="225E \let\land=\wedge
