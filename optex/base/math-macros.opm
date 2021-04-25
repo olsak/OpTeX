@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-03-22>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2021-04-25>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -1066,6 +1066,7 @@
 
 \_endcode %---------------------------------------------------
 
+2021-04-25 \triangleright: typo fixed
 2021-03-22 \(l)eqalignno: \hbox instead \llap, \rlap (\par error suppressed)
 2021-03-19 allow text mode \{ and \}
 2021-02-15 \_mathbox redefines \_textmff etc. in order to respect optical sizes

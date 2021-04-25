@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2020-02-14>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2020-02-25>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -27,6 +27,10 @@
    \`\private` `<sequence> <sequence> ...;` does
    `\let \_<sequence> = \<sequence>` for all sequences.
    \nl
+   \`\_checkexists` `<where> <prefix><sequence>` prints error 
+   if the control sequence propagated to
+   a new name space by `\public` etc. macros is not declared.
+   \nl
    \`\xargs` `<what> <sequence> <sequence> ... ;`
    does `<what><sequence>` for each sequences.
    \_cod -----------------
@@ -38,16 +42,17 @@
 \_def \_pkglabel{}
 \_def \_public {\_xargs \_publicA}
 \_def \_publicA #1{%
-    \_unless\_ifcsname _\_csstring #1\_endcsname%
-    \_errmessage{Macro '\_bslash _\_csstring #1' was not defined.}\fi%
-    \_ea\_let \_ea#1\_csname  _\_csstring #1\_endcsname}
-
+   \_checkexists \public _#1%
+   \_ea\_let \_ea#1\_csname  _\_csstring #1\_endcsname
+}
 \_def \_private {\_xargs \_privateA}
 \_def \_privateA #1{%
-    \_unless\_ifcsname \_csstring #1\_endcsname%
-    \_errmessage{Macro '\_bslash \_csstring #1' was not defined.}\fi%
-    \_ea\_let \_csname  _\_csstring #1\_endcsname =#1}
-
+   \_checkexists \private {}#1%
+   \_ea\_let \_csname  _\_csstring #1\_endcsname =#1%
+}
+\_def\_checkexists #1#2#3{\_unless \_ifcsname #2\_csstring#3\_endcsname
+   \_errmessage {\_string#1: \_bslash#2\_csstring#3 must be declared}\_fi
+}   
 \_public \public \private \xargs \ea ;
 
    \_doc -----------------------
@@ -107,17 +112,16 @@
 
 \_def \_nspublic {\_xargs \_nspublicA}
 \_def \_nspublicA #1{%
-   \_unless\_ifcsname \_pkglabel _\_csstring #1\_endcsname%
-   \_errmessage{Macro '\_bslash\_pkglabel _\_csstring #1' was not defined.}\fi%
-   \_unless\_ifx #1\_undefined%
-      \_opwarning{\_ea\_ignoreit\_pkglabel\_space redefines the meaning of \_string#1}\_fi%
-   \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname}
-
+   \_checkexists \nspublic {\_pkglabel _}#1%
+   \_unless\_ifx #1\_undefined
+      \_opwarning{\_ea\_ignoreit\_pkglabel\_space redefines the meaning of \_string#1}\_fi
+   \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
+}
 \_def \_nsprivate {\_xargs \_nsprivateA}
 \_def \_nsprivateA #1{%
-   \_unless\_ifcsname \_csstring #1\_endcsname%
-   \_errmessage{Macro '\_bslash\_csstring #1' was not defined.}\fi%
-   \_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1}
+   \_checkexists \nsprivate {}#1%
+   \_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1%
+}
 
 
 \_endcode %----------------------------------------------------
@@ -310,5 +314,6 @@ can look like.
 
 \endinput
 
+2021-04-25 \_checkexists introduced
 2021-02-15 \_expandafter -> \_ea in \_codedecl
 2020-02-14 released

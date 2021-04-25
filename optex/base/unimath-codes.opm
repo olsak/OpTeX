@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2021-04-20>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2021-04-25>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -439,6 +439,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2021-04-25  \triangleright: typo fixed
 2021-04-20  reading mathclass.opm improved
 2021-04-07  \_setnabla introduced, \nabla as uppercase Greek letter
 2021-03-26  \it does \_itGreek
