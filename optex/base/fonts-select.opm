@@ -784,18 +784,19 @@ factor. For example `\setwordspace{2.5}` multiplies interword space by 2.5.
 format `{/<default>/<stretching>/<shrinking>}`. For example,
 `\setwordspace{/1/2.5/1}` enlarges only stretching 2.5~times.
 
-If you need another font transformations, you can use `\setff`
-with following font features provided by Lua\TeX/:
+You can use `\setff` with other font features provided by Lua\TeX/ and `luaotfload` package
+(see documentation of `loaotfload` package for more information):
 
 \begtt
-\setff{embolden=1.5}\rm % font is bolder because outline has nonzero width
-\setff{slant=0.2}\rm    % font is slanted by a linear transformation
-\setff{extend=1.2}\rm   % font is extended by a linear transformation.
-\setff{colr=yes}\rm     % if the font includes colored characters, use colors
-\setff{upper}\rm        % to uppercase (lower=lowecase) conversion at font level
+\setff{embolden=1.5}\rm  % font is bolder because outline has nonzero width
+\setff{slant=0.2}\rm     % font is slanted by a linear transformation
+\setff{extend=1.2}\rm    % font is extended by a linear transformation.
+\setff{colr=yes}\rm      % if the font includes colored characters, use colors
+\setff{upper}\rm         % to uppercase (lower=lowecase) conversion at font level
+\setff{fallback=name}\rm % use fonts from a list given by name if missing chars
 \endtt
 
-Use font transformations mentioned above and \^`\setletterspace`,
+Use font transformations `embolden`, `slant`, `extend` and \^`\setletterspace`,
 \^`\setwordspace` with care. The best setting of these values is the default
 setting in every font, of course. If you really need to set a different
 letter spacing then it is strongly recommended to add `\setff{-liga}`

@@ -98,6 +98,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#microtypeex">Micro-typography: exceptions for selected fonts</a>
     <li><a href="#scaleto">Text size changed to the desired width</a>
     <li><a href="#fawesome">More than 1300 icons from Awesome5 fonts</a>
+    <li><a href="#emoji">Emoji characters used directly in text</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
     <li><a href="#ul">Marking parts of text</a>
 </ul>
@@ -511,6 +512,36 @@ two OpTeX macros \initunifonts and \resizethefont). This is one of reasons
 why I like plain TeX.
 
 <p CLASS=datum>(0012) -- P. O. 2020-05-08<p>
+<hr>
+
+<h2><a name="emoji"></a>Emoji characters used directly in text</h2>
+
+<p>We want to write:
+
+<pre>
+\fontfam[lm]
+
+Is it OK? 👍 Yes.
+</pre>
+
+<p>and the current font is used for the text, but emoji font is used for the
+emoticon. The following code implements this.
+
+<pre>
+\initunifonts
+\addto\_fontfeatures{fallback=emoji;}\_reloading
+\directlua{luaotfload.add_fallback ("emoji", {"TwemojiMozilla:+colr;"} )}
+\rm
+</pre>
+
+<p>The "fallback" font feature is used and set globally for all fonts.
+This feature loads and uses fonts from given font list (declared by
+the luaotfload.add_fallback Lua function) if the character is missing in the current
+font. The falback font is loaded at the same size as the current font.
+
+<p>Note: we need not to load emoji package.
+
+<p CLASS=datum>(0062) -- P. O. 2021-04-25<p>
 <hr>
 
 <h2><a name="nonunicode"></a>Fonts with non-Unicode encoding</h2>

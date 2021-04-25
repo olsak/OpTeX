@@ -51,5 +51,8 @@ We can use \emoji{grinning} or directly: {\emojifont 😀} too.
 
 More than 3000 emoticons are available.
 
+See also \ulink[http://petr.olsak.net/optex/optex-tricks.html#emoji]
+{\OpTeX/ trick 0062}.
+
 If you want black-and-white pictograms, see another font:
 \url{http://petr.olsak.net/optex/optex-tricks.html\#fawesome}
