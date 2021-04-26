@@ -19,6 +19,17 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.02> Apr. 2021
+       Location CTAN:macros/luatex/optex moved to CTAN:macros/optex (similarly for TDS).
+       NewComputerModern font support added.
+       Microtypography support added.
+       Various colors for links can be declared by \def\_<type>linkolor.
+       unimath-codes: \nabla math-code set similar as \Delta.
+       Actual version of UnicodeData.txt read during format generation.
+       Reading mathclacss.opm improved.
+       slides: hyperlink destinations allowed in \slideshow mode too.
+       \bibpart allows to create independent bib-lists in single document.
+       \setwordspace: format of the parameter improved.
 <1.01> Mar. 2021
        Minor code fixes (thanks to reports from users).
        LibreCaslon font file added.
