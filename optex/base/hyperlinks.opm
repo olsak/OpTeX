@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2021-04-17>} % preloaded in format
+\_codedecl \ulink {Hyperlinks <2021-04-30>} % preloaded in format
 
    \_doc ----------------------------
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
@@ -115,14 +115,15 @@
 \_def\_url#1{{%
    \_def\_tmpa{#1}\_replstring\_tmpa {\|}{}%
    {\_escapechar=-1 \_ea}\_ea\_edef\_ea\_tmpa\_ea{\_detokenize\_ea{\_tmpa}}%
-   \_def\_tmpb{#1}\_replstring\_tmpb {\|}{\_urlbskip}%
+   \_def\_tmpb{#1}\_replstring\_tmpb {\|}{[||]}%
+   {\_escapechar=-1 \_ea}\_ea\_edef\_ea\_tmpb\_ea{\_detokenize\_ea{\_tmpb}}%
+   \_replstring\_tmpb{[||]}{\_urlbskip}%
    \_replstring\_tmpb {//} {{\_urlskip\_urlslashslash\_urlbskip}}%
    \_replstring\_tmpb {/}  {{\_urlskip/\_urlbskip}}%
    \_replstring\_tmpb {.}  {{\_urlskip.\_urlbskip}}%
    \_replstring\_tmpb {?}  {{\_urlskip?\_urlbskip}}%
    \_replstring\_tmpb {=}  {{\_urlskip=\_urlbskip}}%
    \_ea\_replstring\_ea\_tmpb \_ea{\_string &} {{\_urlbskip\_char`\& \_urlskip}}%
-   \_ea\_replstring\_ea\_tmpb \_ea{\_bslash|}  {{\_penalty0}}%
    \_ea\_ulink \_ea[\_tmpa] {\_urlfont\_tmpb\_null}%
 }}
 \_def\_urlfont{\_tt}
@@ -160,6 +161,7 @@ of internal links are created at the same destination place:
 
 \_endinput
 
+2021-04-30 \url: \detokenize of \tmpb added, bug fix.
 2021-04-17 attr{\_pdfborder{...}} instead expanding \_pdfborder to attr{...}
 2021-04-02 The possibility of \def\_toclinkcolor introduced, \localcolor moved
 2021-01-27 \public \link added to \hyperlinks, bug fixed.
