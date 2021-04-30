@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \MakeReference {Reading bib databases <2021-04-13>} % loaded on demand by \usebib
+\_codedecl \MakeReference {Reading bib databases <2021-04-30>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    Loading the `librarian.tex` macro package. See `texdoc librarian`
@@ -17,7 +17,7 @@
 \_let\newwrite=\_newwrite
 
 \_private \BibFile \ReadList \SortList \SortingOrder \NameCount \AbbreviateFirstname
-   \CreateField \RetrieveFieldInFor \RetrieveFieldIn ;
+   \CreateField \RetrieveFieldInFor \RetrieveFieldIn \RetrieveField ;
 
    \_doc -----------------------------
    The `\usebib` command.
@@ -367,6 +367,7 @@ character is sorted before `A`.
 
 History:
 --------
+2021-04-30  \RetrieveField declared as private, bug fixed.
 2021-04-13  \bibpart implemented
 2021-04-13  \_bibgl introduced (used by \slides)
 2021-03-12  \_citelistB added before first test.
