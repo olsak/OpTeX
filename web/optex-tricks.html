@@ -1617,6 +1617,7 @@ If the table item does not have any decimal point (for example it is the
 title of the column) then the text is centered.
 
 <pre>
+\def\decimalpoint{.}
 \def\_paramtabdeclareN#1{\the\tabiteml\hfil\adigit{#1}##.\relax\the\tabitemr} 
 \def\adigit#1#2.#3{\ifx\relax#3\hfil#2\_unsskip\hfil \else
     \tmpdim=.5em \tmpdim=#1\tmpdim $#2$%
@@ -1647,14 +1648,17 @@ number of digits declared in N parameter.
 
 <p>If you don't want to specify the maximal number of digits, you can
 declare D column declarator (without parameter) and use the \eqbox macro
-from OpTeX.
+from OpTeX, see section 
+<a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:^eqbox">2.30.4</a>. 
+You have to run TeX two times.
 
 <pre>
+\def\decimalpoint{.}
 \def\_tabdeclareD{\the\tabiteml\hfil\adigitD##.\relax\the\tabitemr} 
 \def\adigitD#1.#2{\ifx\relax#2\hfil#1\_unsskip\hfil \else
     $#1$%
-    \_ea \ifx.#3\relax\phantom\decimalpoint \else \decimalpoint \fi
-    \_ea \adigitAD\fi #3%
+    \_ea \ifx.#2\relax\phantom\decimalpoint \else \decimalpoint \fi
+    \adigitAD\fi #2%
 }
 \def\adigitAD#1.\relax{\eqbox l[D:\the\tabnum/\the\colnum]{$#1$}} 
 
