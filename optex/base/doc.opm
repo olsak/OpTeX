@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2020-05-02>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-02>}
 
    \_doc -----------------------------
    General decalarations.
@@ -186,11 +186,9 @@
    \_doc -----------------------------
    Main documentation points and hyperlinks to/from it.
    Main documentation point: \code{\\`\\foo`}.
-   User-level documentation point: \code{\\^`\\foo}, first occurence only.
+   User documentation point: \code{\\^`\\foo}, first occurence only.
    The next occurrences are only links to the main documentation point.
-   Link to user-level documentation point: \code{\\~`\\foo}.
-   If user-level documentation point follows the main documentation point
-   then use \code{\\_forwardlink\\`\\foo`}.
+   Link to user documentation point: \code{\\~`\\foo}.
    \_cod -----------------------------
 
 \_verbchar`
@@ -202,8 +200,6 @@
             \_link[cs:^\_tmp]{\Red}{\_tt\_csstring\\\_tmp}\_else
             {\_tt\Red\_csstring\\\_tmp}\_fi}%
 }
-\_def\_forwardlink\`#1`{{\_slet{cs:^\_csstring#1}{relax}\`#1`}}
-
 \_def\^`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
          \_link[cs:\_tmp]{\Blue}{\_tt\_string#1}}%
@@ -274,14 +270,14 @@ if this point precedes. Finally, the
 \code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
 hyperlinks to the user documentation point.
 
-By default, the hyperink from main documentation point to the user-level
+By default, the hyperink from main documentation point to the user
 documentation point is active only if it is backward link, i.e.\
 the main documentation point is given later. The reason is that we don't
-know if such user-level documentation point will exists when creating
+know if such user documentation point will exist when creating
 main documentation point and we don't want
-broken links. If you are sure that user-level documentation point will
-follow then use prefix \^`\fw` before \code{\\`}, for example
-\code{\\fw\\`\\foo`} is main documentation point where the user-level
+broken links. If you are sure that user documentation point will
+follow then use prefix \^`\fw` before~\code{\\`}, for example
+\code{\\fw\\`\\foo`} is main documentation point where the user
 documentation point is given later and forward hyperlink is created here.
 
 Control sequences and their page positions of main documentation points and user
@@ -302,6 +298,7 @@ If you want to document `\.foo` control sequences from an
 
 \endinput
 
+2021-05-02 \_forwadlink replaced by \_fw, to be more consistent
 2021-05-02 \fw introduced, \.foo -> \foo allowed.
 2020-04-28 \levevmode in \^ macros added (bug fixed)
 2020-04-22 released
