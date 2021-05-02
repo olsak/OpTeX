@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2020-04-28>}
+\_codedecl \printdoc {Macros for documentation printing <2020-05-02>}
 
    \_doc -----------------------------
    General decalarations.
@@ -45,7 +45,7 @@
    \_typosize[8/10]
    \_let\_printverbline=\_printcodeline
    \_ttline=\_inputlineno
-   \_setverb
+   \_setverb \_catcode`\.=11
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_relax \_ttfont
@@ -74,7 +74,7 @@
 \_def\_makecsB#1{\_addto\_tmp{#1}\_futurelet\_next\_makecsA}
 \_def\_makecsF{\_ifx\_tmp\_empty \_csstring\\%
        \_else \_ifcsname ,\_tmp\_endcsname \_link[cs:\_tmp]{\Blue}{\_csstring\\\_tmp}%
-       \_else \_let\_next=\_tmp \_remfirstunderscore\_next
+       \_else \_let\_next=\_tmp \_remfirstunderscoreordot\_next
               \_ifx\_next\_empty \_let\_next=\_tmp \_fi
               \_ifcsname ,\_next\_endcsname \_link[cs:\_next]{\Blue}{\_csstring\\\_tmp}%
        \_else \_csstring\\\_tmp \_fi\_fi\_fi
@@ -96,8 +96,8 @@
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
 }
-\_def\_remfirstunderscore#1{\_ea\_remfirstunderscoreA#1\_relax#1}
-\_def\_remfirstunderscoreA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi}
+\_def\_remfirstunderscoreordot#1{\_ea\_remfirstuordotA#1\_relax#1}
+\_def\_remfirstuordotA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi \_if\_string#1.\_def#3{#2}\_fi}
 
    \_doc -----------------------------
    The lines in the listing mode have a yellow background.
@@ -216,6 +216,14 @@
    \_futurelet\_next\_cslinkA
 }
 
+   \_doc -----------------------------
+   The `\fw` for forward links to user documentation point (given later)
+   is defined here.
+   \_cod -----------------------------
+
+\_def\_fw\`#1`{{\_slet{cs:^\_csstring#1}{}\`#1`}}
+\_public \fw ;
+
 \_endcode %-------------------------------------------
 
 \noindent
@@ -255,10 +263,6 @@ applied, the reading of the file opened by `\printdoc` is finished.
 You cannot reach the end of the file (without `\_endcode`) in the listing
 mode.
 
-The listing mode creates all control sequences which are listed in the
-index as an active link to the main documentation point of such control sequence
-and prints them in blue. Another text is printed in black.
-
 The main documentation point is denoted by \code{\\`\\}`<sequence>`\code{`}
 in red, for example \code{\\`\\foo`}.
 The user documentation point is the first occurrence of
@@ -266,11 +270,38 @@ The user documentation point is the first occurrence of
 There can be more such markups, all of them are hyperlinks to the main
 documentation point.
 And main documentation point is a hyperlink to the user documentation point
-if this point exists. Finally, the
+if this point precedes. Finally, the
 \code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
 hyperlinks to the user documentation point.
 
+By default, the hyperink from main documentation point to the user-level
+documentation point is active only if it is backward link, i.e.\
+the main documentation point is given later. The reason is that we don't
+know if such user-level documentation point will exists when creating
+main documentation point and we don't want
+broken links. If you are sure that user-level documentation point will
+follow then use prefix \^`\fw` before \code{\\`}, for example
+\code{\\fw\\`\\foo`} is main documentation point where the user-level
+documentation point is given later and forward hyperlink is created here.
+
+Control sequences and their page positions of main documentation points and user
+documentation points are saved to the index.
+
+The listing mode creates all control sequences which are listed in the
+index as an active link to the main documentation point of such control sequence
+and prints them in blue. Moreower, active links are control sequneces of the
+type `\_foo` or `\.foo` although the documentation mentions only `\foo`.
+Another text is printed in black.
+
+If you want to document `\.foo` control sequences from an
+\OpTeX/ package, set catcode of the dot to~11. It means, you can use:
+\begtt
+\load[doc]
+\catcode`\.=11
+\endtt
+
 \endinput
 
+2021-05-02 \fw introduced, \.foo -> \foo allowed.
 2020-04-28 \levevmode in \^ macros added (bug fixed)
 2020-04-22 released
