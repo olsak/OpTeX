@@ -6,9 +6,9 @@
 % The \emoji{<name>} command is available, see texdoc emoji (from
 % corresponding LaTeX package).
 
-\_namespace{emoji}
+\_codedecl \emoji {Emotikons from the TwemojiMozilla.ttf font}
 
-\_codedecl \.emoji {Emotikons from the TwemojiMozilla.ttf font}
+\_namespace{emoji}
 
    \_doc -----------------------------
    Font TwemojiMozilla.ttf is loaded. The font feature +colr is needed.

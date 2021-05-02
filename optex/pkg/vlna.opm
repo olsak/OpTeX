@@ -10,9 +10,9 @@
 % vlna.opm is based on Lua code from the package `luavlna` (by Michal Hoftich
 % and Miro Hrončok). See `texdoc luavlna` or end of this file for more information.
 
-\_namespace{vlna}
+\_codedecl \singlechars {Preventing single-chars prepositions and more <2021-01-08>}
 
-\_codedecl \.singlechars {Preventing single-chars prepositions and more <2021-01-08>}
+\_namespace{vlna}
 
    \_doc -----------------------------
    We declare new attribute, register callbacks, and define Lua functions that
