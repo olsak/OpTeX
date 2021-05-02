@@ -33,6 +33,7 @@ Modifiers:^^J
    \_let\_bsansdigits=\_bfdigits
    \_let\_bisansvariables=\_bivariables
    \_let\_bisansgreek=\_bigreek
+   \_Umathchardef \triangle "0 "5 "25B3 \_Umathcode "25B3 "0 "5 "25B3
 \_fi
 
 \_endcode
@@ -81,12 +82,12 @@ name) and to optional font features appended. The Font Selection
 System uses this macro at the primitive level in the following sense:
 
 \begtt \catcode`\<=13
-\font \<selector> {\_fontnamegen} \_sizespec
+\font \<font-switch> {\_fontnamegen} \_sizespec
 \endtt
 %
 Note that the extended `\font` syntax
-`\font\<selector> {<font name>:<font features>} <size spec.>` or
-`\font\<selector> {[<font file name>]:<font features>} <size spec.>`
+`\font\<font-switch> {<font name>:<font features>} <size spec.>` or
+`\font\<font-switch> {[<font file name>]:<font features>} <size spec.>`
 is expected here.
 
 \seccc Example 1

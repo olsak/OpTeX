@@ -115,7 +115,7 @@ Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.^^
 
 \_endcode
 
-\secc How to write the font family file with optical sizes
+\secc[optsizes] How to write the font family file with optical sizes
 
 You can use \^`\_optname` macro when `\_fontnamegen` in expanded. This macro is fully
 expandable and its input is `<internal-template>` and its output is a
