@@ -56,7 +56,7 @@
 
    \_doc ----------------------------
    \`\ulink``[<url>]{<text>}` creates external link. It prints only the `<text>` by default but
-   the \^`\hyperlinks` declaration defines it as \`\_urlactive``[url:<url>]{<text>}`.
+   the \^`\hyperlinks` declaration defines it as \`\_urlactive``[url:<url>]{<color>}{<text>}`.
    The external link is created by the `\_pdfstartlink...\pdfendlink` primitives.
    The `<url>` is detokenized with `\escapechar=-1` before it is used, so
    `\%`, `\#` etc. can be used in the `<url>`.

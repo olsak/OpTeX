@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-02>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-03>}
 
    \_doc -----------------------------
    General decalarations.
@@ -66,18 +66,26 @@
 \_edef\_Endcode{\_noexpand\_empty\_bslash _endcode}
 
    \_doc -----------------------------
-   The scanner of the control sequences in the listing mode.
+   The scanner of the control sequences in the listing mode replaces all
+   occurrences of `\` by \`\_makecs`. This macro reads next tokens and
+   accumulates them to `\_tmpa` as long as they have category 11. It
+   means that `\_tmpa` includes the name of the following control sequence
+   when \`\_makecsF` is run. The printing form of the control
+   sequence is set to `\_tmpb` and the test of existence `\,<csname>`is
+   performed. If it is true then active hyperlink is created. If not, then
+   the first `_` or `.` is removed from `\_tmpa` and the test is repeated.
    \_cod -----------------------------
 
-\_def\_makecs{\_def\_tmp{}\_futurelet\_next\_makecsA}
+\_def\_makecs{\_def\_tmpa{}\_futurelet\_next\_makecsA}
 \_def\_makecsA{\_ifcat a\_noexpand\_next \_ea\_makecsB \_else \_ea\_makecsF \_fi}
-\_def\_makecsB#1{\_addto\_tmp{#1}\_futurelet\_next\_makecsA}
-\_def\_makecsF{\_ifx\_tmp\_empty \_csstring\\%
-       \_else \_ifcsname ,\_tmp\_endcsname \_link[cs:\_tmp]{\Blue}{\_csstring\\\_tmp}%
-       \_else \_let\_next=\_tmp \_remfirstunderscoreordot\_next
-              \_ifx\_next\_empty \_let\_next=\_tmp \_fi
-              \_ifcsname ,\_next\_endcsname \_link[cs:\_next]{\Blue}{\_csstring\\\_tmp}%
-       \_else \_csstring\\\_tmp \_fi\_fi\_fi
+\_def\_makecsB#1{\_addto\_tmpa{#1}\_futurelet\_next\_makecsA}
+\_def\_makecsF{\_let\_tmpb=\_tmpa
+       \_ifx\_tmpa\_empty \_csstring\\%
+       \_else \_ifcsname ,\_tmpa\_endcsname \_trycs{el:\_tmpa}{\_intlink}%
+       \_else \_remfirstunderscoreordot\_tmpa
+              \_ifx\_tmpa\_empty \_let\_tmpa=\_tmpb \_fi
+              \_ifcsname ,\_tmpa\_endcsname \_trycs{el:\_tmpa}{\_intlink}%
+       \_else \_csstring\\\_tmpb \_fi\_fi\_fi
 }
 \_def\_processinput{%
    \_let\_start=\_relax
@@ -98,6 +106,16 @@
 }
 \_def\_remfirstunderscoreordot#1{\_ea\_remfirstuordotA#1\_relax#1}
 \_def\_remfirstuordotA#1#2\_relax#3{\_if _#1\_def#3{#2}\_fi \_if\_string#1.\_def#3{#2}\_fi}
+
+   \_doc -----------------------------
+   By default the internal link is created by \`\_intlink` inside listing
+   mode. But you can define `\el:<csname>` which has precedence and it can
+   create an external link. The `\_tmpa` includes the name used in the link
+   and `\_tmpb` is the name to be printed. See \^`\_makecdF` above and the
+   example at the beginning of this section.
+   \_cod -----------------------------
+
+\_def\_intlink{\_link[cs:\_tmpa]{\Blue}{\_csstring\\\_tmpb}}
 
    \_doc -----------------------------
    The lines in the listing mode have a yellow background.
@@ -213,7 +231,7 @@
 }
 
    \_doc -----------------------------
-   The `\fw` for forward links to user documentation point (given later)
+   The \`\fw` macro for forward links to user documentation point (given later)
    is defined here.
    \_cod -----------------------------
 
@@ -296,9 +314,37 @@ If you want to document `\.foo` control sequences from an
 \catcode`\.=11
 \endtt
 
+The listing mode is able to generate external links to another \OpTeX/-like
+documentation, if the macros `\,<csname>` and `\el:<csname>` are defined.
+The second macro should create a hyperlink using `\_tmpa`
+where the link name of the <csname> is saved and `\_tmpb` where the name of
+the <csname> to be printed is saved (`\tmpb` can include preceding `_` or
+`.` unlike `\_tmpa`). For example, suppose, that we have created
+`optex-doc.eref` file by:
+\begtt
+TEXINPUTS='.;$TEXMF/{doc,tex}//' optex optex-doc
+grep Xindex optex-doc.ref > optex-doc.eref
+\endtt
+The `.eref` file includes only `\_Xindex{<csname>}{}` lines from
+`optex-doc.ref` file. Then we can use following macros:
+\begtt
+\def\_Xindex#1#2{\sdef{,#1}{}\slet{el:#1}{optexdoclink}}
+\def\optexdoclink{%
+   \edef\extlink{url:\optexdocurl\csstring\#cs:\_tmpa}%
+   \_ea\_urlactive\_ea[\extlink]{\Cyan}{\csstring\\\_tmpb}}
+\def\optexdocurl{http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
+\isfile{optex-doc.eref}\iftrue \input{optex-doc.eref}\fi
+\endtt
+All `\el:<csname>`, where <csname> is from `optex-doc.ref`,
+have the same meaning: `\optexdoclink` in this example. And
+`\optexdoclink` creates the external link in `\Cyan` color.
+
+\secc Implementation
+
 \endinput
 
-2021-05-02 \_forwadlink replaced by \_fw, to be more consistent
+2021-05-03 External links fom listing mode allowed.
+2021-05-02 \_forwadlink replaced by \_fw, to be more consistent.
 2021-05-02 \fw introduced, \.foo -> \foo allowed.
 2020-04-28 \levevmode in \^ macros added (bug fixed)
 2020-04-22 released
