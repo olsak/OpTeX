@@ -324,11 +324,9 @@ callback_register("mlist_to_hlist", function(head, ...)
     elseif new_head ~= true then
         head = new_head
     end
-
     -- mlist_to_hlist means either added functions or standard luatex behavior
     -- of node.mlist_to_hlist (handled by default function)
     head = callback.call_callback("mlist_to_hlist", head, ...)
-
     -- post_mlist_to_hlist_filter
     new_head = callback.call_callback("post_mlist_to_hlist_filter", head, ...)
     if new_head == false then

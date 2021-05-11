@@ -70,7 +70,7 @@
    occurrences of `\` by \`\_makecs`. This macro reads next tokens and
    accumulates them to `\_tmpa` as long as they have category 11. It
    means that `\_tmpa` includes the name of the following control sequence
-   when \`\_makecsF` is run. The printing form of the control
+   when \fw\`\_makecsF` is run. The printing form of the control
    sequence is set to `\_tmpb` and the test of existence `\,<csname>`is
    performed. If it is true then active hyperlink is created. If not, then
    the first `_` or `.` is removed from `\_tmpa` and the test is repeated.
@@ -111,7 +111,7 @@
    By default the internal link is created by \`\_intlink` inside listing
    mode. But you can define `\el:<csname>` which has precedence and it can
    create an external link. The `\_tmpa` includes the name used in the link
-   and `\_tmpb` is the name to be printed. See \^`\_makecdF` above and the
+   and `\_tmpb` is the name to be printed. See \^`\_makecsF` above and the
    example at the beginning of this section.
    \_cod -----------------------------
 
