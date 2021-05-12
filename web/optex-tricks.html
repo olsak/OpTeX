@@ -2635,22 +2635,57 @@ pair. It. means that balancing of {...} has higher priority.
 
 <h2><a name="addallowbreak"></a>Breaking URL at any point</h2>
 
-<p>The long URLs can make problems in the text. OpTeX allows to break them
-only at / or . and allows breaking words by hyphenation patterns.
-But sometimes this is not sufficient. We can allow to break the \url argument
-at any point by the following code:
+<p>Breaking URLs to more lines can be customized by
+\_urlxskip (inserted between normal characters),
+\_urlbskip (inserted after :// / . ? = - &amp;), \_urlskip (inserted before
+these special characters) and \_urlgskip (inserted by \|).
+By default, URL is breakable at any point
+(since OpTeX version May 2021) because \_urlxskip is defined by
+\penalty9990 and there is a small amount of stretchability.
+
+<p>If we dislike such stretchability between characters, we can declare
+breaking possibiity with ragged right, when URL is broken:
 
 <pre>
-\def\addallowbreak #1{\_ifx\_null#1\_else \_hskip0pt plus1pt\_relax #1\_ea\addallowbreak\_fi}
-\addto\_urlfont{\ea\addallowbreak}
+\def\_urlxskip{\nobreak\hfil\penalty9900 \hfilneg}
+\def\_urlbskip{\nobreak\hfil\penalty100 \hfilneg}
 </pre>
 
-<p>The \url macro from OpTeX uses \_urlfont \_tmpb \_null
-for printing URL. The code adds the macro \addallowbreak
-to the \_urlfont and this macro inserts \hskip0pt plus1pt
-between each character.
+<p>Suppose, we want to allow breaking URLs only after / . ? = &amp and breaking
+using \|, moreower small stretching between all characters in URL are
+allowed. Then we can use following settings:
 
-<p CLASS=datum>(0052) -- P. O., 2021-04-03<p>
+<pre>
+\slet{_ur:-}{undefined} % disallow breaking after -
+\_def\_urlxskip{\_penalty10000\_hskip0pt plus0.03em\_relax}
+</pre>
+
+<p>If we want to break long URLs only manually using \| inside URL text
+then we can define:
+
+<pre>
+\let\_urlxskip=\nobreak
+\let\_urlbskip=\nobreak
+\let\_urlskip-\nobreak
+\def\_urlgskip{\hfil\break}
+</pre>
+
+<p>You can try to show, where glues are added to the URL text
+by following experiment:
+
+<pre>
+\def\_urlxskip{@}
+\def\_urlbskip{*}
+\def\_urlskip{§}
+\def\_urlgskip{!}
+\url{http://petr.olsak.net/op\|tex}
+</pre>
+
+<p>You get: <tt>h*t*t*p§:§/§/@p*e*t*r§.@o*l*s*a*k§.@n*e*t§/@o*p!t*e*x</tt>
+but a hyperling to real http://petr.olsak.net/optex is created (if \hyterlinks
+is declared).
+
+<p CLASS=datum>(0052) -- P. O., 2021-05-12<p>
 <hr>
 
 <h2><a name="perpage"></a>PerPage package features</h2>
