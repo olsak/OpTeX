@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-03>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-13>}
 
    \_doc -----------------------------
    General decalarations.
@@ -48,6 +48,7 @@
    \_setverb \_catcode`\.=11
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
+   \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
    \_relax \_ttfont
    \_endlinechar=`^^J
    \_def\_tmpb{\_start}%
@@ -343,6 +344,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2021-05-13 \def\t added, bug fixed.
 2021-05-03 External links fom listing mode allowed.
 2021-05-02 \_forwadlink replaced by \_fw, to be more consistent.
 2021-05-02 \fw introduced, \.foo -> \foo allowed.
