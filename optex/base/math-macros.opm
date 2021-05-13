@@ -321,6 +321,7 @@
 \_protected\_def\cot {\_mathop{\_rm cot}\_nolimits}
 \_protected\_def\coth {\_mathop{\_rm coth}\_nolimits}
 %\_protected\_def\sec {\_mathop{\_rm sec}\_nolimits} % \sec is section
+\_protected\_def\secant {\_mathop{\_rm sec}\_nolimits}
 \_protected\_def\csc {\_mathop{\_rm csc}\_nolimits}
 \_protected\_def\max {\_mathop{\_rm max}}
 \_protected\_def\min {\_mathop{\_rm min}}
