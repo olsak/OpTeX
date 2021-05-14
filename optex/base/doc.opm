@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-13>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-14>}
 
    \_doc -----------------------------
    General decalarations.
@@ -34,6 +34,8 @@
    \_doc -----------------------------
    The listing mode is implemented here. The \`\maxlines`
    is maximal lines of code printed in the listing mode.
+   The \`\_catcodedot` sets dot as letter in listngs (for package
+   documentation where `\.foo` sequeces exist).
    \_cod -----------------------------
 
 \_newcount \_maxlines   \_maxlines=100000
@@ -45,7 +47,7 @@
    \_typosize[8/10]
    \_let\_printverbline=\_printcodeline
    \_ttline=\_inputlineno
-   \_setverb \_catcode`\.=11
+   \_setverb \_catcodedot
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
@@ -58,13 +60,16 @@
    \_def\_tmpa{\_empty#1}%
    \_let\_next=\_readverbline
    \_ea\_isinlist\_ea\_tmpa\_ea{\_Doc}\_iftrue \_let\_next=\_processinput \_fi
+   \_ea\_isinlist\_ea\_tmpa\_ea{\_Doctab}\_iftrue \_let\_next=\_processinput \_fi
    \_ea\_isinlist\_ea\_tmpa\_ea{\_Endcode}\_iftrue \_endinput \_let\_next=\_processinput \_fi
    \_ifx\_next\_readverbline \_addto\_tmpb{#1^^J}\_fi
    \_next
 }
 {\_catcode`\ =13 \_gdef\_aspace{ }}\_def\_asp{\_ea\_noexpand\_aspace}
 \_edef\_Doc{\_asp\_asp\_bslash _doc}
+\_bgroup \_lccode`~=`\^^I \_lowercase{\_egroup\_edef\_Doctab{\_noexpand~\_bslash _doc}}
 \_edef\_Endcode{\_noexpand\_empty\_bslash _endcode}
+\_def\_catcodedot{\_catcode`\.=11 }
 
    \_doc -----------------------------
    The scanner of the control sequences in the listing mode replaces all
@@ -186,6 +191,15 @@
    \_bf\_llaptoclink{#1}{#2}\_hfill \_pgn{#3}\_tocpar\_medskip}
 
    \_doc -----------------------------
+   If this macro is loaded by \^`\load` then we need to initialize
+   catcodes using the `\_afteroad` macro.
+   \_cod -----------------------------
+
+\_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 \_catcode`\.=11
+   \_wlog {doc.opm: catcodes of < and ` activated, catcode of . is letter.}%
+}
+
+   \_doc -----------------------------
    The \code{<something>} will be print as <something>.
    \_cod -----------------------------
 
@@ -194,13 +208,6 @@
 
 \_def<#1>{$\langle\hbox{\it#1\/}\rangle$}
 \_everyintt{\_catcode`\<=13 }
-
-   \_doc -----------------------------
-   If this macro is loaded by \^`\load` then we need to initialize
-   catcodes using the `\_afteroad` macro.
-   \_cod -----------------------------
-
-\_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 }
 
    \_doc -----------------------------
    Main documentation points and hyperlinks to/from it.
@@ -248,12 +255,13 @@ commands are defined after the file `doc.opm` is load by \^`\load`~`[doc]`.
 The `\printcoc` starts reading of given `<filename>` from the second line.
 The file is read in {\em the listing mode}.
 The `\prindoctail` starts reading given `<filename>` from the
-first occurrence of the `\_encode`. The file is read
+first occurrence of the `\_endcode`. The file is read
 in normal mode (like `\input <filename>`).
 
 The {\em listing mode} prints the lines as a listing of a code. This mode is
 finished when first {\visiblesp`  \_doc`} occurs or first `\_endcode`
-occurs. At least two spaces must precede before such `\_doc`. On the other
+occurs. At least two spaces or one tab
+character must precede before such `\_doc`. On the other
 hand, the `\_encode` must be at the left edge of the line without spaces.
 If this rule is not met then the listing mode continues.
 
@@ -344,6 +352,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2021-05-14 \_catcodedot, \_Doctab introduced.
 2021-05-13 \def\t added, bug fixed.
 2021-05-03 External links fom listing mode allowed.
 2021-05-02 \_forwadlink replaced by \_fw, to be more consistent.

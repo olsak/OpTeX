@@ -4,6 +4,7 @@
 % (three times) to generate OpTeX documentation including references and the index. 
 
 \load [doc.opm]  \let\enddocument=\endinput
+\let\_catcodedot=\relax \catcode`\.=12 % we are not using \.foo sequences
 
 \typosize[10/12]  % Main size (used in techdoc)
 
