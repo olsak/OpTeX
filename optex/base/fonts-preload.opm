@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \tenrm {Latin Modern fonts (EC) preloaded <2020-01-23>} % loaded in format
+\_codedecl \tenrm {Latin Modern fonts (EC) preloaded <2020-01-23>} % preloaded in format
 
 % Only few text fonts are preloaded:
 
