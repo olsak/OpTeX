@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-14>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-15>}
 
    \_doc -----------------------------
    General decalarations.
@@ -61,7 +61,7 @@
    \_let\_next=\_readverbline
    \_ea\_isinlist\_ea\_tmpa\_ea{\_Doc}\_iftrue \_let\_next=\_processinput \_fi
    \_ea\_isinlist\_ea\_tmpa\_ea{\_Doctab}\_iftrue \_let\_next=\_processinput \_fi
-   \_ea\_isinlist\_ea\_tmpa\_ea{\_Endcode}\_iftrue \_endinput \_let\_next=\_processinput \_fi
+   \_ea\_isinlist\_ea\_tmpa\_ea{\_Endcode}\_iftrue \_def\_next{\_processinput\_endinput}\_fi
    \_ifx\_next\_readverbline \_addto\_tmpb{#1^^J}\_fi
    \_next
 }
@@ -198,6 +198,7 @@
 \_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 \_catcode`\.=11
    \_wlog {doc.opm: catcodes of < and ` activated, catcode of . is letter.}%
 }
+\_catcode`.=11
 
    \_doc -----------------------------
    The \code{<something>} will be print as <something>.
@@ -316,13 +317,6 @@ and prints them in blue. Moreower, active links are control sequneces of the
 type `\_foo` or `\.foo` although the documentation mentions only `\foo`.
 Another text is printed in black.
 
-If you want to document `\.foo` control sequences from an
-\OpTeX/ package, set catcode of the dot to~11. It means, you can use:
-\begtt
-\load[doc]
-\catcode`\.=11
-\endtt
-
 The listing mode is able to generate external links to another \OpTeX/-like
 documentation, if the macros `\,<csname>` and `\el:<csname>` are defined.
 The second macro should create a hyperlink using `\_tmpa`
@@ -352,6 +346,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2021-05-15 \_endinput shifted after \_processinput when \_endcode is scanned.
 2021-05-14 \_catcodedot, \_Doctab introduced.
 2021-05-13 \def\t added, bug fixed.
 2021-05-03 External links fom listing mode allowed.
