@@ -26,9 +26,7 @@
 \_public \boxlines ;
 
    \_doc -----------------------------
-   The \`\report` and \`\letter` style initialization macros are defined here.
-   \nl
-   The `\letter` defines \`\address` and \`\subject` macros.
+   The \`\report` style initialization macro is defined here.
    \_cod -----------------------------
 
 \_def\_report{
@@ -43,6 +41,15 @@
    \_parindent=1.2em \_iindent=\_parindent \_ttindent=\_parindent
    \_footline={\_global\_footline={\_hss\_rmfixed\_folio\_hss}}
 }
+
+   \_doc -----------------------------
+   The \`\letter` style initialization macro is defined here.
+
+   The `\letter` defines \`\address` and \`\subject` macros.
+
+   See the files `demo/op-letter-*.tex` for usage examples.
+   \_cod -----------------------------
+
 \_def\_letter{
    \_def\_address{\_vtop\_bgroup\_boxlines \_parskip=0pt \_let\par=\_egroup}
    \_def\_subject{{\_bf \_mtext{subj}: }}
@@ -65,56 +72,7 @@
 }
 \_public \slides ;
 
-
 \_endcode % -------------------------------------
-
-The example of `\letter` style document follows:
-
-\begtt %-----------------------------------------------------------------
-
-\letter
-\fontfam[bonum]
-\chyph
-
-\address
-  Vážený pan
-  Mgr. Bořek Byrokrat
-  ředitel Ústavu pro další možnosti
-  Úřední 789
-  123 45 Praha 1
-
-\hfill V Praze dne \today
-
-\subject Žádost o možnost další možnosti
-
-Vážený pane řediteli
-
-na základě Vašeho dopisu č.j.~123456/78-dat a elektronické výzvy si dovoluji
-Vás požádat o prozkoumání mé možnosti další možnosti.
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-commodo consequat.
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-esse cillum dolore eu fugiat nulla pariatur.
-
-S úctou
-
-\hfill \address
-  {\it Petr Olšák}
-  specialista na \TeX{}
-  Ulice 12345
-  Praha 13
-
-\bye
-
-\endtt %---------------------------------------------------------------------
-
-\endinput
 
 2021-03-10 \ifmmode* added to \adef*
 2020-03-28 released

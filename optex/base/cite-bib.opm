@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \cite {Cite, Biblioraphy <2021-04-13>} % loaded in format
+\_codedecl \cite {Cite, Biblioraphy <2021-04-13>} % preloaded in format
 
    \_doc -----------------------------
    Registers used by `\cite`, `\bib` macros are declared here.

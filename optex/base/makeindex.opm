@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2021-02-15>} % loaded in format
+\_codedecl \makeindex {Makeindex and sorting <2021-02-15>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.

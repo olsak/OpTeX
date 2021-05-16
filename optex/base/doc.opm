@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-15>}
+\_codedecl \printdoc {Macros for documentation printing <2021-05-15>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
