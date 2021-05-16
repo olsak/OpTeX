@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2021-02-03>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2021-05-16>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
@@ -51,7 +51,9 @@
 
 \_def \_sdef #1{\_ea\_def \_csname#1\_endcsname}
 \_def \_sxdef #1{\_ea\_xdef \_csname#1\_endcsname}
-\_def \_slet #1#2{\_ea\_let \_csname#1\_ea\_endcsname \_csname#2\_endcsname}
+\_def \_slet #1#2{\_ea\_let \_csname#1\_ea\_endcsname
+   \_ifcsname#2\_ea\_endcsname \_begincsname#2\_endcsname \_else \_undefined \_fi
+}
 \_public \sdef \sxdef \slet ;
 
    \_doc ------------------------------
@@ -123,6 +125,7 @@
 
 \_endcode % -------------------------------------
 
+2021-05-16: \slet reimplemnted (to allow \slet{foo}{undefined}).
 2021-02-03: \useit defined.
 2021-01-22: \trycs: \ea added in order to be able to use cs with parameters
 2021-01-08: \opwarning format changed (secondly, hope that conclusively)
