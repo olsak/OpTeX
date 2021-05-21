@@ -95,6 +95,9 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskervilleF]
 
+\_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
+   { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
+
 \_famfrom {Georg Duffner, Octavio Pardo}
 \_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
    { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
