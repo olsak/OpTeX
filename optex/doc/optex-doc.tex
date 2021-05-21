@@ -111,10 +111,13 @@ document \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]
 \nonum\chap Index
 
 \noindent
-There are all sequences used in \OpTeX/ except \TeX/ primitives. You can use
-another index with \TeX/ primitives from
+There are all control sequences used in \OpTeX/ except \TeX/ primitives.
+If you want to know something about \TeX/ primitives then you can use another index from
 \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#ref:index]{\TeX/ in a Nutshell}.
 
+% active links directly to the main documentation point but not to the pages:
+\def\_printii #1&{\noindent\hskip-\iindent \link[cs:#1]\Blue{\bslash #1} }
+\def\_pgprintA #1{#1}
 \begmulti 3 \tt \makeindex \endmulti
 
 \bye
