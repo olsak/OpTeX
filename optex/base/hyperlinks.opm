@@ -67,7 +67,7 @@
 
    \_doc ------------------------------
    \`\link``[<type>:<spec>]{<color>}{<text>}` creates a link. It is
-   kept here fo backward compatibility and it is
+   kept here for backward compatibility and it is
    equivalent to \^`\_xlink{<type>}{<spec>}{<color>}{<text>}`.
    If `\_<type>action` is not defined then
    `\link` creates internal link do the \^`\dest[<type>:<spec>]`.
