@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2021-05-02>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2021-05-23>} % preloaded in format
 
    \_doc -----------------------------
    The variant selectors  \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, \^`\tt`
@@ -467,24 +467,33 @@
 
    \_doc -----------------------------
    The font features are managed in the \`\_fontfeatures` macro.
-   They have their implicit values saved in the \`\_defaultfontfeatures`
-   and the \`\setff` `{<features>}`
-   can add next font features. If there is the same font feature as the newly
-   added one then the old value is removed from the `\_fontfeatures` list.
+   It expands to
+   \begitems
+   * \`\_defaultfontfeatures` -- used for each font,
+   * \`\_ffadded` -- features added by \^`\setff`,
+   * \`\_ffcolor` -- features added by \^`\setfontcolor`,
+   * \`\_ffletterspace` -- features added by \^`\setletterspace`,
+   * \`\_ffwordspace` -- features added by \^`\setwordspace`.
+   \enditems
+   The macros \^`\_ffadded`, \^`\_ffcolor`, \^`\_ffletterspace`,
+   \^`\_ffwordspace` are empty by default.
    \_cod -----------------------------
 
+\_def \_fontfeatures{\_defaultfontfeatures\_ffadded\_ffcolor\_ffletterspace\_ffwordspace}
 \_def \_defaultfontfeatures {+tlig;}
+\_def \_ffadded{}
+\_def \_ffcolor{}
+\_def \_ffletterspace{}
+\_def \_ffwordspace{}
+
+   \_doc -----------------------------
+   The \`\setff` `{<features>}` adds next font features to \^`\_ffadded`.
+   Usage \^`\setff{}` resets empty set of all \^`\_ffadded` features.
+   \_cod -----------------------------
+
 \_def \_setff #1{%
-   \_ifx^#1^\_let \_fontfeatures=\_defaultfontfeatures
-   \_else \_edef\_fontfeatures{\_fontfeatures #1;}\_fi
+   \_ifx^#1^\_def\_ffadded{}\_else \_edef\_ffadded{\_ffadded #1;}\_fi
    \_reloading
-}
-\_setff {} % default font features: +tlig;
-\_def\_removefeature #1{%
-    \_isinlist\_fontfeatures{#1}\_iftrue
-        \_def\_tmp ##1#1##2;##3\_relax{\_def\_fontfeatures{##1##3}}%
-        \_ea \_tmp \_fontfeatures \_relax
-    \_fi
 }
 \_public \setff ;
 
@@ -498,22 +507,18 @@
    `\fontdimen` registers).
    \_cod -----------------------------
 
-\_def\_savedfontcolor{}
-\_def\_savedletterspace{}
-\_def\_savedwsp{}
-
-\_def \_setfontcolor #1{\_removefeature{color=}%
-    \_edef\_tmp{\_calculatefontcolor{#1}}%
-    \_ifx\_tmp\_empty \_else \_edef\_fontfeatures{\_fontfeatures color=\_tmp;}\_fi
-    \_reloading
+\_def \_setfontcolor #1{%
+   \_edef\_tmp{\_calculatefontcolor{#1}}%
+   \_ifx\_tmp\_empty \_def\_ffcolor{}\_else \_edef\_ffcolor{color=\_tmp;}\_fi
+   \_reloading
 }
-\_def \_setletterspace #1{\_removefeature{letterspace=}%
-    \_if^#1^\_else \_edef\_fontfeatures{\_fontfeatures letterspace=#1;}\_fi
-    \_reloading
+\_def \_setletterspace #1{%
+   \_if^#1^\_def\_ffletterspace{}\_else \_edef\_ffletterspace{letterspace=#1;}\_fi
+   \_reloading
 }
 \_def \_setwordspace #1{%
-   \_if^#1^\_def\_setwsp##1{}\_removefeature{+Ws}%
-   \_else \_def\_setwsp{\_setwspA#1/}\_setff{+Ws}\_fi
+   \_if^#1^\_def\_setwsp##1{}\_def\_ffwordspace{}%
+   \_else \_def\_setwsp{\_setwspA#1/}\_def\_ffwordspace{+Ws;}\_fi
    \_reloading
 }
 \_def\_setwsp #1{}
@@ -1005,7 +1010,8 @@ Luaotfload documentation for more information.
 
 \endinput
 
-2021-05=02  simpler \_resizefont, better concept of doc, moving parts from fonts-resize
+2021-05-23  concept of \_fontfeatures macro re-implemented
+2021-05-02  simpler \_resizefont, better concept of doc, moving parts from fonts-resize
 2021-04-22  \_ffonum introduced
 2021-04-19  \setwordspace: parameter format {/A/B/C} implemented.
 2021-02-25  \_ttunifont introduced
