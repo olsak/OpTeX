@@ -109,7 +109,7 @@
 %% TODO equivalences
 
    \_doc --------------------
-   The \`\_mte_PR` (for regular and bod fonts) and \`\_mte_PI`
+   The \`\_mte_PR` (for regular and bold fonts) and \`\_mte_PI`
    (for italic and bold italic fonts) are empty by default but user can
    declare specific values here. This macro is used last in the
    `\directlua` code, so it has general precedence.
@@ -122,11 +122,24 @@
 \.trydef \_mte_XI {} % user specific, eXpansion, Italic fonts
 
    \_doc --------------------
-   \`\enablemte` and \`\disablemte` are defined here.
+   We add new submacro \`\.features` to the `\_fontfeatures`. It is empty by
+   default but it will be changed by `\enablemte` to read protrusion and
+   expansion data using lua code.
    \_cod --------------------
 
 \_addto\_fontfeatures{\.features}
 \_def\.features{}
+
+   \_doc --------------------
+   \`\enablemte` initializes prortusion data by the \^`\.enableprotrusion` macro
+   and expansion data by the \^`\.enableexpansion` macro. Then it sets `\_protrudechars`
+   and `\_adjustspacing` primitives and sets the \^`\.features` macro to use
+   the tables `typr` (for regular or bold fonts) or `typi` (for italic
+   or bold italic fonts). These functions are declared in the lua code below.
+   \nl
+   \`\disablemte` disables font features and sets appropriate primitive
+   registers to zero.
+   \_cod --------------------
 
 \_def\.enablemte {%
    \_initunifonts
@@ -134,7 +147,7 @@
    \.enableexpansion
    \_protrudechars=2
    \_adjustspacing=2
-   \_def\.features{protrusion=normal,expansion=default}%
+   \_def\.features{protrusion=typ\.var,expansion=default}%
    \_reloading \_currvar % current font is re-loaded
 }
 \_def\.disablemte {%
@@ -145,14 +158,34 @@
 }
 \_nspublic \enablemte \disablemte ;
 
+   \_doc --------------------
+   The \`\.var` macro exapnds ro `r` when regular or bold font is loaded
+   and it expands to `i` if italic or bold italic font is loaded.
+   The `typr` or `typi` data table is selected using this macro.
+   \_cod --------------------
+
+\_def\.it{it}\_def\.bi{bi}
+\_def\.var{\_ifx\_whatresize\.it i\_else \_ifx\_whatresize\.bi i\_else r\_fi\_fi}
+
+    \_doc -------------------
+    The `typr` and `typi` data tables are created using lua code in
+    the \`\.enableprotrusion` macro. All macros with particular data
+    mentioned above are used here.
+    The analogical concept is used in the \`\.enableexpansion` macro.
+    \_cod -------------------
+
 \_def\.enableprotrusion {%
    \_directlua {%
       local byte = string.byte
-      fonts.protrusions.setups['normal']={
-      factor=\.fpfactor,
-      left=1,
-      right=1,
-      \.AlphabetPR \.alphabetPR \.digitsPR \.punctPR \.quotPR \.PR
+      fonts.protrusions.setups['typr']={
+         factor=\.fpfactor,
+         left=1, right=1,
+         \.AlphabetPR \.alphabetPR \.digitsPR \.punctPR \.quotPR \.PR
+      }
+      fonts.protrusions.setups['typi']={
+         factor=\.fpfactor,
+         left=1, right=1,
+%        \.AlphabetPI \.alphabetPI \.digitsPI \.punctPI \.quotPI \.PI %% TODO
 }}}
 \_def\.fpfactor{1}
 
@@ -177,60 +210,58 @@
 
 You can do `\load[mte]` followed by \^`\enablemte`. The microtypographic
 extensions (protrusions, expansions) of all fonts are available after
-`\enablemte`. The Microtype \LaTeX/ package does similar effect.
+\^`\enablemte`. The Microtype \LaTeX/ package does similar effect.
 
-The `\enablemte` reloads the current font with microtypographic features enabled
+The \^`\enablemte` reloads the current font with microtypographic features enabled
 and all new fonts used by the Font Selection System have microtypographic
 features enabled too, because they are added to the `\_fontfeatures` macro.
 
-The `\enablemte` macro does only local settings. If it is used in a group then
+The \^`\enablemte` macro does only local settings. If it is used in a group then
 only fonts used in this group are modified.
 
-The `\enablemte` macro sets (among other things) `\protrudechars=2`
+The \^`\enablemte` macro sets (among other things) `\protrudechars=2`
 (protrusion is enabled) and `\adjustspacing=2` (font expansion is enabled).
 You can disable these features by setting these primitive registers to zero
 value. Note, that the values of these primitive registers are checked when
 paragraph is finalized although the fonts were loaded with microtypograpgic
 features enabled. It means that you have to use `\par` before end of group
-if you use `\enablemte` inside a group.
+if you use \^`\enablemte` inside a group.
 
-On the other hand, you can use `\disablemte` macro which reloads current
+On the other hand, you can use \^`\disablemte` macro which reloads current
 font with microtypographic features disabled and all newly loaded fonts have
-this features disabled too. The macro has local validity. You can use
-`{\disablemte text}`: the `text` in this example is typesed by a font with
+this features disabled too. The macro has local validity. For example,
+`{\disablemte text}` prints `text` by a font with
 mte disabled. It works locally in the middle of the paragraph (unlike setting
 `\protrudechars` and `\adjustspacing` to zero).
 
 You can define your own protrusion or expansion values. Simply copy macros
-`\_mte_AlphabetPR`, `\_mte_quotPR`, etc. and define them as you wish using
-`\def`. Such definition has precedence.
+`\_mte_AlphabetPR`, `\_mte_quotPR`, etc.\ from this package and define them
+as you wish using `\def`. Such definition has precedence.
 Similar definitions can be in some font family files too, so: do your
 definition after all `\fontfam` if you want to keep the precedence.
 All such definitions must be performed before the `\mteinit` command.
 
-You can use `\def\_mte_PR` for data of protrusion of regular and bold fonts
+You can use `\def\_mte_PR` for data of protrusion for regular or bold fonts
 which has general precedence. For example, if you want to protrude hyphen
-char with factor one at the right side and by factor 0.4 at the left dide, use
+char with factor one at the right side and by factor 0.4 at the left side, use
 \begtt
 \def\_mte_PR {% user specification, Protrusion, Regular fonts
  \_mte - = {.4, 1},  % /hyphen
 }
 \endtt
-If you want to declare protrusion data for italic and bold italic fonts,
-use `\_mte_PI`.
-If you want to set font expansion data, use `\_mte_XR` (for regular and bod
-fonts) and `\_mte_XI` (for italic and bold italic fonts).
+Protrusion data for italic and bold italic fonts can be rewritten by
+`\_mte_PI`. Analogical macros are used for expansion data `\_mte_XR`
+(for regular and bod fonts) and `\_mte_XI` (for italic and bold italic fonts).
 
-If you feel that default microtypographis data are wrong in particular case,
-please let me know about them. I can correct it in this package. If you feel
+If you feel that default microtypographis data are wrong in a particular case,
+please let me know. I can correct it in this package. If you feel
 that a specific font family neeeds different microtypographic data, please
-let me about them. I can add extra definitions to appropriate font family
+let me know. I can add extra definitions to appropriate font family
 file.
 
-You can use \^`\setfpfactor` `<factor><space>` or \^`\setfxfactor` `<factor><space>`
-to set the factor by which all protrusion or expansion data are scaled. The
-<factor> is decimal number and its default value is 1.
-These macros must be used before `\enablemte`.
+You can use \^`\setfpfactor` `<factor><space>` to set the factor by which
+all protrusion data are scaled. The <factor> is decimal number and its default
+value is~1. This macro can be used before \^`\enablemte`.
 
 \_endinput
 
