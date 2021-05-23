@@ -1,0 +1,237 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+% mte.opm, Petr Olšák <petr@olsak.net>, 2021
+% See end of the file for more information
+
+\_codedecl \enablemte {MicroTypographic Extension <2021-05-23>}
+\_namespace{mte}
+
+    \_doc -------------------
+    First, we define default protrusion values. They are
+    saved in the macros
+    \`\_mte_AlphabetPR`, \`\_mte_alphabetPR`, \`\_mte_digitsPR`, \`\_mte_punctPR`,
+    \`\_mte_quotPR`, \`\_mte_otherPR`
+    for regular and bold fonts and in the macros
+    \`\_mte_AlphabetPI`, \`\_mte_alphabetPI`, \`\_mte_digitsPI`, \`\_mte_punctPI`,
+    \`\_mte_quotPI`, \`\_mte_otherPI`
+    for italic and bold italic fonts.
+    We are using long names of these macros (without dot shortcut) because
+    user can copy these macros to his/her macro file and do modifications.
+    \nl
+    User (or a fontfamily file) can define other values, for example by
+    `\def\_mte_AlphabetPR{...}`. If such definition is done before
+    loading this package, it has precedence. This is the reason why we are
+    using \`\.trydef` which defines given macro only if it is not defined
+    already.
+    \_cod -------------------
+
+\_def\.trydef #1{\_ifx#1\_undefined \_afterfi{\_def#1}\_else \_ea\_ignoreit \_fi}
+
+    \_doc
+    We want to save size of the following macros, so we don't write
+    `[byte('<char>')]` but only \`\_mte`~`<char>`. We use \OpTeX/ name space for
+    \^`\_mte` (no package name space) because user may copy these macros to
+    other macro files and modify them. We hope that the name \^`\_mte` will
+    never used in another meaning in \OpTeX/.
+    \_cod
+
+\_def\_mte #1{[byte('#1')]}
+
+   \_doc --------------------
+   The protrusion data follows.
+   The values are coefficients of total width of declared character.
+   First value gives left protrusion, second value is right protrusion.
+   \_cod --------------------
+
+\.trydef \_mte_AlphabetPR {% Alphabets, Protrusion, Regular fonts
+ \_mte A = {.05,.05},
+ \_mte Æ = {.05,0  },
+ \_mte F = {0  ,.05},
+ \_mte J = {.05,0  },
+ \_mte K = {0  ,.05},
+ \_mte L = {0  ,.05},
+ \_mte T = {.05,.05},
+ \_mte V = {.05,.05},
+ \_mte W = {.05,.05},
+ \_mte X = {.05,.05},
+ \_mte Y = {.05,.05},
+}
+\.trydef \_mte_alphabetPR {% alphabets, Protrusion, Regular fonts
+ \_mte k = {0  ,.05},
+ \_mte r = {0  ,.05},
+ \_mte t = {0  ,.07},
+ \_mte v = {.05,.05},
+ \_mte w = {.05,.05},
+ \_mte x = {.05,.05},
+ \_mte y = {.05,.07},
+}
+\.trydef \_mte_digitsPR {% digits, Protrusion, Regular fonts
+ \_mte 0 = {0  ,.05},
+ \_mte 1 = {.1 ,.2 },
+ \_mte 2 = {.05,.05},
+ \_mte 3 = {.05,.05},
+ \_mte 4 = {.07,.07},
+ \_mte 5 = {0  ,.05},
+ \_mte 6 = {0  ,.05},
+ \_mte 7 = {.05,.1 },
+ \_mte 8 = {0  ,.05},
+ \_mte 9 = {0  ,.05},
+}
+\.trydef \_mte_punctPR {% punctuations, Protrusion, Regular fonts
+ \_mte . = {0 , .7},
+ \_mte , = {0 , .5},
+ \_mte : = {0 , .5},
+ \_mte ; = {0 , .5},
+ \_mte ! = {0 , .1},
+ \_mte ? = {0 , .2},
+ \_mte @ = {.05,.05},
+ \_mte ~ = {.2, .25},
+ [0x0025] = {.05,.05}, % /percent
+ \_mte * = {.3, .3},
+ \_mte + = {.25,.25},
+ \_mte - = {.4, .5},   % /hyphen
+ \_mte – = {.4, .3},   % /endash
+ \_mte — = {.3, .2},   % /emdash
+ \_mte _ = {.2, .2},   % /underscore
+ \_mte / = {.2, .3},
+ [0x005C] = {.2, .3},  % /backslash
+}
+\.trydef \_mte_quotPR {% quotation marks, Protrusion, Regular fonts
+ [0x0027] = {.3,.4},   % /quotesingle
+ \_mte ‘ = {.5,.7}, \_mte ’ = {.5,.6},
+ \_mte “ = {.5,.3}, \_mte ” = {.2,.6},
+ \_mte ‚ = {.4,.4}, \_mte „ = {.4,.4},
+ \_mte ‹ = {.4,.4}, \_mte › = {.3,.5},
+ \_mte « = {.3,.2}, \_mte » = {.1,.4},
+}
+%% TODO \_mte_othersPR
+%% TODO \_mte_*PI
+%% TODO \_mte_*XR, \_mte_*XI
+%% TODO equivalences
+
+   \_doc --------------------
+   The \`\_mte_PR` (for regular and bod fonts) and \`\_mte_PI`
+   (for italic and bold italic fonts) are empty by default but user can
+   declare specific values here. This macro is used last in the
+   `\directlua` code, so it has general precedence.
+   The same idea is used with `\_mte_XR` and `\_mte_XI` macros.
+   \_cod --------------------
+
+\.trydef \_mte_PR {} % user specific, Protrusion, Regular fonts
+\.trydef \_mte_PI {} % user specific, Protrusion, Italic fonts
+\.trydef \_mte_XR {} % user specific, eXpansion, Regular fonts
+\.trydef \_mte_XI {} % user specific, eXpansion, Italic fonts
+
+   \_doc --------------------
+   \`\enablemte` and \`\disablemte` are defined here.
+   \_cod --------------------
+
+\_addto\_fontfeatures{\.features}
+\_def\.features{}
+
+\_def\.enablemte {%
+   \_initunifonts
+   \.enableprotrusion
+   \.enableexpansion
+   \_protrudechars=2
+   \_adjustspacing=2
+   \_def\.features{protrusion=normal,expansion=default}%
+   \_reloading \_currvar % current font is re-loaded
+}
+\_def\.disablemte {%
+   \_protrudechars=0
+   \_adjustspacing=0
+   \_def\.features{}%
+   \_reloading \_currvar
+}
+\_nspublic \enablemte \disablemte ;
+
+\_def\.enableprotrusion {%
+   \_directlua {%
+      local byte = string.byte
+      fonts.protrusions.setups['normal']={
+      factor=\.fpfactor,
+      left=1,
+      right=1,
+      \.AlphabetPR \.alphabetPR \.digitsPR \.punctPR \.quotPR \.PR
+}}}
+\_def\.fpfactor{1}
+
+\_def\.enableexpansion {}% TODO
+
+   \_doc --------------------
+   \`\setfpfactor` and \`\setfxfactor` simpy define \`\.fpfactor` and \`\.fxfactor`
+   used in lua code.
+   \_cod --------------------
+
+\_def\.setfpfactor #1 {\_def\.fpfactor{#1}}
+\_def\.setfxfactor #1 {\_def\.fxfactor{#1}}
+\_nspublic \setfpfactor \setfxfactor ;
+
+\_endnamespace
+\_endcode
+
+\tit MicroTypographic Extensions for \OpTeX/
+
+\centerline{\it Petr Olšák, 2021}
+\bigskip
+
+You can do `\load[mte]` followed by \^`\enablemte`. The microtypographic
+extensions (protrusions, expansions) of all fonts are available after
+`\enablemte`. The Microtype \LaTeX/ package does similar effect.
+
+The `\enablemte` reloads the current font with microtypographic features enabled
+and all new fonts used by the Font Selection System have microtypographic
+features enabled too, because they are added to the `\_fontfeatures` macro.
+
+The `\enablemte` macro does only local settings. If it is used in a group then
+only fonts used in this group are modified.
+
+The `\enablemte` macro sets (among other things) `\protrudechars=2`
+(protrusion is enabled) and `\adjustspacing=2` (font expansion is enabled).
+You can disable these features by setting these primitive registers to zero
+value. Note, that the values of these primitive registers are checked when
+paragraph is finalized although the fonts were loaded with microtypograpgic
+features enabled. It means that you have to use `\par` before end of group
+if you use `\enablemte` inside a group.
+
+On the other hand, you can use `\disablemte` macro which reloads current
+font with microtypographic features disabled and all newly loaded fonts have
+this features disabled too. The macro has local validity. You can use
+`{\disablemte text}`: the `text` in this example is typesed by a font with
+mte disabled. It works locally in the middle of the paragraph (unlike setting
+`\protrudechars` and `\adjustspacing` to zero).
+
+You can define your own protrusion or expansion values. Simply copy macros
+`\_mte_AlphabetPR`, `\_mte_quotPR`, etc. and define them as you wish using
+`\def`. Such definition has precedence.
+Similar definitions can be in some font family files too, so: do your
+definition after all `\fontfam` if you want to keep the precedence.
+All such definitions must be performed before the `\mteinit` command.
+
+You can use `\def\_mte_PR` for data of protrusion of regular and bold fonts
+which has general precedence. For example, if you want to protrude hyphen
+char with factor one at the right side and by factor 0.4 at the left dide, use
+\begtt
+\def\_mte_PR {% user specification, Protrusion, Regular fonts
+ \_mte - = {.4, 1},  % /hyphen
+}
+\endtt
+If you want to declare protrusion data for italic and bold italic fonts,
+use `\_mte_PI`.
+If you want to set font expansion data, use `\_mte_XR` (for regular and bod
+fonts) and `\_mte_XI` (for italic and bold italic fonts).
+
+If you feel that default microtypographis data are wrong in particular case,
+please let me know about them. I can correct it in this package. If you feel
+that a specific font family neeeds different microtypographic data, please
+let me about them. I can add extra definitions to appropriate font family
+file.
+
+You can use \^`\setfpfactor` `<factor><space>` or \^`\setfxfactor` `<factor><space>`
+to set the factor by which all protrusion or expansion data are scaled. The
+<factor> is decimal number and its default value is 1.
+These macros must be used before `\enablemte`.
+
+\_endinput
+
+Use optex mte-doc.tex to generate documentation from this file.

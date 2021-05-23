@@ -1,0 +1,16 @@
+% This is part of mte.opm macro package for OpTeX
+
+% Run  optex mte-doc
+% (two times) to generate documentation including references and the index.
+
+\load [doc]
+
+\printdoctail mte.opm
+\printdoc     mte.opm
+
+\nonum\sec Index
+\begmulti 3
+\tt \makeindex
+\endmulti
+
+\bye
