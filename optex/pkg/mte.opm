@@ -8,17 +8,17 @@
     \_doc -------------------
     First, we define default protrusion values. They are
     saved in the macros
-    \`\_mte_AlphabetPR`, \`\_mte_alphabetPR`, \`\_mte_digitsPR`, \`\_mte_punctPR`,
-    \`\_mte_quotPR`, \`\_mte_otherPR`
-    for regular and bold fonts and in the macros
-    \`\_mte_AlphabetPI`, \`\_mte_alphabetPI`, \`\_mte_digitsPI`, \`\_mte_punctPI`,
-    \`\_mte_quotPI`, \`\_mte_otherPI`
+    \^`\.AlphabetPR`, \^`\.alphabetPR`, \^`\.digitsPR`, \^`\.punctPR`,
+    \^`\.quotPR`, \^`\.othersPR`
+    for regular and bold fonts. The analogous macros
+    \^`\.AlphabetPI`, \^`\.alphabetPI`, \^`\.digitsPI`, \^`\.punctPI`,
+    \^`\.quotPI`, \^`\.othersPI` store data
     for italic and bold italic fonts.
-    We are using long names of these macros (without dot shortcut) because
-    user can copy these macros to his/her macro file and do modifications.
+    We are using long names of these macros (without the dot shortcut in the
+    code) because user can copy these macros to his/her macro file and do modifications.
     \nl
     User (or a fontfamily file) can define other values, for example by
-    `\def\_mte_AlphabetPR{...}`. If such definition is done before
+    `\def\_mte_quotPR{...}`. If such definition is done before
     loading this package, it has precedence. This is the reason why we are
     using \`\.trydef` which defines given macro only if it is not defined
     already.
@@ -27,99 +27,405 @@
 \_def\.trydef #1{\_ifx#1\_undefined \_afterfi{\_def#1}\_else \_ea\_ignoreit \_fi}
 
     \_doc
-    We want to save size of the following macros, so we don't write
-    `[byte('<char>')]` but only \`\_mte`~`<char>`. We use \OpTeX/ name space for
+    We want to save size of the following macros with data tables, so we don't write
+    `[<code of char>] =` but only \`\_mte`~`<char> =`. We use \OpTeX/ name space for
     \^`\_mte` (no package name space) because user may copy these macros to
     other macro files and modify them. We hope that the name \^`\_mte` will
-    never used in another meaning in \OpTeX/.
+    be never used in another meaning in \OpTeX/.
     \_cod
 
-\_def\_mte #1{[byte('#1')]}
+\_def\_mte #1{[\_immediateassignment\_tmpnum=`#1 \_the\_tmpnum]}
 
    \_doc --------------------
-   The protrusion data follows.
+   The protrusion data follow.
    The values are coefficients of total width of declared character.
    First value gives left protrusion, second value is right protrusion.
+   \`\.AlphabetPR`
    \_cod --------------------
 
 \.trydef \_mte_AlphabetPR {% Alphabets, Protrusion, Regular fonts
- \_mte A = {.05,.05},
- \_mte Æ = {.05,0  },
- \_mte F = {0  ,.05},
- \_mte J = {.05,0  },
- \_mte K = {0  ,.05},
- \_mte L = {0  ,.05},
- \_mte T = {.05,.05},
- \_mte V = {.05,.05},
- \_mte W = {.05,.05},
- \_mte X = {.05,.05},
- \_mte Y = {.05,.05},
+   \_mte  A = {.05,.05},
+   \_mte  Æ = {.05,  0},
+   \_mte  F = {0  ,.05},
+   \_mte  J = {.05,  0},
+   \_mte  K = {0  ,.05},
+   \_mte  L = {0  ,.05},
+   \_mte  T = {.05,.05},
+   \_mte  V = {.05,.05},
+   \_mte  W = {.05,.05},
+   \_mte  X = {.05,.05},
+   \_mte  Y = {.05,.05},
 }
+   \_doc
+   \`\.alphabetPR`
+   \_cod
+
 \.trydef \_mte_alphabetPR {% alphabets, Protrusion, Regular fonts
- \_mte k = {0  ,.05},
- \_mte r = {0  ,.05},
- \_mte t = {0  ,.07},
- \_mte v = {.05,.05},
- \_mte w = {.05,.05},
- \_mte x = {.05,.05},
- \_mte y = {.05,.07},
+   \_mte  k = {0  ,.05},
+   \_mte  r = {0  ,.05},
+   \_mte  t = {0  ,.07},
+   \_mte  v = {.05,.05},
+   \_mte  w = {.05,.05},
+   \_mte  x = {.05,.05},
+   \_mte  y = {.05,.07},
 }
+   \_doc
+   \`\.digitsPR`
+   \_cod
+
 \.trydef \_mte_digitsPR {% digits, Protrusion, Regular fonts
- \_mte 0 = {0  ,.05},
- \_mte 1 = {.1 ,.2 },
- \_mte 2 = {.05,.05},
- \_mte 3 = {.05,.05},
- \_mte 4 = {.07,.07},
- \_mte 5 = {0  ,.05},
- \_mte 6 = {0  ,.05},
- \_mte 7 = {.05,.1 },
- \_mte 8 = {0  ,.05},
- \_mte 9 = {0  ,.05},
+   \_mte  0 = {0  ,.05},
+   \_mte  1 = {.1 ,.2 },
+   \_mte  2 = {.05,.05},
+   \_mte  3 = {.05,.05},
+   \_mte  4 = {.07,.07},
+   \_mte  5 = {0  ,.05},
+   \_mte  6 = {0  ,.05},
+   \_mte  7 = {.05,.1 },
+   \_mte  8 = {0  ,.05},
+   \_mte  9 = {0  ,.05},
+   [0xF731] = {.1, .1},   % /one.oldstyle
+   [0xF732] = {.05, .05}, % /two.oldstyle
+   [0xF733] = {.03, .08}, % /three.oldstyle
+   [0xF734] = {.05, .05}, % /four.oldstyle
+   [0xF737] = {.05, .08}, % /seven.oldstyle
 }
+   \_doc
+   \`\.punctPR`
+   \_cod
+
 \.trydef \_mte_punctPR {% punctuations, Protrusion, Regular fonts
- \_mte . = {0 , .7},
- \_mte , = {0 , .5},
- \_mte : = {0 , .5},
- \_mte ; = {0 , .5},
- \_mte ! = {0 , .1},
- \_mte ? = {0 , .2},
- \_mte @ = {.05,.05},
- \_mte ~ = {.2, .25},
- [0x0025] = {.05,.05}, % /percent
- \_mte * = {.3, .3},
- \_mte + = {.25,.25},
- \_mte - = {.4, .5},   % /hyphen
- \_mte – = {.4, .3},   % /endash
- \_mte — = {.3, .2},   % /emdash
- \_mte _ = {.2, .2},   % /underscore
- \_mte / = {.2, .3},
- [0x005C] = {.2, .3},  % /backslash
+   \_mte  . = {0 , .7},
+   \_mte  , = {0 , .5},
+   \_mte  : = {0 , .5},
+   \_mte  ; = {0 , .5},
+   \_mte  ! = {0 , .1},
+   \_mte  ? = {0 , .2},
+   \_mte  @ = {.05,.05},
+   \_mte  ~ = {.2, .25},
+   \_mte \% = {.05,.05}, % /percent
+   \_mte  * = {.3, .3},
+   \_mte  + = {.25,.25},
+   \_mte  - = {.4, .5},   % /hyphen
+   \_mte  – = {.4, .3},   % /endash
+   \_mte  — = {.3, .2},   % /emdash
+   \_mte  _ = {.2, .2},   % /underscore
+   \_mte  / = {.2, .3},
+   \_mte \\ = {.2, .3},  % /backslash
+   \_mte  ¡ = {.1, 0}, \_mte  ¿ = {.1, 0},
 }
+   \_doc
+   \`\.quotPR`
+   \_cod
+
 \.trydef \_mte_quotPR {% quotation marks, Protrusion, Regular fonts
- [0x0027] = {.3,.4},   % /quotesingle
- \_mte ‘ = {.5,.7}, \_mte ’ = {.5,.6},
- \_mte “ = {.5,.3}, \_mte ” = {.2,.6},
- \_mte ‚ = {.4,.4}, \_mte „ = {.4,.4},
- \_mte ‹ = {.4,.4}, \_mte › = {.3,.5},
- \_mte « = {.3,.2}, \_mte » = {.1,.4},
+   \_mte  ' = {.3,.4},   % /quotesingle
+   \_mte  ‘ = {.5,.7}, \_mte  ’ = {.5,.6},
+   \_mte  “ = {.5,.3}, \_mte  ” = {.2,.6},
+   \_mte  ‚ = {.4,.4}, \_mte  „ = {.4,.4},
+   \_mte  ‹ = {.4,.4}, \_mte  › = {.3,.5},
+   \_mte  « = {.3,.2}, \_mte  » = {.1,.4},
 }
-%% TODO \_mte_othersPR
-%% TODO \_mte_*PI
-%% TODO \_mte_*XR, \_mte_*XI
-%% TODO equivalences
+   \_doc
+   \`\.othersPR`
+   \_cod
+
+\.trydef \_mte_othersPR {% other characters, Protrusion, Regular fonts
+   \_mte  ( = {.3, 0},  \_mte  ) = {0 ,.3},
+   \_mte  < = {.2, .1}, \_mte  > = {.1, .2},
+   \_mte \{ = {.4, .2}, \_mte \} = {.2, .4}, % /braceleft, /braceright
+   [0x2329] = {.4,  0}, [0x232A] = {0 ,.4},  % /angleleft, /angleright
+   \_mte  † = {.1,.1},
+   \_mte  ‡ = {.08, .08},
+   \_mte  • = {.2, .2},
+   \_mte  · = {.4, .45}, % /periodcentered
+   \_mte  ℃ = {.08, .05},
+   \_mte  ₡ = {0 , .05},
+   \_mte  ° = {.4, .4},
+   [0x2122] = {.1, .2}, % /trademark
+   \_mte  © = {.1, .1},
+   \_mte  ® = {.1, .1},
+   \_mte  ª = {.1, .2},
+   \_mte  º = {.1, .2},
+   \_mte  ¹ = {.2, .25},
+   \_mte  ² = {.05, .1},
+   \_mte  ³ = {.05, .1},
+   \_mte  ¬ = {.2,   0},
+   \_mte  − = {.3, .3},
+   \_mte  ± = {.15, .2},
+   \_mte  × = {.15, .25},
+   \_mte  ÷ = {.15, .25},
+   \_mte  € = {.1,   0},
+   \_mte  Γ = {0   ,.180}, % /Gamma
+   \_mte  Δ = {.1, .1},    % /Delta
+   \_mte  Θ = {.05, .05},  % /Theta
+   \_mte  Λ = {.1,.1},     % /Lambda
+   \_mte  Σ = {.05, .05},  % /Sigma
+   \_mte  Υ = {.1,.1},     % /Upsilon
+   \_mte  Φ = {.05, .05},  % /Phi
+   \_mte  Ψ = {.05, .05},  % /Psi
+}
+
+   \_doc
+   The protrusion data for italic and bold italic fonts follow.
+   \`\.AlphabetPI`
+   \_cod
+
+\.trydef \_mte_AlphabetPI {% Alphabets, Protrusion, Italic fonts
+   \_mte  A = {.125,.1},
+   \_mte  Æ = {.125,-.055},
+   \_mte  B = {.09,-.04},
+   \_mte  C = {.145,-.075},
+   \_mte  D = {.075,-.028},
+   \_mte  E = {.08,-.055},
+   \_mte  F = {.085,-.08},
+   \_mte  G = {.153,-.015},
+   \_mte  H = {.073,-.06},
+   \_mte  I = {.14,-.12},
+   [0x0132] = {.14,-.08}, % IJ
+   \_mte  J = {.135,-.08},
+   \_mte  K = {.07,-.03},
+   \_mte  L = {.087,.04},
+   \_mte  M = {.067,-.045},
+   \_mte  N = {.075,-.055},
+   \_mte  O = {.15,-.03},
+   \_mte  Œ = {.15,-.055},
+   \_mte  P = {.082,-.05},
+   \_mte  Q = {.15,-.03},
+   \_mte  R = {.075, .015},
+   \_mte  S = {.09,-.065},
+   \_mte  $ = {.1,-.02}, % $
+   \_mte  T = {.22,-.085},
+   \_mte  U = {.23,-.055},
+   \_mte  V = {.26,-.06},
+   \_mte  W = {.185,-.055},
+   \_mte  X = {.07,-.03},
+   \_mte  Y = {.25,-.06},
+   \_mte  Z = {.09,-.06},
+}
+   \_doc
+   \`\.alphabetPI`
+   \_cod
+
+\.trydef \_mte_alphabetPI {% alphabets, Protrusion, Italic fonts
+   \_mte  a = {.15,-.01},
+   \_mte  b = {.17, 0},
+   \_mte  c = {.173,-.01},
+   \_mte  d = {.15,-.055},
+   \_mte  e = {.18, 0},
+   \_mte  f = {0  ,-.25},
+   \_mte  g = {.15,-.01},
+   \_mte  h = {.1,  0},
+   \_mte  i = {.21, 0},
+   [0x17C9] = {.21,-.04}, % ij
+   \_mte  j = {0  ,-.04},
+   \_mte  k = {.11,-.05},
+   \_mte  l = {.24,-.11},
+   \_mte  m = {.08, 0},
+   \_mte  n = {.115, 0},
+   \_mte  o = {.155, 0},
+   \_mte  q = {.17,-.04},
+   \_mte  r = {.155,-.04},
+   \_mte  s = {.13, 0},
+   \_mte  t = {.23,-.01},
+   \_mte  u = {.12, 0},
+   \_mte  v = {.14,-.025},
+   \_mte  w = {.098,-.02},
+   \_mte  x = {.065,-.04},
+   \_mte  y = {.13,-.02},
+   \_mte  z = {.110,-.08},
+}
+   \_doc
+   \`\.digitsPI`
+   \_cod
+
+\.trydef \_mte_digitsPI {% digits, Protrusion, Italic fonts
+   \_mte  0 = {.17,-.085},
+   \_mte  1 = {.23,.11},
+   \_mte  2 = {.13,-.07},
+   \_mte  3 = {.14,-.07},
+   \_mte  4 = {.13,.08},
+   \_mte  5 = {.16, 0},
+   \_mte  6 = {.175,-.03},
+   \_mte  7 = {.25,-.15},
+   \_mte  8 = {.13,-.04},
+   \_mte  9 = {.155,-.08},
+   [0xF730] = {.05,.05}, % /zero.oldstyle
+   [0xF731] = {.1, .1},  % /one.oldstyle
+   [0xF732] = {.1,.08},  % /two.oldstyle
+   [0xF733] = {.08,.05}, % /three.oldstyle
+   [0xF734] = {.08,.08}, % /four.oldstyle
+   [0xF735] = {.05,  0}, % /five.oldstyle
+   [0xF736] = {.05,  0}, % /six.oldstyle
+   [0xF737] = {.08,.08}, % /seven.oldstyle
+   [0xF738] = {.05,  0}, % /eight.oldstyle
+   [0xF739] = {0  ,.05}, % /nine.oldstyle
+}
+   \_doc
+   \`\.punctPI`
+   \_cod
+
+\.trydef \_mte_punctPI {% punctuations, Protrusion, Italic fonts
+   \_mte  . = {0 ,.5},
+   \_mte  , = {0 ,.45},
+   \_mte  : = {0 ,.3},
+   \_mte  ; = {0 ,.3},
+   \_mte  & = {.13,.03},
+   \_mte \% = {.18,.05},
+   \_mte  * = {.38,.02},
+   \_mte  + = {.18,.2},
+   \_mte  @ = {.18,.01},
+   \_mte  ~ = {.2,.15},
+   \_mte  ( = {.3, 0},   \_mte ) = {0  ,.07},
+   \_mte  / = {.1,.1},
+   \_mte  - = {.5,.3}, % /hyphen
+   \_mte  – = {.5,.3}, % /endash
+   \_mte  — = {.4,.17}, % /emdash
+   \_mte  _ = {.1,.2}, % /underscore
+   \_mte  ¡ = {.2,  0},  \_mte ¿ = {.2,  0},
+}
+   \_doc
+   \`\.quotPI`
+   \_cod
+
+\.trydef \_mte_quotPI {% quotation marks, Protrusion, Italic fonts
+   \_mte  ' = {.3,.4}, % /quotesingle
+   \_mte  " = {.5,.3},
+   \_mte  ‘ = {.8,.2},  \_mte  ’ = {.8,-.02},
+   \_mte  “ = {.54,.1}, \_mte  ” = {.5,.1},
+   \_mte  ‚ = {.3,.7},  \_mte  „ = {.2,.6},
+   \_mte  ‹ = {.5,.3},  \_mte  › = {.4,.4},
+   \_mte  « = {.4,.1},  \_mte  » = {.2,.3},
+}
+   \_doc
+   \`\.othersPI`
+   \_cod
+
+\.trydef \_mte_othersPI {% other characters, Protrusion, Italic fonts
+   \_mte  < = {.3,.1},  \_mte > = {200,100},
+   \_mte \\ = {.3,.3},
+   \_mte \{ = {.4,.1},  \_mte \}  = {200,200},
+   \_mte  † = {.2,.08},
+   \_mte  ‡ = {.12,.08},
+   \_mte  • = {.22,.1},
+   \_mte  · = {.55,.3}, % /periodcentered
+   \_mte  ℃ = {.17, 0},
+   \_mte  ₡ = {.1,.05},
+   \_mte  ¶ = {.2, 0},
+   \_mte  ° = {.5,.3},
+   [0x2122] = {.2,.07}, % /trademark
+   \_mte  © = {.05,.07},
+   \_mte  ® = {.05,.07},
+   \_mte  ª = {.14,.1},
+   \_mte  º = {.14,.1},
+   \_mte  ¹ = {.40,.15},
+   \_mte  ² = {.25,.08},
+   \_mte  ³ = {.25,.08},
+   \_mte  ¬ = {.25,.08},
+   \_mte  − = {.3,.2},
+   \_mte  ± = {.15,.17},
+   \_mte  × = {.2,.2},
+   \_mte  ÷ = {.2,.2},
+   \_mte  € = {.15, 0},
+   \_mte  Γ = {.1,.12}, % /Gamma
+   \_mte  Δ = {.12,.1}, % /Delta
+   \_mte  Θ = {.12,.05}, % /Theta
+   \_mte  Λ = {.13,.1}, % /Lambda
+   \_mte  Ξ = {.1, 0}, % /Xi
+   \_mte  Π = {.1, 0}, % /Pi
+   \_mte  Σ = {.1,.05}, % /Sigma
+   \_mte  Υ = {.18,.1}, % /Upsilon
+   \_mte  Φ = {.13,.07}, % /Phi
+   \_mte  Ψ = {.13,.05}, % /Psi
+   \_mte  Ω = {.05, 0}, % /Omega
+}
 
    \_doc --------------------
-   The \`\_mte_PR` (for regular and bold fonts) and \`\_mte_PI`
-   (for italic and bold italic fonts) are empty by default but user can
-   declare specific values here. This macro is used last in the
-   `\directlua` code, so it has general precedence.
-   The same idea is used with `\_mte_XR` and `\_mte_XI` macros.
+   The expansion data follow in macros \^`\.AlphabetX`, \^`\.alphabetX`, \^`\.digitsX`
+   and \^`\.othersX`.
+   They are common for all fonts. \`\.AlphabetX`
    \_cod --------------------
 
-\.trydef \_mte_PR {} % user specific, Protrusion, Regular fonts
-\.trydef \_mte_PI {} % user specific, Protrusion, Italic fonts
-\.trydef \_mte_XR {} % user specific, eXpansion, Regular fonts
-\.trydef \_mte_XI {} % user specific, eXpansion, Italic fonts
+\.trydef \_mte_AlphabetX {% Alphabets, eXpansion
+   \_mte  A = .5,
+   \_mte  Æ = .5,
+   \_mte  B = .7,
+   \_mte  C = .7,
+   \_mte  D = .5,
+   \_mte  E = .7,
+   \_mte  F = .7,
+   \_mte  G = .5,
+   \_mte  H = .7,
+   \_mte  K = .7,
+   \_mte  M = .7,
+   \_mte  N = .7,
+   \_mte  O = .5,
+   \_mte  Œ = .5,
+   \_mte  P = .7,
+   \_mte  Q = .5,
+   \_mte  R = .7,
+   \_mte  S = .7,
+   \_mte  U = .7,
+   \_mte  W = .7,
+   \_mte  Z = .7,
+}
+   \_doc
+   \`\.alphabetX`
+   \_cod
+
+\.trydef \_mte_alphabetX {% alphabets, eXpansion
+   \_mte  a = .7,
+   \_mte  æ = .7,
+   \_mte  b = .7,
+   \_mte  c = .7,
+   \_mte  d = .7,
+   \_mte  e = .7,
+   \_mte  g = .7,
+   \_mte  h = .7,
+   \_mte  k = .7,
+   \_mte  m = .7,
+   \_mte  n = .7,
+   \_mte  o = .7,
+   \_mte  œ = .7,
+   \_mte  p = .7,
+   \_mte  q = .7,
+   \_mte  s = .7,
+   \_mte  u = .7,
+   \_mte  w = .7,
+   \_mte  z = .7,
+}
+   \_doc
+   \`\.digitsX`
+   \_cod
+
+\.trydef \_mte_digitsX {% digits, eXpansion
+   \_mte  2 = .7,
+   \_mte  3 = .7,
+   \_mte  6 = .7,
+   \_mte  8 = .7,
+   \_mte  9 = .7,
+}
+   \_doc
+   \`\.othersX`
+   \_cod
+
+\.trydef \_mte_othersX {% others, eXpansion
+}
+
+   \_doc --------------------
+   The \`\_mte_P` (for protrusion, all fonts) and \`\_mte_X`
+   (for expansion, all fonts) are empty by default but user can
+   declare specific values here. These macros are used last in the
+   \`\.allPR`, \`\.allPI`, \`\.allX` macros
+   (used in the lua code bellow), so it has general precedence.
+   \_cod --------------------
+
+\.trydef \_mte_P {} % user specific, Protrusion
+\.trydef \_mte_X {} % user specific, eXpansion
+
+\_def \.allPR {\.AlphabetPR \.alphabetPR \.digitsPR \.punctPR \.quotPR \.othersPR \.P}
+\_def \.allPI {\.AlphabetPI \.alphabetPI \.digitsPI \.punctPI \.quotPI \.othersPI \.P}
+\_def \.allX  {\.AlphabetX  \.alphabetX  \.digitsX  \.othersX \.X}
 
    \_doc --------------------
    We add new submacro \`\.features` to the `\_fontfeatures`. It is empty by
@@ -134,8 +440,9 @@
    \`\enablemte` initializes prortusion data by the \^`\.enableprotrusion` macro
    and expansion data by the \^`\.enableexpansion` macro. Then it sets `\_protrudechars`
    and `\_adjustspacing` primitives and sets the \^`\.features` macro to use
-   the tables `typr` (for regular or bold fonts) or `typi` (for italic
-   or bold italic fonts). These functions are declared in the lua code below.
+   the protrusion tables `pr` (for regular or bold fonts) or `pi` (for italic
+   or bold italic fonts). The table `ex` is used for expansion data.
+   These functions are declared in the lua code below.
    \nl
    \`\disablemte` disables font features and sets appropriate primitive
    registers to zero.
@@ -143,12 +450,12 @@
 
 \_def\.enablemte {%
    \_initunifonts
-   \.enableprotrusion
-   \.enableexpansion
+   \.initprotrusion
+   \.initexpansion
    \_protrudechars=2
    \_adjustspacing=2
-   \_def\.features{protrusion=typ\.var,expansion=default}%
-   \_reloading \_currvar % current font is re-loaded
+   \_def\.features{protrusion=p\.var;expansion=ex}%
+   \_reloading \_currvar
 }
 \_def\.disablemte {%
    \_protrudechars=0
@@ -161,38 +468,47 @@
    \_doc --------------------
    The \`\.var` macro exapnds ro `r` when regular or bold font is loaded
    and it expands to `i` if italic or bold italic font is loaded.
-   The `typr` or `typi` data table is selected using this macro.
+   The `pr` or `pi` data table is selected using this macro.
    \_cod --------------------
 
 \_def\.it{it}\_def\.bi{bi}
 \_def\.var{\_ifx\_whatresize\.it i\_else \_ifx\_whatresize\.bi i\_else r\_fi\_fi}
 
     \_doc -------------------
-    The `typr` and `typi` data tables are created using lua code in
+    The `pr` and `pi` data tables are created using lua code in
     the \`\.enableprotrusion` macro. All macros with particular data
     mentioned above are used here.
     The analogical concept is used in the \`\.enableexpansion` macro.
     \_cod -------------------
 
-\_def\.enableprotrusion {%
+\_def\.initprotrusion {%
    \_directlua {%
-      local byte = string.byte
-      fonts.protrusions.setups['typr']={
+      fonts.protrusions.setups['pr']={
          factor=\.fpfactor,
-         left=1, right=1,
-         \.AlphabetPR \.alphabetPR \.digitsPR \.punctPR \.quotPR \.PR
+         \.leftright,
+         \.allPR
       }
-      fonts.protrusions.setups['typi']={
+      fonts.protrusions.setups['pi']={
          factor=\.fpfactor,
-         left=1, right=1,
-%        \.AlphabetPI \.alphabetPI \.digitsPI \.punctPI \.quotPI \.PI %% TODO
+         \.leftright,
+         \.allPI
 }}}
 \_def\.fpfactor{1}
+\_def \.leftright {left=1, right=1}
 
-\_def\.enableexpansion {}% TODO
+\_def\.initexpansion {%
+   \_directlua {%
+      fonts.expansions.setups['ex']={
+         \.stretchshrinkstep,
+         factor=\.fxfactor,
+         \.allX
+      }
+}}
+\_def \.fxfactor{1}
+\_def \.stretchshrinkstep {stretch=3, shrink=2, step=.5}
 
    \_doc --------------------
-   \`\setfpfactor` and \`\setfxfactor` simpy define \`\.fpfactor` and \`\.fxfactor`
+   \`\setfpfactor` and \`\setfxfactor` simply define \`\.fpfactor` and \`\.fxfactor`
    used in lua code.
    \_cod --------------------
 
@@ -200,6 +516,85 @@
 \_def\.setfxfactor #1 {\_def\.fxfactor{#1}}
 \_nspublic \setfpfactor \setfxfactor ;
 
+   \_doc --------------------
+   There are similar letters: A, Á, Á, Â, Ã, Ä, Å, they need the same setting.
+   But only the basic letter (A in this example) has protrusion and/or expansion
+   setting using lua code. The equivalent settings are done by the macro
+   \`\.setequivs``<font-switch>`.
+   This macro is used in `\_newfontloaded <font-switch>`
+   which is called by \OpTeX/ if the font is loaded first.
+   The \^`\.setequivs` macro uses data from \^`\.equalcodes` (see bellow)
+   and sets equal `\lpcode`, `\rpcode` and `\efcode` for variant characters.
+   It is called only if `\.features` is non-empty, i.e.\ if the font
+   includes MTE data.
+   \_cod --------------------
+
+\_def\_newfontloaded#1{\_ifx\.features\_empty \_else \.setequivs#1\_fi}
+
+\_def\.setequivs #1{\_let\.f=#1\_ea\.setequivsA\.equalcodes,,={},}
+\_def\.setequivsA#1#2=#3#4,{\_ifx^#3^\_else
+   \_afterfi{\_tmpnum=`#1 \.setequivsB#3#4\_end\.setequivsA}\_fi}
+\_def\.setequivsB#1{\_ifx\_end#1\_else
+   \_lpcode\.f`#1=\_lpcode\.f\_tmpnum
+   \_rpcode\.f`#1=\_rpcode\.f\_tmpnum
+   \_efcode\.f`#1=\_efcode\.f\_tmpnum
+   \_ea\.setequivsB\_fi
+}
+
+   \_doc --------------------
+   \`\.equalcodes` includes comma separated equivalences.
+   The same `\lpcode`, `\rpcode` and `\efcode` for all characters
+   given at rifgt side is set as these codes of the character given
+   at the left side of equal sign.
+   You can do `\addto\_mte_equalcodes{<your additional settings>}`
+   if you want.
+   \_cod --------------------
+
+\_def\.equalcodes {%
+   A = ÀÁÂÃÄÅĀĂĄǺȀẠẢẤẦẨẪẬẮẰẲẶΑ,
+   B = ฿Β,
+   C = ÇĆĈĊČ,
+   D = ÐĎĐḌḎ,
+   E = ÈÉÊËĒĔĖĘĚȄẸẺẼỀẾỄỂỆΕ,
+   G = ĜĞĠĢǦǴ,
+   H = ĤĦḤḦḪΗ,
+   I = ÌÍÎÏĨĪĬĮİȈỈỊΙ,
+   J = Ĵ,
+   K = ĶΚ,
+   L = ĹĽĻŁḶ,
+   M = Μ,
+   N = ÑŃŅŇṄṆΝ,
+   O = ÒÓÔÕÖØŌŎŐỌƠǪǾȌỎỐỒỔỖỘỚỜỠỞỢΟ,
+   P = Ρ,
+   R = ŔŖŘȐṚṘṜ,
+   S = ŚŜŞŠȘṢ,
+   T = ŢŤȚṬṮΤ,
+   U = ÙÚÛÜŨŪŬŮŰŲƯȔỤỦỨỪỬỮỰ,
+   W = ŴẀẂẄ,
+   X = Χ,
+   Y = ÝŶŸỴỶỸ,
+   Z = ŹŻŽẒΖ,
+   a = àáâãäåāăąǻȁạảấầẩẫậắằẳẵ,
+   æ = ǽ,
+   c = çćĉċč,
+   d = đḍḏ, % ď has different right side
+   e = èéêëēĕėęěȅẹẻẽếềểễệ,
+   g = ĝğġģǧǵ,
+   h = ĥħḥḧḫ,
+   i = ìíîïĩīĭįıȉỉị,
+   j = ĵ,
+   k = ķ,
+   l = ĺļłḷḹ, % ľ has different right side
+   n = ñńņňṅṇ,
+   o = òóôõöøōŏőọơǫǿȍỏốồổỗộớờỡởợ,
+   r = ŕŗřȑṛṙṝ,
+   s = śŝşšșṣ,
+   t = ţțṭṯẗť,
+   u = ùúûüũūŭůűųưȕụủứừửữự,
+   w = ŵẁẃẅ,
+   y = ýŷÿỳỵỷỹ,
+   z = źżžẓ,
+}
 \_endnamespace
 \_endcode
 
@@ -241,17 +636,15 @@ Similar definitions can be in some font family files too, so: do your
 definition after all `\fontfam` if you want to keep the precedence.
 All such definitions must be performed before the `\mteinit` command.
 
-You can use `\def\_mte_PR` for data of protrusion for regular or bold fonts
+You can use `\def\_mte_P` for data of protrusion for all fonts
 which has general precedence. For example, if you want to protrude hyphen
 char with factor one at the right side and by factor 0.4 at the left side, use
 \begtt
-\def\_mte_PR {% user specification, Protrusion, Regular fonts
+\def\_mte_P {% user specification, Protrusion, Regular fonts
  \_mte - = {.4, 1},  % /hyphen
 }
 \endtt
-Protrusion data for italic and bold italic fonts can be rewritten by
-`\_mte_PI`. Analogical macros are used for expansion data `\_mte_XR`
-(for regular and bod fonts) and `\_mte_XI` (for italic and bold italic fonts).
+Analogical macro can be used for expansion data `\_mte_X`.
 
 If you feel that default microtypographis data are wrong in a particular case,
 please let me know. I can correct it in this package. If you feel
