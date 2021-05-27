@@ -17,7 +17,7 @@
     We are using long names of these macros (without the dot shortcut in the
     code) because user can copy these macros to his/her macro file and do modifications.
     \nl
-    User (or a fontfamily file) can define other values, for example by
+    User (or a font family file) can define other values, for example by
     `\def\_mte_quotPR{...}`. If such definition is done before
     loading this package, it has precedence. This is the reason why we are
     using \`\.trydef` which defines given macro only if it is not defined
@@ -428,33 +428,35 @@
 \_def \.allX  {\.AlphabetX  \.alphabetX  \.digitsX  \.othersX \.X}
 
    \_doc --------------------
-   We add new submacro \`\.features` to the `\_fontfeatures`. It is empty by
+   We add a new macro \`\.features` to the \OpTeX/'s
+   \olink[fontfeatures]\_fontfeatures. It is empty by
    default but it will be changed by `\enablemte` to read protrusion and
-   expansion data using lua code.
+   expansion data using Lua code.
    \_cod --------------------
 
 \_addto\_fontfeatures{\.features}
 \_def\.features{}
 
    \_doc --------------------
-   \`\enablemte` initializes prortusion data by the \^`\.enableprotrusion` macro
-   and expansion data by the \^`\.enableexpansion` macro. Then it sets `\_protrudechars`
-   and `\_adjustspacing` primitives and sets the \^`\.features` macro to use
+   \`\enablemte` initializes protrusion data by the \^`\.initprotrusion` macro
+   and expansion data by the \^`\.initexpansion` macro. Then it sets
+   \elink[pdfprotrudechars]{\protrudechars} and \elink[pdfadjustspacing]{\adjustspacing}
+   primitives and sets the \^`\.features` macro to use
    the protrusion tables `pr` (for regular or bold fonts) or `pi` (for italic
    or bold italic fonts). The table `ex` is used for expansion data.
-   These functions are declared in the lua code below.
+   These tables are declared in the Lua code below.
    \nl
-   \`\disablemte` disables font features and sets appropriate primitive
+   \`\disablemte` disables font \^`\.features` and sets appropriate primitive
    registers to zero.
    \_cod --------------------
 
 \_def\.enablemte {%
    \_initunifonts
-   \.initprotrusion
-   \.initexpansion
+   \.initprotrusion  % luacode, pr and pi tables initialized
+   \.initexpansion   % luacode, ex table initialized
    \_protrudechars=2
    \_adjustspacing=2
-   \_def\.features{protrusion=p\.var;expansion=ex}%
+   \_def\.features{protrusion=p\.var;expansion=ex}% pr/pi and ex tables used
    \_reloading \_currvar
 }
 \_def\.disablemte {%
@@ -466,7 +468,7 @@
 \_nspublic \enablemte \disablemte ;
 
    \_doc --------------------
-   The \`\.var` macro exapnds ro `r` when regular or bold font is loaded
+   The \`\.var` macro expands ro `r` when regular or bold font is loaded
    and it expands to `i` if italic or bold italic font is loaded.
    The `pr` or `pi` data table is selected using this macro.
    \_cod --------------------
@@ -474,12 +476,12 @@
 \_def\.it{it}\_def\.bi{bi}
 \_def\.var{\_ifx\_whatresize\.it i\_else \_ifx\_whatresize\.bi i\_else r\_fi\_fi}
 
-    \_doc -------------------
-    The `pr` and `pi` data tables are created using lua code in
-    the \`\.enableprotrusion` macro. All macros with particular data
-    mentioned above are used here.
-    The analogical concept is used in the \`\.enableexpansion` macro.
-    \_cod -------------------
+   \_doc -------------------
+   The `pr` and `pi` data tables are created using lua code in
+   the \`\.initprotrusion` macro. The data from \^`\.allPR` or \^`\.allPI`
+   are used here.
+   The analogical concept is used in the \`\.initexpansion` macro.
+   \_cod -------------------
 
 \_def\.initprotrusion {%
    \_directlua {%
@@ -493,23 +495,27 @@
          \.leftright,
          \.allPI
 }}}
-\_def\.fpfactor{1}
-\_def \.leftright {left=1, right=1}
-
 \_def\.initexpansion {%
    \_directlua {%
       fonts.expansions.setups['ex']={
          \.stretchshrinkstep,
          factor=\.fxfactor,
          \.allX
-      }
-}}
+}}}
+
+   \_doc --------------------
+   The \`\.leftright`, \`\.stretchshrinkstep`,  \`\.fpfactor`, and \`\.fxfactor`
+   macros are used in the Lua code above and they have following default values
+   (you can re-define them, if you want):
+   \_cod --------------------
+
+\_def \.fpfactor{1}
+\_def \.leftright {left=1, right=1}
 \_def \.fxfactor{1}
 \_def \.stretchshrinkstep {stretch=3, shrink=2, step=.5}
 
    \_doc --------------------
-   \`\setfpfactor` and \`\setfxfactor` simply define \`\.fpfactor` and \`\.fxfactor`
-   used in lua code.
+   \`\setfpfactor` and \`\setfxfactor` simply define \^`\.fpfactor` and \^`\.fxfactor`.
    \_cod --------------------
 
 \_def\.setfpfactor #1 {\_def\.fpfactor{#1}}
@@ -519,14 +525,16 @@
    \_doc --------------------
    There are similar letters: A, Á, Á, Â, Ã, Ä, Å, they need the same setting.
    But only the basic letter (A in this example) has protrusion and/or expansion
-   setting using lua code. The equivalent settings are done by the macro
+   setting using Lua code. The equivalent settings are done by the macro
    \`\.setequivs``<font-switch>`.
-   This macro is used in `\_newfontloaded <font-switch>`
+   This macro is used in \olink[_newfontloaded]{\_newfontloaded} `<font-switch>`
    which is called by \OpTeX/ if the font is loaded first.
    The \^`\.setequivs` macro uses data from \^`\.equalcodes` (see bellow)
-   and sets equal `\lpcode`, `\rpcode` and `\efcode` for variant characters.
-   It is called only if `\.features` is non-empty, i.e.\ if the font
-   includes MTE data.
+   and sets equal
+   \elink[lpcode]{\lpcode}, \elink[rpcode]{\rpcode}, and \elink[efcode]{\efcode}
+   for variant characters.
+   It is called only if \^`\.features` is non-empty, i.e.\ if the font
+   includes mte data.
    \_cod --------------------
 
 \_def\_newfontloaded#1{\_ifx\.features\_empty \_else \.setequivs#1\_fi}
@@ -542,9 +550,10 @@
 }
 
    \_doc --------------------
-   \`\.equalcodes` includes comma separated equivalences.
-   The same `\lpcode`, `\rpcode` and `\efcode` for all characters
-   given at rifgt side is set as these codes of the character given
+   \`\.equalcodes` includes comma separated equivalences. The same
+   \elink[lpcode]{\lpcode}, \elink[rpcode]{\rpcode}, and \elink[efcode]{\efcode}
+   for all characters
+   given at right side is set as these codes of the character given
    at the left side of equal sign.
    You can do `\addto\_mte_equalcodes{<your additional settings>}`
    if you want.
@@ -605,31 +614,44 @@
 
 You can do `\load[mte]` followed by \^`\enablemte`. The microtypographic
 extensions (protrusions, expansions) of all fonts are available after
-\^`\enablemte`. The Microtype \LaTeX/ package does similar effect.
+\^`\enablemte`. The \LaTeX/ package Microtype does similar effect.
 
-The \^`\enablemte` reloads the current font with microtypographic features enabled
-and all new fonts used by the Font Selection System have microtypographic
-features enabled too, because they are added to the `\_fontfeatures` macro.
+The \^`\enablemte` macro reloads the current font with microtypographic
+extensions (mte) enabled and all new fonts loaded by the Font Selection System have
+mte enabled too, because they are added to the
+\olink[_fontfeatures]{\_fontfeatures} macro used by \OpTeX/.
 
 The \^`\enablemte` macro does only local settings. If it is used in a group then
-only fonts used in this group are modified.
+only fonts used in this group have mte.
 
-The \^`\enablemte` macro sets (among other things) `\protrudechars=2`
-(protrusion is enabled) and `\adjustspacing=2` (font expansion is enabled).
+The \^`\enablemte` macro sets (among other things)
+\elink[pdfprotrudechars]{\protrudechars}`=2` (protrusion is enabled) and
+\elink[pdfadjustspacing]{\adjustspacing}`=2` (font expansion is enabled).
 You can disable these features by setting these primitive registers to zero
-value. Note, that the values of these primitive registers are checked when
-paragraph is finalized although the fonts were loaded with microtypograpgic
-features enabled. It means that you have to use `\par` before end of group
+value (it is default if \^`\enablemte` is not used).
+Note, that the values of these registers are checked when
+paragraph is finalized although the fonts were loaded with mte enabled.
+It means that you have to use `\par` before end of group
 if you use \^`\enablemte` inside a group.
+For example:
+
+\begtt
+{\enablemte
+  Roman font with mte enabled, \it italic font with mte enabled.
+  \par % mte features are used
+}
+\endtt
+%
+Or, simply use \^`\enablemte` at beginning of your document.
 
 On the other hand, you can use \^`\disablemte` macro which reloads current
-font with microtypographic features disabled and all newly loaded fonts have
-this features disabled too. The macro has local validity. For example,
+font with mte disabled and all newly loaded fonts have
+mte disabled too. The macro has local validity. For example,
 `{\disablemte text}` prints `text` by a font with
 mte disabled. It works locally in the middle of the paragraph (unlike setting
 `\protrudechars` and `\adjustspacing` to zero).
 
-You can define your own protrusion or expansion values. Simply copy macros
+You can define your own protrusion or expansion values: copy macros
 `\_mte_AlphabetPR`, `\_mte_quotPR`, etc.\ from this package and define them
 as you wish using `\def`. Such definition has precedence.
 Similar definitions can be in some font family files too, so: do your
@@ -638,24 +660,26 @@ All such definitions must be performed before the `\mteinit` command.
 
 You can use `\def\_mte_P` for data of protrusion for all fonts
 which has general precedence. For example, if you want to protrude hyphen
-char with factor one at the right side and by factor 0.4 at the left side, use
+char with factor one at the right side and by factor 0.5 at the left side, use
 \begtt
 \def\_mte_P {% user specification, Protrusion, Regular fonts
- \_mte - = {.4, 1},  % /hyphen
+ \_mte - = {.5, 1},  % /hyphen
 }
 \endtt
 Analogical macro can be used for expansion data `\_mte_X`.
 
-If you feel that default microtypographis data are wrong in a particular case,
-please let me know. I can correct it in this package. If you feel
-that a specific font family neeeds different microtypographic data, please
-let me know. I can add extra definitions to appropriate font family
-file.
-
 You can use \^`\setfpfactor` `<factor><space>` to set the factor by which
 all protrusion data are scaled. The <factor> is decimal number and its default
 value is~1. This macro can be used before \^`\enablemte`.
+You can use \^`\setfxfactor` `<factor><space>` with analogical meaning,
+expansion data are scaled by given~<factor>.
+
+If you feel that default microtypographic data are wrong in a particular case,
+please let me know. I can correct it in this package. If you feel
+that a specific font family needs different microtypographic data, please
+let me know. I can add extra definitions to appropriate font family
+file.
 
 \_endinput
 
-Use optex mte-doc.tex to generate documentation from this file.
+Use "optex mte-doc.tex" (twice) to generate documentation from this file.
