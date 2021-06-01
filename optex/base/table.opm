@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-04-12>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-06-01>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -73,8 +73,13 @@
    `<converted declaration>` immediately after each column declarator.
 
    If `pxto` keyword was used, then we set the virtual unit \^`\tsize` to
-   `\hsize` first. Then the first attempt of the table is created in box 0.
-   Then the \^`\tsize` is re-calculated using `\wd0` and the real table is
+   `-\hsize` first. Then the first attempt of the table is created in box 0.
+   All collums where `p{..\tsize}` is used, are created as empty in this first
+   pass. So, the `\wd0` is the width of all other columns.
+   The \^`\_tsizesum` includes the sum of \^`\tsize`'s in `\hsize` units
+   after firts pass. The desired table width is stored in the `\_tmpdim`, so
+   `\_tmpdim-\_wd0` is the rest which have to be filled by \^`\tsize`s.
+   Then the \^`\tsize` is re-calculated and the real table is
    printed by `\halign` in the second pass.
 
    If no `pxto` keyword was used, then we print the table using `\halign`
@@ -101,8 +106,12 @@
    \_replstring\_tmpb{\crlp}{\_crcr\crlp}%
    \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
    \_ifpxto
-      \_tsize=\_hsize \_setbox0 = \_vbox{\_tablepxpreset \_halign \_tableC}%
-      \_tsize=\_dimexpr\_hsize-(\_wd0-\_tmpdim)\_relax
+      \_tsizesum=\_zo \_def\_tsizelast{0}%
+      \_tsize=-\_hsize \_setbox0 = \_vbox{\_tablepxpreset \_halign \_tableC}%
+      \_advance\_tmpdim by-\_wd0
+      \_ifdim \_tmpdim >\_zo \_else \_tsizesum=\_zo \_fi
+      \_ifdim \_tsizesum >\_zo \_tsize =\_expr{\_number\_hsize/\_number\_tsizesum}\_tmpdim
+      \_else \_tsize=\_zo \_fi
       \_setbox0=\_null \_halign \_tableC
    \_else
       \_halign\_tablew \_tableC
@@ -211,10 +220,31 @@
 \_def\_tabdeclarec{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}
 \_def\_tabdeclarel{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}
 \_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
-\_def\_paramtabdeclarep#1{\_the\_tabiteml
-   \_vtop{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
-   \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax ##\_unsskip
-   \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}\_the\_tabitemr}
+\_def\_paramtabdeclarep#1{\_the\_tabiteml\_vtop{\_hsize=#1\_relax \_partabitem{##}}\_the\_tabitemr}
+
+   \_doc -----------------------------
+   \`\_partabitem``{<data>}` prints the table item in a paragraph format.
+   This macro solves two things. Fist, the setting of parameters for the
+   paragraph formatting. The `\hsize` and parameters from macros
+   \^`\fC`, \^`\fR` etc. are set already.\nl
+   Second thing: if the `\hsize` is negative then first pass of `pxto` table is processed.
+   We print nothing in such case but we advance the \`\_tsizesum`.
+   The auxiliary macro \`\_tsizelast` is used to do advancing
+   only in the first row of the table.
+   \^`\_tsizesum` and \^`\_tsizelast` are initialized in the \^`\_tableB` macro.
+   \_cod -----------------------------
+
+\_newdimen \_tsizesum
+\_long\_def\_partabitem#1{%
+   \_ifdim\_hsize<0pt
+      \_ifnum\_tsizelast<\_colnum \_global\_advance\_tsizesum by-\_hsize
+         \_xdef\_tsizelast{\_the\_colnum}\_fi
+   \_else
+      \_baselineskip=\_normalbaselineskip
+      \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax #1\_unsskip
+      \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi
+   \_fi
+}
 
    \_doc -----------------------------
    Users put optional spaces around the table item typically, i.e.\ they write
@@ -469,14 +499,14 @@ The first `c` column is variable width (it gets the width of the most wide item)
 and the resting space to given `\hsize` is filled by the `p` column.
 
 You can declare more than one `p{<coefficient>\tsize}` columns in the table
-when `pxto` keyword is used. The total sum of <coefficinets> must be exactly one.
-For example,
+when `pxto` keyword is used.
 
 \begtt \catcode`\<=13
-\table pxto13cm {r p{.3\tsize} p{.5\tsize} p{.2\tsize} l}{<data>}
+\table pxto13cm {r p{3.5\tsize} p{2\tsize} p{\tsize} l}{<data>}
 \endtt
 %
-This gives the ratio of widths of individual paragraphs in the table.
+This gives the ratio of widths of individual paragraphs in the table
+3.5\,:\,2\,:\,1.
 
 \secc `\eqbox`: boxes with equal width across the whole document
 
@@ -512,6 +542,7 @@ after the second one.
 
 \_endinput
 
+2021-06-01 pxto: sum of \tsize's allowed different than 1
 2021-04-12 p declarator: \hskip0pt added to allow first word hyphenated
 2021-03-09 \_tablepxpreset introduced
 2021-02-15 \_expandafter -> \_ea

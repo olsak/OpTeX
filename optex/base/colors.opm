@@ -130,7 +130,7 @@
    accumulated in Lua code `color_C`, `color_M`, `color_Y` and `color_K`.
    The `\_douseK` applies \^`\useK` to CMYK components.
    \nl
-   The `\_tocmyk<rgb>` or `\_torgb<cmyk>` control sequences (given by
+   The `\_tocmyk:<rgb>` or `\_torgb:<cmyk>` control sequences (given by
    \^`\rgbcmykmap`) have precedence.
    \_cod -----------------------------
 
