@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-06-01>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-06-02>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -58,10 +58,9 @@
 
    \_doc -----------------------------
    The \`\_tableB` saves `<data>` to `\_tmpb`
-   and does four \^`\replstring`s to prefix each macro \^`\crl` (etc.)
-   by `\_crcr`. The reason is: we want to use macros that scan its parameter
-   to the delimiter written in the right part of the table item declaration.
-   See \^`\fS` for example. The `\crcr` cannot be hidden in another macro in this case.
+   and does \^`\replstring`s to prefix each macro \^`\crl` (etc.)
+   by `\_crcr`. See \^`\_tabreplstrings`. It cannot be used in a `\table` in
+   another `\table`, so \^`\_tabreplstrings` is set to `\relax` locally.
 
    The `\tabskip` value is saved for places between columns
    into the \`\_tabskipmid` macro. Then it runs
@@ -101,17 +100,17 @@
    \_cod -----------------------------
 
 \_long\_def\_tableB #1{\_egroup \_def\_tmpb{#1}%
-   \_replstring\_tmpb{\crl}{\_crcr\crl}\_replstring\_tmpb{\crll}{\_crcr\crll}%
-   \_replstring\_tmpb{\crli}{\_crcr\crli}\_replstring\_tmpb{\crlli}{\_crcr\crlli}%
-   \_replstring\_tmpb{\crlp}{\_crcr\crlp}%
+   \_tablereplstrings \_let\_tablereplstrings=\_relax
    \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
    \_ifpxto
+      \_edef\_tsizes{\_global\_tsizesum=\_the\_tsizesum \_gdef\_noexpand\_tsizelast{\_tsizelast}}%
       \_tsizesum=\_zo \_def\_tsizelast{0}%
-      \_tsize=-\_hsize \_setbox0 = \_vbox{\_tablepxpreset \_halign \_tableC}%
+      \_tsize=-\_hsize \_setbox0=\_vbox{\_tablepxpreset \_halign \_tableC}%
       \_advance\_tmpdim by-\_wd0
       \_ifdim \_tmpdim >\_zo \_else \_tsizesum=\_zo \_fi
       \_ifdim \_tsizesum >\_zo \_tsize =\_expr{\_number\_hsize/\_number\_tsizesum}\_tmpdim
       \_else \_tsize=\_zo \_fi
+      \_tsizes % retoring values if there is a \table pxto inside a \table pxto.
       \_setbox0=\_null \_halign \_tableC
    \_else
       \_halign\_tablew \_tableC
@@ -119,6 +118,19 @@
 }
 \_def\_tableC{\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_tabskip=\_tabskipr\_cr
    \_scantextokens\_ea{\_tmpb\_crcr}}}
+
+   \_doc -----------------------------
+   \`\_tabreplstrings` replaces each `\crl` etc. to `\crcr\crl`.
+   The reason is: we want to use macros that scan its parameter
+   to a delimiter written in the right part of the table item declaration.
+   The `\crcr` cannot be hidden in another macro in this case.
+   \_cod -----------------------------
+
+\_def\_tablereplstrings{%
+   \_replstring\_tmpb{\crl}{\_crcr\crl}\_replstring\_tmpb{\crll}{\_crcr\crll}%
+   \_replstring\_tmpb{\crli}{\_crcr\crli}\_replstring\_tmpb{\crlli}{\_crcr\crlli}%
+   \_replstring\_tmpb{\crlp}{\_crcr\crlp}%
+}
 
 \_def\_tablepxpreset{} % can be used to de-activate references to .ref file
 \_newbox\_tstrutbox    % strut used in table rows
@@ -235,6 +247,7 @@
    \_cod -----------------------------
 
 \_newdimen \_tsizesum
+\_def \_tsizelast{0}
 \_long\_def\_partabitem#1{%
    \_ifdim\_hsize<0pt
       \_ifnum\_tsizelast<\_colnum \_global\_advance\_tsizesum by-\_hsize
@@ -542,6 +555,7 @@ after the second one.
 
 \_endinput
 
+2021-06-02 \table in \table allowed, bug fixed.
 2021-06-01 pxto: sum of \tsize's allowed different than 1
 2021-04-12 p declarator: \hskip0pt added to allow first word hyphenated
 2021-03-09 \_tablepxpreset introduced
