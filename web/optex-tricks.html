@@ -178,6 +178,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Sections
 <ul>
     <li><a href="#seccc">New level o sections</a>
+    <li><a href="#part">Adding \part, the highest level of sections</a>
 </ul>
 
 <li>Slides
@@ -1633,11 +1634,10 @@ in \vcent or \vbot macros.
 for example "V":
 
 <pre>
-\_def\_paramtabdeclareV#1{\_the\_tabiteml
-   $\_vcenter{\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
-   \_lineskiplimit=0pt \_noindent \raise\ht\_tstrutbox\hbox{}##\_unsskip
-   \_ifvmode\_vskip\_dp\_tstrutbox
-   \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi}$\_the\_tabitemr}
+\def\_paramtabdeclareV#1{\_the\_tabiteml
+   $\vcenter{\medskip \hsize=#1\relax \_partabitem{##}\medskip}$%
+   \_the\_tabitemr
+}
 
 \table{|V{1.5cm}|V{4cm}|}{...}
 </pre>
@@ -2856,6 +2856,54 @@ Text.
 
 <p CLASS=datum>(0033) -- P. O., 2021-01-14<p>
 <hr>
+
+<h2><a name="part"></a>Adding \part, the highest level of sections</h2>
+
+<p>OpTeX supports \chap, \sec, \secc, but not \part, i.e. the outermost level
+of them. We suppose that user can define it including required design if it is needed.
+The example of \part macro follows:
+
+<pre>
+\newcount\partnum
+\eoldef\part#1{\vfil\break
+   \incr\partnum \_chapnum=0 \_chapx % reset counters
+   \vglue100pt
+   \incr\tocrefnum \dest[toc:\the\tocrefnum] % destination from TOC and outlines
+   \centerline{\typosize[20/]\bf Part \the\partnum:\quad #1} % Title
+   \_ewref\_Xtoc{{0}{part}{}{}#1} % TOC line, \part has level 0
+   {\nopagenumbers \vfil\break}   % single page without pageno
+}
+</pre>
+
+<p>You can try it:
+
+<pre>
+\hyperlinks \Green \Green
+\outlines0
+\maketoc
+
+\part Book One
+
+\chap My chapter
+\sec  Special section
+\secc This is subsection
+\secc Next subsection
+Text.
+
+\chap Next Chapter
+\sec  next sec
+
+\part Book Two
+
+\bye
+</pre>
+
+<p>Note, that table of contents is created properly and correct tree
+structure of outlines is prepared too.
+
+<p CLASS=datum>(0059) -- P. O., 2021-06-01<p>
+<hr>
+
 
 <p CLASS="lmarg">Slides</p>
 
