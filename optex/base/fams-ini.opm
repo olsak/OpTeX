@@ -187,7 +187,7 @@ have the original Times purchased from Adobe then you can register your
 declaration of Adobe's Times family in `fams-local.opm`. When a user writes
 `\fontfam[Times]` then the original Times (not Termes) is used.
 
-The `fams-ini.opm` and `fams-local.opm` files use the macros
+The `fams-ini.opm` and `fams-local.opm` files can use the macros
 \~`\_faminfo`, \~`\_famalias` and \~`\_famtext`. See the example from
 `fams-ini.tex`:
 

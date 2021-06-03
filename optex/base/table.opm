@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-06-02>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-06-03>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -243,7 +243,8 @@
    We print nothing in such case but we advance the \`\_tsizesum`.
    The auxiliary macro \`\_tsizelast` is used to do advancing
    only in the first row of the table.
-   \^`\_tsizesum` and \^`\_tsizelast` are initialized in the \^`\_tableB` macro.
+   \^`\_tsizesum` and \^`\_tsizelast` are initialized in the \^`\_tableB` macro.\nl
+   \`\_partabitemA``{<data>}` only copies <data>, but it is redefined by \^`\fS`.
    \_cod -----------------------------
 
 \_newdimen \_tsizesum
@@ -254,10 +255,11 @@
          \_xdef\_tsizelast{\_the\_colnum}\_fi
    \_else
       \_baselineskip=\_normalbaselineskip
-      \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax #1\_unsskip
+      \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax \_partabitemA{#1}\_unsskip
       \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi
    \_fi
 }
+\_let\_partabitemA=\_useit
 
    \_doc -----------------------------
    Users put optional spaces around the table item typically, i.e.\ they write
@@ -281,9 +283,9 @@
 \_def\_fR{\_leftskip=0pt plus 1fill \_relax}
 \_def\_fC{\_leftskip=0pt plus1fill \_rightskip=0pt plus 1fill \_relax}
 \_def\_fX{\_leftskip=0pt plus1fil  \_rightskip=0pt plus-1fil \_parfillskip=0pt plus2fil \_relax}
-\_long\_def\_fS #1\_unsskip{\_noindent \_setbox0 =\_vbox{\_noindent #1\_endgraf \_ea}%
-   \_ifnum\_prevgraf=1 \_hfil \_fi #1\_unsskip
-}
+\_def\_fS{\_long\_def\_partabitemA##1{%
+   \_setbox0=\_vbox{\_noindent ##1\_endgraf \_ea}\_ifnum\_prevgraf=1 \_hfil \_fi ##1%
+}}
 \_public \fL \fR \fC \fX \fS ;
 
    \_doc -----------------------------
@@ -555,6 +557,7 @@ after the second one.
 
 \_endinput
 
+2021-06-03 \fS corrected, re-implemented.
 2021-06-02 \table in \table allowed, bug fixed.
 2021-06-01 pxto: sum of \tsize's allowed different than 1
 2021-04-12 p declarator: \hskip0pt added to allow first word hyphenated
