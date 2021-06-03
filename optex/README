@@ -17,8 +17,14 @@ pkg/   ... external macros. Maybe, they can be created by other authors if
            in the OpTeX documentation.
 doc/   ... PDF version of the OpTeX documentation and sources.
 
-History:
-
+<1.03> Jun. 2021:
+       mte: Package for MicroTypographic Extensions released.
+       Erewhon: font family support added.
+       \rgbcmykmap for RGB-CMYK mapping introduced.
+       \table: sum of \tsizes allowed different from one.
+       doc: hyperlinks from Index created.
+       \url and \link macros re-written.
+       Bugs fixing.
 <1.02> Apr. 2021
        Location CTAN:macros/luatex/optex moved to CTAN:macros/optex (similarly for TDS).
        NewComputerModern font support added.
