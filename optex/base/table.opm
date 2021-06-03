@@ -259,7 +259,7 @@
       \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi
    \_fi
 }
-\_let\_partabitemA=\_useit
+\_let\_partabitemA=\_scantextokens
 
    \_doc -----------------------------
    Users put optional spaces around the table item typically, i.e.\ they write
@@ -284,7 +284,8 @@
 \_def\_fC{\_leftskip=0pt plus1fill \_rightskip=0pt plus 1fill \_relax}
 \_def\_fX{\_leftskip=0pt plus1fil  \_rightskip=0pt plus-1fil \_parfillskip=0pt plus2fil \_relax}
 \_def\_fS{\_long\_def\_partabitemA##1{%
-   \_setbox0=\_vbox{\_noindent ##1\_endgraf \_ea}\_ifnum\_prevgraf=1 \_hfil \_fi ##1%
+   \_setbox0=\_vbox{\_noindent ##1\_endgraf \_ea}\_ifnum\_prevgraf=1 \_hfil \_fi
+   \_scantextokens{##1}%
 }}
 \_public \fL \fR \fC \fX \fS ;
 
@@ -557,6 +558,7 @@ after the second one.
 
 \_endinput
 
+2021-06-03 \scantextokens added to \_partabitem, bug fixed.
 2021-06-03 \fS corrected, re-implemented.
 2021-06-02 \table in \table allowed, bug fixed.
 2021-06-01 pxto: sum of \tsize's allowed different than 1

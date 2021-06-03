@@ -17,6 +17,8 @@ pkg/   ... external macros. Maybe, they can be created by other authors if
            in the OpTeX documentation.
 doc/   ... PDF version of the OpTeX documentation and sources.
 
+History:
+
 <1.03> Jun. 2021:
        mte: Package for MicroTypographic Extensions released.
        Erewhon: font family support added.
