@@ -352,3 +352,15 @@ luatexbase = {
     call_callback = callback.call_callback,
     callbacktypes = {}
 }
+--
+-- `\tracingmacros` callback registered.
+-- Use `\tracingmacros=3` or `\tracingmacros=4` if you want to see the result.
+callback.add_to_callback("input_level_string",
+   function(n)
+       if tex.tracingmacros > 3 then
+          return "[" .. n .. "] "
+       elseif tex.tracingmacros > 2 then
+          return "~" .. string.rep(".",n)
+       end
+   end
+)
