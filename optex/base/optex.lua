@@ -32,6 +32,16 @@ function alloc.new_attribute(name)
     end
 end
 --
+-- Allocator for Lua functions ("pseudoprimitives"). It passes variadic
+-- arguments (`...`) like \"global" to `token.set_lua`.
+local function_table = lua.get_functions_table()
+local luafnalloc = 0
+function define_lua_command(csname, fn, ...)
+    luafnalloc = luafnalloc + 1
+    token.set_lua(csname, luafnalloc, ...)
+    function_table[luafnalloc] = fn
+end
+--
 -- `provides_module` is needed by older version of luaotfload
 provides_module = function() end
 --
