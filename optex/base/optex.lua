@@ -2,7 +2,11 @@
 
 -- The basic lua functions and declarations used in \OpTeX/ are here
 
--- GENERAL
+-- \medskip\secc General^^M
+--
+-- Define namespace where some \OpTeX/ functions will be added.
+
+optex = optex or {}
 
 -- Error function used by following functions for critical errors.
 local function err(message)
@@ -15,7 +19,7 @@ function registernumber(name)
     return token.create(name).index
 end
 --
--- ALLOCATORS
+-- \medskip\secc[lua-alloc] Allocators^^M
 alloc = alloc or {}
 --
 -- An attribute allocator in Lua that cooperates with normal \OpTeX/ allocator.
@@ -33,7 +37,7 @@ function alloc.new_attribute(name)
 end
 --
 -- Allocator for Lua functions ("pseudoprimitives"). It passes variadic
--- arguments (`...`) like \"global" to `token.set_lua`.
+-- arguments (\"`...`") like `"global"` to `token.set_lua`.
 local function_table = lua.get_functions_table()
 local luafnalloc = 0
 function define_lua_command(csname, fn, ...)
@@ -45,7 +49,7 @@ end
 -- `provides_module` is needed by older version of luaotfload
 provides_module = function() end
 --
--- CALLBACKS
+-- \medskip\secc[callbacks] Callbacks^^M
 callback = callback or {}
 --
 -- Save `callback.register` function for internal use.
@@ -191,6 +195,7 @@ end
 -- callbacks, that are called manually by user using `call_callback` or for
 -- standard callbacks that have default functions -- like `mlist_to_hlist` (see
 -- below).
+local call_callback
 function callback.add_to_callback(name, fn, description)
     if user_callbacks[name] or callback_functions[name] or default_functions[name] then
         -- either:
@@ -204,7 +209,7 @@ function callback.add_to_callback(name, fn, description)
         -- when things break, like when callbacks get redefined by future
         -- luatex.
         assert(callback_register(name, function(...)
-            return callback.call_callback(name, ...)
+            return call_callback(name, ...)
         end))
     else
         err("cannot add to callback '"..name.."' - no such callback exists")
@@ -317,6 +322,7 @@ function callback.call_callback(name, ...)
     end
     return not changed or head
 end
+call_callback = callback.call_callback
 --
 -- Create \"virtual" callbacks `pre/post_mlist_to_hlist_filter` by setting
 -- `mlist_to_hlist` callback. The default behaviour of `mlist_to_hlist` is kept by
@@ -327,7 +333,7 @@ callback.create_callback("pre_mlist_to_hlist_filter", "list")
 callback.create_callback("post_mlist_to_hlist_filter", "reverselist")
 callback_register("mlist_to_hlist", function(head, ...)
     -- pre_mlist_to_hlist_filter
-    local new_head = callback.call_callback("pre_mlist_to_hlist_filter", head, ...)
+    local new_head = call_callback("pre_mlist_to_hlist_filter", head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
@@ -336,9 +342,9 @@ callback_register("mlist_to_hlist", function(head, ...)
     end
     -- mlist_to_hlist means either added functions or standard luatex behavior
     -- of node.mlist_to_hlist (handled by default function)
-    head = callback.call_callback("mlist_to_hlist", head, ...)
+    head = call_callback("mlist_to_hlist", head, ...)
     -- post_mlist_to_hlist_filter
-    new_head = callback.call_callback("post_mlist_to_hlist_filter", head, ...)
+    new_head = call_callback("post_mlist_to_hlist_filter", head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
@@ -346,6 +352,27 @@ callback_register("mlist_to_hlist", function(head, ...)
         head = new_head
     end
     return head
+end)
+--
+-- For preprocessing boxes just before shipout we define custom callback. This
+-- is used for coloring based on attributes.
+-- There is however a challenge - how to call this callback? We could redefine
+-- `\shipout` and `\pdfxform` (which both run `ship_out` procedure internally),
+-- but they would lose their primtive meaning – i.e. `\immediate` wouldn't work
+-- with `\pdfxform`. The compromise is to require anyone to run
+-- \`\_preshipout``<destination box number><box specification>` just before
+-- `\shipout` or `\pdfxform` if they want to call `pre_shipout_filter` (and
+-- achieve colors and possibly more).
+callback.create_callback("pre_shipout_filter", "list")
+
+local tex_setbox = tex.setbox
+local token_scanint = token.scan_int
+local token_scanlist = token.scan_list
+define_lua_command("_preshipout", function()
+    local boxnum = token_scanint()
+    local head = token_scanlist()
+    head = call_callback("pre_shipout_filter", head)
+    tex_setbox(boxnum, head)
 end)
 --
 -- Compatibility with \LaTeX/ through luatexbase namespace. Needed for
@@ -374,3 +401,187 @@ callback.add_to_callback("input_level_string", function(n)
         return ""
     end
 end, "_tracingmacros")
+--
+-- \medskip\secc[lua-colors] Handling of colors using attributes^^M
+--
+-- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
+-- to them. We do this by intercepting \TeX/ just before it ships out a page and
+-- inject PDF literals according to attributes.
+--
+local node_id = node.id
+local glyph_id = node_id("glyph")
+local rule_id = node_id("rule")
+local glue_id = node_id("glue")
+local hlist_id = node_id("hlist")
+local vlist_id = node_id("vlist")
+local disc_id = node_id("disc")
+local token_getmacro = token.get_macro
+
+local direct = node.direct
+local todirect = direct.todirect
+local tonode = direct.tonode
+local getfield = direct.getfield
+local setfield = direct.setfield
+local getwhd = direct.getwhd
+local getid = direct.getid
+local getlist = direct.getlist
+local setlist = direct.setlist
+local getleader = direct.getleader
+local getattribute = direct.get_attribute
+local insertbefore = direct.insert_before
+local copy = direct.copy
+local traverse = direct.traverse
+local one_bp = tex.sp("1bp")
+local string_format = string.format
+--
+-- The attribute for coloring is allocated in `colors.opm`
+local color_attribute = registernumber("_colorattr")
+--
+-- Now we define function which creates whatsit nodes with PDF literals. We do
+-- this by creating a base literal, which we then copy and customize.
+--
+local pdf_base_literal = direct.new("whatsit", "pdf_literal")
+setfield(pdf_base_literal, "mode", 2) -- direct mode
+local function pdfliteral(str)
+    local literal = copy(pdf_base_literal)
+    setfield(literal, "data", str)
+    return literal
+end
+optex.directpdfliteral = pdfliteral
+--
+-- The function {\Red`colorize`}`(head, current, current_stroke)` goes through
+-- a node list and injects PDF literals according to attributes.
+-- Its arguments are the head of the list to be colored and the current color
+-- for fills and strokes. It is a recursive function – nested
+-- horizontal and vertical lists are handled in the same way. Only the
+-- attributes of “content” nodes (glyphs, rules, etc.) matter. Users drawing
+-- with PDF literals have to set color themselves.
+--
+-- Whatsit node with color setting PDF literal is injected only when a
+-- different color is needed. Our injection does not care about boxing levels,
+-- but this isn't a problem, since PDF literal whatsits just instruct the
+-- `\shipout` related procedures to emit the literal.
+--
+-- We also set the stroke and non-stroke colors separately. This is because
+-- stroke color is not always needed – \LuaTeX/ itself only uses it for rules
+-- whose one dimension is less than or equal to 1 bp and for fonts whose `mode`
+-- is set to 1 (outline) or 2 (outline and fill). Catching these cases is a
+-- little bit involved. For example rules are problematic, because at this
+-- point their dimensions can still be running ($-2^{30}$) – they may or may
+-- not be below the one big point limit. Also the text direction is involved.
+-- Because of the negative value for running dimensions the simplistic check,
+-- while not fully correct, should produce the right results. We currently
+-- don't check for the font mode at all.
+--
+-- Leaders (represented by glue nodes with leader field) are not handled fully.
+-- They are problematic, because their content is repeated more times and it
+-- would have to be ensured that the coloring would be right even for e.g.
+-- leaders that start and end on a different color. We came to conclusion that
+-- this is not worth, hence leaders are handled just opaquely and only the
+-- attribute of the glue node itself is checked. For setting different colors
+-- inside leaders, raw PDF literals have to be used.
+--
+-- We use the `node.direct` way of working with nodes. This is less safe, and
+-- certainly not idiomatic Lua, but faster and codewise more close to the way
+-- \TeX/ works with nodes.
+local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
+    if id == glyph_id then
+        return true, false
+    elseif id == glue_id then
+        n = getleader(n)
+        if n then
+            id = getid(n)
+            if id == hlist_id or id == vlist_id then
+                -- leaders with hlist/vlist get single color
+                return true, false
+            else -- rule
+                -- stretchy leaders with rules are tricky,
+                -- just set both colors for safety
+                return true, true
+            end
+        end
+    elseif id == rule_id then
+        local width, height, depth = getwhd(n)
+        if width <= one_bp or height + depth <= one_bp then
+            -- running (-2^30) may need both
+            return true, true
+        end
+        return true, false
+    end
+    return false, false
+end
+
+local function colorize(head, current, current_stroke)
+    for n, id, subtype in traverse(head) do
+        if id == hlist_id or id == vlist_id then
+            -- nested list, just recurse
+            local list = getlist(n)
+            list, current, current_stroke = colorize(list, current, current_stroke)
+            setlist(n, list)
+        elseif id == disc_id then
+            -- at this point only no-break (replace) list is of any interest
+            local replace = getfield(n, "replace")
+            if replace then
+                replace, current, current_stroke = colorize(replace, current, current_stroke)
+                setfield(n, "replace", replace)
+            end
+        else
+            local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
+            local new = getattribute(n, color_attribute) or 0
+            local newcolor = nil
+            if current ~= new and nonstroke_needed then
+                newcolor = token_getmacro("_color:"..new)
+                current = new
+            end
+            if current_stroke ~= new and stroke_needed then
+                local stroke_color = token_getmacro("_color-s:"..current)
+                if stroke_color then
+                    if newcolor then
+                        newcolor = string_format("%s %s", newcolor, stroke_color)
+                    else
+                        newcolor = stroke_color
+                    end
+                    current_stroke = new
+                end
+            end
+            if newcolor then
+                head = insertbefore(head, n, pdfliteral(newcolor))
+            end
+        end
+    end
+    return head, current, current_stroke
+end
+--
+-- Colorization should be run just before shipout. We use our custom callback
+-- for this. See the definition of `pre_shipout_filter` for details on
+-- limitations.
+callback.add_to_callback("pre_shipout_filter", function(list)
+    -- By setting initial color to -1 we force initial setting of color on
+    -- every page. This is useful for transparently supporting other default
+    -- colors than black (although it has a price for each normal document).
+    local list = colorize(todirect(list), -1, -1)
+    return tonode(list)
+end, "_colors")
+--
+-- We also hook into `luaotfload`'s handling of color. Instead of the default
+-- behavior (inserting colorstack whatsits) we set our own attribute. The hook
+-- has to be registered {\em after} `luaotfload` is loaded.
+function optex_hook_into_luaotfload()
+    local setattribute = direct.set_attribute
+    local token_setmacro = token.set_macro
+    local color_count = registernumber("_colorcnt")
+    local tex_getcount, tex_setcount = tex.getcount, tex.setcount
+    luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
+        local attr = tonumber(token_getmacro("_color:"..rgbcolor))
+        if not attr then
+            attr = tex_getcount(color_count)
+            tex_setcount(color_count, attr + 1)
+            local strattr = tostring(attr)
+            token_setmacro("_color::"..rgbcolor, strattr)
+            token_setmacro("_color:"..strattr, rgbcolor)
+            -- no stroke color set
+        end
+        setattribute(n, color_attribute, attr)
+        return head, n
+    end)
+end

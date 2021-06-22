@@ -1349,14 +1349,16 @@ using this empty internal name.
 {`\White`},
 {\Grey `\Grey`},
 {\LightGrey `\LightGrey`} and
-`\Black`. User can define more
-such selectors by setting four CMYK components
-\new
-or three RGB components. For example
+`\Black`. More
+such selectors can be defined
+by setting four CMYK components (using \^`\setcmykcolor`),
+or three RGB components (using \^`\setrgbcolor`)
+or one grey component (using \^`\setgreycolor`). For example
 
 \begtt
 \def \Orange {\setcmykcolor{0 0.5 1 0}}
 \def \Purple {\setrgbcolor{1 0 1}}
+\def \DarkGrey {\setgreycolor{.1}}
 \endtt
 
 \new
@@ -1368,7 +1370,7 @@ name, then the letters B, C, etc. are appended to the name in \OpTeX/. For examp
 `\Chocolate` is Chocolate1, `\ChocolateB` is Chocolate2 etc.
 
 \new
-The color selectors work locally in groups by default but with limitations. See
+The color selectors work locally in groups by default. See
 the technical documentation, section~\ref[colors] for more information.
 
 The basic colors \^`\Blue`, \^`\Red`, \^`\Cyan`, \^`\Yellow` etc.\ are defined
@@ -1405,23 +1407,24 @@ If a convex linear combination (as in the last example above) is used then it
 emulates color behavior on a painter's palette.
 You can use \^`\rgbcolordef` instead of \^`\colordef` if you want to mix colors
 in the additive RGB color space.
+If \^`\onlyrgb` is set then \^`\colordef` works like \^`\rgbcolordef`.
 
 \def\coloron#1#2#3{%
-   \setbox0=\hbox{{#2#3}}\leavevmode
-   \localcolor \rlap{#1\strut \vrule width\wd0}\box0
+   \setbox0=\hbox{#2#3}\leavevmode
+   \rlap{#1\strut \vrule width\wd0}\box0
 }
-The following example defines the macro for the
-\coloron\Yellow\Brown{colored text on the colored background}. Usage:
+The following example defines the macro for
+\coloron\Yellow\Brown{colored text on colored background}. Usage:
 `\coloron<background><foreground>{<text>}`
 
-The `\coloron` can be defined as follows:
+The `\coloron` macro can be defined as follows:
 
 \begtt
 \def\coloron#1#2#3{%
-   \setbox0=\hbox{{#2#3}}%
+   \setbox0=\hbox{#2#3}%
    \leavevmode \rlap{#1\strut \vrule width\wd0}\box0
 }
-\coloron\Yellow\Brown{The brown text on the yellow background}
+\coloron\Yellow\Brown{Brown text on yellow background}
 \endtt
 
 \secc Images

@@ -146,6 +146,7 @@
    \_directlua{%
       require('luaotfload-main')
       luaotfload.main()
+      optex_hook_into_luaotfload()
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont

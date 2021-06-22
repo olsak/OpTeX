@@ -127,7 +127,7 @@
    The lines in the listing mode have a yellow background.
    \_cod -----------------------------
 
-\_def\Yellow{\_setcmykcolor{0.0 0.0 0.3 0.03}}
+\_def\Yellow{\_setcmykcolor{0 0 .3 .03}}
 
 \_def\_printcodeline#1{\_advance \_maxlines by-1
    \_ifnum \_maxlines<0 \_ea \_endverbprinting \_fi
