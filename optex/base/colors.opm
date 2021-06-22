@@ -73,53 +73,6 @@
 \_public \onlyrgb \onlycmyk ;
 
    \_doc -----------------------------
-   The \`\_setcolor` macro redefines empty `\_ensureblack` macro (used in
-   output routine for headers and footers) to `\_ensureblackA` which sets
-   Black at the start of its parameter and returns to the current color at the
-   end of its parameter.
-
-   The current color is saved into `\_currentcolor` macro and colorstack is pushed.
-   Finally, the `\_colorstackpop` is initialized by `\aftergroup` if
-   `\localcolor` is declared.
-
-   You can save the current color to your macro  by `\let\yourmacro=\_currentcolor`
-   and you can return to this color by the command `\_setcolor\yourmacro`.
-   \_cod -----------------------------
-
-\_protected\_def \_setcolor #1{\_global\_let\_ensureblack=\_ensureblackA
-   \_iflocalcolor \_edef\_currentcolor{#1}\_colorstackpush\_currentcolor
-                  \_aftergroup\_colorstackpop
-   \_else         \_xdef\_currentcolor{#1}\_colorstackset\_currentcolor \_fi
-}
-\_def\_pdfblackcolor{0 g 0 G}
-\_edef\_currentcolor{\_pdfblackcolor}
-\_def\_ensureblackA#1{\_global\_let\_openfnotestack=\_openfnotestackA
-   \_colorstackpush\_pdfblackcolor #1\_colorstackpop}
-
-   \_doc -----------------------------
-   The colorstack is initialized here and the basic macros
-   \`\_colorstackpush`, \`\_colorstackpop` and \`\_colorstackset`
-   are defined here.
-   \_cod -----------------------------
-
-\_mathchardef\_colorstackcnt=0 % Implicit stack usage
-\_def\_colorstackpush#1{\_pdfcolorstack\_colorstackcnt push{#1}}
-\_def\_colorstackpop{\_pdfcolorstack\_colorstackcnt pop}
-\_def\_colorstackset#1{\_pdfcolorstack\_colorstackcnt set{#1}}
-
-   \_doc -----------------------------
-   We need to open a special color stack for footnotes because footnotes
-   can follow on the next pages and their colors are independent of colors
-   used in the main page-body. The \`\_openfnotestack` is defined as
-   \`\_openfnotestackA` when the \^`\_setcolor` is used first.
-   The \`\_fnotestack` is initialized in in `\everyjob` because the
-   initialization is not saved to the format.
-   \_cod -----------------------------
-
-%\_mathchardef\_fnotestack=\_pdfcolorstackinit page {0 g 0 G} % must be in \everyjob
-\_def \_openfnotestackA {\_pdfcolorstack\_fnotestack current}
-
-   \_doc -----------------------------
    We use Lua codes for RGB to CMYK or CMYK to RGB conversions and for
    addition color components in the \^`\colordef` macro.
    The \`\_rgbtocmyk` `<R> <G> <B> ;` expands to `<C> <M> <Y> <K>` and
@@ -319,26 +272,7 @@
 
 \_endcode % -------------------------------------
 
-The colors have different behavior than fonts. Marks (whatsits) with color
-information are stored into PDF output and \TeX/ doesn't interpret them.
-The PDF viewer (or PDF interpreter in a printer) reads these marks
-and switches colors according to them. This
-is independent of \TeX/ group mechanism. You can declare
-`\nolocalcolor` at the beginning of the document, if you want this behavior.
-In this case, if you set a color then you must return to the black color
-using `\Black` manually.
-
-By default, \OpTeX/ sets `\localcolor`. It means that the typesetting
-returns to a previous color at the end of the current group, so you cannot
-write `\Black` explicitly. This is implemented using the `\aftergroup` feature.
-There is a limitation of this feature: when a color selector is used in a
-group of a box, which is saved by `\setbox`, then the activity or
-reconstruction of the previous color is processed at `\setbox` time, no in the
-box itself. You must correct it by double group:
-\begtt
-\setbox0=\hbox{\Red text}   % bad:  \Black is done after \setbox
-\setbox0=\hbox{{\Red text}} % good: \Black is done after group inside the box
-\endtt
+TODO: Document colors based on attributes.
 
 The implementation of colors is based on colorstack, so the current color
 can follow across more pages. It is not so obvious because PDF viewer (or PDF

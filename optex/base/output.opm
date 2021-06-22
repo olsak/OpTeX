@@ -59,23 +59,16 @@
    New is only \`\_backgroundbox`. It is `\vbox` with zero height with its
    contents (from \^`\pgbackground`) extended down. It is shifted directly to the
    left-upper corner of the paper.
-
-   The \`\_ensureblack` sets the typesetting of its parameter locally to `\Black`
-   color. We needn't do this if colors are never used in the document. So,
-   the default value of the `\_ensureblack` macro is empty. But the first usage of
-   color macros in the document re-defines `\_ensureblack`.
-   See the section~\ref[colors] for more details.
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox{%
+     \_resetcolor
      \_istoksempty \_pgbackground
-        \_iffalse \_ensureblack{\_backgroundbox{\_the\_pgbackground}}\_nointerlineskip \_fi
-     \_ensureblack{\_makeheadline}%
+        \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
+     \_makeheadline%
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}% \pagebody in plainTeX
-     \_ensureblack{\_makefootline}}%
+     \_makefootline}%
 }
-\_def \_ensureblack #1{#1} % will be re-defined by color macros
-\_let \_openfnotestack = \_relax % will be re-defined by color macros
 \_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to\_zo{\_kern-\_voffset #1\_vss}}
 
    \_doc -----------------------------
@@ -102,17 +95,16 @@
 
    \_doc -----------------------------
    The \`\_pagecontents` is similar as in plain \TeX/. The only differnece is
-   that the \`\_pagedest` is inserted at the top of `\_pagecontents` and
-   \^`\_ensureblack` is applied to the \^`\topins` and \^`\footins` material.\nl
+   that the \`\_pagedest` is inserted at the top of `\_pagecontents`.\nl
    The \`\_footnoterule` is defined here.
    \_cod -----------------------------
 
 \_def\_pagecontents{\_pagedest % destination of the page
-  \_ifvoid\_topins \_else \_ensureblack{\_unvbox\_topins}\_fi
+  \_ifvoid\_topins \_else \_unvbox\_topins\_fi
   \_dimen0=\_dp255 \_unvbox255 % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
     \_vskip\_skip\_footins
-    \_ensureblack{\_footnoterule \_openfnotestack \_unvbox\_footins}\_fi
+    \_footnoterule \_unvbox\_footins\_fi
   \_kern-\_dimen0 \_vskip \_pgbottomskip
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}
@@ -157,7 +149,7 @@
 \_def \_opfootnote #1#2{\_insert\_footins\_bgroup
   \_interlinepenalty=\_interfootnotelinepenalty
   \_leftskip=\_zo \_rightskip=\_zo \_spaceskip=\_zo \_xspaceskip=\_zo \_relax
-  \_let\_colorstackcnt=\_fnotestack % special color stack for footnotes
+  \_resetcolor
   #1\_relax % local settings used by \fnote macro
   \_splittopskip=\_ht\_strutbox % top baseline for broken footnotes
   \_splitmaxdepth=\_dp\_strutbox \_floatingpenalty=20000
@@ -165,10 +157,8 @@
   \_isnextchar \_bgroup
      {\_bgroup \_aftergroup\_vfootA \_afterassignment\_ignorespaces \_let\_next=}{\_vfootB}%
 }
-\_def\_vfootA{\_unskip\_strut\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
-\_def\_vfootB #1{#1\_unskip\_strut\_vfootF}
-\_def\_vfootF{\_egroup} % close \_insert\_footins\_bgroup
-\_def\_closefncolor#1{#1\_isnextchar\_colorstackpop\_closefncolor\_vfootF}
+\_def\_vfootA{\_unskip\_strut\_egroup}
+\_def\_vfootB #1{#1\_unskip\_strut\_egroup}
 \_def \_footstrut {\_vbox to\_splittopskip{}}
 \_skip\_footins=\_bigskipamount % space added when footnote is present
 \_count\_footins=1000 % footnote magnification factor (1 to 1)
@@ -190,7 +180,7 @@
 \_skip\_topins=\_zoskip % no space added when a topinsert is present
 \_count\_topins=1000 % magnification factor (1 to 1)
 \_dimen\_topins=\_maxdimen % no limit per page
-\_def \_oins {\_par \_begingroup\_setbox0=\_vbox\_bgroup} % start a \_vbox
+\_def \_oins {\_par \_begingroup\_setbox0=\_vbox\_bgroup\_resetcolor} % start a \_vbox
 \_def \_endinsert {\_par\_egroup % finish the \_vbox
   \_ifumid \_dimen0=\_ht0 \_advance\_dimen0 by\_dp0 \_advance\_dimen0 by\_baselineskip
     \_advance\_dimen0 by\_pagetotal \_advance\_dimen0 by-\_pageshrink
@@ -214,11 +204,11 @@
    \_fontdef\_draftfont{\_setfontsize{at10pt}\_bf}%
    \_global\_let\_draftfont=\_draftfont
 }
-\_def \_draftbox #1{\_setbox0=\_hbox{#1}%
+\_def \_draftbox #1{\_setbox0=\_hbox{\_setgreycolor{.8}#1}%
    \_kern.5\_vsize \_kern\_voffset \_kern4.5\_wd0
    \_hbox to0pt{\_kern.5\_xhsize \_kern\_hoffset \_kern-2\_wd0
    \_pdfsave \_pdfrotate{55}\_pdfscale{10}{10}%
-   \_hbox to0pt{\_localcolor\_setgreycolor{.8}\_box0\_hss}%
+   \_hbox to0pt{\_box0\_hss}%
    \_pdfrestore
    \_hss}%
 }

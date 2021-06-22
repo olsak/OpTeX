@@ -260,9 +260,7 @@
       \_advance\_hsize by-2\_hhkern \_advance\_hsize by-2\_roundness \_fi
    \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
 }
-\_def\_inovalA{\_isnextchar\_colorstackpop\_inovalB\_inovalC}
-\_def\_inovalB#1{#1\_isnextchar\_colorstackpop\_inovalB\_inovalC}
-\_def\_inovalC{\_egroup % of \setbox0=\hbox\bgroup
+\_def\_inovalA{\_egroup % of \setbox0=\hbox\bgroup
    \_ifdim\_vvkern=\_zo \_else \_ht0=\_dimexpr\_ht0+\_vvkern \_relax
                                \_dp0=\_dimexpr\_dp0+\_vvkern \_relax \_fi
    \_ifdim\_hhkern=\_zo \_else \_wd0=\_dimexpr\_wd0+\_hhkern \_relax \_fi

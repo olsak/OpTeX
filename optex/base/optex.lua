@@ -374,3 +374,242 @@ callback.add_to_callback("input_level_string",
        end
    end
 )
+--
+-- Handling of color using attributes
+--
+-- Setting of color in PDF is handled by graphics operators which change the
+-- graphics context. Colors for fills/strokes are distinguished, but apart from
+-- that, only one color is active at time and is used for all material drawn by
+-- following graphics operators, until next color is set. Each PDF content (e.g.
+-- page or form XObject) has its own graphics context, that is initialized from
+-- zero. Hence natural way of working with color (color settings are not lost
+-- by going between pages) have to be handled.
+--
+-- \TeX/ itself has no concept of color. Color has always been handled by
+-- inserting whatsits (either using `\special` for DVI or using
+-- `\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient way of doing
+-- it, \TeX/ doesn't have to know anything about colors, it just inserts the
+-- relevant literals when doing `\shipout`. However, it is also problematic in
+-- many ways:
+--
+-- \begitems
+-- * Due to the asynchronic nature of shipping out pages, the handling of
+-- initial color of page (which should be the last color of previous page) is
+-- problematic.
+-- * In \TeX/ there isn't only contiguous page content, but also headlines,
+-- footlines and inserts (including footnotes). They shouldn't just take color
+-- from what just happens to be preceding, but should be colored independently.
+-- * Whatsit nodes are not really fully transparent to all stages of \TeX/ and
+-- just turning on/off color can result in differently typeset documents. See
+-- e.g.
+--  \begitems
+--   * \url{https://tex.stackexchange.com/questions/599165/why-does-color-change-vertical-alignement-in-table-with-fixed-width/}
+--   * \url{https://tex.stackexchange.com/questions/599367/strange-vertical-spacing-after-colored-equation/}
+--  \enditems
+-- * To give a false notion of grouping with whatsits, implementations usually
+-- set color and try to restore it with `\aftergroup`, which has its own quirks,
+-- e.g:
+--\begtt
+--\setbox0=\hbox{\Red text}   % bad:  \Black is done after `\setbox`
+--\setbox0=\hbox{{\Red text}} % good: \Black is done after group inside the box
+--\endtt
+-- \enditems
+--
+-- While the first two issues can be handled using `\pdfcolorstack`, the color
+-- handling is still not really natural.
+--
+-- With \LuaTeX/ different approach is possible. We can set attributes, which
+-- are bound to essentially everything \TeX/ creates (characters, rules, glues,
+-- \dots) and respect grouping. Their behaviour is similar to that of font
+-- setting on characters. In \TeX, every typeset character is internally a
+-- char node that carries a font number with itself. This associated font number
+-- stays the same and doesn't change on even on boxing/unboxing.
+--
+-- We can do the same with colors. It is a somewhat radical change, because some
+-- coloring idioms may not work like before. But with a different mindset it
+-- indeed seems more natural. If we create a box with text in default (black)
+-- color, why should it change just because something before it says `\Yellow`?
+-- If a footnote is created with color red it should be red regardless on what
+-- pages it is typeset at (and what they contain).
+--
+-- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
+-- to them. We do this by intercepting \TeX/ just before it ships out a page and
+-- inject PDF literals according to attributes.
+--
+local node_id, node_subtype = node.id, node.subtype
+local glyph_id = node_id("glyph")
+local rule_id = node_id("rule")
+local glue_id = node_id("glue")
+local hlist_id = node_id("hlist")
+local vlist_id = node_id("vlist")
+local whatsit_id = node_id("whatsit")
+local pdfliteral_id = node_subtype("pdf_literal")
+local pdfsave_id = node_subtype("pdf_save")
+local pdfrestore_id = node_subtype("pdf_restore")
+local setattribute = tex.setattribute
+local tex_shipout = tex.shipout
+local tex_setbox = tex.setbox
+local token_scanlist = token.scan_list
+local token_scanargument = token.scan_argument
+local token_scanint = token.scan_int
+
+local direct = node.direct
+local todirect = direct.todirect
+local tonode = direct.tonode
+local setfield = direct.setfield
+local getlist = direct.getlist
+local setlist = direct.setlist
+local getleader = direct.getleader
+local getattribute = direct.get_attribute
+local insertbefore = direct.insert_before
+local copy = direct.copy
+local traverse = direct.traverse
+local getbox = direct.getbox
+
+-- We first allocate an attribute for coloring.
+local color_attribute = alloc.new_attribute("colorattr")
+--
+-- Now we define function which creates whatsit nodes with PDF literals. We do
+-- this by creating a base literal, which we then copy and customize.
+--
+local pdf_base_literal = direct.new("whatsit", "pdf_literal")
+setfield(pdf_base_literal, "mode", 2) -- direct mode
+local function pdfliteral(str)
+    local literal = copy(pdf_base_literal)
+    setfield(literal, "data", str)
+    return literal
+end
+--
+-- The numbers used with this attribute are mapped to their corresponding PDF
+-- literals using `colors`, hence we can know what literal to insert for what
+-- attribute. However we also need the reverse mapping – when setting current
+-- color, we need to know what attribute to set.
+--
+-- First example is the default color, which is used when the attribute is
+-- unset. It uses the number “0”, “`nil`” would be just as good, but is not a
+-- valid index in Lua. It is important to note, that index 0 is not accounted
+-- by the length operator (used later) and this is intentional – normal colors
+-- start at 1, and their count is `#colors`.
+--
+local colors = {}
+colors[0] = pdfliteral("0 g 0 G")
+colors["0 g 0 G"] = 0
+--
+-- This is the function that goes through a node list and injects PDF literals
+-- according to attributes. Its arguments are the head of the list to be
+-- colored and the current color. It is a recursive function – nested
+-- horizontal and vertical lists are handled in the same way. Only the
+-- attributes of “content” nodes matter, these include most importantly glyph
+-- nodes and rule nodes which are colored directly, but also PDF literals and
+-- similar, which also participate in coloring.
+--
+-- Whatsit node with color setting PDF literal is injected only when a
+-- different color is needed, hence there shouldn't be any unnecessary
+-- consecutive color changes which can happen with use of pdfTeX's color stack.
+-- Our injection does not care about boxing levels, but this isn't a problem,
+-- since (when placed correctly), PDF literal whatsits just instruct the
+-- `\shipout` related procedures to emit the literal now.
+--
+-- Leaders (represented by glue nodes with leader field) are not handled fully.
+-- They are problematic, because their content is repeated more times and it
+-- would have to be ensured that the coloring would be right even for e.g.
+-- leaders that start and end on a different color. I came to conclusion that
+-- this is not worth, hence leaders are handled just opaquely and only the
+-- attribute of the glue node itself is checked. For setting different colors
+-- inside leaders, raw PDF literals have to be used.
+--
+-- We use the `node.direct` way of working with nodes. This is less safe, and
+-- certainly not idiomatic Lua, but faster and codewise more close to the way
+-- \TeX/ works with nodes.
+--
+local function colorize(head, current)
+    for n, id, subtype in traverse(head) do
+        if id == hlist_id or id == vlist_id then
+            -- nested list, just recurse
+            local list = getlist(n)
+            list, current = colorize(list, current)
+            setlist(n, list)
+        elseif id == glyph_id or id == disc_id or id == rule_id
+                or (id == glue_id and getleader(n))
+                or (id == whatsit_id
+                    and (subtype == pdfliteral_id
+                        or subtype == pdfsave_id
+                        or subtype == pdfrestore_id)) then
+            -- color participating node, check if current color has to change
+            local new = getattribute(n, color_attribute) or 0
+            if new ~= current then
+                head    = insertbefore(head, n, copy(colors[new]))
+                current = new
+            end
+        end
+    end
+    return head, current
+end
+--
+-- For \TeX/ end, we define \`\_setcolor``{<color literal>}`, which translates
+-- <color literal> to number using `colors` table (allocating a new number if
+-- necessary) and sets the attribute to the number.
+--
+-- If we are setting to `0` (most probably due to `\Black`), we instead unset
+-- the attribute entirely. Both would have been handled the same way by
+-- `colorize`, but this way we save on attribute nodes.
+--
+define_lua_command("_setcolor", function()
+    local color = token_scanargument()
+    local num = colors[color]
+    if not num then
+        num = #colors + 1
+        colors[num] = pdfliteral(color)
+        colors[color] = num
+    elseif num == 0 then
+        -- don't bother setting the attribute to zero, when unsetting it has the same effect
+        num = -0x7FFFFFFF
+    end
+    setattribute(color_attribute, num)
+end)
+--
+-- In similar fashion, we define \`\_resetcolor`, which unsets the attribute,
+-- hence restoring initial color (probably black).
+--
+define_lua_command("_resetcolor", function()
+    setattribute(color_attribute, -0x7FFFFFFF)
+end)
+--
+-- Because it is so easy to use different default/initial color other than
+-- black, we allow it. Of course we need to change what `colors` maps to/from
+-- `0`. Furthermore we need to note that black is special, because that is what
+-- all pages start on. For any other color we need to force an initial color setting in `colorize`,
+-- regardless of what color is currently set. This is handled by
+-- `initial_color`, the initial value of `colorize`'s `current`. For black it
+-- can be `0` (current/initial color is indeed black), but if set to something
+-- not equal to any number assigned to color (we use `-1`) initial color is set
+-- to color `0` (now most probably non-black).
+--
+local initial_color = 0
+define_lua_command("_setdefaultcolor", function()
+    local color = token_scanargument()
+    colors[0] = pdfliteral(color)
+    colors[color] = 0
+     -- not zero, so initial color will be set on every page on first content encountered
+    initial_color = -1
+end)
+--
+-- Now we need to somehow allow \TeX/ to use `colorize` on otherwise finished
+-- boxes. We do this by redefining `\_shipout`, which means that our mechanism
+-- works almost transparently to the end user. This is sadly not really possible
+-- with \pdfxform, which creates PDF form XObjects (very similiar to PDF page
+-- content). Redefining the said primitive is not sufficient, because of
+-- `\immediate`. Those that want to colorize boxes before transforming them to
+-- xforms should use \`\_colorizebox``<boxnum>`.
+--
+define_lua_command("_shipout", function()
+    local list = token_scanlist()
+    list = tonode(colorize(todirect(list), initial_color))
+    tex_setbox(0, list)
+    tex_shipout(0)
+end)
+--
+define_lua_command("_colorizebox", function()
+    local boxnum = token_scanint()
+    colorize(getbox(boxnum), initial_color)
+end)
