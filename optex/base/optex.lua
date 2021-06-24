@@ -603,6 +603,7 @@ end)
 -- xforms should use \`\_colorizebox``<boxnum>`.
 --
 define_lua_command("_shipout", function()
+    print("luashipout")
     local list = token_scanlist()
     list = tonode(colorize(todirect(list), initial_color))
     tex_setbox(0, list)
