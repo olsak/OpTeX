@@ -510,12 +510,12 @@ end
 -- certainly not idiomatic Lua, but faster and codewise more close to the way
 -- \TeX/ works with nodes.
 --
-local function colorize(head, current)
+local function colorize(head, current, current_stroke)
     for n, id, subtype in traverse(head) do
         if id == hlist_id or id == vlist_id then
             -- nested list, just recurse
             local list = getlist(n)
-            list, current = colorize(list, current)
+            list, current, current_stroke = colorize(list, current, current_stroke)
             setlist(n, list)
         elseif id == glyph_id or id == disc_id or id == rule_id
                 or (id == glue_id and getleader(n))
@@ -530,9 +530,23 @@ local function colorize(head, current)
                 head = insertbefore(head, n, pdfliteral(color))
                 current = new
             end
+            if ((id == rule_id
+                        -- width and height may be running at this point (-2^30),
+                        -- we could calculate the right dimension from `head`,
+                        -- but text direction would have to be considered
+                        and (getfield(n, "width") <= one_bp
+                            or (getfield(n, "height") + getfield(n, "depth")) <= one_bp))
+                        or (id == whatsit_id)) then
+                -- "strokable" node, we might have to change stroke color
+                if current_stroke ~= current then
+                    local color = token_getmacro("_color:stroke:"..current)
+                    head  = insertbefore(head, n, pdfliteral(color))
+                    current_stroke = current
+                end
+            end
         end
     end
-    return head, current
+    return head, current, current_stroke
 end
 -- Because it is so easy to use different default/initial color other than
 -- black, we allow it. Of course we need to change what `colors` maps to/from
@@ -557,12 +571,12 @@ local initial_color = 0
 define_lua_command("_shipout", function()
     print("luashipout")
     local list = token_scanlist()
-    list = tonode(colorize(todirect(list), initial_color))
+    list = tonode(colorize(todirect(list), initial_color, initial_color))
     tex_setbox(0, list)
     tex_shipout(0)
 end)
 --
 define_lua_command("_colorizebox", function()
     local boxnum = token_scanint()
-    colorize(getbox(boxnum), initial_color)
+    colorize(getbox(boxnum), initial_color, initial_color)
 end)

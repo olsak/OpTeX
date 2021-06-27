@@ -81,14 +81,16 @@
    \_else
       \_the\_colorcnt
       \_sxdef{_color:#1#2}{\_the\_colorcnt}%
-      \_sxdef{_color:\_the\_colorcnt}{#1 #2 #1 #3}%
+      \_sxdef{_color:\_the\_colorcnt}{#1 #2}%
+      \_sxdef{_color:stroke:\_the\_colorcnt}{#1 #3}%
       \_incr \_colorcnt
    \_fi
 }
 
 % Black is the default color.
 \_sdef{_color:0g}{0}
-\_sdef{_color:0}{0 g 0 G}
+\_sdef{_color:0}{0 g}
+\_sdef{_color:stroke:0}{0 G}
 
    \_doc -----------------------------
    We use Lua codes for RGB to CMYK or CMYK to RGB conversions and for
