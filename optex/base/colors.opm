@@ -62,10 +62,11 @@
 \_def\_onlyrgb{\_def\Red{\_setrgbcolor{1 0 0}}%
    \_def\Green{\_setrgbcolor{0 1 0}}\_def\Blue{\_setrgbcolor{0 0 1}}%
    \_let\_colordef=\_rgbcolordef
-   \_def\_formatrgb##1{\_fillstroke{##1 rg}{##1 RG}}%
-   \_def\_formatcmyk##1{\_fillstroke{\_cmyktorgb ##1 ; rg}{\_cmyktorgb ##1 ; RG}}}
-\_def\_onlycmyk{\_def\_formatcmyk##1{\_fillstroke{##1 k}{##1 K}}%
-   \_def\_formatrgb##1{\_fillstroke{\_rgbtocmyk ##1 ; k}{\_rgbtocmyk ##1 ; K}}}
+   \_def\_setrgbcolor##1{\_setcolor{##1}{rg}{RG}}%
+   \_def\_setcmykcolor##1{\_ea\_setcolor\_ea{\_expanded{\_cmyktorgb ##1 ;}}{rg}{RG}}}
+\_def\_onlycmyk{%
+   \_def\_setrgbcolor##1{\_ea\_setcolor\_ea{\_expanded{\_rgbtocmyk ##1 ;}}kK}%
+   \_def\_setcmykcolor##1{\_setcolor{##1}kK}}
 \_public \onlyrgb \onlycmyk ;
 
    \_doc -----------------------------
