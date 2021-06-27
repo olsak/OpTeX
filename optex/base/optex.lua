@@ -452,10 +452,12 @@ local tex_setbox = tex.setbox
 local token_scanlist = token.scan_list
 local token_scanargument = token.scan_argument
 local token_scanint = token.scan_int
+local token_getmacro = token.get_macro
 
 local direct = node.direct
 local todirect = direct.todirect
 local tonode = direct.tonode
+local getfield = direct.getfield
 local setfield = direct.setfield
 local getlist = direct.getlist
 local setlist = direct.setlist
@@ -465,9 +467,10 @@ local insertbefore = direct.insert_before
 local copy = direct.copy
 local traverse = direct.traverse
 local getbox = direct.getbox
+local one_bp = tex.sp("1bp")
 
 -- We first allocate an attribute for coloring.
-local color_attribute = alloc.new_attribute("colorattr")
+local color_attribute = registernumber("_colorattr")
 --
 -- Now we define function which creates whatsit nodes with PDF literals. We do
 -- this by creating a base literal, which we then copy and customize.
@@ -479,21 +482,6 @@ local function pdfliteral(str)
     setfield(literal, "data", str)
     return literal
 end
---
--- The numbers used with this attribute are mapped to their corresponding PDF
--- literals using `colors`, hence we can know what literal to insert for what
--- attribute. However we also need the reverse mapping – when setting current
--- color, we need to know what attribute to set.
---
--- First example is the default color, which is used when the attribute is
--- unset. It uses the number “0”, “`nil`” would be just as good, but is not a
--- valid index in Lua. It is important to note, that index 0 is not accounted
--- by the length operator (used later) and this is intentional – normal colors
--- start at 1, and their count is `#colors`.
---
-local colors = {}
-colors[0] = pdfliteral("0 g 0 G")
-colors["0 g 0 G"] = 0
 --
 -- This is the function that goes through a node list and injects PDF literals
 -- according to attributes. Its arguments are the head of the list to be
@@ -538,43 +526,14 @@ local function colorize(head, current)
             -- color participating node, check if current color has to change
             local new = getattribute(n, color_attribute) or 0
             if new ~= current then
-                head    = insertbefore(head, n, copy(colors[new]))
+                local color = token_getmacro("_color:"..new)
+                head = insertbefore(head, n, pdfliteral(color))
                 current = new
             end
         end
     end
     return head, current
 end
---
--- For \TeX/ end, we define \`\_setcolor``{<color literal>}`, which translates
--- <color literal> to number using `colors` table (allocating a new number if
--- necessary) and sets the attribute to the number.
---
--- If we are setting to `0` (most probably due to `\Black`), we instead unset
--- the attribute entirely. Both would have been handled the same way by
--- `colorize`, but this way we save on attribute nodes.
---
-define_lua_command("_setcolor", function()
-    local color = token_scanargument()
-    local num = colors[color]
-    if not num then
-        num = #colors + 1
-        colors[num] = pdfliteral(color)
-        colors[color] = num
-    elseif num == 0 then
-        -- don't bother setting the attribute to zero, when unsetting it has the same effect
-        num = -0x7FFFFFFF
-    end
-    setattribute(color_attribute, num)
-end)
---
--- In similar fashion, we define \`\_resetcolor`, which unsets the attribute,
--- hence restoring initial color (probably black).
---
-define_lua_command("_resetcolor", function()
-    setattribute(color_attribute, -0x7FFFFFFF)
-end)
---
 -- Because it is so easy to use different default/initial color other than
 -- black, we allow it. Of course we need to change what `colors` maps to/from
 -- `0`. Furthermore we need to note that black is special, because that is what
@@ -586,13 +545,6 @@ end)
 -- to color `0` (now most probably non-black).
 --
 local initial_color = 0
-define_lua_command("_setdefaultcolor", function()
-    local color = token_scanargument()
-    colors[0] = pdfliteral(color)
-    colors[color] = 0
-     -- not zero, so initial color will be set on every page on first content encountered
-    initial_color = -1
-end)
 --
 -- Now we need to somehow allow \TeX/ to use `colorize` on otherwise finished
 -- boxes. We do this by redefining `\_shipout`, which means that our mechanism

@@ -44,13 +44,9 @@
    If only strokes are needed you can do `\def\_fillstroke#1#2{#2}`.
    \_cod -----------------------------
 
-\_def\_setcmykcolor#1{\_setcolor{\_formatcmyk{#1}}}
-\_def\_setrgbcolor#1{\_setcolor{\_formatrgb{#1}}}
-\_def\_setgreycolor#1{\_setcolor{\_formatgrey{#1}}}
-\_def\_formatcmyk#1{\_fillstroke{#1 k}{#1 K}}
-\_def\_formatrgb#1{\_fillstroke{#1 rg}{#1 RG}}
-\_def\_formatgrey#1{\_fillstroke{#1 g}{#1 G}}
-\_def\_fillstroke#1#2{#1 #2}
+\_def\_setcmykcolor#1{\_setcolor{#1}kK}
+\_def\_setrgbcolor#1{\_setcolor{#1}{rg}{RG}}
+\_def\_setgreycolor#1{\_setcolor{#1}gG}
 \_public \setcmykcolor \setrgbcolor \setgreycolor ;
 
    \_doc -----------------------------
@@ -71,6 +67,28 @@
 \_def\_onlycmyk{\_def\_formatcmyk##1{\_fillstroke{##1 k}{##1 K}}%
    \_def\_formatrgb##1{\_fillstroke{\_rgbtocmyk ##1 ; k}{\_rgbtocmyk ##1 ; K}}}
 \_public \onlyrgb \onlycmyk ;
+
+   \_doc -----------------------------
+   Setting of color.
+   \_cod -----------------------------
+
+\_newattribute \_colorattr
+\_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
+\_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
+\_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF}
+\_def\_colorprefix{}
+\_def\_translatecolor#1#2#3{\_ifcsname _color:#1#2\_endcsname\_lastnamedcs\_relax
+   \_else
+      \_the\_colorcnt
+      \_sxdef{_color:#1#2}{\_the\_colorcnt}%
+      \_sxdef{_color:\_the\_colorcnt}{#1 #2 #1 #3}%
+      \_incr \_colorcnt
+   \_fi
+}
+
+% Black is the default color.
+\_sdef{_color:0g}{0}
+\_sdef{_color:0}{0 g 0 G}
 
    \_doc -----------------------------
    We use Lua codes for RGB to CMYK or CMYK to RGB conversions and for
