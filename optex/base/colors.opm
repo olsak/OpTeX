@@ -63,10 +63,13 @@
    \_def\Green{\_setrgbcolor{0 1 0}}\_def\Blue{\_setrgbcolor{0 0 1}}%
    \_let\_colordef=\_rgbcolordef
    \_def\_setrgbcolor##1{\_setcolor{##1}{rg}{RG}}%
-   \_def\_setcmykcolor##1{\_ea\_setcolor\_ea{\_expanded{\_cmyktorgb ##1 ;}}{rg}{RG}}}
+   \_def\_setcmykcolor##1{\_ea\_setcolor\_ea{\_expanded{\_cmyktorgb ##1 ;}}{rg}{RG}}%
+   \_public \colordef \setrgbcolor \setcmykcolor ;}
 \_def\_onlycmyk{%
+   \_let\_colordef=\_cmykcolordef
    \_def\_setrgbcolor##1{\_ea\_setcolor\_ea{\_expanded{\_rgbtocmyk ##1 ;}}kK}%
-   \_def\_setcmykcolor##1{\_setcolor{##1}kK}}
+   \_def\_setcmykcolor##1{\_setcolor{##1}kK}%
+   \_public \colordef \setrgbcolor \setcmykcolor ;}
 \_public \onlyrgb \onlycmyk ;
 
    \_doc -----------------------------
