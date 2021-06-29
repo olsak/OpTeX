@@ -191,6 +191,7 @@ end
 -- callbacks, that are called manually by user using `call_callback` or for
 -- standard callbacks that have default functions -- like `mlist_to_hlist` (see
 -- below).
+local call_callback
 function callback.add_to_callback(name, fn, description)
     if user_callbacks[name] or callback_functions[name] or default_functions[name] then
         -- either:
@@ -204,7 +205,7 @@ function callback.add_to_callback(name, fn, description)
         -- when things break, like when callbacks get redefined by future
         -- luatex.
         assert(callback_register(name, function(...)
-            return callback.call_callback(name, ...)
+            return call_callback(name, ...)
         end))
     else
         err("cannot add to callback '"..name.."' - no such callback exists")
@@ -317,6 +318,7 @@ function callback.call_callback(name, ...)
     end
     return not changed or head
 end
+call_callback = callback.call_callback
 --
 -- Create \"virtual" callbacks `pre/post_mlist_to_hlist_filter` by setting
 -- `mlist_to_hlist` callback. The default behaviour of `mlist_to_hlist` is kept by
@@ -327,7 +329,7 @@ callback.create_callback("pre_mlist_to_hlist_filter", "list")
 callback.create_callback("post_mlist_to_hlist_filter", "reverselist")
 callback_register("mlist_to_hlist", function(head, ...)
     -- pre_mlist_to_hlist_filter
-    local new_head = callback.call_callback("pre_mlist_to_hlist_filter", head, ...)
+    local new_head = call_callback("pre_mlist_to_hlist_filter", head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
@@ -336,9 +338,9 @@ callback_register("mlist_to_hlist", function(head, ...)
     end
     -- mlist_to_hlist means either added functions or standard luatex behavior
     -- of node.mlist_to_hlist (handled by default function)
-    head = callback.call_callback("mlist_to_hlist", head, ...)
+    head = call_callback("mlist_to_hlist", head, ...)
     -- post_mlist_to_hlist_filter
-    new_head = callback.call_callback("post_mlist_to_hlist_filter", head, ...)
+    new_head = call_callback("post_mlist_to_hlist_filter", head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
@@ -346,6 +348,27 @@ callback_register("mlist_to_hlist", function(head, ...)
         head = new_head
     end
     return head
+end)
+--
+-- For preprocessing boxes just before shipout we define custom callback. This
+-- is used for coloring based on attributes.
+callback.create_callback("pre_shipout_filter", "list")
+--
+-- There is however a challenge - how to call this callback? We could redefine
+-- `\shipout` and `\pdfxform` (which both run `ship_out` procedure internally),
+-- but they would lose their primtive meaning – i.e. `\immediate` wouldn't work
+-- with `\pdfxform`. The compromise is to require anyone to run
+-- `\_preshipout<destination box number><box specification>` just before
+-- `\shipout` or `\pdfxform` if they want to call `pre_shipout_filter` (and
+-- achieve colors and possibly more).
+local tex_setbox = tex.setbox
+local token_scanint = token.scan_int
+local token_scanlist = token.scan_list
+define_lua_command("_preshipout", function()
+    local boxnum = token_scanint()
+    local head = token_scanlist()
+    heaad = call_callback("pre_shipout_filter", head)
+    tex_setbox(boxnum, head)
 end)
 --
 -- Compatibility with \LaTeX/ through luatexbase namespace. Needed for
@@ -548,35 +571,13 @@ local function colorize(head, current, current_stroke)
     end
     return head, current, current_stroke
 end
--- Because it is so easy to use different default/initial color other than
--- black, we allow it. Of course we need to change what `colors` maps to/from
--- `0`. Furthermore we need to note that black is special, because that is what
--- all pages start on. For any other color we need to force an initial color setting in `colorize`,
--- regardless of what color is currently set. This is handled by
--- `initial_color`, the initial value of `colorize`'s `current`. For black it
--- can be `0` (current/initial color is indeed black), but if set to something
--- not equal to any number assigned to color (we use `-1`) initial color is set
--- to color `0` (now most probably non-black).
 --
-local initial_color = 0
---
--- Now we need to somehow allow \TeX/ to use `colorize` on otherwise finished
--- boxes. We do this by redefining `\_shipout`, which means that our mechanism
--- works almost transparently to the end user. This is sadly not really possible
--- with \pdfxform, which creates PDF form XObjects (very similiar to PDF page
--- content). Redefining the said primitive is not sufficient, because of
--- `\immediate`. Those that want to colorize boxes before transforming them to
--- xforms should use \`\_colorizebox``<boxnum>`.
---
-define_lua_command("_shipout", function()
-    print("luashipout")
-    local list = token_scanlist()
-    list = tonode(colorize(todirect(list), initial_color, initial_color))
-    tex_setbox(0, list)
-    tex_shipout(0)
-end)
---
-define_lua_command("_colorizebox", function()
-    local boxnum = token_scanint()
-    colorize(getbox(boxnum), initial_color, initial_color)
-end)
+-- Colorization should be run just before shipout. We use our custom callback
+-- for this. See the definiton of `pre_shipout_filter` for details on
+-- limitions.
+callback.add_to_callback("pre_shipout_filter", function(list)
+    -- By setting initial color to -1 we force initial setting of color on
+    -- every page. This is useful for transparently supporting other default
+    -- colors than black (although it has a price for each normal document).
+    return tonode(colorize(todirect(list), -1, -1))
+end, "OpTeX colors using attributes")

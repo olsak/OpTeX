@@ -7,7 +7,7 @@
    \_cod -----------------------------
 
 \_output={\_optexoutput}
-\_def \_optexoutput{\_begoutput \_shipout\_completepage \_endoutput}
+\_def \_optexoutput{\_begoutput \_preshipout0\_completepage \_shipout\_box0 \_endoutput}
 
    \_doc -----------------------------
    Default \`\_begoutput` and \`\_endoutput` is defined.
