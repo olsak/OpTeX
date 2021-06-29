@@ -367,7 +367,7 @@ local token_scanlist = token.scan_list
 define_lua_command("_preshipout", function()
     local boxnum = token_scanint()
     local head = token_scanlist()
-    heaad = call_callback("pre_shipout_filter", head)
+    head = call_callback("pre_shipout_filter", head)
     tex_setbox(boxnum, head)
 end)
 --
