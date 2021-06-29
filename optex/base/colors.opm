@@ -3,16 +3,6 @@
 \_codedecl \colordef {Colors <2021-05-28>} % preloaded in format
 
    \_doc -----------------------------
-   We declare internal boolean value \`\_iflocalcolor` ad do
-   \`\localcolor` as default.
-   \_cod -----------------------------
-
-\_newifi \_iflocalcolor \_localcolortrue
-\_protected\_def \_localcolor   {\_localcolortrue}
-\_protected\_def \_nolocalcolor {\_localcolorfalse}
-\_public \localcolor \nolocalcolor ;
-
-   \_doc -----------------------------
    The basic colors in CMYK
    \`\Blue` \`\Red` \`\Brown` \`\Green` \`\Yellow` \`\Cyan` \`\Magenta`
    \`\Grey` \`\LightGrey` \`\White` and \`\Black`
@@ -39,9 +29,6 @@
    For example `\setrgbcolor{1 0 0}` expands to `\_setcolor{1 0 0 rg 1 0 0 RG}`.\nl
    We set both types of colors (for lines (`K` or `RG` or `G`) and for fills
    (`r` or `rg` or `g`) together in the <pdf-primitive> command.
-   This is the reason why the \`\_fillstroke` uses both its parameters.
-   If only fills are needed you can do `\def\_fillstroke#1#2{#1}`.
-   If only strokes are needed you can do `\def\_fillstroke#1#2{#2}`.
    \_cod -----------------------------
 
 \_def\_setcmykcolor#1{\_setcolor{#1}kK}
@@ -80,7 +67,6 @@
 \_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
 \_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
 \_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF}
-\_def\_colorprefix{}
 \_def\_translatecolor#1#2#3{\_ifcsname _color:#1#2\_endcsname\_lastnamedcs\_relax
    \_else
       \_the\_colorcnt
@@ -95,6 +81,16 @@
 \_sdef{_color:0g}{0}
 \_sdef{_color:0}{0 g}
 \_sdef{_color:stroke:0}{0 G}
+
+   \_doc -----------------------------
+   We support concept of non-local color, i.e. all changes of the color
+   attribute are global. \`\localcolor` is the default.
+   \_cod -----------------------------
+
+\_protected\_def \_localcolor   {\_let\_colorprefix=\_relax}
+\_protected\_def \_nolocalcolor {\_let\_colorprefix=\_global}
+\_public \localcolor \nolocalcolor ;
+\_localcolor
 
    \_doc -----------------------------
    We use Lua codes for RGB to CMYK or CMYK to RGB conversions and for
