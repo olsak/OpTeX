@@ -84,16 +84,6 @@
    If no `pxto` keyword was used, then we print the table using `\halign`
    directly. The \^`\_tablew` macro is nonempty if the `to` keyword was used.
 
-   Because the color selector with `\aftergroup` can be used inside the
-   table item, we must create the second real group for each table item.
-   This is reason why we start `<converted declaration>` by `\bgroup` and we
-   end it by `\egroup` in the \`\_tableC` macro. Each `&` character
-   is stored as `\egroup&\bgroup` in `<converted declaration>`. The
-   `\halign\_tablew\_tableC` really does:
-   \begtt \catcode`\<=13
-   \halign\_tablew{\bgroup<converted declaration>\egroup\tabskip=\tabskipr \cr<data>\crcr}
-   \endtt
-   \relax
    The <data> are re-tokenized by `\_scantextokens` in order to be more
    robust to catcode changing inside the <data>. But inline verbatim cannot
    work in special cases here like \code{`\{`} for example.
@@ -116,8 +106,7 @@
       \_halign\_tablew \_tableC
    \_fi \_egroup
 }
-\_def\_tableC{\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_tabskip=\_tabskipr\_cr
-   \_scantextokens\_ea{\_tmpb\_crcr}}}
+\_def\_tableC{\_ea{\_the\_tabdata\_tabskip=\_tabskipr\_cr \_scantextokens\_ea{\_tmpb\_crcr}}}
 
    \_doc -----------------------------
    \`\_tabreplstrings` replaces each `\crl` etc. to `\crcr\crl`.
@@ -200,7 +189,7 @@
 \_public \colnum ;
 
 \_def\_addtabitemx{\_ifnum\_colnum>0
-   \_addtabdata{\_egroup &\_bgroup}\_addto\_ddlinedata{&\_dditem}\_fi
+   \_addtabdata{&}\_addto\_ddlinedata{&\_dditem}\_fi
    \_advance\_colnum by1 \_let\_tmpa=\_relax
    \_ifnum\_colnum>1 \_ea\_addtabdata\_ea{\_ea\_colnum\_the\_colnum\_relax}\_fi}
 \_def\_addtabdata#1{\_tabdata\_ea{\_the\_tabdata#1}}
@@ -227,11 +216,18 @@
    letter and `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.
    You can declare more such \"declaration letters" if you want.
+
+   Note, that the `##` with fills are in group. The reason can be explained
+   by following example:
+   \begtt
+   \table{|c|c|}{\crl \Red A & B \crl}
+   \endtt
+   We don't want vertical line after red A to be in red.
    \_cod -----------------------------
 
-\_def\_tabdeclarec{\_the\_tabiteml\_hfil##\_unsskip\_hfil\_the\_tabitemr}
-\_def\_tabdeclarel{\_the\_tabiteml\_relax##\_unsskip\_hfil\_the\_tabitemr}
-\_def\_tabdeclarer{\_the\_tabiteml\_hfil##\_unsskip\_the\_tabitemr}
+\_def\_tabdeclarec{\_the\_tabiteml{\_hfil##\_unsskip\_hfil}\_the\_tabitemr}
+\_def\_tabdeclarel{\_the\_tabiteml{\_relax##\_unsskip\_hfil}\_the\_tabitemr}
+\_def\_tabdeclarer{\_the\_tabiteml{\_hfil##\_unsskip}\_the\_tabitemr}
 \_def\_paramtabdeclarep#1{\_the\_tabiteml\_vtop{\_hsize=#1\_relax \_partabitem{##}}\_the\_tabitemr}
 
    \_doc -----------------------------
@@ -335,7 +331,7 @@
 \_def\_mspan{\_omit \_afterassignment\_mspanA \_mscount=}
 \_def\_mspanA[#1]#2{\_loop \_ifnum\_mscount>1 \_cs{_span}\_omit \_advance\_mscount-1 \_repeat
    \_count1=\_colnum \_colnum=0 \_def\_tmpa{}\_tabdata={}\_scantabdata#1\_relax
-   \_colnum=\_count1 \_setbox0=\_vbox{\_halign\_ea{\_ea\_bgroup\_the\_tabdata\_egroup\_cr#2\_cr}%
+   \_colnum=\_count1 \_setbox0=\_vbox{\_halign\_ea{\_the\_tabdata\_cr#2\_cr}%
    \_global\_setbox8=\_lastbox}%
    \_setbox0=\_hbox{\_unhbox8 \_unskip \_global\_setbox8=\_lastbox}%
    \_unhbox8 \_ignorespaces}
@@ -558,6 +554,7 @@ after the second one.
 
 \_endinput
 
+2021-06-29 grouping in items modified.
 2021-06-03 \scantextokens added to \_partabitem, bug fixed.
 2021-06-03 \fS corrected, re-implemented.
 2021-06-02 \table in \table allowed, bug fixed.
