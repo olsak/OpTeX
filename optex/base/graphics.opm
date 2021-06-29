@@ -231,8 +231,8 @@
    are parameters, they can be set by user in optional brackets `[...]`.
    For example `\fcolor=\Red` does `\_let\_fcolorvalue=\Red` and it means
    filling color.\nl
-   The \`\_setflcolor` uses the \^`\_fillstroke` macro to separate filling
-   color and drawing color.
+   The \`\_setflcolors` uses the \^`\_setcolor` macro to separate filling (non-stroking)
+   color and stroking color.
    \_cod -----------------------------
 
 \_newdimen \_lwidth
@@ -287,9 +287,7 @@
    \_touppervalue\_overlapmarginsvalue \_touppervalue\_shadowvalue
    \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
 }
-\_def\_incircleA {\_isnextchar\_colorstackpop\_incircleB\_incircleC}
-\_def\_incircleB #1{#1\_isnextchar\_colorstackpop\_incircleB\_incircleC}
-\_def\_incircleC {\_egroup % of \setbox0=\hbox\bgroup
+\_def\_incircleA {\_egroup % of \setbox0=\hbox\bgroup
    \_wd0=\_dimexpr \_wd0+\_hhkern \_relax
    \_ht0=\_dimexpr \_ht0+\_vvkern \_relax \_dp0=\_dimexpr \_dp0+\_vvkern \_relax
    \_ifdim \_ratiovalue\_dimexpr \_ht0+\_dp0 > \_wd0
