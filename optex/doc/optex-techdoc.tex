@@ -273,12 +273,6 @@ The allocations are declared in subsection~\ref[lua-alloc], calbacks are
 implemented in subsection~\ref[callbacks] and handling with colors can be
 found in the subsection~\ref[lua-colors].
 
-\newtoks \_hisyntaxlua
-\_hisyntaxlua={%
-   \_hicolor C \Green
-   \_replfromto {--}{^^J}   {\z C{--#1}^^J}%
-}
-
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}
   \commentchars-- \def\docfile{optex.lua} \ttline=-1
   \_def\_printcomments{\_medskip
