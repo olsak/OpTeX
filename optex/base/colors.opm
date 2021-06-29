@@ -11,13 +11,13 @@
 
 \_def\Blue      {\_setcmykcolor{1 1 0 0}}
 \_def\Red       {\_setcmykcolor{0 1 1 0}}
-\_def\Brown     {\_setcmykcolor{0 0.67 0.67 0.5}}
+\_def\Brown     {\_setcmykcolor{0 .67 .67 .5}}
 \_def\Green     {\_setcmykcolor{1 0 1 0}}
 \_def\Yellow    {\_setcmykcolor{0 0 1 0}}
 \_def\Cyan      {\_setcmykcolor{1 0 0 0}}
 \_def\Magenta   {\_setcmykcolor{0 1 0 0}}
-\_def\Grey      {\_setcmykcolor{0 0 0 0.5}}
-\_def\LightGrey {\_setcmykcolor{0 0 0 0.2}}
+\_def\Grey      {\_setcmykcolor{0 0 0 .5}}
+\_def\LightGrey {\_setcmykcolor{0 0 0 .2}}
 \_def\White     {\_setgreycolor{1}}
 \_def\Black     {\_setgreycolor{0}}
 

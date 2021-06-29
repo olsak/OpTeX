@@ -69,8 +69,8 @@
 }
 \_gdef\_hipystrpre#1\x#2{\x#2{#1}\x#2}
 
-\_ifx\LightBlue\_undefined \_gdef\LightBlue {\_setcmykcolor{1 0.43 0 0}}\_fi 
-\_ifx\Orange\_undefined    \_gdef\Orange    {\_setcmykcolor{0 0.64 1 0}}\_fi 
+\_ifx\LightBlue\_undefined \_gdef\LightBlue {\_setcmykcolor{1 .43 0 0}}\_fi
+\_ifx\Orange\_undefined    \_gdef\Orange    {\_setcmykcolor{0 .64 1 0}}\_fi
 
 \_endcode %------------------------------------------------
 
