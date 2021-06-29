@@ -67,10 +67,10 @@
 \_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
 \_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
 \_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF}
-\_def\_translatecolor#1#2#3{\_ifcsname _color:#1#2\_endcsname\_lastnamedcs\_relax
+\_def\_translatecolor#1#2#3{\_ifcsname _color:#1 #2\_endcsname\_lastnamedcs\_relax
    \_else
       \_the\_colorcnt
-      \_sxdef{_color:#1#2}{\_the\_colorcnt}%
+      \_sxdef{_color:#1 #2}{\_the\_colorcnt}%
       \_sxdef{_color:\_the\_colorcnt}{#1 #2}%
       \_sxdef{_color:stroke:\_the\_colorcnt}{#1 #3}%
       \_incr \_colorcnt
@@ -78,7 +78,7 @@
 }
 
 % Black is the default color.
-\_sdef{_color:0g}{0}
+\_sdef{_color:0 g}{0}
 \_sdef{_color:0}{0 g}
 \_sdef{_color:stroke:0}{0 G}
 
