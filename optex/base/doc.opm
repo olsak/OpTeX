@@ -137,7 +137,7 @@
    \_indent \_printverblinenum #1\par}
 
 \_def\_printfilename{\_hbox to0pt{%
-   \_hskip\_hsize\vbox to0pt{\_vss\_llap{\Brown\docfile}\_kern7.5pt}\_hss}%
+   \_hskip\_hsize\_vbox to0pt{\_vss\_llap{\Brown\docfile}\_kern7.5pt}\_hss}%
    \_let\_printfilename=\_relax
 }
 \_everytt={\_let\_printverblinenum=\_relax}
@@ -153,7 +153,7 @@
 \_def\docfile{}
 \_def\_printdoc #1 {\_par \_def\docfile{#1}%
    \_everytt={\_ttshift=-15pt \_let\_printverblinenum=\_relax}%
-   \_ea\_cod \input #1
+   \_ea\_cod \_input #1
    \_everytt={\_let\_printverblinenum=\_relax}%
    \_def\docfile{}%
 }
