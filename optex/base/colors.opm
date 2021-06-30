@@ -24,11 +24,10 @@
    \_doc -----------------------------
    By default, the \`\setcmykcolor` \`\setrgbcolor` and \`\setgreycolor`
    macros with `{<componetns>}` parameter
-   expand to `\_setcolor{<pdf-primitive>}` using \`\_formatcmyk`
-   or \`\_formatrgb` or \`\_formatgrey` expandable macros.
-   For example `\setrgbcolor{1 0 0}` expands to `\_setcolor{1 0 0 rg 1 0 0 RG}`.\nl
-   We set both types of colors (for lines (`K` or `RG` or `G`) and for fills
-   (`r` or `rg` or `g`) together in the <pdf-primitive> command.
+   expand to \^`\_setcolor``{<color-data>}{<fill-op>}{<stroke-op>}` where
+   <color-data> is <R> <G> <B> or <C> <M> <Y> <K> or <G> and
+   <fill-op> is color operator for filling, <stroke-op> is color operator
+   for stroking.
    \_cod -----------------------------
 
 \_def\_setcmykcolor#1{\_setcolor{#1}kK}
@@ -37,13 +36,12 @@
 \_public \setcmykcolor \setrgbcolor \setgreycolor ;
 
    \_doc -----------------------------
-   The \`\onlyrgb` declaration redefines \^`\_formatcmyk` in order it expands
-   to its conversion to RGB <pdf-primitive>. This conversion is done by
-   the \^`\_cmyktorgb` macro. Moreover, `\onlyrgb` re-defines three basic RGB
+   The \`\onlyrgb` declaration redefines \^`\setcmykcolor` to do conversion
+   to RGB just before \^`\_setcolor` is used.
+   The \`\onlycmyk` declaration redefines \^`\setrgbcolor` to do conversion
+   to CMYK just before \^`\_setcolor` is used.
+   Moreover, \^`\onlyrgb` re-defines three basic RGB
    colors for RGB color space and re-declares \^`\colordef` as \^`\rgbcolordef`.
-   The \hbox{\`\onlycmyk`} macro does similar work, it re-defines \^`\_formatrgb`
-   macro. The Grey color space is unchanged and works in both main
-   settings (RGB or CMYK) without collisions.
    \_cod -----------------------------
 
 \_def\_onlyrgb{\_def\Red{\_setrgbcolor{1 0 0}}%
@@ -60,31 +58,48 @@
 \_public \onlyrgb \onlycmyk ;
 
    \_doc -----------------------------
-   Setting of color.
+   The \`\_colorattr` for coloring is allocated and
+   \`\_setcolor``{<color-data>}{<fill-op>}{<stroke-op>}` is defined here.
+   This macro does `\_colorattr=`\`\_colorcnt` if the <color data> was not used
+   before and prepare mapping from this integer value to the <color data>
+   and increments \^`\_colorcnt`.
+   If the <color data> were used already, then \^`\_setcolor`
+   does `\_colorattr=<stored-value>`.
+   This work is done by the \`\_translatecolor` macro. The following mapping
+   macros are created:
+   \begtt \catcode`<=13
+   \_color:<data> <fill-op>     ... expands to used <attribute-value>
+   \_color:<attribute-value>    ... expands to <data> <fill-op>
+   \_color-s:<attribute-value>  ... expands to <data> <stroke-op>
+   \endtt
+   The \`\_resetcolor` un-sets the color attribute, it means that default
+   color (black) is used.
    \_cod -----------------------------
 
 \_newattribute \_colorattr
 \_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
 \_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
-\_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF}
+\_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF }
 \_def\_translatecolor#1#2#3{\_ifcsname _color:#1 #2\_endcsname\_lastnamedcs\_relax
    \_else
-      \_the\_colorcnt
+      \_colorcnt
       \_sxdef{_color:#1 #2}{\_the\_colorcnt}%
       \_sxdef{_color:\_the\_colorcnt}{#1 #2}%
-      \_sxdef{_color:stroke:\_the\_colorcnt}{#1 #3}%
+      \_sxdef{_color-s:\_the\_colorcnt}{#1 #3}%
       \_incr \_colorcnt
    \_fi
 }
-
 % Black is the default color.
 \_sdef{_color:0 g}{0}
 \_sdef{_color:0}{0 g}
-\_sdef{_color:stroke:0}{0 G}
+\_sdef{_color-s:0}{0 G}
 
    \_doc -----------------------------
    We support concept of non-local color, i.e. all changes of the color
-   attribute are global. \`\localcolor` is the default.
+   attribute are global by setting \`\_colorprefix` to `\global`.
+   \`\localcolor` is the default, i.e.\ \^`\_colorprefix` is `\relax`.\nl
+   You can write `\global\Red` if you want to have global setting of the
+   color.
    \_cod -----------------------------
 
 \_protected\_def \_localcolor   {\_let\_colorprefix=\_relax}
@@ -292,16 +307,73 @@
 
 \_endcode % -------------------------------------
 
-TODO: Document colors based on attributes.
+\secc Basic concept
 
-The implementation of colors is based on colorstack, so the current color
-can follow across more pages. It is not so obvious because PDF viewer (or PDF
-interpreter) manipulates with colors locally at each PDF page and it
-initializes each PDF page with black on white color.
+The implementation of colors is based on \LuaTeX/'s attributes (since \OpTeX/ version
+1.04; older versions implemented colors by colorstack).
+
+Setting of color in PDF is handled by graphics operators which change the
+graphics context. Colors for fills/strokes are distinguished, but apart from
+that, only one color is active at time and is used for all material drawn by
+following graphics operators, until next color is set. Each PDF content (e.g.
+page or form XObject) has its own graphics context, that is initialized from
+zero. Hence we have different concept of selecting fonts in \TeX/ (it
+depends on \TeX/ groups but does not depends on pages) and color handling in
+PDF.
+
+\TeX/ itself has no concept of colors. Colors have always been handled by
+inserting whatsits (either using `\special` for DVI or using
+`\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient way of doing
+it, \TeX/ doesn't have to know anything about colors, it just inserts the
+relevant literals when doing `\shipout`. However, it is also problematic in
+many ways:
+
+\begitems
+* Due to the asynchronic nature of shipping out pages, the handling of
+  initial color of page (which should be the last color of previous page) is
+  problematic.
+* In \TeX/ there isn't only contiguous page content, but also headlines,
+  footlines and inserts (including footnotes). They shouldn't just take color
+  from what just happens to be preceding, but should be colored independently.
+* Whatsit nodes are not really fully transparent to all stages of \TeX/ and
+  just turning on/off color can result in differently typeset documents. See e.g.
+  \begitems
+   * \url{https://tex.stackexchange.com/questions/599165}
+   * \url{https://tex.stackexchange.com/questions/599367}
+  \enditems
+* To give a false notion of grouping with whatsits, implementations usually
+  set color and try to restore it with `\aftergroup`, which has its own quirks, e.g:
+  \begtt
+  \setbox0=\hbox{\Red text}   % bad:  \Black is done after `\setbox`
+  \setbox0=\hbox{{\Red text}} % good: \Black is done after group inside the box
+  \endtt
+\enditems
+
+With \LuaTeX/ different approach is possible (and it is used here). We can set
+attributes, which are bound to essentially everything \TeX/ creates
+(characters, rules, glues, \dots) and respect grouping. Their behavior is
+similar to that of font setting on characters. In \TeX, every typeset
+character is internally a char node that carries a font number with itself.
+This associated font number stays the same and doesn't change on even on
+boxing/unboxing.
+
+We use one attribute \^`\_colorattr` for information of currently selected
+color. Setting a color means only to set appropriate value to this attribute.
+The value is propagated to each created typesetting element until the attribute
+is unset or set to another value. So, setting the attribute behaves exactly
+like selecting the font. You can use `{\bf text}` to have text in bold and
+`{\Red text}` to have text in red. We can do `\setbox0=\hbox{\Red text}` and
+use such \"red box" later without problems.
 
 Macros \^`\setcmykcolor``{<C> <M> <Y> <K>}` or \^`\setrgbcolor``{<R> <G> <B>}`
-or\nl \^`\setgreycolor``{<Grey>}` should be used in color selectors or user can
-specify these macros explicitly.
+or\nl \^`\setgreycolor``{<Grey>}` are used in color selectors. These
+macros expand to internal \^`\_setcolor` macro which sets the \^`\_colorattr`
+attribute to an integer value and prepares mapping between this value and the real
+color data. This mapping is used just before each `\shipout` in output routine.
+The \^`\_preshipout` pseudo-primitive is used here, it converts attribute
+values to internal PDF commands for selecting colors.
+
+\secc Color mixing
 
 The color mixing processed by the \^`\colordef` is done in the subtractive color
 model CMYK. If the result has a component greater than 1 then all
@@ -358,6 +430,8 @@ The RGB to CMYK conversion is invoked when a color is declared using `\setrgbcol
 and it is used in \^`\colordef` or if it is printed when \^`\onlycmyk` is declared.
 The CMYK to RGB conversion is invoked when a color is declared using \^`\setcmykcolor`
 and it is used in \^`\rgbcolordef` or if it is printed when \^`\onlyrgb` is declared.
+
+\secc Implementation
 
 \_endinput
 

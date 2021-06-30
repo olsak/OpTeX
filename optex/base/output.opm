@@ -3,7 +3,11 @@
 \_codedecl \nopagenumbers {Output routine <2021-02-25>} % preloaded in format
 
    \_doc -----------------------------
-   \`\_optexoutput` is the default output routine. You can create another...
+   \`\_optexoutput` is the default output routine. You can create another...\nl
+   The \^`\_preshipout``<destination box number><box specification>` used
+   here behaves similarly like `\setbox` but it does not only copy the box
+   contents but adds the color literals depending on used attributes.
+   It is defined using lua code, see section~\ref[lua].
    \_cod -----------------------------
 
 \_output={\_optexoutput}
@@ -58,14 +62,16 @@
    The \`\_completepage` is similar to what plain \TeX/ does in its output routine.
    New is only \`\_backgroundbox`. It is `\vbox` with zero height with its
    contents (from \^`\pgbackground`) extended down. It is shifted directly to the
-   left-upper corner of the paper.
+   left-upper corner of the paper.\nl
+   The \^`\_resetcolor` used here means that all newly created texts in
+   output routine (texts used in headline, footline) have default color.
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox{%
      \_resetcolor
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
-     \_makeheadline%
+     \_makeheadline
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}% \pagebody in plainTeX
      \_makefootline}%
 }

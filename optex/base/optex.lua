@@ -358,7 +358,7 @@ callback.create_callback("pre_shipout_filter", "list")
 -- `\shipout` and `\pdfxform` (which both run `ship_out` procedure internally),
 -- but they would lose their primtive meaning – i.e. `\immediate` wouldn't work
 -- with `\pdfxform`. The compromise is to require anyone to run
--- `\_preshipout<destination box number><box specification>` just before
+-- \`\_preshipout``<destination box number><box specification>` just before
 -- `\shipout` or `\pdfxform` if they want to call `pre_shipout_filter` (and
 -- achieve colors and possibly more).
 local tex_setbox = tex.setbox
@@ -400,61 +400,6 @@ callback.add_to_callback("input_level_string",
 --
 -- Handling of color using attributes
 --
--- Setting of color in PDF is handled by graphics operators which change the
--- graphics context. Colors for fills/strokes are distinguished, but apart from
--- that, only one color is active at time and is used for all material drawn by
--- following graphics operators, until next color is set. Each PDF content (e.g.
--- page or form XObject) has its own graphics context, that is initialized from
--- zero. Hence natural way of working with color (color settings are not lost
--- by going between pages) have to be handled.
---
--- \TeX/ itself has no concept of color. Color has always been handled by
--- inserting whatsits (either using `\special` for DVI or using
--- `\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient way of doing
--- it, \TeX/ doesn't have to know anything about colors, it just inserts the
--- relevant literals when doing `\shipout`. However, it is also problematic in
--- many ways:
---
--- \begitems
--- * Due to the asynchronic nature of shipping out pages, the handling of
--- initial color of page (which should be the last color of previous page) is
--- problematic.
--- * In \TeX/ there isn't only contiguous page content, but also headlines,
--- footlines and inserts (including footnotes). They shouldn't just take color
--- from what just happens to be preceding, but should be colored independently.
--- * Whatsit nodes are not really fully transparent to all stages of \TeX/ and
--- just turning on/off color can result in differently typeset documents. See
--- e.g.
---  \begitems
---   * \url{https://tex.stackexchange.com/questions/599165/why-does-color-change-vertical-alignement-in-table-with-fixed-width/}
---   * \url{https://tex.stackexchange.com/questions/599367/strange-vertical-spacing-after-colored-equation/}
---  \enditems
--- * To give a false notion of grouping with whatsits, implementations usually
--- set color and try to restore it with `\aftergroup`, which has its own quirks,
--- e.g:
---\begtt
---\setbox0=\hbox{\Red text}   % bad:  \Black is done after `\setbox`
---\setbox0=\hbox{{\Red text}} % good: \Black is done after group inside the box
---\endtt
--- \enditems
---
--- While the first two issues can be handled using `\pdfcolorstack`, the color
--- handling is still not really natural.
---
--- With \LuaTeX/ different approach is possible. We can set attributes, which
--- are bound to essentially everything \TeX/ creates (characters, rules, glues,
--- \dots) and respect grouping. Their behaviour is similar to that of font
--- setting on characters. In \TeX, every typeset character is internally a
--- char node that carries a font number with itself. This associated font number
--- stays the same and doesn't change on even on boxing/unboxing.
---
--- We can do the same with colors. It is a somewhat radical change, because some
--- coloring idioms may not work like before. But with a different mindset it
--- indeed seems more natural. If we create a box with text in default (black)
--- color, why should it change just because something before it says `\Yellow`?
--- If a footnote is created with color red it should be red regardless on what
--- pages it is typeset at (and what they contain).
---
 -- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
 -- inject PDF literals according to attributes.
@@ -492,7 +437,7 @@ local traverse = direct.traverse
 local getbox = direct.getbox
 local one_bp = tex.sp("1bp")
 
--- We first allocate an attribute for coloring.
+-- The attribute for coloring is allocated in `colors.opm`
 local color_attribute = registernumber("_colorattr")
 --
 -- Now we define function which creates whatsit nodes with PDF literals. We do
@@ -562,7 +507,7 @@ local function colorize(head, current, current_stroke)
                         or (id == whatsit_id)) then
                 -- "strokable" node, we might have to change stroke color
                 if current_stroke ~= current then
-                    local color = token_getmacro("_color:stroke:"..current)
+                    local color = token_getmacro("_color-s:"..current)
                     head  = insertbefore(head, n, pdfliteral(color))
                     current_stroke = current
                 end
