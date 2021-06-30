@@ -459,6 +459,18 @@ end
 -- since (when placed correctly), PDF literal whatsits just instruct the
 -- `\shipout` related procedures to emit the literal now.
 --
+-- We also set the stroke and non-stroke colors separately. This is because
+-- stroke color is not always needed – LuaTeX itself only uses it for rules
+-- whose one dimension is less than or equal to 1 bp and for fonts whose `mode`
+-- is set to 1 (outline) or 2 (outline and fill). Of course there may also be
+-- content in PDF literals that uses it. We try to catch these cases when
+-- reasonable (literals), in the case of rules this is more problematic,
+-- because at this point their dimensions can still be running ($-2^{30}$) –
+-- they may or may not be below the one big point limit. Also the text
+-- direction is involved. Because of the negative value for running dimensions
+-- the simplistic check, while not fully correct, should produce the right
+-- results. We currently don't check for the font mode at all.
+--
 -- Leaders (represented by glue nodes with leader field) are not handled fully.
 -- They are problematic, because their content is repeated more times and it
 -- would have to be ensured that the coloring would be right even for e.g.
@@ -492,9 +504,6 @@ local function colorize(head, current, current_stroke)
                 current = new
             end
             if ((id == rule_id
-                        -- width and height may be running at this point (-2^30),
-                        -- we could calculate the right dimension from `head`,
-                        -- but text direction would have to be considered
                         and (getfield(n, "width") <= one_bp
                             or (getfield(n, "height") + getfield(n, "depth")) <= one_bp))
                         or (id == whatsit_id)) then
@@ -511,8 +520,8 @@ local function colorize(head, current, current_stroke)
 end
 --
 -- Colorization should be run just before shipout. We use our custom callback
--- for this. See the definiton of `pre_shipout_filter` for details on
--- limitions.
+-- for this. See the definition of `pre_shipout_filter` for details on
+-- limitations.
 callback.add_to_callback("pre_shipout_filter", function(list)
     -- By setting initial color to -1 we force initial setting of color on
     -- every page. This is useful for transparently supporting other default
