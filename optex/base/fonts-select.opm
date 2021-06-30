@@ -16,7 +16,7 @@
    `\_tryloadbf \_tenbf`. If the font context (font family, font size, features)
    is not changed, then `\_tryloadbf` is `\relax` and `\_tenbf` font switcher selects
    given font. If the font context is changed, then `\_tryloadbf` is re-defined (see
-   \^`\_reloading` macro) to load new bold varinat of the font using \^`\_resizefont`
+   \^`\_reloading` macro) to load new bold variant of the font using \^`\_resizefont`
    The loaded font is saved to `\_tenbf` switcher and `\_tryloadbf` returns
    back to the `\relax` meaning. So, `\bf` macro loads
    new font with current font context and then selects it by `\_tenbf`
@@ -31,8 +31,8 @@
    family independence for `\tt` macro, see section~\ref[tt].
    So, `\_tryloadtt` is defined constantly as \"loading `\tt` font" and it is
    not re-defined to `\relax`. On the other hand, `\_tryloadtt` is
-   re-defined in the \^`\initunifonts` macro or when used
-   \~`\famvardef``\tt`.
+   re-defined in the \^`\initunifonts` macro or when
+   \~`\famvardef``\tt` is used.
    \_cod -----------------------------
 
 \_def\_reloading{\_loadf{rm}\_tenrm \_loadf{bf}\_tenbf \_loadf{it}\_tenit \_loadf{bi}\_tenbi}
@@ -46,8 +46,8 @@
 
    \_doc ----------------------------
    The Font Selection system allows to use \`\currvar`
-   instead explicitly specified variant selector. The current variant
-   is extracted from `\the\font` output which could be `\_ten<XX>` control
+   instead of an explicitly specified variant selector. The current variant
+   is extracted from `\the\font` output which could be the `\_ten<XX>` control
    sequence. Then `\currvar` expands to `\_rm` or `\_it` etc.
    \_cod ----------------------------
 
@@ -66,7 +66,7 @@
    The <variant-name> is `rm` or `bf` or `it` or `bi` or `tt`.
    The new <font-switch> is declared (roughly speaking) by:
    \begtt \catcode`<=13
-   \_font <font switch> = <fontname of>\_ten<variant-name> \_sizepec % in TFM mode
+   \_font <font switch> = <fontname of>\_ten<variant-name> \_sizespec % in TFM mode
    \_font <font switch> = {\_fontnamegen} \_sizespec              % in OTF mode
    \endtt
    The font is loaded by \`\_doresizefont``<font switch>`. This macro has
@@ -121,7 +121,7 @@
    typesetting then it is set to a positive value.\nl
    The `\_newfontloaded` should be defined for micro-typographic configuration of
    fonts, for example. See
-   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#fontexpand]{OpTeX/ trick 0058}.
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#fontexpand]{\OpTeX/ trick 0058}.
    \_cod -----------------------------
 
 \_def\_fontloaded #1{\_ifnum\_skewchar#1=-1 \_skewchar#1=-2 \_newfontloaded#1\_fi}
@@ -130,7 +130,7 @@
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabalities,
    in order to be able to load Unicode fonts. Unfortunately, this part of
-   \OpTeX/ depends on `luaotfload` package, which adapts Con\TeX/t's generic
+   \OpTeX/ depends on the `luaotfload` package, which adapts Con\TeX/t's generic
    font loader for plain \TeX/ and \LaTeX. `luaotfload` uses Lua functions
    from \LaTeX's `luatexbase` namespace, we provide our own replacements.
    Moreover, `\initunifont` switches with
@@ -586,7 +586,7 @@ We distinguish between
   In addition, \OpTeX/ defines \~`\tt` as variant selector
   independent of chosen font family. It selects typewriter-like font.
 * {\em font modifiers} are declared in a family (`\cond`, `\caps`) or are
-  \"build in" (\^`\setfontsize``{<size spec>}`, \~`\setff{<features>}`).
+  \"built-in" (\^`\setfontsize``{<size spec>}`, \~`\setff{<features>}`).
   They do appropriate change in the {\em font context} but do not select
   the font.
 * {\em family selectors} (for example `\Termes`, `\LMfonts`),
@@ -702,10 +702,10 @@ family selectors and defined font macros doing something with fonts.
   variant selectors can be declared by \~`\famvardef` command. They select a
   font dependent on the current font context, see section~\ref[famvardef].
   The `\tt` selector is documented in section~\ref[tt].
-* Font modifiers are \"build in" or declared by \~`\moddef` command.
+* Font modifiers are \"built-in" or declared by \~`\moddef` command.
   They do modifications in the font context but don't select any font.
   \begitems
-  * \"build-in" font modifiers are \^`\setfontsize` (see
+  * \"built-in" font modifiers are \^`\setfontsize` (see
     section~\ref[setfontsize]), \~`\setff` (see section~\ref[setff]),
     \~`\setfontcolor`, \~`\setletterspace` and \~`\setwordspace`
     (see section~\ref[specff]). They are independent of font family.
@@ -996,7 +996,7 @@ all possibilities of extended `\font` primitive.
 
 The \OpTeX/ format is initialized by `luatex` engine by default but
 you can initialize it by `luahbtex` engine too. Then the harfbuzz library is
-ready to use for font rendering as an alternative to build-in font renderer
+ready to use for font rendering as an alternative to built-in font renderer
 from Luaotfload. The harfbuzz library gives more features for rendering
 Indic and Arabic scripts. But it is not used as default, you need to specify
 `mode=harf` in the fontfeatures field when `\font` is used. Moreover, when
