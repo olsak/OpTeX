@@ -146,13 +146,7 @@
    \_directlua{%
       require('luaotfload-main')
       luaotfload.main()
-      local setattribute = node.direct.set_attribute
-      local color_attr = registernumber("_colorattr")
-      luaotfload.set_colorhandler(function(head, n, rgbcolor)
-          local attr = tonumber(token.get_macro("_color:"..rgbcolor)) or 0
-          setattribute(n, color_attr, attr)
-          return head, n
-      end)
+      optex_hook_into_luaotfload()
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont

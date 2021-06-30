@@ -510,8 +510,10 @@ local function colorize(head, current, current_stroke)
                 -- "strokable" node, we might have to change stroke color
                 if current_stroke ~= current then
                     local color = token_getmacro("_color-s:"..current)
-                    head  = insertbefore(head, n, pdfliteral(color))
-                    current_stroke = current
+                    if color then
+                        head  = insertbefore(head, n, pdfliteral(color))
+                        current_stroke = current
+                    end
                 end
             end
         end
@@ -529,3 +531,26 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     local list = colorize(todirect(list), -1, -1)
     return tonode(list)
 end, "_colors")
+--
+-- We also hook into `luaotfload`'s handling of color. Instead of the default
+-- behavior (inserting colorstack whatsits) we set our own attribute. The hook
+-- has to be registered {\em after} `luaotfload` is loaded.
+function optex_hook_into_luaotfload()
+    local setattribute = direct.set_attribute
+    local token_setmacro = token.set_macro
+    local color_count = registernumber("_colorcnt")
+    local tex_getcount, tex_setcount = tex.getcount, tex.setcount
+    luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
+        local attr = tonumber(token_getmacro("_color:"..rgbcolor))
+        if not attr then
+            attr = tex_getcount(color_count)
+            tex_setcount(color_count, attr + 1)
+            local strattr = tostring(attr)
+            token_setmacro("_color:"..rgbcolor, strattr)
+            token_setmacro("_color:"..strattr, rgbcolor)
+            -- no stroke color set
+        end
+        setattribute(n, color_attribute, attr)
+        return head, n
+    end)
+end
