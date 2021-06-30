@@ -33,7 +33,7 @@ function alloc.new_attribute(name)
 end
 --
 -- Allocator for Lua functions ("pseudoprimitives"). It passes variadic
--- arguments (`...`) like \"global" to `token.set_lua`.
+-- arguments (\"`...`") like `"global"` to `token.set_lua`.
 local function_table = lua.get_functions_table()
 local luafnalloc = 0
 function define_lua_command(csname, fn, ...)
@@ -352,8 +352,6 @@ end)
 --
 -- For preprocessing boxes just before shipout we define custom callback. This
 -- is used for coloring based on attributes.
-callback.create_callback("pre_shipout_filter", "list")
---
 -- There is however a challenge - how to call this callback? We could redefine
 -- `\shipout` and `\pdfxform` (which both run `ship_out` procedure internally),
 -- but they would lose their primtive meaning – i.e. `\immediate` wouldn't work
@@ -361,6 +359,8 @@ callback.create_callback("pre_shipout_filter", "list")
 -- \`\_preshipout``<destination box number><box specification>` just before
 -- `\shipout` or `\pdfxform` if they want to call `pre_shipout_filter` (and
 -- achieve colors and possibly more).
+callback.create_callback("pre_shipout_filter", "list")
+
 local tex_setbox = tex.setbox
 local token_scanint = token.scan_int
 local token_scanlist = token.scan_list
@@ -398,7 +398,7 @@ callback.add_to_callback("input_level_string",
    end
 )
 --
--- Handling of color using attributes
+-- \secc Handling of color using attributes^^M
 --
 -- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
@@ -414,12 +414,6 @@ local whatsit_id = node_id("whatsit")
 local pdfliteral_id = node_subtype("pdf_literal")
 local pdfsave_id = node_subtype("pdf_save")
 local pdfrestore_id = node_subtype("pdf_restore")
-local setattribute = tex.setattribute
-local tex_shipout = tex.shipout
-local tex_setbox = tex.setbox
-local token_scanlist = token.scan_list
-local token_scanargument = token.scan_argument
-local token_scanint = token.scan_int
 local token_getmacro = token.get_macro
 
 local direct = node.direct
@@ -434,9 +428,8 @@ local getattribute = direct.get_attribute
 local insertbefore = direct.insert_before
 local copy = direct.copy
 local traverse = direct.traverse
-local getbox = direct.getbox
 local one_bp = tex.sp("1bp")
-
+--
 -- The attribute for coloring is allocated in `colors.opm`
 local color_attribute = registernumber("_colorattr")
 --
@@ -524,5 +517,6 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     -- By setting initial color to -1 we force initial setting of color on
     -- every page. This is useful for transparently supporting other default
     -- colors than black (although it has a price for each normal document).
-    return tonode(colorize(todirect(list), -1, -1))
-end, "OpTeX colors using attributes")
+    local list = colorize(todirect(list), -1, -1)
+    return tonode(list)
+end, "_colors")
