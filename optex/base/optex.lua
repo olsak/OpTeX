@@ -483,7 +483,7 @@ end
 -- \TeX/ works with nodes.
 local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
     if id == glyph_id then
-        return true, true
+        return true, false
     end
     if id == glue_id then
         n = getleader(n)
@@ -503,6 +503,7 @@ local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stro
     if id == rule_id then -- normal or nested under leaders
         local width, height, depth = getwhd(n)
         if width <= one_bp or height + depth <= one_bp then
+            -- running (-2^30) may need both
             return true, true
         end
         return true, false
@@ -531,7 +532,11 @@ local function colorize(head, current, current_stroke)
             if current_stroke ~= new and stroke_needed then
                 local stroke_color = token_getmacro("_color-s:"..current)
                 if stroke_color then
-                    newcolor = string_format("%s %s", newcolor or "", stroke_color)
+                    if newcolor then
+                        newcolor = string_format("%s %s", newcolor, stroke_color)
+                    else
+                        newcolor = stroke_color
+                    end
                     current_stroke = new
                 end
             end
