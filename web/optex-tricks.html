@@ -1303,17 +1303,17 @@ creates the table:
    \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdL}
 \def\setcellcolor{%
    \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi}
-\def\setcellcolorC\_setcolor#1#2\end#3#4{%
-   \ifx#3\vtop \def\tmp{#2}%
-      \setbox0=\hbox{\the\tabiteml\vtop{\localcolor#4}\the\tabitemr}%
-      \the\tabstrut {\localcolor\_setcolor{#1}\vrule width\wd0}\kern-\wd0 \box0
+\def\setcellcolorC\_setcolor#1#2#3#4\end#5#6{%
+   \ifx#5\vtop \def\tmp{#4}%
+      \setbox0=\hbox{{\the\tabiteml\vtop{\localcolor#6}\the\tabitemr}}%
+      \the\tabstrut {\localcolor\_setcolor{#1}{#2}{#3}\vrule width\wd0}\kern-\wd0 \box0
    \else
-      \setbox0=\hbox{{\the\tabiteml\localcolor#2\_unsskip\the\tabitemr}}%
-      {\localcolor\_setcolor{#1}%
-       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#3\hfil plus1fil\fi}%
+      \setbox0=\hbox{{\the\tabiteml\localcolor#4\_unsskip\the\tabitemr}}%
+      {\localcolor\_setcolor{#1}{#2}{#3}%
+       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#5\hfil plus1fil\fi}%
       \kern-\wd0 \box0
-      \ifx#4\hfil
-      {\kern-.2pt \localcolor\_setcolor{#1}\leaders\vrule\hskip.2pt plus1fil}\fi
+      \ifx#6\hfil
+      {\kern-.2pt \localcolor\_setcolor{#1}{#2}{#3}\leaders\vrule\hskip.2pt plus1fil}\fi
    \fi
 }
 \def\setcellcolorD{\ifx\cellcolor\undefined \let\next=\setcellcolorN
