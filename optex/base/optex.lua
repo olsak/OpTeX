@@ -2,7 +2,7 @@
 
 -- The basic lua functions and declarations used in \OpTeX/ are here
 
--- GENERAL
+-- \medskip\secc General^^M
 
 -- Error function used by following functions for critical errors.
 local function err(message)
@@ -15,7 +15,7 @@ function registernumber(name)
     return token.create(name).index
 end
 --
--- ALLOCATORS
+-- \medskip\secc[lua-alloc] Allocators^^M
 alloc = alloc or {}
 --
 -- An attribute allocator in Lua that cooperates with normal \OpTeX/ allocator.
@@ -45,7 +45,7 @@ end
 -- `provides_module` is needed by older version of luaotfload
 provides_module = function() end
 --
--- CALLBACKS
+-- \medskip\secc[callbacks] Callbacks^^M
 callback = callback or {}
 --
 -- Save `callback.register` function for internal use.
@@ -398,7 +398,7 @@ callback.add_to_callback("input_level_string",
    end
 )
 --
--- \secc Handling of color using attributes^^M
+-- \medskip\secc[lua-colors] Handling of colors using attributes^^M
 --
 -- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
@@ -444,9 +444,10 @@ local function pdfliteral(str)
     return literal
 end
 --
--- This is the function that goes through a node list and injects PDF literals
--- according to attributes. Its arguments are the head of the list to be
--- colored and the current color. It is a recursive function – nested
+-- The function {\Red`colorize`}`(head, current, current_stroke)` goes through
+-- a node list and injects PDF literals according to attributes.
+-- Its arguments are the head of the list to be colored and the current color
+-- for fills and strokes. It is a recursive function – nested
 -- horizontal and vertical lists are handled in the same way. Only the
 -- attributes of “content” nodes matter, these include most importantly glyph
 -- nodes and rule nodes which are colored directly, but also PDF literals and
@@ -454,13 +455,13 @@ end
 --
 -- Whatsit node with color setting PDF literal is injected only when a
 -- different color is needed, hence there shouldn't be any unnecessary
--- consecutive color changes which can happen with use of pdfTeX's color stack.
+-- consecutive color changes which can happen with use of pdf\TeX's color stack.
 -- Our injection does not care about boxing levels, but this isn't a problem,
 -- since (when placed correctly), PDF literal whatsits just instruct the
 -- `\shipout` related procedures to emit the literal now.
 --
 -- We also set the stroke and non-stroke colors separately. This is because
--- stroke color is not always needed – LuaTeX itself only uses it for rules
+-- stroke color is not always needed – \LuaTeX/ itself only uses it for rules
 -- whose one dimension is less than or equal to 1 bp and for fonts whose `mode`
 -- is set to 1 (outline) or 2 (outline and fill). Of course there may also be
 -- content in PDF literals that uses it. We try to catch these cases when
@@ -474,7 +475,7 @@ end
 -- Leaders (represented by glue nodes with leader field) are not handled fully.
 -- They are problematic, because their content is repeated more times and it
 -- would have to be ensured that the coloring would be right even for e.g.
--- leaders that start and end on a different color. I came to conclusion that
+-- leaders that start and end on a different color. We came to conclusion that
 -- this is not worth, hence leaders are handled just opaquely and only the
 -- attribute of the glue node itself is checked. For setting different colors
 -- inside leaders, raw PDF literals have to be used.
