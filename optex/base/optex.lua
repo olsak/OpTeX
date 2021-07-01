@@ -410,10 +410,6 @@ local rule_id = node_id("rule")
 local glue_id = node_id("glue")
 local hlist_id = node_id("hlist")
 local vlist_id = node_id("vlist")
-local whatsit_id = node_id("whatsit")
-local pdfliteral_id = node_subtype("pdf_literal")
-local pdfsave_id = node_subtype("pdf_save")
-local pdfrestore_id = node_subtype("pdf_restore")
 local token_getmacro = token.get_macro
 
 local direct = node.direct
@@ -487,12 +483,6 @@ end
 -- \TeX/ works with nodes.
 local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
     if id == glyph_id then
-        return true, true
-    end
-    if id == whatsit_id and
-            (subtype == pdfliteral_id
-            or subtype == pdfsave_id
-            or subtype == pdfrestore_id) then
         return true, true
     end
     if id == glue_id then
