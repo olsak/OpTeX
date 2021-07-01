@@ -1259,9 +1259,9 @@ the first item in the cell data is color switcher then this color is used
 for the background of the cell. For example:
 
 <pre>
-   ... &amp; \Blue Text &amp;        ... % blue background and black text 
-   ... &amp; \Green \Red  Text &amp; ... % green background and red text 
-   ... &amp; \relax \Blue Text &amp; ... % blue text and default background 
+   ... &amp; \Blue Text &amp;        ... % blue background and black text
+   ... &amp; \Green \Red  Text &amp; ... % green background and red text
+   ... &amp; \relax \Blue Text &amp; ... % blue text and default background
 </pre>
 
 <p>The color of the background will stretch as spaces in the common cells in
@@ -1281,8 +1281,8 @@ you can insert the white space between lines by \noalign{\kern...}. Example:
             \tabstrut={\lower4pt\vbox to15pt{}}        % lines dimensions
             \tabskip=2pt \everycr={\noalign{\kern2pt}} % spaces between cells
             \let\cellcolor=\Yellow % default background color
-           } 
-\table{clr}{first item      &amp; second &amp; \Blue \White third item \cr 
+           }
+\table{clr}{first item      &amp; second &amp; \Blue \White third item \cr
             next long item  &amp; \Red X &amp; \Green       YES }
 </pre>
 
@@ -1290,11 +1290,11 @@ creates the table:
 
 <p><IMG SRC="../img/tab4-ukazka.png" ALT="Table example" border=0>
 
-<p>Implementation: 
+<p>Implementation:
 
 <pre>
-\def\tabdC{\futurelet\next\setcellcolor##\end\hfil\hfil} 
-\def\tabdL{\futurelet\next\setcellcolor##\end\relax\hfil} 
+\def\tabdC{\futurelet\next\setcellcolor##\end\hfil\hfil}
+\def\tabdL{\futurelet\next\setcellcolor##\end\relax\hfil}
 \def\tabdR{\futurelet\next\setcellcolor##\end\hfil\relax}
 \def\tabdP#1{\futurelet\next\setcellcolor##\end\vtop
     {\hsize=#1\relax \baselineskip=\normalbaselineskip
@@ -1302,29 +1302,29 @@ creates the table:
 \def\colortab{\tablinespace=0pt \let\_paramtabdeclarep=\tabdP
    \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdL}
 \def\setcellcolor{%
-   \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi} 
-\def\setcellcolorC\_setcolor#1#2\end#3#4{% 
+   \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi}
+\def\setcellcolorC\_setcolor#1#2\end#3#4{%
    \ifx#3\vtop \def\tmp{#2}%
       \setbox0=\hbox{\the\tabiteml\vtop{\localcolor#4}\the\tabitemr}%
       \the\tabstrut {\localcolor\_setcolor{#1}\vrule width\wd0}\kern-\wd0 \box0
    \else
-      \setbox0=\hbox{{\the\tabiteml\localcolor#2\_unsskip\the\tabitemr}}% 
+      \setbox0=\hbox{{\the\tabiteml\localcolor#2\_unsskip\the\tabitemr}}%
       {\localcolor\_setcolor{#1}%
-       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#3\hfil plus1fil\fi}% 
-      \kern-\wd0 \box0 
-      \ifx#4\hfil 
+       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#3\hfil plus1fil\fi}%
+      \kern-\wd0 \box0
+      \ifx#4\hfil
       {\kern-.2pt \localcolor\_setcolor{#1}\leaders\vrule\hskip.2pt plus1fil}\fi
-   \fi 
-} 
-\def\setcellcolorD{\ifx\cellcolor\undefined \let\next=\setcellcolorN 
-   \else \def\next{\_ea\_ea\_ea\setcellcolorC\cellcolor}% 
-   \fi \next 
-} 
+   \fi
+}
+\def\setcellcolorD{\ifx\cellcolor\undefined \let\next=\setcellcolorN
+   \else \def\next{\_ea\_ea\_ea\setcellcolorC\cellcolor}%
+   \fi \next
+}
 \def\setcellcolorN#1\end#2#3{#2\tabiteml{\localcolor#1\unskip}\tabitemr#3}
 
-\def\multispanc#1#2#3{\multispan{#1}% 
-   \_ea\_ea\_ea\cellcolexp#2#3\end\hfil\hfil\ignorespaces} 
-\def\cellcolexp{\futurelet\next\setcellcolor} 
+\def\multispanc#1#2#3{\multispan{#1}%
+   \_ea\_ea\_ea\cellcolexp#2#3\end\hfil\hfil\ignorespaces}
+\def\cellcolexp{\futurelet\next\setcellcolor}
 </pre>
 
 <p>The \setcellcolor macro scans the first token from the cell data. The
