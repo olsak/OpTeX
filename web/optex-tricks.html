@@ -1300,7 +1300,7 @@ creates the table:
     {\hsize=#1\relax \baselineskip=\normalbaselineskip
      \lineskiplimit=0pt \noindent\tmp\_unsskip\lower\dp\_tstrutbox\hbox{}}}
 \def\colortab{\tablinespace=0pt \let\_paramtabdeclarep=\tabdP
-   \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdL}
+   \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdR}
 \def\setcellcolor{%
    \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi}
 \def\setcellcolorC\_setcolor#1#2#3#4\end#5#6{%
@@ -1320,7 +1320,7 @@ creates the table:
    \else \def\next{\_ea\_ea\_ea\setcellcolorC\cellcolor}%
    \fi \next
 }
-\def\setcellcolorN#1\end#2#3{#2\tabiteml{\localcolor#1\unskip}\tabitemr#3}
+\def\setcellcolorN#1\end#2#3{#2\the\tabiteml{\localcolor#1\unskip}\the\tabitemr#3}
 
 \def\multispanc#1#2#3{\multispan{#1}%
    \_ea\_ea\_ea\cellcolexp#2#3\end\hfil\hfil\ignorespaces}
