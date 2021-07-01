@@ -1349,14 +1349,16 @@ using this empty internal name.
 {`\White`},
 {\Grey `\Grey`},
 {\LightGrey `\LightGrey`} and
-`\Black`. User can define more
-such selectors by setting four CMYK components
-\new
-or three RGB components. For example
+`\Black`. More
+such selectors can be defined
+by setting four CMYK components (using \^`\setcmykcolor`),
+or three RGB components (using \^`\setrgbcolor`)
+or one grey component (using \^`\setgreycolor`). For example
 
 \begtt
 \def \Orange {\setcmykcolor{0 0.5 1 0}}
 \def \Purple {\setrgbcolor{1 0 1}}
+\def \DarkGrey {\setgreycolor{.1}}
 \endtt
 
 \new

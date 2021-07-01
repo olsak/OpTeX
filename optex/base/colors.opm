@@ -309,9 +309,6 @@
 
 \secc Basic concept
 
-The implementation of colors is based on \LuaTeX/'s attributes (since \OpTeX/ version
-1.04; older versions implemented colors by colorstack).
-
 Setting of color in PDF is handled by graphics operators which change the
 graphics context. Colors for fills/strokes are distinguished, but apart from
 that, only one color is active at time and is used for all material drawn by
@@ -326,44 +323,27 @@ inserting whatsits (either using `\special` for DVI or using
 `\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient way of doing
 it, \TeX/ doesn't have to know anything about colors, it just inserts the
 relevant literals when doing `\shipout`. However, it is also problematic in
-many ways:
+many ways.
 
-\begitems
-* Due to the asynchronic nature of shipping out pages, the handling of
-  initial color of page (which should be the last color of previous page) is
-  problematic.
-* In \TeX/ there isn't only contiguous page content, but also headlines,
-  footlines and inserts (including footnotes). They shouldn't just take color
-  from what just happens to be preceding, but should be colored independently.
-* Whatsit nodes are not really fully transparent to all stages of \TeX/ and
-  just turning on/off color can result in differently typeset documents. See e.g.
-  \begitems
-   * \url{https://tex.stackexchange.com/questions/599165}
-   * \url{https://tex.stackexchange.com/questions/599367}
-  \enditems
-* To give a false notion of grouping with whatsits, implementations usually
-  set color and try to restore it with `\aftergroup`, which has its own quirks, e.g:
-  \begtt
-  \setbox0=\hbox{\Red text}   % bad:  \Black is done after `\setbox`
-  \setbox0=\hbox{{\Red text}} % good: \Black is done after group inside the box
-  \endtt
-\enditems
+This is reason we decide to change colors handling from `\pdfcolorstack` to
+\LuaTeX/ attributes in version 1.04 of \OpTeX. Using attributes, the color
+setting looks exacly like font selection from \TeX/ point of view: it
+respects \TeX/ groups, colors can span to more pages, independent colors
+can be set for in all `\insert`s. Moreover, once a material is typeset
+(using `\setbox` for example) then it has its fonts and its colors
+definitelly set and you can rely on it when you are using `\unhbox` etc.\
+operations. There are no internal whatsits for colors which can interferre
+with other typesetting material.
 
-With \LuaTeX/ different approach is possible (and it is used here). We can set
-attributes, which are bound to essentially everything \TeX/ creates
-(characters, rules, glues, \dots) and respect grouping. Their behavior is
-similar to that of font setting on characters. In \TeX, every typeset
-character is internally a char node that carries a font number with itself.
-This associated font number stays the same and doesn't change on even on
-boxing/unboxing.
-
+The \LuaTeX/ attributes can be set like other register settings and after
+such a setting, their values are bound to essentially everything \TeX/ creates
+(characters, rules, glues, \dots).
 We use one attribute \^`\_colorattr` for information of currently selected
 color. Setting a color means only to set appropriate value to this attribute.
 The value is propagated to each created typesetting element until the attribute
 is unset or set to another value. So, setting the attribute behaves exactly
 like selecting the font. You can use `{\bf text}` to have text in bold and
-`{\Red text}` to have text in red. We can do `\setbox0=\hbox{\Red text}` and
-use such \"red box" later without problems.
+`{\Red text}` to have text in red.
 
 Macros \^`\setcmykcolor``{<C> <M> <Y> <K>}` or \^`\setrgbcolor``{<R> <G> <B>}`
 or\nl \^`\setgreycolor``{<Grey>}` are used in color selectors. These
