@@ -132,11 +132,11 @@
    For example, the
    following result is generated when `<declaration>=|cr||cl|`.
    \begtt
-   tabdata: \_vrule\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA
-      &\_the\_tabiteml\_hfil#\_unsskip\_the\_tabitemr
+   tabdata: \_vrule\_the\_tabiteml{\_hfil#\_unsskip\_hfil}\_the\_tabitemr\_tabstrutA
+      &\_the\_tabiteml{\_hfil#\_unsskip}\_the\_tabitemr
                                              \_vrule\_kern\_vvkern\_vrule\_tabstrutA
-      &\_the\_tabiteml\_hfil#\_unsskip\_hfil\_the\_tabitemr\_tabstrutA
-      &\_the\_tabiteml#\_unsskip\_hfil\_the\_tabitemr\_vrule\_tabstrutA
+      &\_the\_tabiteml{\_hfil#\_unsskip\_hfil}\_the\_tabitemr\_tabstrutA
+      &\_the\_tabiteml{\_relax#\_unsskip\_hfil}\_the\_tabitemr\_vrule\_tabstrutA
    ddlinedata: &\_dditem &\_dditem\_vvitem &\_dditem &\_dditem
    \endtt
    The second result in the \`\_ddlinedata` macro is a template of one row of the table
