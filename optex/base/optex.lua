@@ -419,8 +419,9 @@ local token_getmacro = token.get_macro
 local direct = node.direct
 local todirect = direct.todirect
 local tonode = direct.tonode
-local getfield = direct.getfield
 local setfield = direct.setfield
+local getwhd = direct.getwhd
+local getid = direct.getid
 local getlist = direct.getlist
 local setlist = direct.setlist
 local getleader = direct.getleader
@@ -429,6 +430,7 @@ local insertbefore = direct.insert_before
 local copy = direct.copy
 local traverse = direct.traverse
 local one_bp = tex.sp("1bp")
+local string_format = string.format
 --
 -- The attribute for coloring is allocated in `colors.opm`
 local color_attribute = registernumber("_colorattr")
@@ -483,7 +485,41 @@ end
 -- We use the `node.direct` way of working with nodes. This is less safe, and
 -- certainly not idiomatic Lua, but faster and codewise more close to the way
 -- \TeX/ works with nodes.
---
+local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
+    if id == glyph_id then
+        return true, true
+    end
+    if id == whatsit_id and
+            (subtype == pdfliteral_id
+            or subtype == pdfsave_id
+            or subtype == pdfrestore_id) then
+        return true, true
+    end
+    if id == glue_id then
+        n = getleader(n)
+        if not n then
+            -- ordinary "space" glue
+            return false, false
+        else
+            id = getid(n)
+            if id == hlist_id or id == vlist_id then
+                -- leaders with hlist/vlist get single color
+                return true, false
+            end
+            -- else we have a leader rule checked below (note that color will
+            -- rightly be set before leader, not before the nested rule!)
+        end
+    end
+    if id == rule_id then -- normal or nested under leaders
+        local width, height, depth = getwhd(n)
+        if width <= one_bp or height + depth <= one_bp then
+            return true, true
+        end
+        return true, false
+    end
+    return false, false
+end
+
 local function colorize(head, current, current_stroke)
     for n, id, subtype in traverse(head) do
         if id == hlist_id or id == vlist_id then
@@ -491,31 +527,26 @@ local function colorize(head, current, current_stroke)
             local list = getlist(n)
             list, current, current_stroke = colorize(list, current, current_stroke)
             setlist(n, list)
-        elseif id == glyph_id or id == disc_id or id == rule_id
-                or (id == glue_id and getleader(n))
-                or (id == whatsit_id
-                    and (subtype == pdfliteral_id
-                        or subtype == pdfsave_id
-                        or subtype == pdfrestore_id)) then
-            -- color participating node, check if current color has to change
+        else
+            local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
-            if new ~= current then
-                local color = token_getmacro("_color:"..new)
-                head = insertbefore(head, n, pdfliteral(color))
+            local newcolor = nil
+            if current ~= new and nonstroke_needed then
+                newcolor = token_getmacro("_color:"..new)
+                if not newcolor then
+                    print("newcolor", new, newcolor)
+                end
                 current = new
             end
-            if ((id == rule_id
-                        and (getfield(n, "width") <= one_bp
-                            or (getfield(n, "height") + getfield(n, "depth")) <= one_bp))
-                        or (id == whatsit_id)) then
-                -- "strokable" node, we might have to change stroke color
-                if current_stroke ~= current then
-                    local color = token_getmacro("_color-s:"..current)
-                    if color then
-                        head  = insertbefore(head, n, pdfliteral(color))
-                        current_stroke = current
-                    end
+            if current_stroke ~= new and stroke_needed then
+                local stroke_color = token_getmacro("_color-s:"..current)
+                if stroke_color then
+                    newcolor = string_format("%s %s", newcolor or "", stroke_color)
+                    current_stroke = new
                 end
+            end
+            if newcolor then
+                head = insertbefore(head, n, pdfliteral(newcolor))
             end
         end
     end
