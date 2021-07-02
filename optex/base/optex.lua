@@ -496,8 +496,9 @@ local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stro
                 -- leaders with hlist/vlist get single color
                 return true, false
             end
-            -- else we have a leader rule checked below (note that color will
-            -- rightly be set before leader, not before the nested rule!)
+            -- stretchy leaders with rules are tricky,
+            -- just set both colors for safety
+            return true, true
         end
     end
     if id == rule_id then -- normal or nested under leaders
