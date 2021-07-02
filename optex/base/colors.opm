@@ -285,7 +285,7 @@
    \begtt
    \def\vr{\vrule height10pt depth2pt width20pt}
    \def\_showcolor{\hbox{\tt\_bslash\_tmpb: \csname\_tmpb\endcsname \vr}\space\space}
-   \begmulti 4 \typosize[11/14]
+   \begmulti 4 \typosize[10/14]
    \morecolors
    \endmulti
    \endtt
