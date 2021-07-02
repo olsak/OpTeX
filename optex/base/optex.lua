@@ -524,9 +524,6 @@ local function colorize(head, current, current_stroke)
             local newcolor = nil
             if current ~= new and nonstroke_needed then
                 newcolor = token_getmacro("_color:"..new)
-                if not newcolor then
-                    print("newcolor", new, newcolor)
-                end
                 current = new
             end
             if current_stroke ~= new and stroke_needed then
