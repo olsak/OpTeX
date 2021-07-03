@@ -2795,8 +2795,9 @@ listings of nodes. The implemetation:
 
 <pre>
 \def\addshowpglists{\directlua{
+   local nodetree = require("nodetree")
    callback.add_to_callback("pre_shipout_filter", function(head)
-         require("nodetree").print(head)
+         nodetree.print(head)
          return head
       end, "showpglists") }}
 \gdef\removeshowpglists{\directlua{
