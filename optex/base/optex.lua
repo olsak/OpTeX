@@ -447,28 +447,24 @@ end
 -- Its arguments are the head of the list to be colored and the current color
 -- for fills and strokes. It is a recursive function – nested
 -- horizontal and vertical lists are handled in the same way. Only the
--- attributes of “content” nodes matter, these include most importantly glyph
--- nodes and rule nodes which are colored directly, but also PDF literals and
--- similar, which also participate in coloring.
+-- attributes of “content” nodes (glyphs, rules, etc.) matter. Users drawing
+-- with PDF literals have to set color themselves.
 --
 -- Whatsit node with color setting PDF literal is injected only when a
--- different color is needed, hence there shouldn't be any unnecessary
--- consecutive color changes which can happen with use of pdf\TeX's color stack.
--- Our injection does not care about boxing levels, but this isn't a problem,
--- since (when placed correctly), PDF literal whatsits just instruct the
--- `\shipout` related procedures to emit the literal now.
+-- different color is needed. Our injection does not care about boxing levels,
+-- but this isn't a problem, since PDF literal whatsits just instruct the
+-- `\shipout` related procedures to emit the literal.
 --
 -- We also set the stroke and non-stroke colors separately. This is because
 -- stroke color is not always needed – \LuaTeX/ itself only uses it for rules
 -- whose one dimension is less than or equal to 1 bp and for fonts whose `mode`
--- is set to 1 (outline) or 2 (outline and fill). Of course there may also be
--- content in PDF literals that uses it. We try to catch these cases when
--- reasonable (literals), in the case of rules this is more problematic,
--- because at this point their dimensions can still be running ($-2^{30}$) –
--- they may or may not be below the one big point limit. Also the text
--- direction is involved. Because of the negative value for running dimensions
--- the simplistic check, while not fully correct, should produce the right
--- results. We currently don't check for the font mode at all.
+-- is set to 1 (outline) or 2 (outline and fill). Catching these cases is a
+-- little bit involved. For example rules are problematic, because at this
+-- point their dimensions can still be running ($-2^{30}$) – they may or may
+-- not be below the one big point limit. Also the text direction is involved.
+-- Because of the negative value for running dimensions the simplistic check,
+-- while not fully correct, should produce the right results. We currently
+-- don't check for the font mode at all.
 --
 -- Leaders (represented by glue nodes with leader field) are not handled fully.
 -- They are problematic, because their content is repeated more times and it
