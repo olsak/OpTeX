@@ -173,6 +173,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#beglua">Processing lua code with normal characters</a>
     <li><a href="#dayw">Printing time, date</a>
+    <li><a href="#pglists">Listings of all nodes in selected pages</a>
 </ul>
 
 <li>Sections
@@ -2774,6 +2775,48 @@ to get the day in the week in given date.
 </pre>
 
 <p CLASS=datum>(0055) -- P. O., 2021-04-06<p>
+<hr>
+
+<h2><a name="pglists"></a>Listings of all nodes in selected pages</h2>
+
+<p>We create macro "\showpglists list-of-pages" which prints the list of all
+nodes in selected pages to the log and to the terminal for debugging
+purposes. For example
+
+<pre>
+\showpglists 3,4,7
+</pre>
+
+<p>prints all nodes of pages 3, 4, and 7.
+
+<p>This OpTeX trick is a simple example of usage of the pre_shipout_filter callback
+declared in OpTeX from version 1.04. The package nodetree is required for the
+listings of nodes. The implemetation:
+
+<pre>
+\def\addshowpglists{\directlua{
+   callback.add_to_callback("pre_shipout_filter", function(head)
+         require("nodetree").print(head)
+         return head
+      end, "showpglists") }}
+\gdef\removeshowpglists{\directlua{
+   callback.remove_from_callback("pre_shipout_filter", "showpglists") }}
+
+\def\showpglists #1 {\addto\showpgs{#1,}}
+\def\showpgs{,}
+
+\addto\_begoutput{%
+   \ea\isinlist\ea\showpgs\ea{\ea,\the\pageno,}\iftrue
+      \addshowpglists
+      \addto\_endoutput{\removeshowpglists}%
+   \fi
+}
+</pre>
+
+<p>The callback is registered in \_begoutput only if \the\pageno is in the page
+list \showpgs. Then it used in \_preshipout and unregistered in \_endoutput.
+
+<p CLASS=datum>(0063) -- P. O., 2021-07-03<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
