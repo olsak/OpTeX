@@ -410,11 +410,13 @@ local rule_id = node_id("rule")
 local glue_id = node_id("glue")
 local hlist_id = node_id("hlist")
 local vlist_id = node_id("vlist")
+local disc_id = node_id("disc")
 local token_getmacro = token.get_macro
 
 local direct = node.direct
 local todirect = direct.todirect
 local tonode = direct.tonode
+local getfield = direct.getfield
 local setfield = direct.setfield
 local getwhd = direct.getwhd
 local getid = direct.getid
@@ -515,6 +517,11 @@ local function colorize(head, current, current_stroke)
             local list = getlist(n)
             list, current, current_stroke = colorize(list, current, current_stroke)
             setlist(n, list)
+        elseif id == disc_id then
+            -- at this point only no-break (replace) list is of any interest
+            local replace = getfield(n, "replace")
+            replace, current, current_stroke = colorize(replace, current, current_stroke)
+            setfield(n, "replace", replace)
         else
             local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
