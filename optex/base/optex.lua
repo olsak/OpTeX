@@ -482,24 +482,20 @@ end
 local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
     if id == glyph_id then
         return true, false
-    end
-    if id == glue_id then
+    elseif id == glue_id then
         n = getleader(n)
-        if not n then
-            -- ordinary "space" glue
-            return false, false
-        else
+        if n then
             id = getid(n)
             if id == hlist_id or id == vlist_id then
                 -- leaders with hlist/vlist get single color
                 return true, false
+            else -- rule
+                -- stretchy leaders with rules are tricky,
+                -- just set both colors for safety
+                return true, true
             end
-            -- stretchy leaders with rules are tricky,
-            -- just set both colors for safety
-            return true, true
         end
-    end
-    if id == rule_id then -- normal or nested under leaders
+    elseif id == rule_id then
         local width, height, depth = getwhd(n)
         if width <= one_bp or height + depth <= one_bp then
             -- running (-2^30) may need both
