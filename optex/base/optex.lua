@@ -516,8 +516,10 @@ local function colorize(head, current, current_stroke)
         elseif id == disc_id then
             -- at this point only no-break (replace) list is of any interest
             local replace = getfield(n, "replace")
-            replace, current, current_stroke = colorize(replace, current, current_stroke)
-            setfield(n, "replace", replace)
+            if replace then
+                replace, current, current_stroke = colorize(replace, current, current_stroke)
+                setfield(n, "replace", replace)
+            end
         else
             local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
