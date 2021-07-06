@@ -1855,7 +1855,7 @@ the implementation is this splitting problem:
 \def\frcolor{.8 g } % light grey -- color of blocks.
 \pgbackground={%
    \slet{tmp}{frm:\the\pageno}
-   \ifx\tmp\relax \def\tmp{}\fi
+   \ifx\tmp\undefined \def\tmp{}\fi
    \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
    \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
    \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
