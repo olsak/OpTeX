@@ -406,7 +406,7 @@ for full version of such file. Then you can use it:
 </pre>
 
 <p>The letters are set as active but they can be used in \edef or \write
-withtout expanding them because their meanig is not macro but chardef
+without expanding them because their meanig is not macro but chardef
 constant.
 
 <p>We don't want to fall to the encodings hell. So, such encoding file is
@@ -782,10 +782,10 @@ parameter is read. The first ` is run after this parameter is completely read. I
 changes catcodes but nothing is read directly from file at this time, so 
 such catcode setting is ineffective.
 
-<p>We know that the usage of \code{...} is 100% working, but we must to escape
+<p>We know that the usage of \code{...} is 100% working, but we must escape
 each TeX sensitive character: \p{test: \code{\\relax x\~\&amp;} fin.}.
 
-<p>There exist a method how to "protect" the macro parameter without
+<p>There is a method for "protecting" the macro parameter without
 escaping the TeX sensitive characters. Use \verbi as a prefix before usage
 of the macro:
 
@@ -875,7 +875,7 @@ Finally, the text is printed in it.
 
 <p>which draws the curve from x0 y0 to x1 y1 ended by arrow spike. The part
 {cx0 cy0 cx1 cy1} can be empty, i. e. {}. The line is drawn in such case.
-The numbers {cx0 cy0 cx1 cy1} gives the control points of a Bézier curve. At
+The numbers {cx0 cy0 cx1 cy1} give the control points of a Bézier curve. At
 the end of the arrow is printed the "Text" shifted by dx1 dy1. The numbers
 cx0 cy0 cx1 cy1 x1 y1 are relative to the origin x0 y0. This origin is
 relative to the current typesetting point. All numbers are in bp units by
@@ -887,9 +887,9 @@ the arrow spike and you can redefine it.
 \vglue5cm
 \def\arrowccparams{1 0 0 rg 1 0 0 RG}  % red color is initialized
 
-Pokus \arrowcc 0 10 {-30 20 -30 50} 20 50 (3 -3) {Text 1}
-dále \arrowcc 0 -3 {} 40 -30 (3 -3) {Text 2}
-a ještě \arrowcc 0 2 {10 20 20 30} 40 40 (3 -2) {Text 3}.
+Test \arrowcc 0 10 {-30 20 -30 50} 20 50 (3 -3) {Text 1}
+more \arrowcc 0 -3 {} 40 -30 (3 -3) {Text 2}
+and more \arrowcc 0 2 {10 20 20 30} 40 40 (3 -2) {Text 3}.
 </pre>
 
 <p>creates:
@@ -929,8 +929,8 @@ simple and straightforward lua code.
 
 <p>The macro \rotcm takes vector (#3,#4)-(#1,#2) and prepares cm
 matrix data for rotation in the direction of given vector.
-The data are stored in \rotdata macro using \preparerotdata (for lines)
-or \preparedirection (for Bézier curves). Then the \rotdata is used inside
+The data is stored in \rotdata macro using \preparerotdata (for lines)
+or \preparedirection (for Bézier curves). Then \rotdata is used inside
 \pdfliteral parameter.
 
 <p CLASS=datum>(0037) -- P. O. 2021-02-05<p>
@@ -940,13 +940,13 @@ or \preparedirection (for Bézier curves). Then the \rotdata is used inside
 
 <p>We create a macro \circletext {radius}{angle}{TEXT}{correction} which
 prints TEXT around a circle with given radius. First letter of the TEXT
-starts at given angle. The fourth parameter declares a corrections between
+starts at given angle. The fourth parameter declares a correction between
 letter pairs because the standard kerning table is deactivated when printing
 around circle. The TEXT runs clockwise when the radius is positive (the
 center of the circle is below the letters). When the radius parameter is
 negative then TEXT runs anticlockwise and the center of the circle is above
 the letters. The macro creates a typesetting material with zero dimensions,
-the center of the circle is at the actual typesetting point. For example
+the center of the circle is at the current typesetting point. For example
 
 <p><IMG SRC="../img/uni-ukazka.png" ALT="Code blocks" border=0>
 
@@ -961,11 +961,11 @@ the center of the circle is at the actual typesetting point. For example
 
 <p>The fourth parameter correction can include the declaration of word space
 (using \spaceskip=...) and the space corrections between declared pairs of
-letters using \kpcirc AB{num}: the \kern num (in em units) is inserted
-between each pair of letters AB. Note that the example includes the
-"composed object" $\bullet$. Such object must be enclosed by braces.
+letters using \kpcirc AB{num}: \kern num (in em units) is inserted
+between each pair of letters AB. Note that the example includes a
+"composed object" – $\bullet$. Such object must be enclosed by braces.
 
-<p>The letterspacing can be set by \def\circletextS{\kern value}. The zero
+<p>Letterspacing can be set by \def\circletextS{\kern value}. No
 letterspacing is set by default.
 
 <p>The \circletext macro can be defined by
@@ -1006,9 +1006,9 @@ converts such length to the angular measure in degrees.
 
 <h2><a name="ignoreinspic"></a>Ignoring pictures when \inspic is processed</h2>
 
-<p>Pictures may take more size in the resulting PDF. We can want to disable their
-loading when a draft of our document is created. Or we can want to sent the
-source code to a colleague to experimenting with it but without picture
+<p>Pictures may take more size in the resulting PDF. We may want to disable their
+loading when a draft of our document is created. Or we may want to sent the
+source code to a colleague for experimenting, but without picture
 files. Both cases can be solve by \ignoreinspic macro. When it is used at the
 beginning of the document then all pictures loaded by \inspic have following
 features:
@@ -1024,8 +1024,8 @@ The real picture is not embedded to the PDF file, so the file keeps its small si
 a non-existent image are taken from \nopicw and \nopicratio macros. The
 \nopicw gives the natural width and the \nopicratio gives the ratio
 width/height. The real sizes are calculated from \picwidth, \picheight and
-the virtual natural sizes (as \inspic normally does it) and the gray rectangle is
-printed. The "NONE: file-name" is appended, where the file-name is the non
+the virtual natural sizes (as \inspic normally does it) and a gray rectangle is
+printed. The text "NONE: file-name" is appended, where the file-name is the non
 existent picture file name given by the argument of \inspic.
 </ul>
 
@@ -1054,11 +1054,11 @@ existent picture file name given by the argument of \inspic.
 
 <p>
 The internal \_inspicB macro is re-defined when \ingnoreinspic is used.
-It loads the image by orginal \inspic to the box0 and use only its
-dimensions. The contents of box0 is thrown away when the group is leaved.
+It loads the image to box0 (using the orginal \inspic macro) and uses only its
+dimensions. The contents of box0 is thrown away when the group is left.
 Note, that \inspic starts with \hbox\bgroup, so the final \egroup leaves its
-group. When the file does not exists then a more calculaton is done and the
-box0 is constructed with given dimensions.
+group. When the file does not exists then more calculatons are done and
+box0 is constructed with calculated dimensions.
 
 <p CLASS=datum>(0053) -- P. O. 2021-04-04<p>
 <hr>
@@ -1073,10 +1073,10 @@ is loaded too. The single font includes more math alphabets together: math
 italics, roman, calligraphic, fractur, greek letters, bbchars etc.
 
 <p>Maybe, your opinion about ideal black board letters (\bbchar's) is
-influneced by traditional AMS fonts and it is different than the opinion of
+influneced by the traditional AMS fonts and it is different than the opinion of
 font designer of the used Unicode math font (Latin Modern math font is
-typical example of this case). Then you can return to the AMS \bbchars by
-following code used <i>after</i> first the \fontfam[] command 
+typical example of this case). Then you can return to the AMS \bbchars
+using the following code <i>after</i> the first \fontfam[] command
 loads the Unicode math font.
 
 <pre>
@@ -1090,19 +1090,19 @@ in order to load 8 bit version of math fonts as family 5 (5 is the
 first unused math family when Unicode math font is loaded). 
 Then we re-define \bbchar macro as
 family5 selector and mathcodes of letters must be "normal" (not Unicoded) 
-when this 8bit font is used (this is done by \_rmvariables macro).
+when this 8bit font is used (this is done by the \_rmvariables macro).
 
 <p CLASS=datum>(0001) -- P. O. 2020-04-09<p>
 <hr>
 
 <h2><a name="matrixx"></a>More comfortable writing of matrices</h2>
 
-<p>It is quite strenuous to put the characters &amp; between every item in
-the matrix. In particular, when we are writing a huge amount of matrices.
-But we can simplify our writing (and reading the source text too) by 
+<p>It is quite strenuous to put the characters &amp; between every item of
+a matrix. In particular, when we are writing a huge amount of matrices.
+But we can simplify our writing (and reading of the source text too) using the
 \replstring macro. We create the \x macro which can be used as a prefix
-before \matrix, \pmatrix etc. macros. If it is used then user can write
-spaces instead &amp; characters.
+before macros such as \matrix and \pmatrix. If it is used then user can write
+spaces instead of ampersands.
 
 <pre>
 \def\x#1#2{\def\tmpb{#2}\replstring\tmpb{ }{&}\_ea#1\_ea{\tmpb}}
@@ -1120,16 +1120,16 @@ $$
 
 <p>Sometimes we need to typeset something like f(b+((c+d)(e+f))\cdot g)
 and we want to set outer parentheses bigger than the inner ones because this
-is traditional typographical rule. We can write
+is a traditional typographical rule. We can write
 $f\Bigl(b+\bigl((c+d)(e+f)\bigr)\cdot g\Bigl)$
-in our TeX source but this makes the source less clear. The macro \biglr
-defined here is able to set such task automatically. you can write:
+in our TeX source, but this makes the source less clear. The macro \biglr
+defined here is able to do such a task automatically. You can write:
 
 <pre>
 $\biglr f(b+((c+d)(e+f))\cdot g) \biglr$
 </pre>
 
-<p>All material between the couple of \biglr is scaned by TeX and the
+<p>All material between the \biglr pair is scanned by TeX and the
 appropriate \bigl, \bigr, \Bigl etc. are added before parentheses ()
 automatically.
 
@@ -1167,7 +1167,7 @@ one. Sometimes you want to use only text fonts in both cases. Suppose that
 you have a text font without visually compatible math font. Then you may
 want to use a-z, A-Z, 0-9 and some other characters from text font in math
 mode instead from math font. The following trick does this (compare
-the mathastext.sty package used in LaTeX).
+this with the mathastext.sty package used in LaTeX).
 
 <p>We assume that the Unicode math font is loaded already and now, we want
 to typeset characters mentioned above from text font in math mode. Try this:
@@ -1203,7 +1203,7 @@ Heros in text, 13, but $Termes-math, 13$. It is visually incompatible.
 
 % Characters !?*,.:;+-=()[]/&lt;&gt| are printed from math family 5, i.e. normal text font
 \textcharsinmath !5 ?5 *2 ,6 .0 :6 ;6 +2 −2 =3 (4 )5 [4 ]5 /0 &lt;3 &gt;3 |0 .\end
-\Umathcode `- = 2 5 "2212   % Minus in math mode creted by hyphen character
+\Umathcode `- = 2 5 "2212   % Minus in math mode created by the hyphen character
 \Umathcode `\{ = 4 5 `\{    % \{ and \} must have mathcode from fam 5
 \Umathcode `\} = 5 5 `\}
 \Udelcode  `\{ = 1 `\{      % and delcode from fam 1 (math font)
@@ -1216,7 +1216,7 @@ Heros in text and in math: $Heros-math: 13, M = -(3!) + y_5$.
 
 <p>The code above reloads the same Unicode math font but moreover, it loads the currently
 used \rm and \it text fonts as math family 5 and 6. The digits are rendered
-from family 5 and variables from family 6 instead from the math fonts. The
+from family 5 and variables from family 6 instead of from the math fonts. The
 characters specified by \textcharsinmath, i.e. ! ? * , . : + - = ( ) [ ] &lt;
 &gt; | \{ and \}, are printed from family 5 too.
 Other math symbols are printed from original Unicode math font.
