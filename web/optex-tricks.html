@@ -62,7 +62,6 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
 <li> \colordef does colors mixing.
 <li> \morecolors reads color names from xcolor package.
-<li> Footnotes has their own color stack.
 <li> \transformbox applies linear transformations.
 <li> \oval, \circle create colored oval or circle around text.
 <li> \clipinoval, \clipincircle declare clipping path for images.
@@ -1259,9 +1258,9 @@ the first item in the cell data is color switcher then this color is used
 for the background of the cell. For example:
 
 <pre>
-   ... &amp; \Blue Text &amp;        ... % blue background and black text 
-   ... &amp; \Green \Red  Text &amp; ... % green background and red text 
-   ... &amp; \relax \Blue Text &amp; ... % blue text and default background 
+   ... &amp; \Blue Text &amp;        ... % blue background and black text
+   ... &amp; \Green \Red  Text &amp; ... % green background and red text
+   ... &amp; \relax \Blue Text &amp; ... % blue text and default background
 </pre>
 
 <p>The color of the background will stretch as spaces in the common cells in
@@ -1281,8 +1280,8 @@ you can insert the white space between lines by \noalign{\kern...}. Example:
             \tabstrut={\lower4pt\vbox to15pt{}}        % lines dimensions
             \tabskip=2pt \everycr={\noalign{\kern2pt}} % spaces between cells
             \let\cellcolor=\Yellow % default background color
-           } 
-\table{clr}{first item      &amp; second &amp; \Blue \White third item \cr 
+           }
+\table{clr}{first item      &amp; second &amp; \Blue \White third item \cr
             next long item  &amp; \Red X &amp; \Green       YES }
 </pre>
 
@@ -1290,55 +1289,55 @@ creates the table:
 
 <p><IMG SRC="../img/tab4-ukazka.png" ALT="Table example" border=0>
 
-<p>Implementation: 
+<p>Implementation:
 
 <pre>
-\def\tabdC{\futurelet\next\setcellcolor##\end\hfil\hfil} 
-\def\tabdL{\futurelet\next\setcellcolor##\end\relax\hfil} 
+\def\tabdC{\futurelet\next\setcellcolor##\end\hfil\hfil}
+\def\tabdL{\futurelet\next\setcellcolor##\end\relax\hfil}
 \def\tabdR{\futurelet\next\setcellcolor##\end\hfil\relax}
 \def\tabdP#1{\futurelet\next\setcellcolor##\end\vtop
     {\hsize=#1\relax \baselineskip=\normalbaselineskip
      \lineskiplimit=0pt \noindent\tmp\_unsskip\lower\dp\_tstrutbox\hbox{}}}
 \def\colortab{\tablinespace=0pt \let\_paramtabdeclarep=\tabdP
-   \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdL}
+   \let\_tabdeclarec=\tabdC \let\_tabdeclarel=\tabdL \_let\_tabdeclarer=\tabdR}
 \def\setcellcolor{%
-   \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi} 
-\def\setcellcolorC\_setcolor#1#2\end#3#4{% 
-   \ifx#3\vtop \def\tmp{#2}%
-      \setbox0=\hbox{\the\tabiteml\vtop{\localcolor#4}\the\tabitemr}%
-      \the\tabstrut {\localcolor\_setcolor{#1}\vrule width\wd0}\kern-\wd0 \box0
+   \ifx\next\_setcolor \expandafter\setcellcolorC\else \expandafter\setcellcolorD\fi}
+\def\setcellcolorC\_setcolor#1#2#3#4\end#5#6{%
+   \ifx#5\vtop \def\tmp{#4}%
+      \setbox0=\hbox{\the\tabiteml\vtop{\localcolor#6}\the\tabitemr}%
+      \the\tabstrut {\localcolor\_setcolor{#1}{#2}{#3}\vrule width\wd0}\kern-\wd0 \box0
    \else
-      \setbox0=\hbox{{\the\tabiteml\localcolor#2\_unsskip\the\tabitemr}}% 
-      {\localcolor\_setcolor{#1}%
-       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#3\hfil plus1fil\fi}% 
-      \kern-\wd0 \box0 
-      \ifx#4\hfil 
-      {\kern-.2pt \localcolor\_setcolor{#1}\leaders\vrule\hskip.2pt plus1fil}\fi
-   \fi 
-} 
-\def\setcellcolorD{\ifx\cellcolor\undefined \let\next=\setcellcolorN 
-   \else \def\next{\_ea\_ea\_ea\setcellcolorC\cellcolor}% 
-   \fi \next 
-} 
-\def\setcellcolorN#1\end#2#3{#2\tabiteml{\localcolor#1\unskip}\tabitemr#3}
+      \setbox0=\hbox{\the\tabiteml\localcolor#4\_unsskip\the\tabitemr}%
+      {\localcolor\_setcolor{#1}{#2}{#3}%
+       \the\tabstrut\leaders\vrule\hskip\wd0 \ifx#5\hfil plus1fil\fi}%
+      \kern-\wd0 \box0
+      \ifx#6\hfil
+      {\kern-.3bp \localcolor\_setcolor{#1}{#2}{#3}\leaders\vrule\hskip.3bp plus1fil}\fi
+   \fi
+}
+\def\setcellcolorD{\ifx\cellcolor\undefined \let\next=\setcellcolorN
+   \else \def\next{\_ea\_ea\_ea\setcellcolorC\cellcolor}%
+   \fi \next
+}
+\def\setcellcolorN#1\end#2#3{#2\the\tabiteml{\localcolor#1\unskip}\the\tabitemr#3}
 
-\def\multispanc#1#2#3{\multispan{#1}% 
-   \_ea\_ea\_ea\cellcolexp#2#3\end\hfil\hfil\ignorespaces} 
-\def\cellcolexp{\futurelet\next\setcellcolor} 
+\def\multispanc#1#2#3{\multispan{#1}%
+   \_ea\_ea\_ea\cellcolexp#2#3\end\hfil\hfil\ignorespaces}
+\def\cellcolexp{\futurelet\next\setcellcolor}
 </pre>
 
 <p>The \setcellcolor macro scans the first token from the cell data. The
 macro works in declaration part of the \halign, so the first token is
 scanned as the first unexpandable token after expansion. This token is
 \_setcolor when color macro is presented here. If this is true then the
-\setcellcolorC macro is executed, #1 is the \_setcolor parameter
-#2 is the text of the item, #3 and #4 include the
-message about the align style. This macro measures the cell text in the box0
-and does the colored backround by \leaders. If the first token isn't \global
-then the macro \setcellcolorD decides if the \cellcolor is defined. If it is
-true then \setcellcolorC is execuded (with patrially expanded \cellcolor as
-parameter). Else the \setcellcolorN is executed. This macro prints no
-background.
+\setcellcolorC macro is executed, #1, #2 and #3 are the \_setcolor parameters
+#4 is the text of the item, #5 and #6 decide the
+align style. This macro measures the cell text in the box0
+and does the colored background using \leaders. If the first token isn't \_setcolor
+then the macro \setcellcolorD decides if \cellcolor is defined. If it is
+true then \setcellcolorC is execuded (with partially expanded \cellcolor as
+parameter). Else \setcellcolorN is executed. This macro doesn't print
+any background.
 
 <p>The \multispanc Num \Color {text} can be used for multispan cells, see
 <a href="http://petr.olsak.net/opmac-tricks-e.html#multispanc">OPmac trick 103</a>.
