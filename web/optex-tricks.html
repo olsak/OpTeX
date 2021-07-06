@@ -1332,14 +1332,14 @@ creates the table:
 macro works in declaration part of the \halign, so the first token is
 scanned as the first unexpandable token after expansion. This token is
 \_setcolor when color macro is presented here. If this is true then the
-\setcellcolorC macro is executed, #1 is the \_setcolor parameter
-#2 is the text of the item, #3 and #4 include the
-message about the align style. This macro measures the cell text in the box0
-and does the colored backround by \leaders. If the first token isn't \global
-then the macro \setcellcolorD decides if the \cellcolor is defined. If it is
-true then \setcellcolorC is execuded (with patrially expanded \cellcolor as
-parameter). Else the \setcellcolorN is executed. This macro prints no
-background.
+\setcellcolorC macro is executed, #1, #2 and #3 are the \_setcolor parameters
+#4 is the text of the item, #5 and #6 decide the
+align style. This macro measures the cell text in the box0
+and does the colored background using \leaders. If the first token isn't \_setcolor
+then the macro \setcellcolorD decides if \cellcolor is defined. If it is
+true then \setcellcolorC is execuded (with partially expanded \cellcolor as
+parameter). Else \setcellcolorN is executed. This macro doesn't print
+any background.
 
 <p>The \multispanc Num \Color {text} can be used for multispan cells, see
 <a href="http://petr.olsak.net/opmac-tricks-e.html#multispanc">OPmac trick 103</a>.
