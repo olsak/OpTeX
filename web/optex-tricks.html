@@ -752,7 +752,7 @@ We can redefine the \_printinverbatim macro in order to do it:
 \def\_printinverbatim#1{%
    \ovalparams{\lwidth=0pt \lcolor=\LightGrey \fcolor=\LightGrey}%
    \inoval{\setbox0=\hbox{#1}\ht0=1.35ex \dp0=.15ex \box0}}
-\activettchar`
+\verbchar`
 
 This `text` is printed as a `code&amp; {block}`.
 </pre>
@@ -772,7 +772,7 @@ the constant values in order all ovals have the same height plus depth.
 
 <pre>
 \def\p#1{print: "#1"}
-\activettchar`
+\verbchar`
 
 \p{test: `\relax x~&amp;` fin.} % error (misplaced align tab)
 </pre>
@@ -796,7 +796,7 @@ of the macro:
 \def\verbC{\catcode`\\=12 \catcode`\#=12 \catcode`\%=12 }
 \def\verbG#1{\endgroup \tmp{\scantextokens{#1}}}
 
-\activettchar`
+\verbchar`
 \def\p#1{print: "#1"}
 
 \verbi\p{aha `\relax!@#$%^&amp; uff~` mluff}
@@ -3160,7 +3160,7 @@ structure of outlines is prepared too.
 <p>The following code creates a clickable navigation bar for selecting
 pages/slides in \slides style. You can insert it to the file
 <tt>op-slides.tex</tt> (between lines \backgroundpic{op-slides-bg.png}
-and \activettchar` and try it. You must process the document by OpTeX twice.
+and \verbchar` and try it. You must process the document by OpTeX twice.
 
 <pre>
 \pgbackground={\vbox to0pt{\_copy\_bgbox\_vss}
