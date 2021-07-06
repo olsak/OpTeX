@@ -3404,16 +3404,16 @@ released versions and xyz5 for patched versions. You can use it in the context
 
 <h2><a name="diff"></a>Showing differences between versions of the document</h2>
 
-<p>If we have two versions of the same document: document-old.tex and
-document-new.tex, then we can print document-new.tex with colorized parts of
-the text, which is new in this new verison of the document. Define:
+<p>Suppose we have two versions of the same document: document-old.tex and
+document-new.tex. We can print document-new.tex with the added/changed parts
+colorized. Define:
 
 <pre>
 \def\diffstart/{{\nolocalcolor\Red}}
 \def\diffstop/{{\nolocalcolor\Black}}
 
-\regmacro {\def\diffstart/{}\def\diffstop{}} 
-          {\def\diffstart/{}\def\diffstop{}}  
+\regmacro {\def\diffstart/{}\def\diffstop{}}
+          {\def\diffstart/{}\def\diffstop{}}
           {\def\diffstart/{}\def\diffstop{}}
 </pre>
 
@@ -3425,22 +3425,22 @@ wdiff -1 --start-insert='\diffstart/' --end-insert='\diffstop/' \
 optex diff.tex
 </pre>
 
-<p>The resulting PDF have the new phrases in red color. 
+<p>The resulting PDF will have the new phrases typeset in red color.
 
-<p>Because we are using \localcolor by default and we set these two
-colors as \nolocalcolor, then there can be little problems. But most cases are
-solved good. Moreover, it is simple and effective.
+<p>Because \localcolor is the default and we set these two
+colors as \nolocalcolor, then there can be problems. But most cases will
+work just fine. Moreover this solution is simple and effective.
 
-<p>Only new texts are highigted without any change of formatting the
-document. If you need to see colored deleted texts, then you can show it 
-on the ANSI terminal:
+<p>Only new texts are highigted without any change of formatting of the
+document. If you need to see colored deleted texts, then you can view them
+on your ANSI terminal by using:
 
 <pre>
 wdiff -n -w $'\033[30;41m' -x $'\033[0m' -y $'\033[30;42m' -z $'\033[0m' \
       document-old.tex document-new.tex | less -R
 </pre>
 
-<p>This trick was inspired from an idea by Daniel Gromada. 
+<p>This trick was inspired by an idea from Daniel Gromada.
 He suggested it for the OPmac tricks set.
 
 <p CLASS=datum>(0014) -- P. O., D. G. 2020-05-17<p>
