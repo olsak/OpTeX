@@ -558,6 +558,39 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     return tonode(list)
 end, "_colors")
 --
+--
+local function create_pre_shipout_injector(attribute, default, namespace)
+    local current
+    local function injector(head)
+        for n, id, subtype in traverse(head) do
+            if id == hlist_id or id == vlist_id then
+                -- nested list, just recurse
+                setlist(n, injector(getlist(n)))
+            elseif id == disc_id then
+                -- only replace part is interesting at this point
+                local replace = getfield(n, "replace")
+                if replace then
+                    setfield(n, "replace", injector(replace))
+                end
+            elseif id == glyph_id or id == rule_id
+                    or (id == glue_id and getleader(n)) then
+                local new = getattribute(n, attribute) or 0
+                if new ~= current then
+                    local literal = token_getmacro(namespace..new)
+                    head = insertbefore(head, n, pdfliteral(literal))
+                    current = new
+                end
+            end
+        end
+        return head
+    end
+
+    return function(list)
+        current = default
+        return tonode(injector(todirect(list)))
+    end
+end
+--
 -- We also hook into `luaotfload`'s handling of color. Instead of the default
 -- behavior (inserting colorstack whatsits) we set our own attribute. The hook
 -- has to be registered {\em after} `luaotfload` is loaded.
