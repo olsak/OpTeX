@@ -94,6 +94,31 @@
 \_sdef{_color:0}{0 g}
 \_sdef{_color-s:0}{0 G}
 
+\_def\_setextgstate{%
+   \_pdfobj reserveobjnum
+   \_xdef\_ExtGStatesobj{\_the\_pdflastobj}%
+   \_glet\_setextgstate\_relax
+   \_expanded{\_global\_pdfpageresources{/ExtGState \_ExtGStatesobj\_space 0 R}}%
+}
+\_addto\_begoutput{\_setextgstate}
+\_addto\_byehook{\_immediate\_pdfobj useobjnum\_ExtGStatesobj {<<\_ExtGStates>>}}
+
+\_newattribute \_transpattr
+\_newcount \_transpcnt \_transpcnt=1 % allocations start at 1
+\_def\_transparency#1{\_transpattr=
+   \_ifcsname _transp::#1\_endcsname \_lastnamedcs\_relax \_else
+      \_transpcnt
+      \_sxdef{_transp::#1}{\_the\_transpcnt}%
+      \_sxdef{_transp:\_the\_transpcnt}{/Tr\_the\_transpcnt\_space gs}%
+      \_global\_ea\_addto\_ea\_ExtGStates\_ea{\_expanded{ /Tr\_the\_transpcnt <</ca #1 /CA #1>>}}%
+      \_incr \_transpcnt
+   \_fi
+}
+% Transparency of "1" is the default
+\_sdef{_transp::1}{0}
+\_sdef{_transp:0}{/Tr0 gs}
+\_def\_ExtGStates{/Tr0 <</ca 1 /CA 1>>}%
+
    \_doc -----------------------------
    We support concept of non-local color, i.e. all changes of the color
    attribute are global by setting \`\_colorprefix` to `\global`.
