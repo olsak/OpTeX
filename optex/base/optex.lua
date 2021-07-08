@@ -597,6 +597,12 @@ callback.add_to_callback(
     "_transp"
 )
 --
+callback.add_to_callback(
+    "pre_shipout_filter",
+    create_pre_shipout_injector(registernumber("_fntoutattr"), 0, "_fntout:"),
+    "_fntout"
+)
+--
 -- We also hook into `luaotfload`'s handling of color. Instead of the default
 -- behavior (inserting colorstack whatsits) we set our own attribute. The hook
 -- has to be registered {\em after} `luaotfload` is loaded.

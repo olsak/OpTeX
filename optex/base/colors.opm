@@ -119,6 +119,18 @@
 \_sdef{_transp:0}{/Tr0 gs}
 \_def\_ExtGStates{/Tr0 <</ca 1 /CA 1>>}%
 
+\_newattribute \_fntoutattr
+\_newcount \_fntoutcnt \_fntoutcnt=1 % allocations start at 1
+\_def\_outlinefont#1{\_fntoutattr=
+   \_ifcsname _fntout::#1\_endcsname \_lastnamedcs\_relax \_else
+      \_fntoutcnt
+      \_sxdef{_fntout::#1}{\_the\_fntoutcnt}%
+      \_sxdef{_fntout:\_the\_fntoutcnt}{#1 w 1 Tr}%
+      \_incr \_fntoutcnt
+   \_fi
+}
+\_sdef{_fntout:0}{0 w 0 Tr}
+
    \_doc -----------------------------
    We support concept of non-local color, i.e. all changes of the color
    attribute are global by setting \`\_colorprefix` to `\global`.
