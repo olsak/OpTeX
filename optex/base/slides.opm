@@ -53,19 +53,20 @@
    \_doc -----------------------------
    The \`\pshow``<num>` prints the text in invisible
    (transparent) font when \^`\layernum`\code{<}`<num>`.
-   The transparency is set by `\pdfpageresoyrces` primitive.
+   For transparency we need to define special graphics states.
    \_cod -----------------------------
 
-\pdfpageresources{/ExtGState << /Invisible << /Type /ExtGState /ca 0 /CA 0 >>
-                                /Visible   << /Type /ExtGState /ca 1 /CA 1 >> >>}
-\addto\_morepgresources{/Invisible << /Type /ExtGState /ca 0 /CA 0 >>
-                        /Visible   << /Type /ExtGState /ca 1 /CA 1 >>}
-\def\Invisible {\_pdfliteral{/Invisible gs}}
-\def\Visible   {\_pdfliteral{/Visible gs}}
-\def\Transparent {\Invisible \_aftergroup \Visible}
+\_addextgstate{/Invisible <</ca 0 /CA 0>>}
+\_addextgstate  {/Visible <</ca 1 /CA 1>>}
+
+\_def\_Invisible   {\_pdfliteral{/Invisible gs}}
+\_def\_Visible     {\_pdfliteral{/Visible gs}}
+\_def\_Transparent {\_Invisible \_aftergroup \_Visible}
+
+\_public \Invisible \Visible \Transparent ;
 
 \_def\_use#1#2{\_ifnum\_layernum#1\_relax#2\_fi}
-\_def\_pshow#1{\_use{=#1}\Red \_use{<#1}\Transparent \_ignorespaces}
+\_def\_pshow#1{\_use{=#1}\Red \_use{<#1}\_Transparent \_ignorespaces}
 
    \_doc -----------------------------
    The main level list of items is activated here. The `\_item:X` and
