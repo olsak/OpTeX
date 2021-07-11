@@ -1413,18 +1413,18 @@ If \^`\onlyrgb` is set then \^`\colordef` works like \^`\rgbcolordef`.
    \setbox0=\hbox{#2#3}\leavevmode
    \rlap{#1\strut \vrule width\wd0}\box0
 }
-The following example defines the macro for the
-\coloron\Yellow\Brown{colored text on the colored background}. Usage:
+The following example defines the macro for
+\coloron\Yellow\Brown{colored text on colored background}. Usage:
 `\coloron<background><foreground>{<text>}`
 
-The `\coloron` can be defined as follows:
+The `\coloron` macro can be defined as follows:
 
 \begtt
 \def\coloron#1#2#3{%
    \setbox0=\hbox{#2#3}%
    \leavevmode \rlap{#1\strut \vrule width\wd0}\box0
 }
-\coloron\Yellow\Brown{The brown text on the yellow background}
+\coloron\Yellow\Brown{Brown text on yellow background}
 \endtt
 
 \secc Images

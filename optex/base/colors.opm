@@ -94,44 +94,6 @@
 \_sdef{_color:0}{0 g}
 \_sdef{_color-s:0}{0 G}
 
-% first initialize page resources, then execute new meaning of itself
-\_def\_addextgstate#1{\_initpageresources \_addextgstate{#1}}
-
-\_newattribute \_transpattr
-\_newcount \_transpcnt \_transpcnt=1 % allocations start at 1
-\_def\_transparency#1{\_inittransparency \_transpattr=
-   \_ifcsname _transp::#1\_endcsname \_lastnamedcs\_relax \_else
-      \_transpcnt
-      \_sxdef{_transp::#1}{\_the\_transpcnt}%
-      \_sxdef{_transp:\_the\_transpcnt}{/Tr\_the\_transpcnt\_space gs}%
-      \_addextgstate{/Tr\_the\_transpcnt <</ca #1 /CA #1>>}%
-      \_incr \_transpcnt
-   \_fi
-}
-% Transparency of "1" is the default
-\_sdef{_transp::1}{0}
-\_sdef{_transp:0}{/Tr0 gs}
-\_def\_inittransparency{%
-   \_addextgstate{/Tr0 <</ca 1 /CA 1>>}%
-   \_glet\_inittransparency=\_relax
-}
-
-\_public \transparency ;
-
-\_newattribute \_fntoutattr
-\_newcount \_fntoutcnt \_fntoutcnt=1 % allocations start at 1
-\_def\_outlinefont#1{\_fntoutattr=
-   \_ifcsname _fntout::#1\_endcsname \_lastnamedcs\_relax \_else
-      \_fntoutcnt
-      \_sxdef{_fntout::#1}{\_the\_fntoutcnt}%
-      \_sxdef{_fntout:\_the\_fntoutcnt}{#1 w 1 Tr}%
-      \_incr \_fntoutcnt
-   \_fi
-}
-\_sdef{_fntout:0}{0 w 0 Tr}
-
-\_public \outlinefont ;
-
    \_doc -----------------------------
    We support concept of non-local color, i.e. all changes of the color
    attribute are global by setting \`\_colorprefix` to `\global`.
@@ -358,30 +320,26 @@ PDF.
 
 \TeX/ itself has no concept of colors. Colors have always been handled by
 inserting whatsits (either using `\special` for DVI or using
-`\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient way of doing
-it, \TeX/ doesn't have to know anything about colors, it just inserts the
-relevant literals when doing `\shipout`. However, it is also problematic in
-many ways.
+`\pdfliteral`/`\pdfcolorstack` for PDF). It is very efficient and \TeX/ doesn't
+even have to know anything about colors, but it is also problematic in many
+ways.
 
-This is reason we decide to change colors handling from `\pdfcolorstack` to
-\LuaTeX/ attributes in version 1.04 of \OpTeX. Using attributes, the color
-setting looks exacly like font selection from \TeX/ point of view: it
-respects \TeX/ groups, colors can span to more pages, independent colors
-can be set for in all `\insert`s. Moreover, once a material is typeset
-(using `\setbox` for example) then it has its fonts and its colors
-definitelly set and you can rely on it when you are using `\unhbox` etc.\
-operations. There are no internal whatsits for colors which can interferre
-with other typesetting material.
+That is the reason why we decided to change color handling from
+`\pdfcolorstack` to \LuaTeX/ attributes in version 1.04 of \OpTeX. Using
+attributes, the color setting behaves exactly like font selection from \TeX/
+point of view: it respects \TeX/ groups, colors can span more pages,
+independent colors can be set for `\insert`s, etc. Moreover, once a material is
+created (using `\setbox` for example) then it has its fonts and its colors
+frozen and you can rely on it when you are using e.g. `\unhbox`. There are no
+internal whatsits for colors which can interfere with other typesetting
+material. In the end something like setting text to red (`{\Red text}`) should
+have the same nice behavior like setting text to bold (`{\bf text}`).
 
-The \LuaTeX/ attributes can be set like other register settings and after
-such a setting, their values are bound to essentially everything \TeX/ creates
-(characters, rules, glues, \dots).
-We use one attribute \^`\_colorattr` for information of currently selected
-color. Setting a color means only to set appropriate value to this attribute.
-The value is propagated to each created typesetting element until the attribute
-is unset or set to another value. So, setting the attribute behaves exactly
-like selecting the font. You can use `{\bf text}` to have text in bold and
-`{\Red text}` to have text in red.
+\LuaTeX/ attributes can be set like count register -- one attribute holds one
+number at a time. But the value of attribute is propagated to each created
+typesetting element until the attribute is unset or set to another value. Very
+much like the font property. We use one attribute \^`\_colorattr` for storing
+the currently selected color (in number form).
 
 Macros \^`\setcmykcolor``{<C> <M> <Y> <K>}` or \^`\setrgbcolor``{<R> <G> <B>}`
 or\nl \^`\setgreycolor``{<Grey>}` are used in color selectors. These
