@@ -404,7 +404,7 @@ callback.add_to_callback("input_level_string",
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
 -- inject PDF literals according to attributes.
 --
-local node_id, node_subtype = node.id, node.subtype
+local node_id = node.id
 local glyph_id = node_id("glyph")
 local rule_id = node_id("rule")
 local glue_id = node_id("glue")
