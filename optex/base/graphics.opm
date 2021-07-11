@@ -314,7 +314,7 @@
 \_public \inoval \incircle \ratio \lwidth \fcolor \lcolor \shadow \overlapmargins ;
 
    \_doc -----------------------------
-   Just before defining shadows, which require special graphics states), we
+   Just before defining shadows, which require special graphics states, we
    define means for managing these graphics states. This is important, because
    otherwise our use of `\pdfpageresources` register might clash with other
    packages (TikZ) or even with our other usage (slides).
