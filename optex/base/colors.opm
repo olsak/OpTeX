@@ -68,22 +68,22 @@
    This work is done by the \`\_translatecolor` macro. The following mapping
    macros are created:
    \begtt \catcode`<=13
-   \_color:<data> <fill-op>     ... expands to used <attribute-value>
+   \_color::<data> <fill-op>    ... expands to used <attribute-value>
    \_color:<attribute-value>    ... expands to <data> <fill-op>
    \_color-s:<attribute-value>  ... expands to <data> <stroke-op>
    \endtt
    The \`\_resetcolor` un-sets the color attribute, it means that default
-   color (black) is used.
+   color (black) shall be used.
    \_cod -----------------------------
 
 \_newattribute \_colorattr
 \_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
 \_protected\_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
 \_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF }
-\_def\_translatecolor#1#2#3{\_ifcsname _color:#1 #2\_endcsname\_lastnamedcs\_relax
+\_def\_translatecolor#1#2#3{\_ifcsname _color::#1 #2\_endcsname\_lastnamedcs\_relax
    \_else
       \_colorcnt
-      \_sxdef{_color:#1 #2}{\_the\_colorcnt}%
+      \_sxdef{_color::#1 #2}{\_the\_colorcnt}%
       \_sxdef{_color:\_the\_colorcnt}{#1 #2}%
       \_sxdef{_color-s:\_the\_colorcnt}{#1 #3}%
       \_incr \_colorcnt
