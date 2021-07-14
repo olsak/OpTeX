@@ -98,6 +98,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#emoji">Emoji characters used directly in text</a>
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
     <li><a href="#ul">Marking parts of text</a>
+    <li><a href="#attreffects">Font effects using attributes</a>
 </ul>
 
 <li>Lists
@@ -440,9 +441,204 @@ without any change in OpTeX:
 <li>Background colored (splitabble to more lines) text by
     <a href="http://petr.olsak.net/opmac-tricks-e.html#coltext">OPmac trick 0085</a>
     can be printed. Use \coltext\ColorA\ColorB{text}.
+<li>See also the following trick <a href="#attreffects">(OpTeX trick 0064)</a>
+    for information about achieving font effects with LuaTeX attributes.
 </ul>
 
 <p CLASS=datum>(0044) -- P. O. 2021-02-08<p>
+<hr>
+
+<h2><a name="attreffects"></a>Font effects using attributes</h2>
+
+<p>Setting of color is based on attributes in OpTeX v1.04+. We can use similar
+mechanism to achieve other font/rule effects, with different PDF graphics
+operators. For example we can achieve transparency or font outlines this
+way:</p>
+
+<pre>
+Normal, {\transparency{.5} half transparent,
+\Red{\transparency{.2}red and more transparent,} back to half,} back to normal.
+
+Normal, {\outlinefont{.15}outlined}, {\outlinefont{.3}more outlined}.
+</pre>
+
+<p>which produces:</p>
+
+<img src="../img/attreffects.png" alt="Text with transparency and outlines" border=0>
+
+<p>To achieve these effects we must first introduce a Lua mechanism:</p>
+
+<pre>
+\directlua{
+local node_id  = node.id
+local glyph_id = node_id("glyph")
+local rule_id  = node_id("rule")
+local glue_id  = node_id("glue")
+local hlist_id = node_id("hlist")
+local vlist_id = node_id("vlist")
+local disc_id  = node_id("disc")
+
+local direct       = node.direct
+local todirect     = direct.todirect
+local tonode       = direct.tonode
+local getfield     = direct.getfield
+local setfield     = direct.setfield
+local getlist      = direct.getlist
+local setlist      = direct.setlist
+local getleader    = direct.getleader
+local getattribute = direct.get_attribute
+local insertbefore = direct.insert_before
+local copy         = direct.copy
+local traverse     = direct.traverse
+
+local token_getmacro = token.get_macro
+
+local pdfliteral = optex.directpdfliteral
+
+function register_pre_shipout_injector(name, attribute_name, namespace, default)
+    local current
+    local default = default or 0
+    local attribute = assert(registernumber(attribute_name))
+    local function injector(head)
+        for n, id, subtype in traverse(head) do
+            if id == hlist_id or id == vlist_id then
+                % nested list, just recurse
+                setlist(n, injector(getlist(n)))
+            elseif id == disc_id then
+                % only replace part is interesting at this point
+                local replace = getfield(n, "replace")
+                if replace then
+                    setfield(n, "replace", injector(replace))
+                end
+            elseif id == glyph_id or id == rule_id
+                    or (id == glue_id and getleader(n)) then
+                local new = getattribute(n, attribute) or 0
+                if new ~= current then
+                    local literal = token_getmacro(namespace..new)
+                    head = insertbefore(head, n, pdfliteral(literal))
+                    current = new
+                end
+            end
+        end
+        return head
+    end
+
+    callback.add_to_callback("pre_shipout_filter", function(list)
+        current = default
+        return tonode(injector(todirect(list)))
+    end, name)
+end
+}
+</pre>
+
+<p>Then we can define the font effects as we please:</p>
+
+<p>Transparency:</p>
+
+<pre>
+\newattribute \transpattr
+\newcount \transpcnt \transpcnt=1 % allocations start at 1
+\def\transparency#1{\inittransparency \transpattr=
+   \ifcsname transp::#1\endcsname \lastnamedcs\relax \else
+      \transpcnt
+      \sxdef{transp::#1}{\the\transpcnt}%
+      \sxdef{transp:\the\transpcnt}{/Tr\the\transpcnt\space gs}%
+      \addextgstate{/Tr\the\transpcnt &lt;&lt;/ca #1 /CA #1&gt;&gt;}%
+      \incr \transpcnt
+   \fi
+}
+\addto\_resetcolor{\transpattr=-"7FFFFFFF }
+% Transparency of "1" is the default
+\sdef{transp::1}{0}
+\sdef{transp:0}{/Tr0 gs}
+\def\inittransparency{%
+   \addextgstate{/Tr0 &lt;&lt;/ca 1 /CA 1&gt;&gt;}%
+   \glet\inittransparency=\relax
+}
+\directlua{
+register_pre_shipout_injector("transp", "transpattr", "transp:")
+}
+</pre>
+
+<p>Font outline:</p>
+
+<pre>
+\newattribute \fntoutattr
+\newcount \fntoutcnt \fntoutcnt=1 % allocations start at 1
+\def\outlinefont#1{\fntoutattr=
+   \ifcsname fntout::#1\endcsname \lastnamedcs\relax \else
+      \fntoutcnt
+      \sxdef{fntout::#1}{\the\fntoutcnt}%
+      \sxdef{fntout:\the\fntoutcnt}{#1 w 1 Tr}%
+      \incr \fntoutcnt
+   \fi
+}
+\addto\_resetcolor{\fntoutattr=-"7FFFFFFF }
+\sdef{fntout:0}{0 w 0 Tr}
+\directlua{
+register_pre_shipout_injector("fntout", "fntoutattr", "fntout:")
+}
+</pre>
+
+<p>The core idea is the same as with colors (see the OpTeX documentation)&nbsp;–
+we use attributes to mark typesetting material and just before shipout we
+postprocess, injecting PDF literals where necessary. But unlike with colors,
+which are specialized (e.g. stroke vs non-stroke), we define a generic Lua
+function generator that can inject any PDF literals we want.</p>
+
+<p>Each distinct transparency / font outline width maps to a single number that
+is used as the attribute value. Similarly, the inverse mapping maps the
+attribute values to PDF literals. Special attribute value of “0” designates the
+default effect&nbsp;– this is e.g. what returns the graphics state to normal
+after TeX group ends. Other effects are allocated starting at number 1.</p>
+
+<p>The TeX user interface consists of <code>\outlinefont</code> and
+<code>\transparency</code>, they essentially just set the attribute to the right
+attribute value (allocating new one if necessary). <code>\transparency</code>
+has a little more work to do, because it has to initialize a new graphics state
+for each transparency&nbsp;– even the default one (this happens the first time
+transparency is actually used, apart from other things it allows detection of
+collision with TikZ).</p>
+
+<p>We also add to <code>\_resetcolor</code> which is what the default OpTeX
+output routine uses to achieve clean slate for headers / footers.</p>
+
+<p>Name of the effect, the attribute name and the macro prefix for PDF literals
+are passed to the Lua side in order to generate the associated PDF literal
+injector.</p>
+
+<p>The literals for transparency activate the prepared graphics states (which
+are named “<code>/Tr⟨<i>number</i>⟩</code>”. Literals for font outlines activate
+the outline style (“<code>1 Tr</code>”) and set the outline width with
+“<code>⟨<i>number</i>⟩ w</code>”.</p>
+
+<p>If you want to use other default value of an effect, you need to change the
+mapping of attribute value 0 and also need to force inject a PDF
+literal on the start of each page (this is normally not done, because it would
+be wasteful). The first can be easily done by using a couple of
+<code>\sdef</code>s. The second can be achieved by passing an invalid attribute
+value (e.g. -1) as the initial (which forces the initial injection
+no matter what).</p>
+
+<p>For example to achieve half transparency for whole document, we change a few
+definitions:</p>
+
+<pre>
+% Transparency of ".5" is the default
+\sdef{transp::.5}{0}
+\def\inittransparency{%
+   \addextgstate{/Tr0 &lt;&lt;/ca .5 /CA .5&gt;&gt;}%
+   \glet\inittransparency=\relax
+}
+\directlua{
+% -1 forces initial setting on each page
+register_pre_shipout_injector("transp", "transpattr", "transp:", -1)
+}
+</pre>
+
+<p>Sadly outline fonts don't work with colors.</p>
+
+<p CLASS=datum>(0064) -- M. V. 2021-07-14</p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
