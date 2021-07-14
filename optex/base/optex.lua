@@ -577,7 +577,7 @@ function optex_hook_into_luaotfload()
             attr = tex_getcount(color_count)
             tex_setcount(color_count, attr + 1)
             local strattr = tostring(attr)
-            token_setmacro("_color:"..rgbcolor, strattr)
+            token_setmacro("_color::"..rgbcolor, strattr)
             token_setmacro("_color:"..strattr, rgbcolor)
             -- no stroke color set
         end
