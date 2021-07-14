@@ -3,6 +3,10 @@
 -- The basic lua functions and declarations used in \OpTeX/ are here
 
 -- \medskip\secc General^^M
+--
+-- Define namespace where some \OpTeX/ functions will be added.
+
+optex = optex or {}
 
 -- Error function used by following functions for critical errors.
 local function err(message)
@@ -443,6 +447,7 @@ local function pdfliteral(str)
     setfield(literal, "data", str)
     return literal
 end
+optex.directpdfliteral = pdfliteral
 --
 -- The function {\Red`colorize`}`(head, current, current_stroke)` goes through
 -- a node list and injects PDF literals according to attributes.
