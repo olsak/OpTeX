@@ -79,7 +79,7 @@
 \_newattribute \_colorattr
 \_newcount \_colorcnt \_colorcnt=1 % allocations start at 1
 \_protected\_def\_setcolor{\_colorprefix\_colorattr=\_translatecolor}
-\_def\_resetcolor{\_colorprefix\_colorattr=-"7FFFFFFF }
+\_def\_resetcolor{\_colorattr=-"7FFFFFFF }
 \_def\_translatecolor#1#2#3{\_ifcsname _color::#1 #2\_endcsname\_lastnamedcs\_relax
    \_else
       \_colorcnt
