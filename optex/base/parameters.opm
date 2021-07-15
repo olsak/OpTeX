@@ -58,7 +58,7 @@
 
    \_doc -----------------------------
    \secc Plain \TeX/ registers
-   Declared registers used in plain \TeX/
+   Allocate registers that are used just like in plain \TeX/.
    \_cod -----------------------------
 
 % We also define special registers that function like parameters:
@@ -100,14 +100,14 @@
 \_normalbaselines % baseline setting, 10 pt font size
 
    \_doc -----------------------------
-   Different values than in plain \TeX/ have the following primitive registers.
+   The following primitive registers have different values than in plain \TeX/.
    We prohibit orphans, set more information for tracing boxes, set page origin
    to the upper left corner of the paper (no at 1\,in, 1\,in coordinates)
-   and set default page dimensions as A4, no letter.
+   and set default page dimensions as A4, not letter.
    \_cod -----------------------------
 
-\_emergencystretch=20pt % we want to use third pass of paragraph building algoritmh
-                        % we need not keep the compatibility with old documents
+\_emergencystretch=20pt % we want to use third pass of paragraph building algorithm
+                        % we don't need compatibility with old documents
 
 \_clubpenalty=10000    % after first line of paragraph
 \_widowpenalty=10000   % before last line of paragraph
@@ -115,10 +115,10 @@
 \_showboxbreadth=150   % for tracing boxes
 \_showboxdepth=7
 \_errorcontextlines=15
-\_tracinglostchars=2   % missing chracter warnings on terminal too
+\_tracinglostchars=2   % missing character warnings on terminal too
 
-\_outputmode=1   % PDF ouput
-\_pdfvorigin=0pt % orgin is exatly at left upper corner
+\_outputmode=1   % PDF output
+\_pdfvorigin=0pt % origin is exactly at upper left corner
 \_pdfhorigin=0pt
 \_hoffset=25mm   % margins are 2.5cm, no 1in
 \_voffset=25mm
@@ -374,7 +374,7 @@
 
 \_newtoks\_everymnote
 \_newdimen\_mnotesize   \_mnotesize=20mm   % the width of the mnote paragraph
-\_newdimen\_mnoteindent \_mnoteindent=10pt % ditance between mnote and text
+\_newdimen\_mnoteindent \_mnoteindent=10pt % distance between mnote and text
 \_public \everymnote \mnotesize \mnoteindent ;
 
    \_doc -----------------------------
@@ -428,8 +428,8 @@
 
    \_doc -----------------------------
    The \^`\eqalign` macro can be configured by \`\eqlines` and \`\eqstyle`
-   tokens lists. The default values are set in order these macro beahaves
-   as in Plain \TeX. The \`\eqspace` is horizontal space put
+   tokens lists. The default values are set in order these macro behaves
+   like in Plain \TeX. The \`\eqspace` is horizontal space put
    between equation systems if more columns in \^`\eqalign` are used.
    \_cod -----------------------------
 
@@ -447,8 +447,8 @@
 \_public \lmfil ;
 
    \_doc -----------------------------
-   The output routine uses token list \`\headline` and \`\footline` in the
-   same sense as in plain \TeX/. If they are non-empty then `\hfil` or `\hss`
+   The output routine uses token lists  \`\headline` and \`\footline` in the
+   same sense as plain \TeX/ does. If they are non-empty then `\hfil` or `\hss`
    must be here because they are used inside `\hbox to\hsize`.
 
    Assume that page-body text can be typeset in different sizes and
