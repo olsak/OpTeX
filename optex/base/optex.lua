@@ -572,7 +572,7 @@ function optex_hook_into_luaotfload()
     local color_count = registernumber("_colorcnt")
     local tex_getcount, tex_setcount = tex.getcount, tex.setcount
     luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
-        local attr = tonumber(token_getmacro("_color:"..rgbcolor))
+        local attr = tonumber(token_getmacro("_color::"..rgbcolor))
         if not attr then
             attr = tex_getcount(color_count)
             tex_setcount(color_count, attr + 1)
