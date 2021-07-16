@@ -450,6 +450,15 @@ without any change in OpTeX:
 
 <h2><a name="attreffects"></a>Font effects using attributes</h2>
 
+<p>You can set printing outlines of characters directly and simply by
+
+<pre>
+\pdfliteral{1 Tr .3 w}TEXT\pdfliteral{0 Tr 0 w}
+</pre>
+
+<p>but it cannot span more pages and it does not respect TeX grouping.
+There is another possibility shown in this trick.
+
 <p>Setting of color is based on attributes in OpTeX v1.04+. We can use similar
 mechanism to achieve other font/rule effects, with different PDF graphics
 operators. For example we can achieve transparency or font outlines this
@@ -638,7 +647,7 @@ register_pre_shipout_injector("transp", "transpattr", "transp:", -1)
 
 <p>Sadly outline fonts don't work with colors.</p>
 
-<p CLASS=datum>(0064) -- M. V. 2021-07-14</p>
+<p CLASS=datum>(0064) -- M. Vlasák 2021-07-14</p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>

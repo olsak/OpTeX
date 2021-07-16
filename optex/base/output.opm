@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2021-02-25>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2021-07-16>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another...\nl
@@ -257,6 +257,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2021-07-16 output routine supports colors via attributes
 2021-02-25 \_draftbox improved
 2021-02-15 \_advance -> \_decr
 2020-05-12 \vfootB: \uskip -> \unskip bug fixed

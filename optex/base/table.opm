@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-06-03>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-07-16>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -554,7 +554,7 @@ after the second one.
 
 \_endinput
 
-2021-06-29 grouping in items modified.
+2021-07-16 grouping based on colors via attributes.
 2021-06-03 \scantextokens added to \_partabitem, bug fixed.
 2021-06-03 \fS corrected, re-implemented.
 2021-06-02 \table in \table allowed, bug fixed.

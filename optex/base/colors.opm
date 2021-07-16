@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \colordef {Colors <2021-05-28>} % preloaded in format
+\_codedecl \colordef {Colors <2021-07-16>} % preloaded in format
 
    \_doc -----------------------------
    The basic colors in CMYK
@@ -411,6 +411,7 @@ and it is used in \^`\rgbcolordef` or if it is printed when \^`\onlyrgb` is decl
 
 \_endinput
 
+2021-07-16 colors reimplemented, now they are based on attributes
 2021-05-28 \rgbcmykmap introduced
 2020-04-22 \replstring\tmpb{+ }{+}, {- }{-} added in \colordef, bug fixed
 2020-03-18 introduced

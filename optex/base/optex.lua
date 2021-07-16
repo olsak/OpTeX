@@ -42,7 +42,7 @@ local function_table = lua.get_functions_table()
 local luafnalloc = 0
 function define_lua_command(csname, fn, ...)
     luafnalloc = luafnalloc + 1
-    token.set_lua(csname, luafnalloc, ...)
+    token.set_lua(csname, luafnalloc, ...) -- WARNING: needs LuaTeX 1.08 (2019) or newer
     function_table[luafnalloc] = fn
 end
 --
@@ -585,3 +585,7 @@ function optex_hook_into_luaotfload()
         return head, n
     end)
 end
+
+   -- History:
+   -- 2021-07-16 support for colors via attributes added
+   -- 2020-11-11 optex.lua released
