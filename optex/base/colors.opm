@@ -90,7 +90,7 @@
    \_fi
 }
 % Black is the default color.
-\_sdef{_color:0 g}{0}
+\_sdef{_color::0 g}{0}
 \_sdef{_color:0}{0 g}
 \_sdef{_color-s:0}{0 G}
 
