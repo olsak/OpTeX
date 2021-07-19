@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2021-05-16>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2021-07-18>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
@@ -114,17 +114,24 @@
 \_public \loggingall \tracingall ;
 
    \_doc ------------------------------
-   Write a warning if the user did not load a Unicode Font {\em or}
-   if there were unresolved references. \`\_byehook` is used in the \^`\bye` macro.
+   Write a warning if the user did not load a Unicode Font.
+   Write a \"rerun" warning if some references are unresolved or if the
+   `.ref` file is changed.
+   \`\_byehook` is used in the \^`\bye` macro.
    \_cod ------------------------------
 
 \_def\_byehook{%
    \_ifx\_initunifonts\_relax \_relax\_else \_opwarning{Unicode font was not loaded}\_fi
-   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}\_fi
+   \_ifnum\_unresolvedrefs>0 \_opwarning{Try to rerun to get references right}%
+   \_else \_immediate\_closeout\_reffile
+      \_edef\_tmp{\_mdfive{\_jobname.ref}}%
+      \_ifx\_tmp\_prevrefhash\_else \_opwarning{Try to rerun, \_jobname.ref file changed}\_fi
+   \_fi
 }
 
 \_endcode % -------------------------------------
 
+2021-07-18: \_byehook: checking `ref` file consistency added.
 2021-05-16: \slet reimplemnted (to allow \slet{foo}{undefined}).
 2021-02-03: \useit defined.
 2021-01-22: \trycs: \ea added in order to be able to use cs with parameters

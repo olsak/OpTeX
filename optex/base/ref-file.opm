@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \openref {File for references <2021-04-13>} % preloaded in format
+\_codedecl \openref {File for references <2021-07-18>} % preloaded in format
 
    \_doc --------------------------
    The \`\_inputref` macro is used in `\everyjob`. It reads `\jobname.ref` file
@@ -12,14 +12,28 @@
 
 \_def\_inputref {%
   \_isfile{\_jobname.ref}\_iftrue
-     \_input {\_jobname.ref}
+     \_input {\_jobname.ref}%
+     \_edef\_prevrefhash{\_mdfive{\_jobname.ref}}%
      \_gfnotenum=0 \_lfnotenum=0 \_mnotenum=0
      \_openrefA{\_string\_inputref}%
   \_fi
 }
 
    \_doc --------------------------
-   If the file does not exist then it is not created by default. It means that if you
+   \`\_mdfive``{<file>}` expands to the MD5 hash of given file.
+   We do checking of consistency of the `.ref` file. First, we read the MD5 hash
+   of this file from previous \TeX/ run before it is removed and opened to
+   writting again in the \^`\_inputref` macro. The hash is saved to \`\_prevrefhash`.
+   Second, we read the MD5 hash in the \^`\_byehook` macro again and if
+   these hashes are not the same, warning about \"ref file is changed" is
+   printed. Try `optex op-demo` two times to see the effect.
+   \_cod --------------------------
+
+\_def\_mdfive#1{\_directlua{mdfive("#1")}}
+\_def\_prevrefhash{}
+
+   \_doc --------------------------
+   If the `.ref` file does not exist then it is not created by default. It means that if you
    process a document without any forward references then no `\jobname.ref`
    file is created because it is unusable. The \^`\_wref` macro is a dummy in
    this case.
@@ -47,7 +61,7 @@
 \_def\_openrefA #1{%
    \_immediate\_openout\_reffile="\_jobname.ref"\_relax
    \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
-   \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file (#1)}%
+   \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
 }
 \_def\_ewref #1#2{\_edef\_ewrefA{#2}\_ea\_wref\_ea#1\_ea{\_ewrefA}}
@@ -142,6 +156,7 @@ to test a simple plain \TeX/ macro, you create `test.tex` file, you do
 \_endinput
 
 History:
+2021-07-18  ref file consistency checking added
 2021-04-13  \Xrefversion incremented (6), new format of \_Xbib
 2021-02-05  \_ewref introduced
 2020-02-14  released

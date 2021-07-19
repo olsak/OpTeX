@@ -19,6 +19,16 @@ function registernumber(name)
     return token.create(name).index
 end
 --
+-- MD5 hash of given file.
+function mdfive(file)
+    local fh = io.open(file, "rb")
+    if fh then
+        local data = fh:read("*a")
+        fh:close()
+        tex.print(md5.sumhexa(data))
+   end
+end
+--
 -- \medskip\secc[lua-alloc] Allocators^^M
 alloc = alloc or {}
 --
