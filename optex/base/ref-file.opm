@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \openref {File for references <2021-07-18>} % preloaded in format
+\_codedecl \openref {File for references <2021-07-19>} % preloaded in format
 
    \_doc --------------------------
    The \`\_inputref` macro is used in `\everyjob`. It reads `\jobname.ref` file
@@ -15,7 +15,7 @@
      \_input {\_jobname.ref}%
      \_edef\_prevrefhash{\_mdfive{\_jobname.ref}}%
      \_gfnotenum=0 \_lfnotenum=0 \_mnotenum=0
-     \_openrefA{\_string\_inputref}%
+     \_openref
   \_fi
 }
 
@@ -44,7 +44,7 @@
 
    \_doc ---------------------
    If a macro needs to create and to use `.ref` file then such macro must use
-   \`\openref`. When the file is created (using internal \`\_openrefA`) then
+   \`\openref`. When the file is created then
    the \`\_wref` `\<macro>{<data>}` is redefined in order to
    save the line `\<macro><data>` to the `.ref` file using asynchronous
    `\write` primitive. Finally, the `\_openref` destroys itself, because we
@@ -55,14 +55,11 @@
    \_cod ---------------------
 
 \_def\_openref {%
-  \_ifx \_wref\_wrefrelax \_openrefA{\_string\openref}\_fi
-  \_gdef\_openref{}%
-}
-\_def\_openrefA #1{%
    \_immediate\_openout\_reffile="\_jobname.ref"\_relax
    \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
    \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
+   \_gdef\_openref{}%
 }
 \_def\_ewref #1#2{\_edef\_ewrefA{#2}\_ea\_wref\_ea#1\_ea{\_ewrefA}}
 \_def\openref{\_openref}
@@ -156,6 +153,7 @@ to test a simple plain \TeX/ macro, you create `test.tex` file, you do
 \_endinput
 
 History:
+2021-07-19  \openrefA merged to \openref
 2021-07-18  ref file consistency checking added
 2021-04-13  \Xrefversion incremented (6), new format of \_Xbib
 2021-02-05  \_ewref introduced
