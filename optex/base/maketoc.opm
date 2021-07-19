@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \maketoc {Macros for maketoc <2020-02-09>} % preloaded in format
+\_codedecl \maketoc {Macros for maketoc <2021-07-18>} % preloaded in format
 
    \_doc ------------------------------------
    \`\_Xtoc` `{<level>}{<type>}{<number>}{<o-title>}<title>` (in `.ref` file) reads
@@ -73,7 +73,8 @@
    Parameters are `{<number>}{<title>}{<pageno>}`.
    \_cod -----------------------------------
 
-\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip \_bf\_llaptoclink{#1}{#2}\_hfill \_pgn{#3}\_tocpar}
+\_sdef{_tocl:1}#1#2#3{\_nofirst\_bigskip
+   \_bf\_llaptoclink{#1}{#2}\_nobreak\_hfill \_pgn{#3}\_tocpar}
 \_sdef{_tocl:2}#1#2#3{\_llaptoclink{#1}{#2}\_tocdotfill \_pgn{#3}\_tocpar}
 \_sdef{_tocl:3}#1#2#3{\_advance\_leftskip by\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
 
@@ -148,6 +149,7 @@
 
 \_endcode
 
+2021-07-18 _tocl:1, \nobreak added, bug fixed
 2021-02-09 \thisoutline implemented
 2020-04-23 \_tocpar introduced (incompatible change)
 2020-04-22 \_pg -> \_pgn (incompatible change)
