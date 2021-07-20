@@ -240,8 +240,8 @@ extensions are already prepared and ready for use.
 
 <h2><a name="scaleto"></a>Text size changed to the desired width</h2>
 
-<p>We prepare the macro \scaleto size {text} which prints “text” by actual font rescaled, 
-that the “text” width is the given size.
+<p>We prepare the macro \scaleto size {text} which prints “text” in the current
+font, but rescaled so that the width of “text” is the given size.
 
 <pre>
 \def\scaleto#1#{\def\tmp{#1}\scaletoA}
@@ -2745,7 +2745,7 @@ in the form "pp:counter-name:counter-value" using \_ewref to the ref file.
 The effect is the same as when the normal \label[...] is saved to the ref
 file. The \incrpp knows the actual page (where the labes was saved) in the
 second TeX run using \cs{_pgref:label}. The effect is the same as when
-\pgref is used. If the actual page is new then \incrpp sets the
+\pgref is used. If the current page is new then \incrpp sets the
 internal macro \cs{pp:counter-name} to the initial value, else it increments
 the value of the internal macro. The \cs{currpp:counter-name}
 includes the page where last

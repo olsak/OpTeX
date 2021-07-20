@@ -170,7 +170,7 @@
    be in the right font family context. The `\_currfamily` is set to the
    `<Famselector>` by the `\<Famselector>` too, because `\<Famselector>`
    must set the right font family context. The font family context is given by the current
-   `\_currfamily` value and by the actual meaning of the \^`\_fontnamegen` macro.
+   `\_currfamily` value and by the current meaning of the \^`\_fontnamegen` macro.
    The \`\_mathfaminfo` is saved for usage in the catalog.
    \_cod -----------------------------
 
