@@ -509,7 +509,8 @@ output of the \LaTeX/ source file.
 italic, \.`\bf` selects upright bold font, \.`\bi` selects bold italic and
 \.`\tt` selects a monospaced font, \.`\em` select italic (if upright is current) or upright
 (if italic is current). The font sizes or other font features are typically ignored
-by cnv-programs. The actual font selection is closed at the end of the current group.
+by cnv-programs. Selection of font is local to a group (i.e. should be reverted
+at the end of the current group).
 The groups are given:
 \begitems
 * explicitly by `{` and `}` characters (which are not delimiters of

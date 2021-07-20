@@ -33,7 +33,7 @@ History:
        Microtypography support added.
        Various colors for links can be declared by \def\_<type>linkolor.
        unimath-codes: \nabla math-code set similar as \Delta.
-       Actual version of UnicodeData.txt read during format generation.
+       Up to date version of UnicodeData.txt read during format generation.
        Reading mathclacss.opm improved.
        slides: hyperlink destinations allowed in \slideshow mode too.
        \bibpart allows to create independent bib-lists in single document.
