@@ -11,6 +11,12 @@
 
    \_doc ----------------------------
    Counter for the number of unresolved references \`\_unresolvedrefs`.
+   It is set but unused in OpTeX versions 1.04+. You can add the report, for
+   example:
+   \begtt
+   \_addto\_byehook{\_ifnum\_unresolvedrefs>0 \_opwarning
+      {There are \_the\_unresolvedrefs\_space unresolved references}\_fi}
+   \endtt
    \_cod ----------------------------
 
 \_newcount\_unresolvedrefs
