@@ -133,11 +133,11 @@
 \_def\_loadumathfamily #1 #2#3 {%
   \_edef\_optsizesave{\_the\_optsize}%
   \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{\_textmff #3} at\_optsize
-  \_textfont#1=\_mF \_ifnum#1=1 \_textfont2=\_mF \_textfont3=\_mF \_fi
+  \_textfont#1=\_mF
   \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{\_scriptmff #3} at\_optsize
-  \_scriptfont#1=\_mF \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
+  \_scriptfont#1=\_mF
   \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{\_sscriptmff #3} at\_optsize
-  \_scriptscriptfont#1=\_mF \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi
+  \_scriptscriptfont#1=\_mF
   \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
 \_def\_textmff{} \_def\_scriptmff{+ssty=0;} \_def\_sscriptmff{+ssty=1;}
