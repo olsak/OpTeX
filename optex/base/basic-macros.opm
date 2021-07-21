@@ -132,7 +132,7 @@
 
 2021-07-20: \_unresovedrefs removed from \_byehook
 2021-07-18: \_byehook: checking `ref` file consistency added.
-2021-05-16: \slet reimplemnted (to allow \slet{foo}{undefined}).
+2021-05-16: \slet reimplemented (to allow \slet{foo}{undefined}).
 2021-02-03: \useit defined.
 2021-01-22: \trycs: \ea added in order to be able to use cs with parameters
 2021-01-08: \opwarning format changed (secondly, hope that conclusively)
