@@ -85,9 +85,9 @@
     \_setunimathdimens
 }%
 \_def\_setunimathdimens{% PlainTeX sets these dimens for 10pt size only:
-  \_delimitershortfall=0.5\_fontdimen6\_textfont3
-  \_nulldelimiterspace=0.12\_fontdimen6\_textfont3
-  \_scriptspace=0.05\_fontdimen6\_textfont3
+  \_delimitershortfall=0.5\_fontdimen6\_textfont1
+  \_nulldelimiterspace=0.12\_fontdimen6\_textfont1
+  \_scriptspace=0.05\_fontdimen6\_textfont1
   \_setbox0=\_hbox{\_everymath{}$\_fam1\_displaystyle{0\_atop0}$}%
   \_Umathfractiondelsize\_displaystyle = \_dimexpr(\_ht0-\_Umathaxis\_displaystyle)*2\_relax
   \_setbox0=\_box\_voidbox
@@ -116,10 +116,7 @@
    The `<font features>` are added to the default
    \`\_mfontfeatures` and to the size-dependent features `+ssty=0`
    if script size is asked or `+ssty=1` if scriptscriptsize is asked.
-   If the math family 1 is loaded then the family 2 and 3 are set by the same
-   font because \TeX/ needs to read dimension information about generating
-   math formulae from these three math families. All information needed by
-   \TeX/ is collected in single Unicode-math font.\nl
+   All information needed by \TeX/ is collected in single Unicode-math font.\nl
    The \^`\_corrmsize` `<factor><space>` can be used just before
    `\_loadumathfamily`, see section~\ref[math-preload] for more information.\nl
    The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are additional font
@@ -133,11 +130,11 @@
 \_def\_loadumathfamily #1 #2#3 {%
   \_edef\_optsizesave{\_the\_optsize}%
   \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{\_textmff #3} at\_optsize
-  \_textfont#1=\_mF \_ifnum#1=1 \_textfont2=\_mF \_textfont3=\_mF \_fi
+  \_textfont#1=\_mF
   \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{\_scriptmff #3} at\_optsize
-  \_scriptfont#1=\_mF \_ifnum#1=1 \_scriptfont2=\_mF \_scriptfont3=\_mF \_fi
+  \_scriptfont#1=\_mF
   \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{\_sscriptmff #3} at\_optsize
-  \_scriptscriptfont#1=\_mF \_ifnum#1=1 \_scriptscriptfont2=\_mF \_scriptscriptfont3=\_mF \_fi
+  \_scriptscriptfont#1=\_mF
   \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
 \_def\_textmff{} \_def\_scriptmff{+ssty=0;} \_def\_sscriptmff{+ssty=1;}
