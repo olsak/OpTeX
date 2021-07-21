@@ -3,9 +3,9 @@
 \_codedecl \openref {File for references <2021-07-19>} % preloaded in format
 
    \_doc --------------------------
-   The \`\_inputref` macro is used in `\everyjob`. It reads `\jobname.ref` file
-   if it exists. After the file is read then it is removed and opened to write
-   a new contents to this file.
+   The \`\_inputref` macro is executed in `\everyjob`. It reads the
+   `\jobname.ref` file, if it exists. After the file is read then it is removed
+   and opened for writing.
    \_cod --------------------------
 
 \_newwrite\_reffile
@@ -20,44 +20,44 @@
 }
 
    \_doc --------------------------
-   \`\_mdfive``{<file>}` expands to the MD5 hash of given file.
-   We do checking of consistency of the `.ref` file. First, we read the MD5 hash
-   of this file from previous \TeX/ run before it is removed and opened to
-   writting again in the \^`\_inputref` macro. The hash is saved to \`\_prevrefhash`.
+   \`\_mdfive``{<file>}` expands to the MD5 hash of a given file.
+   We use it to do consistency checking of the `.ref` file. First, we read the MD5 hash
+   of `.ref` file from previous \TeX/ run before it is removed and opened for
+   writing again in the \^`\_inputref` macro. The hash is saved to \`\_prevrefhash`.
    Second, we read the MD5 hash in the \^`\_byehook` macro again and if
-   these hashes are not the same, warning about \"ref file is changed" is
-   printed. Try `optex op-demo` two times to see the effect.
+   these hashes differ, warning that \"ref file has changed" is
+   printed. Try running `optex op-demo` twice to see the effect.
    \_cod --------------------------
 
 \_def\_mdfive#1{\_directlua{mdfive("#1")}}
 \_def\_prevrefhash{}
 
    \_doc --------------------------
-   If the `.ref` file does not exist then it is not created by default. It means that if you
+   If the `.ref` file does not exist, then it is not created by default. This means that if you
    process a document without any forward references then no `\jobname.ref`
-   file is created because it is unusable. The \^`\_wref` macro is a dummy in
-   this case.
+   file is created (it would be unusable). The \^`\_wref` macro is a dummy in
+   that case.
    \_cod --------------------------
 
 \_def\_wrefrelax#1#2{}
 \_let\_wref=\_wrefrelax
 
    \_doc ---------------------
-   If a macro needs to create and to use `.ref` file then such macro must use
-   \`\openref`. When the file is created then
-   the \`\_wref` `\<macro>{<data>}` is redefined in order to
-   save the line `\<macro><data>` to the `.ref` file using asynchronous
-   `\write` primitive. Finally, the `\_openref` destroys itself, because we
-   need not open the file again.\nl
-   The `\_wref``<csname>{<params>}` does exactly `\write\_reffile{\string<csname><params>}`
-   in this case and \`\_ewref``<csname>{<params>}` does
+   If a macro needs to create and use the `.ref` file, then such macro must
+   first use \`\openref`. It creates the file and redefines
+   \`\_wref` `\<macro>{<data>}` so that it
+   saves the line `\<macro><data>` to the `.ref` file using the asynchronous
+   `\write` primitive. Finally, `\_openref` destroys itself, because we
+   don't need to open the file again.\nl
+   `\_wref``<csname>{<params>}` in fact does `\write\_reffile{\string<csname><params>}`
+   and similarly \`\_ewref``<csname>{<params>}` does
    `\write\_reffile{\string<csname><expanded-params>}`.
    \_cod ---------------------
 
 \_def\_openref {%
    \_immediate\_openout\_reffile="\_jobname.ref"\_relax
    \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
-   \_immediate\_write\_reffile {\_pcent\_pcent\_space OPTeX <\_optexversion> - REF file}%
+   \_immediate\_write\_reffile {\_pcent\_pcent\_space OpTeX <\_optexversion> - REF file}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
    \_gdef\_openref{}%
 }
@@ -66,17 +66,17 @@
 
    \_doc ----------------------
    We are using the convention that the macros used in `.ref` file are named
-   `\_X<foo>`. If there is a new version of \OpTeX/ with a different collection
-   of such macros then we don't want to read the `.ref` files produced by an
-   old version of \OpTeX/ or by OPmac. So the first line of `.ref` file is in
-   the form
+   `\_X<foo>`.
+   We don't want to read `.ref` files from old, incompatible versions of
+   \OpTeX/ (and OPmac). This is ensured by using a version number and the
+   \`\Xrefversion` macro at the beginning of the `.ref` file:
    \begtt \catcode`\<=13
    \Xrefversion{<version>}
    \endtt
-   We can check the version compatibility by this macro.
+   The macro checks the version compatibility.
    Because OPmac does not understand `\_Xrefversion` we use
-   \`\Xrefversion` (with a different number of `<version>` form OPmac) here.
-   The result: OPmac skips the `.ref` files produced by \OpTeX/ and vice
+   `\Xrefversion` (with a different number of `<version>` than OPmac) here.
+   The result: OPmac skips `.ref` files produced by \OpTeX/ and vice
    versa.
    \_cod ----------------------
 
@@ -85,12 +85,13 @@
 \_public \Xrefversion ; % we want to ignore .ref files generated by OPmac
 
    \_doc -----------------------
-   You cannot define your special `.ref` macros before `.ref` file is read
-   because it is read in `\everyjob`. But you can define such macros using
+   You cannot define your own `.ref` macros before `.ref` file is read
+   because it is read in `\everyjob`. But you can define such macros by using
    \`\refdecl``{<definitions of your ref macros>}`.
-   This command sends to `.ref` file your `<definitions of your ref macros>`
-   immediately. Next lines in `.ref` file should include our macros. Example
-   from CTUstyle2:
+   This command immediately writes `<definitions of your ref macros>` to the
+   `.ref` file. Then the next lines written to the  `.ref` file can include
+   your macros.
+   An example from CTUstyle2:
    \begtt
    \refdecl{%
       \def\totlist{} \def\toflist{}^^J
@@ -98,8 +99,8 @@
       \def\Xfig#1#2#3{\addto\toflist{\tofline{#1}{#2}{#3}}}
    }
    \endtt
-   We must read `<definition of your ref macros>` when the catcode of `#` is 12
-   because we needn't duplicate each `#` in the `.ref` file.
+   We must read `<definitions of your ref macros>` while `#` has the catcode 12,
+   because we don't want to duplicate each `#` in the `.ref` file.
    \_cod \_fin -----------------
 
 \_def\_refdecl{\_bgroup \_catcode`\#=12 \_refdeclA}
@@ -111,13 +112,11 @@
 
 \_endcode % ================================================
 
-
-The `.ref` file has the name `\jobname.ref` and
-it saves information about references, TOC lines, etc.
-All data needed in next \TeX/ run are saved here.
-\OpTeX/ reads this file at the beginning of the document
-(using `\everyjob`) if such file exists.
-The `.ref` file looks like:
+A so called `.ref` (`\jobname.ref`) file is used to store data that will be
+needed in the next \TeX/ run (information about references, TOC lines, etc.).
+If it exists it is read by `\everyjob`, when processing of the document starts,
+but it is not created at all if the document doesn't need any forward
+references. Here are the typical contents of a `.ref` file:
 
 \begtt \catcode`\<=13
 \Xrefversion{<ref-version>}
@@ -130,25 +129,22 @@ The `.ref` file looks like:
 \_Xlabel{<label>}{<text>}
 ...
 \endtt
-%
-where <gpageno> is internal page number globally numbered from one and
-`<pageno>` is a page number (`\the\pageno`) used in pagination (they may differ).
-Each page begins with \^`\_Xpage`.
-The `<label>` is a label used by user in `\label[<label>]` and `<text>` is a
-text which should be referenced (the number of section or table, for
-example `2.3.14`). The `<title>` is the title of the chapter (`<level>`=1,
-`<type>`=`chap`), section (`<level>`=2, `<type>`=`sec`), subsection
-(`<level>`=3, `<type>`=`secc`). The \^`\_Xpage` is written at the beginning of each
-page, the `\_Xtoc` is written when chapter or section or subsection title
-exists on the page and `\_Xlabel` when labeled object prefixed by
-`\label[<label>]` exists on the page.
 
-The `.ref` file is read when the processing of the document starts using
-`\everyjob`. It is read, removed, and opened to writing immediately.
-But the `.ref` file should be missing. If none forward references are needed
-in the document then `.ref` file is not created. For example, you only want
-to test a simple plain \TeX/ macro, you create `test.tex` file, you do
-`optex test` and you don't need to see an empty `test.ref` file in your directory.
+\begitems
+* \^`\_Xpage` corresponds to the beginning of a page. <gpageno> is an internal
+page number, globally numbered from one. `<pageno>` is the page number
+(`\the\pageno`) used in pagination (they may differ).
+
+* \^`\_Xtoc` corresponds to a chapter, section or subsection title on a page.
+`<title>` is the title of the chapter (`<level>`=1, `<type>`=`chap`), section
+(`<level>`=2, `<type>`=`sec`) or subsection (`<level>`=3, `<type>`=`secc`).
+
+* \^`\_Xlabel` corresponds to a labelled object on a page. `<label>` is the
+label provided by the user in \^`\label[<label>]`, while `<text>` is the text
+which should be used for the reference (section or table number, for example
+`2.3.14`).
+\enditems
+
 
 \_endinput
 
