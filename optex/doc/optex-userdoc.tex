@@ -1721,12 +1721,12 @@ temporarily standard category codes during loading and it tries to
 load `<filename>.opm` or `<filename>.tex` or `<filename>`, the first occurence
 wins. Example:
 \begtt
-\load [qrcode, tikz]
+\load [qrcode, scanbase]
 \endtt
 %
-does `\input qrcode.opm` \,and `\input tikz.tex` \,and it saves
-local information about the fact that these file names
-`qrcode` and `tikz` were already used, i.\,e. next \^`\load` will skip them.
+does `\input qrcode.opm` \,and \,and `\input scanbase.tex`.
+It saves local information about the fact that these file names
+(`qrcode`, `scanbase`) were loaded, i.e.\ next \^`\load` will skip them.
 
 It is strongly recommended to use the `\load` macro for loading external
 macros if you need them. On the other hand, if your source document is structured
@@ -1736,6 +1736,7 @@ The macro packages intended to \OpTeX/ have the name `*.opm`.
 The following packages are distributed as part of \OpTeX/:
 \begitems
 * `qrcode.opm` enables to create QR codes.
+* `tikz.opm` does `\input tikz.tex`, i.e.\ loads Ti{\it k\/}Z. It adds \OpTeX/-specific code.
 * \ulink[http://petr.olsak.net/ftp/olsak/optex/mte-doc.pdf]{\tt mte.opm}
   includes settings for microtypographic extensions (protrusions+expanding fonts).
 * `vlna.opm` enables to protect of one-letter prepositions and more things automatically.

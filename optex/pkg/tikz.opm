@@ -1,0 +1,39 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+
+\_codedecl \tikzpicture {TikZ for OpTeX <2021-07-15>}
+
+   \_doc
+   This package is \OpTeX/'s compatibility layer for PGF/TikZ. When users do
+   `\load[tikz]` they expect `tikz.tex` to be loaded, but this file gets loaded
+   instead. It does load `tikz.tex`, but also does fixups.
+
+   First we load TikZ itself.
+
+   \_cod
+
+\_input tikz.tex
+
+   \_doc
+   PGF's `\pgfutil@everybye` hooks into `\end`, but normally \OpTeX/ uses the
+   prefixed `\_end`. Here we make it hook into `\_byehook` which should
+   hopefully be preserved by all \OpTeX/ macro writers.
+   \_cod
+
+\_addto\_byehook{\_the\_cs{pgfutil@everybye}}
+
+   \_doc
+   There is a general disagreement about the use/meaning of `\hoffset` and
+   `\voffset` -- \LaTeX/, the \LaTeX/ `crop`
+   package\fnote{\url{https://www.ctan.org/pkg/crop}}, TikZ, and \OpTeX/ all
+   try to use the values differently. Unfortunately this means a broken
+   behaviour observed by end users in
+   \OpTeX/\fnote{\url{https://github.com/pgf-tikz/pgf/issues/983}}.
+
+   The problem at hand is that PGF nowadays sets the page origin to include
+   `\hoffset` and `\voffset`. We instead set it to the origin (i.e. the point
+   $(0, 0)$).
+   \_cod
+
+\_sdef{pgf@sys@pdf@mark@pos@pgfpageorigin}{\pgfpointorigin}
+
+\_endcode
