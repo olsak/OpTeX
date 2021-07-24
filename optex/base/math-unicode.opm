@@ -113,8 +113,8 @@
    loads the given Unicode-math fonts in three sizes given by the
    \^`\setmathsizes` macro and sets it as the math family `<number>`.
    The `<font features>` are added to the default
-   \`\_mfontfeatures` and to the size-dependent features `+ssty=0`
-   if script size is asked or `+ssty=1` if scriptscriptsize is asked.
+   \`\_mfontfeatures` and to the size-dependent features `ssty=1`
+   if script size is asked or `ssty=2` if scriptscriptsize is asked.
    All information needed by \TeX/ is collected in single Unicode-math font.\nl
    The \^`\_corrmsize` `<factor><space>` can be used just before
    `\_loadumathfamily`, see section~\ref[math-preload] for more information.\nl
@@ -136,7 +136,7 @@
   \_scriptscriptfont#1=\_mF
   \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
-\_def\_textmff{} \_def\_scriptmff{+ssty=0;} \_def\_sscriptmff{+ssty=1;}
+\_def\_textmff{ssty=0;} \_def\_scriptmff{ssty=1;} \_def\_sscriptmff{ssty=2;}
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs not to

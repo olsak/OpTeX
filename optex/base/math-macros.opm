@@ -1059,8 +1059,8 @@
 \_def\_mathbox#1{{\_mathstyles{\_hbox{%
    \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
    \_else
-      \_ifnum\_stylenum=2 \_def\_textmff{+ssty=0;}\_fi
-      \_ifnum\_stylenum=3 \_def\_textmff{+ssty=1;}\_def\_scriptmff{+ssty=1;}\_fi
+      \_ifnum\_stylenum=2 \_def\_textmff{ssty=1;}\_fi
+      \_ifnum\_stylenum=3 \_def\_textmff{ssty=2;}\_def\_scriptmff{ssty=2;}\_fi
       \_typoscale[\_dobystyle{}{}{700}{500}/]\_fi #1}}}%
 }
 \_public \mathbox ;
