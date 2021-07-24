@@ -87,7 +87,6 @@
 \_def\_setunimathdimens{% PlainTeX sets these dimens for 10pt size only:
   \_delimitershortfall=0.5\_fontdimen6\_textfont1
   \_nulldelimiterspace=0.12\_fontdimen6\_textfont1
-  \_scriptspace=0.05\_fontdimen6\_textfont1
   \_setbox0=\_hbox{\_everymath{}$\_fam1\_displaystyle{0\_atop0}$}%
   \_Umathfractiondelsize\_displaystyle = \_dimexpr(\_ht0-\_Umathaxis\_displaystyle)*2\_relax
   \_setbox0=\_box\_voidbox
