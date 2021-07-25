@@ -1576,8 +1576,7 @@ We can re-define the `\_normalmath` macro by:
 \begtt \typosize[10/12]
 \addto\_normalmath {\_loadmathfamily 5 bbold }
 
-\_regtfm bbold 0 bbold5 5.5 bbold6 6.5 bbold7 7.5 bbold8 8.5 bbold9
-               9.5 bbold10 11.1 bbold12 15 bbold17 * % using all bbold*.tfm
+\_regtfm bbold 0 bbold5 6 bbold7 8.5 bbold10 * % using all bbold*.pfb
 \_normalmath  % reload the math fonts collection
 \endtt
 %
@@ -1585,8 +1584,7 @@ The string \"`bbold`" is declared by `\_regtfm` as a collection of all
 `bbold*.tfm` fonts, the optical sizes are supported.
 
 \addto\_normalmath {\_loadmathfamily 5 bbold }
-\_regtfm bbold 0 bbold5 5.5 bbold6 6.5 bbold7 7.5 bbold8 8.5 bbold9
-               9.5 bbold10 11.1 bbold12 15 bbold17 * % using all bbold*.tfm
+\_regtfm bbold 0 bbold5 6 bbold7 8.5 bbold10 * % using all bbold*.pfb
 \_normalmath
 \Umathchardef \bbplus 2 5 "2B
 \Umathchardef \bble   3 5 "3C
