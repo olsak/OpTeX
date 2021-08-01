@@ -212,28 +212,10 @@ The important OPmac tricks will be re-implemented here soon.
 <h2><a name="fontexpand"></a>Micro-typography: font expanding, hanging punctuation</h2>
 
 <p>LuaTeX supports "microtypography features": slight font expanding when
-the paragraph line is stretched and hanging punctuation. You can enable this
-using primitives \pdffontexpand+\adjustspacing and
-\rpcode,\lpcode+\protrudechars. Example:
-
-<pre>
-\pdffontexpand\_tenrm 30 20 5   % font expanding configured for \_tenrm
-\adjustspacing=2                % font expandnig activated
-
-\chardef\hyph=\hyphenchar\_tenrm
-\rpcode\_tenrm\hyph=310  \rpcode\_tenrm`\.=200 \rpcode\_tenrm`\,=200
-\lpcode\_tenrm`\“=400 \rpcode\_tenrm`\”=400  % hanging punctuation configured for \_tenrm
-\protrudechars=2                             % hanging puctuation activated
-</pre>
-
-<p>See <a href="http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf">TeX in a Nutshell,
-page 23</a> for more information about parameters of used primitives.
-
-<p>You can start from this example and modify it for your needs.
-
-<p>You can use <a href="http://petr.olsak.net/ftp/olsak/optex/mte-doc.pdf">mte.opm</a>
-package where the data for microtypographic
-extensions are already prepared and ready for use.
+the paragraph line is stretched and hanging punctuation. You are best at using
+the <a href="http://petr.olsak.net/ftp/olsak/optex/mte-doc.pdf">mte.opm</a>
+package where the data for microtypographic extensions are already prepared and
+ready for use.
 
 <p CLASS=datum>(0058) -- P. O. 2020-04-16<p>
 <hr>
