@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2021-02-03>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2021-08-02>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -304,6 +304,7 @@
 
 \_endcode
 
+2021-08-02 more robust \fornum: \fi moved by \afterfi
 2021-02-03 public version of \loop and \foreach are \long
 2020-05-22 \foreach, \fornum: all settings are global, independent on TeX group
 2020-05-06 \isnextchar: \let\tmp=#1 -> \let\tmp= #1 (bug fix, #1 should be space)
