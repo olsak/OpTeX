@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2020-05-22>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2020-08-02>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -92,6 +92,7 @@
 \_def\_lipsumload{{%
    \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
+      \_def\SetLipsumLanguage##1{}%
       \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
       \_opinput {lipsum.ltd.tex}%
       \_global\_let\_lipsumload=\_empty
@@ -101,6 +102,7 @@
 
 \_endcode
 
+2021-08-02 \SetLipsumLanguage added, fix for new lipusm version
 2021-01-04 \lipsumtext introduced
 2020-05-22 \lipsum uses \fornum (expandable after first usage)
 2020-04-02 released
