@@ -246,8 +246,8 @@
    this place for sorting indexes: `\,<word1> \,<word2> \,<word3> ...`.
 
    The current language (chosen for hyphenation patterns) is used for
-   sorting data. If the `\_sortinglang` macro
-   is defined as `<iso-code>`(for example `\def\sortinglang{de}`)
+   sorting data. If the macro \`\_sortinglang`
+   is defined as `<iso-code>` (for example `\def\sortinglang{de}`)
    then this has precedence and current language is not used.
    Moreover, if you specify \`\_asciisortingtrue` then ASCII
    sorting will be processed and all language sorting data will be ignored.

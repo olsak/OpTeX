@@ -118,9 +118,9 @@
    \_ea\_fornumB\_ea{\_the\_numexpr#3\_ea}\_ea{\_the\_numexpr#1}%
 }
 \_def\_fornumB #1#2{\_ifnum#1\_ifnum#2>0<\_else>\_fi \_frnum \_getforstack
-   \_else \_ea\_fbody\_ea{\_the\_frnum}%
+   \_else \_afterfi{\_ea\_fbody\_ea{\_the\_frnum}%
       \_immediateassignment\_global\_advance\_frnum by#2
-      \_afterfi{\_fornumB{#1}{#2}}\_fi
+      \_fornumB{#1}{#2}}\_fi
 }
 \_def\fornum#1..#2\do{\_fornumstep 1:#1..#2\_do}
 \_def\fornumstep#1:#2..#3\do{\_fornumstep #1:#2..#3\_do}
