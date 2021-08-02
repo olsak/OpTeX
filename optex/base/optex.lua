@@ -218,9 +218,9 @@ function callback.add_to_callback(name, fn, description)
         -- register a proxy function as a real callback. Assert, so we know
         -- when things break, like when callbacks get redefined by future
         -- luatex.
-        assert(callback_register(name, function(...)
+        callback_register(name, function(...)
             return call_callback(name, ...)
-        end))
+        end)
     else
         err("cannot add to callback '"..name.."' - no such callback exists")
     end
