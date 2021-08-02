@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2021-04-05>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2021-08-02>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -254,6 +254,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2021-08-02 ssty fontfeatures rewritten; fam2, fam3 unused, \scriptspace not set
 2021-04-04 \_setunimathdimens: \setbox0=\box\voidbox added
 2021-03-09 \_setunimathdimes: \_begin/end/group instead {}, bug fixed
 2021-02-15 \_textmff, \_scriptmff and \_sscriptmff introduced
