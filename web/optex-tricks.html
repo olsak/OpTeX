@@ -1802,8 +1802,8 @@ aligned. Maybe, you want to set vertically alignment to center or to the last
 line. The following testing code shows one approach:
 
 <pre>
-\def\vcent{\def\_vtop##1{$\vcenter{\noindent\raise\ht\_tstrutbox\hbox{}##1}$}}
-\def\vbot{\def\_vtop##1{\vbox{\noindent\raise\ht\_tstrutbox\hbox{}##1}}}
+\def\vbot{\let\_tableparbox=\_vbox}
+\def\vcent{\toksapp\tabiteml{$}\tokspre\tabitemr{$}\let\_tableparbox=\_vcenter}
 
 \table{|p{1.5cm}|p{4cm}|}{ % top alignment (default)
  \crl
@@ -1812,7 +1812,7 @@ line. The following testing code shows one approach:
  \crl
 }
 
-\table{|(\vcent)p{1.5cm}|:(\vcent)p{4cm}|}{ % vertically centered paragraphs
+\table{|p{1.5cm\vcent}|p{4cm\vcent}|}{ % vertically centered paragraphs
  \crl
  d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &amp;
  ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
@@ -1820,30 +1820,16 @@ line. The following testing code shows one approach:
 }
 </pre>
 
-<p>The \_vtop used in the p declarator is locally redefined to \vcenter. This is
-done by (\vcent) prefixed before each p declarator. We must to use column
-boundary declarator ":" in order to apply the \vcent to the following p column.
-The \vbot macro can be used instead \vcent: the paragraphs will be
-vertically aligned to the bottom.
-The tabstrut must be added to the first line of the paragraphs. This is done
-in \vcent or \vbot macros.
+<p>You can combine \fL, \fR, \fC and \fX with \vbot and \vcent. For example,
+p{7cm\fC\vcent} creates horizontaly and verticaly centered paragraph.
+
+<p>Internals: the macros \vbot and \vcent redefine the OpTeX sequence
+\_tableparbox, which is used in "p" table items and is declared as \vtop by default.
 
 <p>The alternative is:
 
 <pre>
 \thistable{\vcent} \table{|p{1.5cm}|p{4cm}|}{...}
-</pre>
-
-<p>Another alternative is to declare new column declatator,
-for example "V":
-
-<pre>
-\def\_paramtabdeclareV#1{\_the\_tabiteml
-   $\vcenter{\medskip \hsize=#1\relax \_partabitem{##}\medskip}$%
-   \_the\_tabitemr
-}
-
-\table{|V{1.5cm}|V{4cm}|}{...}
 </pre>
 
 <p CLASS=datum>(0023) -- P. O. 2020-06-01<p>

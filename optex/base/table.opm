@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2021-07-16>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2021-08-04>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -211,7 +211,7 @@
    \_doc -----------------------------
    The default \"declaration letters" `c`, `l`, `r` and `p` are declared
    by setting \`\_tabdeclarec`, \`\_tabdeclarel`, \`\_tabdeclarer` and
-   \`\_paramtabdeclarep` macros. In general, define
+   \^`\_paramtabdeclarep` macros. In general, define
    `\def\_tabdeclare<letter>{...}` for a non-parametric
    letter and `\def\_paramtabdeclare<letter>{...}` for a letter with a parameter.
    The double hash `##` must be in the definition, it is replaced by a real table item data.
@@ -228,34 +228,50 @@
 \_def\_tabdeclarec{\_the\_tabiteml{\_hfil##\_unsskip\_hfil}\_the\_tabitemr}
 \_def\_tabdeclarel{\_the\_tabiteml{\_relax##\_unsskip\_hfil}\_the\_tabitemr}
 \_def\_tabdeclarer{\_the\_tabiteml{\_hfil##\_unsskip}\_the\_tabitemr}
-\_def\_paramtabdeclarep#1{\_the\_tabiteml\_vtop{\_hsize=#1\_relax \_partabitem{##}}\_the\_tabitemr}
 
    \_doc -----------------------------
-   \`\_partabitem``{<data>}` prints the table item in a paragraph format.
-   This macro solves two things. Fist, the setting of parameters for the
-   paragraph formatting. The `\hsize` and parameters from macros
-   \^`\fC`, \^`\fR` etc. are set already.\nl
-   Second thing: if the `\hsize` is negative then first pass of `pxto` table is processed.
-   We print nothing in such case but we advance the \`\_tsizesum`.
+   The \`\_paramtabdeclarep``{<data>}` is invoked when `p{<data>}`
+   declarator is used. First, it saves the `\hsize` value
+   and then it runs \`\_tablepar`.
+   The \^`\_tablepar` macro behaves like \`\_tableparbox` (which is `\vtop`) in normal cases.
+   But there is a special case: if the first pass of `pxto` table is
+   processed then `\hsize` is negative. We print nothing in this case, i.e.\
+   \^`\_tableparbox` is \^`\ignoreit` and we advance the \`\_tsizesum`.
    The auxiliary macro \`\_tsizelast` is used to do advancing
    only in the first row of the table.
-   \^`\_tsizesum` and \^`\_tsizelast` are initialized in the \^`\_tableB` macro.\nl
-   \`\_partabitemA``{<data>}` only copies <data>, but it is redefined by \^`\fS`.
+   \^`\_tsizesum` and \^`\_tsizelast` are initialized in the \^`\_tableB` macro.
    \_cod -----------------------------
 
-\_newdimen \_tsizesum
-\_def \_tsizelast{0}
-\_long\_def\_partabitem#1{%
+\_def\_paramtabdeclarep#1{\_hsize=#1\_relax
+   \_the\_tabiteml \_tablepar{\_tableparB ##\_tableparC}\_the\_tabitemr
+}
+\_def\_tablepar{%
    \_ifdim\_hsize<0pt
       \_ifnum\_tsizelast<\_colnum \_global\_advance\_tsizesum by-\_hsize
          \_xdef\_tsizelast{\_the\_colnum}\_fi
-   \_else
-      \_baselineskip=\_normalbaselineskip
-      \_lineskiplimit=\_zo \_noindent \_hskip\_zo \_relax \_partabitemA{#1}\_unsskip
-      \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_hbox{}\_fi
+      \_let\_tableparbox=\_ignoreit
    \_fi
+   \_tableparA \_tableparbox
 }
-\_let\_partabitemA=\_scantextokens
+\_let \_tableparbox=\_vtop
+\_let \_tableparA=\_empty
+\_newdimen \_tsizesum
+\_def \_tsizelast{0}
+
+   \_doc -----------------------------
+   The \`\_tableparB` initializes the paragraphs inside the table item and
+   \`\_tableparC` closes them. They are used in the \^`\_paramtabdeclarep` macro.
+   The first paragraph is no indented.
+   \_cod -----------------------------
+
+\_def\_tableparB{%
+   \_baselineskip=\_normalbaselineskip \_lineskiplimit=\_zo \_noindent
+   \_raise\_ht\_tstrutbox\_null \_hskip\_zo \_relax
+}
+\_def\_tableparC{%
+   \_unsskip
+   \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_null\_fi
+}
 
    \_doc -----------------------------
    Users put optional spaces around the table item typically, i.e.\ they write
@@ -270,20 +286,33 @@
 
    \_doc -----------------------------
    The \`\fL`, \`\fR`, \`\fC` and \`\fX` macros only do special parameters settings
-   for paragraph building algorithm. The \`\fS` prints the paragraph into
-   box 0 first, measures the number of lines by the `\prevgraf` primitive
-   and use (or don't use) `\hfil` (for centering) before the first line.
-   \_cod -----------------------------
+   for paragraph building algorithm.
+   \_cod
 
 \_let\_fL=\_raggedright
 \_def\_fR{\_leftskip=0pt plus 1fill \_relax}
 \_def\_fC{\_leftskip=0pt plus1fill \_rightskip=0pt plus 1fill \_relax}
 \_def\_fX{\_leftskip=0pt plus1fil  \_rightskip=0pt plus-1fil \_parfillskip=0pt plus2fil \_relax}
-\_def\_fS{\_long\_def\_partabitemA##1{%
-   \_setbox0=\_vbox{\_noindent ##1\_endgraf \_ea}\_ifnum\_prevgraf=1 \_hfil \_fi
-   \_scantextokens{##1}%
-}}
-\_public \fL \fR \fC \fX \fS ;
+\_public \fL \fR \fC \fX ;
+
+   \_doc -----------------------------
+   The \`\fS` macro is more tricky. The \^`\_tableparbox` isn't printed
+   immediatelly, but `\setbox2=` is prefixed by the macro \`\_tableparA`,
+   which is empty by default (used in \^`\_tablepar`). The \`\_tableparD`
+   is processed after the box is set: it checks if there is only one line
+   and prints `\hbox to\hsize{\hfil<this line>\hfil}` in this case. In other
+   cases, the box2 is printed.
+   \_cod -----------------------------
+
+\_def\_fS{\_relax
+   \_ifdim\_hsize<0pt \_else \_def\_tableparA{\_setbox2=}\_fi
+   \_addto\_tableparC{\_aftergroup\_tableparD}%
+}
+\_def\_tableparD{\_setbox0=\_vbox{\_unvcopy2 \_unskip \_global\_setbox1=\_lastbox}%
+   \_ifdim\_ht0>0pt \_box2 \_setbox0=\_box1
+   \_else \_hbox to\_hsize{\_hfil \_unhbox1\_unskip\_unskip\_hfil}\_setbox0=\_box2 \_fi
+}
+\_public \fS ;
 
    \_doc -----------------------------
    The family of `\_cr*` macros
@@ -554,6 +583,7 @@ after the second one.
 
 \_endinput
 
+2021-08-04 \_patamtabdeclarep reimplemented.
 2021-07-16 grouping based on colors via attributes.
 2021-06-03 \scantextokens added to \_partabitem, bug fixed.
 2021-06-03 \fS corrected, re-implemented.
