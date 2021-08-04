@@ -85,8 +85,10 @@
    \_if t\_ignoresecond#1\_else \_slet{_tryload#1}{_relax}\_fi
 }
 \_def\_doresizetfmfont#1{\_logfont{#1}%
-   \_ea\_font\_ea#1\_ea\_rfontskipat
-      \_fontname \_cs{_ten\_whatresize} \_relax\_space \_sizespec \_relax
+   \_ifx#1\_nullfont \_else
+      \_ea\_font\_ea#1\_ea\_rfontskipat
+         \_fontname \_cs{_ten\_whatresize} \_relax\_space \_sizespec \_relax
+   \_fi
 }
 \_let\_doresizefont=\_doresizetfmfont
 \_def\_logfont#1{} % default is no logging of used fonts

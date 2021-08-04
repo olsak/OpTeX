@@ -4,21 +4,25 @@
 
 % Only few text fonts are preloaded:
 
+% allow missing fonts during format generation
+\_suppressfontnotfounderror=1
 \_font\_tenrm=ec-lmr10   % roman text
 \_font\_tenbf=ec-lmbx10  % boldface extended
 \_font\_tenit=ec-lmri10  % text italic
 \_font\_tenbi=ec-lmbxi10 % bold italic
 \_font\_tentt=ec-lmtt10  % typewriter
+\_suppressfontnotfounderror=0
+
 \_tenrm
 
 \_public \tenrm \tenbf \tenit \tenbi \tentt ;
 
 \_endcode %---------------------------------------------------
 
-The format in lua\TeX/ can download only non-Unicode fonts. Latin Modern EC is
+The format in Lua\TeX/ can download only non-Unicode fonts. Latin Modern EC is
 loaded here. These fonts are totally unusable in LuaTeX when languages with out
 of ASCII or ISO-8859-1 alphabets are used (for example Czech). We load only
-a few 8bit fonts here especially for simple testing the format.
+a few 8bit fonts here especially for simple testing of the format.
 But, if the user needs to do more serious work, he/she can
 use `\fontfam` macro to load a selected font family of Unicode fonts.
 
