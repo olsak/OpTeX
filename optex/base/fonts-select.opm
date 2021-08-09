@@ -177,7 +177,7 @@
       utf = unicode.utf8
 
       % load the bulk of the ConTeXt code
-      assert(loadfile(kpse.find_file("luatex-fonts-merged", "lua")))()
+      lua.bytecode[2]()
 
       % Register callbacks
       callback.disable_callback("ligaturing")
