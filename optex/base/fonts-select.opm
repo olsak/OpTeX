@@ -144,8 +144,7 @@
 
 \_def\_initunifonts {%
    \_directlua{%
-      local saved = callback.register
-
+      logs = logs or {}
       function texio.reporter(...)
          if trace_context then
              texio.write_nl(...)
@@ -166,6 +165,7 @@
           return num
       end
 
+      local saved = callback.register
       function callback.register(cb, fn)
           if fn == false then
               callback.disable_callback(cb)
@@ -174,10 +174,18 @@
           end
       end
 
-      fonts = fonts or {}
-      fonts._merge_loaded_message_done_ = true
+      utf = unicode.utf8
 
-      assert(loadfile(kpse.find_file("luatex-fonts", "lua")))()
+      % load the bulk of the ConTeXt code
+      assert(loadfile(kpse.find_file("luatex-fonts-merged", "lua")))()
+
+      % Register callbacks
+      callback.disable_callback("ligaturing")
+      callback.disable_callback("kerning")
+      callback.add_to_callback("pre_linebreak_filter", nodes.simple_font_handler, "context")
+      callback.add_to_callback("hpack_filter",         nodes.simple_font_handler, "context")
+      callback.add_to_callback("define_font",          fonts.definers.read,       "context")
+
       callback.register = saved
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
