@@ -144,9 +144,41 @@
 
 \_def\_initunifonts {%
    \_directlua{%
-      require('luaotfload-main')
-      luaotfload.main()
-      optex_hook_into_luaotfload()
+      local saved = callback.register
+
+      function texio.reporter(...)
+         if trace_context then
+             texio.write_nl(...)
+         end
+      end
+
+      % Attribute 0 must be 0 for ConTeXt
+      tex.setattribute(0, 0)
+
+      local attrs = {}
+      attributes = attributes or {}
+      function attributes.private(name)
+          local num = attrs[name]
+          if not num then
+              num = alloc.new_attribute(name)
+              attrs[name] = num
+          end
+          return num
+      end
+
+      function callback.register(cb, fn)
+          if fn == false then
+              callback.disable_callback(cb)
+          else
+              callback.add_to_callback(cb, fn, "context")
+          end
+      end
+
+      fonts = fonts or {}
+      fonts._merge_loaded_message_done_ = true
+
+      assert(loadfile(kpse.find_file("luatex-fonts", "lua")))()
+      callback.register = saved
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont
