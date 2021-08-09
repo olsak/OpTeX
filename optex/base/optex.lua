@@ -222,7 +222,7 @@ function callback.add_to_callback(name, fn, description)
             return call_callback(name, ...)
         end)
     else
-        err("cannot add to callback '"..name.."' - no such callback exists")
+        err("cannot add to callback '"..name.."' - it doesn't exist or is disabled")
     end
 
     -- add function to callback list for this callback
@@ -262,6 +262,13 @@ function callback.remove_from_callback(name, description)
     end
 
     return fn, description
+end
+--
+-- Disable a callback completely.
+function callback.disable_callback(name)
+    callback_register(name, false)
+    -- don't allow adding functions from now on
+    callback_types[name] = nil
 end
 --
 -- helper iterator generator for iterating over reverselist callback functions
@@ -396,6 +403,7 @@ luatexbase = {
     create_callback = callback.create_callback,
     add_to_callback = callback.add_to_callback,
     remove_from_callback = callback.remove_from_callback,
+    disable_callback = callback.disable_callback,
     call_callback = callback.call_callback,
     callbacktypes = {}
 }
