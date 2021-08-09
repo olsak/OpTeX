@@ -580,32 +580,6 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     local list = colorize(todirect(list), -1, -1)
     return tonode(list)
 end, "_colors")
---
--- We also hook into `luaotfload`'s handling of color. Instead of the default
--- behavior (inserting colorstack whatsits) we set our own attribute. The hook
--- has to be registered {\em after} `luaotfload` is loaded.
-function optex_hook_into_luaotfload()
-    if not luaotfload.set_colorhandler then
-        return -- old luaotfload, colored fonts will be broken
-    end
-    local setattribute = direct.set_attribute
-    local token_setmacro = token.set_macro
-    local color_count = registernumber("_colorcnt")
-    local tex_getcount, tex_setcount = tex.getcount, tex.setcount
-    luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
-        local attr = tonumber(token_getmacro("_color::"..rgbcolor))
-        if not attr then
-            attr = tex_getcount(color_count)
-            tex_setcount(color_count, attr + 1)
-            local strattr = tostring(attr)
-            token_setmacro("_color::"..rgbcolor, strattr)
-            token_setmacro("_color:"..strattr, rgbcolor)
-            -- no stroke color set
-        end
-        setattribute(n, color_attribute, attr)
-        return head, n
-    end)
-end
 
    -- History:
    -- 2021-07-16 support for colors via attributes added
