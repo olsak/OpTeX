@@ -187,6 +187,10 @@
       callback.add_to_callback("define_font",          fonts.definers.read,       "context")
 
       callback.register = saved
+
+      % "\font=name" is a font name lookup with fallback to file name, we don't
+      % support font name, yet
+      fonts.names.resolve = function() end
    }%
    \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
    \_global\_let \_doresizefont=\_doresizeunifont
