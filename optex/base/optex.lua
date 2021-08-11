@@ -580,6 +580,55 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     local list = colorize(todirect(list), -1, -1)
     return tonode(list)
 end, "_colors")
+--
+-- Load ConTeXt font loading code with some preparations
+logs = logs or {}
+function texio.reporter(...)
+ if trace_context then
+     texio.write_nl(...)
+ end
+end
+--
+-- Attribute 0 must be 0 for ConTeXt
+tex.setattribute(0, 0)
+--
+local attrs = {}
+attributes = attributes or {}
+function attributes.private(name)
+  local num = attrs[name]
+  if not num then
+      num = alloc.new_attribute(name)
+      attrs[name] = num
+  end
+  return num
+end
+--
+local saved = callback.register
+function callback.register(cb, fn)
+  if fn == false then
+      callback.disable_callback(cb)
+  else
+      callback.add_to_callback(cb, fn, "context")
+  end
+end
+--
+utf = unicode.utf8
+--
+-- load the bulk of the ConTeXt code
+lua.bytecode[2]()
+--
+-- Register callbacks
+callback.disable_callback("ligaturing")
+callback.disable_callback("kerning")
+callback.add_to_callback("pre_linebreak_filter", nodes.simple_font_handler, "context")
+callback.add_to_callback("hpack_filter",         nodes.simple_font_handler, "context")
+callback.add_to_callback("define_font",          fonts.definers.read,       "context")
+--
+callback.register = saved
+
+-- "\font=name" is a font name lookup with fallback to file name, we don't
+-- support font name, yet
+fonts.names.resolve = function() end
 
    -- History:
    -- 2021-07-16 support for colors via attributes added
