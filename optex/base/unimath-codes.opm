@@ -40,20 +40,20 @@
 \_chardef\_ncharsxA="1D63C   \_chardef\_ncharsxa="1D656
 \_chardef\_ncharttA="1D670   \_chardef\_nchartta="1D68A
 
-\_protected\_def\_rmvariables     {\_umathrange{A-Z}71\_ncharrmA \_umathrange{a-z}71\_ncharrma}
-\_protected\_def\_bfvariables     {\_umathrange{A-Z}71\_ncharbfA \_umathrange{a-z}71\_ncharbfa}
-\_protected\_def\_itvariables     {\_umathrange{A-Z}71\_ncharitA \_umathrange{a-z}71\_ncharita}
-\_protected\_def\_bivariables     {\_umathrange{A-Z}71\_ncharbiA \_umathrange{a-z}71\_ncharbia}
-\_protected\_def\_calvariables    {\_umathrange{A-Z}71\_ncharclA \_umathrange{a-z}71\_ncharcla}
-\_protected\_def\_bcalvariables   {\_umathrange{A-Z}71\_ncharbcA \_umathrange{a-z}71\_ncharbca}
-\_protected\_def\_frakvariables   {\_umathrange{A-Z}71\_ncharfrA \_umathrange{a-z}71\_ncharfra}
-\_protected\_def\_bfrakvariables  {\_umathrange{A-Z}71\_ncharbrA \_umathrange{a-z}71\_ncharbra}
-\_protected\_def\_bbvariables     {\_umathrange{A-Z}71\_ncharbbA \_umathrange{a-z}71\_ncharbba}
-\_protected\_def\_sansvariables   {\_umathrange{A-Z}71\_ncharsnA \_umathrange{a-z}71\_ncharsna}
-\_protected\_def\_bsansvariables  {\_umathrange{A-Z}71\_ncharbsA \_umathrange{a-z}71\_ncharbsa}
-\_protected\_def\_isansvariables  {\_umathrange{A-Z}71\_ncharsiA \_umathrange{a-z}71\_ncharsia}
-\_protected\_def\_bisansvariables {\_umathrange{A-Z}71\_ncharsxA \_umathrange{a-z}71\_ncharsxa}
-\_protected\_def\_ttvariables     {\_umathrange{A-Z}71\_ncharttA \_umathrange{a-z}71\_nchartta}
+\_protected\_def\_rmvariables     {\_umathrange{A-Z}70\_ncharrmA \_umathrange{a-z}70\_ncharrma}
+\_protected\_def\_bfvariables     {\_umathrange{A-Z}70\_ncharbfA \_umathrange{a-z}70\_ncharbfa}
+\_protected\_def\_itvariables     {\_umathrange{A-Z}70\_ncharitA \_umathrange{a-z}70\_ncharita}
+\_protected\_def\_bivariables     {\_umathrange{A-Z}70\_ncharbiA \_umathrange{a-z}70\_ncharbia}
+\_protected\_def\_calvariables    {\_umathrange{A-Z}70\_ncharclA \_umathrange{a-z}70\_ncharcla}
+\_protected\_def\_bcalvariables   {\_umathrange{A-Z}70\_ncharbcA \_umathrange{a-z}70\_ncharbca}
+\_protected\_def\_frakvariables   {\_umathrange{A-Z}70\_ncharfrA \_umathrange{a-z}70\_ncharfra}
+\_protected\_def\_bfrakvariables  {\_umathrange{A-Z}70\_ncharbrA \_umathrange{a-z}70\_ncharbra}
+\_protected\_def\_bbvariables     {\_umathrange{A-Z}70\_ncharbbA \_umathrange{a-z}70\_ncharbba}
+\_protected\_def\_sansvariables   {\_umathrange{A-Z}70\_ncharsnA \_umathrange{a-z}70\_ncharsna}
+\_protected\_def\_bsansvariables  {\_umathrange{A-Z}70\_ncharbsA \_umathrange{a-z}70\_ncharbsa}
+\_protected\_def\_isansvariables  {\_umathrange{A-Z}70\_ncharsiA \_umathrange{a-z}70\_ncharsia}
+\_protected\_def\_bisansvariables {\_umathrange{A-Z}70\_ncharsxA \_umathrange{a-z}70\_ncharsxa}
+\_protected\_def\_ttvariables     {\_umathrange{A-Z}70\_ncharttA \_umathrange{a-z}70\_nchartta}
 
 \_chardef\_greekrmA="0391   \_chardef\_greekrma="03B1
 \_chardef\_greekbfA="1D6A8  \_chardef\_greekbfa="1D6C2
@@ -62,18 +62,18 @@
 \_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
 \_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita}
-\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma}
-\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa}
-\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia}
-\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna}
-\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia}
-\_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA \_setnablait}
-\_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA \_setnablarm}
-\_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA \_setnablabf}
-\_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA \_setnablabi}
-\_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA \_setnablabsans}
-\_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA \_setnablabisans}
+\_protected\_def\_itgreek    {\_umathrangegreek70\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangegreek70\_greekrma}
+\_protected\_def\_bfgreek    {\_umathrangegreek70\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangegreek70\_greekbia}
+\_protected\_def\_bsansgreek {\_umathrangegreek70\_greeksna}
+\_protected\_def\_bisansgreek{\_umathrangegreek70\_greeksia}
+\_protected\_def\_itGreek    {\_umathrangeGREEK70\_greekitA \_setnablait}
+\_protected\_def\_rmGreek    {\_umathrangeGREEK70\_greekrmA \_setnablarm}
+\_protected\_def\_bfGreek    {\_umathrangeGREEK70\_greekbfA \_setnablabf}
+\_protected\_def\_biGreek    {\_umathrangeGREEK70\_greekbiA \_setnablabi}
+\_protected\_def\_bsansGreek {\_umathrangeGREEK70\_greeksnA \_setnablabsans}
+\_protected\_def\_bisansGreek{\_umathrangeGREEK70\_greeksiA \_setnablabisans}
 
    \_doc -----------------------------
    \`\_setnabla` is used in order to `\nabla` behaves like uppercase Greek
@@ -81,7 +81,7 @@
    If you want to deactivate this behavior, use `\def\_setnabla#1 {}`.
    \_cod -----------------------------
 
-\_def \_setnabla {\_Umathcode"2207 = 7 1}
+\_def \_setnabla {\_Umathcode"2207 = 7 0}
 \_def \_setnablarm     {\_setnabla"02207 }
 \_def \_setnablabf     {\_setnabla"1D6C1 }
 \_def \_setnablait     {\_setnabla"1D6FB }
@@ -100,12 +100,12 @@
 \_chardef\_digitbsO="1D7EC
 \_chardef\_digitttO="1D7F6
 
-\_protected\_def\_rmdigits    {\_umathrange{0-9}71\_digitrmO}
-\_protected\_def\_bfdigits    {\_umathrange{0-9}71\_digitbfO}
-\_protected\_def\_bbdigits    {\_umathrange{0-9}71\_digitbbO}
-\_protected\_def\_sansdigits  {\_umathrange{0-9}71\_digitsnO}
-\_protected\_def\_bsansdigits {\_umathrange{0-9}71\_digitbsO}
-\_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
+\_protected\_def\_rmdigits    {\_umathrange{0-9}70\_digitrmO}
+\_protected\_def\_bfdigits    {\_umathrange{0-9}70\_digitbfO}
+\_protected\_def\_bbdigits    {\_umathrange{0-9}70\_digitbbO}
+\_protected\_def\_sansdigits  {\_umathrange{0-9}70\_digitsnO}
+\_protected\_def\_bsansdigits {\_umathrange{0-9}70\_digitbsO}
+\_protected\_def\_ttdigits    {\_umathrange{0-9}70\_digitttO}
 
    \_doc -----------------------------
    The  \`\cal`, \`\bbchar`, \`\frak`, \`\script` and
@@ -164,10 +164,10 @@
    }
    \_sdef{_c:L}{1}\_sdef{_c:B}{2}\_sdef{_c:V}{2}\_sdef{_c:R}{3}\_sdef{_c:N}{0}\_sdef{_c:U}{0}
    \_sdef{_c:F}{0}\_sdef{_c:O}{4}\_sdef{_c:C}{5}\_sdef{_c:P}{6}\_sdef{_c:A}{7}
-   \_def\_pset#1#2{\_Umathcode#1=\_tmp\_space 1 #1\_relax
-      \_if#2O\_Udelcode#1=1 #1\_relax\_fi
-      \_if#2C\_Udelcode#1=1 #1\_relax\_fi
-      \_if#2F\_Udelcode#1=1 #1\_relax\_fi
+   \_def\_pset#1#2{\_Umathcode#1=\_tmp\_space 0 #1\_relax
+      \_if#2O\_Udelcode#1=0 #1\_relax\_fi
+      \_if#2C\_Udelcode#1=0 #1\_relax\_fi
+      \_if#2F\_Udelcode#1=0 #1\_relax\_fi
    }
    \_catcode`#=14 \_everyeof={;{} } \_def\par{}
    \_globaldefs=1 \_ea \_p \_input mathclass.opm
@@ -183,11 +183,11 @@
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
       \_ifnum#1=\_Umathcodenum#1 % the code isn't set by mathclass.opm
-          \_Umathchardef#2=0 1 #1 \_Umathcode#1=0 1 #1
+          \_Umathchardef#2=0 0 #1 \_Umathcode#1=0 0 #1
       \_else \_Umathcharnumdef#2=\_Umathcodenum#1 \_fi
-      \_ifx#3\_mathopen   \_def#2{\_Udelimiter 4 1 #1 }\_fi
-      \_ifx#3\_mathclose  \_def#2{\_Udelimiter 5 1 #1 }\_fi
-      \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
+      \_ifx#3\_mathopen   \_def#2{\_Udelimiter 4 0 #1 }\_fi
+      \_ifx#3\_mathclose  \_def#2{\_Udelimiter 5 0 #1 }\_fi
+      \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 0 #1 }\_fi
    }
    \_globaldefs=1 \_input unimath-table.opm
 \_endgroup
@@ -196,29 +196,29 @@
    Many special characters must be declared with care...
    \_cod -----------------------------
 
-\_global\_Udelcode`<=1 "027E8 % these characters have different meaning
-\_global\_Udelcode`>=1 "027E9 % as normal and as delimeter
+\_global\_Udelcode`<=0 "027E8 % these characters have different meaning
+\_global\_Udelcode`>=0 "027E9 % as normal and as delimeter
 
 \_mit % default math alphabets setting
 
 % hyphen character is transformed to minus:
-\_Umathcode `- = 2 1 "2212
+\_Umathcode `- = 2 0 "2212
 
 % mathclass defines : as Punct, plain.tex as Rel, we keep mathclass,
 % i.e. there is difference from plain.tex, you can use $f:A\to B$.
 
 % mathclas defines ! as Ord, plain.tex as Close
-\_Umathcode `! = 5 1 `!  % keep plain.tex declaration
-\_Umathchardef \mathexclam = 5 1 `!
+\_Umathcode `! = 5 0 `!  % keep plain.tex declaration
+\_Umathchardef \mathexclam = 5 0 `!
 % mathclas defines ? as Punct, plain.tex as Close
-\_Umathcode `? = 5 1 `?  % keep plain.tex declaration
-\_Umathchardef \mathquestion = 5 1 `?
+\_Umathcode `? = 5 0 `?  % keep plain.tex declaration
+\_Umathchardef \mathquestion = 5 0 `?
 
-\_Umathcode `* = 2 1 "02217  % equivalent to \ast, like in plain TeX
+\_Umathcode `* = 2 0 "02217  % equivalent to \ast, like in plain TeX
 
-\_protected\_def \_sqrt       {\_Uradical 1 "0221A }
-\_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
-\_protected\_def \_fourthroot {\_Uradical 1 "0221C }
+\_protected\_def \_sqrt       {\_Uradical 0 "0221A }
+\_protected\_def \_cuberoot   {\_Uradical 0 "0221B }
+\_protected\_def \_fourthroot {\_Uradical 0 "0221C }
 
 \_def \nabla {^^^^2207} % \nabla behaves as uppercase Gereek letter, see \_setnabla
 
@@ -237,36 +237,36 @@
    \pointint "02A15 \sqint "02A16 \intlarhk "02A17 \intx "02A18
    \intcap "02A19 \intcup "02A1A \upint "02A1B \lowint "02A1C \_relax "0
 
-\_protected\_def \vert  {\_Udelimiter 0 1 "07C }
-\_protected\_def \Vert  {\_Udelimiter 0 1 "02016 }
-\_protected\_def \Vvert {\_Udelimiter 0 1 "02980 }
+\_protected\_def \vert  {\_Udelimiter 0 0 "07C }
+\_protected\_def \Vert  {\_Udelimiter 0 0 "02016 }
+\_protected\_def \Vvert {\_Udelimiter 0 0 "02980 }
 
-\_protected\_def \_overbrace    #1{\mathop {\Umathaccent  7 1 "023DE{#1}}\limits}
-\_protected\_def \_underbrace   #1{\mathop {\Umathaccent bottom 7 1 "023DF{#1}}\limits}
-\_protected\_def \_overparen    #1{\mathop {\Umathaccent  7 1 "023DC{#1}}\limits}
-\_protected\_def \_underparen   #1{\mathop {\Umathaccent bottom 7 1 "023DD{#1}}\limits}
-\_protected\_def \_overbracket  #1{\mathop {\Umathaccent  7 1 "023B4{#1}}\limits}
-\_protected\_def \_underbracket #1{\mathop {\Umathaccent bottom 7 1 "023B5{#1}}\limits}
+\_protected\_def \_overbrace    #1{\mathop {\Umathaccent        7 0 "023DE{#1}}\limits}
+\_protected\_def \_underbrace   #1{\mathop {\Umathaccent bottom 7 0 "023DF{#1}}\limits}
+\_protected\_def \_overparen    #1{\mathop {\Umathaccent        7 0 "023DC{#1}}\limits}
+\_protected\_def \_underparen   #1{\mathop {\Umathaccent bottom 7 0 "023DD{#1}}\limits}
+\_protected\_def \_overbracket  #1{\mathop {\Umathaccent        7 0 "023B4{#1}}\limits}
+\_protected\_def \_underbracket #1{\mathop {\Umathaccent bottom 7 0 "023B5{#1}}\limits}
 
 \_public \overbrace \underbrace \overparen \underparen \overbracket \underbracket ;
 
-\_protected\def \widehat            {\Umathaccent 7 1 "00302 }
-\_protected\def \widetilde          {\Umathaccent 7 1 "00303 }
-\_protected\def \overleftharpoon    {\Umathaccent 7 1 "020D0 }
-\_protected\def \overrightharpoon   {\Umathaccent 7 1 "020D1 }
-\_protected\def \overleftarrow      {\Umathaccent 7 1 "020D6 }
-\_protected\def \overrightarrow     {\Umathaccent 7 1 "020D7 }
-\_protected\def \overleftrightarrow {\Umathaccent 7 1 "020E1 }
+\_protected\def \widehat            {\Umathaccent 7 0 "00302 }
+\_protected\def \widetilde          {\Umathaccent 7 0 "00303 }
+\_protected\def \overleftharpoon    {\Umathaccent 7 0 "020D0 }
+\_protected\def \overrightharpoon   {\Umathaccent 7 0 "020D1 }
+\_protected\def \overleftarrow      {\Umathaccent 7 0 "020D6 }
+\_protected\def \overrightarrow     {\Umathaccent 7 0 "020D7 }
+\_protected\def \overleftrightarrow {\Umathaccent 7 0 "020E1 }
 
-\_mathchardef\ldotp="612E
+\_Umathchardef \ldotp = 6 0 "002E
 \_let\|=\Vert
 \_mathcode`\_="8000
 
-\_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass says that it is Rel
-\_global\_Umathcode    "002E         = 0 1 "002E % mathclass says that dot is Punct
-\_global\_Umathchardef \unicodecdots = 0 1 "22EF
+\_global\_Umathcode    "22EF         = 0 0 "22EF % mathclass says that it is Rel
+\_global\_Umathcode    "002E         = 0 0 "002E % mathclass says that dot is Punct
+\_global\_Umathchardef \unicodecdots = 0 0 "22EF
 
-\_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
+\_global\_Umathcode `/ = 0 0 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
 
 % compressed dots in S and SS styles (usable in \matrix when it is in T, S and SS style)
 \_protected\_def \vdots {\_relax \_ifnum \_mathstyle>3 \_unicodevdots \_else \_vdots \_fi}
