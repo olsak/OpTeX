@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2021-08-02>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2021-08-16>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -110,15 +110,21 @@
    \endtt
 
    \`\_loadumathfamily` `<number> {<font>}{<font features>}`
-   loads the given Unicode-math fonts in three sizes given by the
-   \^`\setmathsizes` macro and sets it as the math family `<number>`.
+   loads the given Unicode-math fonts in three sizes
+   using single <font> with different `mathsize=1,2,3` font features.
+   The math font family is set with given `<number>`.
    The `<font features>` are added to the default
    \`\_mfontfeatures` and to the size-dependent features `ssty=1`
-   if script size is asked or `ssty=2` if scriptscriptsize is asked.
-   All information needed by \TeX/ is collected in single Unicode-math font.\nl
+   if script size is asked or `ssty=2` if scriptscriptsize is asked.\nl
+   \`\_mparams``<number>` inserts additional font feature `nomathparam`
+   if the <number> of the family is greater than 3. Lua\TeX/ sets math
+   parameters (thickness of fraction rules etc., see section 7.4 in Lua\TeX/
+   documentation) repeatedly from loaded math
+   fonts if `nomathparam` is not given. We want to load these parameters only
+   from fonts at families 0--3 (and actually we are using only family 1 as main math font).\nl
    The \^`\_corrmsize` `<factor><space>` can be used just before
    `\_loadumathfamily`, see section~\ref[math-preload] for more information.\nl
-   The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are additional font
+   The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are font
    features for text, script and sscript sizes respectively. They are
    locally re-defined in \^`\mathbox` macro.
    \_cod -----------------------------
@@ -127,16 +133,15 @@
 \_def\_mfontfeatures{mode=base;script=math;}
 
 \_def\_loadumathfamily #1 #2#3 {%
-  \_edef\_optsizesave{\_the\_optsize}%
-  \_optsize=\_sizemtext  \_font\_mF=\_umathname{#2}{\_textmff #3} at\_optsize
-  \_textfont#1=\_mF
-  \_optsize=\_sizemscript \_font\_mF=\_umathname{#2}{\_scriptmff #3} at\_optsize
-  \_scriptfont#1=\_mF
-  \_optsize=\_sizemsscript \_font\_mF=\_umathname{#2}{\_sscriptmff #3} at\_optsize
-  \_scriptscriptfont#1=\_mF
-  \_optsize=\_optsizesave \_ptmunit=\_ptunit
+  \_font\_mF=\_umathname{#2}{\_textmff   \_mparams{#1}#3} at\_sizemtext \_textfont        #1=\_mF
+  \_font\_mF=\_umathname{#2}{\_scriptmff \_mparams{#1}#3} at\_sizemtext \_scriptfont      #1=\_mF
+  \_font\_mF=\_umathname{#2}{\_sscriptmff\_mparams{#1}#3} at\_sizemtext \_scriptscriptfont#1=\_mF
+  \_ptmunit=\_ptunit
 }
-\_def\_textmff{ssty=0;} \_def\_scriptmff{ssty=1;} \_def\_sscriptmff{ssty=2;}
+\_def\_textmff   {ssty=0;mathsize=1;}
+\_def\_scriptmff {ssty=1;mathsize=2;}
+\_def\_sscriptmff{ssty=2;mathsize=3;}
+\_def\_mparams#1{\_ifnum#1>3 nomathparam;\_fi}
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs not to
@@ -254,6 +259,8 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2021-08-16 \_loadumathfamily simplified, used mathsize= font feature.
+2021-08-16 nomathparam font feature used for families > 3 (bug fixed).
 2021-08-02 ssty fontfeatures rewritten; fam2, fam3 unused, \scriptspace not set
 2021-04-04 \_setunimathdimens: \setbox0=\box\voidbox added
 2021-03-09 \_setunimathdimes: \_begin/end/group instead {}, bug fixed
