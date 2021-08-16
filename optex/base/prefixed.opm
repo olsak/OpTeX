@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2020-02-25>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2021-08-16>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -61,17 +61,18 @@
    such file more than once. Else the <info> is printed to the terminal
    and the file is read.\nl
    The {\`\_endcode`} is defined as `\endinput` in the `optex.ini` file.
-   \`\wterm` `{<text>}` prints `<text>`
-   to the terminal and to the `.log` file (as in plain \TeX/).
+   \`\wterm` `{<text>}` prints the `<text>` to the terminal and to the `.log` file,
+   \`\wlog` `{<text>}` prints the `<text>` only to the `.log` file (as in plain \TeX)
    \_cod -----------------------
 
 \_def \_codedecl #1#2{%
-   \_ifx #1\_undefined \_wterm{#2}%
+   \_ifx #1\_undefined \_wlog{#2}%
    \_else \_ea \_endinput \_fi
 }
 \_def \_wterm {\_immediate \_write16 }
+\_def \_wlog {\_immediate\_write-1 } % write on log file (only)
 
-\_public \wterm ;
+\_public \wterm \wlog ;
 
    \_doc ------------------------
    The `\optexversion` and `\fmtname` are defined in the `optex.ini` file.
@@ -314,6 +315,7 @@ can look like.
 
 \endinput
 
+2021-08-16 \_wlog moved from basic macros, \_codedecl uses \_wlog only.
 2021-04-25 \_checkexists introduced
 2021-02-15 \_expandafter -> \_ea in \_codedecl
 2020-02-14 released

@@ -3,7 +3,7 @@
 \_codedecl \sdef {Basic macros for OpTeX <2021-07-20>} % preloaded in format
 
    \_doc ------------------------------
-   \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, \`\null` and \`\wlog`
+   \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
    are classical macros from plain \TeX/.
    \_cod ------------------------------
 
@@ -11,8 +11,7 @@
 \_def \_empty {}
 \_def \_space { }
 \_def \_null {\_hbox{}}
-\_def \_wlog {\_immediate\_write-1 } % write on log file (only)
-\_public \bgroup \egroup \empty \space \null \wlog ;
+\_public \bgroup \egroup \empty \space \null ;
 
    \_doc ------------------------------
    \`\ignoreit` ignores next token or `{<text>}`,
