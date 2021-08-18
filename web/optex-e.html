@@ -88,6 +88,7 @@ various engines. We are using only Unicode and only LuaTeX.
 <li>All features from OPmac macros are copied (for example, you can see 
     <a href="../opmac-prospectus.pdf">opmac-prospectus.pdf</a>) 
 <li>Macros are documented in the same place where code is.
+<li>Documentation of all features is at single place.
 <li>The user namespace of control sequences is separated from internal
 namespace of OpTeX and primitives (\foo versus \_foo).
 </ul>
@@ -97,7 +98,8 @@ can process your document by <tt>optex document</tt>. Try
 <tt>optex op-demo</tt> for example. If the <tt>optex</tt> command
 is not present, try to run <tt>luatex -fmt optex op-demo</tt>.
 
-<p>If you have a TeX distribution without OpTeX, you can install it manually:
+<p>If you have a TeX distribution without OpTeX, you need LuaTeX in version
+1.10.0 (2019) or later, luaotfload package 3.12 or later, and you can install OpTeX manually:
 
 <pre>
    unzip optex-(version).zip

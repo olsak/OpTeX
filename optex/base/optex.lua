@@ -577,6 +577,9 @@ end, "_colors")
 -- behavior (inserting colorstack whatsits) we set our own attribute. The hook
 -- has to be registered {\em after} `luaotfload` is loaded.
 function optex_hook_into_luaotfload()
+    if not luaotfload.set_colorhandler then
+        return -- old luaotfload, colored fonts will be broken
+    end
     local setattribute = direct.set_attribute
     local token_setmacro = token.set_macro
     local color_count = registernumber("_colorcnt")
