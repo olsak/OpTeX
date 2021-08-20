@@ -181,6 +181,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#part">Adding \part, the highest level of sections</a>
 </ul>
 
+<li>References
+<ul>
+    <li><a href="#fref">Flefible reference texts</a>
+</ul>
+
 <li>Slides
 <ul>
     <li><a href="#slider">Navigation bar for selecting pages</a>
@@ -3094,6 +3099,50 @@ structure of outlines is prepared too.
 <p CLASS=datum>(0059) -- P. O., 2021-06-01<p>
 <hr>
 
+<p CLASS="lmarg">References</p>
+
+<h2><a name="fref"></a>Flexible reference texts</h2>
+
+<p>In OpTeX, \ref[label] prints an active text in fixed format which is only
+a number of the section or the figure or whatever.
+Maybe, we want to print more active text (for example,
+with the name of linked object).
+This OpTeX trick creates more flexible \ref macro.
+If \ref[label] is not followed by {text} immediatelly then it behaves as
+standard OpTeX's \ref. But \ref[label]{text} prints active "text". This "text"
+should include the @ character which is replaced by the number of the
+referenced object. For example:
+
+<pre>
+\hyperlinks\Blue\Blue
+
+See section \ref[label] or see \ref[label]{section @}.
+</pre>
+
+<p>creates: See section <a href="#fref">65</a> or see <a href="#fref">section 65</a>.
+
+<p>The implementation follows:
+
+<pre>
+\def\ref[#1]{\def\tmp{#1}\futurelet\next\refA}
+\def\refA{\ifx\next\bgroup\ea\refB\else\refB{@}\fi}
+\def\refB#1{\def\tmpb{#1}%
+   \isdefined{_lab:\tmp}\iftrue
+      \replstring\tmpb{@}{\cs{_lab:\tmp}}\_ilink[ref:\tmp]{\tmpb}%
+   \else
+      \replstring\tmpb{@}{??}\tmpb
+      \_opwarning{label [\tmp] unknown. Try to TeX me again}%
+      \_incr\_unresolvedrefs \_openref
+   \fi
+}
+</pre>
+
+<p>The original \ref macro is redefined. The existence of opening brace "{" is
+tested by \futurelet and the @ is replaced by \replstring. The
+\cs{_lab:label} expands to the number of the referenced object.
+
+<p CLASS=datum>(0065) -- P. O., 2021-08-20<p>
+<hr>
 
 <p CLASS="lmarg">Slides</p>
 
