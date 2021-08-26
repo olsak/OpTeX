@@ -19,6 +19,14 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.04> Aug. 2021:
+       Color handling reimplemented, LuaTeX's attributes are used now.
+       Loading Unicode math fonts reimplemented, (s)script size given by font.
+       Better compatibility with TikZ using tikz.opm package.
+       .ref file: consistency checking added.
+       Versions of .opm files printed only to .log.
+       \tracingmacros=3 or 4 enabled.
+       Bugs fixing.
 <1.03> Jun. 2021:
        mte: Package for MicroTypographic Extensions released.
        Erewhon: font family support added.
