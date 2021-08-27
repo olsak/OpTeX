@@ -27,19 +27,19 @@
    \_doc ----------------------------
    Each hyperlink is created internally by \`\_xlink``{<type>}{<spec>}{<color>}{<text>}`.
    This macro expands to `\_quitvmode{<text>}` by default, i.e.\ no active
-   hyperlink is created, only <text> is printed in horizontal mode.
-   If \^`\hyperlinks` is used, then `\_xlink` gets meaning of
-   \`\_xlinkactive` and hyperlinks are created using `\pdfstartlink`,
+   hyperlink is created, only <text> is printed in horizontal mode (and in a group).
+   If \^`\hyperlinks` is used, then `\_xlink` gets the meaning of
+   \`\_xlinkactive` and hyperlinks are created by the `\pdfstartlink`/%
    `\pdfendlink` primitives. The <text> has given <color> only when
-   hyperlink is created. But if `\_<type>linkcolor` is defined, it has
-   precedence.
+   hyperlink is created. If `\_<type>linkcolor` is defined, it has
+   precedence over <color>.
    \nl
    The \`\_linkdimens` macro declares the dimensions of link area.
    \nl
    A specific action can be defined for each link <type> by the macro
    `\_<type>action{<spec>}`. \OpTeX/ defines only \`\_urlaction``{<url>}`.
    The default link action (when `\_<type>action` is not defined) is
-   `goto mame{<type>:<spec>}` (creates an internal link). It is declared in the
+   `goto name{<type>:<spec>}` (an internal link). It is declared in the
    \`\_linkactions``{<type>}{<spec>}` macro.
    \nl
    The `\_pdfstartlink` primitive uses `attr{\_pdfborder{<type>}}`. The
