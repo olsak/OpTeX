@@ -91,14 +91,15 @@
 \_public \ilink \ulink \link ;
 
    \_doc ----------------------------
-   \`\hyperlinks``{<ilink_color>}{<ulink_color>}` activates `\dest`, `\xlink`,
-   in order they create links.
+   \`\hyperlinks``<ilink color><ulink color>` activates `\dest`, `\xlink`,
+   so that they create links. Not setting colors (`\hyperlinks{}{}`) is also
+   supported.
    \_cod ----------------------------
 
 \_def\_hyperlinks#1#2{%
    \_let\_dest=\_destactive \_let\_xlink=\_xlinkactive
-   \_let\_ilinkcolor=#1%
-   \_let\_elinkcolor=#2%
+   \_let\_ilinkcolor=#1\_empty
+   \_let\_elinkcolor=#2\_empty
    \_public \dest \xlink ;%
 }
 \_public \hyperlinks ;
