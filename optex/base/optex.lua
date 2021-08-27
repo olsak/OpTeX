@@ -419,12 +419,17 @@ end, "_tracingmacros")
 -- inject PDF literals according to attributes.
 --
 local node_id = node.id
+local node_subtype = node.subtype
 local glyph_id = node_id("glyph")
 local rule_id = node_id("rule")
 local glue_id = node_id("glue")
 local hlist_id = node_id("hlist")
 local vlist_id = node_id("vlist")
 local disc_id = node_id("disc")
+local whatsit_id = node_id("whatsit")
+local pdfliteral_id = node_subtype("pdf_literal")
+local pdfsave_id = node_subtype("pdf_save")
+local pdfrestore_id = node_subtype("pdf_restore")
 local token_getmacro = token.get_macro
 
 local direct = node.direct
@@ -517,6 +522,10 @@ local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stro
             return true, true
         end
         return true, false
+    elseif id == whatsit_id and (subtype == pdfliteral_id
+                or subtype == pdfsave_id
+                or subtype == pdfrestore_id) then
+        return true, true
     end
     return false, false
 end
