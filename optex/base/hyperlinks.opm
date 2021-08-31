@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2021-05-14>} % preloaded in format
+\_codedecl \ulink {Hyperlinks <2021-08-31>} % preloaded in format
 
    \_doc ----------------------------
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
@@ -202,6 +202,7 @@ Another example `\def\_tocborder{1 0 0}` causes red frames in TOC
 
 \_endinput
 
+2021-08-31 \hyperlinks{}{} allowed, bug fixed
 2021-05-14 \_xlink introduced, \link, \ilink, \ulink re-implemented.
 2021-05-12 \url: triplet :// instead //, \_urlslashslash removed.
 2021-05-11 \url reimplemented, \_urlxskip added.
