@@ -203,7 +203,7 @@
 \_chardef\i="11 \chardef\j="12 % dotless letters
 \_chardef\aa="E5
 \_chardef\AA="C5
-\_chardef\S="9F
+\_chardef\S="A7
 \_def\l{\_errmessage{\_usedirectly ł}}
 \_def\L{\_errmessage{\_usedirectly Ł}}
 %\def\_{\_ifmmode \kern.06em \vbox{\hrule width.3em}\else _\fi} % obsolete
