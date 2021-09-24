@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2021-07-16>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2021-09-24>} % preloaded in format
 
    \_doc -----------------------------
    The variant selectors  \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, \^`\tt`
@@ -175,7 +175,7 @@
    \_cod -----------------------------
 
 \_def\_famdecl [#1]#2#3#4#5#6#7#8{%
-   \_initunifonts \_uniaccents
+   \_initunifonts \_unichars \_uniaccents
    \_unless\_ifcsname _f:\_csstring#2:main.fam\_endcsname
       \_isfont{#7}\_iffalse
          \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
@@ -1011,6 +1011,7 @@ Luaotfload documentation for more information.
 
 \endinput
 
+2021-09-24  \_unichars used in \initunifonts
 2021-07-16  \initunifonts: optex_hook_into_luaotfload added.
 2021-05-23  concept of \_fontfeatures macro re-implemented
 2021-05-02  simpler \_resizefont, better concept of doc, moving parts from fonts-resize

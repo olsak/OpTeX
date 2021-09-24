@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2021-04-09>} % preloaded in format
+\_codedecl \magstep {Macros from plain TeX <2021-09-24>} % preloaded in format
 
    \_doc -----------------------------
    The \`\dospecials` works like in plain TeX but does nothing with `_`.
@@ -210,14 +210,28 @@
 \_def\_{\_hbox{_}}
 \_def\dag{\_errmessage{\_usedirectly †}}
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
-%\_def\copyright{\_errmessage{\_usedirectly ©}}
-\_def\copyright{©} % << example, what to do
+\_def\copyright{\_errmessage{\_usedirectly ©}}
 %\_def\Orb{\_mathhexbox20D} % obsolete (part of Copyright)
 %\_def\P{\_mathhexbox27B}   % obsolete
 
 \_def \_usedirectly #1{Load Unicoded font by \string\fontfam\space and use directly #1}
 \_def \_mathhexbox #1#2#3{\_leavevmode \_hbox{$\_math \_mathchar"#1#2#3$}}
 \_public \mathhexbox ;
+
+   \_doc -----------------------------
+   The \`\_unichars` macro is run in \^`\initunifonts`,
+   Unicodes are used instead old plain \TeX/ settings.
+   \_cod -----------------------------
+
+\def\_unichars{% characters with different codes in Unicode:
+   \_chardef\ss=`ß
+   \_chardef\oe=`œ
+   \_chardef\OE=`Œ
+   \_chardef\S=`§
+   \_chardef\dag`†
+   \_chardef\ddag`‡
+   \_chardef\copyright`©
+}
 
    \_doc -----------------------------
    Accents.
@@ -344,5 +358,6 @@
 
 \_endcode % -------------------------------------
 
+2021-09-24 ... \_unichars introduced
 2021-04-09 ... \_public\showhyphens, bug fixed
 2020-02-14 ... released
