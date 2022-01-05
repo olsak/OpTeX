@@ -71,23 +71,23 @@
    \_cod -----------------------------
 
 \_def\_normalunimath{%
-    \_loadumathfamily 1 {\_unimathfont}{} % Base font
+    \_loadumathfamily 0 {\_unimathfont}{} % Base font
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens
 }%
 \_def\_boldunimath{%
     \_ifx\_unimathboldfont \_undefined
-       \_loadumathfamily 1 {\_unimathfont}{embolden=1.7;} % Base faked bold
+       \_loadumathfamily 0 {\_unimathfont}{embolden=1.7;} % Base faked bold
     \_else
-       \_loadumathfamily 1 {\_unimathboldfont}{} % Base real bold font
+       \_loadumathfamily 0 {\_unimathboldfont}{} % Base real bold font
     \_fi
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens
 }%
 \_def\_setunimathdimens{% PlainTeX sets these dimens for 10pt size only:
-  \_delimitershortfall=0.5\_fontdimen6\_textfont1
-  \_nulldelimiterspace=0.12\_fontdimen6\_textfont1
-  \_setbox0=\_hbox{\_everymath{}$\_fam1\_displaystyle{0\_atop0}$}%
+  \_delimitershortfall=0.5\_fontdimen6\_textfont0
+  \_nulldelimiterspace=0.12\_fontdimen6\_textfont0
+  \_setbox0=\_hbox{\_everymath{}$\_displaystyle{0\_atop0}$}%
   \_Umathfractiondelsize\_displaystyle = \_dimexpr(\_ht0-\_Umathaxis\_displaystyle)*2\_relax
   \_setbox0=\_box\_voidbox
 }
@@ -101,7 +101,7 @@
    \begtt
    \loadmath{[xitsmath-regular]}
    \def\_boldmath{%
-      \_loadumathfamily 1 {[xitsmath-bold]}{} % Base font
+      \_loadumathfamily 0 {[xitsmath-bold]}{} % Base font
       \_loadmathfamily 4  rsfs % script
       \_loadumathfamily 5 {[xitsmath-regular]}{}
       \_def\|{\_Udelimiter 0 5 "02016 }%      % norm delimiter from family 5

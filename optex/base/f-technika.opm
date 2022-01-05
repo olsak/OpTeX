@@ -2,8 +2,8 @@
 
 \_famdecl [Technika] \Technika {Fonts from visual style of CTU in Prague}
         {\caps \light \book} {\rm \bf \it \bi \stencil} {}
-        {[Technika-Regular]}
-        {\_def\_fontnamegen {[Technika\_stencilV-\_currV]:\_capsV\_fontfeatures}}
+        {Technika-Regular}
+        {\_def\_fontnamegen {Technika\_stencilV-\_currV:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J

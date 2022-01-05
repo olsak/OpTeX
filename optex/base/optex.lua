@@ -222,7 +222,7 @@ function callback.add_to_callback(name, fn, description)
             return call_callback(name, ...)
         end)
     else
-        err("cannot add to callback '"..name.."' - no such callback exists")
+        err("cannot add to callback '"..name.."' - it doesn't exist or is disabled")
     end
 
     -- add function to callback list for this callback
@@ -262,6 +262,13 @@ function callback.remove_from_callback(name, description)
     end
 
     return fn, description
+end
+--
+-- Disable a callback completely.
+function callback.disable_callback(name)
+    callback_register(name, false)
+    -- don't allow adding functions from now on
+    callback_types[name] = nil
 end
 --
 -- helper iterator generator for iterating over reverselist callback functions
@@ -396,6 +403,7 @@ luatexbase = {
     create_callback = callback.create_callback,
     add_to_callback = callback.add_to_callback,
     remove_from_callback = callback.remove_from_callback,
+    disable_callback = callback.disable_callback,
     call_callback = callback.call_callback,
     callbacktypes = {}
 }
@@ -582,31 +590,54 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     return tonode(list)
 end, "_colors")
 --
--- We also hook into `luaotfload`'s handling of color. Instead of the default
--- behavior (inserting colorstack whatsits) we set our own attribute. The hook
--- has to be registered {\em after} `luaotfload` is loaded.
-function optex_hook_into_luaotfload()
-    if not luaotfload.set_colorhandler then
-        return -- old luaotfload, colored fonts will be broken
-    end
-    local setattribute = direct.set_attribute
-    local token_setmacro = token.set_macro
-    local color_count = registernumber("_colorcnt")
-    local tex_getcount, tex_setcount = tex.getcount, tex.setcount
-    luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
-        local attr = tonumber(token_getmacro("_color::"..rgbcolor))
-        if not attr then
-            attr = tex_getcount(color_count)
-            tex_setcount(color_count, attr + 1)
-            local strattr = tostring(attr)
-            token_setmacro("_color::"..rgbcolor, strattr)
-            token_setmacro("_color:"..strattr, rgbcolor)
-            -- no stroke color set
-        end
-        setattribute(n, color_attribute, attr)
-        return head, n
-    end)
+-- Load ConTeXt font loading code with some preparations
+logs = logs or {}
+function texio.reporter(...)
+ if trace_context then
+     texio.write_nl(...)
+ end
 end
+--
+-- Attribute 0 must be 0 for ConTeXt
+tex.setattribute(0, 0)
+--
+local attrs = {}
+attributes = attributes or {}
+function attributes.private(name)
+  local num = attrs[name]
+  if not num then
+      num = alloc.new_attribute(name)
+      attrs[name] = num
+  end
+  return num
+end
+--
+local saved = callback.register
+function callback.register(cb, fn)
+  if fn == false then
+      callback.disable_callback(cb)
+  else
+      callback.add_to_callback(cb, fn, "context")
+  end
+end
+--
+utf = unicode.utf8
+--
+-- load the bulk of the ConTeXt code
+lua.bytecode[2]()
+--
+-- Register callbacks
+callback.disable_callback("ligaturing")
+callback.disable_callback("kerning")
+callback.add_to_callback("pre_linebreak_filter", nodes.simple_font_handler, "context")
+callback.add_to_callback("hpack_filter",         nodes.simple_font_handler, "context")
+callback.add_to_callback("define_font",          fonts.definers.read,       "context")
+--
+callback.register = saved
+
+-- "\font=name" is a font name lookup with fallback to file name, we don't
+-- support font name, yet
+fonts.names.resolve = function() end
 
    -- History:
    -- 2021-07-16 support for colors via attributes added

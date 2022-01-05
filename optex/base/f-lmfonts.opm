@@ -3,8 +3,8 @@
 \_famdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
         {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital
          \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {LM}
-        {[lmroman10-regular]}
-        {\_def\_fontnamegen {[\_optname{lm\_subfamV.\_currV}]:\_fontfeatures}}
+        {lmroman10-regular}
+        {\_def\_fontnamegen {\_optname{lm\_subfamV.\_currV}:\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers (selects subfamily):^^J
@@ -106,12 +106,12 @@ Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.^^
                     \_onlyif subfam=tt:       {\_fvars r b isl bisl }}
 \_moddef \caps     {\_onlyif subfam=rm,tt:    {\_fvars rc . ic . }}
 
-\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}}
+\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{tlig=no;}\_ttset \_rm}}
 \_private \LMfonts \ttset ; % used in \_tryloadtt
 
 \_initfontfamily % new font family must be initialized
 
-\_loadmath {[latinmodern-math]}
+\_loadmath {latinmodern-math}
 
 \_endcode
 
