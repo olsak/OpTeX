@@ -44,7 +44,12 @@
 %\ttindent=0pt
 \everylist={\advance\ttindent by-1em}
 \hyperlinks \Green \Green
-\def\cskip{\par\nobreak}
+\ifx\_partokenset\undefined
+   \def\cskip{\par\nobreak}
+\else
+   \def\cskip{\_par\nobreak}
+\fi
+
 \def\begblock{\medskip\hbox\bgroup\vrule\vbox\bgroup\hrule\smallskip
    \_fnset\leftskip=\parindent \rightskip=\parindent \medskip\noindent}
 \def\endblock{\medskip\hrule\egroup\vrule\egroup}

@@ -176,7 +176,7 @@
    \_ifx\_end#2 \_let\_next=\_relax \_else \_def\_next{\_printverb#2}\_fi
    \_next
 }
-\_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\par}
+\_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\_par}
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
 \_def\_printverblinenum{\_llap{\_sevenrm \_the\_ttline\_kern.9em}}
 \_def\_putttpenalty{\_def\_putttpenalty{\_penalty\_ttpenalty}}

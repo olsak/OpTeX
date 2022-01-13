@@ -18,7 +18,7 @@
    \_def\_nl{\_boxlinesE}%
    \_bgroup \_lccode`\~=`\^^M\_lowercase{\_egroup\_let~}\_boxlinesE
    \_everypar{\_setbox0=\_lastbox\_endgraf
-      \_hbox\_bgroup \_catcode`\^^M=13 \_let\par=\_nl \_aftergroup\_boxlinesC}%
+      \_hbox\_bgroup \_catcode`\^^M=13 \_let\_par=\_nl \_aftergroup\_boxlinesC}%
 }
 \_def\_boxlinesC{\_futurelet\_next\_boxlinesD}
 \_def\_boxlinesD{\_ifx\_next\_empty\_else\_ea\_egroup\_fi}
@@ -51,7 +51,7 @@
    \_cod -----------------------------
 
 \_def\_letter{
-   \_def\_address{\_vtop\_bgroup\_boxlines \_parskip=0pt \_let\par=\_egroup}
+   \_def\_address{\_vtop\_bgroup\_boxlines \_parskip=0pt \_let\_par=\_egroup}
    \_def\_subject{{\_bf \_mtext{subj}: }}
    \_public \address \subject ;
    \_typosize[11/14]

@@ -48,11 +48,11 @@
    Plain \TeX/ classical \`\obeylines` and \`\obeyspaces`.
    \_cod -----------------------------
 
-% In \obeylines, we say `\let^^M=\par' instead of `\def^^M{\par}'
-% since this allows, for example, `\let\par=\cr \obeylines \halign{...'
+% In \obeylines, we say `\let^^M=\_par' instead of `\def^^M{\_par}'
+% since this allows, for example, `\let\_par=\cr \obeylines \halign{...'
 {\_catcode`\^^M=13 % these lines must end with %
   \_gdef\_obeylines{\_catcode`\^^M=13\_let^^M\_par}%
-  \_global\_let^^M=\par} % this is in case ^^M appears in a \write
+  \_global\_let^^M=\_par} % this is in case ^^M appears in a \write
 \_def\_obeyspaces{\_catcode`\ =13 }
 {\_obeyspaces\_global\_let =\_space}
 \_public \obeylines \obeyspaces ;

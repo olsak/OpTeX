@@ -80,15 +80,15 @@
     usages of `\lipsum` are fully expandable. If you want to have all
     printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
 
-    `\lipsum` adds `\par` after each printed paragraph. If you don't need
-    such `\par` here, use \`\lipsumtext``[<number>]`.
-    This macro prints only one selected paragraph <number> and does not add `\par`.
+    `\lipsum` adds `\_par` after each printed paragraph. If you don't need
+    such `\_par` here, use \`\lipsumtext``[<number>]`.
+    This macro prints only one selected paragraph <number> and does not add `\_par`.
     \_cod ----------------------------
 
 \_def\_lipsumtext[#1]{\_lipsumload\_cs{_lip:#1}}
 \_def\_lipsum[#1]{\_lipsumA #1\_empty-\_empty\_end}
 \_def\_lipsumA #1-#2\_empty#3\_end{%
-   \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\par}}
+   \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{{%
    \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
@@ -99,6 +99,78 @@
    }}}
 \_public \lipsum \lipsumtext ;
 \_let \lorem=\lipsum
+
+   \_doc -----------------------------
+   Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to
+   specify something different than `\par` at empty lines. We set `\_par`
+   (see bellow) in \OpTeX/ version 1.04+ and newer. Some macros were rewritten
+   due to this change. And we copy old versions of these changed macros here
+   in order to allow to use older Lua\TeX/ versions where `\partokenname` is
+   not provided.\nl
+   Note that your macros where a parameter is separated by the empty line
+   must be changed too. Use `\def\macro #1\_par{...}` instead
+   `\def\macro #1\par{...}`.
+   \_cod -----------------------------
+
+\_ifx\_partokenname\_undefined % LuaTeX 1.13 or older:
+
+   \_def\_begmulti #1 {\_par\_bgroup\_wipeepar\_multiskip\_penalty0 \_def\_Ncols{#1}
+      \_setbox6=\_vbox\_bgroup\_bgroup \_let\_setxhsize=\_relax \_penalty-99
+      \_advance\_hsize by\_colsep
+      \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep
+      \_mullines=0
+      \_def\par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
+   }
+   \_def\_incaption {\_bgroup
+      \_ifcsname _\_tmpa num\_endcsname \_ea\_incr \_csname _\_tmpa num\_endcsname
+      \_else \_opwarning{Unknown caption /\_tmpa}\_fi
+      \_edef\_thecapnum {\_csname _the\_tmpa num\_endcsname}%
+      \_edef\_thecaptitle{\_mtext{\_tmpa}}%
+      \_ea\_the \_csname _everycaption\_tmpa\_endcsname
+      \_def\_par{\_nbpar\_egroup}\_let\par=\_par
+      \_cs{_printcaption\_tmpa}%
+   }
+   \_def\_boxlines{%
+      \_def\_boxlinesE{\_ifhmode\_egroup\_empty\_fi}%
+      \_def\_nl{\_boxlinesE}%
+      \_bgroup \_lccode`\~=`\^^M\_lowercase{\_egroup\_let~}\_boxlinesE
+      \_everypar{\_setbox0=\_lastbox\_endgraf
+         \_hbox\_bgroup \_catcode`\^^M=13 \_let\par=\_nl \_aftergroup\_boxlinesC}%
+   }
+   \_def\_letter{
+      \_def\_address{\_vtop\_bgroup\_boxlines \_parskip=0pt \_let\par=\_egroup}
+      \_def\_subject{{\_bf \_mtext{subj}: }}
+      \_public \address \subject ;
+      \_typosize[11/14]
+      \_vsize=\_dimexpr \_topskip + 49\_baselineskip \_relax % added 2020-03-28
+      \_parindent=0pt
+      \_parskip=\_medskipamount
+      \_nopagenumbers
+   }
+   \_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\par}
+   \_public \begmulti \boxlines \letter ;
+
+\_else % LuaTeX 1.14 or newer:
+
+   \_doc -----------------------------
+   We set `\partokenneame` to `\_par` in order to keep the name `\par` in
+   user name space. I.e. a user can say `\def\par{paragraph}` for example
+   without crash of processing the document. Se section~\ref[prefixed] for
+   more details about the name space concept.\nl
+   Moreover, we set `\partokencontext` to one in order to the `\_par` token
+   is inserted not only at empty lines, but also at the end of `\vbox`, `\vtop` and
+   `\vcenter` if horizontal mode is opened here. This differs from default
+   \TeX/ behavior where horizontal mode is closed in these cases without
+   inserting par token.\nl
+   We set \`\_partokenset` to defined value 1 in order to the macro programmer can
+   easily check these settings in \OpTeX/ format by
+   `\ifx\_partokenset\undefined ... \else ...\fi`.
+   \_cod -----------------------------
+
+   \_partokenname\_par
+   \_partokencontext=1
+   \_let\_partokenset=1
+\_fi
 
 \_endcode
 

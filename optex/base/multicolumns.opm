@@ -31,7 +31,7 @@
    \_advance\_hsize by\_colsep
    \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep
    \_mullines=0
-   \_def\par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
+   \_def\_par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
 }
 \_def\_endmulti{\_vskip-\_prevdepth\_vfil
    \_ea\_egroup\_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax

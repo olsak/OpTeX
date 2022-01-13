@@ -134,7 +134,7 @@
    \_ifx\_printfilename\_relax \_penalty \_ttpenalty \_fi \_vskip-4pt
    \_noindent\_rlap{\Yellow \_vrule height8pt depth5pt width\_hsize}%
    \_printfilename
-   \_indent \_printverblinenum #1\par}
+   \_indent \_printverblinenum #1\_par}
 
 \_def\_printfilename{\_hbox to0pt{%
    \_hskip\_hsize\_vbox to0pt{\_vss\_llap{\Brown\docfile}\_kern7.5pt}\_hss}%

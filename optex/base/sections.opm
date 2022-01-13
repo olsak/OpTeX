@@ -331,7 +331,7 @@
    edefines \`\_thecapnum` as `\_the<letter>num` and
    defines \`\_thecaptitle` as language-dependent word using \^`\_mtext`,
    runs the `\_everycaption<letter>` tokens register.
-   The group opened by `\caption` is finalized by first `\par` from
+   The group opened by `\caption` is finalized by first `\_par` from
    an empty line or from `\vskip` or from `\endinsert`.
    The `\_printcaption<letter>` is called, it starts with
    printing of the caption.\nl
@@ -347,7 +347,7 @@
    \_edef\_thecapnum {\_csname _the\_tmpa num\_endcsname}%
    \_edef\_thecaptitle{\_mtext{\_tmpa}}%
    \_ea\_the \_csname _everycaption\_tmpa\_endcsname
-   \_def\_par{\_nbpar\_egroup}\_let\par=\_par
+   \_def\_par{\_nbpar\_egroup}%
    \_cs{_printcaption\_tmpa}%
 }
 \_def \_cskip {\_par\_nobreak\_medskip} % space between caption and the object
