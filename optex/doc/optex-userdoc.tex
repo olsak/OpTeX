@@ -564,7 +564,8 @@ if optional parameter
 `[<label>]` is appended to \^`\chap`, \^`\sec`,
 \^`\secc`, \^`\caption/t`, \^`\caption/f` or \^`\eqmark`. The alternative syntax is
 to use \^`\label[<label>]` before mentioned commands (not necessarily directly
-before). The reference is realized by \^`\ref[<label>]` or \^`\pgref[<label>]`.
+before). The reference is realized by \^`\ref[<label>]` (prints the number
+of the referenced object) or \^`\pgref[<label>]` (prints the page number).
 Example:
 
 \begtt
@@ -581,6 +582,13 @@ Now we can point to the section~\ref[beatle] on the page~\pgref[beatle]
 or write something about the equation~\ref[pythagoras]. Finally there
 is an interesting Table~\ref[comp-depend].
 \endtt
+
+The text printed by \^`\ref` or \^`\pgref` can be given explicitly by
+\^`\ref[<label>]{<text>}` or \^`\pgref[<label>]{<text>}`. If the `<text>`
+includes the `@` character, it is replaced by implicitly printed text.
+Example: `see \ref[lab]{section~@}` prints the same as `see section~\ref[lab]`,
+but first case creates larger active area for mouse clicking, when
+\~`\hyperlinks` are declared.
 
 If there are forward referenced objects then users have to run \TeX{} twice.
 During each pass, the working `*.ref` file (with references data) is created
@@ -663,7 +671,7 @@ If the linked text have to be different than the URL, you can use
 `\ulink[http://petr.olsak.net/optex]{\OpTeX/ page}`
 outputs to the text
 \ulink[http://petr.olsak.net/optex]{\OpTeX/ page}.
-The characters \code{\%}, `\`, `#`, `{`, and `}` must by escaped in
+The characters \code{\%}, `\`, `#`, `{`, and `}` must be escaped in
 the <url> parameter.
 
 The PDF format provides {\em outlines} which are notes placed in the special frame of

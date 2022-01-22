@@ -24,11 +24,10 @@
 
    \_doc ----------------------------
    \`\_Xlabel` `{<label>}{<text>}` saves the <text> to `\_lab:<label>` and saves
-   `[pg:<gpageno>]{<pageno>}` to `\_pgref:<label>`.
+   `{<gpageno>}{<pageno>}` to `\_pgref:<label>`.
    \_cod ----------------------------
 
-\_def\_Xlabel#1#2{\_sdef{_lab:#1}{#2}\_sxdef{_pgref:#1}{\_ea\_bracketspg\_currpage}}
-\_def\_bracketspg#1#2{[pg:#1]{#2}}
+\_def\_Xlabel#1#2{\_sdef{_lab:#1}{#2}\_sxdef{_pgref:#1}{\_currpage}}
 
    \_doc ----------------------------
    \`\label``[<label>]` saves the declared label to `\_lastlabel` and
@@ -54,29 +53,50 @@
 \_public \label \wlabel ;
 
    \_doc ----------------------------
-   \`\ref``[<label>]` uses saved `\_lab:<label>` and prints (linked) `<text>`.
+   \`\ref``[<label>]{<given-text>}` prints (linked) `<given-text>`.
+   The missing optional `{<given-text>}` is replaced by `{@}`. The `@` is
+   replaced by `<implicit-text>` from saved `\lab:<label>` using \^`\_reftext` macro.
    If the reference is backward then we know `\lab:<label>` without any need
    to read REF file. On the other hand, if the reference is forwarded, then we
    doesn't know `\_lab:<label>` in the first run of \TeX/ and we print a warning and
    do `\_openref`.
    \nl
-   \`\pgref``[<label>]` uses `{<gpageno>}{<pageno>}` from `\_pgref:<label>` and
-   prints (linked) `<pageno>` using `\_ilink` macro.
+   \`\pgref``[<label>]{<given-text>}` prints `<given-text>` where `@` is
+   replaced by <pageno>. Data in the format `{<gpageno>}{<pageno>}`
+   are read from `\_pgref:<label>` by \`\_pgrefB``{<gpageno>}{<pageno>}{<given-text>}`.
+   \nl
+   \`\_lastreflabel` keeps the value of the last label read by \^`\ref` or \^`\pgref`.
+   You can use it for example by definig a macro `\pg` by `\def\pg{\pgref[\_lastreflabel]}`
+   and then you need not repeat the same label in typical situations and you
+   can write for instance: `see section \ref[lab] at page \pg.`
    \_cod ----------------------------
 
-\_def\_ref[#1]{\_isdefined{_lab:#1}%
-  \_iftrue \_ilink[ref:#1]{\_csname _lab:#1\_endcsname}%
-  \_else ??\_opwarning{label [#1] unknown. Try to TeX me again}%
+\_def\_ref[#1]{\_xdef\_lastreflabel{#1}\_isnextchar\_bgroup{\_refA}{\_refA{@}}}
+\_def\_refA #1{\_isdefined{_lab:\_lastreflabel}%
+  \_iftrue \_ilink[ref:\_lastreflabel]{\_reftext{\_csname _lab:\_lastreflabel\_endcsname}{#1}}%
+  \_else \_reftext{??}{#1}\_opwarning{label [\_lastreflabel] unknown. Try to TeX me again}%
+     \_incr\_unresolvedrefs \_openref
+  \_fi
+}
+\_def\_pgref[#1]{\_xdef\_lastreflabel{#1}\_isnextchar\_bgroup{\_pgrefA}{\_pgrefA{@}}}
+\_def\_pgrefA #1{\_isdefined{_pgref:\_lastreflabel}%
+  \_iftrue \_ea\_ea\_ea\_pgrefB \_csname _pgref:\_lastreflabel\_endcsname{#1}%
+  \_else \_reftext{??}{#1}\_opwarning{pg-label [\_lastreflabel] unknown. Try to TeX me again}%
   \_incr\_unresolvedrefs \_openref
   \_fi
 }
-\_def\_pgref[#1]{\_isdefined{_pgref:#1}%
-  \_iftrue \_ea\_ea\_ea\_ilink \_csname _pgref:#1\_endcsname
-  \_else ??\_opwarning{pg-label [#1] unknown. Try to TeX me again}%
-  \_incr\_unresolvedrefs \_openref
-  \_fi
-}
+\_def\_pgrefB #1#2#3{\_ilink[pg:#1]{\_reftext{#2}{#3}}}
+
 \_public \ref \pgref ;
+
+   \_doc -----------------------------
+   \`\_reftext``{<implicit-text>}{<given-text>}` expands to the <given-text>
+   but the optional `@` in the `<given-text>` is replaced by the `<implicit-text>` first.
+   \_cod -----------------------------
+
+\_def\_reftext  #1#2{\_isatin #2@\_iffalse #2\_else\_reftextA{#1}#2\_end \_fi}
+\_def\_reftextA #1#2@#3\_end {#2#1#3}
+\_def\_isatin #1@#2\_iffalse {\_ifx\_end#2\_end}
 
    \_doc -----------------------------
    Default \`\_printlabel` is empty macro (labels are not printed).
