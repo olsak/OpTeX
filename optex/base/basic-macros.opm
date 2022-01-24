@@ -106,7 +106,7 @@
    \_cod ------------------------------
 
 \_def\_loggingall{\_tracingcommands=3 \_tracingstats=2 \_tracingpages=1
-  \_tracingoutput=1 \_tracinglostchars=1 \_tracingmacros=3
+  \_tracingoutput=1 \_tracingmacros=3 % \_tracinglostchars=2 is already set
   \_tracingparagraphs=1 \_tracingrestores=1 \_tracingscantokens=1
   \_tracingifs=1 \_tracinggroups=1 \_tracingassigns=1 }
 \_def\_tracingall{\_tracingonline=1 \_loggingall}
