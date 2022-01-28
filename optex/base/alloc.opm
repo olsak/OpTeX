@@ -86,9 +86,13 @@
 \_public \newinsert ;
 
    \_doc -----------------------------
-   Other allocation macros \`\newattribute` and \`\newcatcodetable`
-   have their counter allocated by the `\newcount` macro.
+   Other allocation macros \`\newmarks`, \`\newattribute` and
+   \`\newcatcodetable` have their counter allocated by the `\newcount` macro.
    \_cod -----------------------------
+
+\_newcount \_marksalloc \_marksalloc=0 % start at 1, 0 is \mark
+\_chardef\_maimarks=\_maicount
+\_def\_newmarks #1{\_allocator #1{marks}\_chardef}
 
 \_newcount \_attributealloc  \_attributealloc=0
 \_chardef\_maiattribute=\_maicount
@@ -98,7 +102,7 @@
 \_chardef\_maicatcodetable=32767
 \_def\_newcatcodetable #1{\_allocator #1{catcodetable}\_chardef}
 
-\_public \newattribute \newcatcodetable ;
+\_public \newmarks \newattribute \newcatcodetable ;
 
    \_doc -----------------------------
    We declare public and private versions of `\tmpnum` and `\tmpdim`
