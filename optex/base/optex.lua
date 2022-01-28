@@ -385,8 +385,8 @@ define_lua_command("_preshipout", function()
     tex_setbox(boxnum, head)
 end)
 --
--- Compatibility with \LaTeX/ through luatexbase namespace. Needed for
--- luaotfload.
+-- Compatibility with outher packages through luatexbase namespace. Needed for
+-- luaotfload and minim.
 luatexbase = {
     registernumber = registernumber,
     attributes = attributes,
@@ -397,7 +397,15 @@ luatexbase = {
     add_to_callback = callback.add_to_callback,
     remove_from_callback = callback.remove_from_callback,
     call_callback = callback.call_callback,
-    callbacktypes = {}
+    callbacktypes = {}, -- deliberately empty
+    -- allow temporary uninstall/reinstall for minim
+    uninstall = function()
+        callback.register = callback_register
+        luatexbase = nil
+    end,
+    reinstall = function()
+        callback_register = callback.register
+    end,
 }
 --
 -- `\tracingmacros` callback registered.
