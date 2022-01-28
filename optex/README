@@ -19,6 +19,10 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.05> Jan. 2022:
+       \_par used internally instead \par if \partokenname is available.
+       Extended format \ref[label]{text} and \pgref[label]{text} introduced.
+       Fixed a few bugs.
 <1.04> Aug. 2021:
        Color handling reimplemented, LuaTeX's attributes are used now.
        Loading Unicode math fonts reimplemented, (s)script size given by font.
