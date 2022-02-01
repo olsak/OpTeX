@@ -241,7 +241,7 @@ Several fonts don't switch to the font features if the features are
 specified directly as documented above. You must add the `script=latn;`
 specification to the features string when using these fonts, see
 `f-baskerville.opm` for example. The reason: these fonts don't follow the
-OpenType specification and they don't set the `DFLT` script but only script
+OpenType specification and they don't set the `DFLT` script but only scripts
 with given names like `latn`. And the tables implementing all font features
 are included here. You can check the internals of the font by FontForge:
 View / Show~ATT / OpenType Tables / GSUB. Do you see the `DFLT` script here?

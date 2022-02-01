@@ -30,7 +30,7 @@
 \_def\_Xlabel#1#2{\_sdef{_lab:#1}{#2}\_sxdef{_pgref:#1}{\_currpage}}
 
    \_doc ----------------------------
-   \`\label``[<label>]` saves the declared label to `\_lastlabel` and
+   \`\label``[<label>]` saves the declared label to \`\_lastlabel` and
    \`\wlabel``{<text>}` uses the `\_lastlabel` and activates
    `\_wref\_Xlabel{<label>}{<text>}`.
    \_cod ----------------------------
