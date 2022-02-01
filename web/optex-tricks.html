@@ -183,7 +183,7 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>References
 <ul>
-    <li><a href="#fref">Flexible reference texts</a>
+    <li><a href="#lot">List of figures, list of tables</a>
 </ul>
 
 <li>Slides
@@ -3104,47 +3104,65 @@ structure of outlines is prepared too.
 
 <p CLASS="lmarg">References</p>
 
-<h2><a name="fref"></a>Flexible reference texts</h2>
+<h2><a name="lot"></a>List of figures, list of tables</h2>
 
-<p>In OpTeX, \ref[label] prints an active text in fixed format which is only
-a number of the section or the figure or whatever.
-Maybe, we want to print more active text (for example,
-with the name of linked object).
-This OpTeX trick creates more flexible \ref macro.
-If \ref[label] is not followed by {text} immediatelly then it behaves as
-standard OpTeX's \ref. But \ref[label]{text} prints active "text". This "text"
-should include the @ character which is replaced by the number of the
-referenced object. For example:
+<p>OpTeX provides only \maketoc for making table of contents.
+We create commands \makeLOF for creating a list of figures and \makeLOT for
+creating a list of tables.
+
+<p>We create macros \captionF resp. \captionT for the captions of
+the figure or of the table respectively with the following syntax:
 
 <pre>
-\hyperlinks\Blue\Blue
-
-See section \ref[label] or see \ref[label]{section @}.
+\captionT [label]{A short caption} A detail caption \par
+\captionF [label]{A short caption} A detail caption \par
 </pre>
 
-<p>creates: See section <a href="#fref">65</a> or see <a href="#fref">section 65</a>.
+<p>All parameters are obligatory. The short caption is used in the generated
+list of figures/tables, the detail caption is printed immediatelly. The
+commands \caption/f or \caption/t cannot be used if you want to put the information
+about the figure/table to the generated list.
 
-<p>The implementation follows:
+<p>The implementation:
 
 <pre>
-\def\ref[#1]{\def\tmp{#1}\futurelet\next\refA}
-\def\refA{\ifx\next\bgroup\ea\refB\else\refB{@}\fi}
-\def\refB#1{\def\tmpb{#1}%
-   \isdefined{_lab:\tmp}\iftrue
-      \replstring\tmpb{@}{\cs{_lab:\tmp}}\_ilink[ref:\tmp]{\tmpb}%
-   \else
-      \replstring\tmpb{@}{??}\tmpb
-      \_opwarning{label [\tmp] unknown. Try to TeX me again}%
-      \_incr\_unresolvedrefs \_openref
-   \fi
+\_refdecl{%
+\_def\lotlist{} \_def\loflist{}^^J
+\_def\Xtab#1#2#3{\_addto\lotlist{\lline{#1}{#2}{#3}}\_ea\_addto\_ea\lotlist\_ea{\_currpage}}^^J
+\_def\Xfig#1#2#3{\_addto\loflist{\lline{#1}{#2}{#3}}\_ea\_addto\_ea\loflist\_ea{\_currpage}}
 }
+\def\captionT [#1]#2{\caption/t[#1]\_ewref\Xtab{{#1}{\_thetnum}{#2}}\ignorespaces}
+\def\captionF [#1]#2{\caption/f[#1]\_ewref\Xfig{{#1}{\_thefnum}{#2}}\ignorespaces}
+
+\def\lline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+
+\def\makell#1{\par
+   \ifx\lotlist\undefined \opwarning{\noexpand#1 empty, try to run TeX again}
+   \else #1\fi
+}
+\def\makeLOF{\makell\loflist}
+\def\makeLOT{\makell\lotlist}
 </pre>
 
-<p>The original \ref macro is redefined. The existence of opening brace "{" is
-tested by \futurelet and the @ is replaced by \replstring. The
-\cs{_lab:label} expands to the number of the referenced object.
+<p>The \refdecl declares new commands used in the ref file in the format:
 
-<p CLASS=datum>(0065) -- P. O., 2021-08-20<p>
+<pre>
+\Xtab{label}{table-number}{short caption}
+\Xfig{label}{figure-number}{short caption}
+</pre>
+
+<p>These commands put the data to the \loflist or \lotlist in the format:
+
+<pre>
+\lline{label}{number}{short caption}{gpagenum}{pagenum}
+</pre>
+
+<p>for each figure/table. The macro \lline defines the typography of each
+object used in the generated lists. You can change it, of course. For
+example, if you use \bf\ref[#1] insetad \bf#2 then you have the numbers in
+the list clickable (after \hyperlinks declaration).
+
+<p CLASS=datum>(0066) -- P. O., 2022-02-01<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>
