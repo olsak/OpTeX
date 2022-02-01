@@ -237,6 +237,15 @@ See the font family file `f-lmfonts.opm` or `f-poltawski.opm` where you can find
 the example of the optical sizes declaration including documentation about
 it.
 
+Several fonts don't switch to the font features if the features are
+specified directly as documented above. You must add the `script=latn;`
+specification to the features string when using these fonts, see
+`f-baskerville.opm` for example. The reason: these fonts don't follow the
+OpenType specification and they don't set the `DFLT` script but only script
+with given names like `latn`. And the tables implementing all font features
+are included here. You can check the internals of the font by FontForge:
+View / Show~ATT / OpenType Tables / GSUB. Do you see the `DFLT` script here?
+
 If you need to create a font family file with a non-Unicode font, you can do it.
 The `\_fontnamegen` must expand to the name of TFM file in this case. But we
 don't prefer such font family files, because they are usable only with
