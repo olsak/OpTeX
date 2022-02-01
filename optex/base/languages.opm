@@ -43,6 +43,7 @@
 \_langw gr  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
 \_langw ru  Глава        Таблица     Рисунок      Предмет
 \_langw sk  Kapitola     Tabuľka     Obrázok      Vec
+\_langw pt  Capítulo     Tabela      Figura       Assunto
 
    \_doc -----------------------------
    You can add more words as you wish. For example \`\today` macro:
@@ -66,11 +67,13 @@
              júla augusta septembra októbra novembra decembra
 \_monthw it  gennaio febbraio marzo aprile maggio giugno
              luglio agosto settembre ottobre novembre dicembre
-
+\_monthw pt  janeiro fevereiro março abril maio junho julho agosto
+             setembro outubro novembro dezembro 
 
 \_sdef{_mt:today:en}{\_mtext{m\_the\_month} \_the\_day, \_the\_year}
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year}
 \_slet{_mt:today:sk}{_mt:today:cs}
+\_sdef{_mt:today:pt}{\_the\_day~de \_mtext{m\_the\_month}~ de \_the\_year}
 
 \_def\_today{\_mtext{today}}
 \_public \today ;
