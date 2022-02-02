@@ -152,6 +152,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#blockoval">Text blocks in ovals</a>
 </ul>
 
+<li>Different formatting
+<ul>
+    <li><a href="#fnindent">Indented footnotes
+</ul>
+
 <li>Macro tricks
 <ul>
     <li><a href="#condi">Structured conditionals</a>
@@ -2142,6 +2147,29 @@ The diameter or rounded corners is set to 10bp.
 </pre>
 
 <p CLASS=datum>(0034) -- P. O., 2021-01-14<p>
+<hr>
+
+<p CLASS="lmarg">Different formatting</p>
+
+<h2><a name="fnindent"></a>Indented footnotes</h2>
+
+<p>The <a href="https://tex.stackexchange.com/questions/632215/">question</a>
+on StackExchange includes the need of indented footnotes, like this:
+
+<pre>
+--------------
+  1 This is a long footnote
+    at more than one line.
+</pre>
+
+<p>We can set this formatting by replacing \_textindent by \textllap in \_fnset:
+
+<pre>
+\def\textllap#1{\noindent\llap{#1\enspace}\ignorespaces}
+\addto\_fnset{\leftskip=\parindent \let\_textindent=\textllap}
+</pre>
+
+<p CLASS=datum>(0067) -- P. O., 2022-02-02<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
