@@ -104,7 +104,7 @@
    \_cod \_fin -----------------
 
 \_def\_refdecl{\_bgroup \_catcode`\#=12 \_refdeclA}
-\_def\_refdeclA #1{\egroup\_openref
+\_def\_refdeclA #1{\_egroup\_openref
    \_immediate\_write\_reffile {\_pcent\_space \_string \refdecl:}%
    \_immediate\_write\_reffile {\_detokenize{#1}}%
 }
