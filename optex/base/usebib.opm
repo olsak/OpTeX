@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \MakeReference {Reading bib databases <2021-04-30>} % loaded on demand by \usebib
+\_codedecl \MakeReference {Reading bib databases <2022-02-04>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    Loading the `librarian.tex` macro package. See `texdoc librarian`
@@ -33,7 +33,6 @@
         \_emergencystretch=.3\_hsize
         \_def\_optexbibstyle{#2}%
         \_setctable\_optexcatcodes
-        \_ea \_skiptoendinput \_input languages.opm
         \_input bib-#2.opm
         \_the \_bibtexhook
         \_ifcsname _mt:bib.and:\_cs{_lan:\_the\_language}\_endcsname \_else
@@ -55,7 +54,6 @@
      \_egroup
   \_fi
 }
-\_long\_def\_skiptoendinput#1\_endinput{}
 \_def\_readbibentry#1#{\_readbibentryA}
 \_def\_readbibentryA#1{\_readbibentryB#1,,\_relax!.}
 \_def\_readbibentryB#1#2,#3\_relax!.{\_addto\_citelist{\_citeI[#1#2]}}
@@ -367,6 +365,7 @@ character is sorted before `A`.
 
 History:
 --------
+2022-02-04  reading tail of languages.opm removed
 2021-04-30  \RetrieveField declared as private, bug fixed.
 2021-04-13  \bibpart implemented
 2021-04-13  \_bibgl introduced (used by \slides)

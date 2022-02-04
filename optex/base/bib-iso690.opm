@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (iso690) <2021-04-07>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2022-02-04>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
@@ -122,7 +122,9 @@
 
 \_CreateField {lang}
 \_def\_setlang#1{\_ifx#1\_empty \_else
-     \_ifcsname _mt:bib.and:#1\_endcsname \_language=\_csname _#1Patt\_endcsname \_relax
+     \_setbox0=\_vbox{\_langinput{#1}}%
+     \_ifcsname _mt:bib.and:#1\_endcsname
+        \_language=\_csname _#1Patt\_endcsname \_relax
      \_else \_opwarning{No phrases for "#1" used by [\EntryKey] in .bib}%
    \_fi\_fi
 }
@@ -905,5 +907,6 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
+2022-02-04 ... \_langinput used in \_setlang
 2021-04-07 ... \biboptions toks declaration moved, bug fixed.
 2020-03-10 ... released
