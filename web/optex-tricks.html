@@ -566,7 +566,7 @@ end
       \transpcnt
       \sxdef{transp::#1}{\the\transpcnt}%
       \sxdef{transp:\the\transpcnt}{/Tr\the\transpcnt\space gs}%
-      \addextgstate{/Tr\the\transpcnt &lt;&lt;/ca #1 /CA #1&gt;&gt;}%
+      \addextgstate{Tr\the\transpcnt}{&lt;&lt;/ca #1 /CA #1&gt;&gt;}%
       \incr \transpcnt
    \fi
 }
@@ -575,7 +575,7 @@ end
 \sdef{transp::1}{0}
 \sdef{transp:0}{/Tr0 gs}
 \def\inittransparency{%
-   \addextgstate{/Tr0 &lt;&lt;/ca 1 /CA 1&gt;&gt;}%
+   \addextgstate{Tr0}{&lt;&lt;/ca 1 /CA 1&gt;&gt;}%
    \glet\inittransparency=\relax
 }
 \directlua{
@@ -650,7 +650,7 @@ definitions:</p>
 % Transparency of ".5" is the default
 \sdef{transp::.5}{0}
 \def\inittransparency{%
-   \addextgstate{/Tr0 &lt;&lt;/ca .5 /CA .5&gt;&gt;}%
+   \addextgstate{Tr0}{&lt;&lt;/ca .5 /CA .5&gt;&gt;}%
    \glet\inittransparency=\relax
 }
 \directlua{

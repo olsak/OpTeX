@@ -56,8 +56,8 @@
    For transparency we need to define special graphics states.
    \_cod -----------------------------
 
-\_addextgstate{/Invisible <</ca 0 /CA 0>>}
-\_addextgstate  {/Visible <</ca 1 /CA 1>>}
+\_addextgstate{Invisible}{<</ca 0 /CA 0>>}
+\_addextgstate  {Visible}{<</ca 1 /CA 1>>}
 
 \_def\_Invisible   {\_pdfliteral{/Invisible gs}}
 \_def\_Visible     {\_pdfliteral{/Visible gs}}
