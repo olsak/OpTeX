@@ -58,7 +58,10 @@
 
    \_doc -----------------------------
    \secc Plain \TeX/ registers
-   Allocate registers that are used just like in plain \TeX/.
+   Allocate registers that are used just like in plain \TeX/.\nl
+   \`\smallskipamount`, \`\medskipamount`, \`\bigskipamount`,
+   \`\normalbaselineskip`, \`\normallineskip`,\nl \`\normallineskiplimit`,
+   \`\jot`, \`\interdisplaylinepenalty`, \`\interfootnotelinepenalty`.
    \_cod -----------------------------
 
 % We also define special registers that function like parameters:
@@ -72,6 +75,15 @@
 \_newcount\_interdisplaylinepenalty \_interdisplaylinepenalty=100
 \_newcount\_interfootnotelinepenalty \_interfootnotelinepenalty=100
 
+\_public \smallskipamount \medskipamount \bigskipamount
+   \normalbaselineskip \normallineskip \normallineskiplimit
+   \jot \interdisplaylinepenalty \interfootnotelinepenalty ;
+
+   \_doc -----------------------------
+   Plain \TeX/ macros fpr setting parameters.
+   \`\normalbaselines`, \`\frenchspacing`, \`\nonfrenchspacing`.
+   \_cod -----------------------------
+
 \_def\_normalbaselines{\_lineskip=\_normallineskip
   \_baselineskip=\_normalbaselineskip \_lineskiplimit=\_normallineskiplimit}
 
@@ -80,10 +92,7 @@
 \_def\_nonfrenchspacing{\_sfcode`\.=3000 \_sfcode`\?=3000 \_sfcode`\!=3000
   \_sfcode`\:=2000 \_sfcode`\;=1500 \_sfcode`\,=1250 }
 
-\_public \normalbaselines \frenchspacing \nonfrenchspacing
-   \smallskipamount \medskipamount \bigskipamount
-   \normalbaselineskip \normallineskip \normallineskiplimit
-   \jot \interdisplaylinepenalty \interfootnotelinepenalty ;
+\_public \normalbaselines \frenchspacing \nonfrenchspacing ;
 
    \_doc -----------------------------
    \secc Different settings than in plain \TeX/
@@ -91,9 +100,9 @@
    Default \"baseline setting" is for 10\,pt fonts (like in plain \TeX/).
    But `\typosize` and `\typoscale` macros re-declare it if another font size is used.
 
-   The \`\nonfrenchspacing` is not set by default because
+   The \^`\nonfrenchspacing` is not set by default because
    the author of \OpTeX/ is living in Europe.
-   If you set `\enlang` hyphenation patterns then `\nonfrenchspacing`
+   If you set `\enlang` hyphenation patterns then \^`\nonfrenchspacing`
    is set.
    \_cod -----------------------------
 
