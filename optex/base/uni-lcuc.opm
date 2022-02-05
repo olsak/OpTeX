@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_wterm{Setting lccodes and uccodes for Unicode characters <2021-04-07>} % preloaded in format.
+\_wlog{Setting lccodes and uccodes for Unicode characters <2021-04-07>} % preloaded in format.
 
 \_isfile{UnicodeData.txt}\_iftrue
 \_begingroup

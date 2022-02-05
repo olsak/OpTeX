@@ -140,7 +140,7 @@
 
    \_doc -----------------------------
    The \`\quoteschars``<lqq><rqq><lq><rq>` defines `\"` and `\"` as `\_qqA`
-   in in normal mode and as expadable macros in outline mode.
+   in normal mode and as expadable macros in outline mode.
    We want to well process the common cases: \code{\\"`&`"} or \code{\\"`\{`"}.
    This is the reason why the quotes parameter is read in verbatim mode and retokenized
    again by `\scantextokens`. We want to allow to quote the quotes mark

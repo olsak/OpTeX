@@ -253,7 +253,7 @@
 The \^`\printdoc` `<filename><space>` and \^`\printdoctail` `<filename><space>`
 commands are defined after the file `doc.opm` is load by \^`\load`~`[doc]`.
 
-The `\printcoc` starts reading of given `<filename>` from the second line.
+The `\printdoc` starts reading of given `<filename>` from the second line.
 The file is read in {\em the listing mode}.
 The `\prindoctail` starts reading given `<filename>` from the
 first occurrence of the `\_endcode`. The file is read
@@ -263,7 +263,7 @@ The {\em listing mode} prints the lines as a listing of a code. This mode is
 finished when first {\visiblesp`  \_doc`} occurs or first `\_endcode`
 occurs. At least two spaces or one tab
 character must precede before such `\_doc`. On the other
-hand, the `\_encode` must be at the left edge of the line without spaces.
+hand, the `\_endcode` must be at the left edge of the line without spaces.
 If this rule is not met then the listing mode continues.
 
 If the first line or the last line of the listing mode is empty then such

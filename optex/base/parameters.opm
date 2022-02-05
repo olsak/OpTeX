@@ -80,7 +80,7 @@
    \jot \interdisplaylinepenalty \interfootnotelinepenalty ;
 
    \_doc -----------------------------
-   Plain \TeX/ macros fpr setting parameters.
+   Plain \TeX/ macros for setting parameters.
    \`\normalbaselines`, \`\frenchspacing`, \`\nonfrenchspacing`.
    \_cod -----------------------------
 
