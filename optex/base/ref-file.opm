@@ -59,6 +59,7 @@
    \_gdef\_wref ##1##2{\_write\_reffile{\_bslash\_csstring##1##2}}%
    \_immediate\_write\_reffile {\_pcent\_pcent\_space OpTeX <\_optexversion> - REF file}%
    \_immediate\_wref \Xrefversion{{\_REFversion}}%
+   \_ifx\_refdecldata\_empty \_else \_refdeclwrite \_fi
    \_gdef\_openref{}%
 }
 \_def\_ewref #1#2{\_edef\_ewrefA{#2}\_ea\_wref\_ea#1\_ea{\_ewrefA}}
@@ -88,7 +89,7 @@
    You cannot define your own `.ref` macros before `.ref` file is read
    because it is read in `\everyjob`. But you can define such macros by using
    \`\refdecl``{<definitions of your ref macros>}`.
-   This command immediately writes `<definitions of your ref macros>` to the
+   This command writes `<definitions of your ref macros>` to the
    `.ref` file. Then the next lines written to the  `.ref` file can include
    your macros.
    An example from CTUstyle2:
@@ -100,13 +101,23 @@
    }
    \endtt
    We must read `<definitions of your ref macros>` while `#` has the catcode 12,
-   because we don't want to duplicate each `#` in the `.ref` file.
+   because we don't want to duplicate each `#` in the `.ref` file.\nl
+   `\refdecl` appends its data to the \`\_refdecldata` macro. It is
+   pushed to the `.ref` file immediatelly only if the file is opened
+   already. Otherwise we are waiting to `\openref` because we don't want
+   to open the `.ref` file if it is unnecessary.
    \_cod \_fin -----------------
 
-\_def\_refdecl{\_bgroup \_catcode`\#=12 \_refdeclA}
-\_def\_refdeclA #1{\egroup\_openref
-   \_immediate\_write\_reffile {\_pcent\_space \_string \refdecl:}%
-   \_immediate\_write\_reffile {\_detokenize{#1}}%
+\_def\_refdecldata{}
+\_def\_refdecl{\_bgroup \_catcode`\#=12 \_catcode`\\=12 \_catcode`\ =12 \_refdeclA}
+\_def\_refdeclA#1{\_egroup
+   \_ifx\_refdecldata\_empty\_else \_global\_addto\_refdecldata{^^J}\_fi
+   \_global\_addto\_refdecldata{#1}%
+   \_ifx\_openref\_empty \_refdeclwrite \_fi
+}
+\_def\_refdeclwrite{%
+   \_immediate\_write\_reffile{\_pcent\_space \_string\refdecl:^^J\_detokenize\_ea{\_refdecldata}}%
+   \_gdef\_refdecldata{}%
 }
 \_public \refdecl ;
 
