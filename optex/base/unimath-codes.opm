@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-01-06>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-02-08>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -243,22 +243,34 @@
 \_protected\_def \Vert  {\_Udelimiter 0 1 "02016 }
 \_protected\_def \Vvert {\_Udelimiter 0 1 "02980 }
 
-\_protected\_def \_overbrace    #1{\mathop {\Umathaccent  7 1 "023DE{#1}}\limits}
-\_protected\_def \_underbrace   #1{\mathop {\Umathaccent bottom 7 1 "023DF{#1}}\limits}
-\_protected\_def \_overparen    #1{\mathop {\Umathaccent  7 1 "023DC{#1}}\limits}
-\_protected\_def \_underparen   #1{\mathop {\Umathaccent bottom 7 1 "023DD{#1}}\limits}
-\_protected\_def \_overbracket  #1{\mathop {\Umathaccent  7 1 "023B4{#1}}\limits}
-\_protected\_def \_underbracket #1{\mathop {\Umathaccent bottom 7 1 "023B5{#1}}\limits}
+\_protected\_def \_overbrace    #1{\_mathop {\_Umathaccent  7 1 "023DE{#1}}\_limits}
+\_protected\_def \_underbrace   #1{\_mathop {\_Umathaccent bottom 7 1 "023DF{#1}}\_limits}
+\_protected\_def \_overparen    #1{\_mathop {\_Umathaccent  7 1 "023DC{#1}}\_limits}
+\_protected\_def \_underparen   #1{\_mathop {\_Umathaccent bottom 7 1 "023DD{#1}}\_limits}
+\_protected\_def \_overbracket  #1{\_mathop {\_Umathaccent  7 1 "023B4{#1}}\_limits}
+\_protected\_def \_underbracket #1{\_mathop {\_Umathaccent bottom 7 1 "023B5{#1}}\_limits}
 
 \_public \overbrace \underbrace \overparen \underparen \overbracket \underbracket ;
 
-\_protected\def \widehat            {\Umathaccent 7 1 "00302 }
-\_protected\def \widetilde          {\Umathaccent 7 1 "00303 }
-\_protected\def \overleftharpoon    {\Umathaccent 7 1 "020D0 }
-\_protected\def \overrightharpoon   {\Umathaccent 7 1 "020D1 }
-\_protected\def \overleftarrow      {\Umathaccent 7 1 "020D6 }
-\_protected\def \overrightarrow     {\Umathaccent 7 1 "020D7 }
-\_protected\def \overleftrightarrow {\Umathaccent 7 1 "020E1 }
+\_protected\_def \widehat            {\_Umathaccent 7 1 "00302 }
+\_protected\_def \widetilde          {\_Umathaccent 7 1 "00303 }
+\_protected\_def \overleftharpoon    {\_Umathaccent 7 1 "020D0 }
+\_protected\_def \overrightharpoon   {\_Umathaccent 7 1 "020D1 }
+\_protected\_def \overleftarrow      {\_Umathaccent 7 1 "020D6 }
+\_protected\_def \overrightarrow     {\_Umathaccent 7 1 "020D7 }
+\_protected\_def \overleftrightarrow {\_Umathaccent 7 1 "020E1 }
+
+\_protected\_def \wideoverbar  {\_Umathaccent 7 1 "00305 }
+\_protected\_def \widebreve    {\_Umathaccent 7 1 "00306 }
+\_protected\_def \widecheck    {\_Umathaccent 7 1 "0030C }
+\_protected\_def \wideutilde   {\_Umathaccent bottom 7 1 "00330 }
+\_protected\_def \mathunderbar {\_Umathaccent bottom 7 1 "00332 }
+\_protected\_def \underleftrightarrow   {\_Umathaccent bottom 7 1 "0034D }
+\_protected\_def \widebridgeabove       {\_Umathaccent 7 1 "020E9 }
+\_protected\_def \underrightharpoondown {\_Umathaccent bottom 7 1 "020EC }
+\_protected\_def \underleftharpoondown  {\_Umathaccent bottom 7 1 "020ED }
+\_protected\_def \underleftarrow        {\_Umathaccent bottom 7 1 "020EE }
+\_protected\_def \underrightarrow       {\_Umathaccent bottom 7 1 "020EF }
 
 \_mathchardef\ldotp="612E
 \_let\|=\Vert
@@ -443,6 +455,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-02-08  several wide math accents added
 2022-01-06  \varTheta corrected
 2021-09-15  \square, \blacksquare defined
 2021-04-25  \triangleright: typo fixed
