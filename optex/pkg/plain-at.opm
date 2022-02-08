@@ -28,6 +28,7 @@
 \_def\n@space{\_nulldelimiterspace\z@ \m@th}
 \_newdimen\p@renwd \p@renwd=8.75pt
 \_def\alloc@#1#2#3#4#5{\_allocator#5{\_csstring#2}#3}
+\_catcode`\@=12
 \_restorectable
 
 \_endcode
