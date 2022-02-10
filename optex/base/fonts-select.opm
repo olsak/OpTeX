@@ -571,6 +571,9 @@
 
 The basic principles of the Font Selection System used in \OpTeX/
 was documented in the section~\ref[fontfam].
+\nl
+You can use the `\font` primitive directly without the Font selection system,
+see section~\ref[fontprimitive].
 
 \secc Terminology
 
