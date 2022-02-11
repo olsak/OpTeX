@@ -154,7 +154,8 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Different formatting
 <ul>
-    <li><a href="#fnindent">Indented footnotes
+    <li><a href="#fnindent">Indented footnotes</a>
+    <li><a href="#linnum">Line numbers in the left side of the formatted text</a> 
 </ul>
 
 <li>Macro tricks
@@ -171,6 +172,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#addallowbreak">Breaking URL at any point</a>
     <li><a href="#perpage">PerPage package features</a>
     <li><a href="#begfile">Filecontents package features</a>
+    <li><a href="#sort">Sorting phrases</a>
 </ul>
 
 <li>Lua matters
@@ -2172,6 +2174,53 @@ on StackExchange includes the need of indented footnotes, like this:
 <p CLASS=datum>(0067) -- P. O., 2022-02-02<p>
 <hr>
 
+<h2><a name="linnum"></a>Line numbers in the left side of the formatted text</h2>
+
+<p>The <a href="https://tex.stackexchange.com/questions/632832">question</a>
+on the tex.stackexchange
+asks for the line numbers in the left side of the formatted text. The macro package edmac 
+mentioned here is not usable for OpTeX because it changes the output routine. 
+If you want to change the output routine, you must to do it with
+recommendation given in the section 2.18 of the OpTeX manual, but old edmac
+macro package does't respect it.
+
+<p>The solution by wipet does not use edmac, but simply does a box
+manupulation at the post processing state (when \pend is processed):
+
+<pre>
+\newcount\firstlinenum
+\newcount\linenumincrement
+
+\def\pstart{\par \setbox0=\vbox\bgroup}
+\def\pend{\par \global\tmpnum=\prevgraf \egroup
+   \multiply\tmpnum by\linenumincrement \advance\tmpnum by\firstlinenum
+   \firstlinenum=\tmpnum \advance\tmpnum by-1
+   \setbox0=\vbox{\unvbox0
+      \setbox2=\hbox{}
+      \loop
+         \unskip\unpenalty \setbox1=\lastbox
+         \ifvoid1 \else
+            \global\setbox2=\hbox{\llap{\printnum}\box1\penalty0\unhbox2}
+            \advance\tmpnum by-\linenumincrement 
+            \repeat
+   }\noindent\unhbox2 \par
+}
+\def\printnum{\setfontsize{mag.6}\rm\the\tmpnum\kern.8em}
+</pre> 
+
+<p>The signle paragraph surrounded by \pstart...\pend is processed first in
+the \vbox. The lines from this paragraph are moved from the vertical list to
+a horizontal list in \box2. The line numbers are added here by \llap. The
+lines are separated by \penalty0 in the created horizontal list. This is a
+reason why putting this horizontal list to the paragraph processing again
+(after \noindend) creates desired paragraph. If you want to do this over more
+than single paragraph then you must to re-define \par (or \_par in the new
+OpTeX) in order to do this re-boxing at each paragraph-end between \pstart
+and \pend.
+
+<p CLASS=datum>(0069) -- P. O., 2022-02-02<p>
+<hr>
+
 <p CLASS="lmarg">Macro tricks</p>
 
 <h2><a name="condi"></a>Structured conditionals</h2>
@@ -2818,6 +2867,47 @@ contents.
 file. Elementary my dear Watson.
 
 <p CLASS=datum>(0057) -- P. O., 2021-04-10<p>
+<hr>
+
+<h2><a name="sort"></a>Sorting phrases</h2>
+
+<p>We create a macro \sort with the syntax: \sort list of phrases \endsort. 
+The macro sorts the phrases
+in the given list and prints them. Each phrase is in curly braces in the
+given list. For example:
+
+<pre>
+\sort {first} {second} {third} {fourth} \endsort
+</pre>
+<p>prints: first fourth second third.
+
+<p>This OpTeX trick is meant as an example how to do sorting outside the index macros.
+The implementation follows:
+
+<pre>
+\def\sort #1\endsort {\def\slist{}%
+   \foreach #1\do{\ea\addto\ea\slist\ea{\csname+##1\endcsname}\sdef{+##1}{##1}}
+   \_dosorting\slist
+   \ea\foreach \slist \do{##1 }%
+}
+</pre>
+
+<p>The main key to sorting is the \_dosorting macro from OpTeX. It reads the
+list of control sequencs in a macro. The list must be in the form \?first \?second
+etc. The first character od these cs names (? here, + in the given example)
+are ignored. The control sequences are sorted due to their names and the
+result is saved to the same macro (\slist in the example). The meanings of
+the sorted control sequences are irrelevant during sorting. 
+
+<p>The macro \sort from our example initializes \slist as the empty macro
+and adds the control seqences using \foreach to the \slist in the form
+\+first \+second etc. Each control sequence is defined as the given phrase,
+for example \+first is defined as first, \+second as second etc.
+After \slist is sorted by \_dosorting\slist, we print it. We can do this
+printing simply by expanding \slist, but spaces between phrases are lost in
+this case. This is a reason why we print the result using the second \foreach.
+
+<p CLASS=datum>(0068) -- P. O., 2022-02-11<p>
 <hr>
 
 
