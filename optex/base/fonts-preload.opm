@@ -1,17 +1,21 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \tenrm {Latin Modern fonts (EC) preloaded <2020-01-23>} % preloaded in format
+\_codedecl \tenrm {Latin Modern fonts (EC) preloaded <2022-02-12>} % preloaded in format
 
-% Only few text fonts are preloaded:
-
-% allow missing fonts during format generation
-\_suppressfontnotfounderror=1
-\_font\_tenrm=ec-lmr10   % roman text
-\_font\_tenbf=ec-lmbx10  % boldface extended
-\_font\_tenit=ec-lmri10  % text italic
-\_font\_tenbi=ec-lmbxi10 % bold italic
-\_font\_tentt=ec-lmtt10  % typewriter
-\_suppressfontnotfounderror=0
+\_ifx\fontspreload\_relax
+   \_let\_tenrm=\_nullfont \_let\_tenbf=\_nullfont \_let\_tenit=\_nullfont
+   \_let\_tenbi=\_nullfont \_let\_tentt=\_nullfont
+\_else
+   % Only few text fonts are preloaded:
+   % allow missing fonts during format generation
+   \_suppressfontnotfounderror=1
+   \_font\_tenrm=ec-lmr10   % roman text
+   \_font\_tenbf=ec-lmbx10  % boldface extended
+   \_font\_tenit=ec-lmri10  % text italic
+   \_font\_tenbi=ec-lmbxi10 % bold italic
+   \_font\_tentt=ec-lmtt10  % typewriter
+   \_suppressfontnotfounderror=0
+\_fi
 
 \_tenrm
 
@@ -38,3 +42,14 @@ are declared as `\public` here but only for backward compatibility. We don't
 use them in the Font Selection System. But the protected versions of these
 control sequences are used in the Font Selection System.
 
+If the `*.tfm` files are missing during format generation then the format is
+succesfully generated without any pre-loaded fonts. It doesn't matter if each
+document processed by \OpTeX/ declares Unicode fonts. You can create such
+fonts-less format anyway if you set \`\fontspreload` to `\relax` before
+`\input optex.ini`, i.e.:
+`luatex -ini '\let\fontspreload=\relax \input optex.ini'`
+
+\_endinput
+
+2022-02-12: \fontsplreload added
+2020-01-23: released

@@ -198,7 +198,8 @@
    \_cod -----------------------------
 
 \_suppressfontnotfounderror=1
-\_setmathsizes[10/7/5]\_normalmath
+\_setmathsizes[10/7/5]
+\_ifx\fontspreload\_relax \_else \_normalmath \_fi
 \_suppressfontnotfounderror=0
 
 
