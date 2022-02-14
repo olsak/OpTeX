@@ -88,6 +88,10 @@
    Note: if you need to map compound characters to a character, don't use
    `^^I` or `^^M` because these characters have very specific category codes.
    And use space to separate more mappings, like in \`\_compoundcharscs` above.
+   
+   If you create `\_sortingdata` etc. for your language, please, send them
+   to me. I am ready to add them to a new \OpTeX/ release. Se
+   also section~\ref[langphrases].
    \_cod -----------------------------
 
 \_let \_sortingdatask = \_sortingdatacs
