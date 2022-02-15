@@ -4,7 +4,7 @@
 
    \_doc ----------------------------
    {\bf Implementation.}
-   The \`\readkv` expands its parameter and does replace-strings in order to
+   The \`\readkv``<list>` expands its parameter and does replace-strings in order to
    remove spaces around equal signs and after commas. Double commas are
    removed. Then \`\_kvscan` reads the parameters list finished by the double
    comma and saves values to `\_kv:<key>` macros.\nl
@@ -38,7 +38,7 @@ or
 \myframe [frame-color=\Blue] {text2} % other parameters are default
 \endtt
 %
-You can define `\myframe` as follows:
+or simply `\myframe {text3}`. You can define `\myframe` as follows:
 
 \begtt
 \def\myframedefaults{%    defaults:
@@ -48,21 +48,20 @@ You can define `\myframe` as follows:
    margins=2pt,        % space between text inside and rules.
 }
 \optdef\myframe [] #1{\bgroup
-   \ea\addto\ea\myframedefaults\ea{\ea,\the\opt}%
-   \readkv\myframedefaults
+   \readkv\myframedefaults \readkv{\the\opt}%
    \rulewidth=\kv{rule-width}
    \hhkern=\kv{margins}\vvkern=\kv{margins}\relax
    \kv{frame-color}\frame{\kv{text-color}\strut #1}%
-   \egroup}
+   \egroup
+}
 \endtt
 %
 We recommend using \^`\optdef` for defining macros with optional parameters
 written in `[]`. Then the optional parameters are saved in the \^`\opt` tokens
-register. First: we append the \^`\opt` (actual optional parameters) to
-`\myframedefault` by \^`\addto` macro.
-Second: we read the parameters by
-\^`\readkv{<pramaters list>}` macro.
-Third: the values can be used by expandable \^`\kv{<key>}` macro.
+register. First: we read default parameters by \^`\readkv\myframedefaults`
+and secondly the actual parameters are read by \^`\readkv{\the\opt}`.
+The last setting wins.
+Third: the values can be used by the expandable \^`\kv{<key>}` macro.
 The \^`\kv{<key>}` returns `???` if such key is not declared.
 
 You can use keys without values in the parameters list too, but with
