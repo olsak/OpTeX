@@ -1956,10 +1956,10 @@ documentation.
 
 All macros of Plain \TeX/ are re-written in \OpTeX/. Common macros should
 work in the same sense as in original Plain \TeX. Internal control sequences
-like `\p@` or `\f@@t` are removed and mostly replaced by control sequences
-prefixed by `_` (like `\_this`). If you need to use the basic set of old Plain
-\TeX/ control sequences like `\p@` (for example you are reading an old macro file),
-use `\load[plain-at]`.
+like `\f@@t` are removed and mostly replaced by control sequences
+prefixed by `_` (like `\_this`). Only a basic set of old Plain
+\TeX/ control sequences like `\p@`, `\z@`, `\dimen@` are provided
+but not recommended for new macros.
 
 All primitives and common macros have two
 control sequences with the same meaning: in prefixed and unprefixed form.

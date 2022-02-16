@@ -51,11 +51,29 @@
 \let ^^a0=~
 
     \_doc ----------------------------
-    TikZ needs these funny control sequences.
+    Old macro packages need these funny control sequences.
+    We don't use them in new macros.
     \_cod ----------------------------
 
-\_ea\_toksdef \_csname toks@\_endcsname=0
-\_ea\_let     \_csname voidb@x\_endcsname=\_voidbox
+\_catcode`\@=11
+\_let\z@=\_zo  \_let\z@skip=\_zoskip
+\_newdimen\p@ \p@=1pt
+\_toksdef\toks@=0
+\_let\voidb@x=\_voidbox
+\_chardef\@ne=1 \_chardef\tw@=2 \_chardef\thr@@=3 \_chardef\sixt@@n=16
+\_mathchardef\@m=1000 \_mathchardef\@M=10000 \_mathchardef\@MM=20000
+\_countdef\m@ne=22 \m@ne=-1
+\_chardef\@cclv=255 \_mathchardef\@cclvi=256
+\_skipdef\skip@=0
+\_dimendef\dimen@=0  \_dimendef\dimen@i=1
+\_dimendef\dimen@ii=2
+\_countdef\count@=255
+\_def\m@th{\_mathsurround\z@}
+\_def\o@lign{\_lineskiplimit\z@ \_oalign}
+\_def\n@space{\_nulldelimiterspace\z@ \m@th}
+\_newdimen\p@renwd \p@renwd=8.75pt
+\_def\alloc@#1#2#3#4#5{\_allocator#5{\_csstring#2}#3}
+\_catcode`\@=12
 
     \_doc ----------------------------
     We don't want to read `opmac.tex` unless `\input opmac` is specified.

@@ -2,6 +2,11 @@
 
 \_codedecl \_undefined {Obscure @ names from plain TeX <2020-05-22>}
 
+\_opwarning{plain-at.opm is obsolete, ignored. @-names provided by the format.}
+
+\_endcode
+
+% Old version of plain-at.opm follows:
 \_setctable \_optexcatcodes
 % PlainTeX obscure names:
 \_catcode`\@=11
@@ -42,3 +47,6 @@ can load this file in such cases. For example:
 \endtt
 
 \_endinput
+
+2022-02-15: marked obsolete
+2020-12-20: released
