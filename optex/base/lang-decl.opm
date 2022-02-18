@@ -33,15 +33,14 @@
    * <lr-hyph>: two digits, they denote `\lefthyphenmin` and
      `\righthyphenmin` values.
    \enditems
-   \^`\_preplang` allocates a new internal <number> for given language which will be bound
-   to the hyphenation patterns. But the patterns nor other language data
-   are not read at this moment. The `\_<lang-id>lang` is defined as \^`\_langinit`.
+   \^`\_preplang` allocates a new internal number by \^`\newlanguage\_<lang-id>Patt`
+   which will be bound to the hyphenation patterns. But the patterns nor other language
+   data are not read at this moment. The `\_<lang-id>lang` is defined as \^`\_langinit`.
    When the `\_<lang-id>lang` switch is used firstly in a document then the language is
    initialized, i.e.\ hyphenation patterns and language-dependent data are read.
-   The `\_<lang-id>lang` is re-defined itself after such initialization.\nl
-   \^`\_preplang` does more work: `\_<lang-id>Patt =<number>` and
-   `\def\_ulan:<longname> {<lang-id>}`. This is needed for the \^`\uselanguage`
-   macro.
+   The `\_<lang-id>lang` is re-defined itself after such initialization.
+   \^`\_preplang` does also `\def\_ulan:<longname> {<lang-id>}`, this is needed
+   for the \^`\uselanguage` macro.
    \_cod -----------------------------
 
 \_def\_preplang #1 #2 #3 #4 #5#6{% lang-id LongName lang-tag hyph-tag lr-hyph
