@@ -1,0 +1,258 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_codedecl \langlist {Languages declaration <2022-02-17>} % preloaded in format
+
+   \_doc -----------------------------
+   Hyphenation patterns are loaded only for US English, `\language=0`. All
+   other languages are only declared and their data are loaded on demand
+   when documents are processed.
+   \_cod -----------------------------
+
+\_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks
+\_input hyphen  % en(USenglish) patterns from TeX82
+
+   \_doc -----------------------------
+   \`\_preplang` `<lang-id> <LongName> <lang-tag> <hyph-tag> <lr-hyph>`
+   declares a new language. The parameters (separated by space) are
+   \begitems
+   * <lang-id>: language identifier. It should be derived from ISO 639-1 code
+     but additional letters can be eventually added because <lang-id> must be used
+     uniquely in the whole declaration list. The \^`\_preplang` macro creates
+     the language switch `\_<lang-id>lang` and defines also `\<lang-id>lang`
+     as a macro which expands to `\_<lang-id>lang`. For example, `\_preplang cs Czech ...`
+     creates `\_cslang` as the language switch and defines
+     `\def\cslang{\_cslang}`.
+   * <LongName>: full name of the language.
+   * <lang-tag>: language tag, which is used for setting
+     language-dependent phrases. If a language have two or more hyphenation
+     patterns but a single phrases set, then we declare this language
+     more than once with the same <lang-tag> but different <lang-hyph>.
+   * <hyph-tag>: a part of the file name where the hyphenation patterns
+     are prepared in Unicode. The full file name is `hyph-<hyph-tag>.tex`.
+     If <hyph-tag> is `{}` then no hyphenation patterns are loaded.
+   * <lr-hyph>: two digits, they denote `\lefthyphenmin` and
+     `\righthyphenmin` values.
+   \enditems
+   \^`\_preplang` allocates a new internal <number> for given language which will be bound
+   to the hyphenation patterns. But the patterns nor other language data
+   are not read at this moment. The `\_<lang-id>lang` is defined as \^`\_langinit`.
+   When the `\_<lang-id>lang` switch is used firstly in a document then the language is
+   initialized, i.e.\ hyphenation patterns and language-dependent data are read.
+   The `\_<lang-id>lang` is re-defined itself after such initialization.\nl
+   \^`\_preplang` does more work: `\_<lang-id>Patt =<number>` and
+   `\def\_ulan:<longname> {<lang-id>}`. This is needed for the \^`\uselanguage`
+   macro.
+   \_cod -----------------------------
+
+\_newcount \_langalloc
+\_def\_preplang #1 #2 #3 #4 #5#6{% lang-id LongName lang-tag hyph-tag lr-hyph
+   \_ifcsname _#1lang\_endcsname \_else
+      \_incr\_langalloc
+      \_global \_ea\_chardef \_csname _#1Patt\_endcsname =\_langalloc
+      \_xdef\_langlist{\_langlist\_space#1(#2)}%
+   \_fi
+   \_ifnum\_langalloc>254 \_errmessage{More than 254 languages not allowed}\_fi
+   \_lowercase{\_sxdef{_ulan:#2}}{#1}%
+   \_slet{_#1lang}{_relax}%
+   \_sxdef {#1lang}{\_cs{_#1lang}}%
+   \_sxdef {_#1lang}{\_noexpand\_langinit \_cs{_#1lang}#1(#2)#3[#4]#5#6}%
+}
+   \_doc -----------------------------
+   The \^`\_preplang` macro adds `<lang-id>(<LongName>)` to the `\_langlist` macro
+   which is accessible by \`\langlist`. It can be used for reporting declared
+   languages.
+   \_cod -----------------------------
+
+\_def\langlist{\_langlist}
+\_def\_langlist{en(USEnglish)}
+
+   \_doc -----------------------------
+   All languages with hyphenation patterns provided by \TeX/live  are
+   declared here. The language switches \`\cslang`, \`\sklang`,
+   \`\delang`, \`\pllang` and many others are declared.
+   You can declare more languages by \^`\_preplang` in your
+   document, if you want.\nl
+   The usage of \^`\_preplang` with <lang-id> already declared is allowed.
+   The language is re-declared in this case. This can be used in your document
+   before first usage of the `\<lang-id>lang` switch.
+   \_cod -----------------------------
+
+%          lang-id  LongName        lang-tag  hyph-tag       lr-hyph
+\_preplang enus     USenglishmax    en        en-us             23
+\_preplang engb     UKenglish       en        en-gb             23
+\_preplang it       Italian         it        it                22
+\_preplang de       nGerman         de        de-1996           22
+\_preplang cs       Czech           cs        cs                23
+\_preplang sk       Slovak          sk        sk                23
+\_preplang fr       French          fr        fr                22
+\_preplang pl       Polish          pl        pl                22
+\_preplang cy       Welsh           cy        cy                23
+\_preplang da       Danish          da        da                22
+\_preplang es       Spanish         es        es                22
+\_preplang sl       Slovenian       sl        sl                22
+\_preplang fi       Finnish         fi        fi                22
+\_preplang hu       Hungarian       hu        hu                22
+\_preplang tr       Turkish         tr        tr                22
+\_preplang et       Estonian        et        et                23
+\_preplang id       Indonesian      id        id                22
+\_preplang eu       Basque          eu        eu                22
+\_preplang ga       Irish           ga        ga                23
+\_preplang nb       Bokmal          nb        nb                22
+\_preplang nn       Nynorsk         nn        nn                22
+\_preplang nl       Dutch           nl        nl                22
+\_preplang pt       Portuguese      pt        pt                23
+\_preplang ro       Romanian        ro        ro                22
+\_preplang hr       Croatian        hr        hr                22
+\_preplang zh       Pinyin          zh        zh-latn-pinyin    11
+\_preplang is       Icelandic       is        is                22
+\_preplang hsb      Uppersorbian    hsb       hsb               22
+\_preplang af       Afrikaans       af        af                12
+\_preplang gl       Galician        gl        gl                22
+\_preplang kmr      Kurmanji        kmr       kmr               22
+\_preplang tk       Turkmen         tk        tk                22
+\_preplang la       Latin           la        la                22
+\_preplang ia       Interlingua     ia        ia                22
+\_preplang lac      classicLatin    la        la-x-classic      22
+\_preplang lal      liturgicalLatin la        la-x-liturgic     22
+\_preplang elm      monoGreek       el        el-monoton        11
+\_preplang elp      Greek           el        el-polyton        11
+\_preplang grc      ancientGreek    grc       grc               11
+\_preplang ca       Catalan         ca        ca                22
+\_preplang cop      Coptic          cop       cop               11
+\_preplang mn       Mongolian       mn        mn-cyrl           22
+\_preplang sa       Sanskrit        sa        sa                13
+\_preplang ru       Russian         ru        ru                22
+\_preplang uk       Ukrainian       uk        uk                22
+\_preplang hy       Armenian        hy        hy                12
+\_preplang as       Assamese        as        as                11
+\_preplang hi       Hindi           hi        hi                11
+\_preplang kn       Kannada         kn        kn                11
+\_preplang lv       Latvian         lv        lv                22
+\_preplang lt       Lithuanian      lt        lt                22
+\_preplang ml       Malayalam       ml        ml                11
+\_preplang mr       Marathi         mr        mr                11
+\_preplang or       Oriya           or        or                11
+\_preplang pa       Panjabi         pa        pa                11
+\_preplang ta       Tamil           ta        ta                11
+\_preplang te       Telugu          te        te                11
+\_preplang be       Belarusian      be        be                22
+\_preplang bg       Bulgarian       bg        bg                22
+\_preplang bn       Bengali         bn        bn                11
+\_preplang cu       churchslavonic  cu        cu                12
+\_preplang deo      oldGerman       de        de-1901           22
+\_preplang gsw      swissGerman     gsw       de-ch-1901        22
+\_preplang eo       Esperanto       eo        eo                22
+\_preplang fur      Friulan         fur       fur               22
+\_preplang gu       Gujarati        gu        gu                11
+\_preplang ka       Georgian        ka        ka                12
+\_preplang mk       Macedonian      mk        mk                22
+\_preplang oc       Occitan         oc        oc                22
+\_preplang pi       Pali            pi        pi                12
+\_preplang pms      Piedmontese     pms       pms               22
+\_preplang rm       Romansh         rm        rm                22
+\_preplang srl      Serbian         sr-latn   sh-latn           22
+\_preplang src      SerbianCyrl     sr-cyrl   sh-cyrl           22
+\_preplang sv       Swedish         sv        sv                22
+\_preplang th       Thai            th        th                23
+\_preplang ethi     Ethiopic        ethi      mul-ethi          11
+\_preplang fis      schoolFinnish   fis       fi-x-school       11
+
+   \_doc -----------------------------
+   \`\_preplangmore` `<lang-id><space>{<text>}` declares more activities
+   of the language switch. The <text> is processed whenever
+   `\_<lang-id>lang` is invoked. If \^`\_preplangmore` is not declared
+   for given language then \`\_langdefault` is processed.\nl
+   You can implement selecting a required script for given language, for
+   example:
+   \begtt
+   \_preplangmore ru {\_frenchspacing \_setff{script=cyrl}\selectcyrlfont}
+   \_addto\_langdefaut {\_setff{}\selectlatnfont}
+   \endtt
+   The macros `\selectcyrlfont` and `\selectlatnfont` are not defined in
+   \OpTeX/. If you follow this example, you have to define them after your
+   decision what fonts will be used in your specific situation.
+   \_cod -----------------------------
+
+\_def\_preplangmore #1 #2{\_ea \_gdef \_csname _langspecific:#1\_endcsname{#2}}
+\_def\_langdefault{\_frenchspacing}
+
+\_preplangmore en   {\_nonfrenchspacing}
+\_preplangmore enus {\_nonfrenchspacing}
+\_def\_langdefault  {\_frenchspacing}
+
+   \_doc -----------------------------
+   The default `\language=0` is US-English with preloaded
+   original hyphenation patterns. We define `\_enlang` and \`\enlang` switches.
+   Note that if no language switch is used in the document then
+   `\language=0` and US-English patterns are used, but \^`\nonfrenchspacing`
+   isn't set.
+   \_cod -----------------------------
+
+\_chardef\_enPatt=0
+\_sdef{_lan:0}{en}
+\_sdef{_ulan:usenglish}{en}
+\_def\_enlang{\_uselang{en}\_enPatt23} % \lefthyph=2 \righthyph=3
+\_def\enlang{\_enlang}
+
+   \_doc -----------------------------
+   Each language switch `\_<lang-id>lang` defined by \^`\_preplang` has its initial state\nl
+   \`\_langinit` `\<switch> <lang-id>(<LongName>)<lang-tag>[<hyph-tag>]<lr-hyph>`.
+   The \^`\_langinit` macro does:
+   \begitems
+   * The internal language <number> is extracted from `\_the\_<lang-id>Patt`. 
+   * `\def \_lan:<number> {<lang-tag>}` for mapping from `\language` number to the <lang-tag>.
+   * loads `hyph-<hyph-tag>.tex` file with hyphenation patterns when `\language=<number>`.
+   * loads the part of `lang-data.opm` file with language-dependent phrases
+     using \^`\_langinpput`.
+   * `\def \_<lang-id>lang {\_uselang{<lang-id>}\_<lang-id>Patt <lr-hyph>}`,
+     i.e. the switch redefines itself for doing a \"normal job" when the
+     language switch is used repeatedly.
+   * Runs itself (i.e. `\_<lang-id>lang`) again for doing the \"normal job" firstly.
+   \enditems
+   \_cod -----------------------------
+
+\_def\_langinit #1#2(#3)#4[#5]#6#7{% \_switch lang-id(LongName)lang-tag[hyph-file]lr-hyph
+   \_sxdef{_lan:\_ea\_the\_csname _#2Patt\_endcsname}{#4}%
+   \_begingroup \_setbox0=\_vbox{% we don't want spaces in horizontal mode
+      \_setctable\_optexcatcodes
+      % loading patterns:
+      \_language=\cs{_#2Patt}\_relax
+      \_ifx^#5^\_else
+         \_wlog{Loading hyphenation for #3: \_string\language=\_the\_language\_space(#5)}%
+         \_let\patterns=\_patterns \_let\hyphenation=\_hyphenation \_def\message##1{}%
+         \_isfile {hyph-#5}\_iftrue \_input{hyph-#5}%
+         \_else \_opwarning{No hyph. patterns #5 for #3, missing package?}\_fi
+      \_fi
+      % loading language data:
+      \_langinput{#4}%
+   }\_endgroup
+   \xdef#1{\noexpand\_uselang{#2}\_csname _#2Patt\_endcsname #6#7}%
+   #1% do language switch
+}
+
+   \_doc -----------------------------
+   \`\_uselang``{<lang-id>}\_<lang-id>Patt <pre-hyph><post-hyph>`
+   is used as \"normal job" of the switch.
+   It sets `\language`, `\lefthyphenmin`, `\righthyphenmin`.
+   Finally, it runs data from \^`\_preplangmore` or runs \^`\_langdefault`.
+   \_cod -----------------------------
+
+\_def\_uselang#1#2#3#4{\_language=#2\_lefthyphenmin=#3\_righthyphenmin=#4\_relax
+   \_trycs{_langspecific:#1}{\_langdefault}%
+}
+
+   \_doc -----------------------------
+   The \`\uselanguage` `{<LongLang>}` macro is defined here
+   (for compatibility with e-plain users). Its parameter is case insensitive.
+   \_cod -----------------------------
+
+\_def\_uselanguage#1{\_def\_tmp{#1}\_lowercase{\_cs{_\_trycs{_ulan:#1}{0x}lang}}}
+\_sdef{_0xlang}{\_opwarning{\_string\uselanguage{\_tmp}: Unknown language name, ignored}}
+\_public \uselanguage ;
+
+\_message{Declared languages: \_langlist.
+   Use \_string\<lang-id>lang to initialize language,
+   \_string\cslang\_space for example.}
+
+\_endcode
+
