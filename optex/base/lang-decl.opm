@@ -87,7 +87,7 @@
 \_preplang nl       Dutch           nl        nl                22
 \_preplang et       Estonian        et        et                23
 \_preplang fi       Finnish         fi        fi                22
-\_preplang fis      schoolFinnish   fis       fi-x-school       11
+\_preplang fis      schoolFinnish   fi        fi-x-school       11
 \_preplang fr       French          fr        fr                22
 \_preplang de       nGerman         de        de-1996           22
 \_preplang deo      oldGerman       de        de-1901           22
