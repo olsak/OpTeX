@@ -1613,12 +1613,12 @@ available in your \TeX/ system.
 \new
 Only USenglish patterns (original from Plain \TeX/) are preloaded.
 Hyphenation patterns of all other languages are loaded on demand when you first use
-the `\<iso-code>lang` command in your document.
+the `\<lang-id>lang` command in your document.
 For example \^`\delang` for German, \^`\cslang` for
-Czech, \^`\pllang` for Polish. The <iso-code> is a shortcut
+Czech, \^`\pllang` for Polish. The <lang-id> is a shortcut
 of the language (mostly from ISO 639-1).
-You can list all available languages by \^`\langlist`
-macro. This macro prints now:
+You can list all available languages including their <lang-id>'s by the
+\^`\langlist` macro. It prints now:
 
 \medskip
 {\typosize[8.5/11.5]\emergencystretch=4em \hbadness=4000

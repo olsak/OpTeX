@@ -79,83 +79,85 @@
 
 %          lang-id  LongName        lang-tag  hyph-tag       lr-hyph
 \_preplang enus     USenglishmax    en        en-us             23
+% Europe:
 \_preplang engb     UKenglish       en        en-gb             23
-\_preplang it       Italian         it        it                22
-\_preplang de       nGerman         de        de-1996           22
-\_preplang cs       Czech           cs        cs                23
-\_preplang sk       Slovak          sk        sk                23
-\_preplang fr       French          fr        fr                22
-\_preplang pl       Polish          pl        pl                22
-\_preplang cy       Welsh           cy        cy                23
-\_preplang da       Danish          da        da                22
-\_preplang es       Spanish         es        es                22
-\_preplang sl       Slovenian       sl        sl                22
-\_preplang fi       Finnish         fi        fi                22
-\_preplang hu       Hungarian       hu        hu                22
-\_preplang tr       Turkish         tr        tr                22
-\_preplang et       Estonian        et        et                23
-\_preplang id       Indonesian      id        id                22
-\_preplang eu       Basque          eu        eu                22
-\_preplang ga       Irish           ga        ga                23
-\_preplang nb       Bokmal          nb        nb                22
-\_preplang nn       Nynorsk         nn        nn                22
-\_preplang nl       Dutch           nl        nl                22
-\_preplang pt       Portuguese      pt        pt                23
-\_preplang ro       Romanian        ro        ro                22
+\_preplang be       Belarusian      be        be                22
+\_preplang bg       Bulgarian       bg        bg                22
+\_preplang ca       Catalan         ca        ca                22
 \_preplang hr       Croatian        hr        hr                22
-\_preplang zh       Pinyin          zh        zh-latn-pinyin    11
-\_preplang is       Icelandic       is        is                22
-\_preplang hsb      Uppersorbian    hsb       hsb               22
-\_preplang af       Afrikaans       af        af                12
-\_preplang gl       Galician        gl        gl                22
-\_preplang kmr      Kurmanji        kmr       kmr               22
-\_preplang tk       Turkmen         tk        tk                22
-\_preplang la       Latin           la        la                22
-\_preplang ia       Interlingua     ia        ia                22
-\_preplang lac      classicLatin    la        la-x-classic      22
-\_preplang lal      liturgicalLatin la        la-x-liturgic     22
+\_preplang cs       Czech           cs        cs                23
+\_preplang da       Danish          da        da                22
+\_preplang nl       Dutch           nl        nl                22
+\_preplang et       Estonian        et        et                23
+\_preplang fi       Finnish         fi        fi                22
+\_preplang fis      schoolFinnish   fis       fi-x-school       11
+\_preplang fr       French          fr        fr                22
+\_preplang de       nGerman         de        de-1996           22
+\_preplang deo      oldGerman       de        de-1901           22
+\_preplang gsw      swissGerman     gsw       de-ch-1901        22
 \_preplang elm      monoGreek       el        el-monoton        11
 \_preplang elp      Greek           el        el-polyton        11
 \_preplang grc      ancientGreek    grc       grc               11
-\_preplang ca       Catalan         ca        ca                22
-\_preplang cop      Coptic          cop       cop               11
-\_preplang mn       Mongolian       mn        mn-cyrl           22
-\_preplang sa       Sanskrit        sa        sa                13
-\_preplang ru       Russian         ru        ru                22
-\_preplang uk       Ukrainian       uk        uk                22
-\_preplang hy       Armenian        hy        hy                12
-\_preplang as       Assamese        as        as                11
-\_preplang hi       Hindi           hi        hi                11
-\_preplang kn       Kannada         kn        kn                11
+\_preplang hu       Hungarian       hu        hu                22
+\_preplang is       Icelandic       is        is                22
+\_preplang ga       Irish           ga        ga                23
+\_preplang it       Italian         it        it                22
+\_preplang la       Latin           la        la                22
+\_preplang lac      classicLatin    la        la-x-classic      22
+\_preplang lal      liturgicalLatin la        la-x-liturgic     22
 \_preplang lv       Latvian         lv        lv                22
 \_preplang lt       Lithuanian      lt        lt                22
-\_preplang ml       Malayalam       ml        ml                11
-\_preplang mr       Marathi         mr        mr                11
-\_preplang or       Oriya           or        or                11
-\_preplang pa       Panjabi         pa        pa                11
-\_preplang ta       Tamil           ta        ta                11
-\_preplang te       Telugu          te        te                11
-\_preplang be       Belarusian      be        be                22
-\_preplang bg       Bulgarian       bg        bg                22
-\_preplang bn       Bengali         bn        bn                11
-\_preplang cu       churchslavonic  cu        cu                12
-\_preplang deo      oldGerman       de        de-1901           22
-\_preplang gsw      swissGerman     gsw       de-ch-1901        22
-\_preplang eo       Esperanto       eo        eo                22
-\_preplang fur      Friulan         fur       fur               22
-\_preplang gu       Gujarati        gu        gu                11
-\_preplang ka       Georgian        ka        ka                12
 \_preplang mk       Macedonian      mk        mk                22
-\_preplang oc       Occitan         oc        oc                22
-\_preplang pi       Pali            pi        pi                12
-\_preplang pms      Piedmontese     pms       pms               22
+\_preplang pl       Polish          pl        pl                22
+\_preplang pt       Portuguese      pt        pt                23
+\_preplang ro       Romanian        ro        ro                22
 \_preplang rm       Romansh         rm        rm                22
+\_preplang ru       Russian         ru        ru                22
 \_preplang srl      Serbian         sr-latn   sh-latn           22
 \_preplang src      SerbianCyrl     sr-cyrl   sh-cyrl           22
+\_preplang sk       Slovak          sk        sk                23
+\_preplang sl       Slovenian       sl        sl                22
+\_preplang es       Spanish         es        es                22
 \_preplang sv       Swedish         sv        sv                22
-\_preplang th       Thai            th        th                23
+\_preplang uk       Ukrainian       uk        uk                22
+\_preplang cy       Welsh           cy        cy                23
+% Others:
+\_preplang af       Afrikaans       af        af                12
+\_preplang hy       Armenian        hy        hy                12
+\_preplang as       Assamese        as        as                11
+\_preplang eu       Basque          eu        eu                22
+\_preplang bn       Bengali         bn        bn                11
+\_preplang nb       Bokmal          nb        nb                22
+\_preplang cop      Coptic          cop       cop               11
+\_preplang cu       churchslavonic  cu        cu                12
+\_preplang eo       Esperanto       eo        eo                22
 \_preplang ethi     Ethiopic        ethi      mul-ethi          11
-\_preplang fis      schoolFinnish   fis       fi-x-school       11
+\_preplang fur      Friulan         fur       fur               22
+\_preplang gl       Galician        gl        gl                22
+\_preplang ka       Georgian        ka        ka                12
+\_preplang gu       Gujarati        gu        gu                11
+\_preplang hi       Hindi           hi        hi                11
+\_preplang id       Indonesian      id        id                22
+\_preplang ia       Interlingua     ia        ia                22
+\_preplang kn       Kannada         kn        kn                11
+\_preplang kmr      Kurmanji        kmr       kmr               22
+\_preplang ml       Malayalam       ml        ml                11
+\_preplang mr       Marathi         mr        mr                11
+\_preplang mn       Mongolian       mn        mn-cyrl           22
+\_preplang nn       Nynorsk         nn        nn                22
+\_preplang oc       Occitan         oc        oc                22
+\_preplang or       Oriya           or        or                11
+\_preplang pi       Pali            pi        pi                12
+\_preplang pa       Panjabi         pa        pa                11
+\_preplang pms      Piedmontese     pms       pms               22
+\_preplang zh       Pinyin          zh        zh-latn-pinyin    11
+\_preplang sa       Sanskrit        sa        sa                13
+\_preplang ta       Tamil           ta        ta                11
+\_preplang te       Telugu          te        te                11
+\_preplang th       Thai            th        th                23
+\_preplang tr       Turkish         tr        tr                22
+\_preplang tk       Turkmen         tk        tk                22
+\_preplang hsb      Uppersorbian    hsb       hsb               22
 
    \_doc -----------------------------
    \`\_preplangmore` `<lang-id><space>{<text>}` declares more activities
@@ -203,7 +205,7 @@
    * `\def \_lan:<number> {<lang-tag>}` for mapping from `\language` number to the <lang-tag>.
    * loads `hyph-<hyph-tag>.tex` file with hyphenation patterns when `\language=<number>`.
    * loads the part of `lang-data.opm` file with language-dependent phrases
-     using \^`\_langinpput`.
+     using \^`\_langinput`.
    * `\def \_<lang-id>lang {\_uselang{<lang-id>}\_<lang-id>Patt <lr-hyph>}`,
      i.e. the switch redefines itself for doing a \"normal job" when the
      language switch is used repeatedly.
@@ -255,4 +257,3 @@
    \_string\cslang\_space for example.}
 
 \_endcode
-
