@@ -91,7 +91,7 @@
 \_preplang fr       French          fr        fr                22
 \_preplang de       nGerman         de        de-1996           22
 \_preplang deo      oldGerman       de        de-1901           22
-\_preplang gsw      swissGerman     gsw       de-ch-1901        22
+\_preplang gsw      swissGerman     de        de-ch-1901        22
 \_preplang elm      monoGreek       el        el-monoton        11
 \_preplang elp      Greek           el        el-polyton        11
 \_preplang grc      ancientGreek    grc       grc               11
