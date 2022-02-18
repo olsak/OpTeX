@@ -15,6 +15,7 @@
 \_chardef\_mairead  = 15
 \_chardef\_maiwrite = 15
 \_chardef\_maifam   = 255
+\_chardef\_mailangu = 16383
 
    \_doc -----------------------------
    Each allocation macro needs its own counter.
@@ -29,6 +30,7 @@
 \_countdef\_readalloc=16   \_readalloc=-1
 \_countdef\_writealloc=17  \_writealloc=-1
 \_countdef\_famalloc=18    \_famalloc=3
+\_countdef\_langualloc=19  \_langualloc=0
 
    \_doc -----------------------------
    The common allocation macro
@@ -51,7 +53,7 @@
    \_doc -----------------------------
    The allocation macros
    \`\newcount`, \`\newdimen`, \`\newskip`, \`\newmuskip`, \`\newbox`,
-   \`\newtoks`, \`\newread`, \`\newwrite` and \`\newfam`
+   \`\newtoks`, \`\newread`, \`\newwrite`, \`\newfam`, and `\newlanguage`
    are defined here.
    \_cod -----------------------------
 
@@ -64,8 +66,10 @@
 \_def\_newread #1{\_allocator #1{read}\_chardef}
 \_def\_newwrite #1{\_allocator #1{write}\_chardef}
 \_def\_newfam #1{\_allocator #1{fam}\_chardef}
+\_def\_newlanguage #1{\_allocator #1{langu}\_chardef}
 
-\_public \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newfam ;
+\_public \newcount \newdimen \newskip \newmuskip \newbox \newtoks
+         \newread \newwrite \newfam \newlanguage ;
 
    \_doc -----------------------------
    The \`\newinsert` macro is defined differently than others.
@@ -86,9 +90,13 @@
 \_public \newinsert ;
 
    \_doc -----------------------------
-   Other allocation macros \`\newattribute` and \`\newcatcodetable`
+   Other allocation macros \`\newmarks`. \`\newattribute` and \`\newcatcodetable`
    have their counter allocated by the `\newcount` macro.
    \_cod -----------------------------
+
+\_newcount \_marksalloc \_marksalloc=0 % start at 1, 0 is \mark
+\_chardef\_maimarks=\_maicount
+\_def\_newmarks #1{\_allocator #1{marks}\_chardef}
 
 \_newcount \_attributealloc  \_attributealloc=0
 \_chardef\_maiattribute=\_maicount
@@ -98,7 +106,7 @@
 \_chardef\_maicatcodetable=32767
 \_def\_newcatcodetable #1{\_allocator #1{catcodetable}\_chardef}
 
-\_public \newattribute \newcatcodetable ;
+\_public \newmarks \newattribute \newcatcodetable ;
 
    \_doc -----------------------------
    We declare public and private versions of `\tmpnum` and `\tmpdim`
