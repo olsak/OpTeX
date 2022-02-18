@@ -44,14 +44,11 @@
    macro.
    \_cod -----------------------------
 
-\_newcount \_langalloc
 \_def\_preplang #1 #2 #3 #4 #5#6{% lang-id LongName lang-tag hyph-tag lr-hyph
    \_ifcsname _#1lang\_endcsname \_else
-      \_incr\_langalloc
-      \_global \_ea\_chardef \_csname _#1Patt\_endcsname =\_langalloc
+      \_ea\_newlanguage\_csname _#1Patt\_endcsname
       \_xdef\_langlist{\_langlist\_space#1(#2)}%
    \_fi
-   \_ifnum\_langalloc>254 \_errmessage{More than 254 languages not allowed}\_fi
    \_lowercase{\_sxdef{_ulan:#2}}{#1}%
    \_slet{_#1lang}{_relax}%
    \_sxdef {#1lang}{\_cs{_#1lang}}%

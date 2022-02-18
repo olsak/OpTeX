@@ -12,23 +12,25 @@
 \_let\_maimuskip = \_maicount
 \_let\_maibox    = \_maicount
 \_let\_maitoks   = \_maicount
-\_chardef\_mairead  = 15
-\_chardef\_maiwrite = 15
-\_chardef\_maifam   = 255
+\_chardef\_mairead     = 15
+\_chardef\_maiwrite    = 15
+\_chardef\_maifam      = 255
+\_chardef\_mailanguage = 16383
 
    \_doc -----------------------------
    Each allocation macro needs its own counter.
    \_cod -----------------------------
 
-\_countdef\_countalloc=10  \_countalloc=255
-\_countdef\_dimenalloc=11  \_dimenalloc=255
-\_countdef\_skipalloc=12   \_skipalloc=255
-\_countdef\_muskipalloc=13 \_muskipalloc=255
-\_countdef\_boxalloc=14    \_boxalloc=255
-\_countdef\_toksalloc=15   \_toksalloc=255
-\_countdef\_readalloc=16   \_readalloc=-1
-\_countdef\_writealloc=17  \_writealloc=-1
-\_countdef\_famalloc=18    \_famalloc=3
+\_countdef\_countalloc=10    \_countalloc=255
+\_countdef\_dimenalloc=11    \_dimenalloc=255
+\_countdef\_skipalloc=12     \_skipalloc=255
+\_countdef\_muskipalloc=13   \_muskipalloc=255
+\_countdef\_boxalloc=14      \_boxalloc=255
+\_countdef\_toksalloc=15     \_toksalloc=255
+\_countdef\_readalloc=16     \_readalloc=-1
+\_countdef\_writealloc=17    \_writealloc=-1
+\_countdef\_famalloc=18      \_famalloc=3
+\_countdef\_languagealloc=19 \_languagealloc=0
 
    \_doc -----------------------------
    The common allocation macro
@@ -51,7 +53,7 @@
    \_doc -----------------------------
    The allocation macros
    \`\newcount`, \`\newdimen`, \`\newskip`, \`\newmuskip`, \`\newbox`,
-   \`\newtoks`, \`\newread`, \`\newwrite` and \`\newfam`
+   \`\newtoks`, \`\newread`, \`\newwrite`, \`\newfam` and \`\newlanguage`
    are defined here.
    \_cod -----------------------------
 
@@ -64,8 +66,10 @@
 \_def\_newread #1{\_allocator #1{read}\_chardef}
 \_def\_newwrite #1{\_allocator #1{write}\_chardef}
 \_def\_newfam #1{\_allocator #1{fam}\_chardef}
+\_def\_newlanguage #1{\_allocator #1{language}\_chardef}
 
-\_public \newcount \newdimen \newskip \newmuskip \newbox \newtoks \newread \newwrite \newfam ;
+\_public \newcount \newdimen \newskip \newmuskip \newbox
+         \newtoks \newread \newwrite \newfam \newlanguage ;
 
    \_doc -----------------------------
    The \`\newinsert` macro is defined differently than others.
