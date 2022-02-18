@@ -66,7 +66,7 @@
 
 \_def\_wlog#1{\_nobreak\_smallskip
    \_hbox to\_hsize{\_hskip25pt
-      \_edef\_tmp{#1}\_replstring\_tmp{^^J}{\_par}%
+      \_edef\_tmp{#1}\_replstring\_tmp{^^J}{\_endgraf}%
       \_smalltt \_noindent \_ea \string \_csname \_currfamily\_endcsname
       \_vtop{\leftskip=1em \_baselineskip=9pt \_tmp \_par}\_hss
       \_if\_relax\_the\_famfrom\_relax \_else from: \_the\_famfrom \_fi
