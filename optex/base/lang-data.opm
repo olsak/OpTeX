@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language phrases <2022-02-04>} % only en, cs plreloaded in format
+\_codedecl \_langdata {Language dependent data <2022-02-19>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -95,3 +95,6 @@
 % todo
 
 \_endcode
+
+2022-02-19: concept finalized, but data still far of competness
+2022-02-04: released

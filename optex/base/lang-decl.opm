@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \langlist {Languages declaration <2022-02-17>} % preloaded in format
+\_codedecl \langlist {Languages declaration <2022-02-19>} % preloaded in format
 
    \_doc -----------------------------
    \`\_preplang` `<lang-id> <LongName> <lang-tag> <hyph-tag> <lr-hyph>`
@@ -307,3 +307,6 @@
 \_langinput{en} \_langinput{cs}
 
 \_endcode
+
+2022-02-19 \_langinput moved here
+2022-02-17 released, original file was hyphen-lan.opm

@@ -1,12 +1,12 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2021-02-15>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2022-02-19>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
-   You need not any external program. The sorting can be used for vaious
-   other aplications, see an example in
-   \ulink[http://petr.olsak.net/optex/optex-tricks.html#sort]{\OpTeX/ trick~0068}.
+   You need not any external program. The sorting can be used for various
+   other applications, see an example in
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#sort]{\OpTeX/ trick~0068}.
 
    There are two passes in the sorting algorithm. The primary pass does not
    distinguish between a group of letters (typically non-accented and
@@ -450,6 +450,7 @@
 
 \_endcode % -------------------------------------
 
+2022-02-19 \_sotringdataen etc. moved to lang-data.opm file
 2021-02-15 \_expandafter -> \_ea
 2021-02-01 secodary sorting: start from code 65
 2020-04-21 \isempty \iffalse ... \fi added to \iindex
