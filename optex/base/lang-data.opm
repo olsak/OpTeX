@@ -10,6 +10,7 @@
 \_monthw en January February March April May June
             July August September October November December
 \_sdef{_mt:today:en}{\_mtext{m\_the\_month} \_the\_day, \_the\_year}
+\_quotationmarks en {“”‘’}
 
 \_let \_sortingdataen = \_sortingdatacs  % it can be shared with Czech
 \_let \_ignoredcharsen = \_ignoredcharscs
@@ -29,6 +30,7 @@
 \_monthw cs ledna února března dubna května června
             července srpna září října listopadu prosince
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
+\_quotationmarks cs {„“‚‘}
 
 %\_def\_sortingdatacs   {...} % all these macros are preloaded in the format,
 %\_def\_compoundcharscs {...} % see section 2.33 or file makeindex.tex.
@@ -36,32 +38,39 @@
 
 \_langdata de {German}  % ------------------------------------------------
 \_langw de  Kapitel      Tabelle     Abbildung    Betreff
-% todo
-
-\_langdata es {Spanish} % ------------------------------------------------
-\_langw es  Capítulo     Tabla       Figura       Sujeto
+\_quotationmarks de {„“‚‘}
 % todo
 
 \_langdata it {Italian} % ------------------------------------------------
 \_langw it  Capitolo     Tabella     Fig.         Oggetto
 \_monthw it gennaio febbraio marzo aprile maggio giugno
             luglio agosto settembre ottobre novembre dicembre
+\_quotationmarks it {“”«»}
+% todo
+
+\_langdata es {Spanish} % ------------------------------------------------
+\_langw es  Capítulo     Tabla       Figura       Sujeto
+\_quotationmarks es {“”«»}
 % todo
 
 \_langdata fr {French}  % ------------------------------------------------
 \_langw fr  Chapitre     Tableau     Figure       Matière
+\_quotationmarks fr {“”«»}
 % toto
 
 \_langdata pl {Polish}  % ------------------------------------------------
 \_langw pl  Rozdział     Tabela      Ilustracja   Temat
+\_quotationmarks pl {“”«»}
 % todo
 
 \_langdata el {Greek}   % ------------------------------------------------
 \_langw el  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
+\_quotationmarks el {“”«»}
 % todo
 
 \_langdata ru {Russian} % ------------------------------------------------
 \_langw ru  Глава        Таблица     Рисунок      Предмет
+\_quotationmarks ru {“”«»}
 % todo
 
 \_langdata sk {Slovak}  % ------------------------------------------------
@@ -72,6 +81,7 @@
 \_monthw sk januára februára marca apríla mája júna
             júla augusta septembra októbra novembra decembra
 \_sdef{_mt:today:sk}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
+\_quotationmarks sk {„“‚‘}
 
 \_let \_sortingdatask = \_sortingdatacs     % it can be shared with Czech
 \_let \_compoundcharssk = \_compoundcharscs

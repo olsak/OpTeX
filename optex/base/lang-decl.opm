@@ -255,10 +255,18 @@
    The language data are collected in the single `lang-data.opm` file.
    Appropriate parts of this file is read by \^`\_langinput{<lang-tag>}`.
    First few lines of the file looks like:
-   {\maxlines=46 \printdoc lang-data.opm }%
+   {\maxlines=47 \printdoc lang-data.opm }%
    There are analogical declaration for more languages here. Unfortunately, this
    file is far for completeness. I welcome you send me a part of declaration
    for your language.
+
+   If your language is missing in this file then a warning is reported during
+   language initialization. You can create your private declaration in your
+   macros (analogical as in the `lang-data.opm` file
+   but without the \^`\_langdata` prefix).
+   Then you will want to remove the warning about missing data. This can be
+   done by \`\nolanginput``{<lang-tag>}` given before initialization of your
+   language.
 
    The whole file `lang-data.opm` is not preloaded in the format because
    I suppose a plenty languages here and I don't want to waste the \TeX/ memory
@@ -270,14 +278,6 @@
 
    If the part of the `lang-data.opm` concerned by <lang-tag> is read already
    then `\_li:<lang-tag>` is set to `R` and we don't read this part of the file again.
-
-   If your language is missing in this file then a warning is reported during
-   language initialization. You can create your private declaration in your
-   macros (analogical as in the `lang-data.opm` file from \OpTeX/ release
-   but without the \^`\_langdata` prefix).
-   Then you will want to remove the warning about missing data. This can be
-   done by \`\_nolanginput``{<lang-tag>}` given before initialization of your
-   language.
    \_cod -----------------------------
 
 \_def\_langinput #1{%
@@ -292,12 +292,13 @@
    \_fi
 }
 \_def\_readlangdata #1#2{%
-   \_ifx^#2^\_opwarning{Missing data for language #1 in lang-data.opm}%
+   \_ifx^#2^\_opwarning{Missing data for language "#1" in lang-data.opm}%
    \_else \_wlog{Reading data for the language #2 (#1)}%
    \_fi
 }
 \_def\_langdata #1 #2{\_endinput}
-\_def\_nolagninput #1{\_ea\_glet \_csname _li:#1\_endcsname N}
+\_def\_nolanginput #1{\_ea\_glet \_csname _li:#1\_endcsname N}
+\_public \nolanginput ;
 
    \_doc -----------------------------
    Data of two preferred languages are preloaded in the format:
