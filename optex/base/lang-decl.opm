@@ -3,15 +3,6 @@
 \_codedecl \langlist {Languages declaration <2022-02-17>} % preloaded in format
 
    \_doc -----------------------------
-   Hyphenation patterns are loaded only for US English, `\language=0`. All
-   other languages are only declared and their data are loaded on demand
-   when documents are processed.
-   \_cod -----------------------------
-
-\_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks
-\_input hyphen  % en(USenglish) patterns from TeX82
-
-   \_doc -----------------------------
    \`\_preplang` `<lang-id> <LongName> <lang-tag> <hyph-tag> <lr-hyph>`
    declares a new language. The parameters (separated by space) are
    \begitems
@@ -179,8 +170,9 @@
 \_def\_langdefault  {\_frenchspacing}
 
    \_doc -----------------------------
-   The default `\language=0` is US-English with preloaded
-   original hyphenation patterns. We define `\_enlang` and \`\enlang` switches.
+   The default `\language=0` is US-English with original hyphenation patterns
+   preloaded in the format (see the end of section~\ref[plain]).
+   We define `\_enlang` and \`\enlang` switches.
    Note that if no language switch is used in the document then
    `\language=0` and US-English patterns are used, but \^`\nonfrenchspacing`
    isn't set.
@@ -191,6 +183,14 @@
 \_sdef{_ulan:usenglish}{en}
 \_def\_enlang{\_uselang{en}\_enPatt23} % \lefthyph=2 \righthyph=3
 \_def\enlang{\_enlang}
+
+   \_doc -----------------------------
+   The list of declared languages are reported during format generation.
+   \_cod -----------------------------
+
+\_message{Declared languages: \_langlist.
+   Use \_string\<lang-id>lang to initialize language,
+   \_string\cslang\_space for example.}
 
    \_doc -----------------------------
    Each language switch `\_<lang-id>lang` defined by \^`\_preplang` has its initial state\nl
@@ -240,7 +240,7 @@
 }
 
    \_doc -----------------------------
-   The \`\uselanguage` `{<LongLang>}` macro is defined here
+   The \`\uselanguage` `{<LongName>}` macro is defined here
    (for compatibility with e-plain users). Its parameter is case insensitive.
    \_cod -----------------------------
 
@@ -248,8 +248,61 @@
 \_sdef{_0xlang}{\_opwarning{\_string\uselanguage{\_tmp}: Unknown language name, ignored}}
 \_public \uselanguage ;
 
-\_message{Declared languages: \_langlist.
-   Use \_string\<lang-id>lang to initialize language,
-   \_string\cslang\_space for example.}
+   \_doc -----------------------------
+   The \"language data" include declarations of
+   rules for sorting (see section~\ref[makeindex]),
+   language-dependent phrases and quotation marks (see section~\ref[langphrases]).
+   The language data are collected in the single `lang-data.opm` file.
+   Appropriate parts of this file is read by \^`\_langinput{<lang-tag>}`.
+   First few lines of the file looks like:
+   {\maxlines=43 \printdoc lang-data.opm }
+   There are analogical declaration for more languages here. Unfortunately, this
+   file is far for completeness. I welcome you send me a part of declaration
+   for your language.
+
+   The whole file `lang-data.opm` is not preloaded in the format because
+   I suppose a plenty languages here and I don't want to waste the \TeX/ memory
+   by these declarations. Each part of this file prefixed by
+   \`\_langdata` `<lang-tag> {<LongName>}` is read separately
+   when \`\_langinput``{<lang-tag>}` is used. And it is used
+   in the \^`\_langinit` macro (i.e.\ when the language is initialized),
+   so the appropriate part of this file is read automatically on demand.
+
+   If the part of the `lang-data.opm` concerned by <lang-tag> is read already
+   then `\_li:<lang-tag>` is set to `R` and we don't read this part of the file again.
+
+   If your language is missing in this file then a warning is reported during
+   language initialization. You can create your private declaration in your
+   macros (analogical as in the `lang-data.opm` file from \OpTeX/ release
+   but without the \^`\_langdata` prefix).
+   Then you will want to remove the warning about missing data. This can be
+   done by \`\_nolanginput``{<lang-tag>}` given before initialization of your
+   language.
+   \_cod -----------------------------
+
+\_def\_langinput #1{%
+   \_unless \_ifcsname _li:#1\_endcsname
+      \_bgroup
+          \_edef\_tmp{\_noexpand\_langdata #1 }\_everyeof\_ea{\_tmp{}}%
+          \_long \_ea\_def \_ea\_tmp \_ea##\_ea1\_tmp{\_readlangdata{#1}}%
+          \_globaldefs=1
+          \_ea\_tmp \_input{lang-data.opm}%
+          \_ea\_glet \_csname _li:#1\_endcsname R%
+      \_egroup
+   \_fi
+}
+\_def\_readlangdata #1#2{%
+   \_ifx^#2^\_opwarning{Missing data for language #1 in lang-data.opm}%
+   \_else \_wlog{Reading data for the language #2 (#1)}%
+   \_fi
+}
+\_def\_langdata #1 #2{\_endinput}
+\_def\_nolagninput #1{\_ea\_glet \_csname _li:#1\_endcsname N}
+
+   \_doc -----------------------------
+   Data of two preferred languages are preloaded in the format:
+   \_cod -----------------------------
+
+\_langinput{en} \_langinput{cs}
 
 \_endcode

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2021-09-24>} % preloaded in format
+\_codedecl \magstep {Macros from plain TeX <2022-02-19>} % preloaded in format
 
    \_doc -----------------------------
    The \`\dospecials` works like in plain TeX but does nothing with `_`.
@@ -356,8 +356,16 @@
 \_def \_bye {\_par \_vfill \_supereject \_byehook \_end}
 \_public \showhyphens \bye ;
 
+   \_doc -----------------------------
+   Plain \TeX/ reads `hyphen.tex` with patterns as `\language=0`. We do the same.
+   \_cod -----------------------------
+
+\_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks
+\_input hyphen  % en(USenglish) patterns from TeX82
+
 \_endcode % -------------------------------------
 
+2022-02-19 ... \input hyphen.tex moved here (format file is 80k smaller)
 2021-09-24 ... \_unichars introduced
 2021-04-09 ... \_public\showhyphens, bug fixed
 2020-02-14 ... released

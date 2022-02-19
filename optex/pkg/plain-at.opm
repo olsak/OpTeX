@@ -2,7 +2,7 @@
 
 \_codedecl \_undefined {Obscure @ names from plain TeX <2020-05-22>}
 
-\_opwarning{plain-at.opm is obsolete, ignored. @-names provided by the format}
+\_opwarning{plain-at.opm is obsolete, ignored. @-names defined by the format}
 
 \_endcode
 

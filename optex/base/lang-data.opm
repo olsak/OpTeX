@@ -1,8 +1,8 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langwords {Language phrases <2022-02-04>} % only en, cs plreloaded in format
+\_codedecl \_langdata {Language phrases <2022-02-04>} % only en, cs plreloaded in format
 
-\_langwords en {English}
+\_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
 \_langb en  {, and }  { et al.} { ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
             {Available from } {Available also from }
@@ -11,7 +11,7 @@
             July August September October November December
 \_sdef{_mt:today:en}{\_mtext{m\_the\_month} \_the\_day, \_the\_year}
 
-\_langwords cs {Czech}
+\_langdata cs {Czech}   % ------------------------------------------------
 %           Chapter      Table       Figure       Subject
 \_langw cs  Kapitola     Tabulka     Obrázek      Věc
 %           {, and }  { et al.} { ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
@@ -26,37 +26,37 @@
             července srpna září října listopadu prosince
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 
-\_langwords de {German}
+\_langdata de {German}  % ------------------------------------------------
 \_langw de  Kapitel      Tabelle     Abbildung    Betreff
 % todo
 
-\_langwords es {Spanish}
+\_langdata es {Spanish} % ------------------------------------------------
 \_langw es  Capítulo     Tabla       Figura       Sujeto
 % todo
 
-\_langwords fr {French}
+\_langdata fr {French}  % ------------------------------------------------
 \_langw fr  Chapitre     Tableau     Figure       Matière
 % toto
 
-\_langwords it {Italian}
+\_langdata it {Italian} % ------------------------------------------------
 \_langw it  Capitolo     Tabella     Fig.         Oggetto
 \_monthw it gennaio febbraio marzo aprile maggio giugno
             luglio agosto settembre ottobre novembre dicembre
 % todo
 
-\_langwords pl {Polish}
+\_langdata pl {Polish}  % ------------------------------------------------
 \_langw pl  Rozdział     Tabela      Ilustracja   Temat
 % todo
 
-\_langwords el {Greek}
+\_langdata el {Greek}   % ------------------------------------------------
 \_langw el  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
 % todo
 
-\_langwords ru {Russian}
+\_langdata ru {Russian} % ------------------------------------------------
 \_langw ru  Глава        Таблица     Рисунок      Предмет
 % todo
 
-\_langwords sk {Slovak}
+\_langdata sk {Slovak}  % ------------------------------------------------
 \_langw sk  Kapitola     Tabuľka     Obrázok      Vec
 \_langb sk  { a } { a~kol.} { vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editori}
             {Dostupné na } {Dostupné tiež na }
@@ -65,7 +65,7 @@
             júla augusta septembra októbra novembra decembra
 \_sdef{_mt:today:sk}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 
-\_langwords pt {Portuguese}
+\_langdata pt {Portuguese} % ------------------------------------------------
 \_langw pt  Capítulo     Tabela      Figura       Assunto
 \_monthw pt janeiro fevereiro março abril maio junho julho agosto
             setembro outubro novembro dezembro 
