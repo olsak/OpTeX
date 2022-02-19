@@ -4,7 +4,9 @@
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
-   You need not any external program.
+   You need not any external program. The sorting can be used for vaious
+   other aplications, see an example in
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html#sort]{\OpTeX/ trick~0068}.
 
    There are two passes in the sorting algorithm. The primary pass does not
    distinguish between a group of letters (typically non-accented and
@@ -14,12 +16,14 @@
    before acute before circumflex before ring. At less priority: lowercase
    letters must be before uppercase letters.
 
-   The \`\_sortingdata``<iso-code>` implements these rules for the language
-   <iso-code>. The groups between commas are not distinguished in the first
+   The \`\_sortingdata``<lang-tag>` implements these rules for the language
+   given by <lang-tag>. The <lang-tag> is typicaly ISO 639-1 code of the language
+   and it is declared by \~`\_preplang` defined in section~\ref[langdecl].
+   The \`\_sortingdatacs` for Czech rules is defined below.
+   The groups between commas are not distinguished in the first
    pass. The second pass distinguishes all characters mentioned in the
-   `\_sortingdata<iso-code>` (commas are ignored). The order of letters
-   in the `\_sortingdata<iso-code>` macro is significant for the sorting algorithm.
-   The Czech rules (`cs`) are implemented here:
+   `\_sortingdata<lang-tag>` (commas are ignored). The order of letters
+   in the `\_sortingdata<lang-tag>` macro is significant for the sorting algorithm.
    \_cod -----------------------------
 
 \_def \_sortingdatacs {%
@@ -59,49 +63,34 @@
 }
 
    \_doc -----------------------------
-   Characters ignored by the sorting algorithm are declared in \`\_ignoredchars``<iso-code>`.
+   Characters to be ignored are declared in  \`\_ignoredchars``<lang-tag>`.
+   See \`\_ignoredcharscs` for Czech rules. These characters are ignored in the first pass
+   without additional condition. All characters are taken into account in
+   the second pass: ASCII characters with code $\string<65$ are sorted first if they
+   are not mentioned in the \^`\_sortingdata``<lang-tag>` macro.
+   Others not mentioned characters have undefined behavior during sorting.
+
    The compound characters (two or more characters interpreted as one
    character in the sorting algorithm) are mapped to single invisible characters
-   in \`\_compoundchars``<iso-code>`. Czech rules declare ch or Ch or CH as
-   a single letter sorted between H and I. See \`\_sortingdatacs` above where
-   these declared characters are used.
-
-   The characters declared in `\_ignoredchars` are ignored in the first pass
-   without additional condition. All characters are taken into account in
-   second pass: ASCII characters with code $\string<65$ are sorted first if they
-   are not mentioned in the `\_sortingdata<iso-code>` macro.
-   Others not mentioned characters have undefined behavior during sorting.
+   in \`\_compoundchars``<lang-tag>`, see \`\_compoundcharscs` below for Czech rules,
+   where ch or Ch or CH are declared as a single letter sorted between H and I.
+   See \^`\_sortingdatacs` above where these declared characters are used.
    \_cod -----------------------------
 
 \_def \_ignoredcharscs  {.,;?!:'"|()[]<>=+}
 \_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V} % DZ etc. are sorted normally
 
    \_doc -----------------------------
-   Slovak sorting rules are the same as Czech. The macro `\_sortingdatacs`
-   includes Slovak letters too. Compound characters are the same.
-   English sorting rules can be defined by `\_sortingdatacs` too because
-   English alphabet is a subset of the Czech and Slovak alphabets. Only
-   difference: \`\_compoundcharsen` is empty in English rules.
-
    You can declare these macros for more languages if you wish to use
    `\makeindex` with sorting rules with respect to your language.
    Note: if you need to map compound characters to a character, don't use
-   `^^I` or `^^M` because these characters have very specific category codes.
-   And use space to separate more mappings, like in \`\_compoundcharscs` above.
+   `^^I`, `^^J` or `^^M` because these characters have very specific category codes.
+   And use spaces to separate more mappings, like in \^`\_compoundcharscs` above.
    
    If you create `\_sortingdata` etc. for your language, please, send them
-   to me. I am ready to add them to a new \OpTeX/ release. Se
-   also section~\ref[langphrases].
-   \_cod -----------------------------
+   to me. I am ready to add them to the file `lang-data.opm` in a new \OpTeX/ release.
+   See also section~\ref[langdecl].
 
-\_let \_sortingdatask = \_sortingdatacs
-\_let \_compoundcharssk = \_compoundcharscs
-\_let \_ignoredcharssk = \_ignoredcharscs
-\_let \_sortingdataen = \_sortingdatacs
-\_def \_compoundcharsen {}
-\_let \_ignoredcharsen = \_ignoredcharscs
-
-   \_doc -----------------------------
    Preparing to primary pass is implemented by the \`\_setprimarysorting` macro.
    It is called from `\makeindex` macro and all processing of sorting is in a group.
    \_cod -----------------------------
@@ -251,7 +240,7 @@
 
    The current language (chosen for hyphenation patterns) is used for
    sorting data. If the macro \`\_sortinglang`
-   is defined as `<iso-code>` (for example `\def\sortinglang{de}`)
+   is defined as `<lang-tag>` (for example `\def\_sortinglang{de}` for German)
    then this has precedence and current language is not used.
    Moreover, if you specify \`\_asciisortingtrue` then ASCII
    sorting will be processed and all language sorting data will be ignored.

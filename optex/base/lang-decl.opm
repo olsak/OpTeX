@@ -14,8 +14,8 @@
      creates `\_cslang` as the language switch and defines
      `\def\cslang{\_cslang}`.
    * <LongName>: full name of the language.
-   * <lang-tag>: language tag, which is used for setting
-     language-dependent phrases. If a language have two or more hyphenation
+   * <lang-tag>: language tag, which is used for setting language-dependent phrases
+     and sorting data. If a language have two or more hyphenation
      patterns but a single phrases set, then we declare this language
      more than once with the same <lang-tag> but different <lang-hyph>.
    * <hyph-tag>: a part of the file name where the hyphenation patterns
@@ -255,7 +255,7 @@
    The language data are collected in the single `lang-data.opm` file.
    Appropriate parts of this file is read by \^`\_langinput{<lang-tag>}`.
    First few lines of the file looks like:
-   {\maxlines=43 \printdoc lang-data.opm }
+   {\maxlines=46 \printdoc lang-data.opm }%
    There are analogical declaration for more languages here. Unfortunately, this
    file is far for completeness. I welcome you send me a part of declaration
    for your language.
