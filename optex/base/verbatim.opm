@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2021-04-18>} % preloaded in format
+\_codedecl \begtt {Verbatim <2022-02-22>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters
@@ -350,7 +350,7 @@
 }
 \_def\_testcommentchars #1\_iftrue{\_iffalse} % default value of \_testcommentchar
 \_def\_printcomments{\_ttskip
-   {\_catcodetable0 \_reloading \_rm \_everypar={}%
+   {\_catcodetable0 \_rm \_everypar={}%
     \_noindent \_ignorespaces \_scantextokens\_ea{\_vcomments}\_par}%
    \_ttskip
 }
@@ -376,6 +376,7 @@
 \_endinput
 
 History:
+2022-02-22 ... \_reloading removed due to changes in font-select
 2021-04-18 ... \_protrudechars=0 added
 2021-04-07 ... \_savemathsb, \_restoremathsb introduced
 2021-01-22 ... \activettchar changed to \verbchar

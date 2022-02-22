@@ -714,19 +714,17 @@ previous listing of math alphabets and sets as default:
 Moreover, it defines the alphabet selectors at user level (see section 1.3.3
 of the \OpTeX/ manual). For example
 \begtt \typosize[10/12]
-\def\rm {\_tryload\_tenrm \_inmath{\_rmavariables \_rmdigits}}
+\_def\_marm {\_inmath{\_rmavariables \_rmdigits}} % \_mamrm is used in \rm
 \endtt
 %
-The first part
-\new \OpTeX/
-`\_tryload\_tenrm` is applicable for text fonts and the
-`\_inmath` part is processed only in math mode and sets the math alphabets.
-You can see the file `unimath-codes.opm` where all user-level selectors are
+`\_inmath` runs it parameter only in math mode and sets the math alphabets.
+You can see the file `unimath-codes.opm` where all these selectors are
 defined. You can redefine them. For example, \OpTeX/ defines `\bf` as a math
 alphabet selector that selects sans serif bold in math. This is the common
-notation for vectors, tensors, and matrices. If you dislike this, then you can define:
+notation for vectors, tensors, and matrices. If you dislike this (maybe
+because plain \TeX/ has different defaults), then you can define:
 \begtt \typosize[10/12]
-\def\bf {\_tryloadbf\_tenbf \_inmath{\_bfvariables\_bfdigits\_bfgreek\_bfGreek}}
+\_def\_mabf {\_inmath{\_bfvariables\_bfdigits\_bfgreek\_bfGreek}} % used in \bf
 \endtt
 
 

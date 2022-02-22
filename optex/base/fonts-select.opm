@@ -1,118 +1,72 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2021-09-24>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2022-02-22>} % preloaded in format
 
    \_doc -----------------------------
-   The variant selectors  \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, \^`\tt`
-   are defined (roughly speaking) by
-   \begtt \catcode`\<=13
-   \def\<XX> {\_tryload<XX>\_ten<XX>}
-   \endtt
-   where <XX> is \"internal variant name" `rm` or `bf` or `it` or `bi` or `tt`.
-   There are five \"internal font switchers" `\_tenrm`, `\_tenbf`, `\_tenit`,
-   `\_tenbi` and `\_tentt`. They are used almost for all fonts selected by the Fonts
-   Selection System. For example, `\_tenbf` is the switcher for bold variant of
-   the current family in the current font context. The \^`\bf` macro is defined as
-   `\_tryloadbf \_tenbf`. If the font context (font family, font size, features)
-   is not changed, then `\_tryloadbf` is `\relax` and `\_tenbf` font switcher selects
-   given font. If the font context is changed, then `\_tryloadbf` is re-defined (see
-   \^`\_reloading` macro) to load new bold variant of the font using \^`\_resizefont`
-   The loaded font is saved to `\_tenbf` switcher and `\_tryloadbf` returns
-   back to the `\relax` meaning. So, `\bf` macro loads
-   new font with current font context and then selects it by `\_tenbf`
-   selector. The word \"ten" is used here
-   only for historical reason; the font can be at arbitrary size.
-   \nl
-   The \`\_reloading` macro is run whenever font context is changed.
-   It activates `\_tryload<XX>` for `<XX>` in `rm`, `bf`, `it` and `bi`.
-   The \`\_loadf``{<XX>}\ten<XX>` is processed for this.
-   \nl
-   The \`\_tryloadtt` is implemented differently because we want to keep
-   family independence for `\tt` macro, see section~\ref[tt].
-   So, `\_tryloadtt` is defined constantly as \"loading `\tt` font" and it is
-   not re-defined to `\relax`. On the other hand, `\_tryloadtt` is
-   re-defined in the \^`\initunifonts` macro or when
-   \~`\famvardef``\tt` is used.
+   The main principle of the Font Selection System is: run one or more
+   modifiers followed by \^`\fontsel`. Modifiers saves data and \^`\fontsel`
+   selects the font considering saved data. Each basic variant selector
+   \`\rm`, \`\bf`, \`\it`, \`\bi`, and \`\tt` runs internal variant modifier
+   \`\_fmodrm`, \`\_fmodbf`, \`\_fmodit`, \`\_fmodbi` and \`\_fmodtt`.
+   These modifiers save their data to the \`\_famv` macro which is
+   `rm` or `bf` or `it` or `bi` or `tt`. The \`\currvar` selector
+   is \^`\fontsel` by default, but variant selectors declared by
+   \^`\famvardef` change it.
    \_cod -----------------------------
 
-\_def\_reloading{\_loadf{rm}\_tenrm \_loadf{bf}\_tenbf \_loadf{it}\_tenit \_loadf{bi}\_tenbi}
-\_def\_loadf#1#2{\_sdef{_tryload#1}{\_ifmmode \_else \_resizefont{#1}#2\_fi}}
-\_def\_tryloadtt{\_resizefont{tt}\_tentt} % only in TFM mode
+\_def\_famv{rm}  % default value
+\_protected\_def \_fmodrm {\_def\_famv{rm}}
+\_protected\_def \_fmodbf {\_def\_famv{bf}}
+\_protected\_def \_fmodit {\_def\_famv{it}}
+\_protected\_def \_fmodbi {\_def\_famv{bi}}
+\_protected\_def \_fmodtt {\_def\_famv{tt}}
 
-\_let\_tryloadrm=\_relax
-\_let\_tryloadbf=\_relax
-\_let\_tryloadit=\_relax
-\_let\_tryloadbi=\_relax
-
-   \_doc ----------------------------
-   The Font Selection system allows to use \`\currvar`
-   instead of an explicitly specified variant selector. The current variant
-   is extracted from `\the\font` output which could be the `\_ten<XX>` control
-   sequence. Then `\currvar` expands to `\_rm` or `\_it` etc.
-   \_cod ----------------------------
-
-\_protected \_def \_currvar{\_cs{_currvar:\_ea \_csstring \_the\_font}}
-\_sdef{_currvar:_tenrm}{\_rm}
-\_sdef{_currvar:_tenbf}{\_bf}
-\_sdef{_currvar:_tenit}{\_it}
-\_sdef{_currvar:_tenbi}{\_bi}
-\_sdef{_currvar:_tentt}{\_tt}
-\_public \currvar ;
+\_protected\_def \_rm {\_fmodrm \_fontsel \_marm}
+\_protected\_def \_bf {\_fmodbf \_fontsel \_mabf}
+\_protected\_def \_it {\_fmodit \_fontsel \_mait}
+\_protected\_def \_bi {\_fmodbi \_fontsel \_mabi}
+\_protected\_def \_tt {\_fmodtt \_fontsel \_matt}
+\_protected\_def \_currvar {\_fontsel} \_protected\_def \currvar{\_currvar}
+\_public \rm \bf \it \bi \tt ;
 
    \_doc -----------------------------
-   The \`\_resizefont` `{<variant-name>}\<font switch>` is the heart of the
-   Fonts Selection System. It resizes the font given by the variant with
-   respect to the current font context and sets a new <font-switch>.
-   The <variant-name> is `rm` or `bf` or `it` or `bi` or `tt`.
-   The new <font-switch> is declared (roughly speaking) by:
-   \begtt \catcode`<=13
-   \_font <font switch> = <fontname of>\_ten<variant-name> \_sizespec % in TFM mode
-   \_font <font switch> = {\_fontnamegen} \_sizespec              % in OTF mode
-   \endtt
-   The font is loaded by \`\_doresizefont``<font switch>`. This macro has
-   meaning \`\_doresizetfmfont` in TFM mode (default in format) and it
-   switches to \^`\_doresizeunifont` when \^`\initunifonts` is used.\nl
-   The `<fontname of>` is generated by the `\fontname` \TeX/ primitive where
-   \`\_rfontskipat` removes the `at<dimen>` part of the `\fontname` output.\nl
-   The \`\_whatresize` is defined as `<variant-name>`.\nl
-   The \^`\_fontloaded``<font switch>` is a macro which can be used for
-   post-processing when a font is loaded.
+   The \`\fontsel` creates the <font switch> in the format `\_ten<famv>`
+   and loads the font associated to the <font switch>.
+   The loading is done by:
+   \begitems \style a
+   * `\letfont <font switch> = \savedswitch \_sizespec`
+   * `\font <font switch> = \fontnamegen \_sizespec`
+   \enditems
+   The a) variant is used when \~`\_fontnamegen` isn't defined, i.e.\
+   \^`\fontfam` wasn't used: only basic variant and \^`\_sizespec` is taken
+   into account. The b) variant is processed when \^`\fontfam` was used:
+   all data saved by all font modifiers are used during expansion of \^`\_fontnamegen`.\nl
+   After the font is loaded, final job is done by \`\_fontselA``<font-switch>`.
    \_cod -----------------------------
 
-\_def\_resizefont#1#2{%
-   \_edef\_whatresize{#1}\_doresizefont#2\_relax \_fontloaded #2%
-   \_lastmagsize=\_zo
-   \_if t\_ignoresecond#1\_else \_slet{_tryload#1}{_relax}\_fi
+\_protected\_def \_fontsel {%
+   \_ifx\_fontnamegen\_undefined % \fontfam was not used
+      \_ea\_let \_ea\_tmpf \_csname _ten\_famv\_endcsname
+      \_ea\_fontlet \_csname _ten\_xfamv\_endcsname \_tmpf \_sizespec
+   \_else % \fontfam is used
+      \_ea\_font \_csname _ten\_xfamv\_endcsname {\_fontnamegen}\_sizespec
+   \_fi \_relax
+   \_ea \_fontselA \_csname _ten\_xfamv\_endcsname
 }
-\_def\_doresizetfmfont#1{\_logfont{#1}%
-   \_ifx#1\_nullfont \_else
-      \_ea\_font\_ea#1\_ea\_rfontskipat
-         \_fontname \_cs{_ten\_whatresize} \_relax\_space \_sizespec \_relax
-   \_fi
+\_def\_fontselA #1{%
+   \_protected\_def \_currvar {\_fontsel}% default value of \_currvar
+   \_fontloaded #1% initial settings if font is loaded firstly
+   \_setwsp  #1%    wordspace setting
+   \_logfont #1%    font selecting should be logged.
+   #1% select the font
 }
-\_let\_doresizefont=\_doresizetfmfont
-\_def\_logfont#1{} % default is no logging of used fonts
+\_def \_logfont #1{}
+\_def \_xfamv {\_famv}
 
-\_def\_rfontskipat#1{\_ifx#1"\_ea\_rfskipatX \_else\_ea\_rfskipatN\_ea#1\_fi}
-\_def\_rfskipatX #1" #2\_relax{"\_whichtfm{#1}"}
-\_def\_rfskipatN #1 #2\_relax{\_whichtfm{#1}}
+\_public \fontsel ;
 
    \_doc -----------------------------
-    \`\_doresizeunifont``<font-switch>` implements the OTF mode of
-   loading fonts \^`\_doresizefont`.
-   There is a fallback to TFM mode if \^`\_fontnamegen` is not defined.\nl
-   The \^`\_fontnamegen` expands to the font name/file:font-features
-   depending on the current font context.
-   \_cod -----------------------------
-
-\_def\_doresizeunifont #1{\_logfont{#1}%
-   \_ifx\_fontnamegen\_undefined \_doresizetfmfont#1\_else
-       \_font#1={\_fontnamegen} \_sizespec \_relax \_setwsp#1\_relax
-   \_fi
-}
-
-   \_doc -----------------------------
-   If a font is loaded by \^`\_resizefont` or \^`\resizethefont` then the
+   If a font is loaded by macros \^`\fontsel` or \^`\resizethefont` then the
    \`\_fontloaded``<font switch>` is called immediately after it. If the font
    is loaded first then its `\skewchar` is equal to $-1$. We run
    \`\_newfontloaded``<font switch>` and set `\skewchar=-2` in this case.
@@ -122,7 +76,7 @@
    globally saved to the font (like `\fontdimen`). If it is used in math
    typesetting then it is set to a positive value.\nl
    The `\_newfontloaded` should be defined for micro-typographic configuration of
-   fonts, for example. See
+   fonts, for example. The `mte.opm` package uses it. See also
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#fontexpand]{\OpTeX/ trick 0058}.
    \_cod -----------------------------
 
@@ -130,36 +84,32 @@
 \_def\_newfontloaded #1{}
 
    \_doc -----------------------------
-   \`\initunifonts` macro extends \LuaTeX's font capabalities,
-   in order to be able to load Unicode fonts. Unfortunately, this part of
-   \OpTeX/ depends on the `luaotfload` package, which adapts Con\TeX/t's generic
-   font loader for plain \TeX/ and \LaTeX. `luaotfload` uses Lua functions
-   from \LaTeX's `luatexbase` namespace, we provide our own replacements.
-   Moreover, `\initunifont` switches with
-   the \^`\_doresizefont` macro to OTF mode which is represented by the
-   macro \^`\_doresizeunifont`.
-   Finally, \^`\initunifonts` sets itself to relax because we don't want to do
-   this work twice.\nl
-   \`\_ttunifont` is default font for `\tt` variant.
+   \`\_ttunifont` is default font for \^`\tt` variant when \^`\initunifonts` is declared.
    User can re-define it or use \^`\famvardef``\tt`.
+   The \`\_unifmodtt` macro is used instead \^`\_fmodtt` after
+   \^`\initunifonts`. It ignores the loading part of the following \^`\fontsel`
+   and do loading itself.
    \_cod -----------------------------
 
-\_def\_initunifonts {%
-   \_directlua{%
-      require('luaotfload-main')
-      luaotfload.main()
-      optex_hook_into_luaotfload()
-   }%
-   \_gdef\_rfskipatX ##1" ##2\_relax{"##1"}%
-   \_global\_let \_doresizefont=\_doresizeunifont
-   \_gdef\_tryloadtt {\_begingroup \_let\_fontnamegen\_ttunifont % \tt uses \_ttunifont
-      \_resizefont{tt}\_tentt\_relax \_ea\_endgroup \_ea\_let \_ea\_tentt \_the\_tentt}%
-   \_global\_let \_initunifonts=\_relax % we need not to do this work twice
-   \_global\_let \initunifonts=\_relax
-}
 \_def\_ttunifont{[lmmono10-regular]:\_fontfeatures-tlig;}
+\_def\_unifmodtt\_fontsel{%  ignore following \_fontsel
+   \_ea\_font \_csname _ten\_ttfamv\_endcsname {\_ttunifont}\_sizespec \_relax
+   \_ea\_fontselA \_csname _ten\_ttfamv\_endcsname
+   \_def \_currvar{\_tt}%
+}
+\_def\_ttfamv{tt}
 
-\_public \initunifonts ;
+   \_doc ----------------------------
+   A large part of the Font Selection System was re-implemented in Feb. 2022.
+   We want to keep backward compatibility:
+   \_cod ----------------------------
+
+\_def \_tryloadrm\_tenrm {\_fmodrm \_fontsel}
+\_def \_tryloadbf\_tenbf {\_fmodbf \_fontsel}
+\_def \_tryloadit\_tenit {\_fmodit \_fontsel}
+\_def \_tryloadbi\_tenbi {\_fmodbi \_fontsel}
+\_def \_tryloadtt\_tentt {\_fmodtt \_fontsel}
+\_def \_reloading {}
 
    \_doc -----------------------------
    The \`\_famdecl` `[<Family Name>] \<Famselector> {<comment>} {<modifiers>} {<variants>} {<math>}`\nl
@@ -188,10 +138,10 @@
          \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetfam}}%
          \_ea \_let \_csname _f:\_currfamily:main.fam\_endcsname =#2%
       \_fi
-   \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_reloading \_rm \_ea \_endinput \_fi
+   \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_rm \_ea \_endinput \_fi
 }
 \_def\_initfontfamily{%
-   \_csname _f:\_currfamily:main.fam\_endcsname \_reloading \_rm
+   \_csname _f:\_currfamily:main.fam\_endcsname \_rm
 }
 
    \_doc -----------------------------
@@ -227,7 +177,7 @@
    \_sdef{_fvar:bi}{#4}%
    \_ifx.#4\_slet{_fvar:bi}{_fvar:it}\_fi
 }
-\_def\_currV{\_cs{_fvar:\_whatresize}}
+\_def\_currV{\_trycs{_fvar:\_famv}{rm}}
 \_def\_V{ }
 \_def \_fsetV #1 {\_fsetVa #1,=,}
 \_def \_fsetVa #1=#2,{\_isempty{#1}\_iffalse
@@ -250,33 +200,31 @@
    the warning. When the `\_currfamily` value is
    changed then we can declare the same `\<modifier>` with a different meaning.
 
-   When a user declares a prefixed variant of the `\<modifier>` then unprefixed
-   modifier name is used in internal macros, this is the reason why we are using
-   the \`\_remifirstunderscore``\_tmp` (where `\_tmp` expands to
-   `_<something>` or to `<something>`. The `\_remifirstunderscore`
-   redefines `\_tmp` in the way that it
-   expands only to `<something>` without the first `_`.
-
    \`\_setnewmeaning` `<cs-name>=\_tmpa <by-what>` does exactly `\_let <csname>=\_tmpa`
    but warning is printed if <cs-name> is defined already and it is not a variant
    selector or font modifier.
 
    \`\_addtomodlist` `<font modifier>` adds given modifier to \`\_modlist`
-   macro. This list is used after `\resetmod` when a new family is selected by
+   macro. This list is used after \^`\resetmod` when a new family is selected by
    a family selector, see \`\_resetfam` macro.
    This allows reinitializing the same current modifiers in the font context
    after the family is changed.
    \_cod -----------------------------
 
-\_def \_moddef #1#2{\_edef\_tmp{\_csstring#1}%
-   \_sdef{_f:\_currfamily:\_tmp}{\_addtomodlist#1#2\_reloading}%
+\_def \_moddef #1#2{%
+   \_edef\_tmp{\_csstring#1}%
+   \_sdef{_f:\_currfamily:\_tmp}{\_addtomodlist#1#2}%
    \_protected \_edef \_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
    \_setnewmeaning #1=\_tmpa \moddef
 }
 \_protected \_def\_resetmod {\_cs{_f:\_currfamily:resetmod}} % private variant of \resetmod
-\_def \_resetfam{\_def\_addtomodlist##1{}\_resetmod
+\_def \_resetfam{%
+   \_def\_addtomodlist##1{}\_resetmod
    \_edef \_modlist{\_ea}\_modlist
    \_let\_addtomodlist=\_addtomodlistb
+   \_ifcsname _f:\_currfamily:\_ea\_csstring \_currvar \_endcsname
+   \_else \_ea\_ifx\_currvar\_tt \_else \_def\_currvar{\_fontsel}\_fi
+   \_fi % corrected \_currvar in the new family
 }
 \_def \_currfamily{} % default current family is empty
 \_def \_modlist{}    % list of currently used modifiers
@@ -306,60 +254,39 @@
    <font-switch>.
    We want to declare <font-switch> in its real name directly by `\font` primitive in
    order to save this name for reporting later (in overfull messages, for
-   example). This is the reason why \^`\_loadf` is re-defined locally here.
-   The <variant selector> used in <data> expands to `\_tryload<XX> \_ten<XX>`.
-   The modified `\_tryload<XX>`
-   removes `\_ten<XX>` and does `\_resizefont{<XX>}<font-swith><font-switch>`,
-   i.e.\ a font is loaded using real `<font-switch>` name and then it is selected
-   as the current font.
+   example). This is the reason why \`\_xfamv` and \`\_ttfamv` are re-defined locally here.
+   They have precedence when \^`\fontsel` constructs the <font switch> name.
    \_cod -----------------------------
 
 \_def\_fontdef #1#2{\_begingroup
-   \_def\_loadf##1##2{\_sdef{_tryload##1}####1{\_resizefont{##1}#1#1}}%
-   \_reloading \_let\_reloading=\_relax
-   #2\_ea\_endgroup \_ea\_let \_ea#1\_the\_font
+   \_edef\_xfamv{\_csstring#1}\_let\_ttfamv\_xfamv #2%
+   \_ea\_endgroup\_ea \_let\_ea #1\_the\_font
 }
 \_public \fontdef ;
 
    \_doc -----------------------------
-   The \`\famvardef` `\<XX> {<data>}` does, roughly speaking:
+   The \`\famvardef` `\xxx {<data>}` does, roughly speaking:
    \begtt \catcode`\<=13
-   \def \<XX> {\fontdef\_ten<XX> {<data>}\_ten<XX>}
+   \def \xxx {{<data>\ea}\the\font \def\_currvar{\xxx}}
    \endtt
-   but the macro `\<XX>` is declared as family-dependent.
-   So, the real \^`\famvardef` `\<XX> {<data>}`
-   uses analogical trick like \^`\moddef` with
-   the \^`\_famdepend` macro. The \^`\famvardef` loads
-   the auxiliary \`\_famvardefA` `\<XX> \_ten<XX> \_tryload<XX> {<data>}`.
-   It does:
-   \begitems
-   * `\def \_tryload:<currfam>:<XX> {`\^`\fontdef`` \_ten<XX> {<data>}}` loads font `\_ten<XX>`,
-   * `\protected\def \<XX> {\_famdepend \<XX> {_f:<currfam>:<XX>}}`,
-   * `\def \_f:<currfam>:<XX> {\_tryload:<currfam>:<XX>\_ten<XX>}` keeps family dependent definition,
-   * `\def \_currvar:_ten<XX> {\<XX>}` in order to the \^`\currvar` macro work correctly.
-   \enditems
-   `\famvardef\tt` behaves somewhat differently: it doesn't re-define the
-   `\tt` macro which is defined  as `\_tryloadtt \_tentt` in sections~\ref[math-preload]
-   and~\ref[unimath-codes]. It only re-defines the internal `\_tryloadtt` macro.
-   Note, that you cannot use `\tt` inside `\famvardef\tt`. So, new `\tt`
-   macro does not load \^`\_ttunifont` but uses font from a standard variant
-   rm, bf, it or bi with given font context.
+   but the macro `\xxx` is declared as family-dependent.
+   It is analogically as in `\moddef`.
+   The `\xxx` is defined as `\_famdepend\xxx{_f:\_currfamily:xxx}`
+   and `\_f:<currfam>:xxx` is defined as mentioned.\nl
+   `\famvardef\tt` behaves somewhat differently: it defines internal version
+   `\_tt` (it is used in \^`\_ttfont` and \^`\_urlfont`) and set `\tt` to
+   the same meaning.
    \_cod -----------------------------
 
-\_def\_famvardef#1{\_edef\_tmp{\_csstring#1}%
-   \_ea\_famvardefA \_ea#1\_csname _ten\_tmp\_ea\_endcsname
-      \_csname _tryload:\_currfamily:\_tmp\_endcsname
-}
-\_def\_famvardefA #1#2#3#4{% #1=\XX #2=\_tenXX #3=\_tryload:currfam:XX #4=data
-   \_isinlist{.\_rm\_bf\_it\_bi\currvar\_currvar}#1\_iftrue
-      \_opwarning{\_string\famvardef:
-         You cannot re-declare standard variant selector \_string#1}%
-   \_else
-      \_def#3{\_fontdef#2{#4}}%
-      \_protected\_edef\_tmpa{\_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_tmp}}%
-      \_ifx #1\_tt \_let\_tryloadtt=#3\_else \_setnewmeaning #1=\_tmpa \famvardef \_fi
-      \_sdef{_f:\_currfamily:\_tmp}{#3#2}%
-      \_sdef{_currvar:\_csstring#2}{#1}%
+\_def\_famvardef#1#2{%
+   \_sdef{_f:\_currfamily:\_csstring#1}%
+      {{\_edef\_xfamv{\_csstring#1}\_let\_ttfamv\_xfamv #2\_ea}\_the\_font \_def\_currvar{#1}}%
+   \_protected\_edef\_tmpa {%
+      \_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_csstring#1}}%
+   \_ifx #1\tt
+      \_protected\_def\_tt{{\_def\_xfamv{tt}#2\_ea}\_the\_font \_def\_currvar{\_tt}}%
+      \_let\tt=\_tt
+   \_else \_setnewmeaning #1=\_tmpa \famvardef
    \_fi
 }
 \_public \famvardef ;
@@ -496,7 +423,6 @@
 
 \_def \_setff #1{%
    \_ifx^#1^\_def\_ffadded{}\_else \_edef\_ffadded{\_ffadded #1;}\_fi
-   \_reloading
 }
 \_public \setff ;
 
@@ -505,7 +431,7 @@
    special font features provided by \LuaTeX/ (and by \XeTeX/ too but it is not
    our business). The \`\setwordspace` recalculates the `\fontdimen2,3,4`
    of the font using the \`\setwsp` macro which is used by the
-   \^`\_doresizeunifont` macro. It activates a dummy font feature `+Ws` too in
+   \^`\_fontselA` macro. It activates a dummy font feature `+Ws` too in
    order the font is reloded by the `\font` primitive (with independent
    `\fontdimen` registers).
    \_cod -----------------------------
@@ -513,16 +439,13 @@
 \_def \_setfontcolor #1{%
    \_edef\_tmp{\_calculatefontcolor{#1}}%
    \_ifx\_tmp\_empty \_def\_ffcolor{}\_else \_edef\_ffcolor{color=\_tmp;}\_fi
-   \_reloading
 }
 \_def \_setletterspace #1{%
    \_if^#1^\_def\_ffletterspace{}\_else \_edef\_ffletterspace{letterspace=#1;}\_fi
-   \_reloading
 }
 \_def \_setwordspace #1{%
    \_if^#1^\_def\_setwsp##1{}\_def\_ffwordspace{}%
    \_else \_def\_setwsp{\_setwspA#1/}\_def\_ffwordspace{+Ws;}\_fi
-   \_reloading
 }
 \_def\_setwsp #1{}
 \_def\_setwspA #1{\_ifx/#1\_ea\_setwspB \_else\_afterfi{\_setwspC#1}\_fi}
@@ -573,15 +496,12 @@
 
 The basic principles of the Font Selection System used in \OpTeX/
 was documented in the section~\ref[fontfam].
-\nl
-You can use the `\font` primitive directly without the Font selection system,
-see section~\ref[fontprimitive].
 
 \secc Terminology
 
 We distinguish between
 \begitems
-* {\em font switchers}, they are declared by the `\font` primitive or by
+* {\em font switches}, they are declared by the `\font` primitive or by
   \^`\fontlet` or \~`\fontdef` macros, they select given font.
 * {\em variant selectors}, there are four basic variant selectors
   \^`\rm`, \^`\bf`, \^`\it`, \^`\bi`, there is a special selector \^`\currvar`.
@@ -610,7 +530,7 @@ selection of real font when the variant selector is processed. It includes the
 value of {\em current family}, current font size, and
 more values stored by font modifiers.
 
-The {\em family context} is the current family value stored in the font
+The {\em family context} is the current family name stored in the font
 context. The variant selectors declared by \~`\famvardef` and
 font modifiers declared by \~`\moddef` are dependent on the {\em family context}.
 They can have the same names but different behavior in different families.
@@ -658,7 +578,7 @@ It keeps the current variant and the font of such variant is
 reloaded with respect to the current font context by the previously given family
 selector and font modifiers.
 
-You can use the \^`\setfontsize` `{<sizespec>}` command in the same sense as
+You can use the \^`\setfontsize` `{<size spec>}` command in the same sense as
 other font modifiers. It saves information about font size to the font
 context. See section~\ref[setfontsize]. Example:
 
@@ -684,7 +604,7 @@ this and you are satisfied with 8bit math CM+AMS fonts preloaded in the
 font family.
 
 If you want to use your specially selected Unicode-math font then use
-\^`\loadmath` `{[<font_file>]}` or \^`\loadmath` `{<font_name>}` before first
+\^`\loadmath` `{[<font file>]}` or \^`\loadmath` `{<font name>}` before first
 `\fontfam` is used.
 
 
@@ -836,7 +756,7 @@ from LatinModern font family is used.
 The \^`\tt` variant selector is used in \OpTeX/ internal macros
 \^`\_ttfont` (verbatim texts) and \^`\_urlfont` (printing URL's).
 
-You can redefine the behavior of `\tt` by \^`\famvardef`. For example:
+The behavior of \^`\tt` can be re-defined by \^`\famvardef`. For example:
 
 \begtt
 \fontfam[Cursor]
@@ -848,8 +768,8 @@ Test in Termes: {\tt text}. {\Heros\rm Test in Heros: {\tt text}}.
 Test in URL \url{http://something.org}.
 \endtt
 %
-You can see that `\tt` stay family independent. This is a special feature only
-for `\tt` selector. New definition is used in \^`\_ttfont` and \^`\_urlfont` too.
+You can see that \^`\tt` stay family independent. This is a special feature only
+for \^`\tt` selector. New definitions of \^`\_ttfont` and \^`\_urlfont` are done too.
 It is recommended to use `\setff{-liga;-tlig}` to suppress the
 ligatures in typewriter fonts.
 
@@ -919,7 +839,7 @@ the font family), we have following font modifiers (independent of font
 family):
 
 \begtt \catcode`\<=13
-\setfontsize{<sizespec>}    % sets the font size
+\setfontsize{<size spec>}   % sets the font size
 \setff{<font feature>}       % adds the font feature
 \setfontcolor{<color>}     % sets font color
 \setletterspace{<number>} % sets letter spacing
@@ -986,36 +906,9 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \printdoctail fams-ini.opm
 
-\secc[exfont] Notices about extension of `\font` primitive
-%---------------------------------------------------------
-
-Unicode fonts are loaded by extended `\font` primitive. This extension is
-not activated in \OpTeX/ by default, \^`\initunifonts` macro activates it.
-You need not use \^`\initunifonts` explicitly if \^`\fontfam` macro is
-used because \^`\fontfam` runs it internally.
-
-The \^`\initunifonts` loads the Lua code from the Luaotfload package which
-implements the `\font` primitive extension. See its
-documentation `luaotfload-latex.pdf` for information about
-all possibilities of extended `\font` primitive.
-
-The \OpTeX/ format is initialized by `luatex` engine by default but
-you can initialize it by `luahbtex` engine too. Then the harfbuzz library is
-ready to use for font rendering as an alternative to built-in font renderer
-from Luaotfload. The harfbuzz library gives more features for rendering
-Indic and Arabic scripts. But it is not used as default, you need to specify
-`mode=harf` in the fontfeatures field when `\font` is used. Moreover, when
-`mode=harf` is used, then you must specify `script` too. For example
-
-\begtt
-\font\devafont=[NotoSansDevanagari-Regular]:mode=harf;script=dev2
-\endtt
-%
-If the `luahbtex` engine is not used then `mode=harf` is ignored. See
-Luaotfload documentation for more information.
-
 \endinput
 
+2022-02-22  Font Selection System reimplemented, \fontsel introduced
 2021-09-24  \_unichars used in \initunifonts
 2021-07-16  \initunifonts: optex_hook_into_luaotfload added.
 2021-05-23  concept of \_fontfeatures macro re-implemented

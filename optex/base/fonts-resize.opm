@@ -1,11 +1,35 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2021-05-02>} % preloaded in format
+\_codedecl \setfontsize {Font resizing macros <2022-02-22>} % preloaded in format
 
    \_doc -----------------------------
-   The \`\setfontsize` `{<sizespec>}` saves the `<sizespec>` to the \`\_sizespec` macro.
-   The \`\_optsize` value is calculated from the `<sizespec>`.
-   If the `<sizepec>` is in the `mag<number>` format then the contents of
+   \`\initunifonts` macro extends \LuaTeX's font capabilities,
+   in order to be able to load Unicode fonts. Unfortunately, this part of
+   \OpTeX/ depends on the `luaotfload` package, which adapts Con\TeX/t's generic
+   font loader for plain \TeX/ and \LaTeX. `luaotfload` uses Lua functions
+   from \LaTeX's `luatexbase` namespace, we provide our own replacements.
+   \^`\initunifonts` sets itself to relax because we don't want to do
+   this work twice.
+   \_cod -----------------------------
+
+\_def\_initunifonts {%
+   \_directlua{%
+      require('luaotfload-main')
+      luaotfload.main()
+      optex_hook_into_luaotfload()
+   }%
+   \_glet \_fmodtt=\_unifmodtt  % use \_ttunifont for \tt
+   \_glet \_initunifonts=\_relax % we need not to do this work twice
+   \_glet \initunifonts=\_relax
+}
+\_public \initunifonts ;
+
+   \_doc -----------------------------
+   The \`\setfontsize` `{<size spec>}` saves the `<size spec>` to the \`\_sizespec` macro.
+   The \`\_optsize` value is calculated from the `<size spec>`.
+   If the <size spec> is in the format `scaled<factor>` then
+   `\_optsize` is set from \`\defaultoptsize`.
+   If the `<size spec>` is in the `mag<number>` format then the contents of
    the `\_sizespec` macro is re-calculated to the `at<dimen>` format using
    previous `\_optsize` value.
    \par \goodbreak
@@ -18,7 +42,6 @@
 \_def\_setfontsize #1{%
    \_edef\_sizespec{#1}%
    \_ea \_setoptsize \_sizespec\_relax
-   \_reloading
 }
 \_def\_setoptsize {\_isnextchar a{\_setoptsizeA}
                                  {\_isnextchar m{\_setoptsizeC}{\_setoptsizeB}}}
@@ -33,80 +56,84 @@
 \_public \setfontsize \defaultoptsize ;
 
    \_doc -----------------------------
-   \`\fontlet` `<font switch A> <font switch B> <size spec>` does
-   \begtt \catcode`\<=13
-   \font <font switch A> = <fontname> <sizespec>
-   \endtt
-   The `<fontname>` is extracted using the primitive command `\_fontname <font switch B>`.
+   The `\fontname` primitive returns the <font file name> optionally
+   followed by <size spec>. The \`\xfontname` macro expands to <font file name>
+   without <size spec>. We need to remove the part `<space>at<dimen>` from
+   `\fontname` output. The letters `at` have category 12.
    \_cod -----------------------------
 
-\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else
-   \_ea\_font\_ea#1\_ea\_rfontskipat\_fontname#2 \_relax\_space \_fi
-}
-\_public \fontlet ;
+\_edef\_stringat{\_string a\_string t}
+\_edef\_xfontname#1{\_unexpanded{\_ea\_xfontnameA\_fontname}#1 \_stringat\_relax}
+\_expanded{\_def\_noexpand\_xfontnameA#1 \_stringat#2\_relax}{#1}
 
    \_doc -----------------------------
-   \`\newcurrfontsize` `<size spec>` sets current font size to the `<size spec>`
-   It is implemented by \^`\fontlet`.
-   The font switch of the current font is extracted by `\_the\_font`.
-   We must re-create the control sequence `\_the\_font` because
-   its original meaning is set to \"inaccessible" by \TeX/ when `\font`
-   primitive is started.
+   \`\fontlet` `<font switch A> <font switch B> <size spec>` does
+   \begtt \catcode`\<=13
+   \font <font switch A> = {<font file name>} <size spec>
+   \endtt
+   Note, that the `\_xfontname` output is converted due to optical size data using `\_optfn`.
+   \_cod -----------------------------
+
+\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else \_font #1{\_optfn{\_xfontname#2}}\_fi}
+\_public \xfontname \fontlet ;
+
+   \_doc -----------------------------
+   \`\newcurrfontsize` `<size spec>` does
+   \^`\fontlet` `<saved switch>=\font <size spec>\_relax <saved switch>`.
+   It changes the current font at the given <size spec>.
    \nl
-   \`\resizethefont` is implemented by `\newcurrfontsize` using data from
+   \`\resizethefont` is implemented by \^`\newcurrfontsize` using data from
    the \^`\_sizespec` macro.
    \_cod -----------------------------
 
 \_def \_newcurrfontsize #1{% \newcurrfontsize{at25pt}
-   \_edef\_tmp{\_ea\_csstring \_the\_font}%
-   \_ea \_fontlet \_csname \_tmp\_ea\_endcsname \_the\_font \_space #1\_relax
-   \_ea\_fontloaded \_csname \_tmp \_ea\_endcsname \_csname \_tmp\_endcsname
+   \_ea\_def \_ea\_tmp \_ea{\_csname \_ea\_csstring \_the\_font \_endcsname}%
+   \_ea\_fontlet \_tmp \_font #1\_relax
+   \_ea\_fontloaded \_tmp
+   \_tmp
 }
 \_protected\_def \_resizethefont{\_newcurrfontsize\_sizespec}
-
- \_public \newcurrfontsize \resizethefont ;
+\_public \newcurrfontsize \resizethefont ;
 
    \_doc -----------------------------
    The \`\_regtfm` `<font id> <optical size data>`
-   saves the <optical size data> concerned to `<font id>`.
+   registers optical sizes data directly by the font file names.
+   This can be used for `tfm` files or OpenType files without
+   various font features. See also \`\_regoptsizes` in section~\ref[optsizes].
+   The `\_regtfm` command saves the <optical size data> concerned to the `<font id>`.
    The `<optical size data>` is in the form as shown below in the code where
    `\_regtfm` is used.
    \nl
-   The \`\_wichtfm` `<fontname>` expands to the `<fontname>` or to the corrected
-   `<fontname>` read from the `<optical size data>`. It is used in the
-   \^`\_rfontskipat` macro and it is used in \^`\fontlet` macro.
-   It means that each `<fontname>` generated by the `\fontname` primitive in the
-   `\fontlet` macro is processed by the `\_whichtfm`. The real `<fontname>` or
-   corrected `<fontname>` (depending on the optical data does not exist or exist)
-   is the output of the expansion before `\font` primitive takes this output
-   as its parameter.
+   The \`\_optfn` `<fontname>` expands to the `<fontname>` or to the corrected
+   `<fontname>` read from the `<optical size data>` registered by `\_regtfm`.
+   It is used in the \^`\fontlet` macro.
 
-   The implementation detail: The `\_<font id>:reg` is defined as the
-   `<optical size data>` and all control sequences `\_<fontname>:reg`
+   The implementation detail: The `\_reg:<font id>` is defined as the
+   `<optical size data>` and all control sequences `\_reg:<fontname>`
    from this data line have the same meaning because of the
-   \`\_reversetfm` macro. The `\_whichtfm` expands this data line and apply
-   \`\_dowhichtfm`. This macro selects the right result from the data line
+   \`\_reversetfm` macro. The `\_optfn` expands this data line and apply
+   \`\_runoptfn`. This macro selects the right result from the data line
    by testing with the current `\_optsize` value.
    \_cod -----------------------------
 
-\_def\_regtfm #1 0 #2 *{\_ea\_def \_csname _#1:reg\_endcsname{#2 16380 \_relax}%
+\_def\_regtfm #1 0 #2 *{\_ea\_def \_csname _reg:#1\_endcsname{#2 16380 \_relax}%
   \_def\_tmpa{#1}\_reversetfm #2 * %
 }
 \_def\_reversetfm #1 #2 {% we need this data for \_setmathfamily
-   \_ea\_let\_csname _#1:reg\_ea\_endcsname
-   \_csname _\_tmpa:reg\_endcsname
+   \_ea\_let\_csname _reg:#1\_ea\_endcsname
+   \_csname _reg:\_tmpa\_endcsname
    \_if*#2\_else \_ea\_reversetfm \_fi
 }
-\_def\_whichtfm #1{%
-   \_ifcsname _#1:reg\_endcsname
-      \_ea\_ea\_ea \_dowhichtfm
-      \_csname _#1:reg\_ea\_endcsname
+\_def\_optfn #1{%
+   \_ifcsname _reg:#1\_endcsname
+      \_ea\_ea\_ea \_runoptfn
+      \_csname _reg:#1\_ea\_endcsname
    \_else
       #1%
    \_fi
 }
-\_def\_dowhichtfm #1 #2 {%
-   \_ifdim\_optsize<#2pt #1\_ea\_ignoretfm\_else \_ea\_dowhichtfm
+\_def\_runoptfn #1 #2 {%
+   \_ifdim\_optsize<#2pt #1\_ea\_ignoretfm\_else \_ea\_runoptfn
 \_fi
 }
 \_def\_ignoretfm #1\_relax{}
@@ -116,24 +143,66 @@
    \_cod -----------------------------
 
 \_regtfm lmr  0 ec-lmr5 5.5 ec-lmr6 6.5 ec-lmr7 7.5 ec-lmr8 8.5 ec-lmr9 9.5
-                ec-lmr10 11.1 ec-lmr12 15 ec-lmr17 *
+                         ec-lmr10 11.1 ec-lmr12 15 ec-lmr17 *
 \_regtfm lmbx 0 ec-lmbx5 5.5 ec-lmbx6 6.5 ec-lmbx7 7.5 ec-lmbx8 8.5 ec-lmbx9 9.5
-                ec-lmbx10 11.1 ec-lmbx12 *
+                         ec-lmbx10 11.1 ec-lmbx12 *
 \_regtfm lmri 0 ec-lmri7 7.5 ec-lmri8 8.5 ec-lmri9 9.5 ec-lmri10 11.1 ec-lmri12 *
 \_regtfm lmtt 0 ec-lmtt8 8.5 ec-lmtt9 9.5 ec-lmtt10 11.1 ec-lmtt12 *
 
 \_endcode %---------------------------------------------------
 
 
-\sec[setfontsize] Scaling fonts in text mode (low-level macros)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\sec[fontprimitive] Using `\font` primitive directly
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-This section describes single part of Font Selection System: resizing fonts
-to various sizes. This feature is available in both modes: TFM mode
-(initialized when format starts) and OTF mode (after \~`\fontfam` or
-\~`\initunifonts` is used).
+You can declare a new {\em font switch} by `\font` primitive:
+\begtt \catcode`\<=13
+\font \<font switch> = <font file name> <size spec>
+% for example:
+\font \tipa = tipa10 at12pt % the font tipa10 at 10pt is loaded
+% usage:
+{\tipa TEXT}  % the TEXT is printed in the loaded font.
+\endtt
+The <size spec> can be empty or `at<dimen>` or `scaled<scale factor>`. The
+<font file name> must be terminated by space or surrounded in the braces.
 
-\secc The `\setfontsize` macro
+\OpTeX/ starts with `\font` primitive which is able to read only `tfm` files.
+i.e.\ the `<font file name>.tfm` (and additional data for glyphs)
+must be correctly installed in your system. If you want to load
+OpenType `otf` or `ttf` font files, use the declarator \^`\initunifonts`.
+This command adds additional features to the `\font` primitive which
+gives the extended syntax:
+\begtt \catcode`\<=13
+\font \<font switch> = {[<font file name>]:<font features>} <size spec>
+% or
+\font \<font switch> = {<font name>:<font features>} <size spec>
+\endtt
+where <font file name> is name of the OpenType font file without extension
+(extensions `.otf` or `.ttf` are assumed). The braces in the syntax
+are optional, use them when the <font file name> or <font name> includes spaces.
+The original syntax for `tfm` files is also available. Example:
+\begtt
+\initunifonts
+\font\crimson=[Crimson-Roman] at11pt % the font Crimson-Regular.otf is loaded
+\font\crimsonff=[Crimson-Roman]:+smcp;+onum at11pt % The same font is re-loaded
+                                                   % with font features
+{\crimson Text 12345}   % normal text in Crimson-Regular
+{\crimsonff Text 12345} % Crimson-Regular with small capitals and old digits
+\endtt
+\^`\initunifonts` loads the implementation of the `\font`
+primitive from `luaotfload` package. More information is available
+in the `luaotfload-latex.pdf` file.
+
+Note, that \^`\fontfam` does (among other things) \^`\initunifonts`
+internally. You need not to specify it if \^`\fontfam` is used.
+
+It seems that you must decide about final size of the font before it is
+loaded by the `\font` primitive. It is not exactly true; \OpTeX/ offers
+powerful possibility to resize the font already loaded on demand.
+See the example at the end of next subsection.
+
+
+\secc[setfontsize] The `\setfontsize` macro
 
 The \^`\setfontsize` `{<size spec>}`
 saves the information about `<size spec>`. This information is taken into
@@ -148,7 +217,7 @@ or `\resizethefont` is used. The `<size spec>` can be:
   scaled in respect to the current size of the fonts given by the previous
   \^`\setfontsize` command.
 \enditems
-The initialization value in \OpTeX/ is given by `\setfontsize{at10pt}`.
+The initial value in \OpTeX/ is given by `\setfontsize{at10pt}`.
 
 The \^`\resizethefont` resizes the currently selected font to the size given by previous
 \^`\setfontsize`. For example
@@ -172,81 +241,88 @@ typography.
 Text \smaller text \smaller text \smaller text.
 \endtt
 
-\secc[fontprimitive] The `\font` primitive
-
-If you load a font directly by `\font` primitive and you want to
-create a size-dependent selector for such font then you can use
-\~`\resizethefont`:
-
-\begtt
-\font\tencomfortaa=Comfortaa-Regular-T1 at10pt
-\def\comfortaa{\tencomfortaa\resizethefont}
-
-\comfortaa The 10 pt text is here
-\setfontsize{at12pt}
-\comfortaa The 12 pt text is here
-\endtt
-%
-The example above uses the 8\,bit `tfm` font. You can use Unicode font too, of
-course. The \^`\fontfam` macro initializes the extended `\font` primitive
-features for \LuaTeX/ (see section \ref[exfont]).
-If you didn't use this command, you must initialize
-these features by the \^`\initunifonts` command explicitly, for example:
+The \^`\resizethefont` works with arbitrary current font, for example with the
+font loaded directly by `\font` primitive.  For example:
 
 \begtt
 \initunifonts
-\font\tencyklop=[cyklop-regular] at10pt % the font cyklop-regular.otf is loaded
-\def\cyklop{\tencyklop\resizethefont}
+\font\tencrimson=[Crimson-Roman]:+onum  % font Crimson-Regular at 10 pt is loaded
+\def\crimson{\tencrimson\resizethefont} % \crimson uses the font size on demand
 
-\cyklop The 10 pt text is here
+\crimson The 10 pt text is here.
 \setfontsize{at12pt}
-\cyklop The 12 pt text is here
+\crimson The 12 pt text is here.
 \endtt
+This is not only an academical example. The `\csrimson` command defined here
+behaves like variant selector in the Font Selection System (section~\ref[fontsystem]).
+It takes only information about size from the font context, but it is
+sufficient. You can use it in titles, footnotes, etc. The font size
+depending on surrounding size is automatically selected.
+
 
 \secc[fontlet] The \code{\\fontlet} declarator
 
 We have another command for scaling: \^`\fontlet` which can resize
 arbitrary font given by its font switch.
-This font switch was declared by the
-`\font` primitive or the \~`\fontdef` macro.
-
 \begtt \catcode`\<=13
-  \fontlet \<newfont> = \<fontswitch> <sizespec>
+  \fontlet \<new font switch> = \<given font switch> <size spec>
   example:
   \fontlet \bigfont = \_tenbf at15pt
 \endtt
+The `\<given font switch>` must be declared previously by `\font` or
+\^`\fontlet` or \~`\fontdef`. The `\<new font switch>` is declared as the
+same font at given <size spec>. The equal sign in the syntax is optional.
+You can declare `\<new font switch>` as the scaled current font by
+\begtt \catcode`\<=13
+\fontlet \<new font switch> = \font <size spec>
+\endtt
 
-The resulted `\bigfont` is the same as in the previous example where \~`\fontdef`
-was used. The advantage of \~`\fontdef` macro will be more clear when you load
-font families by `\fontfam` and you are using more font modifiers declared
-in such families.
-
-Summary: you can declare font switches:
-\begitems
-* by the `\font` primitive if you know the font file,
-* by the \^`\fontlet` command if you know the font switch and the size, or
-* by the \~`\fontdef` command if you know the variant and modifiers.
-\enditems
 
 \secc Optical sizes
 
 There are font families with more font files where almost the same font is
 implemented in various design sizes: `cmr5`, `cmr6`, `cmr7`, `cmr8`, `cmr9`,
 `cmr10`, `cmr12`, `cmr17` for example. This feature is called \"optical
-sizes". \OpTeX/ chooses a font with an optical size closest to desired size
-specified by the \^`\setfontsize`, when `at<dimen>` or `mag<coefficient>` is used.
-When `scaled<scale factor>` is used then optical size is chosen using the value
-of the `\defaultoptsize` register and such font is scaled by the specified
-`<scale factor>`. There is `\defaultoptsize=10pt` by default.
-
-Font collections with optical sizes must be registered by the
-\^`\_regtfm` for `tfm` files or \^`\_regoptsizes` for Unicode fonts.
-\OpTeX/ registers 8bit Latin Modern fonts in the format
-and OTF Latin Modern fonts in the `f-lmfonts.opm` file.
+sizes". Each design size is implemented in its individual font file and \OpTeX/ is
+able to choose right file if various optical sizes and corresponding file
+names are declared for the font by \^`\_regtfm` or \^`\_regoptsizes` command.
+The command \^`\setfontsize` sets the internal reuirements for
+optical size if the parameter is in the format `at<dimen>` or `mag<factor>`.
+Then the command \^`\resizethefont` or variant selectors try to choose
+the font suitable for the required optical size. For example
+\begtt
+\fontfam[lm]
+      The text is printed in font [lmroman10-regular] at 10 pt.
+\setfontsize{at13pt}\rm
+      Now in the text is printed in [lmroman12-regular] at 13 pt.
+\endtt
 See also section~\ref[optsizes].
+
+
+\secc Font rendering
+
+If \^`\initunifonts` isn't declared then \OpTeX/ uses classical font
+renderer (like in `pdftex`). The extended font renderer implemented in the
+Luaotfload package is started after \^`\initunifonts`.
+
+The \OpTeX/ format uses `luatex` engine by default but
+you can initialize it by `luahbtex` engine too. Then the harfbuzz library is
+ready to use for font rendering as an alternative to built-in font renderer
+from Luaotfload. The harfbuzz library gives more features for rendering
+Indic and Arabic scripts. But it is not used as default, you need to specify
+`mode=harf` in the fontfeatures field when `\font` is used. Moreover, when
+`mode=harf` is used, then you must specify `script` too. For example
+
+\begtt
+\font\devafont=[NotoSansDevanagari-Regular]:mode=harf;script=dev2
+\endtt
+%
+If the `luahbtex` engine is not used then `mode=harf` is ignored. See
+Luaotfload documentation for more information.
 
 \_endinput
 
+2022-02-22 Font Selection System reimplemented, \fontsel introduced
 2021-05-02 better concept of doc, moving parts to fonts-select
 2021-04-17 \_fontloaded, \_newfontloaded introduced
 2020-04-17 \resizethefont introduced

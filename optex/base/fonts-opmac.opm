@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \typosize {Font managing macros from OPmac <2021-03-10>} % preloaded in format
+\_codedecl \typosize {Font managing macros from OPmac <2022-02-22>} % preloaded in format
 
    \_doc -----------------------------
    \`\typosize` `[<font-size>/<baselineskip>]` sets given parameters.
@@ -104,7 +104,7 @@
    \_mainbaselineskip=\_baselineskip
    \_mainfosize=\_optsize
    \_topskip=\_mainfosize \_splittopskip=\_topskip
-   \_ifmmode \_else \_bf \_it \_bi \_rm \_fi % load all basic variants of the family
+   \_ifmmode \_else \_rm \_fi                % load and initialize \rm variant
    \_ifnum \_mfontsrule>0 \_normalmath \_fi  % load math fonts first
    \_let \_setmainvalues =\_setmainvaluesL
 }
@@ -191,8 +191,8 @@
    \_let\it =\_bi \_let\rm =\_bf \_let\_normalmath=\_boldmath \_bf
    \_runboldmath
    \_ifx\_ncharrmA\_undefined \_protected\_addto\rm{\_fam0 }\_protected\_addto\it{\_fam1 }%
-   \_else \_protected\_def\rm {\_tryloadbf \_tenbf \_inmath{\_rmvariables \_rmdigits}}%
-          \_protected\_def\it {\_tryloadbi \_tenbi \_inmath{\_itvariables}}%
+   \_else \_protected\_def\rm {\_fmodbf \_fontsel \_marm}%
+          \_protected\_def\it {\_fmodbi \_fontsel \_mait}%
    \_fi
 }
 \_def\_runboldmath{\_boldmath}
@@ -218,6 +218,7 @@
 \_endcode % -------------------------------------
 
 History:
+2022-02-22 \_setmainvalues: only \rm initialized
 2021-03-10 \boldify corrected
 2021-03-09 \mfontsrule and \_setmathfonts introduced
 2020-12-12 \_rmfixed fixed

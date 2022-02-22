@@ -106,8 +106,8 @@ Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.^^
                     \_onlyif subfam=tt:       {\_fvars r b isl bisl }}
 \_moddef \caps     {\_onlyif subfam=rm,tt:    {\_fvars rc . ic . }}
 
-\_def \_tryloadtt {\_fontdef\_tentt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}}
-\_private \LMfonts \ttset ; % used in \_tryloadtt
+%\_famvardef\tt{\_LMfonts \_addto\_fontfeatures{-tlig;}\_ttset \_rm}
+%\_private \LMfonts \ttset ; % used in \tt, % removed 2022-02-22
 
 \_initfontfamily % new font family must be initialized
 

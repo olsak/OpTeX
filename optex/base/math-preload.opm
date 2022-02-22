@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalmath {Math fonts CM + AMS preloaded <2020-05-06>} % preloaded in format
+\_codedecl \normalmath {Math fonts CM + AMS preloaded <2022-02-22>} % preloaded in format
 
   \_doc ------------------------------
   We have two math macros \`\normalmath` for the normal shape of all math
@@ -59,11 +59,11 @@
 %\_chardef\_ttfam = 10
 %\_chardef\_itfam = 11
 
-\_protected\_def \_rm {\_tryloadrm \_tenrm \_fam0 }
-\_protected\_def \_bf {\_tryloadbf \_tenbf \_fam\_bffam}
-\_protected\_def \_it {\_tryloadit \_tenit \_fam1 }
-\_protected\_def \_bi {\_tryloadbi \_tenbi \_fam\_bifam}
-\_protected\_def \_tt {\_tryloadtt \_tentt}
+\_protected\_def \_marm {\_fam0 }
+\_protected\_def \_mabf {\_fam\_bffam}
+\_protected\_def \_mait {\_fam1 }
+\_protected\_def \_mabi {\_fam\_bifam}
+\_protected\_def \_matt {}
 
 \_protected\_def \_mit    {\_fam1 }
 \_protected\_def \_cal    {\_fam2 }
@@ -71,7 +71,7 @@
 \_protected\_def \_frak   {\_fam7 }  % fraktur
 \_protected\_def \_script {\_fam6 }  % more extensive script than \cal
 
-\_public \rm \bf \it \bi \tt \mit \cal \bbchar \frak \script ;
+\_public \mit \cal \bbchar \frak \script ;
 
    \_doc -----------------------------
    The optical sizes of Computer Modern fonts, AMS, and other fonts
@@ -149,9 +149,9 @@
 
 \_def\_loadmathfamily #1 #2 {%
   \_edef\_optsizesave{\_the\_optsize}%
-  \_optsize=\_sizemtext    \_font\_mF=\_whichtfm{#2} at\_optsize \_textfont#1=\_mF
-  \_optsize=\_sizemscript  \_font\_mF=\_whichtfm{#2} at\_optsize \_scriptfont#1=\_mF
-  \_optsize=\_sizemsscript \_font\_mF=\_whichtfm{#2} at\_optsize \_scriptscriptfont#1=\_mF
+  \_optsize=\_sizemtext    \_font\_mF=\_optfn{#2} at\_optsize \_textfont#1=\_mF
+  \_optsize=\_sizemscript  \_font\_mF=\_optfn{#2} at\_optsize \_scriptfont#1=\_mF
+  \_optsize=\_sizemsscript \_font\_mF=\_optfn{#2} at\_optsize \_scriptscriptfont#1=\_mF
   \_optsize=\_optsizesave \_ptmunit=\_ptunit
 }
 \_def\_setmathfamily #1 #2{\_let\_mF=#2%
@@ -224,5 +224,6 @@ For example
 
 \_endinput
 
+2022-02-22: \rm, \it, etc moved to fonts-select, \_marm, \_mait etc. introduced
 2020-05-06: \itfam, \ttfam removed, (Unicode math preferred)
 2020-04-14: \skewchar\fam6 added

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-02-08>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-02-22>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -108,18 +108,14 @@
 \_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
 
    \_doc -----------------------------
-   The  \`\cal`, \`\bbchar`, \`\frak`, \`\script` and
-   the \`\rm`, \`\bf`, \`\it`, \`\bi`, \`\tt` are defined here.
-   Their \"8bit definitions" from the file `math-preload.opm`
-   (section~\ref[math-preload]) are removed.\nl
+   The  math alphabets \`\cal`, \`\bbchar`, \`\frak`, \`\script` are re-defined
+   here. The \`\_marm`, \`\_mabf`, \`\_mait`, \`\_mabi`, \`\_matt`
+   used in \^`\rm`, \^`\bf`, \^`\it`, \^`\bi` are re-defined too.\nl
    You can redefine them again if you need different behavior (for example
    you don't want to use sans serif bold in math). What to do:
-   \begtt \advance\hsize by2em
-   \_protected\_def\_bf
-      {\_tryloadbf\_tenbf \_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}
-   \_protected\_def\_bi
-      {\_tryloadbi\_tenbi \_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}
-   \_public \bf \bi ;
+   \begtt
+   \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}
+   \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}
    \endtt
    \`\_inmath` `{<cmds>}` applies `<cmds>` only in math mode.
    \_cod -----------------------------
@@ -130,13 +126,11 @@
 % For example, you need upright lowercase greek letters, you don't need
 % \bf and \bi behave as sans serif in math, ...
 
-\_protected\_def\_rm {\_tryloadrm \_tenrm \_inmath{\_rmvariables \_rmdigits}}
-\_protected\_def\_it {\_tryloadit \_tenit \_inmath{\_itvariables \_itGreek}}
-\_protected\_def\_bf
-   {\_tryloadbf \_tenbf \_inmath{\_bsansvariables \_bsansgreek \_bsansGreek \_bsansdigits}}
-\_protected\_def\_bi
-   {\_tryloadbi \_tenbi \_inmath{\_bisansvariables \_bisansgreek \_bsansGreek \_bsansdigits}}
-\_protected\_def\_tt {\_tryloadtt \_tentt \_inmath{\_ttvariables \_ttdigits}}
+\_protected\_def\_marm {\_inmath{\_rmvariables \_rmdigits}}
+\_protected\_def\_mait {\_inmath{\_itvariables \_itGreek}}
+\_protected\_def\_mabf {\_inmath{\_bsansvariables \_bsansgreek \_bsansGreek \_bsansdigits}}
+\_protected\_def\_mabi {\_inmath{\_bisansvariables \_bisansgreek \_bsansGreek \_bsansdigits}}
+\_protected\_def\_matt {\_inmath{\_ttvariables \_ttdigits}}
 \_protected\_def\_bbchar  {\_bbvariables \_bbdigits}
 \_protected\_def\_cal     {\_calvariables}
 \_protected\_def\_frak    {\_frakvariables}
@@ -145,7 +139,7 @@
 \_protected\_def\_script  {\_rmvariables \_fam4 }
 \_protected\_def\_mit     {\_itvariables \_rmdigits \_itgreek \_rmGreek }
 
-\_public \rm \it \bf \bi \tt \bbchar \cal \frak \misans \mbisans \script \mit ;
+\_public \bbchar \cal \frak \misans \mbisans \script \mit ;
 
    \_doc -----------------------------
    Each Unicode slot carries information about math type. This is saved in
@@ -455,6 +449,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-02-22  \rm, \bf etc. moved to font-select, \_marm, \_mabf etc. introduced
 2022-02-08  several wide math accents added
 2022-01-06  \varTheta corrected
 2021-09-15  \square, \blacksquare defined
