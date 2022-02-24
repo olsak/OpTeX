@@ -4,7 +4,7 @@
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
-   modifiers followed by \^`\fontsel`. Modifiers saves data and \^`\fontsel`
+   modifiers followed by \^`\fontsel`. Modifiers save data and \^`\fontsel`
    selects the font considering saved data. Each basic variant selector
    \`\rm`, \`\bf`, \`\it`, \`\bi`, and \`\tt` runs internal variant modifier
    \`\_fmodrm`, \`\_fmodbf`, \`\_fmodit`, \`\_fmodbi` and \`\_fmodtt`.
@@ -55,9 +55,9 @@
 }
 \_def\_fontselA #1{%
    \_protected\_def \_currvar {\_fontsel}% default value of \_currvar
-   \_fontloaded #1% initial settings if font is loaded firstly
-   \_setwsp  #1%    wordspace setting
    \_logfont #1%    font selecting should be logged.
+   \_setwsp  #1%    wordspace setting
+   \_fontloaded #1% initial settings if font is loaded firstly
    #1% select the font
 }
 \_def \_logfont #1{}
