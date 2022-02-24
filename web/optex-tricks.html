@@ -119,6 +119,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#circletext">Text around a circle</a>
     <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
+    <li><a href="#keystrokes">Keystrokes using special images</a>
 </ul>
 
 <li>Math
@@ -962,7 +963,7 @@ negative then TEXT runs anticlockwise and the center of the circle is above
 the letters. The macro creates a typesetting material with zero dimensions,
 the center of the circle is at the current typesetting point. For example
 
-<p><IMG SRC="../img/uni-ukazka.png" ALT="Code blocks" border=0>
+<p><IMG SRC="../img/uni-ukazka.png" ALT="text around circle" border=0>
 
 <pre>
 \hbox{%
@@ -1075,6 +1076,52 @@ group. When the file does not exists then more calculatons are done and
 box0 is constructed with calculated dimensions.
 
 <p CLASS=datum>(0053) -- P. O. 2021-04-04<p>
+<hr>
+
+<h2><a name="keystrokes"></a>Keystrokes using special images</h2>
+
+<p>We create a macro \keystroke{text}. Similar macro is provided by
+keystroke.sty LaTeX package. For example
+
+<pre>
+\keystroke{Q} \keystroke{E} \keystroke{R} \keystroke{T} \keystroke{Y}\par
+\keystroke{PgUp} \keystroke{Enter}
+</pre>
+
+<p>gives following result:
+
+<p><IMG SRC="../img/keystrokes.png" ALT="keystrokes" border=0>
+
+<p>The implementation:
+
+<pre>
+\newdimen\keysize \keysize=1.3em
+\newbox\keylbox  \newbox\keymbox  \newbox\keyrbox
+\setbox\keylbox=\hbox{\picheight=\keysize \inspic{keystroke_left.pdf}}
+\setbox\keymbox=\hbox{\picheight=\keysize \inspic{keystroke_middle.pdf}}
+\setbox\keyrbox=\hbox{\picheight=\keysize \inspic{keystroke_right.pdf}}
+
+\def\keystroke#1{\setbox0=\hbox{\setfontsize{mag.9}\sans\rm#1}%
+   \leavevmode \lower.2\keysize \hbox{\copy\keylbox
+      \tmpdim=\wd\keymbox
+      \ifdim\wd0>\tmpdim \tmpdim=\wd0 \fi
+      \ifdim\tmpdim>\wd\keymbox
+         \pdfsave \pdfscale{\expr{\bp{\tmpdim}/\bp{\wd\keymbox}}}{1}%
+            \rlap{\copy\keymbox}\pdfrestore
+      \else \rlap{\copy\keymbox}\fi
+      \raise.3\keysize \hbox to\tmpdim{\hss\box0\hss}\copy\keyrbox}%
+}
+</pre>
+
+<p>There are three images: left side, middle and right side. These images
+are part of the keystroke.sty LaTeX package. We print the middle image in
+its natural width W if the text used on keystroke has its width less than W.
+The text is centered to the W size. If the text width is greater than W then
+we print the middle image with \pdfscale{tw/W}{1} where tw is the width of
+the text. It means that the middle image is deformed to its new width in order
+to include whole text. The left and right images are not deformed.
+
+<p CLASS=datum>(0070) -- P. O. 2021-04-04<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
