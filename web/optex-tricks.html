@@ -120,6 +120,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#circletext">Text around a circle</a>
     <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
     <li><a href="#keystrokes">Keystrokes using special images</a>
+    <li><a href="#shadedframe">Frames with shadows</a>
 </ul>
 
 <li>Math
@@ -1101,7 +1102,7 @@ keystroke.sty LaTeX package. For example
 \setbox\keymbox=\hbox{\picheight=\keysize \inspic{keystroke_middle.pdf}}
 \setbox\keyrbox=\hbox{\picheight=\keysize \inspic{keystroke_right.pdf}}
 
-\def\keystroke#1{\setbox0=\hbox{\setfontsize{mag.9}\sans\rm#1}%
+\def\keystroke#1{\setbox0=\hbox{\setfontsize{mag.77}\sans\rm#1}%
    \leavevmode \lower.2\keysize \hbox{\copy\keylbox
       \tmpdim=\wd\keymbox
       \ifdim\wd0>\tmpdim \tmpdim=\wd0 \fi
@@ -1109,7 +1110,7 @@ keystroke.sty LaTeX package. For example
          \pdfsave \pdfscale{\expr{\bp{\tmpdim}/\bp{\wd\keymbox}}}{1}%
             \rlap{\copy\keymbox}\pdfrestore
       \else \rlap{\copy\keymbox}\fi
-      \raise.3\keysize \hbox to\tmpdim{\hss\box0\hss}\copy\keyrbox}%
+      \raise.33\keysize \hbox to\tmpdim{\hss\box0\hss}\copy\keyrbox}%
 }
 </pre>
 
@@ -1121,7 +1122,82 @@ we print the middle image with \pdfscale{tw/W}{1} where tw is the width of
 the text. It means that the middle image is deformed to its new width in order
 to include whole text. The left and right images are not deformed.
 
-<p CLASS=datum>(0070) -- P. O. 2021-04-04<p>
+<p CLASS=datum>(0070) -- P. O. 2022-02-24<p>
+<hr>
+
+<h2><a name="shadedframe"></a>Frames with shadows</h2>
+
+We define a macro \shadedframe {text paragraph} which creates the text in a
+shadedframe with the width given by \hsize. For example
+<pre>
+\shadedframe {
+  {\bf Title}:
+  rweyu fiw wi ewyur uwr rwu wruwr rwu rwur uw qu fiw wi ewyur uwr rwu
+  wruwr rwu rwur uw q fiw wi ewyur uwr rwu wruwr rwu rwur uw qwr.
+}
+</pre>
+
+<p>outputs to
+
+<p><IMG SRC="../img/shadedframe.png" ALT="shaded frame" border=0>
+
+<p>The implementation is based on the macro \frame and measuring boxes and
+adding boxes with given dimensions.
+
+<pre>
+\newdimen\shadewidth
+\def\shadedframe#1{{%
+   \vvkern=4pt \hhkern=4pt \shadewidth=4pt \rulewidth=1pt \hsize=4cm % default values
+   \Grey % frame color
+   \setbox0=\hbox{\frame{\vbox{\Black \noindent\ignorespaces#1}}}%
+   \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
+   \LightGrey % shadow color
+   \hbox{\vbox{\hbox{\rlap{\Yellow\vrule height\ht0 width\wd0 depth\dp0}\box0}%
+               \nointerlineskip \moveright\shadewidth
+                  \hbox{\vrule height\shadewidth width\wdzo}\kern-\shadewidth}%
+         \kern-\shadewidth \vrule height\htzo width\shadewidth}%
+}}
+</pre>
+
+<p>This problem is a good material for example how to create the macro with
+optional key/value paraeters, see section 2.10 in OpTeX manual.
+
+<pre>
+\def\shadedframedefaults{% defaults:
+   frame-color=\Grey,       % color of frame rules
+   text-color=\Black,       % color ot text inside the frame
+   shadow-color=\LightGrey, % color of shadow
+   bg-color=\Yellow,        % background color inside the frame
+   rule-width=1pt,          % width of rules used in the frame
+   v-margins=4pt,           % vertical space between text and frame
+   h-margins=4pt,           % horizontal space between text and frame
+   shade-width=4pt,         % the width of the shadow
+   text-width=4cm,          % width of the text inside the frame
+}
+\optdef\shadedframe [] #1{\bgroup
+      \readkv\shadedframedefaults \readkv{\the\opt}%
+      \vvkern=\kv{v-margins}\hhkern=\kv{h-margins}%
+      \rulewidth=\kv{rule-width}\hsize=\kv{text-width}\relax
+      \kv{frame-color}%
+      \setbox0=\hbox{\frame{\vbox{\kv{text-color}\noindent\ignorespaces#1}}}%
+      \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
+      \kv{shadow-color}%
+      \hbox{\vbox{\hbox{\rlap{\kv{bg-color}\vrule height\ht0 width\wd0 depth\dp0}\box0}%
+                  \nointerlineskip \moveright\kv{shade-width}
+                     \hbox{\vrule height\kv{shade-width}width\wdzo}\kern-\kv{shade-width}}%
+            \kern-\kv{shade-width}\vrule height\htzo width\kv{shade-width}}%
+   \egroup
+}
+</pre>
+
+<p>For example,
+
+<pre>
+\shadedframe [bg-color=\Blue, text-color=\White, text-width=6cm] {text}
+</pre>
+<p>is now possible.
+
+<p CLASS=datum>(0071) -- P. O. 2022-02-28<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
