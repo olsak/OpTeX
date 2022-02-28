@@ -175,6 +175,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#perpage">PerPage package features</a>
     <li><a href="#begfile">Filecontents package features</a>
     <li><a href="#sort">Sorting phrases</a>
+    <li><a href="#sepdef">Declaring macro parameters with more separators</a>
 </ul>
 
 <li>Lua matters
@@ -3033,6 +3034,76 @@ this case. This is a reason why we print the result using the second \foreach.
 <p CLASS=datum>(0068) -- P. O., 2022-02-11<p>
 <hr>
 
+<h2><a name="sepdef"></a>Declaring macro parameters with more separators</h2>
+
+<p>We create \sepdef for declaring macros with a parameter separated by
+various separators. The syntax is:
+
+<pre>
+\sepdef\macro{list of separators}{#1=parameter #2=separator}
+% For example:
+\sepdef\firstsentence{{.}{?}{!}}{{\it#1\Red#2}}
+</pre>
+
+<p>The example declares macro \firstsentence which scanns following text
+until first period or question or exclamation mark occurs. This text is
+treated as #1 and the actual separator is #2. Our example prints the next
+sentence in italic and prints the final character of the sentence in red.
+
+<p>The list of separators is in the format {first}{second}... Each separator
+can include more than single character.
+
+<p>The implementation:
+
+<pre>
+\def\sepdef#1{%
+   \def#1{\edef\seqname{\csstring#1}\def\param{}%
+      \ea\scantoeol\csname sdAx\csstring#1\endcsname}%
+   \sdef{sdAx\csstring#1}##1{\def\tmp{##1}%
+      \ea\foreach\seplist\do{\replstring\tmp{####1}{\sep{####1}}}%
+      \ea\scantosep\tmp\sep\end}%
+   \begingroup \_setscancatcodes \catcode`{=1 \catcode`}=2 \sepdefA #1%
+}
+\def\sepdefA#1#2{\endgroup\def\seplist{#2}\sdef{sdEx\csstring#1}##1##2}
+
+\def\scantosep#1\sep#2{%
+   \addto\param{#1}%
+   \ifx\end#2\addto\param{ }\afterfi{\ea\scantoeol\csname sdAx\seqname\endcsname}%
+   \else \afterfi{\def\separator{#2}\def\tmp{}\scantosepA}%
+   \fi
+}
+\def\scantosepA#1\sep#2{%
+   \addto\tmp{#1}%
+   \ifx\end#2\ea\scantosepB
+   \else\addto\tmp{#2}\ea\scantosepA
+   \fi
+}
+\def\scantosepB{\edef\tmp{\ea\noexpand\csname sdEx\seqname\endcsname{\param}{\separator}\tmp}%
+   \scantextokens\ea{\tmp}%
+}
+</pre>
+
+<p>The \sepdef\macro defines \macro which runs \scantoeol\sdAxmacro, i.e. reads
+single line in verbatim mode. \adAxmacro saves the read line to \tmp and
+does \replstring{what}{\sep{what}} for each "what" from separator list.
+Then the \ea\scantosep\tmp\sep\end is run. The \scantosep reads the data
+separated by \sep. If the next token is \end then we are at the end of line
+and we must to open next line. The \param macro is accumulated. If the next
+token is not \end, then we have found first separator and the next separators
+\sep at the same line are ignored by \scantosepA. Finally, \scantosepB runs
+\adExmacro{param}{sep} and does new \scatextokens. The macro \adExmacro was
+defined by \sepdefA.
+
+<p>Because the lines are read in verbatim mode first, the following example
+with closing brace at the second line works:
+
+<pre>
+{\bf\firstsentence Is it a sentence
+  over more lines?  Next idea.} End.
+</pre>
+
+<p CLASS=datum>(0072) -- P. O., 2022-02-28<p>
+<hr>
 
 <p CLASS="lmarg">Lua matters</p>
 
