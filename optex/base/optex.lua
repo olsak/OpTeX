@@ -49,9 +49,8 @@ end
 -- Allocator for Lua functions ("pseudoprimitives"). It passes variadic
 -- arguments (\"`...`") like `"global"` to `token.set_lua`.
 local function_table = lua.get_functions_table()
-local luafnalloc = 0
 function define_lua_command(csname, fn, ...)
-    luafnalloc = luafnalloc + 1
+    local luafnalloc = #function_table + 1
     token.set_lua(csname, luafnalloc, ...) -- WARNING: needs LuaTeX 1.08 (2019) or newer
     function_table[luafnalloc] = fn
 end
