@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2021-04-22>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2022-03-03>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -108,7 +108,7 @@
    The `\bye` macro is redefined here as an alternative to `\pg.`.
    \_cod -----------------------------
 
-\_def\_endslides{\_byehook \_end}
+\_def\_endslides{\_vfill \_supereject \_byehook \_end}
 \_def\bye{\_pg.}
 
    \_doc -----------------------------
@@ -298,6 +298,7 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2022-03-03 \supereject in \_endslides before \_byehook added
 2021-04-22 \adef* moved back, bug fixed in more-macros.opm
 2021-04-21 \adef* removed from slides.opm, bug fixed
 2021-04-19 \_byehook added to \_endslides.
