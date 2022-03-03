@@ -121,6 +121,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
     <li><a href="#keystrokes">Keystrokes using special images</a>
     <li><a href="#shadedframe">Frames with shadows</a>
+    <li><a href="#roundframe">Frames with rounded corners</a>
 </ul>
 
 <li>Math
@@ -1199,6 +1200,74 @@ optional key/value paraeters, see section 2.10 in OpTeX manual.
 <p>is now possible.
 
 <p CLASS=datum>(0071) -- P. O. 2022-02-28<p>
+<hr>
+
+<h2><a name="roundframe"></a>Frames with rounded corners</h2>
+
+<p>We create the macro \roundframe {Title}{Text} for crrating colored frames
+with rounded corners. For example
+
+<pre>
+\roundframe {Title here}
+            {Text dgd adhkd had dsglj dagjadg fsj csgsd
+             gs sgls fsglfs gfsl fglf gfs rtyr rire wrurey.}
+</pre>
+
+<p>creates:
+
+<p><IMG SRC="../img/roundframe.png" ALT="rounded frame" border=0>
+
+<p>The frame shown above was created with following parameters settings:
+
+<pre>
+\def\fmtfirst  #1{\kern2pt\noindent\strut\White\bf #1\parstrut\kern1pt}
+\def\fmtsecond #1{\kern3pt\noindent\strut\Black\rm #1\parstrut\kern1pt}
+\def\betweenfirstsecond {\Yellow\hrule height2pt}
+\roundframeparams {\hsize=6cm \leftskip=3mm \rightskip=3mm \corners=3mm
+   \parindent=0pt \let\titlecolor=\Blue \let\bodycolor=\LightGrey
+}
+\def\bgoval{\inoval[\roundness=\corners \shadow=Y \lwidth=0pt]{\box1}}
+</pre>
+
+<p>The \fmtfirst declares formating of title part, the \fmtsecond declares
+formatting of text body part. The macro \betweenfirstsecond is used between
+title and body. \roundframeprams sets next parameters used localy when the
+frame is created. The \corners is diameter of rounded corners.
+The \titlecolor and \bodycolor are background colors of
+appropriate parts. The macro \bgoval need not be defined. If undefined then
+there are no additional effects which can be achieve by prinnting backgroud
+\inoval. We need it if we want to have \shadow=Y or \lwidth positive.
+
+<p>The implementation looks like this:
+
+<pre>
+\newdimen\corners  \newtoks\roundframeparams
+\def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
+\def\twobox#1#2#3#4{%
+   \vbox{%
+      \setbox0=\vbox{\fmtfirst{#2}}%
+      \hbox{\rlap{#1\vrule height\ht0 depth\dp0 width\wd0}\box0}
+      \setbox0=\vbox{\fmtsecond{#4}}%
+      \betweenfirstsecond \nointerlineskip
+      \hbox{\rlap{#3\vrule height\ht0 depth\dp0 width\wd0}\box0}
+   }%
+}
+\def\roundframe#1#2{{%
+   \the\roundframeparams \roundness=\corners
+   \setbox0=\twobox\titlecolor{#1}\bodycolor{#2}%
+   \setbox1=\vbox to\dimexpr\ht0-2\corners{}\wd1=\dimexpr\wd0-2\corners\relax
+   \hbox{\ifx\bgoval\undefined \else \raise\corners\rlap{\bgoval}\fi
+         \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
+}}
+</pre>
+
+<p>Note that we need not tikz:). Only OpTeX macros \clipinoval and \inoval are
+used. The macro \twobox \color{title}\color{text} prints the colored parts
+of the frame with sharp corners. Then the macro \clipinoval does rounded
+corners. If we need additional effects then we print \inoval as a part of
+\bgoval macro. It is printed at the background and with empty box1.
+
+<p CLASS=datum>(0073) -- P. O. 2022-03-03<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
