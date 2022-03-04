@@ -1204,7 +1204,7 @@ optional key/value paraeters, see section 2.10 in OpTeX manual.
 
 <h2><a name="roundframe"></a>Frames with rounded corners</h2>
 
-<p>We create the macro \roundframe {Title}{Text} for crrating colored frames
+<p>We create the macro \roundframe {Title}{Text} for making colored frames
 with rounded corners. For example
 
 <pre>
@@ -1231,11 +1231,11 @@ with rounded corners. For example
 
 <p>The \fmtfirst declares formating of title part, the \fmtsecond declares
 formatting of text body part. The macro \betweenfirstsecond is used between
-title and body. \roundframeprams sets next parameters used localy when the
+title and body. \roundframeparams sets next parameters used localy when the
 frame is created. The \corners is diameter of rounded corners.
 The \titlecolor and \bodycolor are background colors of
 appropriate parts. The macro \bgoval need not be defined. If undefined then
-there are no additional effects which can be achieve by prinnting backgroud
+there are no additional effects which can be achieved by printing backgroud
 \inoval. We need it if we want to have \shadow=Y or \lwidth positive.
 
 <p>The implementation looks like this:
