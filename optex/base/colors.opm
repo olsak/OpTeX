@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \colordef {Colors <2021-07-16>} % preloaded in format
+\_codedecl \colordef {Colors <2022-03-05>} % preloaded in format
 
    \_doc -----------------------------
    The basic colors in CMYK
@@ -106,6 +106,39 @@
 \_protected\_def \_nolocalcolor {\_let\_colorprefix=\_global}
 \_public \localcolor \nolocalcolor ;
 \_localcolor
+
+   \_doc -----------------------------
+   The attribute \`\_transpattr` is allocated and set by the
+   \`\transparency``<number>` macro. If such level of the tranparency was
+   never used in the document then
+   \^`\addextgstate{tr<number>}`\code{\{<</ca X /CA X>>\}} is applied
+   (where `X` is `(255-<number>)/255`).
+   This information is used when shipout is processed (similarly as colors).
+   It means `/tr<number> gs` is inserted when the attribute is changed.
+   \_cod -----------------------------
+
+\_newattribute\_transpattr
+\_def\_transparency {\_afterassignment\_transparencyA \_transpattr}
+\_def\_transparencyA{%
+   \_ifnum\_transpattr<1 \_resettransp \_fi
+   \_ifnum\_transpattr>255 \_opwarning{\_noexpand\transparency > 255 not allowed}%
+       \_resettransp
+   \_else
+      \_ifcsname _transp:\_the\_transpattr\_endcsname \_else
+         \_edef\_transpv{\_expr{(255-\_the\_transpattr)/255}}%
+         \_addextgstate{tr\_the\_transpattr}{<</ca \_transpv\_space /CA \_transpv>>}%
+         \_sxdef{_transp:\_the\_transpattr}{}%
+         \_ifcsname _transp:0\_endcsname \_else
+            \_addextgstate{tr0}{<</ca 1 /CA 1>>}%
+            \_sxdef{_transp:0}{}%
+         \_fi
+      \_fi
+   \_fi
+}
+\_def\_resettransp{\_transpattr=-"7FFFFFFF }
+\_def\_thetransparency{\_ifnum \_transpattr=-"7FFFFFFF 0\_else \_the\_transpattr \_fi}
+
+\_public \transparency \thetransparency ;
 
    \_doc -----------------------------
    We use Lua codes for RGB to CMYK or CMYK to RGB conversions and for
@@ -411,6 +444,7 @@ and it is used in \^`\rgbcolordef` or if it is printed when \^`\onlyrgb` is decl
 
 \_endinput
 
+2022-03-05 \transparency added
 2021-07-16 colors reimplemented, now they are based on attributes
 2021-05-28 \rgbcmykmap introduced
 2020-04-22 \replstring\tmpb{+ }{+}, {- }{-} added in \colordef, bug fixed

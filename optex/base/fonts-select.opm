@@ -401,7 +401,7 @@
    \begitems
    * \`\_defaultfontfeatures` -- used for each font,
    * \`\_ffadded` -- features added by \^`\setff`,
-   * \`\_ffcolor` -- features added by \^`\setfontcolor`,
+   * \`\_ffcolor` -- features added by \^`\setfontcolor` (this is obsolette)
    * \`\_ffletterspace` -- features added by \^`\setletterspace`,
    * \`\_ffwordspace` -- features added by \^`\setwordspace`.
    \enditems
@@ -427,13 +427,15 @@
 \_public \setff ;
 
    \_doc -----------------------------
-   The \`\setfontcolor` and \`\setletterspace` are macros based on the
-   special font features provided by \LuaTeX/ (and by \XeTeX/ too but it is not
-   our business). The \`\setwordspace` recalculates the `\fontdimen2,3,4`
+   \`\setletterspace` is based on the
+   special font features provided by `luaotfload` package.
+   The \`\setwordspace` recalculates the `\fontdimen2,3,4`
    of the font using the \`\setwsp` macro which is used by the
    \^`\_fontselA` macro. It activates a dummy font feature `+Ws` too in
    order the font is reloded by the `\font` primitive (with independent
    `\fontdimen` registers).
+   \`\setfontcolor` is kept here only for backward compatibility but not
+   recommended. Use real color switches and the \^`\transparency` instead.
    \_cod -----------------------------
 
 \_def \_setfontcolor #1{%
@@ -632,7 +634,7 @@ family selectors and defined font macros doing something with fonts.
   \begitems
   * \"built-in" font modifiers are \^`\setfontsize` (see
     section~\ref[setfontsize]), \~`\setff` (see section~\ref[setff]),
-    \~`\setfontcolor`, \~`\setletterspace` and \~`\setwordspace`
+    \~`\setletterspace` and \~`\setwordspace`
     (see section~\ref[specff]). They are independent of font family.
   * Font modifiers declared by \~`\moddef` depend on the font family and they
     are typically declared in font family files, see
@@ -841,24 +843,12 @@ family):
 \begtt \catcode`\<=13
 \setfontsize{<size spec>}   % sets the font size
 \setff{<font feature>}       % adds the font feature
-\setfontcolor{<color>}     % sets font color
 \setletterspace{<number>} % sets letter spacing
 \setwordspace{<scaling>}    % modifies word spacing
 \endtt
 
 The \^`\setfontsize` command is described in the section \ref[setfontsize].
 The \^`\setff` command was described in previous subsection.
-
-\^`\setfontcolor` `{<color>}` specifies the color and the opacity of the text.
-The <color> parameter should be in the hexadecimal format of four bytes
-`<red><green><blue><opacity>`, for example `FF0080FF` means full red, zero
-green, half blue and full opacity. You can use names `red`, `green`, `blue`,
-`yellow`, `cyan`, `magenta`, `white`, `grey`, `lgrey` (without the backslash)
-instead of the hexadecimal specification.
-The empty parameter `<color>` means default black color.
-
-These colors of fonts are implemented using \LuaTeX/ internal font feature. This
-is different approach than using colors in section \ref[colors].
 
 \^`\setletterspace` `{<number>}` specifies the letter spacing of the font. The
 `<number>` is a decimal number without unit. The unit is supposed as 1/100 of

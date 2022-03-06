@@ -517,6 +517,7 @@ local one_bp = tex.sp("1bp")
 --
 -- The attribute for coloring is allocated in `colors.opm`
 local color_attribute = registernumber("_colorattr")
+local transp_attribute = registernumber("_transpattr")
 --
 -- Now we define function which creates whatsit nodes with PDF literals. We do
 -- this by creating a base literal, which we then copy and customize.
@@ -596,24 +597,28 @@ local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stro
     return false, false
 end
 
-local function colorize(head, current, current_stroke)
+local function colorize(head, current, current_stroke, current_tr)
     for n, id, subtype in traverse(head) do
         if id == hlist_id or id == vlist_id then
             -- nested list, just recurse
             local list = getlist(n)
-            list, current, current_stroke = colorize(list, current, current_stroke)
+            list, current, current_stroke, current_tr =
+               colorize(list, current, current_stroke, current_tr)
             setlist(n, list)
         elseif id == disc_id then
             -- at this point only no-break (replace) list is of any interest
             local replace = getfield(n, "replace")
             if replace then
-                replace, current, current_stroke = colorize(replace, current, current_stroke)
+                replace, current, current_stroke, current_tr =
+                    colorize(replace, current, current_stroke, current_tr)
                 setfield(n, "replace", replace)
             end
         else
             local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
+            local newtr = getattribute(n, transp_attribute) or 0
             local newcolor = nil
+            local newtrans = nil
             if current ~= new and nonstroke_needed then
                 newcolor = token_getmacro("_color:"..new)
                 current = new
@@ -629,8 +634,17 @@ local function colorize(head, current, current_stroke)
                     current_stroke = new
                 end
             end
+            if newtr ~= current_tr then
+                if token_getmacro("_transp:0") ~= nil then
+                    newtrans = fmt("/tr%d gs", newtr)
+                end
+                current_tr = newtr
+            end
             if newcolor then
                 head = insertbefore(head, n, pdfliteral(newcolor))
+            end
+            if newtrans then
+                head = insertbefore(head, n, pdfliteral(newtrans))
             end
         end
     end
@@ -644,7 +658,7 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     -- By setting initial color to -1 we force initial setting of color on
     -- every page. This is useful for transparently supporting other default
     -- colors than black (although it has a price for each normal document).
-    local list = colorize(todirect(list), -1, -1)
+    local list = colorize(todirect(list), -1, -1, 0)
     return tonode(list)
 end, "_colors")
 --

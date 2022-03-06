@@ -1343,7 +1343,7 @@ using this empty internal name.
 \sec Graphics
 %%%%%%%%%%%%%
 
-\secc Colors
+\secc Colors, transparency
 %%%%%%%%%%%
 
 \OpTeX/ provides a small number of color selectors:
@@ -1369,17 +1369,14 @@ or one grey component (using \^`\setgreycolor`). For example
 \def \DarkGrey {\setgreycolor{.1}}
 \endtt
 
-\new
+The color selectors work locally in groups like font selectors.
+
 The command \^`\morecolors` reads more definitions of color selectors from
 the \LaTeX/ file `x11nam.def`.
 There are about 300 color names like
 `\DeepPink`, `\Chocolate` etc. If there are numbered variants of the same
 name, then the letters B, C, etc. are appended to the name in \OpTeX/. For example
 `\Chocolate` is Chocolate1, `\ChocolateB` is Chocolate2 etc.
-
-\new
-The color selectors work locally in groups by default. See
-the technical documentation, section~\ref[colors] for more information.
 
 The basic colors \^`\Blue`, \^`\Red`, \^`\Cyan`, \^`\Yellow` etc.\ are defined
 with CMYK components using \^`\setcmykcolor`.
@@ -1397,7 +1394,6 @@ presentations). On the other hand, CMYK makes colors more true\fnote
 using ICC profile for your printer.}
 for printing.
 
-\new
 You can define your color by a linear combination of previously defined colors using
 \^`\colordef`. For example:
 
@@ -1434,6 +1430,13 @@ The `\coloron` macro can be defined as follows:
 }
 \coloron\Yellow\Brown{Brown text on yellow background}
 \endtt
+
+The \^`\transparency``<number>` sets the transparency amount of following
+typestting material until current group is closed.
+0 means no transparency (solid objects), 255 means
+full transparency (invisible objects). You can see the effect when
+overlapping one object over another.
+
 
 \secc Images
 %%%%%%%%%%%

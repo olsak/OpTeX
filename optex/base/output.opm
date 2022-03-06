@@ -68,7 +68,7 @@
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox{%
-     \_resetcolor
+     \_resetcolor \_resettransp
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
      \_makeheadline
