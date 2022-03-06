@@ -1,0 +1,96 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+% minim-pdf.opm, Michal Vlasák  <lahcim8@gmail.com>, 2022 
+% see also https://github.com/vlasakm/optex-minim
+
+\_codedecl \nohyphlang {Minim-PDF for \OpTeX/}
+\_namespace{minimpdf}
+
+   \_doc
+   Before loading `minim-pdf` we do a few preparations. Most importantly
+   adjusting core of minim, which is done in `minim.opm`.
+   \_cod
+
+\_load[minim]
+
+\_catcode`\@=11
+\_catcode`\:=11
+
+   \_doc
+   Minim hooks into language mechanism with standard \eTeX/
+   `\uselanguage@hook`. It can then translate language names (e.g
+   \"SwissGerman") into BCP 47 language identifiers (e.g. \"de-ch-1901", the
+   naming scheme of the `hyph-utf8` package) which are then embedded into
+   tagged PDFs. For simplicity, we use what \OpTeX/ calls \"lang-tag" (e.g.
+   \"de") which may not be precise enough (i.e. the right thing for Swiss
+   German would be \"de-ch") and may even be wrong(?).
+
+   When e.g. `\gswlang` (Swiss German) is used, `\uselang{gsw}\_gswPatt<...>`
+   is called in \OpTeX/. We use the fact, the there is mapping from language
+   register numbers (`\_gswPatt`) to \"lang-tag"s (\"de"). To avoid confusion
+   with any other language mappings, we prefix what we give to minim with `o:`.
+
+   We also don't incorporate the \eTeX/ `\uselanguage@hook`, but call minim's
+   callback directly, maybe it will cause less trouble with other packages
+   (since we don't pass standard names to the callback) and also gives a better
+   idea of what happens.
+   \_cod
+
+\_let\.uselang=\_uselang
+\_def\_uselang#1#2#3#4{%
+   \.uselang{#1}{#2}{#3}{#4}%
+   % just set this everytime, doesn't hurt
+   \setlanguagecode{o:#1}{\_cs{_lan:\_the#2}}%
+   \minim:uselanguagecallback{o:#1}%
+}
+
+   \_doc
+   If not detected, a few \"dummy" languages would be (in erroneous ways)
+   defined by minim: like \"nohyph" and \"undetermined". We define a few dummy
+   control sequences, to make minim not define them, since we define them
+   ourselves below. They are used in standard way, but their \"ISO codes" are weird:
+
+   \begtt
+   \nohyphlang
+   \nolanglang
+   \uncodedlang
+   \undeterminedlang
+   \endtt
+   \_cod
+
+\_let\lang@nohyph=\_empty
+\_let\lang@nolang=\_empty
+\_let\lang@uncoded=\_empty
+\_let\lang@undetermined=\_empty
+
+\_preplang nohyph       nohyph       und {} 11
+\_preplang nolang       nolang       und {} 11
+\_preplang uncoded      uncoded      und {} 11
+\_preplang undetermined undetermined und {} 11
+
+   \_doc
+   Now we actually load `minim-pdf`.
+   \_cod
+
+\_input minim-pdf
+
+   \_doc
+   Users aren't supposed to define custom languages in \OpTeX/, forbid that.
+   \_cod
+
+\_def\_tmp{\errmessage{don't use this command with OpTeX}}
+\_let\newnamedddialect=\_tmp
+\_let\newnameddllanguage=\_tmp
+
+   \_doc
+   Since a language may already be set (at least the default Knuth english),
+   then we need to tell minim about it, by reexecuting the language command
+   (like `\enlang`), thus calling into minim through the above mentioned hook.
+   \_cod
+
+% set the current language again to let minim know what it is
+\_cs{\_cs{_lan:\_the\_language}lang}
+
+
+% catcodes changes don't propage, since this file is loaded with \opinput
+\_endnamespace
+\_endcode

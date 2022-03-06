@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2022-03-03>} % preloaded in format
+\_codedecl \inspic {Graphics <2022-03-05>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -316,41 +316,29 @@
 \_def\_circlet#1#2#3{\_circle{#1}{#2}}
 \_def\_coc{\_ifx\_fcolorvalue\_relax S\_else \_ifdim\_lwidth=0pt f\_else B\_fi\_fi}
 
-
 \_public \inoval \incircle \ratio \lwidth \fcolor \lcolor \shadow \overlapmargins ;
 
    \_doc -----------------------------
    Just before defining shadows, which require special graphics states, we
-   define means for managing these graphics states. This is important, because
-   otherwise our use of `\pdfpageresources` register might clash with other
-   packages (TikZ) or even with our other usage (slides).
+   define means for managing these graphics states and other PDF page resources
+   (graphics states, patterns, shadings, etc.). Our mechanism, defined mostly
+   in Lua (see \ref[lua-pdf-resources], uses single dictionary for each PDF page
+   resource type (extgstate, etc.) for all pages (`\pdfpageresources` just
+   points to it).
 
-   The macro \`\addextgstate``<PDF name> <PDF dictionary>` shall be used for
-   adding more graphics states. It must be used {\em after} `\dump`. First use
-   of it detects PGF/TikZ and either uses its mechanism or defines our own. Our
-   mechanism is very similar though -- use single `/ExtGState` dictionary for all
-   pages (`\pdfpageresources` just points to it).
+   The macro \`\addextgstate``{<PDF name>}{<PDF dictionary>}` is a use of that
+   general mechanism and shall be used for adding more graphics states. It must
+   be used {\em after} `\dump`. It's general variant defined in Lua is
+   \^`\_addpageresource` `{<resource type>}{<PDF name>}{<PDF dictionary>}`. You can
+   use `\pageresources` or \^`\_pageresources` if you need to insert resource
+   entries to manually created PDF XObjects.
    \_cod -----------------------------
 
-\_def\_initpageresources{%
-   \_glet\_initpageresources=\_relax
-   \_ifcsname pgf@sys@addpdfresource@extgs@plain\_endcsname
-      % TikZ loaded
-      \_global\_slet{_addextgstate}{pgf@sys@addpdfresource@extgs@plain}%
-   \_else
-      % TikZ not loaded
-      \_pdfobj reserveobjnum% not to be used in iniTeX
-      \_xdef\_extgstatesobj{\_the\_pdflastobj}%
-      \_expanded{\_global\_pdfpageresources={/ExtGState \_extgstatesobj\_space 0 R}}%
-      \_global\_addto\_byehook{\_immediate\_pdfobj useobjnum\_extgstatesobj {<<\_extgstates>>}}%
-      \_gdef\_extgstates{}%
-      \_gdef\_addextgstate##1{\_xdef\_extgstates{\_extgstates\_space##1}}%
-   \_fi
-}
-% first initialize page resources, then execute new meaning of itself
-\_def\_addextgstate#1{\_initpageresources \_addextgstate{#1}}
+\_def\_addextgstate{\_addpageresource{ExtGState}}
 
 \_public \addextgstate ;
+\_def\pageresources{\_pageresources}
+\_def\addpageresource{\_addpageresource}
 
    \_doc -----------------------------
    A shadow effect is implemented here. The shadow is equal to the
@@ -368,8 +356,8 @@
 \_def\_shadowb{1}              % 2*shadowb = blurring area thickness
 
 \_def\_insertshadowresources{%
-   \_addextgstate{/op1 <</ca \_shadowdarknessA>>}%
-   \_addextgstate{/op2 <</ca \_shadowdarknessB>>}%
+   \_addextgstate{op1}{<</ca \_shadowdarknessA>>}%
+   \_addextgstate{op2}{<</ca \_shadowdarknessB>>}%
    \_glet\_insertshadowresources=\_relax
 }
 
@@ -459,9 +447,9 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2022-03-05: \_addextgstate, \pageresources, \addpageresources added
 2022-03-03: \_coc introduced
 2021-07-16: \inoval, \incircle are more simple, using attribitecolor features
 2021-03-19: \inkinspic: pictures in subdirectories, bug fixed
 2020-12-21: \puttext: \box0 in goup, bugfix
 2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed
-

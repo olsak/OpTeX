@@ -1,6 +1,9 @@
 OpTeX: the LuaTeX format based on Plain TeX and OPmac
 
-Author: Petr Olsak, <petr@olsak.net>
+Author:    Petr Olsak, <petr@olsak.net>
+
+Co-author: Michal Vlasák, <lahcim8@gmail.com>
+           (Lua code, colors by attributes, interface to tikz, minim)
 
 This software is in public domain.
 

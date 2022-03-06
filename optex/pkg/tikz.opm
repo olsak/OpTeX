@@ -1,17 +1,88 @@
 % This is macro package used by OpTeX, see http://petr.olsak.net/optex
 
-\_codedecl \tikzpicture {TikZ for OpTeX <2021-07-15>}
+\_codedecl \tikzpicture {TikZ for OpTeX <2022-02-11>}
+\_namespace{pgf}
+\_catcode`\@=11
 
    \_doc
    This package is \OpTeX/'s compatibility layer for PGF/TikZ. When users do
    `\load[tikz]` they expect `tikz.tex` to be loaded, but this file gets loaded
    instead. It does load `tikz.tex`, but also does fixups.
 
-   First we load TikZ itself.
-
+   We want to change some definitions in `pgfutil-plain.def` and
+   `pgfsys-luatex.def`. We need to do that in right times, so we manually
+   emulate some files from PGF to ensure we do things in the correct order.
    \_cod
 
-\_input tikz.tex
+%tikz.tex
+%  pgf.tex
+%    pgfrcs.tex
+%      pgfutil-common.tex
+%        pgfutil-common-lists.tex
+%      pgfutil-plain.tex
+%      pgfrcs.code.tex
+%    pgfcore.tex
+%      pgfsys.tex
+%        pgfsrcs.tex
+%        pgfsys.code.tex
+%          driver
+%      pgfcore.code.tex
+%  pgffor.tex
+%    pgfrcs.tex
+%    pgfkeys.code.tex
+%    pgffor.code.tex
+%  tikz.code.tex
+
+\def\pgfrcsincluded{}
+\input pgfutil-common.tex
+
+   \_doc
+   We load macros from `pgfutil-plain.def` because they are most
+   similar to macros we actually need. But there are several differences.
+   We don't want to load the output routine hack realized by
+   `\input atbegshi.sty\relax \AtBeginShipout{...}` in `pgfutil-plain.def`.
+   This is the reason why we re-define `\input` temporarily.
+   \_cod
+
+\def\input#1\relax{}
+\def\AtBeginShipout#1{}
+\_input pgfutil-plain.def
+\let\input=\_input
+\let\AtBeginShipout=\_undefined
+\let\end=\_end
+
+   \_doc
+   More changes should be done for macros loaded from `pgfutil-plain.def`.
+   These changes follows.
+   \_cod
+
+% Writing to auxiliary files, customized
+
+\_let\pgfutil@aux@read@hook=\_relax
+\_def\pgfutil@writetoaux#1{}
+
+
+% Driver detection, customized
+
+\def\pgfsysdriver{pgfsys-luatex.def}
+
+
+% Font stuff, \_typosize to fixed sizes used, math fonts are scaled too
+
+\def\pgfutil@font@tiny{\_typosize[5/]}
+\def\pgfutil@font@scriptsize{\_typosize[7/]}
+\def\pgfutil@font@footnotesize{\_typosize[8/]}
+\def\pgfutil@font@small{\_typosize[9/]}
+\def\pgfutil@font@normalsize{\_typosize[10/]}
+\def\pgfutil@font@large{\_typosize[12/]}
+\def\pgfutil@font@Large{\_typosize[14.4/]}
+\def\pgfutil@font@huge{\_typosize[20.74/]}
+\def\pgfutil@font@Huge{\_typosize[24.88/]}
+
+\def\pgfutil@font@normalfont{\_rm}
+\def\pgfutil@font@itshape{\_it}
+\def\pgfutil@font@bfseries{\_bf}
+\def\pgfutil@selectfont{\_rm}
 
    \_doc
    PGF's `\pgfutil@everybye` hooks into `\end`, but normally \OpTeX/ uses the
@@ -19,9 +90,34 @@
    hopefully be preserved by all \OpTeX/ macro writers.
    \_cod
 
-\_addto\_byehook{\_the\_cs{pgfutil@everybye}}
+\_addto\_byehook{\_the\pgfutil@everybye}
 
    \_doc
+   Make PGF/TikZ use our PDF resource management. Our functions expect split
+   key and value.
+   \_cod
+
+\_def\.kvsplit#1{\_ea\.kvsplitA\_expanded{#1}\_end}
+\_def\.kvsplitA#1/#2 #3\_end{{#2}{#3}}
+
+\_def\pgfutil@addpdfresource@extgs{\_addpageresource{ExtGState}\.kvsplit}
+\_def\pgfutil@addpdfresource@colorspaces{\_addpageresource{ColorSpace}\.kvsplit}
+\_def\pgfutil@addpdfresource@patterns{\_addpageresource{Pattern}\.kvsplit}
+\_let\pgfutil@setuppdfresources=\_relax
+\_let\pgf@sys@pdf@check@resources=\_relax
+\_def\pgf@sys@pdf@possible@resources{\_pageresources}
+
+\_input pgfrcs.code.tex
+\ProvidesPackageRCS{pgf.tex}
+\_input pgfcore.tex
+\usepgfmodule{shapes,plot}
+\_input pgffor.tex
+\_input tikz.code.tex
+
+   \_doc
+   More changes should be done for macros loaded from `pgfsys-luatex.def`.
+   These changes follows.
+
    There is a general disagreement about the use/meaning of `\hoffset` and
    `\voffset` -- \LaTeX/, the \LaTeX/ `crop`
    package\fnote{\url{https://www.ctan.org/pkg/crop}}, TikZ, and \OpTeX/ all
@@ -34,6 +130,23 @@
    $(0, 0)$).
    \_cod
 
-\_sdef{pgf@sys@pdf@mark@pos@pgfpageorigin}{\pgfpointorigin}
+\_def\pgf@sys@pdf@mark@pos@pgfpageorigin{\pgfpointorigin}
 
+\_refdecl{%
+   \_def\.Xpgfsysmark#1#2#3{\_sdef{pgf@sys@pdf@mark@pos@#1}{\pgfqpoint{#2sp}{#3sp}}}%
+}
+
+\_def\pgfsys@markposition#1{%
+   \_openref
+   \_savepos
+   \_edef\.tmp{#1}%
+   \_ea\_wref\_ea\.Xpgfsysmark\_ea{\_ea{\.tmp}{\_the\_lastxpos}{\_the\_lastypos}}%
+}
+
+% don't worry about reseting catcodes - we are at the end of \opinput'ed file
+\_endnamespace
 \_endcode
+
+History:
+2022-03-05  resources management re-implemented
+2021-07-15  released

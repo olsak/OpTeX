@@ -1741,7 +1741,7 @@ macros if you need them. On the other hand, if your source document is structure
 to more files (with individual chapters or sections), use simply the `\input` primitive.
 
 The macro packages intended to \OpTeX/ have the name `*.opm`.
-The following packages are distributed as part of \OpTeX/:
+The list of packages supported by \OpTeX/ follows. Most of them are directly part of \OpTeX/:
 \begitems
 * `qrcode.opm` enables to create QR codes.
 * `tikz.opm` does `\input tikz.tex`, i.e.\ loads Ti{\it k\/}Z. It adds \OpTeX/-specific code.
@@ -1749,7 +1749,9 @@ The following packages are distributed as part of \OpTeX/:
   includes settings for microtypographic extensions (protrusions+expanding fonts).
 * `vlna.opm` enables to protect of one-letter prepositions and more things automatically.
 * `emoji.opm` defines `\emoji{<name>}` command for colored emoticons.
-* `plain-at.opm` defines the old names from plain \TeX/.
+* \ulink[https://github.com/vlasakm/optex-minim]{\tt minim-mp.opm} enables
+  `\directmetapost` using \ulink[https://ctan.org/pkg/minim-mp]{\tt minim-mp}
+  and \ulink[https://ctan.org/pkg/minim]{\tt minim} packages.
 * \ulink[https://ctan.org/tex-archive/macros/luatex/optex/pdfextra/pdfextra-doc.pdf]{\tt pdfextra.opm}
   allows the use of many extra features from PDF standard (by M. Vlasák).
 \enditems

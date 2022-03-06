@@ -1,0 +1,188 @@
+% This is used by OpTeX packages minim-mp, minim-pdf, see http://petr.olsak.net/optex
+% minim.opm, Michal Vlasák  <lahcim8@gmail.com>, 2022 
+% see also https://github.com/vlasakm/optex-minim
+
+\_def\_optexminim_version{0.1}
+\_codedecl \optexminim_loaded  {Minim compatibility for \OpTeX/ (v\_optexminim_version)}
+
+   \_doc
+   When we want to use minim with \OpTeX/, we need to accomodate for their
+   differences. Particularly in allocations. Because of Esger Renkema's
+   graciousness, minim has been modified in ways that make it easier to
+   integrate with \OpTeX/. So even when the two formats normally disagree on a
+   lot of core things (allocations, callbacks) they can end up working together.
+
+   \OpTeX/ defines most allocation macros in `alloc.opm` and some Lua
+   allocation functions in `optex.lua`. Minim \"packages" are not standalone,
+   they all depend on core routines defined in `minim-alloc.tex` and
+   `minim-alloc.lua` respectively. Minim as a format preloads a stripped
+   version of `etex.src` so the Lua code makes some assumptions about that
+   (i.e. expects local allocators).
+
+   Both \OpTeX/ and minim want to make it possible to register more functions
+   for a single callback, by chaining their calls and `callback.register()`ing
+   only a proxy function. While minim stays close to the `callback` interface
+   from \LuaTeX/, \OpTeX/ is a subset of the \LaTeX/ `luatexbase` interface.
+   But minim now can work on top of ltluatex by using its functions instead of
+   `callback.register()`, so we don't have to do anything to support it in
+   \OpTeX/!
+
+   Firstly, because we only change what is defined by others, we actually need
+   a dummy macro for `\_codedecl`, to prevent loading this file more than once.
+   \_cod
+
+\_catcode`\@=11
+% dummy macro to signalize that we are loaded
+\_let\optexminim_loaded=\empty
+
+   \_doc
+   In general, there are four allocator types expected by minim:
+
+   \begitems
+   * Knuth allocators from `plain.tex` (like `\newcount`). These are already
+   defined by \OpTeX/. Although minim itself sets the old `\allocationnumber`
+   counter, which is not even defined in \OpTeX/.
+
+   * Global allocators from `etex.src` (like `\globcount`). These are not
+   defined by \OpTeX/, since they no longer make sense (\LuaTeX/ doesn't use
+   sparse arrays for registers). Minim defines them to be the classic Knuth
+   allocators if it doesn't find them on the TeX side, but expects them from
+   the Lua side.
+
+   * Local allocators from `etex.src` (like `\loccount`). Concept of local
+   allocators is completely missing in \OpTeX/. The semantics of local
+   allocation in Lua is weird too, so we try to avoid these, since minim also
+   doesn't define their Lua variants.
+
+   * \LuaTeX/ allocators from `ltluatex.tex` (like `\newattribute`). Subset of
+   these is in \OpTeX/ (only atributes, which are also allocatable in Lua, and
+   catcode tables). But minim tries to be compatible with \LaTeX/ and patches
+   its routines if it detects them.
+   \enditems
+
+   For defining \TeX/ commands implemented in Lua, \OpTeX/ has
+   `define_lua_command`, which actually does the allocation and definition at
+   the same time, and allows to do so only from Lua end.
+
+   Historically (in my opinion unfortunately) \LaTeX/ made the allocations of
+   these functions available from \TeX/ end, and the \"lua define" operation is
+   thus a two step process which involves synchronization with \TeX/.
+
+   `minim-alloc` actually defines a `luadef` function which is like
+   `define_lua_command`, but is backed by the minim allocator. To make this
+   work, we just need to set the \LaTeX/ register to the index of last
+   allocated function, since it allocates at counter plus one. Then minim will
+   start where \OpTeX/ stopped, and we will later define `define_lua_command`
+   to be just minim's `luadef`.
+
+   We tell the number of allocated function by going through the table of
+   actually used functions. This is not that robust, because while
+   `define_lua_command` allocates sequentially, the provided functions may be
+   `nil`, which breaks the code below.
+   \_cod
+
+\_newcount\allocationnumber
+
+% for synchronisation of allocated Lua functions
+\_ea\_newcount\_csname e@alloc@luafunction@count\_endcsname
+
+\directlua{
+    local function_table = lua.get_functions_table()
+    % minim allocates at count + 1 for "new" allocators, so this works
+    tex.setcount("global", "e@alloc@luafunction@count", \csstring\#function_table)
+}
+
+   \_doc
+   We also get PDF resources out of the way now. Minim is ready to use \OpTeX's
+   PDF resource management, but also has compatibility layer for PGF, which is
+   not needed in \OpTeX/. We prevent loading the problematic \TeX/ file.
+   \_cod
+
+\_let\minimpdfresourcesloaded=\_empty
+
+   \_doc
+   The preparations are over. We load `minim-alloc.tex`.
+   \_cod
+
+\input minim-alloc
+
+   \_doc
+   Both \LaTeX/ and the minim inspired catcode table allocators initialize the
+   catcode tables with `\initcatcodetable` (i.e. ini\TeX/ catcodes). \OpTeX/
+   merely allocates the registers. \LuaTeX/ doesn't allow to activate
+   unitialized catcode table, therefore activation with either
+   `\initcatcodetable` or `\savecatcodetable` is necessary before use. To
+   ensure compatibility with foreign macros, we also issue `\initcatcodetable`
+   on allocation in the public version of `\newcatcodetable`.
+   \_cod
+
+\_def\newcatcodetable#1{\_newcatcodetable#1\_initcatcodetable#1}
+
+   \_doc
+   By now, the Knuthian allocators are dealt with. \eTeX/ global and local
+   allocators are undefined, but the global ones are expected in minim's Lua
+   code with their hardcoded counter register numbers. This is unacceptable,
+   since in this range (`\count260` to `\count266`) \OpTeX/ has already made
+   allocations. Thus we need to replace these Lua functions with similar
+   definitions. For some, \OpTeX/ also has a different idea whether the counter
+   represent the last or next allocated register number, so we correct that as
+   well.
+
+   We also don't forget to actually set `define_lua_command` to be minim's
+   `luadef`.
+   \_cod
+
+\directlua{
+    local minimalloc = require("minim-alloc")
+
+    define_lua_command = minimalloc.luadef
+
+    % these are allocators already defined in OpTeX that we need to repair
+    local toreplace = {
+        "count",
+        "dimen",
+        "skip",
+        "muskip",
+        "box",
+        "toks",
+        "marks",
+        "attribute",
+        "catcodetable",
+    }
+
+    for _, alloc in ipairs(toreplace) do
+        local cache = {}
+        local countername = string.format("_\_pcent salloc", alloc)
+        minimalloc["new_"..alloc] = function(id)
+            local n = cache[id]
+            if not n then
+                n = tex.getcount(countername) + 1
+                tex.setcount("global", countername, n)
+                if id then
+                    cache[id] = n
+                end
+                minimalloc.log(
+                    "\_nbb\_pcent s\_pcent d : \_pcent s", alloc, n, id or "<unnamed>")
+            end
+            return n
+        end
+    end
+}
+
+   \_doc
+   We also need to do something about `minim-hooks.tex`, which hooks into
+   `\shipout`, but the default \OpTeX/ output routine (and perhaps also the
+   user ones) use `\_shipout`.
+
+   Minim also adds to `\everypar`, but that is fine.
+   \_cod
+
+\_let\shipout\_shipout
+
+\input minim-hooks
+
+\_catcode`\:=11
+\_let\_shipout\minim:shipout:new
+
+% catcodes changes don't propage, since this file is loaded with \opinput
+\_endcode

@@ -1,0 +1,16 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+% minim-mp.opm, Michal Vlasák  <lahcim8@gmail.com>, 2022 
+% see also https://github.com/vlasakm/optex-minim
+
+\_codedecl \_minimmp_used {Minim-PDF for \OpTeX/}
+\_namespace{minimmp}
+
+\_def\.used{}
+
+\_load[minim]
+
+\_input minim-mp
+
+\_endnamespace
+\_endcode
+
