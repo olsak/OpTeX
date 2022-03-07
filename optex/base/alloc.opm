@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newdimen {Allocators for registers <2021-02-15>} % preloaded in format
+\_codedecl \newdimen {Allocators for registers <2022-03-07>} % preloaded in format
 
    \_doc -----------------------------
    The limits are set first.
@@ -92,6 +92,7 @@
    \_doc -----------------------------
    Other allocation macros \`\newmarks`. \`\newattribute` and \`\newcatcodetable`
    have their counter allocated by the `\newcount` macro.
+   \`\_noattr` is constant `-"7FFFFFFF`, i.e. unused attribute
    \_cod -----------------------------
 
 \_newcount \_marksalloc \_marksalloc=0 % start at 1, 0 is \mark
@@ -99,7 +100,8 @@
 \_def\_newmarks #1{\_allocator #1{marks}\_chardef}
 
 \_newcount \_attributealloc  \_attributealloc=0
-\_chardef\_maiattribute=\_maicount
+\_chardef\_maiattribute=\_numexpr\_maicount -1\_relax
+\_attributedef\_noattr \_maicount
 \_def\_newattribute #1{\_allocator #1{attribute}\_attributedef}
 
 \_newcount \_catcodetablealloc  \_catcodetablealloc=10
@@ -176,6 +178,8 @@ the array-like declarator of counters.
 
 \_endinput
 
+2022-03-07  \_noattr allocated
+2022-02-19  \_newlanguage introduced
 2021-02-15  \_advance -> \_incr, \_decr
 2020-05-12  \newmath -> \newfam  bug fixing
 2020-01-23  released

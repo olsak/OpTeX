@@ -617,38 +617,36 @@ local function colorize(head, current, current_stroke, current_tr)
             local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
             local newtr = getattribute(n, transp_attribute) or 0
-            local newcolor = nil
-            local newtrans = nil
+            local newliteral = nil
             if current ~= new and nonstroke_needed then
-                newcolor = token_getmacro("_color:"..new)
+                newliteral = token_getmacro("_color:"..new)
                 current = new
             end
             if current_stroke ~= new and stroke_needed then
                 local stroke_color = token_getmacro("_color-s:"..current)
                 if stroke_color then
-                    if newcolor then
-                        newcolor = fmt("%s %s", newcolor, stroke_color)
+                    if newliteral then
+                        newliteral = fmt("%s %s", newliteral, stroke_color)
                     else
-                        newcolor = stroke_color
+                        newliteral = stroke_color
                     end
                     current_stroke = new
                 end
             end
             if newtr ~= current_tr then
-                if token_getmacro("_transp:0") ~= nil then
-                    newtrans = fmt("/tr%d gs", newtr)
+                if newliteral ~= nil then
+                    newliteral = fmt("%s /tr%d gs", newliteral, newtr)
+                else
+                    newliteral = fmt("/tr%d gs", newtr)
                 end
                 current_tr = newtr
             end
-            if newcolor then
-                head = insertbefore(head, n, pdfliteral(newcolor))
-            end
-            if newtrans then
-                head = insertbefore(head, n, pdfliteral(newtrans))
+            if newliteral then
+                head = insertbefore(head, n, pdfliteral(newliteral))
             end
         end
     end
-    return head, current, current_stroke
+    return head, current, current_stroke, current_tr
 end
 --
 -- Colorization should be run just before shipout. We use our custom callback
@@ -689,6 +687,7 @@ function optex_hook_into_luaotfload()
 end
 
    -- History:
+   -- 2022-03-07 transparency in the colorize() function, current_tr added 
    -- 2022-03-05 resources management added
    -- 2021-07-16 support for colors via attributes added
    -- 2020-11-11 optex.lua released

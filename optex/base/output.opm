@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2021-07-16>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2021-03-07>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another...\nl
@@ -63,12 +63,13 @@
    New is only \`\_backgroundbox`. It is `\vbox` with zero height with its
    contents (from \^`\pgbackground`) extended down. It is shifted directly to the
    left-upper corner of the paper.\nl
-   The \^`\_resetcolor` used here means that all newly created texts in
-   output routine (texts used in headline, footline) have default color.
+   The \^`\_resetattrs` used here means that all newly created texts in
+   output routine (texts used in headline, footline) have default color
+   and no transparency.
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox{%
-     \_resetcolor \_resettransp
+     \_resetattrs
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
      \_makeheadline
@@ -155,7 +156,7 @@
 \_def \_opfootnote #1#2{\_insert\_footins\_bgroup
   \_interlinepenalty=\_interfootnotelinepenalty
   \_leftskip=\_zo \_rightskip=\_zo \_spaceskip=\_zo \_xspaceskip=\_zo \_relax
-  \_resetcolor
+  \_resetattrs
   #1\_relax % local settings used by \fnote macro
   \_splittopskip=\_ht\_strutbox % top baseline for broken footnotes
   \_splitmaxdepth=\_dp\_strutbox \_floatingpenalty=20000
@@ -186,7 +187,7 @@
 \_skip\_topins=\_zoskip % no space added when a topinsert is present
 \_count\_topins=1000 % magnification factor (1 to 1)
 \_dimen\_topins=\_maxdimen % no limit per page
-\_def \_oins {\_par \_begingroup\_setbox0=\_vbox\_bgroup\_resetcolor} % start a \_vbox
+\_def \_oins {\_par \_begingroup\_setbox0=\_vbox\_bgroup\_resetattrs} % start a \_vbox
 \_def \_endinsert {\_par\_egroup % finish the \_vbox
   \_ifumid \_dimen0=\_ht0 \_advance\_dimen0 by\_dp0 \_advance\_dimen0 by\_baselineskip
     \_advance\_dimen0 by\_pagetotal \_advance\_dimen0 by-\_pageshrink
@@ -257,6 +258,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2022-03-07 \_resetattrs instead \_resetcolor
 2021-07-16 output routine supports colors via attributes
 2021-02-25 \_draftbox improved
 2021-02-15 \_advance -> \_decr

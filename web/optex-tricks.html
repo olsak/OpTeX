@@ -568,7 +568,7 @@ end
       \incr \fntoutcnt
    \fi
 }
-\addto\_resetcolor{\fntoutattr=-"7FFFFFFF }
+\addto\_resetattrs{\fntoutattr=\_noattr}
 \sdef{fntout:0}{0 w 0 Tr}
 \directlua{
 register_pre_shipout_injector("fntout", "fntoutattr", "fntout:")
