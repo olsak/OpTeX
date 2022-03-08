@@ -28,7 +28,7 @@
 \_countdef\_boxalloc=14       \_boxalloc=255
 \_countdef\_toksalloc=15      \_toksalloc=255
 \_countdef\_readalloc=16      \_readalloc=-1
-\_countdef\_writealloc=17     \_writealloc=-1
+\_countdef\_writealloc=17     \_writealloc=0 % should be -1 but there is bug in new luatex
 \_countdef\_famalloc=18       \_famalloc=3
 \_countdef\_languagealloc=19  \_languagealloc=0
 
