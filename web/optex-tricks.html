@@ -131,6 +131,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#biglr">Bigger outer parentheses automatically set</a>
     <li><a href="#textinmath">Text fonts in math mode</a>
     <li><a href="#torighteq">Equation marks in atypical cases</a>
+    <li><a href="#subeqmark">Equation marks for sub-equations</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
@@ -1421,6 +1422,42 @@ because we need to know the absolute position of the current point and we
 shift it to the right margin.
 
 <p CLASS=datum>(0028) -- P. O. 2020-07-10<p>
+<hr>
+
+<h2><a name="subeqmark"></a>Equation marks for sub-equations</h2>
+
+<p>Sometime we want to declare a bunch of equations with the same numeric
+equation marks but with different suffixes, for example (1.1a), (1.1b).
+We create a macro <code>\subeqmark suffix</code>.
+The <code>\subeqmark a</code> starts
+the bunch of equations with a new number. Following <code>\subeqmark b</code>,
+<code>\subeqmark c</code> etc. uses the same equation number, they differ only by
+given suffixes. For example
+
+<pre>
+$$ \eqalignno{
+    x + 2y + 3z &amp;= 600 &amp; \subeqmark a \cr
+   12x + y - 3z &amp;= 7   &amp; \subeqmark b[label] \cr
+    4x - y + 5z &amp;= -5  &amp; \subeqmark c \cr
+}
+$$
+See equation~\ref[label].
+$$
+  a^2 + b^2 = c^2 \eqno \eqmark
+$$
+</pre>
+<p>prints the system of equations with numbers (1a), (1b), (1c) and the (1b) is
+referenced in the text. The next Pythagorean theorem has number (2).
+
+<p>The implementation is simple:
+
+<pre>
+\def \_thednum    {(\the\_dnum\dnumpost)}
+\def\dnumpost{}
+\def\subeqmark#1{\def\dnumpost{#1}\ifx a#1\else \decr\_dnum\fi \eqmark}
+</pre>
+
+<p CLASS=datum>(0074) -- P. O. 2022-03-08<p>
 <hr>
 
 <h2><a name="addumathfont"></a>Loading additional Unicode math fonts</h2>
