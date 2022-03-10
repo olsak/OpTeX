@@ -479,7 +479,7 @@ callback.add_to_callback("finish_pdffile", function()
     end
 end)
 --
--- \medskip\secc[lua-colors] Handling of colors using attributes^^M
+-- \medskip\secc[lua-colors] Handling of colors and transparency using attributes^^M
 --
 -- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
@@ -531,16 +531,17 @@ local function pdfliteral(str)
 end
 optex.directpdfliteral = pdfliteral
 --
--- The function {\Red`colorize`}`(head, current, current_stroke)` goes through
--- a node list and injects PDF literals according to attributes.
+-- The function {\Red`colorize`}`(head, current, current_stroke, current_tr)`
+-- goes through a node list and injects PDF literals according to attributes.
 -- Its arguments are the head of the list to be colored and the current color
--- for fills and strokes. It is a recursive function – nested
+-- for fills and strokes and the current trasparency attribute.
+-- It is a recursive function – nested
 -- horizontal and vertical lists are handled in the same way. Only the
 -- attributes of “content” nodes (glyphs, rules, etc.) matter. Users drawing
 -- with PDF literals have to set color themselves.
 --
--- Whatsit node with color setting PDF literal is injected only when a
--- different color is needed. Our injection does not care about boxing levels,
+-- Whatsit node with color setting PDF literal is injected only when a different
+-- color or transparency is needed. Our injection does not care about boxing levels,
 -- but this isn't a problem, since PDF literal whatsits just instruct the
 -- `\shipout` related procedures to emit the literal.
 --
@@ -566,21 +567,13 @@ optex.directpdfliteral = pdfliteral
 -- We use the `node.direct` way of working with nodes. This is less safe, and
 -- certainly not idiomatic Lua, but faster and codewise more close to the way
 -- \TeX/ works with nodes.
-local function is_color_needed(head, n, id, subtype) -- returns non-stroke, stroke color needed
+local function is_color_needed(head, n, id, subtype) -- returns fill, stroke color needed
     if id == glyph_id then
         return true, false
     elseif id == glue_id then
         n = getleader(n)
         if n then
-            id = getid(n)
-            if id == hlist_id or id == vlist_id then
-                -- leaders with hlist/vlist get single color
-                return true, false
-            else -- rule
-                -- stretchy leaders with rules are tricky,
-                -- just set both colors for safety
-                return true, true
-            end
+            return true, true
         end
     elseif id == rule_id then
         local width, height, depth = getwhd(n)
@@ -614,11 +607,11 @@ local function colorize(head, current, current_stroke, current_tr)
                 setfield(n, "replace", replace)
             end
         else
-            local nonstroke_needed, stroke_needed = is_color_needed(head, n, id, subtype)
+            local fill_needed, stroke_needed = is_color_needed(head, n, id, subtype)
             local new = getattribute(n, color_attribute) or 0
             local newtr = getattribute(n, transp_attribute) or 0
             local newliteral = nil
-            if current ~= new and nonstroke_needed then
+            if current ~= new and fill_needed then
                 newliteral = token_getmacro("_color:"..new)
                 current = new
             end
@@ -633,7 +626,7 @@ local function colorize(head, current, current_stroke, current_tr)
                     current_stroke = new
                 end
             end
-            if newtr ~= current_tr then
+            if newtr ~= current_tr and fill_needed then -- (fill_ or stroke_needed) = fill_neded
                 if newliteral ~= nil then
                     newliteral = fmt("%s /tr%d gs", newliteral, newtr)
                 else
