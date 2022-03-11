@@ -22,6 +22,16 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.06> Mar. 2022:
+       \transparency selector using attributes implemented.
+       Interface to minim (minim-mp.opm, minim-pdf.opm) introduced.
+       Interface to TikZ (tikz.opm) improved.
+       PDF page resorces: management by lua code implemented.
+       Possibility of preloading no fonts to the format by \let\fontspreload=\relax.
+       hisyntax-lua.opm introduced.
+       plain-at.opm macros included to the format.
+       Language/hyphenations macros reimplemented, phrases file introduced.
+       Font selection: low level macros reimplemented, \fontsel introduced.
 <1.05> Jan. 2022:
        \_par used internally instead \par if \partokenname is available.
        Extended format \ref[label]{text} and \pgref[label]{text} introduced.
