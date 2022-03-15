@@ -26,7 +26,7 @@ History:
        \transparency selector using attributes implemented.
        Interface to minim (minim-mp.opm, minim-pdf.opm) introduced.
        Interface to TikZ (tikz.opm) improved.
-       PDF page resorces: management by lua code implemented.
+       PDF page resources: management by Lua code implemented.
        Possibility of preloading no fonts to the format by \let\fontspreload=\relax.
        hisyntax-lua.opm introduced.
        plain-at.opm macros included to the format.

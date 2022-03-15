@@ -174,6 +174,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#scantok">Expandable token-per-token scanner</a>
     <li><a href="#balancing">Nested brackets of another type than {}</a>
     <li><a href="#addallowbreak">Breaking URL at any point</a>
+    <li><a href="#setpage">What page-number is current?<a>
     <li><a href="#perpage">PerPage package features</a>
     <li><a href="#begfile">Filecontents package features</a>
     <li><a href="#sort">Sorting phrases</a>
@@ -2918,6 +2919,57 @@ but a hyperlink to real http://petr.olsak.net/optex is created (if \hyperlinks
 is declared).
 
 <p CLASS=datum>(0052) -- P. O., 2021-05-12<p>
+<hr>
+
+
+<h2><a name="setpage"></a>What page-number is current?</h2>
+
+<p>We want to ask sometimes what page-number is current. For example we want
+to put an image to the outer side of the page (to the left side at left page,
+to the right side at right page). We want to do somethig like this:
+
+<pre>
+\ifodd ???
+   \line{\hss \picw=.7\hsize \inspic{picture.jpg}} % right side
+\else
+   \line{\picw=.7\hsize \inspic{picture.jpg}\hss}  % left side
+\fi
+</pre>
+
+<p>We can declare a special counter \picno for such pictures globally
+incremented and we save to the .ref file:
+
+<pre>
+\_sxdef {pic::picno-value}{\selectpage}
+</pre>
+
+<p>When the .ref file is read during the next TeX run then the control
+sequence \pic::picno-value is defined as a macro with the current page number.
+We have to define the macro \selectpage using \refdecl.
+The whole example looks like this:
+
+<pre>
+\refdecl{\def\selectpage{\_ea\_usesecond\_currpage}}
+\def\setpage#1{\_openref \_ewref\_sxdef{{#1}{\_string\selectpage}}}
+
+\newcount\picno
+
+\incr\picno
+\ifodd \trycs{pic::\the\picno}{0}
+   \line{\hss \picw=.7\hsize \inspic{picture.jpg}} % right side
+\else
+   \line{\picw=.7\hsize \inspic{picture.jpg}\hss}  % left side
+\fi
+\setpage{pic::\the\picno}
+</pre>
+
+<p>You can see that \picno must be incremented in the place where we need to
+know the current page number. The \setpage must be added immediatelly after
+the box (or inserted into the box) where we need to know the current page
+number because its internal \write command (used in \setpage) must not be
+separated (to different pages) from its box.
+
+<p CLASS=datum>(0075) -- P. O., 2022-03-15<p>
 <hr>
 
 <h2><a name="perpage"></a>PerPage package features</h2>
