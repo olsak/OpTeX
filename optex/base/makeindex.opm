@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2022-02-19>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2022-03-18>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -438,7 +438,7 @@
 \_def\_iiB #1,{\_if$#1$\_else \_iiC#1/\_relax \_ea\_iiB\_fi}
 \_def\_iiC #1/#2\_relax{\_if$#2$\_else\_iindex{#2#1}\_fi}
 
-\_def\_iid #1 {\_leavevmode\_iindex{#1}#1\_futurelet\_tmp\_iiD\_def\_iitypesaved{}}
+\_def\_iid #1 {\_leavevmode\_iindex{#1}\_def\_iitypesaved{}#1\_futurelet\_tmp\_iiD}
 \_def\_iiD{\_ifx\_tmp,\_else\_ifx\_tmp.\_else\_space\_fi\_fi}
 
 \_def\_iis #1 #2{{\_def~{ }\_global\_sdef{_,#1}{#2}}\_ignorespaces}
@@ -450,6 +450,7 @@
 
 \_endcode % -------------------------------------
 
+2022-03-18 \iid didn't ignore space, bug fixed
 2022-02-19 \_sotringdataen etc. moved to lang-data.opm file
 2021-02-15 \_expandafter -> \_ea
 2021-02-01 secodary sorting: start from code 65
