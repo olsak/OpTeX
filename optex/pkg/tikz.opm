@@ -1,8 +1,9 @@
 % This is macro package used by OpTeX, see http://petr.olsak.net/optex
 
-\_codedecl \tikzpicture {TikZ for OpTeX <2022-02-11>}
+\_codedecl \tikzpicture {TikZ for OpTeX <2022-02-18>}
 \_namespace{pgf}
 \_catcode`\@=11
+\_let\_optexforeach=\foreach
 
    \_doc
    This package is \OpTeX/'s compatibility layer for PGF/TikZ. When users do
@@ -143,10 +144,22 @@
    \_ea\_wref\_ea\.Xpgfsysmark\_ea{\_ea{\.tmp}{\_the\_lastxpos}{\_the\_lastypos}}%
 }
 
+   \_doc
+   I decide to keep \OpTeX's `\foreach` outside the Tikz environment.
+   The Tikz's `\foreach` is activated only inside its environment.
+   If you want to use Tikz's `\foreach` outside too then you can say
+   `\let\foreach=\_pgf_foreach`.
+   \_cod
+
+\addto \tikz@startup@env {\let\foreach=\pgffor@foreach}
+\_let\.foreach=\pgffor@foreach  % \_pgf_foreach is \pgffor@foreach
+\_let\foreach=\_optexforeach    % \foreach is OpTeX's \foreach
+
 % don't worry about reseting catcodes - we are at the end of \opinput'ed file
 \_endnamespace
 \_endcode
 
 History:
-2022-03-05  resources management re-implemented
+2022-03-18  Tikz's \foreach only in its environment.
+2022-03-05  resources management re-implemented.
 2021-07-15  released
