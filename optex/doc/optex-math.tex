@@ -285,8 +285,8 @@ to their nucleus without any exception.
 The primitives \x`\displaystyle`, \x`\textstyle`, \x`\scriptstyle` and
 \x`\scriptscriptstyle` set the given style regardless the default rules. For
 example, you can create a formula in in-line math mode and in $D$ style by
-`$\displaystyle <fomula>$` or a formula in display mode and $T$ style can be printed
-by `$$\textstyle <fomrula>$$`.
+`$\displaystyle <formula>$` or a formula in display mode and $T$ style can be printed
+by `$$\textstyle <formula>$$`.
 
 If a subformula is placed below something (below a line from root symbol,
 below a fraction line), then the processed style $D, T, S$ or $SS$ is
@@ -717,7 +717,7 @@ of the \OpTeX/ manual). For example
 \_def\_marm {\_inmath{\_rmavariables \_rmdigits}} % \_mamrm is used in \rm
 \endtt
 %
-`\_inmath` runs it parameter only in math mode and sets the math alphabets.
+`\_inmath` runs its parameter only in math mode and sets the math alphabets.
 You can see the file `unimath-codes.opm` where all these selectors are
 defined. You can redefine them. For example, \OpTeX/ defines `\bf` as a math
 alphabet selector that selects sans serif bold in math. This is the common
