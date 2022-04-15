@@ -160,6 +160,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#fnindent">Indented footnotes</a>
     <li><a href="#linnum">Line numbers in the left side of the formatted text</a> 
+    <li><a href="#firstline">First line of the paragraph with a different font</a>
 </ul>
 
 <li>Macro tricks
@@ -2397,6 +2398,69 @@ OpTeX) in order to do this re-boxing at each paragraph-end between \pstart
 and \pend.
 
 <p CLASS=datum>(0069) -- P. O., 2022-02-02<p>
+<hr>
+
+<h2><a name="firstline"></a>First line of the paragraph with a different font</h2>
+
+<p>The following macro \firstline{text of the paragraph} prints the
+paragraph with different font of its first line. This font is given by the
+\firstlineshape. For example:
+
+<pre>
+\let\firstlineshape=\bf
+\firstline{The text of the paragraph}
+or
+\def\firstlineshape{\setfontsize{at12pt}\bf \uppercase} % \uppercase must be last
+\firstline{The text of the paragraph}
+</pre>
+
+<p>The implementation:
+
+<pre>
+\def\firstline#1{\par
+   \begingroup \hfuzz=\maxdimen
+   \setbox0=\vbox{
+      \parshape 2 0pt\hsize 0pt\maxdimen
+      \firstlineshape{#1}\par
+      \global\tmpnum=\prevgraf
+      \fornum 2..\prevgraf \do{\setbox0=\lastbox \unskip\unpenalty}
+      \global\setbox1=\lastbox
+   }
+   \ifnum\tmpnum=1 \endgroup \box1 \else
+      \setbox0=\vbox{
+         \parshape 1 0pt0pt
+         \unhcopy1 \par
+         \setbox0=\lastbox \setbox0=\hbox{\unhbox0}
+         \ifdim\wd0=0pt \prevgraf=\numexpr\prevgraf-1\relax \fi
+         \parshape \numexpr\prevgraf+1\relax
+             \fornum 1..\prevgraf \do{0pt0pt }0pt\maxdimen
+         #1\par
+         \setbox0=\box2
+         \loop
+             \setbox0=\lastbox \unskip\unpenalty
+             \ifdim\wd0=\maxdimen
+                 \global\setbox2=\hbox{\unhbox0 \ifvoid2 \else\space\unhbox2 \fi}
+         \repeat
+      }
+      \endgroup
+      \noindent\box1\penalty0\unhbox2 \par
+   \fi
+}
+</pre>
+
+<p>In the first step, we create the first line and the rest is in the second
+(or more) lines with \mexdimen width. Using \fornum we remove the rest and
+save the first line in the \box1. If there is no more lines then the \box1 is
+printed else we go to the second step. The box1 is divided to the elements
+(each element is one line with \hsize=0pt) and the number of the elements N
+is \prevgraf (or \prevgraf-1 if the last element ends with discretionary).
+Then we create \parshape where there is N lines with 0pt width
+and next lines are with \maxdimen width. Only the lines with \maxdimen width
+are taken in the following \loop and saved into \box2. It is the rest of the
+pragraph text. Finally, the paragraph is created again using \box1 followed
+by \unhbox2.
+
+<p CLASS=datum>(0076) -- P. O., 2022-04-15<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
