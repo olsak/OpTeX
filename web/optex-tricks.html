@@ -133,6 +133,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#torighteq">Equation marks in atypical cases</a>
     <li><a href="#subeqmark">Equation marks for sub-equations</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
+    <li><a href="#orical">Original \cal from Computer Modern fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
 </ul>
@@ -1555,6 +1556,34 @@ signs from STIX doesn't look good in single formula.
 <p CLASS=datum>(0030) -- P. O. 2020-12-02<p>
 <hr>
 
+<h2><a name="orical"></a>Original \cal from Computer Modern fonts</h2>
+
+<p>When \fontfam[lm] is used then LatinModern-Math Unicode font is used for
+math. The different calligraphic shapes are here than Knuth designed for his
+Computer Modern fonts. If you want to use his original calligraphic glyphs
+after \fontfam[lm], then you can use \orical instead \cal and the macro
+\orical is defined here:
+
+<pre>
+\addto\_normalmath{%
+  \_loadmathfamily 5 cmsy % CM Standard symbols
+}
+\_normalmath
+\def\orical{\fornum`A..`Z\do{\Umathcode##1 "0 "5 ##1 }}
+
+% For example:
+\def\P{{\orical P}} % powerset
+</pre>
+
+<p>The new math family (5 in our case) is declared in the internal
+\_normalmath macro. This must be done after \fontfam[lm].
+Then the \orical macro sets (locally) approriate math codes for all
+characters A..Z: the class is zero (Ord character], the family is 5 and the
+code slot is the ASCII code of given letter.
+
+<p CLASS=datum>(0077) -- P. O. 2022-04-19<p>
+<hr>
+
 <h2><a name="dots"></a>Intelligent \dots like in AMSTeX</h2>
 
 <p>AMSTeX provides \dots macro which works by the context. If it is surrounded
@@ -2302,7 +2331,7 @@ of the next page looks like B{top-pos}E{pos}...B{0}E{pos}.
 
 <p>and run OpTeX twice.
 
-<p CLASS=datum>(0031) -- P. O., 2021-01-13<p>
+<p CLASS=datum>(0031) -- P. O. 2021-01-13<p>
 <hr>
 
 <h2><a name="blockoval"></a>Text blocks in ovals</h2>
@@ -2327,7 +2356,7 @@ The diameter or rounded corners is set to 10bp.
 }
 </pre>
 
-<p CLASS=datum>(0034) -- P. O., 2021-01-14<p>
+<p CLASS=datum>(0034) -- P. O. 2021-01-14<p>
 <hr>
 
 <p CLASS="lmarg">Different formatting</p>
@@ -2350,7 +2379,7 @@ on StackExchange includes the need of indented footnotes, like this:
 \addto\_fnset{\leftskip=\parindent \let\_textindent=\textllap}
 </pre>
 
-<p CLASS=datum>(0067) -- P. O., 2022-02-02<p>
+<p CLASS=datum>(0067) -- P. O. 2022-02-02<p>
 <hr>
 
 <h2><a name="linnum"></a>Line numbers in the left side of the formatted text</h2>
@@ -2397,7 +2426,7 @@ than single paragraph then you must to re-define \par (or \_par in the new
 OpTeX) in order to do this re-boxing at each paragraph-end between \pstart
 and \pend.
 
-<p CLASS=datum>(0069) -- P. O., 2022-02-02<p>
+<p CLASS=datum>(0069) -- P. O. 2022-02-02<p>
 <hr>
 
 <h2><a name="firstline"></a>First line of the paragraph with a different font</h2>
@@ -2449,7 +2478,7 @@ or
 </pre>
 
 <p>In the first step, we create the first line and the rest is in the second
-(or more) lines with \mexdimen width. Using \fornum we remove the rest and
+(or more) lines with \maxdimen width. Using \fornum we remove the rest and
 save the first line in the \box1. If there is no more lines then the \box1 is
 printed else we go to the second step. The box1 is divided to the elements
 (each element is one line with \hsize=0pt) and the number of the elements N
@@ -2460,7 +2489,7 @@ are taken in the following \loop and saved into \box2. It is the rest of the
 pragraph text. Finally, the paragraph is created again using \box1 followed
 by \unhbox2.
 
-<p CLASS=datum>(0076) -- P. O., 2022-04-15<p>
+<p CLASS=datum>(0076) -- P. O. 2022-04-15<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
@@ -2762,7 +2791,7 @@ input is finished, then \picdir returns to its previous value.
 <p>Unlike the import LaTeX package, the \import macro can be used recursively
 in imported files. So, we need not to define \subimport.
 
-<p CLASS=datum>(0035) -- P. O., 2021-01-14<p>
+<p CLASS=datum>(0035) -- P. O. 2021-01-14<p>
 <hr>
 
 <h2><a name="num"></a>Numbers printed in three-digits groups</h2>
@@ -2815,7 +2844,7 @@ symbol at the end of the \numH macro:
 }
 </pre>
 
-<p CLASS=datum>(0040) -- P. O., 2021-02-06<p>
+<p CLASS=datum>(0040) -- P. O. 2021-02-06<p>
 <hr>
 
 <h2><a name="scantok"></a>Expandable token-per-token scanner</h2>
@@ -2866,7 +2895,7 @@ token list ({,} have catcodes 1,2) then you can define
 \edef\mylist{\ea\scantokenlist\ea{\mylist}}
 </pre>
 
-<p CLASS=datum>(0042) -- P. O., 2021-02-06<p>
+<p CLASS=datum>(0042) -- P. O. 2021-02-06<p>
 <hr>
 
 <h2><a name="balancing"></a>Nested brackets of another type than {}</h2>
@@ -2927,7 +2956,7 @@ pair. It. means that balancing of {...} has higher priority.
 
 <p>The \readnextbal reads next part of the text until next ] occurs.
 
-<p CLASS=datum>(0043) -- P. O., 2021-02-06<p>
+<p CLASS=datum>(0043) -- P. O. 2021-02-06<p>
 <hr>
 
 <h2><a name="addallowbreak"></a>Breaking URL at any point</h2>
@@ -2982,7 +3011,7 @@ by following experiment:
 but a hyperlink to real http://petr.olsak.net/optex is created (if \hyperlinks
 is declared).
 
-<p CLASS=datum>(0052) -- P. O., 2021-05-12<p>
+<p CLASS=datum>(0052) -- P. O. 2021-05-12<p>
 <hr>
 
 
@@ -3033,7 +3062,7 @@ the box (or inserted into the box) where we need to know the current page
 number because its internal \write command (used in \setpage) must not be
 separated (to different pages) from its box.
 
-<p CLASS=datum>(0075) -- P. O., 2022-03-15<p>
+<p CLASS=datum>(0075) -- P. O. 2022-03-15<p>
 <hr>
 
 <h2><a name="perpage"></a>PerPage package features</h2>
@@ -3124,7 +3153,7 @@ in the OpTeX manual).
 <p>The \thepp expands to the \cs{pp:counter-name} and \thepplast expands to
 the \cs{lastpp:counter-name:pageno}.
 
-<p CLASS=datum>(0051) -- P. O., 2021-04-01<p>
+<p CLASS=datum>(0051) -- P. O. 2021-04-01<p>
 <hr>
 
 <h2><a name="begfile"></a>Filecontents package features</h2>
@@ -3159,7 +3188,7 @@ contents.
 \endlinechar is set. Then the parameter is read and written to the given
 file. Elementary my dear Watson.
 
-<p CLASS=datum>(0057) -- P. O., 2021-04-10<p>
+<p CLASS=datum>(0057) -- P. O. 2021-04-10<p>
 <hr>
 
 <h2><a name="sort"></a>Sorting phrases</h2>
@@ -3200,7 +3229,7 @@ After \slist is sorted by \_dosorting\slist, we print it. We can do this
 printing simply by expanding \slist, but spaces between phrases are lost in
 this case. This is a reason why we print the result using the second \foreach.
 
-<p CLASS=datum>(0068) -- P. O., 2022-02-11<p>
+<p CLASS=datum>(0068) -- P. O. 2022-02-11<p>
 <hr>
 
 <h2><a name="sepdef"></a>Declaring macro parameters with more separators</h2>
@@ -3271,7 +3300,7 @@ with closing brace at the second line works:
   over more lines?  Next idea.} End.
 </pre>
 
-<p CLASS=datum>(0072) -- P. O., 2022-02-28<p>
+<p CLASS=datum>(0072) -- P. O. 2022-02-28<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
@@ -3334,7 +3363,7 @@ by \_setverb) and when \endlinechar=`\^^J. Then this parameter is processed by
 the \directlua primitive. The \luamacros token list is used by
 \begLUA...\endLUA pair, you can add more macros here.
 
-<p CLASS=datum>(0054) -- P. O., 2021-04-04<p>
+<p CLASS=datum>(0054) -- P. O. 2021-04-04<p>
 <hr>
 
 <h2><a name="dayw"></a>Printing time, date</h2>
@@ -3409,7 +3438,7 @@ to get the day in the week in given date.
 \def\Othe#1{\ifnum#1&lt;10 0\fi\the#1}
 </pre>
 
-<p CLASS=datum>(0055) -- P. O., 2021-04-06<p>
+<p CLASS=datum>(0055) -- P. O. 2021-04-06<p>
 <hr>
 
 <h2><a name="pglists"></a>Listings of all nodes in selected pages</h2>
@@ -3452,7 +3481,7 @@ listings of nodes. The implemetation:
 <p>The callback is registered in \_begoutput only if \the\pageno is in the page
 list \showpgs. Then it used in \_preshipout and unregistered in \_endoutput.
 
-<p CLASS=datum>(0063) -- P. O., 2021-07-03<p>
+<p CLASS=datum>(0063) -- P. O. 2021-07-03<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
@@ -3533,7 +3562,7 @@ Text.
 \end
 </pre>
 
-<p CLASS=datum>(0033) -- P. O., 2021-01-14<p>
+<p CLASS=datum>(0033) -- P. O. 2021-01-14<p>
 <hr>
 
 <h2><a name="part"></a>Adding \part, the highest level of sections</h2>
@@ -3580,7 +3609,7 @@ Text.
 <p>Note, that table of contents is created properly and correct tree
 structure of outlines is prepared too.
 
-<p CLASS=datum>(0059) -- P. O., 2021-06-01<p>
+<p CLASS=datum>(0059) -- P. O. 2021-06-01<p>
 <hr>
 
 <p CLASS="lmarg">References</p>
@@ -3643,7 +3672,7 @@ object used in the generated lists. You can change it, of course. For
 example, if you use \bf\ref[#1] insetad \bf#2 then you have the numbers in
 the list clickable (after \hyperlinks declaration).
 
-<p CLASS=datum>(0066) -- P. O., 2022-02-01<p>
+<p CLASS=datum>(0066) -- P. O. 2022-02-01<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>
@@ -3714,7 +3743,7 @@ and \_byehook will write the "WARNING: Rerun to get references right".
 (You need the version of OpTeX bigger than 0.17, where \_endslides
 macro is used).
 
-<p CLASS=datum>(0029) -- P. O., 2020-11-19<p>
+<p CLASS=datum>(0029) -- P. O. 2020-11-19<p>
 <hr>
 
 
@@ -3791,7 +3820,7 @@ erweitert.
 <p>Note that usage of these macros are incompatible with \dequotes, i.e. with
 quotation marks used by \"text" and preferred in OpTeX.
 
-<p CLASS=datum>(0036) -- P. O., 2021-01-22<p>
+<p CLASS=datum>(0036) -- P. O. 2021-01-22<p>
 <hr>
 
 <p CLASS="lmarg">Features of PDF viewer</p>
@@ -3868,7 +3897,7 @@ For example:
 \pdfcatalog {/PageLabels &lt;&lt; /Nums [ \pagespecs ] >>}
 </pre>
 
-<p CLASS=datum>(0056) -- P. O., 2021-04-09<p>
+<p CLASS=datum>(0056) -- P. O. 2021-04-09<p>
 <hr>
 
 <p CLASS="lmarg">Others</p>
@@ -3892,7 +3921,7 @@ released versions and xyz5 for patched versions. You can use it in the context
 \def\numversionA#1.#2#3#4#5\relax{#1#2#3\ifx+#45\else0\fi}
 </pre>
 
-<p CLASS=datum>(0049) -- P. O., 2021-03-02<p>
+<p CLASS=datum>(0049) -- P. O. 2021-03-02<p>
 <hr>
 
 <h2><a name="diff"></a>Showing differences between versions of the document</h2>
