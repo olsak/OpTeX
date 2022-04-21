@@ -99,12 +99,14 @@
     printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
 
     `\lipsum` adds `\_par` after each printed paragraph. If you don't need
-    such `\_par` here, use \`\lipsumtext``[<number>]`.
-    This macro prints only one selected paragraph <number> and does not add `\_par`.
+    such `\_par` here, use \`\lipsumtext``[<number>]` or `\lipsum[<number>].`
+    (i.e.\ dot after the parameter). The first case prints the paragraph
+    <number> without the final `\_par` and the second case prints only
+    first sentence from the paragraph <number> using \`\_lipsumdot`.
     \_cod ----------------------------
 
 \_def\_lipsumtext[#1]{\_lipsumload\_cs{_lip:#1}}
-\_def\_lipsum[#1]{\_lipsumA #1\_empty-\_empty\_end}
+\_def\_lipsum[#1]{\_isnextchar.{\_lipsumdot[#1]}{\_lipsumA #1\_empty-\_empty\_end}}
 \_def\_lipsumA #1-#2\_empty#3\_end{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{{%
@@ -115,6 +117,9 @@
       \_opinput {lipsum.ltd.tex}%
       \_global\_let\_lipsumload=\_empty
    }}}
+\_def\_lipsumdot[#1]{\_lipsumload \_ea\_ea\_ea \_lipsumdotA \_csname _lip:#1\_endcsname.\_end}
+\_def\_lipsumdotA #1.#2\_end {#1}
+
 \_public \lipsum \lipsumtext ;
 \_let \lorem=\lipsum
 
