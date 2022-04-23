@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begtt {Verbatim <2022-02-22>} % preloaded in format
+\_codedecl \begtt {Verbatim <2022-04-23>} % preloaded in format
 
    \_doc ----------------------------
    The internal parameters
@@ -113,6 +113,11 @@
    active characters (defined as {\visiblesp`\ `}).
    Other characters have normal category 11 or 12.
 
+   The `^^J` is appended to verbatim data because we need to be sure that
+   the data are finished by this character. When `\endtt` is preceded by
+   spaces then we need to close these spaces by `^^J` and such line is not
+   printed due to a trick used in \^`\_printverb`.
+
    When `\_prepareverbdata` finishes then `\_startverb` runs `\_printverb` loop
    over each line of the data and does a final work: last skip plus `\noindent`
    in the next paragraph.
@@ -157,24 +162,28 @@
 
    \`\_putttpenalty` puts \^`\_ttpenalty` before second and next lines, but
    not before first line in each `\begtt...\endtt` environment.
+
+   The `\_ttline` is increased here in the `\_printverb` macro because of
+   comments-blocks: the `\_prinverbline` is not processed in comments-blocks
+   but we need to count the `\_ttline`.
    \_cod ----------------------------
 
 \_def\_printverb #1^^J#2{%
    \_ifx\_printverblinenum\_relax \_else \_incr\_ttline \_fi
    \_testcommentchars #1\_relax\_relax\_relax
    \_iftrue
-      \_ifx\_end#2 \_printcomments\_fi
+      \_ifx\_end#2\_printcomments\_fi
    \_else
       \_ifx\_vcomments\_empty\_else  \_printcomments \_def\_vcomments{}\_fi
-      \_ifx\_end#2
+      \_ifx\_end#2%
          \_bgroup \_adef{ }{}\_def\t{}% if the last line is emtpy, we don't print it
-         \_ifcat&#1&\_egroup \_else\_egroup \_printverbline{#1}\_fi
+         \_ifcat&#1&\_egroup \_ifx\_printverblinenum\_relax \_else \_decr\_ttline \_fi
+         \_else\_egroup \_printverbline{#1}\_fi
       \_else
          \_printverbline{#1}%
       \_fi
    \_fi
-   \_ifx\_end#2 \_let\_next=\_relax \_else \_def\_next{\_printverb#2}\_fi
-   \_next
+   \_unless\_ifx\_end#2\_afterfi{\_printverb#2}\_fi
 }
 \_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\_par}
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
@@ -253,8 +262,8 @@
    \_loop \_ifeof\_vifile \_tmpnum=\_vinolines\_space \_fi
          \_ifnum\_tmpnum<\_vinolines\_space
          \_vireadline \_advance\_tmpnum by1 \_repeat      %% skip lines
-   \_edef\_ttlinesave{\_ttline=\_the\_ttline}%
-   \_ifnum\_ttline=-1 \_ttline=\_viline \_fi
+   \_edef\_ttlinesave{\_global\_ttline=\_the\_ttline}%
+   \_ifnum\_ttline=-1 \_ttline=\_viline \_else \_let\_ttlinesave=\_relax \_fi
    \_tmpnum=0 \_def\_tmpb{}%
    \_ifnum\_vidolines=0 \_tmpnum=-1 \_fi
    \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_fi
@@ -266,7 +275,7 @@
    \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb^^J}%
    \_catcode`\ =10 \_catcode`\%=9 % used in \commentchars comments
    \_ea\_printverb \_tmpb\_end
-   \_global\_ttlinesave
+   \_ttlinesave
    \_par \_restoremathsb
    \_endgroup
    \_ttskip
@@ -313,8 +322,8 @@
    \^`\commentchars`. Each block of comments is accumulated to one line
    and then it is re-interpreted by \TeX. So, the ends of lines in the
    comments block are lost. You cannot use macros which
-   need to scan end of lines, for example `\begtt...\endtt` inside the comments
-   block does not work. The character `%` is ignored in comments but you can use `\%`
+   need to scan end of lines, for example `\begtt...\endtt` inside the comments.
+   The character `%` is ignored in comments but you can use `\%`
    for printing or `%` alone for de-activating `\_endpar` from empty
    comment lines.
 
@@ -376,6 +385,7 @@
 \_endinput
 
 History:
+2022-04-23 ... \_ttline counting: bug fixed
 2022-02-22 ... \_reloading removed due to changes in font-select
 2021-04-18 ... \_protrudechars=0 added
 2021-04-07 ... \_savemathsb, \_restoremathsb introduced
