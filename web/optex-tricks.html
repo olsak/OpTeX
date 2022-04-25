@@ -111,6 +111,8 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#inttinoval">Code blocks like in Markdown</a>
     <li><a href="#keepverb">Inline verbatim in macro parameters</a>
+    <li><a href="#algol">Algorithms printed as pseudo-codes</a>
+    <li><a href="#ttlineref">Verbatim lines referenced in text</a>
 </ul>
 
 <li>Graphics
@@ -791,6 +793,136 @@ parameter is pre-processed. Only \code{...} is 100% working.
 solution.
 
 <p CLASS=datum>(0017) -- P. O. 2020-05-22<p>
+<hr>
+
+<h2><a name="algol"></a>Algorithms printed as pseudo-codes</h2>
+
+<p>The LaTeX package bundle <b>algorithms</b> enables to create algorithms formatted by
+controlled way (pseudo-codes). We create here something similar, but writing
+the sources is much more confortable than in LaTeX because the source is more similar to
+the printed result and without useless control sequences.
+Our pseudo-code is written between \begtt\algol and \endtt as usual verbatim text.
+The key-words mentioned at pages 1--8 in the algorithms LaTeX documentation are
+written directly in our source code and they are printed in bold font automatically.
+If you want to print another word in bold use a pair of !...!, i.e. write !word!.
+Texts between dollars $...$ are interpreted in math mode. All input characters
+between $...$ are non-verbatim, i.e. the math mode is interpreted as usual.
+Other text (outside math mode) is printed verbatim but in Roman font.
+The example shown at pages 9--10 of algorithms documentation can be prepared by:
+
+<p CLASS="rmarg">
+<IMG SRC="../img/algol.png" ALT="code result" border=0>
+</p>
+
+<pre>
+\begtt \algol
+Require: $n ≥ 0$
+Ensure: $y = x^n$
+   $y ← 1$
+   $X ← x$
+   $N ← n$
+   while $N ≠ 0$ do
+      if $N$ is even then
+         $X_{\rm new} ← X × X$
+         $N ← N/2$
+      else {$N$ is odd}
+         $y ← y × X$
+         $N ← N − 1$
+      end if
+   end while
+\endtt
+</pre>
+
+<p>Note that the brackets {...} in our example are interpreted in normal TeX way in math mode:
+$X_{\rm new}$ but they are printed verbatim outside math mode: else {$N$ is odd}.
+
+<p>You can use symbols like ←, they makes your source code more
+readable. Or you can use common math control sequences in math mode,
+\leftarrow in this case.
+
+<p>The implementation of the \algol macro is based on hi-syntax macros of OpTeX:
+
+<pre>
+\newtoks \_hisyntaxalg
+\_hisyntaxalg = {
+   \_hicolor K \bf  % Keywords
+   \foreach {Require:}{Ensure:}
+      {while}{do}{if}{then}{else}{end}{function}{return}{print}
+      {for}{all}{range}{continue}{repeat}{until}{loop}
+      {not}{and}{or}{xor}{true}{false}
+      \do {\replthis{\n#1\n}{\z K{#1}}}
+}
+\def\algolmath#1${\catcodetable\_optexcatcodes \scantextokens{#1}$}
+\bgroup \lccode`~=`! \lowercase{\egroup \def\algolbf#1~}{{\bf#1}}
+\def\algol{\catcode`$=3
+   \everymath={\algolmath}%
+   \def\_ttfont{\rm}%
+   \adef!{\algolbf}%
+   \hisyntax{ALG}%
+}
+</pre>
+
+<p>You can add \replthis{:=}{\leftarrow} to the \_hisyntaxalg declaration if
+you want to write more legible $y := 1$ instead of $y \leftarrow 1$ in your
+source code. (We assume that you don't write the character ← directly due
+to a limitation of your keyboard or your text editor.)
+Or you can try to colorize your pseudo-code...
+
+<p>Another tip: You can change the indentation of printed result by
+adding
+<pre>
+   \def\_indent{\_quitvmode \def\_dsp{ }\_spacefactor=2000\xspaceskip=.7em }
+</pre>
+<p> to the \_hisyntax declaration. Each indentation space in the source will
+have given \xspaceskip width in the output.
+
+<p CLASS=datum>(0078) -- P. O. 2022-04-24<p>
+<hr>
+
+<h2><a name="ttlineref"></a>Verbatim lines referenced in text</h2>
+
+<p>We implement possibility to refer lines printed by \begtt...\endtt if
+these lines are numbered by \ttline>=0. User needs to select a character
+unused in the verbatim text (the § in the following example) and use
+\ttlineref this-character in the header after \begtt and the same character
+can be used in the verbatim text followed by [label]. Of course,
+you can use more such labels in single verbatim block.
+When the verbatim environment is closed then the \lref[label] expands to
+the the corresponding line number where the [label] was used. For example:
+
+<pre>
+\ttline=0
+\begtt \ttlineref §
+first line
+   second special line §[spec]
+   third line
+\endtt
+
+Note that the line \lref[spec] is very interesting.
+</pre>
+
+<p>The string <tt>§[spec]</tt> in this example is not printed in the verbatim environment,
+it saves only the label [spec] for later use. The \lref[spec] expands to 2
+in our example.
+
+<p>The following code implements this feature but only backward
+references (for sake of simplicity).
+
+<pre>
+\def\ttlineref#1{\adef#1[##1]{\setlref{##1}}}
+\protected\def\setlref#1{\sxdef{ttlin:#1}{\the\ttline}}
+\def\lref[#1]{\trycs{ttlin:#1}{??}}
+</pre>
+
+<p>You can use the same labels in following verbatim blocks. They are
+silently rewritten by new line numbers. We suppose that the \lref[label] are used
+immediately after printed verbatim block and only with labels really
+declared in previous verbatim block.
+
+<p>You can use this trick with combination of previous
+<a href="#algol">OpTeX trick 0078</a>
+
+<p CLASS=datum>(0079) -- P. O. 2022-04-25<p>
 <hr>
 
 <p CLASS="lmarg">Graphics</p>
