@@ -95,6 +95,11 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [BaskervilleF]
 
+\_famfrom {Arkandis Digital Foundry}
+\_faminfo [Baskervald] {Free variants of classical Baskerville by ADF} {f-baskervald}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Baskervald ADF]
+
 \_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
    { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
 

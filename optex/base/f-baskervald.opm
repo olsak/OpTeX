@@ -1,0 +1,22 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Baskervald] \Baskervald {Free vaiants of classical Baskerville by ADF}
+        {\caps} {\rm \bf \it \bi} {}
+        {[Baskervaldx-Reg]}
+        {\_def \_fontnamegen {[Baskervaldx-\_currV]:script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Reg Bol Ita BolIta }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+
