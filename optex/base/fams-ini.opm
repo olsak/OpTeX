@@ -98,7 +98,7 @@
 \_famfrom {Arkandis Digital Foundry}
 \_faminfo [Baskervald] {Free variants of classical Baskerville by ADF} {f-baskervald}
    { -,\caps: {\rm\bf\it\bi} }
-\_famalias [Baskervald ADF]
+\_famalias [Baskervald ADF] \_famalias [ADFBaskerville]
 
 \_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
    { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
