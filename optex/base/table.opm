@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2022-05-02>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2022-05-03>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -59,8 +59,11 @@
    \_doc -----------------------------
    The \`\_tableB` saves `<data>` to `\_tmpb`
    and does \^`\replstring`s to prefix each macro \^`\crl` (etc.)
-   by `\_crcr`. See \^`\_tabreplstrings`. It cannot be used in a `\table` in
-   another `\table`, so \^`\_tabreplstrings` is set to `\relax` locally.
+   by `\_crcr`. See \^`\_tabreplstrings`.
+   The whole `\_tableB` macro is hidden in `{...}` in order to
+   there may be `\table` in `\table` and we want to manipulate with
+   `&` and `\cr` as with normal tokens in the `\_tabreplstrings`, not as
+   the item delimiters of an outer `\table`.
 
    The `\tabskip` value is saved for places between columns
    into the \`\_tabskipmid` macro. Then it runs
@@ -89,10 +92,10 @@
    work in special cases here like \code{`\{`} for example.
    \_cod -----------------------------
 
-\_long\_def\_tableB #1{\_egroup \_def\_tmpb{#1}%
-   {\_tablereplstrings \_glet\_tmpb\_tmpb}\_let\_tablereplstrings=\_relax
-   \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
-   \_ifpxto
+\_long\_def\_tableB #1{\_egroup
+   {\_def\_tmpb{#1}\_tablereplstrings
+    \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
+    \_ifpxto
       \_edef\_tsizes{\_global\_tsizesum=\_the\_tsizesum \_gdef\_noexpand\_tsizelast{\_tsizelast}}%
       \_tsizesum=\_zo \_def\_tsizelast{0}%
       \_tsize=-\_hsize \_setbox0=\_vbox{\_tablepxpreset \_halign \_tableC}%
@@ -102,9 +105,10 @@
       \_else \_tsize=\_zo \_fi
       \_tsizes % retoring values if there is a \table pxto inside a \table pxto.
       \_setbox0=\_null \_halign \_tableC
-   \_else
+    \_else
       \_halign\_tablew \_tableC
-   \_fi \_egroup
+    \_fi
+   }\_egroup % \_tablebox\_bgroup is in the \_table macro
 }
 \_def\_tableC{\_ea{\_the\_tabdata\_tabskip=\_tabskipr\_cr \_scantextokens\_ea{\_tmpb\_crcr}}}
 
@@ -583,6 +587,7 @@ after the second one.
 
 \_endinput
 
+2022-05-03 \_let\_tablereplstring\_relax removed and {...} encloses whole \_tableB body
 2022-05-02 \_tablereplstrings put in group: bug fix \table in \halign
 2022-02-25 {}->\(begin|end)group in \_tabdeclare(l|r|c), bug when \tabitem(l|r)={$} fixed.
 2021-08-04 \_patamtabdeclarep reimplemented.
