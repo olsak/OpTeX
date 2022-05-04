@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2020-08-02>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2022-05-04>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -99,15 +99,16 @@
     printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
 
     `\lipsum` adds `\_par` after each printed paragraph. If you don't need
-    such `\_par` here, use \`\lipsumtext``[<number>]` or `\lipsum[<number>].`
+    such `\_par` here, use \`\lipsumtext``[<number>]` or `\lipsum[<number>.]`
     (i.e.\ dot after the parameter). The first case prints the paragraph
     <number> without the final `\_par` and the second case prints only
     first sentence from the paragraph <number> using \`\_lipsumdot`.
     \_cod ----------------------------
 
 \_def\_lipsumtext[#1]{\_lipsumload\_cs{_lip:#1}}
-\_def\_lipsum[#1]{\_isnextchar.{\_lipsumdot[#1]}{\_lipsumA #1\_empty-\_empty\_end}}
-\_def\_lipsumA #1-#2\_empty#3\_end{%
+\_def\_lipsum[#1]{\_lipsumA #1.]{#1}}
+\_def\_lipsumA #1.#2]#3{\_ifx^#2^\_lipsumB #1\_empty-\_empty\_end \_else \_lipsumdot[#1].\_fi}
+\_def\_lipsumB #1-#2\_empty#3\_end{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{{%
    \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
@@ -197,6 +198,9 @@
 
 \_endcode
 
+2022-05-04 \lipsum[<num>]. changed to \lipsum[<num>.] to keep macro expandable.
+2022-04-21 syntax \lipsum[<num>]. introduced.
+2022-02-16 declaration of @-names moved here from plain-at.opm.
 2021-08-02 \SetLipsumLanguage added, fix for new lipusm version
 2021-01-04 \lipsumtext introduced
 2020-05-22 \lipsum uses \fornum (expandable after first usage)
