@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2022-03-30>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2022-05-04>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -177,7 +177,7 @@
    \_long\_edef#1##1{\_ea\_noexpand\_csname _body:\_csstring#1\_endcsname
                      ##1\_the\_toks0 \_noexpand\_finbody}%
    \_foreachdefA#1{#2}}
-\_def\_foreachdefA#1#2#3{%
+\_long\_def\_foreachdefA#1#2#3{%
    \_long\_sdef{_body:\_csstring#1}#2{\_testparam##1..\_iftrue #3\_cs{_body:\_csstring#1\_ea}\_fi}}
 
 \_public \foreachdef ;
@@ -222,7 +222,7 @@
    The macro is expandable.
    \_cod ----------------------------
 
-\_def\_isequal#1#2#3{\_directlua{%
+\_long\_def\_isequal#1#2#3{\_directlua{%
    if "\_luaescapestring{\_detokenize{#1}}"=="\_luaescapestring{\_detokenize{#2}}"
    then else tex.print("\_nbb unless") end}#3}
 \_public \isequal ;
@@ -232,7 +232,7 @@
    Category codes are ignored in this testing. The macro is expandable.
    \_cod ----------------------------
 
-\_def\_ismacro#1{\_ea\_isequal\_ea{#1}}
+\_long\_def\_ismacro#1{\_ea\_isequal\_ea{#1}}
 \_public \ismacro ;
 
    \_doc ----------------------------
@@ -246,13 +246,13 @@
    \_doc ----------------------------
    \`\isinlist` `\list{<text>}\iftrue` is true if the
    `<text>` is included the macro body of the `\list`.
-   The category codes are relevant here. The macro is not expandable.
+   The category codes are relevant here. The macro is expandable.
    \_cod ----------------------------
 
-\_long\_def\_isinlist#1#2{\_begingroup
-   \_long\_def\_tmp##1#2##2\_end/_%
-        {\_endgroup\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi}%
-   \_ea\_tmp#1\_endlistsep#2\_end/_%
+\_long\_def\_isinlist#1#2{%
+   \_immediateassignment\_long\_def\_isinlistA##1#2##2\_end/_%
+        {\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi}%
+   \_ea\_isinlistA#1\_endlistsep#2\_end/_%
 }
 \_public \isinlist ;
 
@@ -304,6 +304,7 @@
 
 \_endcode
 
+2022-05-04 \isinlist created expandable.
 2022-03-30 \afterfi defined as \long.
 2021-08-02 more robust \fornum: \fi moved by \afterfi
 2021-02-03 public version of \loop and \foreach are \long
