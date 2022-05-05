@@ -1,9 +1,23 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begmulti {Balanced columns <2021-05-20>} % preloaded in format
+\_codedecl \begmulti {Balanced columns <2022-05-05>} % preloaded in format
 
    \_doc -----------------------------
-   This code is documented in detail in the \"\TeX/book naruby", pages 244--246,
+   \`\_betweencolumns` or \`\_leftofcolumns` or \`\_rightofcolumns` include
+   a material printed between columns or left of all columns or right of all
+   columns respectivelly. The \^`\_betweencolumns` must include a
+   stretchability or a material with exactly \^`\colsep` width. You can
+   redefine these macros. For example the rule between colums can be reached
+   by `\_def\_betweencolumns{\hss\vrule\hss}`.\nl
+   \`\_multiskip` puts its material at the start and at the end of
+   \^`\begmulti`...\^`\endmulti`.
+   \_cod -----------------------------
+
+\_def\_betweencolumns{\_hss} \_def\_leftofcolumns{} \_def\_rightofcolumns{}
+\_def\_multiskip{\_medskip}   % space above and below \begmulti...\endmulti
+
+   \_doc -----------------------------
+   The code used here is documented in detail in the \"\TeX/book naruby", pages 244--246,
    free available, \url{http://petr.olsak.net/tbn.html}, but in Czech.
    Roughly speaking, macros complete all material between
    \`\begmulti``<num-columns>` and \`\endmulti`
@@ -12,23 +26,22 @@
    columns with a height of such free space. This is done only if we have
    enough amount of material in `\vbox 6` to fill the full page by columns.
    This is repeated in a loop until we have less amount of material in `\vbox 6`.
-   Then we run `\_balancecolumns` which balances the last part of the columns.
+   Then we run \`\_balancecolumns` which balances the last part of the columns.
    Each part of printed material is distributed to the main vertical list as
    `\hbox{<columns>}` and we need not do any change in the output routine.
 
-   If you have paragraphs in `\begmulti`... `\endmulti` environment then
+   If you have paragraphs in \^`\begmulti`... \^`\endmulti` environment then
    you may say `\raggedright` inside this environment and you can re-assign
    `\widowpenalty` and `\clubppenalty` (they are set to 10000 in \OpTeX/).
    \_cod -----------------------------
 
-\_def\_multiskip{\_medskip}      % space above and below \begmulti...\endmulti
-
 \_newcount\_mullines
 
-\_def\_begmulti #1 {\_par\_bgroup\_wipeepar\_multiskip\_penalty0 \_def\_Ncols{#1}
+\_def\_begmulti #1 {\_par\_bgroup\_wipeepar \_multiskip \_def\_Ncols{#1}
    \_setbox6=\_vbox\_bgroup\_bgroup \_let\_setxhsize=\_relax \_penalty-99
    %% \hsize := column width = (\hsize+\colsep) / n - \colsep
-   \_advance\_hsize by\_colsep
+   \_setbox0=\_hbox{\_leftofcolumns\_rightofcolumns}%
+   \_advance\_hsize by-\_wd0 \_advance\_hsize by\_colsep
    \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep
    \_mullines=0
    \_def\_par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
@@ -37,18 +50,19 @@
    \_ea\_egroup\_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax
    \_dimen0=.8\_maxdimen \_tmpnum=\_dimen0 \_divide\_tmpnum by\_baselineskip
    \_splittopskip=\_baselineskip
-   \_setbox1=\_vsplit6 to0pt
+   \_setbox1=\_vsplit6 to0pt % initialize first \splittopskip in \box6
    %% \dimen1 := the free space on the page
-   \_ifdim\_pagegoal=\_maxdimen \_dimen1=\_vsize \_corrsize{\_dimen1}
-   \_else \_dimen1=\_pagegoal \_advance\_dimen1 by-\_pagetotal \_fi
+   \_penalty0 % initialize \_pageoal
+   \_ifdim\_pagegoal=\_maxdimen \_setcolsize\_vsize
+   \_else \_setcolsize{\_dimexpr\_pagegoal-\_pagetotal}\_fi
    \_ifdim \_dimen1<2\_baselineskip
-     \_vfil\_break \_dimen1=\_vsize \_corrsize{\_dimen1} \_fi
+     \_vfil\_break \_setcolsize\_vsize \_fi
    \_ifnum\_mullines<\_tmpnum \_dimen0=\_ht6 \_else \_dimen0=.8\_maxdimen \_fi
    \_divide\_dimen0 by\_Ncols \_relax
    %% split the material to more pages?
    \_ifdim \_dimen0>\_dimen1 \_splitpart
    \_else \_balancecolumns \_fi  % only balancing
-   \_multiskip\_egroup
+   \_multiskip \_egroup
 }
 
    \_doc -----------------------------
@@ -56,13 +70,9 @@
    \_cod -----------------------------
 
 \_def\_makecolumns{\_bgroup % full page, destination height: \dimen1
-   \_vbadness=20000 \_setbox1=\_hbox{}\_tmpnum=0
-   \_loop \_ifnum\_Ncols>\_tmpnum
-      \_advance\_tmpnum by1
-      \_setbox1=\_hbox{\_unhbox1 \_vsplit6 to\_dimen1 \_hss}
-   \_repeat
-   \_hbox{}\_nobreak\_vskip-\_splittopskip \_nointerlineskip
-   \_line{\_unhbox1\_unskip}
+   \_vbadness=20000 \_dimen6=\_wd6
+   \_createcolumns
+   \_printcolumns
    \_dimen0=\_dimen1 \_divide\_dimen0 by\_baselineskip \_multiply\_dimen0 by\_Ncols
    \_global\_advance\_mullines by-\_dimen0
    \_egroup
@@ -73,7 +83,7 @@
    \_ifnum\_mullines<\_tmpnum \_dimen0=\_ht6 \_else \_dimen0=.8\_maxdimen \_fi
    \_divide\_dimen0 by\_Ncols \_relax
    \_ifx\_balancecolumns\_flushcolumns \_advance\_dimen0 by-.5\_vsize \_fi
-   \_dimen1=\_vsize \_corrsize{\_dimen1}\_dimen2=\_dimen1
+   \_setcolsize\_vsize \_dimen2=\_dimen1
    \_advance\_dimen2 by-\_baselineskip
    %% split the material to more pages?
    \_ifvoid6 \_else
@@ -88,28 +98,50 @@
 
 \_def\_balancecolumns{\_bgroup \_setbox7=\_copy6 % destination height: \dimen0
    \_ifdim\_dimen0>\_baselineskip \_else \_dimen0=\_baselineskip \_fi
-   \_vbadness=20000
-   \_def\_tmp{%
-      \_setbox1=\_hbox{}\_tmpnum=0
-      \_loop \_ifnum\_Ncols>\_tmpnum
-         \_advance\_tmpnum by1
-         \_setbox1=\_hbox{\_unhbox1
-              \_ifvoid6 \_hbox to\_wd6{\_hss}\_else \_vsplit6 to\_dimen0 \_fi\_hss}
-      \_repeat
-   \_ifvoid6 \_else
-      \_advance \_dimen0 by.2\_baselineskip
-      \_setbox6=\_copy7
-      \_ea \_tmp \_fi}\_tmp
-   \_hbox{}\_nobreak\_vskip-\_splittopskip \_nointerlineskip
-   \_hbox to\_hsize{\_unhbox1\_unskip}%
+   \_vbadness=20000 \_dimen6=\_wd6 \_dimen1=\_dimen0
+   \_def\_tmp{\_createcolumns
+      \_ifvoid6 \_else
+         \_advance \_dimen1 by.2\_baselineskip
+         \_setbox6=\_copy7
+         \_ea \_tmp \_fi}\_tmp
+   \_printcolumns
    \_egroup
 }
-\_def\_corrsize #1{%% #1 := #1 + \splittopskip - \topskip
-   \_advance #1 by \_splittopskip \_advance #1 by-\_topskip
+
+   \_doc -----------------------------
+   \`\_setcolsize``<dimen>` sets initial value `\dimen1=<size>` which is
+   used as height of columns at given page.
+   The correction `\splittopskip`$-$`\topskip` is done if the columns start
+   at the top of the page.\nl
+   \`\_createcolumns` prepares columns with given height `\dimen1` side
+   by side to the `\box1`.\nl
+   \`\_printcolumns` prints the columns prepared in `\box1`.
+   The first `\hbox{}` moves typesetting point to the next baseline.
+   Next negative skip ensures that the first line from
+   splitted columns is at this position.
+   \_cod -----------------------------
+
+\_def\_setcolsize #1{\_dimen1=#1\_relax
+   \_ifdim\_dimen1=\_vsize
+      \_advance \_dimen1 by \_splittopskip \_advance \_dimen1 by-\_topskip \_fi
+}
+\_def\_createcolumns{%
+   \_setbox1=\_hbox{\_leftofcolumns}\_tmpnum=0
+   \_loop \_ifnum\_Ncols>\_tmpnum
+      \_advance\_tmpnum by1
+      \_setbox1=\_hbox{\_unhbox1
+         \_ifvoid6 \_hbox to\_dimen6{\_hss}\_else \_vsplit6 to\_dimen1 \_fi
+         \_ifnum\_Ncols=\_tmpnum \_rightofcolumns \_else \_betweencolumns \_fi}%
+   \_repeat
+}
+\_def\_printcolumns{%
+   \_hbox{}\_nobreak\_vskip-\_splittopskip \_nointerlineskip
+   \_hbox to\_hsize{\_unhbox1}%
 }
 \_public \begmulti \endmulti ;
 
 \_endcode % -------------------------------------
 
+2022-05-05 `\_betweencolumns` etc. introduced.
 2021-05-20 Colors inside \begmulti...\endmuti, bug fixed
 2020-03-26 Introduced
