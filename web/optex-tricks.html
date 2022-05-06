@@ -124,6 +124,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#keystrokes">Keystrokes using special images</a>
     <li><a href="#shadedframe">Frames with shadows</a>
     <li><a href="#roundframe">Frames with rounded corners</a>
+    <li><a href="#ornament">Adding ornaments to the background</a>
 </ul>
 
 <li>Math
@@ -164,7 +165,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#fnindent">Indented footnotes</a>
     <li><a href="#linnum">Line numbers in the left side of the formatted text</a> 
     <li><a href="#firstline">First line of the paragraph with a different font</a>
-    <li><a href="#ornament">Adding ornaments to the background</a>
+    <li><a href="#widows">Extra \vsize space for solving widows</a>
 </ul>
 
 <li>Macro tricks
@@ -1352,6 +1353,58 @@ corners. If we need additional effects then we print \inoval as a part of
 \bgoval macro. It is printed at the background and with empty box1.
 
 <p CLASS=datum>(0073) -- P. O. 2022-03-03<p>
+<hr>
+
+<h2><a name="ornament"></a>Adding ornaments to the background</h2>
+
+<p>We create pages decorated by ornaments like shown
+<a href="https://tex.stackexchange.com/questions/643006/">here</a>.
+There is a LaTeX package pgfornament which makes an interface between pgf
+library (which provides huge amount of ornaments) and user. This package is
+designed only for LaTeX, so we choose appropriate ornament from pages 15--23
+from pfgornament documentation and print it via LaTeX. For example:
+
+<pre>
+\documentclass{article}
+\usepackage{pgfornament}
+\begin{document}
+  \pagestyle{empty}
+  \begin{tikzpicture}
+     \pgfornament[width=2cm]{61} % ornament 61 is choosen
+  \end{tikzpicture}
+\end{document}
+</pre>
+
+<p>Apply <tt>pdfcrop output.pdf ornam.pdf</tt> in order to create cropped
+PDF image. This image will be used in our OpTeX document. The advantage is
+that we need not load whole tikz into our document, only single pdf file.
+For example, the background with four ornaments in the corners of the page
+can be declared as follows:
+
+<pre>
+\newbox\ornament
+\setbox\ornament=\hbox{\inspic{ornam.pdf}} % ornament is loaded
+
+\newdimen\pgdist \pgdist=1mm
+\pgbackground={
+   \setbox0=\hbox to\dimexpr \pdfpagewidth-2\pgdist
+      {\copy\ornament \hfil \rotbox{-90}{\copy\ornament}}
+   \moveright\pgdist \vbox to\pdfpageheight{
+      \kern\pgdist
+      \vbox to0pt{\copy0 \vss}
+      \vss
+      \vbox to0pt{\vss \rotbox{180}{\box0}}
+      \kern\pgdist
+   }
+}
+\footlinedist=50pt
+</pre>
+
+<p>The \pgdist is the distance between ornament border and page border. It
+is set to 1mm here but warning: comon laser printers are not able to print
+images so close to the edge of the paper.
+
+<p CLASS=datum>(0080) -- P. O. 2022-05-05<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
@@ -2625,56 +2678,72 @@ by \unhbox2.
 <p CLASS=datum>(0076) -- P. O. 2022-04-15<p>
 <hr>
 
-<h2><a name="ornament"></a>Adding ornaments to the background</h2>
+<h2><a name="widows"></a>Extra \vsize space for solving widows</h2>
 
-<p>We create pages decorated by ornaments like shown
-<a href="https://tex.stackexchange.com/questions/643006/">here</a>.
-There is a LaTeX package pgfornament which makes an interface between pgf
-library (which provides huge amount of ornaments) and user. This package is
-designed only for LaTeX, so we choose appropriate ornament from pages 15--23
-from pfgornament documentation and print it via LaTeX. For example:
+<p>Orphans and widows are single-line paragraph-parts which must not be
+alone at the beginning or at the end of pages. If we need to have exactly
+the same number of lines at all pages then we have problem with these
+orphans and widows. Very interesting solution which automatically adds
+\looseness is implemented in the package
+<a href="https://www.ctan.org/pkg/lua-widow-control">lua-widow-control</a>.
+But sometimes this solution is not fully successful because \looseness is
+not applicable for arbitrary paragraph. Then we can decide, that
+two verso/recto pages should be one-line shorter or larger in order to avoid
+widows and orphans.
+
+<p>The solution presented here is manual-based. You can decide which pages
+should be shorter or larger in a parameter of \extravsizes macro. For
+example:
 
 <pre>
-\documentclass{article}
-\usepackage{pgfornament}
-\begin{document}
-  \pagestyle{empty}
-  \begin{tikzpicture}
-     \pgfornament[width=2cm]{61} % ornament 61 is choosen
-  \end{tikzpicture}
-\end{document}
+\parskip=0pt
+\hsize=11cm
+\vsize=\topskip \advance\vsize by25\baselineskip % 26 lines default
+\footlinedist=35pt  % more space above pageno, default is 24pt
+
+\extravsizes{ 2:+ 11:- 13:+ }
 </pre>
 
-<p>Apply <tt>pdfcrop output.pdf ornam.pdf</tt> in order to create cropped
-PDF image. This image will be used in our OpTeX document. The advantage is
-that we need not load whole tikz into our document, only single pdf file.
-For example, the background with four ornaments in the corners of the page
-can be declared as follows:
+<p>This example gives pages 2 and 3 larger, pages 10 and 11 shorter and pages
+12 and 13 larger by one \baselineskip. You can specify only one page number
+from the verso/recto pair in the list of extra pages, as shown in the
+example. The second page from the pages pair is set to the same value
+automatically. The implementation follows:
 
 <pre>
-\newbox\ornament
-\setbox\ornament=\hbox{\inspic{ornam.pdf}} % ornament is loaded
-
-\newdimen\pgdist \pgdist=1mm
-\pgbackground={
-   \setbox0=\hbox to\dimexpr \pdfpagewidth-2\pgdist
-      {\copy\ornament \hfil \rotbox{-90}{\copy\ornament}}
-   \moveright\pgdist \vbox to\pdfpageheight{
-      \kern\pgdist
-      \vbox to0pt{\copy0 \vss}
-      \vss
-      \vbox to0pt{\vss \rotbox{180}{\box0}}
-      \kern\pgdist
+\newdimen\vsizedefault
+\def\extravsizes#1{%
+   \foreach #1\do ##1:##2{%
+      \tmpnum=##1
+      \sxdef{vs:\the\tmpnum}{##2}
+      \advance\tmpnum by \ifodd\tmpnum -\fi 1
+      \sxdef{vs:\the\tmpnum}{##2}
    }
+   \global\vsizedefault=\vsize \corrvsize  % for page 1
+   \global\pgbottomskip=0pt plus1fil minus\baselineskip
 }
-\footlinedist=50pt
+\addto\_begoutput{\global\vsize=\vsizedefault}
+\addto\_endoutput{\corrvsize}
+
+\def\corrvsize{
+   \global\vsize=\vsizedefault
+   \ifcsname vs:\the\pageno\endcsname
+      \global\advance \vsize by \csname vs:\the\pageno\endcsname \baselineskip
+   \fi
+}
 </pre>
 
-<p>The \pgdist is the distance between ornament border and page border. It
-is set to 1mm here but warning: comon laser printers are not able to print
-images so close to the edge of the paper.
+<p>The \extravsize defines macros \vs:pageno as + or -. It does this for
+given page in the list and for the second page in the pair too. Then it
+initializes \vsizedefault and sets the \pgbottomskip used in the output
+routine in order to allow shorter or larger pages without messages about
+overfull \vbox. The \corrvsize is called
+here for the page 1. All other \corrvsize's are  called from in output routine
+from the \_endoutput macro (where the \pageno is increased for next page
+already). The \corrvsize macro advances \vsize by plus or minus one
+\baselineskip if the macro \vs:pageno is defined.
 
-<p CLASS=datum>(0080) -- P. O. 2022-05-05<p>
+<p CLASS=datum>(0081) -- P. O. 2022-05-06<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
