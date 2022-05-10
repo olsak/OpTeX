@@ -1,19 +1,19 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (iso690) <2022-02-04>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2022-05-10>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
    \_endinput \_fi
 
    \_doc -----------------------------
-   \`\_maybetod` (alias `\.` in the style file group) does not put the second dot.
+   \`\_maybetod` (alias `\:` in the style file group) does not put the second dot.
    \_cod -----------------------------
 
 \_def\_maybedot{\_ifnum\_spacefactor=\_sfcode`\.\_relax\_else.\_fi}
 \_tmpnum=\_sfcode`\. \_advance\_tmpnum by-2 \_sfcode`\.=\_tmpnum
 \_sfcode`\?=\_tmpnum \_sfcode`\!=\_tmpnum
-\_let\.=\_maybedot  % prevents from double periods
+\_let\:=\_maybedot  % prevents from double periods
 
    \_doc -----------------------------
    Option field.
@@ -211,13 +211,13 @@
 }
 \_def\_bookgeneric#1{%
    \_bprinta [howpublished]  {[*].\ }{}%
-   \_bprintb [edition]    {\_doedition{##1}\.\ }{}%
+   \_bprintb [edition]    {\_doedition{##1}\:\ }{}%
    \_bprinta [ednote]     {*.\ }{}%
    \_bprinta [address]    {*\_bprintv[publisher]{:}{\_bprintv[year]{,}{.}}\ }{\_bibwarninga}%
    \_bprinta [publisher]  {*\_bprintv[year]{,}{.}\ }{\_bibwarninga}%
    \_bprintb [year]       {\_doyear{##1}\_bprintv[citedate]{\_bprintv[numbering]{.}{}}{.}\ }%
                                                                                      {\_bibwarning}%
-   \_bprinta [numbering]  {\_preparenumbering*\_bprintv[citedate]{}{\.}\ }{}%
+   \_bprinta [numbering]  {\_preparenumbering*\_bprintv[citedate]{}{\:}\ }{}%
    \_bprinta [citedate]   {\_docitedate*///\_relax.\ }{}%
    #1%
    \_bprinta [series]     {*.\ }{}%
@@ -227,26 +227,26 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:book}{%
-   \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+   \_bprintb [!author]    {\_doauthor1{##1}\:\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\:\ *}\_bprintv[howpublished]{}{\:}\ }%
                                                                                      {\_bibwarning}%
    \_bookgeneric{}%
 }
 \_sdef{_print:article}{%
    \_biboptionvalue{journalpost}\_journalpost
-   \_bprintb [!author]   {\_doauthor1{##1}\.\ }{\_bibwarning}%
+   \_bprintb [!author]   {\_doauthor1{##1}\:\ }{\_bibwarning}%
    \_bprinta [title]     {*.\ \_bprintc\_titlepost{*.\ }}{\_bibwarning}%
-   \_bprintb [journal]   {{\_em##1}\_bprintc\_journalpost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+   \_bprintb [journal]   {{\_em##1}\_bprintc\_journalpost{\:\ *}\_bprintv[howpublished]{}{\:}\ }%
                                                                                      {\_bibwarninga}%
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [address]   {*\_bprintb[publisher]{:}{,}\ }{}%
    \_bprinta [publisher] {*, }{}%
    \_bprinta [month]     {*, }{}%
-   \_bprintb [year]      {\_doyear{##1}\_bprintv[volume,number,pages]{,}{\.}\ }{}%
-   \_bprinta [numbering] {\_preparenumbering*\_bprintv[citedate]{}{\.}\ }
-                        {\_bprinta [volume] {\_prevolume*\_bprintv[number,pages]{,}{\.}\ }{}%
-                         \_bprinta [number] {\_prenumber*\_bprintv[pages]{,}{\.}\ }{}%
-                         \_bprintb [pages]  {\_prepages\_hbox{##1}\_bprintv[citedate]{}{\.}\ }%
+   \_bprintb [year]      {\_doyear{##1}\_bprintv[volume,number,pages]{,}{\:}\ }{}%
+   \_bprinta [numbering] {\_preparenumbering*\_bprintv[citedate]{}{\:}\ }
+                        {\_bprinta [volume] {\_prevolume*\_bprintv[number,pages]{,}{\:}\ }{}%
+                         \_bprinta [number] {\_prenumber*\_bprintv[pages]{,}{\:}\ }{}%
+                         \_bprintb [pages]  {\_prepages\_hbox{##1}\_bprintv[citedate]{}{\:}\ }%
                                                                                      {\_bibwarninga}}%
    \_bprinta [citedate]  {\_docitedate*///\_relax.\ }{}%
    \_bprinta [issn]      {ISSN~*.\ }{}%
@@ -255,11 +255,11 @@
 }
 \_sdef{_print:inbook}{%
    \_let\_bibwarningb=\_relax
-   \_bprintb [!author]   {\_doauthor1{##1}\.\ }{\_bibwarning}%
+   \_bprintb [!author]   {\_doauthor1{##1}\:\ }{\_bibwarning}%
    \_bprinta [title]     {*.\ }{\_bibwarning}%
                         \_Inclause
-   \_bprintb [!editor]   {\_doeditor1{##1}\.\ }{}%
-   \_bprintb [booktitle] {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+   \_bprintb [!editor]   {\_doeditor1{##1}\:\ }{}%
+   \_bprintb [booktitle] {{\_em##1}\_bprintc\_titlepost{\:\ *}\_bprintv[howpublished]{}{\:}\ }%
                                                                                      {\_bibwarning}%
    \_bookgeneric{\_bprintb [pages]  {\_prepages\_hbox{##1}. }{}}%
 }
@@ -267,8 +267,8 @@
 \_slet{_print:conference}{_print:inbook}
 
 \_sdef{_print:thesis}{%
-   \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+   \_bprintb [!author]    {\_doauthor1{##1}\:\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\:\ *}\_bprintv[howpublished]{}{\:}\ }%
                                                                                      {\_bibwarning}%
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [address]    {*\_bprintv[school]{:}{\_bprintv[year]{,}{.}}\ }{\_bibwarning}%
@@ -288,8 +288,8 @@
 \_sdef{_print:bachelorsthesis}{\_def\_thesistype{\_Mtext{bib.bachthesis}}\_cs{_print:thesis}}
 
 \_sdef{_print:generic}{%
-   \_bprintb [!author]    {\_doauthor1{##1}\.\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\.\ *}\_bprintv[howpublished]{}{\.}\ }%
+   \_bprintb [!author]    {\_doauthor1{##1}\:\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\_bprintc\_titlepost{\:\ *}\_bprintv[howpublished]{}{\:}\ }%
                                                                                      {\_bibwarning}%
    \_bprinta [howpublished]  {[*].\ }{}%
    \_bprinta [ednote]     {\_prepareednote*\_bprintv[citedate]{}{.}\ }{\_bibwarning}%
@@ -907,6 +907,7 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
+2022-05-10 ... \. -> \:, collision with \oldaccents fixed.
 2022-02-04 ... \_langinput used in \_setlang
 2021-04-07 ... \biboptions toks declaration moved, bug fixed.
 2020-03-10 ... released
