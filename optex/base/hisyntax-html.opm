@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl\_hisyntaxhtml {Syntax highlighting for html or xml sources <2020-04-03>} 
+\_codedecl\_hisyntaxhtml {Syntax highlighting for html or xml sources <2022-05-12>}
 
 \_newtoks\_hisyntaxhtml  \_newtoks\_hicolorshtml
 
@@ -17,8 +17,9 @@
    \_replthis{<}{\y{_hitaghtml}}
    \_replthis{\_string&}{\y{_hientityhtml}}
 }
-\_gdef\_hitaghtml#1>{\_hitaghtmlA#1\ >}
-\_gdef\_hitaghtmlA#1\ #2>{\z A{<}\z T{#1}\_def\_tmpb{#2^}%
+\_bgroup \_lccode`\~=`\ \_lowercase{\_egroup
+\_gdef\_hitaghtml#1>{\_hitaghtmlA#1~>}
+\_gdef\_hitaghtmlA#1~#2>}{\z A{<}\z T{#1}\_def\_tmpb{#2^}%
   \_if^\_tmpb 
   \_else \_space 
       \_replthis{\ ^}{}\_replfromto{"}{"}{\_histringhtml{"##1"}}\z A{\_tmpb}\_fi
@@ -29,3 +30,5 @@
 
 \_endcode %------------------------------------------------
 
+2022-05-12 \_hitaghtmlA #1~#2: bug fixed
+2020-04-03 released
