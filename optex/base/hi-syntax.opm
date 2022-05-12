@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \hisyntax {Syntax highlighting of verbatim listings <2020-04-04>} % preloaded in format
+\_codedecl \hisyntax {Syntax highlighting of verbatim listings <2022-04-04>} % preloaded in format
 
    \_doc -----------------------------
    The macros `\replfromto` and `\replthis` manipulate the
@@ -99,12 +99,9 @@
       \_ifcsname _hisyntax\_tmpa\_endcsname
           \_ifcsname hicolors\_tmpa\_endcsname
               \_cs{_hicolors\_tmpa}=\_cs{hicolors\_tmpa}%
-          \_else
-              \_if^\_the\_hicolors^\_else
-                  \_ifcsname _hicolors\_tmpa\_endcsname
-                      \_global\_cs{_hicolors\_tmpa}=\_hicolors \_global\_hicolors={}%
-          \_fi\_fi\_fi
+          \_fi
           \_ea\_the \_csname _hisyntax\_tmpa\_endcsname % \_the\_hisyntax<name>
+          \_the\_hicolors  % colors which have precedece
       \_else\_opwarning{Syntax "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
    \_fi\_fi
    \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
@@ -150,17 +147,16 @@ file name must include it in lowercase letters. For example, the file
 \OpTeX/ provides `hisyntax-{c,python,tex,html}.opm` files.
 You can take inspiration from these files and declare more languages.
 
-Users can re-declare colors by `\hicolors={...}` This value has precedence
-over `\_hicolors<name>` values declared in the `hicolors-<name>.opm` file.
-The steps are: copy `\_hicolors<name>={...}`
-from `hicolors-<name>.opm` to your document,
-rename it to `\hicolors={...}` and do your own colors modifications.
+Users can re-declare default colors by `\hicolors={<list of color declarations>}`.
+This value has precedence over `\_hicolors<name>` values declared in the
+`hicolors-<name>.opm` file.
+For example `\hicolors={\hicolor S \Brown}` causes all strings in brown color.
 
 Another way to set non-default colors is to declare
 `\newtoks\hicolors<name>` (without the `_` prefix) and set the color palette there.
 It has precedence before `\_hicolors<name>` (with the `_` prefix) declared in
-the `hicolors-<name>.opm` file.
-This is useful when there are more hi-syntax languages used in one document.
+the `hicolors-<name>.opm` file. You must re-declare all colors used in the
+corresponding `hisyntax-<name>.opm` file.
 
 \secl4 Notes for hi-syntax macro writers
 The file `hisyntax-<name>.opm` is read only once and in a \TeX/ group.
@@ -223,3 +219,5 @@ text.
   phase is based on the expansion of the whole verbatim text.
 \enditems
 
+2022-05-12 \hicolors can include only selected re-declarations.
+2020-04-04 Introduced.
