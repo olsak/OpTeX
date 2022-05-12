@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \slideshow {Slides style for OpTeX <2022-03-08>} % loaded on demand by \slides
+\_codedecl \slideshow {Slides style for OpTeX <2022-05-12>} % loaded on demand by \slides
 
    \_doc -----------------------------
    Default margins and design is declared here.
@@ -27,6 +27,7 @@
 \_rightskip=0pt plus 1fil
 \_ttindent=10pt
 \_def\_ttskip{\_smallskip}
+\_let\_scolor=\Blue  % secondary color used in default design
 
 \_onlyrgb   % RGB color space is better for presentations
 
@@ -75,8 +76,8 @@
 \_newcount\_gilevel
 \_def\*{*}
 \_adef*{\_relax\_ifmmode*\_else\_ea\_startitem\_fi} % defined also in styles.opm
-\_sdef{_item:X}{\Blue\_raise.2ex\_fullrectangle{.8ex}\_kern.5em}
-\_sdef{_item:x}{\Blue\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
+\_sdef{_item:X}{\_scolor\_raise.2ex\_fullrectangle{.8ex}\_kern.5em}
+\_sdef{_item:x}{\_scolor\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
 \_style X
 \_def\_egroups{\_par\_global\_gilevel=\_ilevel \_egroup}
 \_everylist={\_novspaces \_ifcase\_ilevel \_or \_style x \_else \_style - \_fi
@@ -108,12 +109,12 @@
    \_doc -----------------------------
    We need no numbers and no table of contents when using slides.
    The \^`\_printsec` macro is redefined in order the title is centered
-   and typeset in `\Blue`.
+   and typeset in `\_scolor`.
    \_cod -----------------------------
 
-\_def\_titfont{\_typosize[42/60]\_bf \Blue}
+\_def\_titfont{\_typosize[42/60]\_bf \_scolor}
 \_def\_subtitfont{\_typosize[20/30]\_bf}
-\_def\_secfont{\_typosize[25/30]\_bf \Blue}
+\_def\_secfont{\_typosize[25/30]\_bf \_scolor}
 
 \_nonum \_notoc \_let\_resetnonumnotoc=\_relax
 \_def\_printsec#1{\_par
@@ -292,6 +293,7 @@
 
 The user manual of \OpTeX/ slides are in `op-slides.tex` file.
 
+2022-05-12 \Blue -> \_scolor, user can re-define it
 2022-03-08 \Transparent re-defined, \Visible, \Invisible removed
 2022-03-05 \_addextgstate: new syntax used
 2022-03-03 \supereject in \_endslides before \_byehook added
