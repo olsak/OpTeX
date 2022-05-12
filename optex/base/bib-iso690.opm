@@ -14,6 +14,7 @@
 \_tmpnum=\_sfcode`\. \_advance\_tmpnum by-2 \_sfcode`\.=\_tmpnum
 \_sfcode`\?=\_tmpnum \_sfcode`\!=\_tmpnum
 \_let\:=\_maybedot  % prevents from double periods
+\_ifx\.\_undefined \_let\.=\_maybedot \_fi % for backward compatibility
 
    \_doc -----------------------------
    Option field.
