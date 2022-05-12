@@ -281,11 +281,11 @@
 \_public \tabspaces ;
 
    \_doc -----------------------------
-   If \`\hicolors` is non-empty then its contents is used instead
-   `\_hicolors<name>` declared in the file `hisyntax-<name>.opm`.
+   \`\hicolors` can include a list of \~`\hicolor` commands with
+   re-declarations of default colors
+   mentioned in the `\_hicolors<name>` from `hisyntax-<name>.opm` file.
    The user can give his/her preferences about colors for
    syntax highlighting by this tokens list.
-   The full color set must be declared here.
    \_cod -----------------------------
 
 \_newtoks\_hicolors

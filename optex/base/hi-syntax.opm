@@ -147,10 +147,10 @@ file name must include it in lowercase letters. For example, the file
 \OpTeX/ provides `hisyntax-{c,python,tex,html}.opm` files.
 You can take inspiration from these files and declare more languages.
 
-Users can re-declare default colors by `\hicolors={<list of color declarations>}`.
+Users can re-declare default colors by \^`\hicolors``={<list of color declarations>}`.
 This value has precedence over `\_hicolors<name>` values declared in the
 `hicolors-<name>.opm` file.
-For example `\hicolors={\hicolor S \Brown}` causes all strings in brown color.
+For example \^`\hicolors``={`\^`\hicolor`` S \Brown}` causes all strings in brown color.
 
 Another way to set non-default colors is to declare
 `\newtoks\hicolors<name>` (without the `_` prefix) and set the color palette there.
@@ -218,6 +218,8 @@ text.
   as replacement text before the post-processing phase, because the post-processing
   phase is based on the expansion of the whole verbatim text.
 \enditems
+
+\endinput
 
 2022-05-12 \hicolors can include only selected re-declarations.
 2020-04-04 Introduced.
