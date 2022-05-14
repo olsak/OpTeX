@@ -73,6 +73,10 @@
 \_quotationmarks ru {“”«»}
 % todo
 
+\_langdata uk {Ukrainian} % -----------------------------------------------
+\_langw uk  Глави        Таблиця     Малюнок      Тема
+% todo
+
 \_langdata sk {Slovak}  % ------------------------------------------------
 \_langw sk  Kapitola     Tabuľka     Obrázok      Vec
 \_langb sk  { a } { a~kol.} { vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editori}
