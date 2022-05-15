@@ -849,7 +849,7 @@ readable. Or you can use common math control sequences in math mode,
 \newtoks \_hisyntaxalg
 \_hisyntaxalg = {
    \_hicolor K \bf  % Keywords
-   \foreach {Require:}{Ensure:}
+   \foreach {Require:}{Ensure:}{Input:}
       {while}{do}{if}{then}{else}{end}{function}{return}{print}
       {for}{all}{range}{continue}{repeat}{until}{loop}
       {not}{and}{or}{xor}{true}{false}
@@ -863,7 +863,11 @@ readable. Or you can use common math control sequences in math mode,
    \adef!{\algolbf}%
    \hisyntax{ALG}%
 }
+\def\var#1{{\it\adef_{\vrule height.4pt width4pt\relax}#1}}
 </pre>
+
+<p>You can use \var{variable_name} inside the math mode. The variable_name
+is printed in italics.
 
 <p>You can add \replthis{:=}{\leftarrow} to the \_hisyntaxalg declaration if
 you want to write more legible $y := 1$ instead of $y \leftarrow 1$ in your
