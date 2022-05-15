@@ -136,6 +136,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#torighteq">Equation marks in atypical cases</a>
     <li><a href="#subeqmark">Equation marks for sub-equations</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
+    <li><a href="#fillemptyslots">Empty math slots from another math font</a>
     <li><a href="#orical">Original \cal from Computer Modern fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
@@ -1736,6 +1737,60 @@ case becuase combination of basic equal sign from Garamond with other equal
 signs from STIX doesn't look good in single formula.
 
 <p CLASS=datum>(0030) -- P. O. 2020-12-02<p>
+<hr>
+
+<h2><a name="fillemptyslots"></a>Empty math slots from another math font</h2>
+
+<p>The <a href="#addumathfont">previous OpTeX trick</a> implements a macro
+for loading more Unicode math fonts and gives a macro \resetmathchars for
+setting individual math characters as characters from the newly loaded math font.
+Now we implement a method for doing \resetmathchars for all math characters
+which are missing in the basic math setting. For example, we use \fontfam[lm]
+and \input print-unimath.opm shows that doszens slots are empty. We can use
+\addUmathfont for STIXMath-Regular font where almost all slots are
+supported. Now, we need to fill all empty slots by characters from
+STIXMath-Regular:
+<pre>
+\fontfam[lm]
+\addUmathfont \stix {[STIXMath-Regular]}{} {}{} {} % additional font STIX loaded
+
+% fills empty slots from \stix font:
+\fillemptyslots \stix
+
+% Testing the result:
+\input print-unimath.opm
+</pre>
+
+<p>The \fillemptyslots macro is implemented here. We need to use macros
+\resetmathcharX and \resetmathcharY from
+the <a href="#addumathfont">previous OpTeX trick</a>:
+
+<pre>
+\def\UnicodeMathSymbol#1#2#3#4{%
+   \isinlist{\relax\mathord\mathop\mathbin\mathrel\mathpunct}#3\iftrue
+      \def\mathsequence{#2}%
+      \isinlist\intoperators#2\iftrue
+         \edef\mathsequence{\csname\csstring#2op\endcsname}%
+      \fi
+      {\tracinglostchars=0 \global\setbox0=\hbox{$\mathsequence$}}%
+      \ifdim\wd0=0pt \ea\resetmathcharX \mathsequence \fi
+   \fi
+}
+\def\intoperators{\int\iint\iiint\oint\oiint\oiiint
+   \intclockwise\varointclockwise\ointctrclockwise\sumint\iiiint\intbar\intBar
+   \fint\pointint\sqint\intlarhk\intx\intcap\intcup\upint\lowint
+}
+\def\fillemptyslots#1{\chardef\mafam=#1\relax \input unimath-table.opm }
+</pre>
+
+<p>The macro defines the macro \UnicodeMathSymbol used in unimath-table.opm and then
+does \input of this file. All \mahtord,\matop,\mathbin,\mathrel and
+\mathpunct characters are checked and if they give an empty box then they are
+completed from the new math font. Integrals are defined as macros
+(see \_intwithnolimits in unimath-codes.opm), so
+corresponding \...op control sequences are checked and completed.
+
+<p CLASS=datum>(0082) -- P. O. 2022-05-15<p>
 <hr>
 
 <h2><a name="orical"></a>Original \cal from Computer Modern fonts</h2>
