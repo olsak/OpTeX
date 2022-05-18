@@ -187,6 +187,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#begfile">Filecontents package features</a>
     <li><a href="#sort">Sorting phrases</a>
     <li><a href="#sepdef">Declaring macro parameters with more separators</a>
+    <li><a href="#environ">Scanning nested LaTeX environments</a>
 </ul>
 
 <li>Lua matters
@@ -3672,6 +3673,73 @@ with closing brace at the second line works:
 </pre>
 
 <p CLASS=datum>(0072) -- P. O. 2022-02-28<p>
+<hr>
+
+<h2><a name="environ"></a>Scanning nested LaTeX environments</h2>
+
+<p>LaTeX have somewhat impractical syntax with its environments. For example:
+
+<pre>
+\begin{a}
+   preambule
+   \begin{b}
+       next text
+       \begin{c}
+          something inside c
+       \end{c}
+   \end{b}
+   \begin{d}
+      inside d
+   \end{d}
+\end{a}
+</pre>
+
+<p>We try to scan such text by our macros. The problem is that the separator
+\end used by primitive \def isn't sufficient to scan whole environment
+because there may be nested environments. For example, if we define:
+
+<pre>
+\def\begin#1{\cs{begin:#1}}
+\sdef{begin:a}{\scanenvto\text \afterscan{a}}
+\def\afterscan#1{environment:#1, body: \meaning\text}
+</pre>
+
+<p>and run the code above, then we want to store whole body of the
+environment into the macro \text and then the \afterscan{a} macro is
+processed. This macro is defined here only for testing putrposes: it prints
+only environment name and the meaning of the absorbed text. Note, that the
+LaTeX package environ does the similar job.
+
+<p>The \scanenvto is defined here:
+<pre>
+\def\scanenvto#1#2#3{%  #1: body macro, #2{#3}: what to do after scanning
+   \def\doafterscanenvthis{\let#1=\tmp \envcheck{#3}#2{#3}}%
+   \def\tmp{}\def\tmpa{}\scantoend
+}
+\long\def\scantoend#1\end#2{%
+   \addto\tmp{#1}\addto\tmpa{#1}%
+   \isinlist\tmpa\begin\iftrue
+      \addto\tmp{\end{#2}}%
+      \ea\redeftmpa\tmpa\endscanenvtext
+      \ea\scantoend
+   \else
+      \def\envname{#2}\ea\doafterscanenvthis
+   \fi
+}
+\long\def\redeftmpa#1\begin#2#3\endscanenvtext{\def\tmpa{#3}}
+\def\envcheck#1{\ismacro\envname{#1}\iffalse \errmessage{unpaired evironments}\fi}
+</pre>
+
+<p>We read the following text to the first \end by \scantoend. If the text
+includes \begin, then we add the scanned \end{what} to the scanned text, we
+remove the text to the first \begin in the parallel absorbing macro \tmpa
+and run \scantoend again. It is recursive algorithm which works.
+If there is no next \begin in the \tmpa then the
+whole environment is scanned. We do \envcheck (if the name given by \begin
+is the same as the name given by end) and we run what a user needs to do
+after.
+
+<p CLASS=datum>(0084) -- P. O. 2022-05-18<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
