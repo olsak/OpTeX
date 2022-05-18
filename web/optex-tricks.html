@@ -125,6 +125,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#shadedframe">Frames with shadows</a>
     <li><a href="#roundframe">Frames with rounded corners</a>
     <li><a href="#ornament">Adding ornaments to the background</a>
+    <li><a href="#tikzcolorlet">Moving OpTeX's colors to TikZ environment</a>
 </ul>
 
 <li>Math
@@ -1406,10 +1407,71 @@ can be declared as follows:
 </pre>
 
 <p>The \pgdist is the distance between ornament border and page border. It
-is set to 1mm here but warning: comon laser printers are not able to print
+is set to 1mm here but warning: common laser printers are not able to print
 images so close to the edge of the paper.
 
 <p CLASS=datum>(0080) -- P. O. 2022-05-05<p>
+<hr>
+
+<h2><a name="tikzcolorlet"></a>Moving OpTeX's colors to TikZ environment</h2>
+
+<p>The macros for colors have different concept in OpTeX and in Tikz.
+In OpTeX, you can define a color macro for example by
+<pre>
+\def\myColor{\setcmykcolor 1 0 .5 0}
+</pre>
+<p>or you can do color mixing by \colordef.
+On the other hand, Tikz uses the LaTeX concept where
+colors are defined as words (no control sequences) by
+\definecolor{myColor}{rgb}{data} and only rgb is supported by \definecolor.
+
+<p>Suppose, we have all colors prepared by OpTeX's macros and now we want to
+use them in a TikzPicture. For example:
+
+<pre>
+\load [tikz]
+
+\cmykcolordef\myColor{.5\Red + .7\Yellow}  % preparing colors in OpTeX
+
+\tikzcolorlet {myColor} \myColor  % propagating the same color to TikZ
+
+\tikzpicture [fill=myColor]
+\fill (0,0) -- (1,0) -- (1,1) -- cycle;
+\endtikzpicture
+</pre>
+
+<p>The example above does color mixing in cmyk by OpTeX macros, create
+\myColor as cmyk color and then puts this color to TikZ by \tikzcolorlet.
+No conversions are done, the same color in the same color space is used in
+TikZ. The color spaces cmyk, rgb and grey are supported.
+
+<p>The \tikzcolorlet macro is implemented here:
+
+<pre>
+\def\tikzcolorlet #1#2{\ea\tikzcolorletA #2{#1}}
+\def\tikzcolorletA #1#2{%
+   \def\next {\tikzcolorletgrey}%
+   \ifx#1\setcmykcolor \def\next{\tikzcolorletcmyk}\fi
+   \ifx#1\setrgbcolor  \def\next{\tikzcolorletrgb}\fi
+   \next #2
+}
+\def\tikzcolorletcmyk #1 #2 #3 #4 {\tikzcolorletB{cmyk}{#1,#2,#3,#4}}
+\def\tikzcolorletrgb  #1 #2 #3    {\tikzcolorletB{rgb}{#1,#2,#3}}
+\def\tikzcolorletgrey #1          {\tikzcolorletB{gray}{#1}}
+\catcode`\@=11
+\def\tikzcolorletB #1#2#3{\sdef{\string\color@#3}{\xcolor@{}{}{#1}{#2}}}
+\catcode`\@=12
+</pre>
+
+<p>TikZ needs to define a macro \\color@colorName as
+
+<pre>
+\xcolor@{}{}{color-space}{comma-separated-data}
+</pre>
+
+<p>and the code above does this job.
+
+<p CLASS=datum>(0083) -- P. O. 2022-05-18<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
