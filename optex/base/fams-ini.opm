@@ -139,6 +139,10 @@
 \_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
    { -,\angular: {\lf\li\rm\it\bf\bi} }
 
+\_famfrom {tipo, Dario Manuel Muhafara}
+\_faminfo [Overlock] {fonts simulate Overlock sewing technique} {f-overlock}
+   { -: {\rm\it\bf\bi\kf\ki} }
+
 \_famfrom {Eben Sorkin}
 \_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
    { -,\sans: {\lf\li\rm\it\bf\bi\kf\ki} \caps,\sans\caps: {\rm\it} }
