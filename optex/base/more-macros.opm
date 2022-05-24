@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2021-04-25>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-05-24>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -115,11 +115,11 @@
    processor level using the negative `\romannumeral` trick.
    \_cod -----------------------------
 
-\_def\_optdef#1[#2]{% 
-   \_def#1{\_opt={#2}\_isnextchar[{\_cs{_oA:\_string#1}}{\_cs{_oB:\_string#1}}}% 
-   \_sdef{_oA:\_string#1}[##1]{\_opt={##1}\_cs{_oB:\_string#1\_nospaceafter}}% 
-   \_sdef{_oB:\_string#1\_nospaceafter}% 
-} 
+\_def\_optdef#1[#2]{%
+   \_def#1{\_opt={#2}\_isnextchar[{\_cs{_oA:\_csstring#1}}{\_cs{_oB:\_csstring#1}}}%
+   \_sdef{_oA:\_csstring#1}[##1]{\_opt={##1}\_cs{_oB:\_csstring#1\_nospaceafter}}%
+   \_sdef{_oB:\_csstring#1\_nospaceafter}%
+}
 \_def\_nospaceafter#1{\_ea#1\_romannumeral-`\.}
 \_newtoks\_opt
 
@@ -278,6 +278,7 @@
 
 \_endcode % -------------------------------------
 
+2022-05-24 \optdef: used \csstring instead \string, bug fixed.
 2021-04-25 \normalcatcodes: typo fixed
 2021-04-22 \the\_currctable replaced by \the\_catcodetable, bug fixed.
 2020-05-22 robust \catcode newly defined in order \catcode\string.... be possible
