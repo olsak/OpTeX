@@ -188,6 +188,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#sort">Sorting phrases</a>
     <li><a href="#sepdef">Declaring macro parameters with more separators</a>
     <li><a href="#environ">Scanning nested LaTeX environments</a>
+    <li><a href="#MPxx">Macro parameters selectively expanded</a>
 </ul>
 
 <li>Lua matters
@@ -3740,6 +3741,56 @@ is the same as the name given by end) and we run what a user needs to do
 after.
 
 <p CLASS=datum>(0084) -- P. O. 2022-05-18<p>
+<hr>
+
+<h2><a name="MPxx"></a>Macro parameters selectively expanded</h2>
+
+<p>Expl3 language (designed for LaTeX) allows to create macros which get
+their parameters in various states: full-expanded, no-expanded,
+once-expanded. We show how to do it.
+
+Suppose, we want to create a macro \macro with four unseparated parameters,
+first is unexpanded, second is fully expanded, third is once expanded and
+fourth is fully expanded. We create a "prefix-macro" \MPnxex where MP means
+"macro parameters", n means no-expanded, x means fully expanded, e means
+once-expanded. The usage is shown in following testing code:
+
+<pre>
+\def\test{\testA aha}
+\def\testA{A}
+
+\def\macro #1#2#3#4{\message{\unexpanded{1:#1, 2:#2, 3:#3, 4:#4}}}
+
+\MPnxex\macro \test \test \test \test
+</pre>
+
+<p>The macro above prints message: <tt>1:\test , 2:Aaha, 3:\testA aha, 4:Aaha</tt>.
+It means that the first parameter is unexpanded, second is fully expanded, third
+is once-expanded and last is fully expanded when the \macro gets its
+parameters.
+
+<p>The "prefix-macro" \MPnxex is defined by:
+
+<pre>
+\def\MPnxex #1#2#3#4#5{\ea#1\expanded{{\unexpanded{#2}}{#3}{\unexpanded\ea{#4}}{#5}}}
+</pre>
+
+<p>You can define other "prefix-macros" \MP... analogically. The
+principle is: \MP... designed for n \macro parameters must have n+1
+parameters internally, first one is for the \macro itself. Others are
+parameters preprocessed for the \macro. The simplest \MP... macro
+prepares all parameters as fully-expanded:
+
+<pre>
+\def\MPxxx #1#2#3#4{\ea#1\expanded{{#2}{#3}{#4}}}
+</pre>
+
+<p>If you want to create unexpanded first parameter, replace #2 by
+\unexpanded{#2}. If you want to create once-expanded first parameter,
+replace #2 by \unexpanded\ea{#2}. And replace the symbol x to the
+symbol n or e in the \MP... macro name, of course.
+
+<p CLASS=datum>(0085) -- P. O. 2022-05-25<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
