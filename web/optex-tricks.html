@@ -160,6 +160,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#greyblock">Text blocks with grey background splittable to more
     <li><a href="#blockoval">Text blocks in ovals</a>
+    <li><a href="#twoblocks">Two columns parallel side by side</a>
 </ul>
 
 <li>Different formatting
@@ -2662,6 +2663,93 @@ The diameter or rounded corners is set to 10bp.
 </pre>
 
 <p CLASS=datum>(0034) -- P. O. 2021-01-14<p>
+<hr>
+
+<h2><a name="twoblocks"></a>Two columns parallel side by side</h2>
+
+<p>We implement the macro \twoblocks{first column}{second column}
+which prints two columns side by side, the first line of both columns are
+vertically aligned. If there is no space at the current page, the columns
+are broken to more pages. The macro can be used for bilingual text
+columns. You can use more \twoblocks one by one. The first line of each
+\texblocks pair is vertically aligned again. Example:
+
+<pre>
+\twoblocks{
+  {\bf The text in English...} \lorem[1-2]
+}
+{
+  {\bf The text in other language...} \lorem[3-4]
+}
+\twoblocks{
+  {\bf Another text in English...} \lorem[5-12]
+}
+{
+  {\bf Another text in other language...} \lorem[15-22]
+}
+</pre>
+
+<p>Implementation:
+
+<pre>
+\newdimen\pageblank
+\newdimen\columnsht
+
+\def\setcolumn{\advance\hsize by-\colsep \hsize=.5\hsize \penalty0 }
+\def\twoblocks{\par
+   \begingroup \hbadness=5000 \splittopskip=1em plus1fil \brokenpenalty=0
+   \setbox0=\vbox\bgroup \setcolumn
+      \aftergroup\twoblocksA
+      \let\next=%
+}
+\def\twoblocksA{%
+   \setbox1=\vbox\bgroup \setcolumn
+      \aftergroup\twoblocksB
+      \let\next=%
+}
+\def\twoblocksB{\setbox2=\vsplit0 to0pt \setbox2=\vsplit1 to0pt \twoblocksC}
+\def\twoblocksC{%
+   \ifdim\pagegoal=\maxdimen \pageblank=\vsize \else \pageblank=\pagegoal \fi
+   \advance\pageblank by-\pagetotal
+   \ifdim\ht0>\ht1 \columnsht=\ht0 \dimen0=\dp0 \else \columnsht=\ht1 \dimen0=\dp1 \fi
+   \ifdim\columnsht>\pageblank
+      \setbox2=\vsplit0 to\pageblank \setbox3=\vsplit1 to\pageblank
+      \line{\xvtop2\hss\xvtop3}
+      \kern-\baselineskip \nobreak\vfil\break
+      \expandafter\twoblocksC
+   \else
+      \line{\xvtop0\hss\xvtop1}
+      \prevdepth=\dimen0
+      \endgroup
+   \fi
+}
+\def\xvtop#1{\vtop{\null\kern-\splittopskip\unvbox#1}}
+</pre>
+
+<p>The left column is accumulated into box0 by the \twoblocks macro. The
+\twoblocks {text} is transformed to
+
+<pre>
+\setbox0=\vbox\bgroup...\let\next={text}
+</pre>
+
+<p>It means that the opening brace { is ignored because there is \brgoup inside
+the macro instead it. The right column is saved to box1 similar way by the \twoblocksA
+macro. The \twoblocksB macro prepares columns to printing: it adds the
+\splittopskip space at the top of the boxes. The \twobolcksC macro prints columns.
+If there is sufficient space on the current page (\pageblank) then the boxes
+are printed using \line with two \xvtop's. The \xvtop macro is the same like
+\vtop but a correction at the top of the box is added: the \null is exactly at the next
+line in the document and the baseline of the first line of the column is
+shifted to the baseline of the \null box. The \dimen0 is the depth of the
+last line of the larger column and it is set to \prevdepth in order to the
+next line in the document will be printed to the baseline grid.
+If there isn't sufficient space on the current page then we get only parts
+of box0 and box1 of the given height \pageblank using \vsplit primitive,
+we print these parts as columns by the \line macro and go to the next page and
+the macro \twoblocksC is recursively repeated.
+
+<p CLASS=datum>(0086) -- P. O. 2022-05-30<p>
 <hr>
 
 <p CLASS="lmarg">Different formatting</p>
