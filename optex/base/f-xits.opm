@@ -1,0 +1,25 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [XITS] \Xits {A fork of STIX with Bold Math variant}
+        {\caps} {\rm \bf \it \bi} {XITSMath}
+        {[XITS-Regular]}
+        {\_def\_fontnamegen {[XITS-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps (works only for \rm)^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[XITSMath-Regular]}
+\_loadboldmath {[XITSMath-Bold]} \to {[XITSMath-Regular]}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+
