@@ -208,6 +208,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>References
 <ul>
     <li><a href="#lot">List of figures, list of tables</a>
+    <li><a href="#onpage">The text "on page \pgref" printed only sometimes</a>
 </ul>
 
 <li>Slides
@@ -4251,6 +4252,50 @@ example, if you use \bf\ref[#1] insetad \bf#2 then you have the numbers in
 the list clickable (after \hyperlinks declaration).
 
 <p CLASS=datum>(0066) -- P. O. 2022-02-01<p>
+<hr>
+
+<h2><a name="onpage"></a>The text "on page \pgref" printed only sometimes</h2>
+
+<p>We create the macro \onpage which can be used just after \ref[label] and it
+expands only to space if the \ref occurs at the same page as referred page.
+It expands to the text "on page \pgref[label]" if it is referred to a
+different page than the current one. For example:
+
+<pre>
+Section \ref[mylabel]\onpage shows bla bla.
+
+\vfil\break
+
+\sec [mylabel] Section bla bla
+</pre>
+
+<p>prints the text: "Section 1.1 on page 2 shows bla bla" but if you remove
+the \vfil\break in this example then the text "Section 1.1 shows bla bla" is
+printed because the referred section is on the same page. The same task was
+formulated at
+<a href="https://tex.stackexchange.com/questions/605781/">Stack exchange</a>,
+see witpet's answer.
+
+<p>You must run TeX twice in order to get the required result.
+
+<p>The implementation is simple:
+
+<pre>
+\def\onpage{\label[x?\_lastreflabel]\wlabel{}%
+   \space
+   \ea\ifx\csname _pgref:x?\_lastreflabel\ea\endcsname
+          \csname _pgref:\_lastreflabel\endcsname
+   \else on page \pgref[\_lastreflabel] \fi
+}
+</pre>
+
+<p>If \ref[label] is used then the \onpage macro creates an internal label
+x?label and writes it to the .ref file. The test if \_pgref:label
+is equal to \_pgref:x?label is done and if these pages differ then the text
+"on page \pgref[label]" is printed. Note that the macro \_lastreflabel`
+includes the label from the last used \ref macro.
+
+<p CLASS=datum>(0087) -- P. O. 2022-06-06<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>
