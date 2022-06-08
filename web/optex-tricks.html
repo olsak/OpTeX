@@ -2710,8 +2710,10 @@ columns. You can use more \twoblocks one by one. The first line of each
 }
 \def\twoblocksB{\setbox2=\vsplit0 to0pt \setbox2=\vsplit1 to0pt \twoblocksC}
 \def\twoblocksC{%
+   \penalty0 \vskip\parskip
    \ifdim\pagegoal=\maxdimen \pageblank=\vsize \else \pageblank=\pagegoal \fi
    \advance\pageblank by-\pagetotal
+   \ifdim\pageblank&lt;24pt \vfil\break \pageblank=\vsize \fi
    \ifdim\ht0>\ht1 \columnsht=\ht0 \dimen0=\dp0 \else \columnsht=\ht1 \dimen0=\dp1 \fi
    \ifdim\columnsht>\pageblank
       \setbox2=\vsplit0 to\pageblank \setbox3=\vsplit1 to\pageblank
