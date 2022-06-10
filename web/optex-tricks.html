@@ -1757,7 +1757,9 @@ example:
 \resetmathchars \stix \stareq \triangleq \veeeq \wedgeq ;
 </pre>
 
-<p>The implementation of \addUmathfont and \resetmathchars macros follows:
+<p>The implementation of \addUmathfont and \resetmathchars macros
+were moved to the OpTeX format from version 1.7+. Use them
+directly. If you have older OpTeX version you can declare:
 
 <pre>
 \def\resetmathchars #1{\chardef\mafam=#1\relax \xargs \resetmathcharX}

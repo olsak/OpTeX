@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2021-08-16>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2022-06-10>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -154,11 +154,11 @@
    `\<first>+1`, `\<first>+2`
    etc., but \`\_umathcharholes` are skipped
    (`\_umathcharholes` are parts of the Unicode table not designed for math
-   alphabets but they cause that the math alphabets are
+   alphabets, they cause that the math alphabets are
    not continuously spread out in the table; I mean that the
    designers were under the influence of drugs when they created
    this part of the Unicode table).
-   The `<from>-<to>` clause includes normal letters like `A-Z`.
+   The `<from>-<to>` clause includes characters like~`A-Z`.
    \nl
    \`\_umahrangegreek` `\<first>` is the same as
    `\_umathrange {<alpha>-<omega>}\<first>`.
@@ -203,6 +203,53 @@
    \_ea\_greekdef \_fi
 }
 
+   \_doc -----------------------------
+   \`\addUmathfont` `<fam> {[<normal-font>]}{<ffeatures>} {[<bold-font>]}{<ffeatures>} {<factor>}`
+   allocates new <fam> using \^`\newfam` and adds loading this font to the
+   \~`\normalmath` and \~`\boldmath` macros. Note that allocationos using
+   \^`\newfam` starts from 43 because numbers 1--42 are reserved for direct
+   usage without \^`\newfam`.
+   \_cod -----------------------------
+
+\_def\_addUmathfont #1#2#3#4#5#6{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
+   \_ifx\_ncharrmA\_undefined \_errmessage{basic Unicode math font must be loaded first}%
+   \_else \_isfont{#2}\_iffalse \_opwarning{font #2 is unavailable}%
+   \_else
+      \_newfam#1\_relax
+      \_global\_addto\_normalmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{#3} }%
+      \_ifx\_relax#4\_relax
+         \_global\_addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{embolden=1.7;} }%
+      \_else
+         \_global\_addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#4}{#5} }%
+      \_fi
+      \_normalmath
+      \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
+   \_fi \_fi
+}
+
+   \_doc -----------------------------
+   \`\resetmathchars` `<fam> <list of sequences> ;`
+   saves <fam> to \`\_mafam` and applies \`\_resetmathcharsX`
+   to each sequence from <list of sequences>.
+   The `\directlua` chunk prints the 8-digits hexadecimal code of the
+   sequence followed by the sequence itself. The digts are scanned by \`\_resetmathcharsY`
+   and new `\Umathchardef` and `\Umathcode` is declared. Note that the used
+   primitives have the syntax:
+   \begtt \catcode`<=13
+   \Umathchardef <sequence> <math class> <math family> <slot number>
+   \Umathcode <code> <math class> <math family> <slot number>
+   \endtt
+   \_cod -----------------------------
+
+\_def\_resetmathchars #1{\_chardef\_mafam=#1\_relax \_xargs \_resetmathcharX}
+\_def\_resetmathcharX#1{\_ea\_resetmathcharY
+   \_directlua{tex.print(string.format("\_pcent08X", \_the#1))}#1}
+\_def\_resetmathcharY#1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
+   \_Umathchardef #9\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
+   \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
+}
+\_public \addUmathfont \resetmathchars ;
+
 \_endcode
 
 
@@ -218,25 +265,47 @@ if `<normal-font>` was sucessully loaded by the previous `\loadmath`. For exampl
 \loadmath     {[xitsmath-regular]}
 \loadboldmath {[xitsmath-bold]} \to {[xitsmath-regular]}
 \endtt
-There are very few Unicode-math fonts with full \^`\boldmath` support.
+There are very few Unicode-math fonts with full \~`\boldmath` support.
 I know only XITSMath-Bold and KpMath-Bold. If \^`\loadboldmath` is not used
-then \"faked bold" created from \^`\normalmath` is used by default.
+then \"faked bold" created from \~`\normalmath` is used by default.
 
-The \^`\loadmath` macro was succesfully tested on:
+The {\em main math font} is loaded by \^`\loadmath` (typically indirectly using
+\^`\fontfam`) and you can load more {\em additional math fonts} by
+\^`\addUmathfont`:
+\begtt \catcode`<=13
+\addUmathfont \famname {[<normal-font>]}{<ffeatures>} {[<bold-font>]}{<ffeatures>} {<factor>}
+\endtt
+The `\famname` is a control sequence declared by \^`\addUmathfont` for later
+use. It gets math family number. The `<factor>` is decimal number for size
+corrections in view of the main math font. If it is empty then <factor>=1.
+If <bold-font> is empty, the \"faked bold" derived from <normal-font> is used.
+Example:
+\begtt
+\fontfam[lm]  % does \lodmath{[latinmodern-math]}
+\addUmathfont \xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
+\endtt
+%
+declares `latinmodern-math` as main math font (its bold variant is \"faked bold")
+and the additional math font `\xits` is `XITSMath-Regular` for normal
+printing and `XITSMath-Bold` for bold printing.
+
+All characters used in math formula is printed from main math font by
+default. But you can redeclare a list of characters for printing from
+additional font by \^`\resetmathchars` `\famname <list of sequences> ;`. For
+example:
 
 \begtt
-\loadmath{[XITSMath-Regular]}       ... XITS MATH
-\loadmath{[latinmodern-math]}       ... Latin Modern Math
-\loadmath{[texgyretermes-math]}     ... TeXGyre Termes Math
-\loadmath{[texgyrebonum-math]}      ... TeXGyre Bonum Math
-\loadmath{[texgyrepagella-math]}    ... TeXGyre Pagella Math
-\loadmath{[texgyreschola-math]}     ... TeXGyre Schola Math
-\loadmath{[texgyredejavu-math]}     ... TeXGyre DeJaVu Math
-\loadmath{[LibertinusMath-Regular]} ... Libertinus Math
-\loadmath{[FiraMath-Regular]}       ... Fira Math
-\loadmath{[Asana-Math]}             ... Asana Math
-\loadmath{[KpMath-Regular]}         ... KP fonts Math
+\resetmathchars \xits \stareq \triangleq \veeeq \wedgeq ;
 \endtt
+%
+sets the characters `\stareq`, `\triangleq`, `\veeeq`, `\wedgeq` from
+the `\xits` additional font. You can see all possible sequences by
+`\input print-unimath.opm`.
+If you want to use whole math alphabet from additional math font, use
+`\addto\selector{\fam\famname}`, for example `\addto\cal{\fam\xits}`
+declares all `\cal` characters from the `\xits` font loaded by
+\^`\addUmathfont`.
+
 
 \secc Unicode-math macros preloaded in the format
 
@@ -259,6 +328,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2022-06-10 \addUmathfont and \resetmathchars added.
 2021-08-16 \_loadumathfamily simplified, used mathsize= font feature.
 2021-08-16 nomathparam font feature used for families > 3 (bug fixed).
 2021-08-02 ssty fontfeatures rewritten; fam2, fam3 unused, \scriptspace not set

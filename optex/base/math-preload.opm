@@ -39,8 +39,6 @@
 %  \_setmathfamily 11 \_tenbi
   \_setmathdimens
 }
-\_count18=9   % families declared by \newfam are 12, 13, ...
-
 \_def \normalmath {\_normalmath}  \_def\boldmath {\_boldmath}
 
    \_doc -----------------------------

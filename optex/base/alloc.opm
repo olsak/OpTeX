@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newdimen {Allocators for registers <2022-03-07>} % preloaded in format
+\_codedecl \newdimen {Allocators for registers <2022-06-10>} % preloaded in format
 
    \_doc -----------------------------
    The limits are set first.
@@ -29,7 +29,7 @@
 \_countdef\_toksalloc=15      \_toksalloc=255
 \_countdef\_readalloc=16      \_readalloc=-1
 \_countdef\_writealloc=17     \_writealloc=0 % should be -1 but there is bug in new luatex
-\_countdef\_famalloc=18       \_famalloc=3
+\_countdef\_famalloc=18       \_famalloc=42  % \newfam are 43, 44, 45, ...
 \_countdef\_languagealloc=19  \_languagealloc=0
 
    \_doc -----------------------------
@@ -178,6 +178,7 @@ the array-like declarator of counters.
 
 \_endinput
 
+2022-06-10  \_famalloc set to 42 (answer to the biggest fundamental question)
 2022-03-07  \_noattr allocated
 2022-02-19  \_newlanguage introduced
 2021-02-15  \_advance -> \_incr, \_decr

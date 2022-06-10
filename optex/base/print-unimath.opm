@@ -2,6 +2,9 @@
 
 \_codedecl \_undefined {Printing Unicode-math table \string<2020-06-08>}
 
+\_ifx\_ncharrmA\_undefined \_opwarning{No Unicode math font loaded, printing ignored}
+   \_endinput \_fi
+
 \_begingroup
    \_def\UnicodeMathSymbol#1#2#3#4{%
       \_ifnum#1>"10000 \_endinput \_else \_printmathsymbol{#1}{#2}{#3}{#4}\_fi

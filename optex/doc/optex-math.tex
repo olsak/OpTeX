@@ -753,9 +753,7 @@ And the result from `\input print-unimath.opm` looks like the following ten
 pages.
 
 Unsupported characters can be replaced by characters from other Unicode math
-font, see
-\ulink[http://petr.olsak.net/optex/optex-tricks.html\#addumathfont]{OpTeX trick 0030}
-or section~\ref[newfam].
+font, see section~\ref[newfam].
 
 
 \label[listA]\wlabel{}
@@ -1577,17 +1575,28 @@ used). So, the default `\_boldmath` macro defined by \OpTeX/ looks like:
 \let\_boldmath=\_boldunimath % this is done when Unicode math is initialized
 \endtt
 
-\secc[newfam] Example of using additional math font
-
-The font `bbold10.tfm` includes double stroked characters, for example,
-double stroked plus, double stroked Greek letters and digits.
-Try to run `pdftex testfont`, then answer the question about the name of the
-font: `bbold10` and then type command `\table\end`. The `testfont.pdf` is
-printed with the table of characters of this font.
-Most of these characters cannot be found in Unicode math fonts.
+\secc[newfam] Using additional math fonts
 
 \new \OpTeX/
-We show an example of how to add this font to the collection of used math fonts.
+The main Unicode math font is loaded by `\loadmath` and `\loadboldmath`
+(typically processed when `\fontfam[<family-name>]` is declared). Moreover,
+you can load {\em additional Unicode math fonts} and you can combine
+characters from main math font and these additional fonts. This can be
+usable if the main math font doesn't include all desired characters or you
+dislike some character shapes from main font. \OpTeX/ enables to load
+additional math fonts by `\addUmathfont` and characters from additional
+fonts can be declared by `\resetmathchars`. See the section 2.16 of \OpTeX/
+documentation for more details about this.
+
+The rest of this section includes an example which shows another task: how
+to combine main Unicode math font with old 8-bit math font `bbold10.tfm`.
+This font includes double stroked characters, for example, double stroked
+plus, double stroked Greek letters and digits. Try to run `pdftex testfont`,
+then answer the question about the name of the font: `bbold10` and then type
+command `\table\end`. The `testfont.pdf` is printed with the table of
+characters of this font. Most of these characters cannot be found in Unicode
+math fonts.
+
 We can re-define the `\_normalmath` macro by:
 \begtt \typosize[10/12]
 \addto\_normalmath {\_loadmathfamily 5 bbold }
@@ -1662,10 +1671,6 @@ We have to settle for normal version of the font in the `\_boldmath` macro:
 \begtt \typosize[10/12]
    \addto \_boldmath {\_loadmathfamily 5 bbold }
 \endtt
-
-Another approach of using more Unicode math fonts in a single formula is
-shown in
-\ulink[http://petr.olsak.net/optex/optex-tricks.html\#addumathfont]{OpTeX trick 0030}.
 
 \sec Index
 
