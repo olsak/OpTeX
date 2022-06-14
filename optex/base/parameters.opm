@@ -466,7 +466,7 @@
    fonts at the beginning of your document. For example `\fontdef\rmfixed{\rm}`,
    `\fontdef\itfixed{\it}`. Then use them in headline and footline:
    \begtt
-   \headline={\itfixed Text of headline, section: \fistmark \hss}
+   \headline={\itfixed Text of headline, section: \firstmark \hss}
    \footline={\rmfixed \ifodd\pageno \hfill\fi \folio \hfil}
    \endtt
    \_cod -----------------------------
