@@ -4532,102 +4532,124 @@ For example:
 
 <h2><a name="frontsheet"></a>More pages on single sheet</h2>
 
-<p>We create macros \frontsheet{ page spec. }, \backsheet{ page spec. }
+<p>We create macros \sheet NUM { page spec. },
 and \prinsheets. These macros read pages from given PDF document (defined in
 the \document macro) and prints sheets with more pages per single sheet. For
 example:
 <pre>
-\def\document{name} % name of the source document without .pdf extension
-\frontsheet { [ :1 | :2 ] } \printsheets
+\def\document{name}  % the name of the source document without .pdf extension
+\sheet 1 { [ 1 | 2 ] } \printsheets
 </pre>
 
-<p>This example prints two pages per single sheet, pages are [ :1 | :2 ] on
-the first sheet, [ :3 | :4 ] on the second, [ :5 | :6 ] on the third, etc.
+<p>This example prints two pages per single sheet, pages are [ 1 | 2 ] on
+the first sheet, [ 3 | 4 ] on the second, [ 5 | 6 ] on the third, etc.
 
-<p>The optional \backsheet can be used for setting reverse side of the sheet
-(suppose duplex printing).
-You can try more complicated example of "imposition pages to sheets", see
+<p>The [...] in the page spec. means a single row. You can have more rows in
+the single sheet.
+
+<p>The \sheet 1 must be declared always. You can declare more: \sheet 2,
+\sheet 3 etc. All document pages declared in the whole bunch of sheets are
+read first and then the sheets are printed. If there are unprinted document
+pages, then the next pages for the bunch of sheets are read again and the sheets
+are printed, etc. For example, you can declare \sheet 1 and \sheet 2 for
+duplex printing.
+
+<p>You can try more complicated example of "imposition pages to sheets", see
 <a href="https://en.wikipedia.org/wiki/Imposition">wiki about it</a>.
 The example looks like:
 
 <pre>
-\def\document{name}
-\frontsheet {
-  [ v:5 | v:12 | v:9  | v:8 ]
-  [ n:4 | n:13 | n:16 | n:1 ]
+\def\document{name} % included document is name.pdf
+\vspacing=18mm      % spaces between rows is 18mm (default is 0mm)
+\sheet 1 {
+  [ v5 | v12 |14mm|  v9 | v8 ]
+  [ p4 | p13 |14mm| p16 | p1 ]
 }
-\backsheet {
-  [ v:7 | v:10 | v:11 | v:6 ]
-  [ n:2 | n:15 | n:14 | n:3 ]
+\sheet 2 {
+  [ v7 | v10 |14mm| v11 | v6 ]
+  [ p2 | p15 |14mm| p14 | p3 ]
 }
 \printsheets
 </pre>
 
-<p>The page specification includes one or more [...] (they are rows) and
-each row includes page numbers from first step of printing in the format
-rot:pagenum separated by |. The "rot" is rotation r: (90), v: (180),
-l: (-90), n: or nothing: no-rotation.
+<p>The example shows more syntax rules. The page numbers can be prefixed by
+letters: none or p (no rotation), r (90 degrees), l (-90 degrees), v (180
+degrees). The page separators | are optional and if they are used (for
+greater clarity) then they must be followed by a space. If there is no space
+then the dimension terminated by second | is read and the space between
+pages is declared here.
 
 <p>You can add crop-marks to the output of sheets using cropmarks.tex from
 <a href="https://ctan.org/pkg/olsak-misc">olsak-misc macro collection</a>
 released on CTAN and included in TeXlive.
 
-<p>The implementation of \frontsheet, \backsheet and \printsheets:
+<p>The implementation of \sheet and \printsheets:
 
 <pre>
-\newcount\docpage
+\newcount\docpage  \newdimen\vspacing
 \voffset=0pt \hoffset=0pt
-\def\pgparam{} % additional parameters for \pdfximage, width=5cm for example
+\def\pgparam{} % additional parameters for \pdfximage, width5cm for example
 
-\def\makesheet#1#2{\def\tmp{\vbox\bgroup\offinterlineskip}
+\def\sheet{\afterassignment\scansheet \chardef\sheetnumber}
+\def\scansheet{\ifnum\sheetnumber=1 \tmpnum=0 \fi
+   \ea\scansheetA \csname sheetbox\the\sheetnumber\endcsname
+}
+\def\scansheetA#1#2{\def\tmp{\vbox\bgroup\baselineskip=0pt \lineskip=\vspacing}%
    \foreach #2\do ##1[##2]{%
-      \addto\tmp{\hbox\bgroup}%
-      \foreach ##2|\do ####1:####2|{\incr\tmpnum\addto\tmp{\pbox####1.:{####2}}}
-      \addto\tmp{\egroup}
+      \addto\tmp{\hbox\bgroup}\scansheetB ##2X\addto\tmp{\egroup}%
    }
    \addto\tmp{\egroup}\let#1=\tmp
 }
-\def\frontsheet{\tmpnum=0 \makesheet\frontbox}
-\def\backsheet {\makesheet\backbox}
+\def\scansheetB #1{\trycs{pg.#1}{\pgscan#1}}
+\sdef{pg.p}{\pgscan}
+\def\pgscan{\afterassignment\pgset\docpage=}
+\def\pgset{\incr\tmpnum \ea\addto\ea\tmp\ea{\ea{\ea\box\the\docpage}}\scansheetB}
+\sdef{pg.|}{\isnextchar{ }{\scansheetB}{\marginset}}
+\def\marginset#1|{\addto\tmp{\kern#1\relax}\scansheetB}
+\sdef{pg.r}{\addto\tmp{\rotbox{90}}\pgscan}  \sdef{pg.l}{\addto\tmp{\rotbox{-90}}\pgscan}
+\sdef{pg.v}{\addto\tmp{\rotbox{180}}\pgscan} \sdef{pg.X}{}
 
-\def\printsheets{
-   \chardef\numpages=\tmpnum
+\def\printsheets{\chardef\numpages=\tmpnum
    \setbox1=\hbox{\pdfximage \pgparam {\document.pdf}\pdfrefximage\pdflastximage}
    \dimen0=\wd1 \dimen1=\dimexpr\ht1+\dp1\relax
-   \docpage=1 \tmpnum=1 \pdfpagewidth=0pt
-   \printfrontback
+   \docpage=1 \tmpnum=1 \pdfpagewidth=0pt \printsbunch
    \end
 }
-\def\setboxnum#1{\incr\docpage
-   \setbox#1=\ifnum\docpage>\pdflastximagepages
-            \hbox{}\wd#1=\dimen0 \ht#1=\dimen1
-      \else \hbox{\pdfximage\pgparam page\docpage{\document.pdf}\pdfrefximage\pdflastximage}\fi
-}
-\def\pbox#1#2:#3{\trycs{t:#1}{}{\box#3}}
-\sdef{t:v}{\rotbox{180}} \sdef{t:r}{\rotbox{90}} \sdef{t:l}{\rotbox{-90}}
-
-\def\printfrontback{% prints the pair of sheets: front+back
+\def\printsbunch{% scans document pags and prints the bunch of sheets
    \loop \ifnum\tmpnum&lt;\numpages        % scan \numpages boxes from document
          \incr\tmpnum \setboxnum\tmpnum
          \repeat
    \ifdim\pdfpagewidth=0pt
-      \setbox0=\frontbox \pdfpagewidth=\wd0 \pdfpageheight=\ht0 \shipout\box0
-   \else \shipout\frontbox \fi    % prints scanned boxes as front-sheet
-   \incr\pageno
-   \ifx\backbox\undefined \else \shipout\backbox \incr\pageno \fi
-   \ifnum\docpage&lt;\pdflastximagepages \tmpnum=0 \ea\printfrontback \fi
+      \setbox0=\csname sheetbox1\endcsname \pdfpagewidth=\wd0 \pdfpageheight=\ht0 \shipout\box0 
+   \else \shipout\csname sheetbox1\endcsname \fi    % prints scanned boxes as sheet 1
+   \incr\pageno \tmpnum=2
+   \loop \ifcsname sheetbox\the\tmpnum\endcsname % print \seet 2 \sheet3 etc.
+         \shipout \csname sheetbox\the\tmpnum\endcsname
+         \incr\pageno \incr\tmpnum
+         \repeat
+   \ifnum\docpage&lt;\pdflastximagepages \tmpnum=0 \ea\printsbunch \fi
+}
+\def\setboxnum#1{\incr\docpage  % does \setbox#1=\hbox{next page from the document}
+   \setbox#1=\ifnum\docpage>\pdflastximagepages
+            \hbox{}\wd#1=\dimen0 \ht#1=\dimen1   % void page
+      \else \hbox{\pdfximage\pgparam page\docpage{\document.pdf}\pdfrefximage\pdflastximage}\fi
 }
 </pre>
 
-<p>The \frontsheet and \backsheet scan their parameters using \foreach and
-creates macros \frontbox, \backbox. They are \vbox{\hbox{}\hbox{}...}. Each
-\hbox (single row) includes the list of \pbox rot:{num} macros. These macros
-prints \box num (optionally rotated). The \loop in \printfrontback macro
-scans single set of pages from given \document and saves them to the \box1,
-\box2, ... \box\numpages (where \numpaegs is the number of pages on the
-single front+back sheets pair. The \shipout\frontbox and \shipout\backbox
-prints desired sheets. The \printfrontback macro is repeated (recursive
-call) for the next pair of the sheets if there are \document pages not yet printed.
+<p>The \sheet NUM { pg. spec } scans the rows declaration [...] using
+\foreach and creates the macro \sheetboxNUM which is
+\vbox{\hbox{}\hbox{}...}. Each \hbox (single row) includes the list of {\box
+pgNUM} prefixed (optionally) by \rotbox{degrees}. The number of declared
+document pages for whole bunch of sheets is set by \tmpnum and saved to
+\numpages by \printsheets. The \printsheets macro reads first page of the
+document and sets parameters read from it and runs \printsbunch. The
+\printsbunch macro reads next pages of the document for whole bunch of
+sheets (using \loop) and saves them individually to the \box pgNUM. The
+\shipout\sheetboxNUM prints the given sheet. The \sheetbox1 is printed and
+the PDF dimensions are measured and set (if this is really the first sheet).
+The second \loop prints other sheets from the single bunch of sheets. The
+\printsbunch macro is repeated (recursive call) for the next bunch of sheets
+if there are document pages not yet printed.
 
 <p CLASS=datum>(0088) -- P. O. 2022-06-14<p>
 <hr>
