@@ -229,6 +229,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Others
 <ul>
     <li><a href="#frontsheet">More pages on single sheet</a>
+    <li><a href="#booklet">Printing booklets</a>
     <li><a href="#version">Version number of the format</a>
     <li><a href="#diff">Showing differences between versions of the document</a>
     <li><a href="#overleaf">How to run OpTeX at Overleaf</a>
@@ -4554,6 +4555,14 @@ pages, then the next pages for the bunch of sheets are read again and the sheets
 are printed, etc. For example, you can declare \sheet 1 and \sheet 2 for
 duplex printing.
 
+<p>The paper dimensions (for printing) is calculated directly from the sheet
+dimensions without margins if \margins is unused. You can set the paper
+dimensions and left+top margins by \margins (see section 1.2.1 of OpTeX
+doc). The setting right+bottom margins is irrelevant because the sheets
+aren't scaled. But you can scale document pages to a desired size by
+\def\pgparam{width10cm} (for example). If it is unused then the document
+pages have their natural size.
+
 <p>You can try more complicated example of "imposition pages to sheets", see
 <a href="https://en.wikipedia.org/wiki/Imposition">wiki about it</a>.
 The example looks like:
@@ -4587,7 +4596,7 @@ released on CTAN and included in TeXlive.
 
 <pre>
 \newcount\docpage  \newdimen\vspacing
-\voffset=0pt \hoffset=0pt
+\voffset=0pt \hoffset=0pt \pdfpagewidth=0pt
 \def\pgparam{} % additional parameters for \pdfximage, width5cm for example
 
 \def\sheet{\afterassignment\scansheet \chardef\sheetnumber}
@@ -4612,7 +4621,7 @@ released on CTAN and included in TeXlive.
 \def\printsheets{\chardef\numpages=\tmpnum
    \setbox1=\hbox{\pdfximage \pgparam {\document.pdf}\pdfrefximage\pdflastximage}
    \dimen0=\wd1 \dimen1=\dimexpr\ht1+\dp1\relax
-   \docpage=1 \tmpnum=1 \pdfpagewidth=0pt \printsbunch
+   \docpage=1 \tmpnum=1 \printsbunch
    \end
 }
 \def\printsbunch{% scans document pags and prints the bunch of sheets
@@ -4652,6 +4661,68 @@ The second \loop prints other sheets from the single bunch of sheets. The
 if there are document pages not yet printed.
 
 <p CLASS=datum>(0088) -- P. O. 2022-06-14<p>
+<hr>
+
+<h2><a name="booklet"></a>Printing booklets</h2>
+
+<p>We create macro \printbooklet which reads pages from a PDF document
+and creates sheets with two pages (one next to other) per single sheet.
+When the sheets are printed in landscape format with duplex printing
+(short edge) and you fold the printed output in the half
+then you get a booklet of whole document. Usage:
+
+<pre>
+\margins/1 a4l (0,0,0,0)mm  % A4 landscape format with no additional margins
+\def\document {name}        % name.pdf is the document which is read
+\def\pgparam{width148.5mm}  % pages are scaled to the half of A4 landscape width
+\printbooklet               % creates the booklet
+</pre>
+
+<p>For example, if the document has 15 pages, then the output looks like:
+
+<pre>
+[    | 1 ]   [ 2 | 15 ]
+[ 14 | 3 ]   [ 4 | 13 ]
+[ 12 | 5 ]   [ 6 | 11 ]
+[ 10 | 7 ]   [ 8 |  9 ]
+</pre>
+
+<p>The implementation:
+
+<pre>
+\newcount\docpage \newcount\doclastpage
+\newdimen\interspace
+\def\pgparam{}  % additional parameters for \pdfximage, width5cm for example
+\def\printbooklet{
+   \setbox1=\hbox{\pdfximage \pgparam {\document.pdf}\pdfrefximage\pdflastximage}
+   \dimen0=\wd1 \dimen1=\dimexpr\ht1+\dp1\relax
+   \doclastpage=\pdflastximagepages
+   \advance\doclastpage by3 \divide\doclastpage by4 \multiply\doclastpage by4
+   \docpage=1
+   \loop
+      \ifnum\docpage=1 \else \setbox1=\page\docpage \fi \incr\docpage
+      \setbox2=\page\doclastpage                        \decr\doclastpage
+      \setbox3=\page\docpage                            \incr\docpage
+      \setbox4=\page\doclastpage                        \decr\doclastpage
+      \shipout\hbox{\box2\kern\interspace\box1}         \incr\pageno
+      \shipout\hbox{\box3\kern\interspace\box4}         \incr\pageno
+      \ifnum\docpage&lt;\doclastpage \repeat
+   \end
+}
+\def\page#1{\ifnum#1>\pdflastximagepages \hbox to\dimen0{\vbox to\dimen1{}\hss}%
+   \else \hbox{\pdfximage\pgparam page#1{\document.pdf}\pdfrefximage\pdflastximage}\fi
+}
+</pre>
+
+<p>The number of sheet-pairs is doc-pages / 4 rounded up. The doc-pages is read
+from the \pdflastximagepages when first page from the document is read.
+Then the \doclastpage is calculated as number of sheet-pairs multiplied by 4.
+It is ideally the same as \pdflastximagepages but it can be greater: the
+void pages must be used in such case. The \page NUM macro returns real page
+from the document or void page, if NUM>\pdflastximagepages. The sheet-pairs
+are printed in the loop.
+
+<p CLASS=datum>(0089) -- P. O. 2022-06-17<p>
 <hr>
 
 <h2><a name="version"></a>Version number of the format</h2>
