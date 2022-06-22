@@ -4681,10 +4681,7 @@ then you get a booklet of whole document. Usage:
 <p>For example, if the document has 15 pages, then the output looks like:
 
 <pre>
-[    | 1 ]   [ 2 | 15 ]
-[ 14 | 3 ]   [ 4 | 13 ]
-[ 12 | 5 ]   [ 6 | 11 ]
-[ 10 | 7 ]   [ 8 |  9 ]
+[   | 1 ]  [ 2 | 15 ]  [ 14 | 3 ]  [ 4 | 13 ]  [ 12 | 5 ]  [ 6 | 11 ]  [ 10 | 7 ]  [ 8 | 9 ]
 </pre>
 
 <p>The implementation:
@@ -4793,8 +4790,20 @@ He suggested it for the OPmac tricks set.
 
 <h2><a name="overleaf"></a>How to run OpTeX at Overleaf</h2>
 
-<p>Overleaf is LaTeX oriented site, but we can run most recent OpTeX version
-here if we do a set of obscure and dirty tricks.
+<p>Overleaf is LaTeX oriented site, but we can run OpTeX (version from the
+summer) when you insert the file  <b>latexmkrc</b> with contents:
+
+<pre>
+$lualatex = 'TEXINPUTS=./optex//:$TEXINPUTS luatex -fmt=optex %O %S';
+</pre>
+
+<p>to your project and select "LuaLaTeX" engine in the Overleaf menu.
+Or simply copy
+<a href="https://www.overleaf.com/read/gghtcbvrpcdb">this project</a>
+to your project.
+
+<p>If we want to run more recent OpTeX version (not yet installed at Overleaf)
+then we have to do a set of obscure and dirty tricks:
 
 <p>First of all, we have to generate optex.fmt binary file at Overleaf. This
 file is typically binary incompatible in various computers and various
