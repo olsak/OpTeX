@@ -140,7 +140,7 @@
    \_cod -----------------------------
 
 \_def \_preparesorting #1{%
-   \_edef \_tmpb {\_ea\_ignorefirst\_csstring #1}% \,<string> -> <string>
+   \_edef \_tmpb {\_ea\_ignoreit\_csstring #1}% \,<string> -> <string>
    \_ea \_docompound \_compoundchars \_relax:{}       % replace compound characters
    \_lowercase \_ea{\_ea\_def \_ea\_tmpb \_ea{\_tmpb}}% convert in respect to \_sortingdata
    \_ea\_replstring \_ea\_tmpb \_ea{\_csstring\^^I}{}% remove ignored characters
@@ -148,7 +148,6 @@
 \_def \_docompound #1:#2 {%
    \_ifx\_relax#1\_else \_replstring\_tmpb {#1}{#2}\_ea\_docompound \_fi
 }
-\_def \_ignorefirst#1{}
 
    \_doc -----------------------------
    Macro \`\_isAleB` `\,<string1> \,<string2>` returns the result of comparison
@@ -253,7 +252,7 @@
      \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
       \_ifasciisorting
           \_edef\_sortinglang{ASCII}%
-          \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignorefirst\_csstring##1}}%
+          \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignoreit\_csstring##1}}%
           \_let \_setsecondarysorting=\_relax
       \_else
          \_setprimarysorting
@@ -300,7 +299,7 @@
    \_ifcsname _\_csstring #1\_endcsname
       \_ea\_ea\_ea \_printii \_csname _\_csstring #1\_endcsname &%
    \_else
-      \_ea\_ea\_ea\_printii \_ea\_ignorefirst \_csstring #1&%
+      \_ea\_ea\_ea\_printii \_ea\_ignoreit \_csstring #1&%
    \_fi
    \_ea\_printiipages #1&
 }
