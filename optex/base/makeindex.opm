@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2022-03-18>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2022-06-28>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -16,17 +16,15 @@
    before acute before circumflex before ring. At less priority: lowercase
    letters must be before uppercase letters.
 
-   The \`\_sortingdata``<lang-tag>` implements these rules for the language
-   given by <lang-tag>. The <lang-tag> is typicaly ISO 639-1 code of the language
-   and it is declared by \~`\_preplang` defined in section~\ref[langdecl].
-   The \`\_sortingdatacs` for Czech rules is defined below.
+   The \`\_sortingdatalatin`
+   implements these rules for the languages with latin alphabets.
    The groups between commas are not distinguished in the first
    pass. The second pass distinguishes all characters mentioned in the
-   `\_sortingdata<lang-tag>` (commas are ignored). The order of letters
-   in the `\_sortingdata<lang-tag>` macro is significant for the sorting algorithm.
+   \^`\_sortingdatalatin` (commas are ignored). The order of letters
+   in the \^`\_sortingdatalatin` macro is significant for the sorting algorithm.
    \_cod -----------------------------
 
-\_def \_sortingdatacs {%
+\_def \_sortingdatalatin {%
   /,{ },-,&,@,%
   aAäÄáÁ,%
   bB,%
@@ -49,7 +47,7 @@
   qQ,%
   rRŕŔ,%
   řŘ,%
-  sS,%
+  sSß,%
   šŠ,%
   tTťŤ,%
   uUüÜúÚůŮ,%
@@ -63,48 +61,103 @@
 }
 
    \_doc -----------------------------
-   Characters to be ignored are declared in  \`\_ignoredchars``<lang-tag>`.
-   See \`\_ignoredcharscs` for Czech rules. These characters are ignored in the first pass
+   Characters to be ignored during sorting are declared in  \`\_ignoredcharsgeneric`.
+   These characters are ignored in the first pass
    without additional condition. All characters are taken into account in
    the second pass: ASCII characters with code $\string<65$ are sorted first if they
-   are not mentioned in the \^`\_sortingdata``<lang-tag>` macro.
+   are not mentioned in the `\_sortingdata...` macro.
    Others not mentioned characters have undefined behavior during sorting.
-
-   The compound characters (two or more characters interpreted as one
-   character in the sorting algorithm) are mapped to single invisible characters
-   in \`\_compoundchars``<lang-tag>`, see \`\_compoundcharscs` below for Czech rules,
-   where ch or Ch or CH are declared as a single letter sorted between H and I.
-   See \^`\_sortingdatacs` above where these declared characters are used.
    \_cod -----------------------------
 
-\_def \_ignoredcharscs  {.,;?!:'"|()[]<>=+}
-\_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V} % DZ etc. are sorted normally
+\_def \_ignoredcharsgeneric  {.,;?!:'"|()[]<>=+}
 
    \_doc -----------------------------
+   Sorting is always processed by rules of a given language. The macros
+   \`\_sortingdata``<lang-tag>`, \`\_ignoredchars``<lang-tag>`
+   and \`\_compoundchars``<lang-tag>` declare these rules.
+   The `<lang-tag>` is ISO code of the language: en, cs, de, pl, es for example.
+   The English language is implemented here. Other languages are implemented
+   in the `lang-data.opm` file (see section~\ref[langdata]).
+   \_cod -----------------------------
+
+\_let \_sortingdataen = \_sortingdatalatin   % English alphabet is subset of Latin
+\_let \_ignoredcharsen = \_ignoredcharsgeneric
+\_def \_compoundcharsen {}  % English doesn't have compound characters like DZ
+
+   \_doc -----------------------------
+   The \^`\_compoundchars``<lang-tag>` can declare changes performed before
+   sorting. For example Czech language declares:
+   \begtt
+   \_let \_sortingdatacs = \_sortingdatalatin  % Czech alphabet is subset of Latin
+   \_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V}
+   \endtt
+   It transforms two-letters `ch` to single character `^^T` because ch is
+   treated as single compound character by Czech rules and CH is sorted between H and I.
+   See \^`\_sortingdatalatin` where `^^T` is used. This declaration makes more
+   transformations of Ch and CH too. The declarations of the form `x:y` in the
+   \^`\_compoundchars``<lang-tag>` are separated by space.
+
+   You can declare a transformation from single letter to more letters too. For
+   example German rules sets ß equal to ss during sorting:
+   \begtt
+   \_let \_sortingdatade = \_sortingdatalatin  % German alphabet is subset of Latin
+   \_def \_compoundcharsde {ß:ss}
+   \endtt
+   If there are two words equal after first pass of sorting: Masse (mass)
+   and Maße (measures) for example, then second pass must decide about the
+   order. DIN 5007, section 6.1 says: ss must be before ß in this case. So,
+   we want to switch off the \^`\_compoundchars` declaration for the second
+   pass and use the order of s and ß given in `\_sortingdata`. This is
+   possible if the \`\_xcompoundchar``<lang-tag>` is defined.
+   It has precedence in the second pass of sorting. We declare for German:
+   \begtt
+   \_def \_xcompoundcharsde {}
+   \endtt
+   Geman rules mention alternative sorting for phone-books or similar lists of
+   names. The lettes ä ö ü should be interpreted as ae, oe and ue. So we get
+   Mueller $\lt$ Müller $\lt$ Muff. If this rule is not taken into account, we get
+   Mueller $\lt$ Muff $\lt$ Müller. The rule can be implemented by:
+   \begtt
+   \_def \_compoundcharsde {ß:ss Ä:AE Ö:OE Ü:UE ä:ae ö:oe ü:ue}
+   \endtt
+   Because u $\lt$ ü in `\_sortingdata` and because `\_xcompoundcharsde` is
+   empty, we have Mueller $\lt$ Müller after second pass of the sorting.
+
    You can declare these macros for more languages if you wish to use
    `\makeindex` with sorting rules with respect to your language.
    Note: if you need to map compound characters to a character, don't use
    `^^I`, `^^J` or `^^M` because these characters have very specific category codes.
-   And use spaces to separate more mappings, like in \^`\_compoundcharscs` above.
    
-   If you create `\_sortingdata` etc. for your language, please, send them
+   If you created `\_sortingdata` etc. for your language, please, send them
    to me. I am ready to add them to the file `lang-data.opm` in a new \OpTeX/ release.
-   See also section~\ref[langdecl].
+   See also section~\ref[langdata].
 
-   Preparing to primary pass is implemented by the \`\_setprimarysorting` macro.
-   It is called from `\makeindex` macro and all processing of sorting is in a group.
+   \bigskip
+   Preparing to primary pass is implemented by the \`\_setprimarysorting` macro
+   implemented here.
+   The <lang-tag> is saved to the \^`\_sortinglang` macro when sorting is
+   initialized in \^`\_dosorting` (it is typicaly derived from current `\language` value).
+   The \^`\_setprimarysorting` is called from \^`\_dosorting` macro and all
+   processing of sorting is in a group. It sets actual
+   \^`\_sortingdata`, \^`\_compoundchars` and \^`\_ignoredchars` if given language
+   declares them. If not then warning will be printed using \`\_nold` macro
+   and English data are used. The `\lccode` of all characters from
+   \^`\_sortingdata` and \^`\_ignoredchars` are set. The sorted words will be converted
+   using \^`\_compondchars` folowed by `\lowercase` before first pass is run.
    \_cod -----------------------------
 
 \_def\_setprimarysorting {%
    \_ea\_let \_ea\_sortingdata \_csname _sortingdata\_sortinglang\_endcsname
    \_ea\_let \_ea\_compoundchars \_csname _compoundchars\_sortinglang\_endcsname
    \_ea\_let \_ea\_ignoredchars \_csname _ignoredchars\_sortinglang\_endcsname
+   \_def\_nold{}%
    \_ifx \_sortingdata\_relax \_addto\_nold{ sortingdata}%
        \_let \_sortingdata = \_sortingdataen \_fi
    \_ifx \_compoundchars\_relax \_addto\_nold{ compoundchars}%
        \_let \_compoundchars = \_compoundcharsen \_fi
    \_ifx \_ignoredchars\_relax \_addto\_nold{ ignoredchars}%
        \_let \_ignoredchars = \_ignoredcharsen \_fi
+   \_ifx\_nold\_empty\_else \_opwarning{Missing\_nold\_space for language (\_sortinglang)}\_fi
    \_ifx \_compoundchars\_empty \_else
       \_edef \_compoundchars {\_detokenize\_ea{\_compoundchars} }\_fi % all must be catcode 12
    \_def \_act ##1{\_ifx##1\_relax \_else
@@ -135,8 +188,7 @@
    The \`\_preparesorting` `\,<string>` converts `<string>` to `\_tmpb`
    with respect to the data initialized in \^`\_setprimarysorting` or
    \^`\_setsecondarysorting`.\nl
-   The compoud characters are converted to single characters by the
-   \`\_docompound` macro.
+   The compoud characters are converted by the \`\_docompound` macro.
    \_cod -----------------------------
 
 \_def \_preparesorting #1{%
@@ -196,7 +248,7 @@
    code is created by my son Miroslav.
    The \`\_mergesort` macro expects that all items in `\_iilist` are separated
    by a comma when it starts. It ends with sorted items in `\_iilist` without commas.
-   So `\_dosorting` macro must prepare commas between items.
+   So \^`\_dosorting` macro must prepare commas between items.
    \_cod -----------------------------
 
 \_def\_mergesort #1#2,#3{% by Miroslav Olsak
@@ -248,8 +300,8 @@
 \_newifi \_ifasciisorting  \_asciisortingfalse
 \_def\_dosorting #1{%
    \_begingroup
-     \_def\_nold{}%
      \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
+      \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
       \_ifasciisorting
           \_edef\_sortinglang{ASCII}%
           \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignoreit\_csstring##1}}%
@@ -257,12 +309,13 @@
       \_else
          \_setprimarysorting
       \_fi
-      \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
-      \_ifx\_nold\_empty\_else \_opwarning{Missing\_nold\_space for language (\_sortinglang)}\_fi
       \_def \_act##1{\_preparesorting ##1\_edef##1{\_tmpb}}%
-      \_ea\_xargs \_ea\_act #1;%
+      \_ea\_xargs \_ea\_act #1;% \_preparesorting for first pass of sorting applied
+      \_ifcsname _xcompoundchars\_sortinglang\_endcsname
+          \_ea\_let \_ea\_compoundchars \_csname _xcompoundchars\_sortinglang\_endcsname
+      \_fi  % \_compoundchars can differ in the second pass of sorting
       \_def \_act##1{\_addto #1{##1,}}%
-      \_edef #1{\_ea}\_ea\_xargs \_ea\_act #1;%
+      \_edef #1{\_ea}\_ea\_xargs \_ea\_act #1;% commas between items added, mergesort initialized
       \_edef \_iilist{\_ea}\_ea\_mergesort #1\_end,\_end
    \_ea\_endgroup
    \_ea\_def\_ea#1\_ea{\_iilist}%
@@ -449,6 +502,7 @@
 
 \_endcode % -------------------------------------
 
+2022-06-28 \_xcompoundchars introduced, comments upgraded (German sorting mentioned)
 2022-03-18 \iid didn't ignore space, bug fixed
 2022-02-19 \_sotringdataen etc. moved to lang-data.opm file
 2021-02-15 \_expandafter -> \_ea

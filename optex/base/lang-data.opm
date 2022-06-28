@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2022-02-19>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2022-06-28>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -12,9 +12,9 @@
 \_sdef{_mt:today:en}{\_mtext{m\_the\_month} \_the\_day, \_the\_year}
 \_quotationmarks en {“”‘’}
 
-\_let \_sortingdataen = \_sortingdatacs  % it can be shared with Czech
-\_let \_ignoredcharsen = \_ignoredcharscs
-\_def \_compoundcharsen {}
+%\_let \_sortingdataen =  \_sortingdatalatin % set already, see section 2.33, makeindex.opm
+%\_let \_ignoredcharsen = \_ignoredcharsgeneric
+%\_def \_compoundcharsen {}
 
 \_langdata cs {Czech}   % ------------------------------------------------
 %           Chapter      Table       Figure       Subject
@@ -32,14 +32,19 @@
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks cs {„“‚‘}
 
-%\_def\_sortingdatacs   {...} % all these macros are preloaded in the format,
-%\_def\_compoundcharscs {...} % see section 2.33 or file makeindex.tex.
-%\_def\_ignoredcharscs  {...}
+\_let \_sortingdatacs  = \_sortingdatalatin
+\_let \_ignoredcharscs = \_ignoredcharsgeneric
+\_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V} % see \_compoundchars in section 2.33
 
 \_langdata de {German}  % ------------------------------------------------
 \_langw de  Kapitel      Tabelle     Abbildung    Betreff
 \_quotationmarks de {„“‚‘}
-% todo
+%todo
+\_let \_sortingdatade  = \_sortingdatalatin
+\_let \_ignoredcharsde = \_ignoredcharsgeneric
+\_def \_compoundcharsde {ß:ss}
+\_def \_xcompoundcharsde {} % ß is interpreted in second pass of sorting
+%\_def \_compoundcharsde {ß:ss Ä:AE Ö:OE Ü:UE ä:ae ö:oe ü:ue} % alternative sorting
 
 \_langdata it {Italian} % ------------------------------------------------
 \_langw it  Capitolo     Tabella     Fig.         Oggetto
@@ -100,5 +105,6 @@
 
 \_endcode
 
+2022-06-28: German rules added
 2022-02-19: concept finalized, but data still far of competness
 2022-02-04: released

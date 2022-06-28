@@ -249,6 +249,8 @@
 \_public \uselanguage ;
 
    \_doc -----------------------------
+   \secc [langdata] Data for various languages
+
    The \"language data" include declarations of
    rules for sorting (see section~\ref[makeindex]),
    language-dependent phrases and quotation marks (see section~\ref[langphrases]).
