@@ -26,37 +26,44 @@
 
 \_def \_sortingdatalatin {%
   /,{ },-,&,@,%
-  aAäÄáÁ,%
+  aAàÀâÂäÄáÁ,%
+  ąĄ,%
   bB,%
   cC,%
-  čČ,%
+  ćĆčČ,%
   dDďĎ,%
-  eEéÉěĚ,%
+  eEèÈéÉëËêÊěĚ,%
+  ęĘ,%
   fF,%
   gG,%
   hH,%
   ^^T^^U^^V,% ch Ch CH
-  iIíÍ,%
+  iIíÍïÏîÎ,%
   jJ,%
   kK,%
   lLĺĹľĽ,%
+  łŁ,%
   mM,%
   nNňŇ,%
+  ńŃñÑ,%
   oOöÖóÓôÔ,%
   pP,%
   qQ,%
   rRŕŔ,%
   řŘ,%
   sSß,%
-  šŠ,%
+  śŚšŠ,%
   tTťŤ,%
-  uUüÜúÚůŮ,%
+  uUùÙûÛüÜúÚůŮűŰ,%
   vV,%
   wW,%
   xX,%
-  yYýÝ,%
+  yYýÝÿŸ,%
   zZ,%
   žŽ,%
+  źŹ,%
+  żŻ,%
+  ^^Z,% Hungarian: cz:c^^Z, etc., see \_compoundcharshu in lang-data.opm
   0,1,2,3,4,5,6,7,8,9,'%
 }
 
@@ -69,7 +76,7 @@
    Others not mentioned characters have undefined behavior during sorting.
    \_cod -----------------------------
 
-\_def \_ignoredcharsgeneric  {.,;?!:'"|()[]<>=+}
+\_def \_ignoredcharsgeneric  {.,;?!:'"|()[]<>=+-}
 
    \_doc -----------------------------
    Sorting is always processed by rules of a given language. The macros
@@ -108,13 +115,13 @@
    order. DIN 5007, section 6.1 says: ss must be before ß in this case. So,
    we want to switch off the \^`\_compoundchars` declaration for the second
    pass and use the order of s and ß given in `\_sortingdata`. This is
-   possible if the \`\_xcompoundchar``<lang-tag>` is defined.
+   possible if the \`\_xcompoundchars``<lang-tag>` is defined.
    It has precedence in the second pass of sorting. We declare for German:
    \begtt
    \_def \_xcompoundcharsde {}
    \endtt
    Geman rules mention alternative sorting for phone-books or similar lists of
-   names. The lettes ä ö ü should be interpreted as ae, oe and ue. So we get
+   names. The letters ä ö ü should be interpreted as ae, oe and ue. So we get
    Mueller $\lt$ Müller $\lt$ Muff. If this rule is not taken into account, we get
    Mueller $\lt$ Muff $\lt$ Müller. The rule can be implemented by:
    \begtt
@@ -132,8 +139,16 @@
    to me. I am ready to add them to the file `lang-data.opm` in a new \OpTeX/ release.
    See also section~\ref[langdata].
 
+   French sorting rule says: if the words are the same except for accents
+   then accented letters are sorted after unaccented leters but
+   read the words from their end in the second pass.
+   For example corect sorting is: cote $\lt$ côte $\lt$ coté
+   $\lt$ côté. This rule can be activated if the contol sequence
+   \`\_secondpass``<lang-tag>` is set to \^`\_reversewords`.
+   For example, `lang-data.opm` declares `\_let\_secondpassfr=\_reversewords`.
+
    \bigskip
-   Preparing to primary pass is implemented by the \`\_setprimarysorting` macro
+   Preparing to primary pass is performed by the \`\_setprimarysorting` macro
    implemented here.
    The <lang-tag> is saved to the \^`\_sortinglang` macro when sorting is
    initialized in \^`\_dosorting` (it is typicaly derived from current `\language` value).
@@ -143,7 +158,7 @@
    declares them. If not then warning will be printed using \`\_nold` macro
    and English data are used. The `\lccode` of all characters from
    \^`\_sortingdata` and \^`\_ignoredchars` are set. The sorted words will be converted
-   using \^`\_compondchars` folowed by `\lowercase` before first pass is run.
+   using \^`\_compoundchars` followed by `\lowercase` before first pass is run.
    \_cod -----------------------------
 
 \_def\_setprimarysorting {%
@@ -211,7 +226,7 @@
    comparison.
    \nl
    The macro
-   \`\_testAleB` `<converted string1>&\_relax<converted-string2>\_relax \,<string1>\,<string2>`\nl
+   \`\_testAleB` `<converted-string1>&\_relax<converted-string2>&\_relax \,<string1>\,<string2>`\nl
    does the real work. It reads the first character from both converted strings, compares them
    and if it is equal then calls itself recursively else gives the result.
    \_cod -----------------------------
@@ -229,17 +244,27 @@
   \_else \_ifnum `#1<`#3 \_AleBtrue \_else \_AleBfalse \_fi
   \_fi
 }
+
+   \_doc -----------------------------
+   The \`\_testAleBsecondary` `\,<string1> \,<string2>` is run if the
+   words are equal in the primary pass. It runs \^`\_setsecondarysorting` if it
+   was not initialized already. Then prepares compared words to `\_tmpa` and
+   `\_tmpb` and corrects them by \^`\_prepsecondpass` if needed.
+   Finaly, the test is recursively done by the macro \`\_testAleBsecondaryX`
+   `<converted-string1>0\_relax<converted-string2>1\_relax`
+   \_cod -----------------------------
+
+
 \_def\_testAleBsecondary#1#2{%
-  \_bgroup
-     \_setsecondarysorting
-     \_preparesorting#1\_let\_tmpa=\_tmpb \_preparesorting#2%
-     \_edef\_tmpb{\_tmpa0\_relax\_tmpb1\_relax}%
-     \_ea\_testAleBsecondaryX \_tmpb
-  \_egroup
+  \_setsecondarysorting \_let\_setsecondarysorting=\_relax
+  \_preparesorting#1\_let\_tmpa=\_tmpb \_preparesorting#2%
+  \_prepsecondpass
+  \_edef\_tmpb{\_tmpa0\_relax\_tmpb1\_relax}%
+  \_ea\_testAleBsecondaryX \_tmpb
 }
 \_def\_testAleBsecondaryX #1#2\_relax #3#4\_relax {%
    \_if #1#3\_testAleBsecondaryX #2\_relax #4\_relax
-   \_else \_ifnum `#1<`#3 \_global\_AleBtrue \_else \_global \_AleBfalse \_fi
+   \_else \_ifnum `#1<`#3 \_AleBtrue \_else \_AleBfalse \_fi
    \_fi
 }
 
@@ -300,10 +325,10 @@
 \_newifi \_ifasciisorting  \_asciisortingfalse
 \_def\_dosorting #1{%
    \_begingroup
-     \_ifx\_sotringlang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
+      \_ifasciisorting \_def\_sortinglang{ASCII}\_fi
+      \_ifx\_sortinglang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
       \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
-      \_ifasciisorting
-          \_edef\_sortinglang{ASCII}%
+      \_ismacro\_sortinglang{ASCII}\_iftrue
           \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignoreit\_csstring##1}}%
           \_let \_setsecondarysorting=\_relax
       \_else
@@ -314,12 +339,29 @@
       \_ifcsname _xcompoundchars\_sortinglang\_endcsname
           \_ea\_let \_ea\_compoundchars \_csname _xcompoundchars\_sortinglang\_endcsname
       \_fi  % \_compoundchars can differ in the second pass of sorting
+      \_csname _secondpass\_sortinglang \_endcsname % activates \_reversewords if needed
       \_def \_act##1{\_addto #1{##1,}}%
       \_edef #1{\_ea}\_ea\_xargs \_ea\_act #1;% commas between items added, mergesort initialized
       \_edef \_iilist{\_ea}\_ea\_mergesort #1\_end,\_end
    \_ea\_endgroup
    \_ea\_def\_ea#1\_ea{\_iilist}%
 }
+
+   \_doc -----------------------------
+   French rules needs reverese reading the words in the second pass.
+   The \`\_reversewords` is activated in this case and it adds
+   new job to the macro \`\_prepsecondpass`: it reverses the letters in
+   the compared words (saved in `\_tmpa` and `\_tmpb`) by the expandable
+   \`\_sortrevers` macro. The \^`\_prepsecondpass` macro is used in the
+   \^`\_testAleBsecondary` and it is empty by default.
+   \_cod -----------------------------
+
+\_def\_prepsecondpass{}
+\_def\_reversewords{%
+   \_addto\_prepsecondpass{\_edef\_tmpa{\_ea\_sortrevers\_tmpa\_relax}%
+                           \_edef\_tmpb{\_ea\_sortrevers\_tmpb\_relax}}%
+}
+\_def\_sortrevers #1#2\_relax{\_ifx^#2^#1\_else \_sortrevers#2\_relax #1\_fi}
 
    \_doc -----------------------------
    The \`\makeindex` prints the index. First, it sorts the `\_iilist`
@@ -502,6 +544,8 @@
 
 \_endcode % -------------------------------------
 
+2022-06-28 \_reversewords for French sorting introduced
+2022-06-28 \_sortingdatalatin covers more languages
 2022-06-28 \_xcompoundchars introduced, comments upgraded (German sorting mentioned)
 2022-03-18 \iid didn't ignore space, bug fixed
 2022-02-19 \_sotringdataen etc. moved to lang-data.opm file

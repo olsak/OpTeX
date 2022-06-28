@@ -77,8 +77,9 @@
    Note that `\foreach <list>\do {<what>}` is equivalent to `\foreach <list>\do #1{<what>}`.
 
    Recommendation: it is better to use private variants of \`\_foreach`.
-   When the user writes `\input tikz` then `\foreach` macro is redefined! The
-   private variants use \`\_do` separator instead `\do` separator.
+   When the user writes `\input tikz` then `\foreach` macro is redefined in
+   each TikZ environment.
+   The private variants use \`\_do` separator instead `\do` separator.
    \_cod -----------------------------
 
 \_newcount\_frnum        % the numeric variable used in \fornum

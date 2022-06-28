@@ -36,6 +36,7 @@
 \_let \_ignoredcharscs = \_ignoredcharsgeneric
 \_def \_compoundcharscs {ch:^^T Ch:^^U CH:^^V} % see \_compoundchars in section 2.33
 
+
 \_langdata de {German}  % ------------------------------------------------
 \_langw de  Kapitel      Tabelle     Abbildung    Betreff
 \_quotationmarks de {„“‚‘}
@@ -57,16 +58,57 @@
 \_langw es  Capítulo     Tabla       Figura       Sujeto
 \_quotationmarks es {“”«»}
 % todo
+\_let \_sortingdataes  = \_sortingdatalatin
+\_let \_ignoredcharses = \_ignoredcharsgeneric
+\_def \_compoundcharses {}  % since 1994
+
 
 \_langdata fr {French}  % ------------------------------------------------
 \_langw fr  Chapitre     Tableau     Figure       Matière
 \_quotationmarks fr {“”«»}
-% toto
+% todo
+\_let \_sortingdatafr  = \_sortingdatalatin
+\_let \_ignoredcharsfr = \_ignoredcharsgeneric
+\_def \_compoundcharsfr {}
+\_let \_secondpassfr   = \_reversewords % accents in second pass are read from the end
+
 
 \_langdata pl {Polish}  % ------------------------------------------------
 \_langw pl  Rozdział     Tabela      Ilustracja   Temat
 \_quotationmarks pl {“”«»}
 % todo
+\_let \_sortingdatapl  = \_sortingdatalatin
+\_let \_ignoredcharspl = \_ignoredcharsgeneric
+\_def \_compoundcharspl {}
+
+
+\_langdata sv {Swedish} % ------------------------------------------------
+\_langw sv  Kapitel      Tabell      Figur        Föremål
+\_quotationmarks sv {””’’}
+% todo
+\_def \_sortingdatasv {% it is not a subset of \_sortingdatalatin, there is different order
+  /,{ },-,&,@,%
+  aA,bB,cC,dD,eE,fF,gG,hH,iI,jJ,kK,lL,mM,nN,oO,%
+  pP,qQ,rR,sS,tT,uU,vVwW,xX,yY,zZ,%
+  åÅ,äÄ,öÖ,%
+  0,1,2,3,4,5,6,7,8,9,'%
+}
+\_let \_ignoredcharssv = \_ignoredcharsgeneric
+\_def \_compoundcharssv {}
+
+
+\_langdata hu {Hungarian}
+\_langw hu  Fejezet      Táblázat    Ábra        Téma
+\_quotationmarks hu {„”»«}
+%todo
+\_let \_sortingdatahu  = \_sortingdatalatin
+\_let \_ignoredcharshu = \_ignoredcharsgeneric
+\_def \_compoundcharshu {cs:c^^Z Cs:C^^Z CS:C^^Z
+   dzz:d^^Z^^Z Dzz:D^^Z^^Z DZZ:D^^Z^^Z dz:d^^Z Dz:D^^Z DZ:D^^Z
+   gy:g^^Z Gy:G^^Z GY:G^^Z ly:l^^Z Ly:L^^Z LY:L^^Z ny:n^^Z Ny:N^^Z NY:N^^Z
+   sz:s^^Z Sz:S^^Z SZ:S^^Z ty:t^^Z Ty:T^^Z TY:Y^^Z
+   zs:z^^Z Zs:Z^^Z ZS:Z^^Z}
+
 
 \_langdata el {Greek}   % ------------------------------------------------
 \_langw el  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
@@ -80,7 +122,9 @@
 
 \_langdata uk {Ukrainian} % -----------------------------------------------
 \_langw uk  Глави        Таблиця     Малюнок      Тема
+\_quotationmarks uk {“”«»}
 % todo
+
 
 \_langdata sk {Slovak}  % ------------------------------------------------
 \_langw sk  Kapitola     Tabuľka     Obrázok      Vec
@@ -92,9 +136,10 @@
 \_sdef{_mt:today:sk}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks sk {„“‚‘}
 
-\_let \_sortingdatask = \_sortingdatacs     % it can be shared with Czech
-\_let \_compoundcharssk = \_compoundcharscs
-\_let \_ignoredcharssk = \_ignoredcharscs
+\_let \_sortingdatask = \_sortingdatalatin
+\_let \_ignoredcharssk = \_ignoredcharsgeneric
+\_let \_compoundcharssk = \_compoundcharscs  % Dz Dž are sorted OK without new setting
+
 
 \_langdata pt {Portuguese} % ------------------------------------------------
 \_langw pt  Capítulo     Tabela      Figura       Assunto
@@ -105,6 +150,7 @@
 
 \_endcode
 
-2022-06-28: German rules added
-2022-02-19: concept finalized, but data still far of competness
+2022-06-28: Spanish, Polish, French, Swedish, Hungarian sorting rules added
+2022-06-28: German sorting rules added
+2022-02-19: concept finalized, but data still far of completness
 2022-02-04: released
