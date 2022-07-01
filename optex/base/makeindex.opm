@@ -366,7 +366,12 @@
    \_doc -----------------------------
    The \`\makeindex` prints the index. First, it sorts the `\_iilist`
    second, it prints the sorted `\_iilist`, each item is printed
-   using \^`\_printindexitem`.
+   using \^`\_printindexitem`.\nl
+   We set `\leftskip=\iindent` and we suppose that each index entry
+   starts by `\noindent\hskip-\iindent` (see the macro \~`\_printii`).
+   Then the next lines of the same index
+   entry (if the page list is broken to more pages) is indented by
+   `\leftskip=\iindent`.
    \_cod -----------------------------
 
 \_def\_makeindex{\_par

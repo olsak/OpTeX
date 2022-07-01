@@ -1,12 +1,17 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2021-05-15>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2022-07-01>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
    \_cod -----------------------------
 
 \_fontfam[lmfonts]
+
+\_let \mlinkcolor=\Red    % main doc. points
+\_let \ulinkcolor=\Blue   % user doc. points
+\_let \fnamecolor=\Brown  % file names in listing headers
+\_def \bgverbcolor {\_setcmykcolor{0 0 .3 .03}} % background for listings
 \_hyperlinks \Green \Green
 \_enlang
 \_enquotes
@@ -121,32 +126,30 @@
    example at the beginning of this section.
    \_cod -----------------------------
 
-\_def\_intlink{\_link[cs:\_tmpa]{\Blue}{\_csstring\\\_tmpb}}
+\_def\_intlink{\_link[cs:\_tmpa]{\ulinkcolor}{\_csstring\\\_tmpb}}
 
    \_doc -----------------------------
    The lines in the listing mode have a yellow background.
    \_cod -----------------------------
 
-\_def\Yellow{\_setcmykcolor{0 0 .3 .03}}
-
 \_def\_printcodeline#1{\_advance \_maxlines by-1
    \_ifnum \_maxlines<0 \_ea \_endverbprinting \_fi
    \_ifx\_printfilename\_relax \_penalty \_ttpenalty \_fi \_vskip-4pt
-   \_noindent\_rlap{\Yellow \_vrule height8pt depth5pt width\_hsize}%
+   \_noindent\_rlap{\bgverbcolor \_vrule height8pt depth5pt width\_hsize}%
    \_printfilename
    \_indent \_printverblinenum #1\_par}
 
 \_def\_printfilename{\_hbox to0pt{%
-   \_hskip\_hsize\_vbox to0pt{\_vss\_llap{\Brown\docfile}\_kern7.5pt}\_hss}%
+   \_hskip\_hsize\_vbox to0pt{\_vss\_llap{\fnamecolor\docfile}\_kern7.5pt}\_hss}%
    \_let\_printfilename=\_relax
 }
 \_everytt={\_let\_printverblinenum=\_relax}
 
 \_long\_def\_endverbprinting#1\_end#2\_end{\_fi\_fi \_global\_maxlines=100000
-   \_noindent\_typosize[8/]\_dots etc. (see {\_tt\Brown\docfile})}
+   \_noindent\_typosize[8/]\_dots etc. (see {\_tt\fnamecolor\docfile})}
 
    \_doc -----------------------------
-   `\docfile` is currently documented file.\nl
+   \`\docfile` is currently documented file.\nl
    \`\printdoc` and \`\printdoctail` macros are defined here.
    \_cod -----------------------------
 
@@ -174,15 +177,23 @@
 \_public \vitt ;
 
    \_doc -----------------------------
-   The Index entries are without the trailing backslash. We must add it
-   when printing Index.
+   The Index entries are without the trailing backslash in `.ref` file.
+   When printing Index, we distinguish the Index entries with their main
+   documentation point (they are created as links and backslash is added),
+   Index entries with only user documentation points have backslash added
+   but no link is created. Other index entries are printed as usuall
+   without backslash.
    \_cod -----------------------------
 
 \_addto \_ignoredcharsen {_}  % \foo, \_foo is the same in the fist pass of sorting
-\_def\_printii #1#2&{%
-   \_ismacro\_lastii{#1}\_iffalse \_newiiletter{#1}{#2}\_def\_lastii{#1}\_fi
-   \_gdef\_currii{#1#2}\_the\_everyii\_noindent
-   \_hskip-\_iindent \_ignorespaces\_printiiA\bslash#1#2//}
+\_let\_optexprintii=\_printii % original \_printii used for other Index entries
+\_def\_printii #1&{%
+   \_ifcsname cs:#1\_endcsname
+      \_noindent \_hskip-\_iindent {\_tt \_link[cs:#1]\ulinkcolor{\_bslash#1} }\_else
+      \_ifcsname cs:^#1\_endcsname \_noindent \_hskip-\_iindent {\_tt\_bslash#1 }\_else
+         \_afterfi{\_afterfi{\_optexprintii #1&}}\_fi\_fi
+}
+\_def\_pgprintA #1{#1} % no hyperlinks from page numbers
 
 \_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0
    {\_rm\_printpages #1,:,\_par}}
@@ -224,18 +235,18 @@
    \_ifcsname cs:\_tmp\_endcsname\_else \_dest[cs:\_tmp]\_fi
    \_sxdef{cs:\_tmp}{}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname
-            \_link[cs:^\_tmp]{\Red}{\_tt\_csstring\\\_tmp}\_else
-            {\_tt\Red\_csstring\\\_tmp}\_fi}%
+            \_link[cs:^\_tmp]{\mlinkcolor}{\_tt\_csstring\\\_tmp}\_else
+            {\_tt\mlinkcolor\_csstring\\\_tmp}\_fi}%
 }
 \_def\^`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
-         \_link[cs:\_tmp]{\Blue}{\_tt\_string#1}}%
+         \_link[cs:\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
    \_futurelet\_next\_cslinkA
 }
 \_def\_cslinkA{\_ifx\_next`\_ea\_ignoreit \_else \_ea\_ea\_ea`\_ea\_string\_fi}
 
 \_def\~`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
-   \_hbox{\_link[cs:^\_tmp]{\Blue}{\_tt\_string#1}}%
+   \_hbox{\_link[cs:^\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
    \_futurelet\_next\_cslinkA
 }
 
@@ -346,6 +357,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2022-07-01 \_printii improved, colors declaration part added.
 2021-05-15 \_endinput shifted after \_processinput when \_endcode is scanned.
 2021-05-14 \_catcodedot, \_Doctab introduced.
 2021-05-13 \def\t added, bug fixed.

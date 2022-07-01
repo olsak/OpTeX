@@ -2578,7 +2578,7 @@ the implementation is this splitting problem:
 \newdimen\frtop \newdimen\frbottom % positions of top and bottom text on the pages
 \def\frcolor{.8 g } % light grey -- color of blocks.
 \pgbackground={%
-   \slet{tmp}{frm:\the\pageno}
+   \slet{tmp}{frm:\the\gpageno}
    \ifx\tmp\undefined \def\tmp{}\fi
    \frtop=\dimexpr \pdfpageheight-\voffset+\smallskipamount\relax
    \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
