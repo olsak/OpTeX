@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2021-03-03>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2022-07-11>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -69,7 +69,7 @@
    \enditems
    \_cod ---------------------------
 
-\_def\_printchap #1{\_vfill\_supereject
+\_def\_printchap #1{\_vfill\_supereject \_prevdepth=0pt
    \_vglue\_medskipamount % shifted by topkip+\medskipamount
    {\_chapfont \_noindent \_mtext{chap} \_printrefnum[@]\_par
     \_nobreak\_smallskip
@@ -295,15 +295,17 @@
 
    \_doc -----------------------------
    \OpTeX/ sets `\headline={}` by default, so no running headings are printed.
-   You can activate the running headings by following code, for example:
+   You can activate the running headings by following code, for example.
+   See also \ulink[https://github.com/olsak/OpTeX/issues/100]{issue 100}.
    \begtt
-   \addto\_chapx {\_edef\_runningchap {\_thechapnum: \_unexpanded\_ea{\_savedtitle}}}
+   \addto\_chapx {\globaldefs=0 \vfil\break % headline of previous chapter is printed
+      \xdef\_runningchap {\_thechapnum: \unexpanded\_ea{\_savedtitle}}}
    \def \formathead #1#2{\isempty{#1}\iffalse #1: #2\fi}
    \headline = {%
       \ifodd \pageno
           \hfil \ea\formathead\firstmark{}{}%
       \else
-          Chapter: \runningchap \hfil
+          \ifx\_runningchap\_undefined \else Chapter \_runningchap \fi \hfil
       \fi
    }
    \endtt
@@ -459,6 +461,7 @@
 
 \_endcode % -------------------------------------
 
+2022-07-11 \_printchap: \_prevdepth=0pt added, see issue 100
 2021-03-03 \_captionsep introduced, \_othe used in \_thetnum, \_thefnum.
 2021-02-09 \thisoutline implemented
 2021-01-26 \_nl: \unskip added
