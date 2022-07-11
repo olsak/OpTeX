@@ -1,0 +1,34 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Montserrat] \Montserrat {Inspired from old posters in Montserat in Buenos Aires}
+        {\caps \alter \light \elight \xlight \medium \semibold} {\rm \bf \it \bi} {}
+        {[Montserrat-Regular]}
+        {\_def\_fontnamegen {[Montserrat\_alterV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \caps ...... caps & small caps^^J
+ \alter ..... alternative characters^^J
+ \medium .... \rm \it Medium, \bf \bi ExtraBold^^J
+ \semibold .. \rm \it SemiBold, \bf \bi Black^^J
+ \light ..... \rm \it Light, \bf \bi SemiBold^^J
+ \elight .... \rm \it ExtraLight, \bf \bi Medium^^J
+ \xlight .... \rm \it Thin, \bf \bi Regular^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},alter={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \alter    {\_fsetV alter=Alternates }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \xlight   {\_fvars Thin Regular ThinItalic Italic }
+\_moddef \elight   {\_fvars ExtraLight Medium ExtraLightItalic MediumItalic }
+\_moddef \light    {\_fvars Light SemiBold LightItalic SemiBoldItalic }
+\_moddef \medium   {\_fvars Medium ExtraBold MediumItalic ExtraBoldItalic }
+\_moddef \semibold {\_fvars SemiBold Black SemiboldItalic BlackItalic }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

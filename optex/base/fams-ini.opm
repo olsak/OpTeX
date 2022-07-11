@@ -169,6 +169,11 @@
      \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
    }
 
+\_famfrom {Julieta Ulanovsky, http://www.zkysky.com.ar}
+\_faminfo [Montserrat] {Inspired from old posters in Montserat in Buenos Aires} {f-montserrat}
+   { -,\caps,\alter: {\rm\bf\it\bi} \xlight,\elight,\light,-,\medium,\semibold: {\rm\it}
+     -,\medium,\semibold: {\bf\bi} }
+
 \_famfrom {CTU in Prague, Roman Cernohous}
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika}
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }

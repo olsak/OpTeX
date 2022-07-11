@@ -1,9 +1,10 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {Font catalogue <2022-02-22>} % loaded on demand by \fontfam[catalog]
+\_codedecl \_undefined {Font catalogue <2022-07-11>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
 \_initunifonts
+\_raggedbottom
 \_begingroup
 
 \_istoksempty\_catalogmathsample \_iftrue \_noloadmath \_fi
@@ -133,5 +134,6 @@ described in the \code{fams-ini.opm} file.
 
 \_endcode % -------------------------------------
 
+2022-07-11  \_raggedbottom added
 2022-02-22  \_ttfixed, \footline set as global, bug fixed
 2020-02-26  released
