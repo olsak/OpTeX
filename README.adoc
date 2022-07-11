@@ -4,3 +4,5 @@ OpTeX including development versions.
 
 See http://petr.olsak.net/optex/
 
+Documentation: http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf
+
