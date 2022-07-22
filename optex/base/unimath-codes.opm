@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-02-22>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-07-20>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -211,6 +211,8 @@
 \_Umathcode `* = 2 1 "02217  % equivalent to \ast, like in plain TeX
 
 \_Umathcode "03A2 = 7 1 "03F4 % \varTheta
+
+\_Umathcode `© = 0 1 `© % usage $\copyright$ can be seen in old documents
 
 \_protected\_def \_sqrt       {\_Uradical 1 "0221A }
 \_protected\_def \_cuberoot   {\_Uradical 1 "0221B }
@@ -449,6 +451,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-07-20  \Umathcode for copyright declared
 2022-02-22  \rm, \bf etc. moved to font-select, \_marm, \_mabf etc. introduced
 2022-02-08  several wide math accents added
 2022-01-06  \varTheta corrected
