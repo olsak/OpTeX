@@ -23,7 +23,10 @@
 \egroup
 
    \_doc -----------------------------
-   \`\pdfunidef``\macro{<text>}` does more things than only converting to hexadecimal PDF string.
+   \`\pdfunidef``\macro{<text>}` defines `\macro` as <text> converted to
+   Big Endian UTF-16 and enclosed to \code{<>}. Example of usage:
+   `\pdfunidef\infoauthor{Petr Olšák} \pdfinfo{/Author \infoauthor}`.\nl
+   \^`\pdfunidef` does more things than only converting to hexadecimal PDF string.
    The <text> can be scanned in verbatim mode (it is true becuase \^`\_Xtoc`
    reads the <text> in verbatim mode). First `\edef` do
    `\_scantextokens\unexpanded` and second `\edef` expands the parameter
@@ -86,7 +89,7 @@
 }
 
    \_doc -----------------------------
-   The \^`\regmacro` is used in order to sed the values of macros
+   The \^`\regmacro` is used in order to set the values of macros
    `\em`, `\rm`, `\bf`, `\it`, `\bi`, `\tt`, `\/` and `~` to values usable in
    PDF outlines.
    \_cod -----------------------------
