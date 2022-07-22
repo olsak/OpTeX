@@ -33,7 +33,7 @@
 \_delimiterfactor=901 % parameter for scaling delimiters
 \_delimitershortfall=5pt
 \_nulldelimiterspace=1.2pt
-\_scriptspace=0.5pt
+%\_scriptspace=0.5pt % \Umathspaceafterscript used in \_setmathdimens, \_setunimathdimens instead
 \_maxdepth=4pt
 \_splitmaxdepth=\_maxdimen
 \_boxmaxdepth=\_maxdimen

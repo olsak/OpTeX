@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalmath {Math fonts CM + AMS preloaded <2022-02-22>} % preloaded in format
+\_codedecl \normalmath {Math fonts CM + AMS preloaded <2022-07-22>} % preloaded in format
 
   \_doc ------------------------------
   We have two math macros \`\normalmath` for the normal shape of all math
@@ -169,16 +169,36 @@
 \_public \setmathsizes \ptunit \ptmunit ;
 
    \_doc -----------------------------
+   \`\_setmathparam``<luatex-param> {<factor>}` sets
+   <luatex-param> (like `\Umathspaceafterscript`) to values dependent
+   on `1em` of textfont, scriptfont, scriptscriptfont. The <factor> is
+   scaling factor of mentioned `1em`.
+   \_cod -----------------------------
+
+\_def\_setmathparam#1#2{%
+   #1\_displaystyle      =#2\_fontdimen6\_textfont1
+   #1\_textstyle         =#2\_fontdimen6\_textfont1
+   #1\_scriptstyle       =#2\_fontdimen6\_scriptfont1
+   #1\_scriptscriptstyle =#2\_fontdimen6\_scriptscriptfont1
+}
+
+   \_doc -----------------------------
    The \`\_setmathdimens` macro is used in \^`\normalmath` or \^`\boldmath`
    macros. It makes math dimensions dependent on the font size (plain \TeX/ sets
    them only for 10\,pt typesetting). The `\skewchar` of some math families are
-   set here too.
+   set here too.\nl
+   \^`\_setmathparam \Umathspaceafterscript` is used instead `\scriptspace`
+   setting because \LuaTeX/ ingnores `\scriptspace` in most cases. There is
+   small difference from classical \TeX/: we set \"scaled"
+   `\Umathspaceafterscript` dependent on textstyle, scriptstyle, etc.\ sizes.
+   The \`\_scriptspacefactor` is set to 0.05 which gives the same result
+   as Plain \TeX/ `\scriptspace=0.5pt` at 10\,pt font size.
    \_cod -----------------------------
 
 \_def\_setmathdimens{% PlainTeX sets these dimens for 10pt size only:
   \_delimitershortfall=0.5\_fontdimen6\_textfont3
   \_nulldelimiterspace=0.12\_fontdimen6\_textfont3
-  \_scriptspace=0.05\_fontdimen6\_textfont3
+  \_setmathparam\_Umathspaceafterscript \_scriptspacefactor
   \_skewchar\_textfont1=127 \_skewchar\_scriptfont1=127
   \_skewchar\_scriptscriptfont1=127
   \_skewchar\_textfont2=48  \_skewchar\_scriptfont2=48
@@ -186,6 +206,7 @@
   \_skewchar\_textfont6=127 \_skewchar\_scriptfont6=127
   \_skewchar\_scriptscriptfont6=127
 }
+\_def\_scriptspacefactor{.05}
 
    \_doc -----------------------------
    Finally, we preload a math fonts collection in [10/7/5] sizes
@@ -222,6 +243,7 @@ For example
 
 \_endinput
 
+2022-07-22: \_setmathparam\_Umathspaceafterscript added.
 2022-02-22: \rm, \it, etc moved to fonts-select, \_marm, \_mait etc. introduced
 2020-05-06: \itfam, \ttfam removed, (Unicode math preferred)
 2020-04-14: \skewchar\fam6 added
