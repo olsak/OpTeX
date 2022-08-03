@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2022-07-11>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2022-08-02>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -78,13 +78,13 @@
    \_firstnoindent
 }
 \_def\_printsec#1{\_par
-   \_abovetitle{\_penalty-400}\_bigskip
+   \_abovetitle{\_penalty-151}\_bigskip
    {\_secfont \_noindent \_raggedright \_printrefnum[@\_quad]#1\_nbpar}\_insertmark{#1}%
    \_nobreak \_belowtitle{\_medskip}%
    \_firstnoindent
 }
 \_def\_printsecc#1{\_par
-   \_abovetitle{\_penalty-200}{\_medskip\_smallskip}
+   \_abovetitle{\_penalty-101}{\_medskip\_smallskip}
    {\_seccfont \_noindent \_raggedright \_printrefnum[@\_quad]#1\_nbpar}%
    \_nobreak \_belowtitle{\_medskip}%
    \_firstnoindent
@@ -461,6 +461,7 @@
 
 \_endcode % -------------------------------------
 
+2022-08-02 Penalties in \_printsec, \_printsecc changed
 2022-07-11 \_printchap: \_prevdepth=0pt added, see issue 100
 2021-03-03 \_captionsep introduced, \_othe used in \_thetnum, \_thefnum.
 2021-02-09 \thisoutline implemented
