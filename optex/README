@@ -25,7 +25,7 @@ History:
 <1.08> Aug 2022:
        Sorting rules for German, French, Polish, Hungarian, ... added.
        Font files for Montserrat, STIX, XITS, STIXtwo, Overlock added.
-       Minor impovements and bug fixing.
+       Minor improvements and bug fixing.
 <1.07> May 2022:
        Tikz's \foreach works only in its environment.
        \lipsum syntax enlarged by dot after paragraph num, example: \lipusm[3.].
