@@ -653,9 +653,11 @@ callback.add_to_callback("pre_shipout_filter", function(list)
     return tonode(list)
 end, "_colors")
 --
--- We also hook into `luaotfload`'s handling of color. Instead of the default
--- behavior (inserting colorstack whatsits) we set our own attribute. The hook
--- has to be registered {\em after} `luaotfload` is loaded.
+-- We also hook into `luaotfload`'s handling of color and transparency. Instead
+-- of the default behavior (inserting colorstack whatsits) we set our own
+-- attribute. On top of that, we take care of transparency resources ourselves.
+--
+-- The hook has to be registered {\em after} `luaotfload` is loaded.
 function optex_hook_into_luaotfload()
     if not luaotfload.set_colorhandler then
         return -- old luaotfload, colored fonts will be broken
@@ -677,10 +679,31 @@ function optex_hook_into_luaotfload()
         setattribute(n, color_attribute, attr)
         return head, n
     end)
+    luatexbase.add_to_callback("luaotfload.parse_transparent", function(input) -- from "00" to "FF"
+        -- in luaotfload: 0 = transparent, 255 = opaque
+        -- in optex:      0 = opaque,      255 = transparent
+        local alpha = tonumber(input, 16)
+        if not alpha then
+            tex.error("Invalid transparency specification passed to font")
+            return nil
+        elseif alpha == 255 then
+            return nil -- this allows luaotfload to skip calling us for opaque style
+        end
+        local transp = 255 - alpha
+        local transpv = fmt("%.3f", alpha / 255)
+        pdf.add_page_resource("ExtGState", fmt("tr%d", transp), pdf_dict{ca = transpv, CA = transpv})
+        pdf.add_page_resource("ExtGState", "tr0", pdf_dict{ca = 1, CA = 1})
+        return transp -- will be passed to the below function
+    end, "optex")
+    luaotfload.set_transparenthandler(function(head, n, transp)
+        setattribute(n, transp_attribute, transp)
+        return head, n
+    end)
 end
 
    -- History:
-   -- 2022-03-07 transparency in the colorize() function, current_tr added 
+   -- 2022-08-24 luaotfload transparency with attributes added
+   -- 2022-03-07 transparency in the colorize() function, current_tr added
    -- 2022-03-05 resources management added
    -- 2021-07-16 support for colors via attributes added
    -- 2020-11-11 optex.lua released
