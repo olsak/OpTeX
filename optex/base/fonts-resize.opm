@@ -16,7 +16,7 @@
    \_directlua{%
       require('luaotfload-main')
       luaotfload.main()
-      optex_hook_into_luaotfload()
+      optex.hook_into_luaotfload()
    }%
    \_glet \_fmodtt=\_unifmodtt  % use \_ttunifont for \tt
    \_glet \_initunifonts=\_relax % we need not to do this work twice

@@ -29,7 +29,7 @@
    printed. Try running `optex op-demo` twice to see the effect.
    \_cod --------------------------
 
-\_def\_mdfive#1{\_directlua{mdfive("#1")}}
+\_def\_mdfive#1{\_directlua{optex.mdfive("#1")}}
 \_def\_prevrefhash{}
 
    \_doc --------------------------
