@@ -8,7 +8,8 @@ local fmt = string.format
 --
 -- Define namespace where some \OpTeX/ functions will be added.
 
-optex = optex or {}
+local optex = _ENV.optex or {}
+_ENV.optex = optex
 
 -- Error function used by following functions for critical errors.
 local function err(message)
@@ -17,12 +18,14 @@ end
 --
 -- For a `\chardef`'d, `\countdef`'d, etc., csname return corresponding register
 -- number. The responsibility of providing a `\XXdef`'d name is on the caller.
-function registernumber(name)
+local function registernumber(name)
     return token.create(name).index
 end
+_ENV.registernumber = registernumber
+optex.registernumber = registernumber
 --
 -- MD5 hash of given file.
-function mdfive(file)
+function optex.mdfive(file)
     local fh = io.open(file, "rb")
     if fh then
         local data = fh:read("*a")
@@ -32,7 +35,8 @@ function mdfive(file)
 end
 --
 -- \medskip\secc[lua-alloc] Allocators^^M
-alloc = alloc or {}
+local alloc = _ENV.alloc or {}
+_ENV.alloc = alloc
 --
 -- An attribute allocator in Lua that cooperates with normal \OpTeX/ allocator.
 local attributes = {}
@@ -51,17 +55,17 @@ end
 -- Allocator for Lua functions ("pseudoprimitives"). It passes variadic
 -- arguments (\"`...`") like `"global"` to `token.set_lua`.
 local function_table = lua.get_functions_table()
-function define_lua_command(csname, fn, ...)
+local function define_lua_command(csname, fn, ...)
     local luafnalloc = #function_table + 1
     token.set_lua(csname, luafnalloc, ...) -- WARNING: needs LuaTeX 1.08 (2019) or newer
     function_table[luafnalloc] = fn
 end
---
--- `provides_module` is needed by older version of luaotfload
-provides_module = function() end
+_ENV.define_lua_command = define_lua_command
+optex.define_lua_command = define_lua_command
 --
 -- \medskip\secc[callbacks] Callbacks^^M
-callback = callback or {}
+local callback = _ENV.callback or {}
+_ENV.callback = callback
 --
 -- Save `callback.register` function for internal use.
 local callback_register = callback.register
@@ -388,17 +392,18 @@ end)
 --
 -- Compatibility with \LaTeX/ through luatexbase namespace. Needed for
 -- luaotfload.
-luatexbase = {
+_ENV.luatexbase = {
     registernumber = registernumber,
     attributes = attributes,
-    provides_module = provides_module,
+    -- `provides_module` is needed by older version of luaotfload
+    provides_module = function() end,
     new_attribute = alloc.new_attribute,
     callback_descriptions = callback.callback_descriptions,
     create_callback = callback.create_callback,
     add_to_callback = callback.add_to_callback,
     remove_from_callback = callback.remove_from_callback,
     call_callback = callback.call_callback,
-    callbacktypes = {}
+    callbacktypes = {},
 }
 --
 -- `\tracingmacros` callback registered.
@@ -441,6 +446,7 @@ local pdfdict_mt = {
 local function pdf_dict(t)
     return setmetatable(t or {}, pdfdict_mt)
 end
+optex.pdf_dict = pdf_dict
 --
 local resource_dict_objects = {}
 local page_resources = {}
@@ -658,25 +664,31 @@ end, "_colors")
 -- attribute. On top of that, we take care of transparency resources ourselves.
 --
 -- The hook has to be registered {\em after} `luaotfload` is loaded.
-function optex_hook_into_luaotfload()
+local setattribute = direct.set_attribute
+local token_setmacro = token.set_macro
+local color_count = registernumber("_colorcnt")
+local tex_getcount, tex_setcount = tex.getcount, tex.setcount
+--
+local function set_node_color(n, color) -- "1 0 0 rg" or "0 g", etc.
+    local attr = tonumber(token_getmacro("_color::"..color))
+    if not attr then
+        attr = tex_getcount(color_count)
+        tex_setcount(color_count, attr + 1)
+        local strattr = tostring(attr)
+        token_setmacro("_color::"..color, strattr)
+        token_setmacro("_color:"..strattr, color)
+        token_setmacro("_color-s:"..strattr, string.upper(color))
+    end
+    setattribute(todirect(n), color_attribute, attr)
+end
+optex.set_node_color = set_node_color
+--
+function optex.hook_into_luaotfload()
     if not luaotfload.set_colorhandler then
         return -- old luaotfload, colored fonts will be broken
     end
-    local setattribute = direct.set_attribute
-    local token_setmacro = token.set_macro
-    local color_count = registernumber("_colorcnt")
-    local tex_getcount, tex_setcount = tex.getcount, tex.setcount
     luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
-        local attr = tonumber(token_getmacro("_color::"..rgbcolor))
-        if not attr then
-            attr = tex_getcount(color_count)
-            tex_setcount(color_count, attr + 1)
-            local strattr = tostring(attr)
-            token_setmacro("_color::"..rgbcolor, strattr)
-            token_setmacro("_color:"..strattr, rgbcolor)
-            -- no stroke color set
-        end
-        setattribute(n, color_attribute, attr)
+        set_node_color(n, rgbcolor)
         return head, n
     end)
     luatexbase.add_to_callback("luaotfload.parse_transparent", function(input) -- from "00" to "FF"
@@ -702,6 +714,7 @@ function optex_hook_into_luaotfload()
 end
 
    -- History:
+   -- 2022-08-25 expose some useful functions in `optex` namespace
    -- 2022-08-24 luaotfload transparency with attributes added
    -- 2022-03-07 transparency in the colorize() function, current_tr added
    -- 2022-03-05 resources management added
