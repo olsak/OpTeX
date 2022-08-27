@@ -684,32 +684,35 @@ end
 optex.set_node_color = set_node_color
 --
 function optex.hook_into_luaotfload()
-    if not luaotfload.set_colorhandler then
-        return -- old luaotfload, colored fonts will be broken
-    end
-    luaotfload.set_colorhandler(function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
+    -- color support for luaotfload v3.13+, otherwise broken
+    pcall(luaotfload.set_colorhandler, function(head, n, rgbcolor) -- rgbcolor = "1 0 0 rg"
         set_node_color(n, rgbcolor)
         return head, n
     end)
-    luatexbase.add_to_callback("luaotfload.parse_transparent", function(input) -- from "00" to "FF"
-        -- in luaotfload: 0 = transparent, 255 = opaque
-        -- in optex:      0 = opaque,      255 = transparent
-        local alpha = tonumber(input, 16)
-        if not alpha then
-            tex.error("Invalid transparency specification passed to font")
-            return nil
-        elseif alpha == 255 then
-            return nil -- this allows luaotfload to skip calling us for opaque style
-        end
-        local transp = 255 - alpha
-        local transpv = fmt("%.3f", alpha / 255)
-        pdf.add_page_resource("ExtGState", fmt("tr%d", transp), pdf_dict{ca = transpv, CA = transpv})
-        pdf.add_page_resource("ExtGState", "tr0", pdf_dict{ca = 1, CA = 1})
-        return transp -- will be passed to the below function
-    end, "optex")
-    luaotfload.set_transparenthandler(function(head, n, transp)
-        setattribute(n, transp_attribute, transp)
-        return head, n
+
+    -- transparency support for luaotfload v3.22+, otherwise broken
+    pcall(function()
+        luatexbase.add_to_callback("luaotfload.parse_transparent", function(input) -- from "00" to "FF"
+            -- in luaotfload: 0 = transparent, 255 = opaque
+            -- in optex:      0 = opaque,      255 = transparent
+            local alpha = tonumber(input, 16)
+            if not alpha then
+                tex.error("Invalid transparency specification passed to font")
+                return nil
+            elseif alpha == 255 then
+                return nil -- this allows luaotfload to skip calling us for opaque style
+            end
+            local transp = 255 - alpha
+            local transpv = fmt("%.3f", alpha / 255)
+            pdf.add_page_resource("ExtGState", fmt("tr%d", transp), pdf_dict{ca = transpv, CA = transpv})
+            pdf.add_page_resource("ExtGState", "tr0", pdf_dict{ca = 1, CA = 1})
+            return transp -- will be passed to the below function
+        end, "optex")
+
+        luaotfload.set_transparenthandler(function(head, n, transp)
+            setattribute(n, transp_attribute, transp)
+            return head, n
+        end)
     end)
 end
 
