@@ -101,7 +101,12 @@
 \_langw hu  Fejezet      Táblázat    Ábra        Téma
 \_quotationmarks hu {„”»«}
 %todo
-\_let \_sortingdatahu  = \_sortingdatalatin
+\_def \_sortingdatahu {%
+  /,{ },-,&,@,%
+  aAáÁ,bB,cC,dD,eEéÉ,fF,gG,hH,iIíÍ,jJ,kK,lL,mM,nN,oOóÓ,öÖőŐ,%
+  pP,qQ,rR,sS,tT,uUúÚ,üÜűŰ,vV,wW,xX,yY,zZ,^^Z,%
+  0,1,2,3,4,5,6,7,8,9,'%
+}
 \_let \_ignoredcharshu = \_ignoredcharsgeneric
 \_def \_compoundcharshu {cs:c^^Z Cs:C^^Z CS:C^^Z
    dzz:d^^Z^^Z Dzz:D^^Z^^Z DZZ:D^^Z^^Z dz:d^^Z Dz:D^^Z DZ:D^^Z
@@ -150,6 +155,7 @@
 
 \_endcode
 
+2022-08-31: \_sortingdatahu corrected
 2022-06-28: Spanish, Polish, French, Swedish, Hungarian sorting rules added
 2022-06-28: German sorting rules added
 2022-02-19: concept finalized, but data still far of completness
