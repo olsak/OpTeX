@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-08-02>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2022-09-03>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -1065,8 +1065,21 @@
 }
 \_public \mathbox ;
 
+   \_doc -----------------------------
+   We want to avoid Math error:
+   parameter `\Umathspace_after_script\cramped...style` is not set.
+   This is important only if Unicode-math font isn't loaded
+   and something like `$\sqrt{x_i}$` is used.
+   \_cod -----------------------------
+
+\_Umathspaceafterscript\_crampeddisplaystyle=0.5pt
+\_Umathspaceafterscript\_crampedtextstyle=0.5pt
+\_Umathspaceafterscript\_crampedscriptstyle=0.4pt
+\_Umathspaceafterscript\_crampedscriptscriptstyle=0.3pt
+
 \_endcode %---------------------------------------------------
 
+2022-09-03 \Umathspaceafterscript settings introduced
 2021-08-02 ssty fontfeatures rewritten
 2021-04-25 \triangleright: typo fixed
 2021-03-22 \(l)eqalignno: \hbox instead \llap, \rlap (\par error suppressed)
