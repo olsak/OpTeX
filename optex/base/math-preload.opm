@@ -176,10 +176,14 @@
    \_cod -----------------------------
 
 \_def\_setmathparam#1#2{%
-   #1\_displaystyle      =#2\_fontdimen6\_textfont1
-   #1\_textstyle         =#2\_fontdimen6\_textfont1
-   #1\_scriptstyle       =#2\_fontdimen6\_scriptfont1
-   #1\_scriptscriptstyle =#2\_fontdimen6\_scriptscriptfont1
+   #1\_displaystyle             =#2\_fontdimen6\_textfont1
+   #1\_crampeddisplaystyle      =#2\_fontdimen6\_textfont1
+   #1\_textstyle                =#2\_fontdimen6\_textfont1
+   #1\_crampedtextstyle         =#2\_fontdimen6\_textfont1
+   #1\_scriptstyle              =#2\_fontdimen6\_scriptfont1
+   #1\_crampedscriptstyle       =#2\_fontdimen6\_scriptfont1
+   #1\_scriptscriptstyle        =#2\_fontdimen6\_scriptscriptfont1
+   #1\_crampedscriptscriptstyle =#2\_fontdimen6\_scriptscriptfont1
 }
 
    \_doc -----------------------------
