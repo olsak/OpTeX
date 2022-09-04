@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalmath {Math fonts CM + AMS preloaded <2022-07-22>} % preloaded in format
+\_codedecl \normalmath {Math fonts CM + AMS preloaded <2022-09-04>} % preloaded in format
 
   \_doc ------------------------------
   We have two math macros \`\normalmath` for the normal shape of all math
@@ -247,6 +247,7 @@ For example
 
 \_endinput
 
+2022-09-04: \crampedstyles setings added.
 2022-07-22: \_setmathparam\_Umathspaceafterscript added.
 2022-02-22: \rm, \it, etc moved to fonts-select, \_marm, \_mait etc. introduced
 2020-05-06: \itfam, \ttfam removed, (Unicode math preferred)
