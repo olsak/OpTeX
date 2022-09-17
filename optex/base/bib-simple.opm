@@ -56,8 +56,8 @@
    \_setbibmark
 }
 \_sdef{_print:book}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}.\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [edition]    {*~\_mtext{bib.edition}.\ }{}%
    \_bprinta [address]    {*: }{\_bibwarning}%
    \_bprinta [publisher]  {*, }{\_bibwarning}%
@@ -66,21 +66,21 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:article}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
-   \_bprinta [title]      {*.\ }{\_bibwarning}%
-   \_bprintb [journal]    {{\_em##1}.\ }{\_bibwarning}%
-   \_bprinta [year]       {*, }{}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
+   \_bprinta [title]      {*\:\ }{\_bibwarning}%
+   \_bprintb [journal]    {{\_em##1}\:\ }{\_bibwarning}%
+   \_bprinta [year]       {*\_bprintv[volume,number,pages]{,}{.} }{}%
    \_bprinta [volume]     {* }{}%
-   \_bprinta [number]     {(*), }{}%
+   \_bprinta [number]     {(*)\_bprintv[pages]{,}{.} }{}%
    \_bprinta [pages]      {*.\ }{}%
    \_bprintb [doi]        {DOI~\_ulink[http://dx.doi.org/##1]{##1}.\ }{}%
 }
 \_sdef{_print:inbook}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1.}\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
                          In:~%
    \_bprinta [!editor]    {*,~eds.\ }{}%
-   \_bprintb [booktitle]  {{\_em##1}.\ }{\_bibwarning}% 
+   \_bprintb [booktitle]  {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [address]    {*: }{\_bibwarning}%
    \_bprinta [publisher]  {*, }{\_bibwarning}%
    \_bprinta [year]       {*.\ }{\_bibwarning}%
@@ -92,8 +92,8 @@
 \_slet{_print:inproceedings}{_print:inbook}
 
 \_sdef{_print:incolection}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
-   \_bprintb [title]      {{\_em##1}.\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
+   \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [crossreff]  {In~\_cite[*]. }{%
                          \_bprinta [booktitle]  {*. }{\_bibwarning}%
                          \_bprinta [!editor]    {*,~eds.\ }{\_bibwarning}%
@@ -105,7 +105,7 @@
                          \_bprintb [url]        {\_preurl\_url{####1}. }{}}%
 }
 \_sdef{_print:conference}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [edition]    {*~\_mtext{bib.edition}.\ }{}%
    \_bprinta [address]    {*: }{\_bibwarning}%
@@ -115,7 +115,7 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:thesis}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [type]       {*,\ }{\_bibwarning}%
    \_bprinta [school]     {*.\ }{}%
@@ -124,31 +124,31 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:proceedings}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [publisher]  {*.\ }{%
                          \_bprinta [organization] {*.\ }{\_bibwarning}}%
 }   
 \_sdef{_print:techreport}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
                          \_mtext{bib.techreport}.
    \_bprinta [institution] {*.\ }{}%
 }
 \_sdef{_print:booklet}{%
-   \_bprinta [!author]    {*\:\ }{\_bibwarning}%
+   \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [howpublished] {*.\ }{\_bibwarning}%
 }
 \_sdef{_print:manual}{%
-   \_bprinta [!author]    {*\:\ }{}%
+   \_bprinta [!author]    {*.\ }{}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [year]       {*.\ }{}%
    \_bprinta [institution] {*.\ }{}%
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:misc}{%
-   \_bprinta [!author]    {*\:\ }{}%
+   \_bprinta [!author]    {*.\ }{}%
    \_bprintb [title]      {{\_em##1}\:\ }{}%
    \_bprinta [howpublished] {*.\ }{}%
    \_bprinta [institution] {*.\ }{}%
