@@ -671,7 +671,7 @@ levels.
 
 <h2><a name="easylist"></a>Depth of the list given by number of *</h2>
 
-<p>We daclere the macro \easylist which enables to give the list level
+<p>We declare the macro \easylist which enables to give the list level
 simply by the number of * used as a prefix. We need not to specify nesting
 \begitems...\enditems. So, if we use the \style m and \keepstyle
 from previous <a href="#multilist">OpTeX trick 0047</a>, then the following
@@ -695,6 +695,8 @@ package easylist (see texdoc easylist).
 <p>The implementation:
 
 <pre>
+\def\easylist{\adef*{\countlist}}
+\def\aast{\countlist}
 \def\countlist{\tmpnum=1 \countlistA}
 \def\countlistA{\futurelet\next\countlistB}
 \def\countlistB{\ifx\next\aast \ea\countlistC\else \ea\countlistD \fi}
@@ -704,6 +706,7 @@ package easylist (see texdoc easylist).
    \ifnum\tmpnum&lt;\ilevel \fornum \tmpnum..\ilevel-1 \do{\_enditems}\fi\fi
    \_startitem}
 \def\enditems{\fornum 1..\ilevel \do{\_enditems}}
+% + macros from OpTeX trick 0047
 </pre>
 
 <p>Another application. We set given style for each used level:
