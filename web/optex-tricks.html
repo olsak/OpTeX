@@ -191,6 +191,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#environ">Scanning nested LaTeX environments</a>
     <li><a href="#MPxx">Macro parameters selectively expanded</a>
     <li><a href="#addand">Adding "and" before the last item in lists</a>
+    <li><a href="#createfile">Creating files with given contents</a>
 </ul>
 
 <li>Lua matters
@@ -3931,6 +3932,50 @@ but adds the sequence ", and " before the last item when decreased \tmpnum
 is equal to one.
 
 <p CLASS=datum>(0090) -- P. O. 2022-08-11<p>
+<hr>
+
+<h2><a name="createfile"></a>Creating files with given contents</h2>
+
+<p>We create a macro which works similarly to the LaTeX filecontents
+environment. User can write
+
+<pre>
+\createfile {myprogram.c}
+#include <stdio.h>
+int main() {
+   // printf() displays the string inside quotation
+   printf("Hello, World!");
+   return 0;
+}
+\endfile
+</pre>
+
+<p>and the file with given name and given contents is created. The
+end-of-file mark \endfile must be on a separate line without spaces before
+it.
+
+<p>The implementation:
+
+<pre>
+\newwrite\wfile
+\def\createfile#1{\begingroup 
+   \immediate\openout\wfile={#1}%
+   \_setverb \endlinechar=`\^^J \catcode`\^^M=9 \scantoendfile^^J%
+}
+\ea\def\ea\scantoendfile \expanded{#1^^J\csstring\\endfile^^J}{%
+   \ifx^#1^\else \immediate\write\wfile{\ignoreit #1}\fi
+   \immediate\closeout\wfile
+   \endgroup
+}
+</pre>
+
+<p>Note that we must to set catcode of ^^M to ignored because we don't want
+to have a space from the end of the first line. We must add ^^J at the start
+of \scantoendline because user may want to create an empty file using
+\endfile immediatelly after \createfile{name}. And we must to ingore this
+first ^^J by \ignoreit during \write. 
+
+<p CLASS=datum>(0091) -- P. O. 2022-10-07<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
