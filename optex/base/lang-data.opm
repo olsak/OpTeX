@@ -1,10 +1,10 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2022-06-28>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2022-10-10>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
-\_langb en  {, and }  { et al.} { ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
+\_langb en  {, and }  { et al.} {\,ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
             {Available from } {Available also from }
             {Bachelor's Thesis} {Master's Thesis} {Ph.D. Thesis}
 \_monthw en January February March April May June
@@ -19,10 +19,10 @@
 \_langdata cs {Czech}   % ------------------------------------------------
 %           Chapter      Table       Figure       Subject
 \_langw cs  Kapitola     Tabulka     Obrázek      Věc
-%           {, and }  { et al.} { ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
+%           {, and }  { et al.} {\,ed.} {cit.~} {Vol.~} {No.~} {pp.~} {~p.} {,~ed.} {,~eds.}
 %           {Available from } {Available also from }
 %           {Bachelor's Thesis} {Master's Thesis} {Ph.D. Thesis}
-\_langb cs  { a } { a~kol.} { vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editoři}
+\_langb cs  { a } { a~kol.} {\,vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editoři}
             {Dostupné na } {Dostupné též na }
             {Bakalářská práce} {Diplomová práce} {Disertační práce}
 %           January February March April May June
@@ -133,7 +133,7 @@
 
 \_langdata sk {Slovak}  % ------------------------------------------------
 \_langw sk  Kapitola     Tabuľka     Obrázok      Vec
-\_langb sk  { a } { a~kol.} { vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editori}
+\_langb sk  { a } { a~kol.} {\,vyd.} {vid.~} {ročník~} {č.~} {s.~} {~s.} {,~editor} {,~editori}
             {Dostupné na } {Dostupné tiež na }
             {Bakalárska práca} {Diplomová práca} {Dizertačná práca}
 \_monthw sk januára februára marca apríla mája júna
@@ -155,6 +155,7 @@
 
 \_endcode
 
+2022-10-10: { ed.} changed to {\,ed.}
 2022-08-31: \_sortingdatahu corrected
 2022-06-28: Spanish, Polish, French, Swedish, Hungarian sorting rules added
 2022-06-28: German sorting rules added
