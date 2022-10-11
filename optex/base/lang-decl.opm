@@ -170,8 +170,8 @@
 
    \_doc -----------------------------
    The \`\_langreset` is processed before macros declared by \^`\_preplangmore`
-   or before `\_langdefault` for all languages. If you set comething for
-   your language by \^`\_preplangmore` the use `\def\_langreset{<settings>}`
+   or before \^`\_langdefault`. If you set something for
+   your language by \^`\_preplangmore` then use `\def\_langreset{<settings>}`
    in this code too in order to return default values for all other languages.
    See `cs` part of `lang-data.opm` file for an example.
    \_cod -----------------------------

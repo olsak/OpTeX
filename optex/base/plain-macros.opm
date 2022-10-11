@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2022-02-19>} % preloaded in format
+\_codedecl \magstep {Macros from plain TeX <2022-10-11>} % preloaded in format
 
    \_doc -----------------------------
    The \`\dospecials` works like in plain TeX but does nothing with `_`.
@@ -200,7 +200,7 @@
 \_chardef\AE="C6
 \_chardef\OE="D7
 \_chardef\O="D8
-\_chardef\i="11 \chardef\j="12 % dotless letters
+\_chardef\i="19 \chardef\j="1A % dotless letters
 \_chardef\aa="E5
 \_chardef\AA="C5
 \_chardef\S="9F
@@ -223,11 +223,15 @@
    Unicodes are used instead old plain \TeX/ settings.
    \_cod -----------------------------
 
-\def\_unichars{% characters with different codes in Unicode:
+\def\_unichars{% Plain TeX character sequences with different codes in Unicode:
    \_chardef\ss=`ß
-   \_chardef\oe=`œ
-   \_chardef\OE=`Œ
-   \_chardef\S=`§
+   \_chardef\ae=`æ \_chardef\AE=`Æ
+   \_chardef\oe=`œ \_chardef\OE=`Œ
+   \_chardef\o=`ø  \_chardef\O=`Ø
+   \_chardef\aa=`å \_chardef\AA=`Å
+   \_chardef\l=`ł  \_chardef\L=`Ł
+   \_chardef\i=`ı  \_chardef\j=`ȷ
+   \_chardef\S=`§  \_chardef\P=`¶
    \_chardef\dag`†
    \_chardef\ddag`‡
    \_chardef\copyright`©
@@ -365,6 +369,7 @@
 
 \_endcode % -------------------------------------
 
+2022-10-11 ... \_unichars extended
 2022-02-19 ... \input hyphen.tex moved here (format file is 80k smaller)
 2021-09-24 ... \_unichars introduced
 2021-04-09 ... \_public\showhyphens, bug fixed
