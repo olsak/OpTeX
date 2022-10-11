@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \langlist {Languages declaration <2022-02-19>} % preloaded in format
+\_codedecl \langlist {Languages declaration <2022-10-11>} % preloaded in format
 
    \_doc -----------------------------
    \`\_preplang` `<lang-id> <LongName> <lang-tag> <hyph-tag> <lr-hyph>`
@@ -163,11 +163,20 @@
    \_cod -----------------------------
 
 \_def\_preplangmore #1 #2{\_ea \_gdef \_csname _langspecific:#1\_endcsname{#2}}
-\_def\_langdefault{\_frenchspacing}
 
 \_preplangmore en   {\_nonfrenchspacing}
 \_preplangmore enus {\_nonfrenchspacing}
 \_def\_langdefault  {\_frenchspacing}
+
+   \_doc -----------------------------
+   The \`\_langreset` is processed before macros declared by \^`\_preplangmore`
+   or before `\_langdefault` for all languages. If you set comething for
+   your language by \^`\_preplangmore` the use `\def\_langreset{<settings>}`
+   in this code too in order to return default values for all other languages.
+   See `cs` part of `lang-data.opm` file for an example.
+   \_cod -----------------------------
+
+\_def\_langreset {}
 
    \_doc -----------------------------
    The default `\language=0` is US-English with original hyphenation patterns
@@ -236,7 +245,7 @@
    \_cod -----------------------------
 
 \_def\_uselang#1#2#3#4{\_language=#2\_lefthyphenmin=#3\_righthyphenmin=#4\_relax
-   \_trycs{_langspecific:#1}{\_langdefault}%
+   \_langreset \_def\_langreset{}\_trycs{_langspecific:#1}{\_langdefault}%
 }
 
    \_doc -----------------------------
@@ -310,5 +319,6 @@
 
 \_endcode
 
+2022-10-11 \_langreset introduced
 2022-02-19 \_langinput moved here
 2022-02-17 released, original file was hyphen-lan.opm

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2022-10-10>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2022-10-11>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -31,6 +31,8 @@
             července srpna září října listopadu prosince
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks cs {„“‚‘}
+\_preplangmore   cs {\_frenchspacing \_postexhyphenchar=`\-
+                     \_def\_langreset{\_postexhyphenchar=0 }}
 
 \_let \_sortingdatacs  = \_sortingdatalatin
 \_let \_ignoredcharscs = \_ignoredcharsgeneric
@@ -140,6 +142,8 @@
             júla augusta septembra októbra novembra decembra
 \_sdef{_mt:today:sk}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks sk {„“‚‘}
+\_preplangmore   sk {\_frenchspacing \_postexhyphenchar=`\-
+                     \_def\_langreset{\_postexhyphenchar=0 }}
 
 \_let \_sortingdatask = \_sortingdatalatin
 \_let \_ignoredcharssk = \_ignoredcharsgeneric
@@ -155,6 +159,7 @@
 
 \_endcode
 
+2022-10-11: \postexhyphenchar setting added to cs and sk languages
 2022-10-10: { ed.} changed to {\,ed.}
 2022-08-31: \_sortingdatahu corrected
 2022-06-28: Spanish, Polish, French, Swedish, Hungarian sorting rules added
