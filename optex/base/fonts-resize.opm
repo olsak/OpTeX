@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2022-02-22>} % preloaded in format
+\_codedecl \setfontsize {Font resizing macros <2022-10-14>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabilities,
@@ -10,6 +10,7 @@
    from \LaTeX's `luatexbase` namespace, we provide our own replacements.
    \^`\initunifonts` sets itself to relax because we don't want to do
    this work twice.
+   \`\ufont` is a shortcut of \^`\initunifonts`~`\font`.
    \_cod -----------------------------
 
 \_def\_initunifonts {%
@@ -22,7 +23,9 @@
    \_glet \_initunifonts=\_relax % we need not to do this work twice
    \_glet \initunifonts=\_relax
 }
-\_public \initunifonts ;
+\_def\_ufont {\_initunifonts \_font}
+
+\_public \initunifonts \ufont ;
 
    \_doc -----------------------------
    The \`\setfontsize` `{<size spec>}` saves the `<size spec>` to the \`\_sizespec` macro.
@@ -169,7 +172,8 @@ The <size spec> can be empty or `at<dimen>` or `scaled<scale factor>`. The
 \OpTeX/ starts with `\font` primitive which is able to read only `tfm` files.
 i.e.\ the `<font file name>.tfm` (and additional data for glyphs)
 must be correctly installed in your system. If you want to load
-OpenType `otf` or `ttf` font files, use the declarator \^`\initunifonts`.
+OpenType `otf` or `ttf` font files, use the declarator \^`\initunifonts`
+before first `\font` primitive.
 This command adds additional features to the `\font` primitive which
 gives the extended syntax:
 \begtt \catcode`\<=13
@@ -193,8 +197,9 @@ The original syntax for `tfm` files is also available. Example:
 primitive from `luaotfload` package. More information is available
 in the `luaotfload-latex.pdf` file.
 
-Note, that \^`\fontfam` does (among other things) \^`\initunifonts`
-internally. You need not to specify it if \^`\fontfam` is used.
+You can use \^`\ufont` macro which runs \^`\initunifonts` followed by `\font`
+primitive. And \^`\fontfam` does (among other things) \^`\initunifonts`
+too. You need not to specify \^`\initunifonts` if \^`\fontfam` or \^`\ufont` is used.
 
 It seems that you must decide about final size of the font before it is
 loaded by the `\font` primitive. It is not exactly true; \OpTeX/ offers
@@ -245,8 +250,7 @@ The \^`\resizethefont` works with arbitrary current font, for example with the
 font loaded directly by `\font` primitive.  For example:
 
 \begtt
-\initunifonts
-\font\tencrimson=[Crimson-Roman]:+onum  % font Crimson-Regular at 10 pt is loaded
+\ufont\tencrimson=[Crimson-Roman]:+onum % font Crimson-Regular at 10 pt is loaded
 \def\crimson{\tencrimson\resizethefont} % \crimson uses the font size on demand
 
 \crimson The 10 pt text is here.
@@ -322,6 +326,7 @@ Luaotfload documentation for more information.
 
 \_endinput
 
+2022-02-22 \ufont itroduced
 2022-02-22 Font Selection System reimplemented, \fontsel introduced
 2021-05-02 better concept of doc, moving parts to fonts-select
 2021-04-17 \_fontloaded, \_newfontloaded introduced

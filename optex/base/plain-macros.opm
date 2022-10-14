@@ -219,7 +219,7 @@
 \_public \mathhexbox ;
 
    \_doc -----------------------------
-   The \`\_unichars` macro is run in \^`\initunifonts`,
+   The \`\_unichars` macro is run in \~`\initunifonts`,
    Unicodes are used instead old plain \TeX/ settings.
    \_cod -----------------------------
 
