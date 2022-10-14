@@ -126,6 +126,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#roundframe">Frames with rounded corners</a>
     <li><a href="#ornament">Adding ornaments to the background</a>
     <li><a href="#tikzcolorlet">Moving OpTeX's colors to TikZ environment</a>
+    <li><a href="#tikzqrcode">Shadowed and colored QR codes</a>
 </ul>
 
 <li>Math
@@ -1488,6 +1489,65 @@ TikZ. The color spaces cmyk, rgb and grey are supported.
 <p>and the code above does this job.
 
 <p CLASS=datum>(0083) -- P. O. 2022-05-18<p>
+<hr>
+
+<h2><a name="tikzqrcode"></a>Shadowed and colored QR codes</h2>
+
+<p>OpTeX provides printing QR codes after \load[qrcode].
+The following example shows how to set colors and shadows
+of these QR codes using TikZ. I am not sure that such result is extremely
+useful but it shows possibility of combination TikZ macros together with
+QRcode.
+
+<pre>
+\load[qrcode,tikz]
+\usetikzlibrary{fadings, shadings}
+
+\newcount\fadcnt
+\def\fadingtext#1#2{%
+   \incr\fadcnt
+   \setbox0=\hbox{#2}%
+   \tikzfadingfrompicture [name=fading letter\the\fadcnt]
+      \node[text=transparent!0,inner xsep=0pt,outer xsep=0pt] {\copy0};
+   \endtikzfadingfrompicture
+   \tikzpicture [baseline=(textnode.base)]
+      \node[inner sep=0pt,outer sep=0pt](textnode){\phantom{\box0}};
+      \shade[path fading=fading letter\the\fadcnt,#1,fit fading=false]
+      (textnode.south west) rectangle (textnode.north east);%
+   \endtikzpicture
+}
+\newbox\shbox
+\tikzset{%
+   path picture shading/.style={%
+      path picture={%
+         \pgfpointdiff{\pgfpointanchor{path picture bounding box}{south west}}%
+         {\pgfpointanchor{path picture bounding box}{north east}}%
+         \pgfgetlastxy\pathwidth\pathheight
+         \pgfinterruptpicture
+            \global\setbox\shbox=\hbox{\pgfuseshading{#1}}%
+         \endpgfinterruptpicture
+         \pgftransformshift{\pgfpointanchor{path picture bounding box}{center}}%
+         \pgftransformxscale{\pathwidth/(\wd\shbox)}%
+         \pgftransformyscale{\pathheight/(\ht\shbox)}%
+         \pgftext{\box\shbox}%
+   } } }
+\pgfdeclarehorizontalshading{rainbow}{10bp}{%
+   color(0bp)=(violet);
+   color(1.6667bp)=(blue);
+   color(3.3333bp)=(cyan);
+   color(5bp)=(green);
+   color(6.6667bp)=(yellow);
+   color(8.3333bp)=(orange);
+   color(10bp)=(red)
+}
+
+\tikzpicture
+    \fadingtext {path picture shading=rainbow}
+    {\qrcode[height=3cm]{this is QR code message}}
+\endtikzpicture
+</pre>
+
+<p CLASS=datum>(0093) -- P. O. 2022-10-14<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
