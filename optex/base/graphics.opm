@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2022-03-05>} % preloaded in format
+\_codedecl \inspic {Graphics <2022-10-18>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -169,7 +169,7 @@
 }
 
 \_def\_puttext{\_ea\_ea\_ea\_puttextA\_scantwodimens}
-\_def\_puttextA#1#2#3{{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
+\_long\_def\_puttextA#1#2#3{{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
 \_def\_puttextB{%
    \_ifvmode
       \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
@@ -447,6 +447,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2022-10-18  \_puttextA defined \long, bug fixed
 2022-03-05: \_addextgstate, \pageresources, \addpageresources added
 2022-03-03: \_coc introduced
 2021-07-16: \inoval, \incircle are more simple, using attribitecolor features
