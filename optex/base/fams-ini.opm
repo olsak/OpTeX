@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-% Version <2020-02-28>. Loaded in format and secondly on demand by \fontfam[catalog]
+% Version <2022-10-18>. Loaded in format and secondly on demand by \fontfam[catalog]
 
 \_famtext {Special name for printing a catalog :}
 
@@ -167,6 +167,13 @@
      \mono: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi}
      \ttset: {\tf\lf\rm\bf}
      \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
+   }
+
+\_famfrom {tyPoland Lukasz Dziedzic}
+\_faminfo [Lato] {Geometric grotesk, many weights} {f-lato}
+   { \hair: {\rm\it} \thin: {\rm\it} \light: {\rm\it} -: {\rm\it}
+     \book: {\rm\it} \bolder: {\rm\it} -: {\bf\bi}
+     \book: {\bf\bi} \bolder: {\bf\bi}
    }
 
 \_famfrom {Julieta Ulanovsky, http://www.zkysky.com.ar}

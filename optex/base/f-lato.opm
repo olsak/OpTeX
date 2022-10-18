@@ -1,0 +1,34 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Lato] \Lato {Geometric grotesk, many weights}
+        {\hair \thin \light \normal \book \bolder} {} {}
+        {[Lato-Regular]}
+        {\_def\_fontnamegen {[Lato-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier: \caps .... Old digits only (caps not provided)^^J%
+Modifiers (face weight):^^J
+ \hair ...... \rm, \it = Hair, \bf, \bi = Normal^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Medium^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Semibold^^J
+ \normal .... \rm, \it = Normal, \bf, \bi = Bold^^J
+ \book ...... \rm, \it = Medium, \bf, \bi = Heavy^^J
+ \bolder .... \rm, \it = Semibold, \bf, \bi = Black^^J%
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \hair     {\_fvars Hairline Regular HairlineItalic Italic }
+\_moddef \thin     {\_fvars Thin Medium ThinItalic MediumItalic }
+\_moddef \light    {\_fvars Light Semibold LightItalic SemiboldItalic }
+\_moddef \normal   {\_fvars Regular Bold Italic BoldItalic }
+\_moddef \book     {\_fvars Medium Heavy MediumItalic HeavyItalic }
+\_moddef \bolder   {\_fvars Semibold Black SemiboldItalic BlackItalic }
+
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
