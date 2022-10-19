@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2022-08-02>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2022-10-19>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -332,9 +332,11 @@
    The \`\caption``/<letter>` increases `\_<letter>num` counter,
    edefines \`\_thecapnum` as `\_the<letter>num` and
    defines \`\_thecaptitle` as language-dependent word using \^`\_mtext`,
+   declares default format by \^`\_captionformat``{<letter>}` and
    runs the `\_everycaption<letter>` tokens register.
-   The group opened by `\caption` is finalized by first `\_par` from
-   an empty line or from `\vskip` or from `\endinsert`.
+   The two groups opened by `\caption` are finalized by first `\_par` from
+   an empty line or from `\vskip`, `\cskip` or from `\endinsert`.
+   If a \code{\}} occurs first then `\_par` from `\aftergroup` is processed.
    The `\_printcaption<letter>` is called, it starts with
    printing of the caption.\nl
    The \`\cskip` macro inserts nonbreakable vertical space between the caption and
@@ -348,8 +350,11 @@
    \_else \_opwarning{Unknown caption /\_tmpa}\_fi
    \_edef\_thecapnum {\_csname _the\_tmpa num\_endcsname}%
    \_edef\_thecaptitle{\_mtext{\_tmpa}}%
+   \_ea\_captionformat\_ea{\_tmpa}%
    \_ea\_the \_csname _everycaption\_tmpa\_endcsname
-   \_def\_par{\_nbpar\_egroup}%
+   \_def\_par{\_ifhmode\_nbpar\_egroup\_egroup\_fi}%
+   \_ifx\par\_endgraf \_let\par=\_par \_fi
+   \_bgroup \_aftergroup\_par
    \_cs{_printcaption\_tmpa}%
 }
 \_def \_cskip {\_par\_nobreak\_medskip} % space between caption and the object
@@ -359,12 +364,15 @@
    \_doc -----------------------------
    The \`\_printcaptiont` and \`\_printcaptionf` macros start in vertical mode.
    They switch to horizontal mode and use `\_wlabel\_thecapnum` (in order to
-   make reference and hyperlink destination) a they can use:
+   make reference and hyperlink destination). They can use:
    \begitems
    * \^`\_thecaptitle` ... expands to the word Table or Figure (depending on
                            the current language).
    * \^`\_thecapnum` ...   expands to `\the<letter>num` (caption number).
    \enditems
+   The macro \^`\_printcaptiont` (or `f`) is processed inside group and the
+   `\_par` can be run after this group. If you want to re-define formating
+   parameters for `\_par`, do this in the macro \^`\_captionformat`.
    The \`\_captionsep` inserts a separator between auto-generated
    caption number and the following caption text. Default separator
    is `\_enspace` but if the caption text starts with dot or colon, then
@@ -375,7 +383,7 @@
 
 \_def \_printcaptiont {%
    \_noindent \_wlabel\_thecapnum {\_bf\_thecaptitle~\_thecapnum}%
-   \_narrowlastlinecentered\_iindent \_futurelet\_next\_captionsep
+   \_futurelet\_next\_captionsep
 }
 \_def\_captionsep{\_ifx\_next.\_ea\_bfnext \_else\_ifx\_next:\_ea\_ea\_ea\_bfnext
    \_else \_enspace \_fi\_fi}
@@ -392,11 +400,14 @@
    \def\_theanum {\_othe\_chapnum.\_the\_secnum.\_the\_anum}
    \sdef{_mt:a:en}{Algorithm}  \sdef{_mt:a:cs}{Algoritmus} % + your language...
    \endtt
-   The default format of `\caption` text is a paragraph in block narrower by
+   The format of the \^`\caption` text is given by the
+   \`\_captionformat``{<caption-letter>}` macro.
+   The default format for `t` and `f` is a paragraph in block narrower by
    `\_iindent` and with the last line is centered. This setting is done by
    the \`\_narrowlastlinecentered` macro.
    \_cod -----------------------------
 
+\_def\_captionformat#1{\_narrowlastlinecentered\_iindent}
 \_def\_narrowlastlinecentered#1{%
    \_leftskip=#1plus1fil
    \_rightskip=#1plus-1fil
@@ -461,6 +472,7 @@
 
 \_endcode % -------------------------------------
 
+2022-10-19 More robust \caption (two opened groups, \_printcaption introduced)
 2022-08-02 Penalties in \_printsec, \_printsecc changed
 2022-07-11 \_printchap: \_prevdepth=0pt added, see issue 100
 2021-03-03 \_captionsep introduced, \_othe used in \_thetnum, \_thefnum.
