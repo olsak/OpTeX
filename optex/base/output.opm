@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2021-03-07>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2022-10-20>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another...\nl
@@ -86,7 +86,7 @@
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse
    \_vbox to\_zo{\_vss
                  \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
-                 \_hbox to\_xhsize{\_the\_headline}\_hbox{}}\_nointerlineskip
+                 \_hbox to\_xhsize{\_normalbaselines\_the\_headline}\_hbox{}}\_nointerlineskip
    \_fi
 }
 
@@ -96,7 +96,7 @@
 
 \_def\_makefootline{\_istoksempty \_footline \_iffalse
       \_baselineskip=\_footlinedist
-      \_lineskiplimit=-\_maxdimen \_hbox to\_xhsize{\_the\_footline}
+      \_lineskiplimit=-\_maxdimen \_hbox to\_xhsize{\_normalbaselines\_the\_footline}
    \_fi
 }
 
@@ -258,6 +258,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2022-10-22 \_normalbaselines added to \makehead/foot/line
 2022-03-07 \_resetattrs instead \_resetcolor
 2021-07-16 output routine supports colors via attributes
 2021-02-25 \_draftbox improved
