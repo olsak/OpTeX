@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-05-24>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-10-27>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -89,7 +89,7 @@
    loaded file is forgotten after the `\opinput`.
    \_cod -----------------------------
 
-\_def \_load [#1]{\_loadA #1,,,\_end}
+\_def \_load [#1]{\_savemathsb \_loadA #1,,,\_end \_restoremathsb}
 \_def \_loadA #1#2,{\_ifx,#1 \_ea \_loadE \_else \_loadB{#1#2}\_ea\_loadA\_fi}
 \_def \_loadB #1{%
    \_ifcsname _load:#1\_endcsname \_else
@@ -278,6 +278,7 @@
 
 \_endcode % -------------------------------------
 
+2022-10-27 \_savemathsb ...\_restoremathsb added to \load (eg. \load[xstring])
 2022-05-24 \optdef: used \csstring instead \string, bug fixed.
 2021-04-25 \normalcatcodes: typo fixed
 2021-04-22 \the\_currctable replaced by \the\_catcodetable, bug fixed.
