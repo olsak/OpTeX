@@ -101,16 +101,16 @@
 \_def\_processinput{%
    \_let\_start=\_relax
    \_ea\_replstring\_ea\_tmpb\_ea{\_aspace^^J}{^^J}
-   \_addto\_tmpb{\_end}%
+   \_addto\_tmpb{\_fin}%
    \_isinlist\_tmpb{\_start^^J}\_iftrue \_advance\_ttline by1\_fi
    \_replstring\_tmpb{\_start^^J}{\_start}%
    \_replstring\_tmpb{\_start}{}%
-   \_replstring\_tmpb{^^J\_end}{\_end}%
-   \_replstring\_tmpb{^^J\_end}{}%
-   \_replstring\_tmpb{\_end}{}%
+   \_replstring\_tmpb{^^J\_fin}{\_fin}%
+   \_replstring\_tmpb{^^J\_fin}{}%
+   \_replstring\_tmpb{\_fin}{}%
    \_ea\_prepareverbdata\_ea\_tmpb\_ea{\_tmpb^^J}%
    \_replthis{\_csstring\\}{\_noexpand\_makecs}%
-   \_ea\_printverb \_tmpb\_end
+   \_ea\_printverb \_tmpb\_fin
    \_par
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
@@ -145,7 +145,7 @@
 }
 \_everytt={\_let\_printverblinenum=\_relax}
 
-\_long\_def\_endverbprinting#1\_end#2\_end{\_fi\_fi \_global\_maxlines=100000
+\_long\_def\_endverbprinting#1\_fin#2\_fin{\_fi\_fi \_global\_maxlines=100000
    \_noindent\_typosize[8/]\_dots etc. (see {\_tt\fnamecolor\docfile})}
 
    \_doc -----------------------------
