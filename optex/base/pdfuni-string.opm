@@ -51,8 +51,8 @@
       \_escapechar=-1
       \_edef#1{#1\_empty}%
       \_escapechar=`\\
-      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_end$}%  $x$ -> x
-      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_end}}%  {x} -> x
+      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_fin$}%  $x$ -> x
+      \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_fin}}%  {x} -> x
       \_edef#1{\_detokenize\_ea{#1}}%
       \_replstring#1{ }{{ }}%  text text -> text{ }text
       \_catcode`\\=12 \_let\\=\_bslash
@@ -69,8 +69,8 @@
 }
 
 \_def\_removeoutbraces #1#{#1\_removeoutbracesA}
-\_def\_removeoutbracesA #1{\_ifx\_end#1\_else #1\_ea\_removeoutbraces\_fi}
-\_def\_removeoutmath #1$#2${#1\_ifx\_end#2\_else #2\_ea\_removeoutmath\_fi}
+\_def\_removeoutbracesA #1{\_ifx\_fin#1\_else #1\_ea\_removeoutbraces\_fi}
+\_def\_removeoutmath #1$#2${#1\_ifx\_fin#2\_else #2\_ea\_removeoutmath\_fi}
 
    \_doc -----------------------------
    The \`\_prepinverb``<macro><separator>{<text>}`,
@@ -83,9 +83,9 @@
 
 \_def\_prepinverb#1#2#3{\_def#1{}%
    \_def\_dotmpb ##1#2##2{\_addto#1{\_scantextokens{\_unexpanded{##1}}}%
-      \_ifx\_end##2\_else\_ea\_dotmpbA\_ea##2\_fi}%
+      \_ifx\_fin##2\_else\_ea\_dotmpbA\_ea##2\_fi}%
    \_def\_dotmpbA ##1#2{\_addto#1{##1}\_dotmpb}%
-   \_dotmpb#3#2\_end
+   \_dotmpb#3#2\_fin
 }
 
    \_doc -----------------------------

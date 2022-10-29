@@ -94,9 +94,9 @@
    but the optional `@` in the `<given-text>` is replaced by the `<implicit-text>` first.
    \_cod -----------------------------
 
-\_def\_reftext  #1#2{\_isatin #2@\_iffalse #2\_else\_reftextA{#1}#2\_end \_fi}
-\_def\_reftextA #1#2@#3\_end {#2#1#3}
-\_def\_isatin #1@#2\_iffalse {\_ifx\_end#2\_end}
+\_def\_reftext  #1#2{\_isatin #2@\_iffalse #2\_else\_reftextA{#1}#2\_fin \_fi}
+\_def\_reftextA #1#2@#3\_fin {#2#1#3}
+\_def\_isatin #1@#2\_iffalse {\_ifx\_fin#2\_fin}
 
    \_doc -----------------------------
    Default \`\_printlabel` is empty macro (labels are not printed).

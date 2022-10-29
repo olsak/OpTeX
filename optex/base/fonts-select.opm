@@ -161,7 +161,7 @@
    runs <what> only if the `\_<key>V` is defined as `<value-a>` or
    `<value-b>` or ... or `<value-z>`.
    \nl
-   \`\_prepcommalist` `ab,{},cd,\_end,` expands to `ab,,cd,` (auxiliary macro
+   \`\_prepcommalist` `ab,{},cd,\_fin,` expands to `ab,,cd,` (auxiliary macro
    used in `\_onlyif`).\nl
    \`\_ffonum` is a shortcut for oldstyle digits font features used in
    font family files. You can do `\let\_ffonum=\ignoreit` if you don't want
@@ -184,10 +184,10 @@
    \_ifx,#1\_else\_sdef{_#1V}{#2}\_ea\_ea\_ea\_fsetVa\_fi\_fi
 }
 \_def \_onlyif #1=#2:#3{%
-    \_edef\_act{\_noexpand\_isinlist{,\_prepcommalist #2,\_end,}{,\_cs{_#1V},}}\_act
+    \_edef\_act{\_noexpand\_isinlist{,\_prepcommalist #2,\_fin,}{,\_cs{_#1V},}}\_act
     \_iftrue #3\_fi
 }
-\_def\_prepcommalist#1,{\_ifx\_end#1\_empty\_else #1,\_ea\_prepcommalist\_fi}
+\_def\_prepcommalist#1,{\_ifx\_fin#1\_empty\_else #1,\_ea\_prepcommalist\_fi}
 \_def\_ffonum {+onum;+pnum}
 
    \_doc -----------------------------

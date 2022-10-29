@@ -136,10 +136,10 @@
    \_replstring\_tmpb{[||]}{{gb|}}%
    \_replstring\_tmpb{ }{{ }}%
    \_replstring\_tmpb{://}{{://}}%
-   \_ea\_ulink \_ea[\_ea{\_tmpa}] {\_urlfont \_ea\_urlA\_tmpb\_end}%
+   \_ea\_ulink \_ea[\_ea{\_tmpa}] {\_urlfont \_ea\_urlA\_tmpb\_fin}%
 }}
-\_def\_urlA#1{\_ifx\_end#1\_else \_urlC{}{#1}\_fi}
-\_def\_urlB#1{\_ifx\_end#1\_else \_urlC{\_urlxskip}{#1}\_fi}
+\_def\_urlA#1{\_ifx\_fin#1\_else \_urlC{}{#1}\_fi}
+\_def\_urlB#1{\_ifx\_fin#1\_else \_urlC{\_urlxskip}{#1}\_fi}
 \_def\_urlC#1#2{%
    \_ifcsname _ur:#2\_endcsname \_lastnamedcs \_ea\_ea\_ea \_urlA
    \_else #1#2\_ea\_ea\_ea \_urlB \_fi

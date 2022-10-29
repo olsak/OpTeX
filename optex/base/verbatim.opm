@@ -138,7 +138,7 @@
 }
 \_ea\_def\_ea\_startverb \_ea#\_ea1\_csstring\\endtt#2^^J{%
    \_prepareverbdata\_tmpb{#1^^J}%
-   \_ea\_printverb \_tmpb\_end
+   \_ea\_printverb \_tmpb\_fin
    \_par \_restoremathsb
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
@@ -172,10 +172,10 @@
    \_ifx\_printverblinenum\_relax \_else \_incr\_ttline \_fi
    \_testcommentchars #1\_relax\_relax\_relax
    \_iftrue
-      \_ifx\_end#2\_printcomments\_fi
+      \_ifx\_fin#2\_printcomments\_fi
    \_else
       \_ifx\_vcomments\_empty\_else  \_printcomments \_def\_vcomments{}\_fi
-      \_ifx\_end#2%
+      \_ifx\_fin#2%
          \_bgroup \_adef{ }{}\_def\t{}% if the last line is emtpy, we don't print it
          \_ifcat&#1&\_egroup \_ifx\_printverblinenum\_relax \_else \_decr\_ttline \_fi
          \_else\_egroup \_printverbline{#1}\_fi
@@ -183,7 +183,7 @@
          \_printverbline{#1}%
       \_fi
    \_fi
-   \_unless\_ifx\_end#2\_afterfi{\_printverb#2}\_fi
+   \_unless\_ifx\_fin#2\_afterfi{\_printverb#2}\_fi
 }
 \_def\_printverbline#1{\_putttpenalty \_indent \_printverblinenum \_kern\_ttshift #1\_par}
 \_def\_initverblinenum{\_tenrm \_thefontscale[700]\_ea\_let\_ea\_sevenrm\_the\_font}
@@ -274,7 +274,7 @@
             \_repeat
    \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb^^J}%
    \_catcode`\ =10 \_catcode`\%=9 % used in \commentchars comments
-   \_ea\_printverb \_tmpb\_end
+   \_ea\_printverb \_tmpb\_fin
    \_ttlinesave
    \_par \_restoremathsb
    \_endgroup

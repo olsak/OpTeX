@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2021-07-20>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2022-10-29>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -100,6 +100,15 @@
 \_public \opwarning ;
 
    \_doc ------------------------------
+   We define \`\_fin` as a useless macro. Suppose that its meaning will be never
+   used for another control sequence. You can use `\_fin` as a final delimiter
+   of a list of tokens and your macro can ask `\ifx\_fin#1` in order to
+   decide that the list of tokens is finalized.
+   \_cod ------------------------------
+
+\_protected\_long \_def \_fin \_fin {}
+
+   \_doc ------------------------------
    \`\loggingall` and \`\tracingall` are defined similarly as in
    plain \TeX/, but they print
    more logging information to the log file and the terminal.
@@ -129,6 +138,7 @@
 
 \_endcode % -------------------------------------
 
+2022-10-29: \_fin introduced
 2021-07-20: \_unresovedrefs removed from \_byehook
 2021-07-18: \_byehook: checking `ref` file consistency added.
 2021-05-16: \slet reimplemented (to allow \slet{foo}{undefined}).

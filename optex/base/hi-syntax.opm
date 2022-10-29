@@ -23,15 +23,15 @@
 \_def\_replfromto #1#2{\_edef\_tmpa{{#1}{#2}}\_ea\_replfromtoE\_tmpa}
 \_def\_replfromtoE#1#2#3{% #1=from #2=to #3=replacement
    \_def\_replfrom##1#1##2{\_addto\_tmpb{##1}%
-      \_ifx\_end##2\_ea\_replstop \_else \_afterfi{\_replto##2}\_fi}%
+      \_ifx\_fin##2\_ea\_replstop \_else \_afterfi{\_replto##2}\_fi}%
    \_def\_replto##1#2##2{%
-      \_ifx\_end##2\_afterfi{\_replfin##1}\_else
+      \_ifx\_fin##2\_afterfi{\_replfin##1}\_else
         \_addto\_tmpb{#3}%
         \_afterfi{\_replfrom##2}\_fi}%
-   \_def\_replfin##1#1\_end{\_addto\_tmpb{#3}\_replstop}%
-   \_edef\_tmpb{\_ea}\_ea\_replfrom\_tmpb#1\_end#2\_end\_end\_relax
+   \_def\_replfin##1#1\_fin{\_addto\_tmpb{#3}\_replstop}%
+   \_edef\_tmpb{\_ea}\_ea\_replfrom\_tmpb#1\_fin#2\_fin\_fin\_relax
 }
-\_def\_replstop#1\_end\_relax{}
+\_def\_replstop#1\_fin\_relax{}
 \_def\_finrepl{}
 
    \_doc -----------------------------
@@ -55,12 +55,12 @@
 
    The \`\_xscan` macro replaces occurrences of `\x` by `\z` in the post-processing
    phase. The construct `\x <letter>{<text>}` expands to `\_xscan {<letter>}<text>^^J^`.
-   If `#3` is `\_end` then it signals that something wrong happens, the
+   If `#3` is `\_fin` then it signals that something wrong happens, the
    `<from>` was not terminated by legal `<to>` when `\replfromto` did work.
    We must to fix this by using the \`\_xscanR` macro.
    \_cod -----------------------------
 
-\_def\_xscan#1#2^^J#3{\_ifx\_end#3 \_ea\_xscanR\_fi
+\_def\_xscan#1#2^^J#3{\_ifx\_fin#3 \_ea\_xscanR\_fi
    \z{#1}{#2}%
    \_ifx^#3\_else ^^J\_afterfi{\_xscan{#1}#3}\_fi}
 \_def\_xscanR#1\_fi#2^{^^J}
@@ -86,8 +86,8 @@
 
 \_def\_hisyntax#1{\_def\_prepareverbdata##1##2{%
    \_let\n=\_relax \_let\b=\_relax \_def\t{\n\_noexpand\t\n}\_let\_start=\_relax
-   \_adef{ }{\n\_noexpand\ \n}\_edef\_tmpb{\_start^^J##2\_end}%
-   \_replthis{^^J}{\n^^J\b\n}\_replthis{\b\n\_end}{\_end}%
+   \_adef{ }{\n\_noexpand\ \n}\_edef\_tmpb{\_start^^J##2\_fin}%
+   \_replthis{^^J}{\n^^J\b\n}\_replthis{\b\n\_fin}{\_fin}%
    \_let\x=\_relax  \_let\y=\_relax \_let\z=\_relax \_let\t=\_relax
    \_hicomments % keeps comments declared by \commentchars
    \_endlinechar=`\^^M
@@ -104,7 +104,7 @@
           \_the\_hicolors  % colors which have precedece
       \_else\_opwarning{Syntax "\_tmpa" undeclared (no file hisyntax-\_tmpa.opm)}
    \_fi\_fi
-   \_replthis{\_start\n^^J}{}\_replthis{^^J\_end}{^^J}%
+   \_replthis{\_start\n^^J}{}\_replthis{^^J\_fin}{^^J}%
    \_def\n{}\_def\b{}\_adef{ }{\_dsp}%
    \_bgroup \_lccode`\~=`\ \_lowercase{\_egroup\_def\ {\_noexpand~}}%
    \_def\w####1{####1}\_def\x####1####2{\_xscan{####1}####2^^J^}%

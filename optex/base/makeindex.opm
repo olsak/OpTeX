@@ -285,7 +285,7 @@
       \_addto\_iilist{#1#2,}%      % dvojice skupin vyresena
       \_sortreturn{\_fif\_mergesort}%      % \mergesort dalsi
    \_fi
-   \_ifx\_end#3%                   % neco,konec (#1#2=neco)
+   \_ifx\_fin#3%                   % neco,konec (#1#2=neco)
       \_ifx\_empty\_iilist                % neco=kompletni setrideny seznam
          \_def\_iilist{#1#2}%
          \_sortreturn{\_fif\_fif\_gobbletoend}%   % koncim
@@ -303,7 +303,7 @@
    \_relax % zarazka, na ktere se zastavi \sortreturn
 }
 \_def\_sortreturn#1#2\_fi\_relax{#1} \_def\_fif{\_fi}
-\_def\_gobbletoend #1\_end{}
+\_def\_gobbletoend #1\_fin{}
 
    \_doc -----------------------------
    The \`\_dosorting` `\list` macro redefines `\list` as sorted `\list`.
@@ -342,7 +342,7 @@
       \_csname _secondpass\_sortinglang \_endcsname % activates \_reversewords if needed
       \_def \_act##1{\_addto #1{##1,}}%
       \_edef #1{\_ea}\_ea\_xargs \_ea\_act #1;% commas between items added, mergesort initialized
-      \_edef \_iilist{\_ea}\_ea\_mergesort #1\_end,\_end
+      \_edef \_iilist{\_ea}\_ea\_mergesort #1\_fin,\_fin
    \_ea\_endgroup
    \_ea\_def\_ea#1\_ea{\_iilist}%
 }

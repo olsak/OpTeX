@@ -132,8 +132,8 @@
    as a box shifted down by `\parskip` and with `\vskip-\baselineskip` followed.
    \_cod -----------------------------
 
-\_def\_mnote #1#{\_ifx^#1^\_else \_mnoteC#1\_end \_fi \_mnoteD}
-\_def\_mnoteC up#1\_end{\_mnoteskip=#1\_relax} % \mnote up<dimen> {<text>} syntax
+\_def\_mnote #1#{\_ifx^#1^\_else \_mnoteC#1\_fin \_fi \_mnoteD}
+\_def\_mnoteC up#1\_fin{\_mnoteskip=#1\_relax} % \mnote up<dimen> {<text>} syntax
 \_long\_def\_mnoteD#1{%
    \_ifvmode \_vskip\_parskip{\_mnoteA{#1}}\_nobreak\_vskip-\_baselineskip\_vskip-\_parskip \_else
    \_lower\_dp\_strutbox\_hbox{}\_vadjust{\_kern-\_dp\_strutbox \_mnoteA{#1}\_kern\_dp\_strutbox}%

@@ -22,12 +22,12 @@
    \_cod -----------------------------
 
 \_newifi \_ifpxto
-\_def\_table#1#{\_tablebox\_bgroup \_tableW#1\_empty\_end
+\_def\_table#1#{\_tablebox\_bgroup \_tableW#1\_empty\_fin
    \_bgroup \_catcodetable\_optexcatcodes \_tableA}
-\_def\_tableW#1#2\_end{\_pxtofalse
+\_def\_tableW#1#2\_fin{\_pxtofalse
    \_ifx#1\_empty \_def\_tablew{}\_else
-   \_ifx#1p \_def\_tablew{}\_tableWx#2\_end \_else \_def\_tablew{#1#2}\_fi\_fi}
-\_def\_tableWx xto#1\_end{\_tmpdim=#1\_relax \_pxtotrue}
+   \_ifx#1p \_def\_tablew{}\_tableWx#2\_fin \_else \_def\_tablew{#1#2}\_fi\_fi}
+\_def\_tableWx xto#1\_fin{\_tmpdim=#1\_relax \_pxtotrue}
 \_public \table ;
 
    \_doc -----------------------------
@@ -337,12 +337,12 @@
 \_def\_tablinefil{\_leaders\_hrule\_hfil}
 
 \_def\_crlp#1{\_crcr \_zerotabrule \_noalign{\_kern-\_drulewidth}%
-   \_omit \_xdef\_crlplist{#1}\_xdef\_crlplist{,\_ea}\_ea\_crlpA\_crlplist,\_end,%
+   \_omit \_xdef\_crlplist{#1}\_xdef\_crlplist{,\_ea}\_ea\_crlpA\_crlplist,\_fin,%
    \_global\_tmpnum=0 \_gdef\_dditem{\_omit\_crlpD}%
    \_gdef\_vvitem{\_kern\_vvkern\_kern\_drulewidth}\_gdef\_vvitemA{\_kern\_drulewidth}%
    \_vvleft\_crlpD\_ddlinedata \_global\_tmpnum=0 \_crcr \_zerotabrule}
-\_def\_crlpA#1,{\_ifx\_end#1\_else \_crlpB#1-\_end,\_ea\_crlpA\_fi}
-\_def\_crlpB#1#2-#3,{\_ifx\_end#3\_xdef\_crlplist{\_crlplist#1#2,}\_else\_crlpC#1#2-#3,\_fi}
+\_def\_crlpA#1,{\_ifx\_fin#1\_else \_crlpB#1-\_fin,\_ea\_crlpA\_fi}
+\_def\_crlpB#1#2-#3,{\_ifx\_fin#3\_xdef\_crlplist{\_crlplist#1#2,}\_else\_crlpC#1#2-#3,\_fi}
 \_def\_crlpC#1-#2-#3,{\_tmpnum=#1\_relax
    \_loop \_xdef\_crlplist{\_crlplist\_the\_tmpnum,}\_ifnum\_tmpnum<#2\_advance\_tmpnum by1 \_repeat}
 \_def\_crlpD{\_incr\_tmpnum \_edef\_tmpa{\_noexpand\_isinlist\_noexpand\_crlplist{,\_the\_tmpnum,}}%

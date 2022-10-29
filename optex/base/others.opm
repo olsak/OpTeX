@@ -107,8 +107,8 @@
 
 \_def\_lipsumtext[#1]{\_lipsumload\_cs{_lip:#1}}
 \_def\_lipsum[#1]{\_lipsumA #1.]{#1}}
-\_def\_lipsumA #1.#2]#3{\_ifx^#2^\_lipsumB #1\_empty-\_empty\_end \_else \_lipsumdot[#1].\_fi}
-\_def\_lipsumB #1-#2\_empty#3\_end{%
+\_def\_lipsumA #1.#2]#3{\_ifx^#2^\_lipsumB #1\_empty-\_empty\_fin \_else \_lipsumdot[#1].\_fi}
+\_def\_lipsumB #1-#2\_empty#3\_fin{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{{%
    \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
@@ -118,8 +118,8 @@
       \_opinput {lipsum.ltd.tex}%
       \_global\_let\_lipsumload=\_empty
    }}}
-\_def\_lipsumdot[#1]{\_lipsumload \_ea\_ea\_ea \_lipsumdotA \_csname _lip:#1\_endcsname.\_end}
-\_def\_lipsumdotA #1.#2\_end {#1}
+\_def\_lipsumdot[#1]{\_lipsumload \_ea\_ea\_ea \_lipsumdotA \_csname _lip:#1\_endcsname.\_fin}
+\_def\_lipsumdotA #1.#2\_fin {#1}
 
 \_public \lipsum \lipsumtext ;
 \_let \lorem=\lipsum
