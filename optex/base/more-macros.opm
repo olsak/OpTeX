@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-10-27>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-03>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -105,25 +105,29 @@
    The declarator \`\optdef``\macro [<opt default>] <params>{<replacement text>}` 
    defines the `\macro` with the optional parameter followed by normal parameters
    declared in `<params>`. The optional parameter must be used as the first
-   first parameter in brackets `[...]`. If it isn't used then <opt default>
+   parameter in brackets `[...]`. If it isn't used then <opt default>
    is taken into account. The `<replacement text>` can use `\the\opt`
    because optional parameter is saved to the \`\opt` tokens register.
    Note the difference from \LaTeX/ concept where the optional parameter is
    in `#1`. \OpTeX/ uses `#1` as the first normal parameter (if declared).
 
-   The \`\_nospaceafter` ignores the following optional space at expand
+   The \`\nospaceafter` ignores the following optional space at expand
    processor level using the negative `\romannumeral` trick.
+   The \`\nospacefuturelet` bahaves like `\futurelet` primitive, but it
+   ignores the following optional space and works at expand processor level.
    \_cod -----------------------------
 
+\_newtoks\_opt
 \_def\_optdef#1[#2]{%
    \_def#1{\_opt={#2}\_isnextchar[{\_cs{_oA:\_csstring#1}}{\_cs{_oB:\_csstring#1}}}%
    \_sdef{_oA:\_csstring#1}[##1]{\_opt={##1}\_cs{_oB:\_csstring#1\_nospaceafter}}%
    \_sdef{_oB:\_csstring#1\_nospaceafter}%
 }
-\_def\_nospaceafter#1{\_ea#1\_romannumeral-`\.}
-\_newtoks\_opt
+\_def\_nospaceafter#1{\_ea#1\_romannumeral-`\.\_noexpand}
+\_def\_nospacefuturelet#1#2{_ea\_immediateassignment
+   \_ea\_futurelet\_ea#1\_ea#2\_romannumeral-`\.\_noexpand}
 
-\_public \opt \optdef ; 
+\_public \opt \optdef \nospaceafter \nospacefuturelet ;
 
    \_doc -----------------------------
    The declarator \`\eoldef``\macro #1{<replacement text>}` defines a `\macro`
@@ -278,6 +282,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-03 \nospacefuturelet added.
 2022-10-27 \_savemathsb ...\_restoremathsb added to \load (eg. \load[xstring])
 2022-05-24 \optdef: used \csstring instead \string, bug fixed.
 2021-04-25 \normalcatcodes: typo fixed
