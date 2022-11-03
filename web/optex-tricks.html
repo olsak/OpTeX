@@ -142,6 +142,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#orical">Original \cal from Computer Modern fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
+    <li><a href="#bigp">Controlled sizes of parentheses</a>
 </ul>
 
 <li>Tables
@@ -2054,6 +2055,61 @@ $$ a &lt;= b &lt;= c ==> a &lt;= c $$
 they are working in OpTeX too.
 
 <p CLASS=datum>(0061) -- P. O. 2021-04-19<p>
+<hr>
+
+<h2><a name="bigp"></a>Controlled sizes of parentheses</h2>
+
+<p>If you write $f(x(y+z))$ then the outer parentheses should be bigger.
+Classical Plain TeX provides macros \bigl, \bigr, etc., they can be used by
+$f\bigl(x(y+z)\bigr)$. But the source file looks bad with this markup.
+Better is to say that parentheses have to be bigger using a single prefix
+before functional symbol, i.e. $\bigp f(x(y+z))$. This should be print
+the same as previous example with \bigl, \bigr.
+
+<p>We implement prefixes \bigp, \Bigp, \biggp and \Biggp, they can be used
+before a functional symbol. The scaled parentheses surrounding the functional
+parameter can be (...) or [...] or {...} or \{...\}. I.e. \Bigp\Gamma [x] is
+the same as \Gamma \Bigl[x\bigr]. Moreover, the functional parameter gets its
+own TeX group, so \Bigp G(a\over2) results to G\Bigl({a\over2}\bigr). We add
+two more prefixes \autop and \normalp. First one applies \left, \right to
+the parentheses of the parameter, second one keeps the parentheses unscaled.
+The implementation looks like this:
+
+<pre>
+\def\Bigp#1{#1\fparam\Bigl\Bigr}
+\def\biggp#1{#1\fparam\biggl\biggr}
+\def\Biggp#1{#1\fparam\Biggl\Biggr}
+\def\autop#1{#1\fparam\left\right}    % for auto-sized parentheses
+\def\normalp#1{#1\fparam\relax\relax} % for no-scaled parentheses
+\def\fparam#1#2{\let\bigleft=#1\let\bigright=#2\futureletns\next\fparamA}
+\def\fparamA{%
+   \ifx\next(\afterrelax{\fparamB()}\fi
+   \ifx\next[\afterrelax{\fparamB[]}\fi
+   \ifx\next\{\afterrelax{\fparamB\{\}}\fi
+   \ifx\next\bgroup \def\lparen{\{}\def\rparen{\}}\afterrelax{\fparamC}\fi
+   \relax
+}
+\def\fparamB#1#2{%
+   \def\lparen{#1}\def\rparen{#2}%
+   \def\next#1##1#2{\ensurebalanced#1#2\fparamC{##1}}%
+   \next
+}
+\def\fparamC#1{%
+   \ifx\bigleft\left \mathopen{}\fi
+   \bigleft\lparen{#1}\bigright\rparen
+   \ifx\bigright\right \mathclose{}\fi
+}
+\def\afterrelax#1#2\relax{\fi#1}
+\def\futureletns#1#2{\ea\futurelet\ea#1\ea#2\romannumeral-`\.\noexpand}
+</pre>
+
+<p>We need to load macros \ensurebalanced from OpTeX trick
+<a href="#balancing">0043</a> because the functional parameter must be
+scanned as balanced text with respect to the given parentheses. For example
+\Bigp f(1+\bigp f(1+f(x))) works as we expect.
+
+
+<p CLASS=datum>(0094) -- P. O. 2022-11-02<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
