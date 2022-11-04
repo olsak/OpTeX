@@ -255,7 +255,8 @@ The scope of the \^`\_namespace` command ends at the \^`\_endnamespace` command
 or when another \^`\_namespace` is used. This command checks
 if the same package label is not declared by the \^`\_namespace` twice.
 
-The \^`\_nspublic` macro does `\let\foo = \_<pkg>_foo` when
+\^`\_nspublic` `<list of sequences> ;`
+does `\let\foo = \_<pkg>_foo` for each given sequence when
 \^`\_namespace{<pkg>}` is declared. Moreover, it prints a warning if `\foo` is
 defined already. The \^`\_nsprivate` macro does reverse
 operation to it without warnings. Example: you can define `\def\.macro{...}` and then

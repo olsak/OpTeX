@@ -232,7 +232,7 @@
    \_cod -----------------------------
 
 \_def\_bib[#1]{\_def\_tmp{\_isnextchar={\_bibA[#1]}{\_bibmark={}\_bibB[#1]}}%
-   \_ea\_tmp\_romannumeral-`\.} % ignore optional space
+   \_nospaceafter\_tmp} % ignore optional space
 \_def\_bibA[#1]=#2{\_bibmark={#2}\_bibB[#1]}
 \_def\_bibB[#1]{\_par \_bibskip
    \_bibgl\_advance\_bibnum by1

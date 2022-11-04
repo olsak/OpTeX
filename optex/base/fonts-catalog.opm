@@ -47,7 +47,7 @@
 }
 \_def\_dosamples #1:#2{\_ifx^#2^\_else
    \_def\_printvars{#2}%
-   \_ea\_dosamplesA\_romannumeral-`\.#1,,%
+   \_nospaceafter\_dosamplesA #1,,%
    \_ea\_dosamples\_fi
 }
 \_def\_dosamplesA#1,{%
