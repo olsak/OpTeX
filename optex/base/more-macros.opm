@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-03>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-05>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -198,13 +198,20 @@
    It finishes processing or appends the next part to `\_tmptoks` separated by
    <textB> and continues loop. The final part of the macro removes the last `?`
    from resulting `\_tmptoks` and defines a new version of the `\foo`.
+
+   The \^`\replstring` macro is not expandable, but you can create your
+   expandable macro, for example:
+   \begtt
+   \def\replAB#1{\immediateassigned{\def\tmp{#1}\replstring\tmp{A}{B}}\the\_tmptoks}
+   \replAB {text A \and A} % expands to "text B \and B"
+   \endtt
    \_cod -----------------------------
 
 \_newtoks\_tmptoks
 \_catcode`!=3 \_catcode`?=3
 \_def\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
    \_long\_def\_replacestringsA##1#2{\_tmptoks{##1}\_replacestringsB}%
-   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_toksapp\_tmptoks{#3##1}%
+   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_tmptoks\_ea{\_the\_tmptoks#3##1}%
                                      \_ea\_replacestringsB\_fi}%
    \_ea\_replacestringsA #1?#2!#2%
    \_long\_def\_replacestringsA##1?{\_tmptoks{##1}\_edef#1{\_the\_tmptoks}}%
@@ -282,6 +289,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-05 \replstring can be expandable using \immediateassigned: \toksapp replaced
 2022-11-03 \nospacefuturelet added.
 2022-10-27 \_savemathsb ...\_restoremathsb added to \load (eg. \load[xstring])
 2022-05-24 \optdef: used \csstring instead \string, bug fixed.

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2022-10-18>} % preloaded in format
+\_codedecl \inspic {Graphics <2022-11-05>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -383,7 +383,7 @@
            \_ea \_shadowlayer \_fi
     }%
     \_pdfliteral{q /op1 gs 0 g 1 0 0 1 \_shadowmoveto\_space cm
-       \_ifx#1\_circlet 1 0 0 1 \_expr{\_bp{.5\_wd0}} \_expr{\_bp{(\_ht0-\_dp0)/2}} cm
+       \_ifx#1\_circlet 1 0 0 1 \_bp{.5\_wd0} \_bp{(\_ht0-\_dp0)/2} cm
        \_else  1 0 0 1 -\_shadowb\_space -\_shadowb\_space cm \_fi
        \_shadowlayer Q}
 }}
@@ -447,6 +447,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed
 2022-10-18  \_puttextA defined \long, bug fixed
 2022-03-05: \_addextgstate, \pageresources, \addpageresources added
 2022-03-03: \_coc introduced
