@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2022-10-14>} % preloaded in format
+\_codedecl \setfontsize {Font resizing macros <2022-11-14>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabilities,
@@ -77,7 +77,8 @@
    Note, that the `\_xfontname` output is converted due to optical size data using `\_optfn`.
    \_cod -----------------------------
 
-\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else \_font #1{\_optfn{\_xfontname#2}}\_fi}
+\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else
+   \_ea\_font \_ea#1\_expanded{{\_optfn{\_xfontname#2}}}\_fi}
 \_public \xfontname \fontlet ;
 
    \_doc -----------------------------
@@ -89,12 +90,10 @@
    the \^`\_sizespec` macro.
    \_cod -----------------------------
 
-\_def \_newcurrfontsize #1{% \newcurrfontsize{at25pt}
-   \_ea\_def \_ea\_tmp \_ea{\_csname \_ea\_csstring \_the\_font \_endcsname}%
-   \_ea\_fontlet \_tmp \_font #1\_relax
-   \_ea\_fontloaded \_tmp
-   \_tmp
-}
+% \newcurrfontsize{at25pt}
+\_def \_newcurrfontsize {\_ea\_newcurrfontsizeA \_csname \_ea\_csstring \_the\_font \_endcsname}
+\_def \_newcurrfontsizeA #1#2{\_fontlet #1\_font #2\_relax \_fontloaded#1#1}
+
 \_protected\_def \_resizethefont{\_newcurrfontsize\_sizespec}
 \_public \newcurrfontsize \resizethefont ;
 
@@ -326,7 +325,8 @@ Luaotfload documentation for more information.
 
 \_endinput
 
-2022-02-22 \ufont itroduced
+2022-11-07 \fontlet \a\a: bug fixed
+2022-10-14 \ufont itroduced
 2022-02-22 Font Selection System reimplemented, \fontsel introduced
 2021-05-02 better concept of doc, moving parts to fonts-select
 2021-04-17 \_fontloaded, \_newfontloaded introduced
