@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2022-02-22>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2022-11-08>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -258,7 +258,7 @@
    They have precedence when \^`\fontsel` constructs the <font switch> name.
    \_cod -----------------------------
 
-\_def\_fontdef #1#2{\_begingroup
+\_protected\_def \_fontdef #1#2{\_begingroup
    \_edef\_xfamv{\_csstring#1}\_let\_ttfamv\_xfamv #2%
    \_ea\_endgroup\_ea \_let\_ea #1\_the\_font
 }
@@ -278,7 +278,7 @@
    the same meaning.
    \_cod -----------------------------
 
-\_def\_famvardef#1#2{%
+\_protected\_def \_famvardef #1#2{%
    \_sdef{_f:\_currfamily:\_csstring#1}%
       {{\_edef\_xfamv{\_csstring#1}\_let\_ttfamv\_xfamv #2\_ea}\_the\_font \_def\_currvar{#1}}%
    \_protected\_edef\_tmpa {%
@@ -307,7 +307,7 @@
    terminal and to the log file.
    \_cod -----------------------------
 
-\_def\_fontfam[#1]{%
+\_protected\_def \_fontfam [#1]{%
    \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
    \_isfile {f-\_famname.opm}\_iftrue \_opinput {f-\_famname.opm}%
    \_else
@@ -898,6 +898,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2022-11-08  \protected: \fontdef, \famvardef, \fontfam
 2022-02-22  Font Selection System reimplemented, \fontsel introduced
 2021-09-24  \_unichars used in \initunifonts
 2021-07-16  \initunifonts: optex_hook_into_luaotfload added.

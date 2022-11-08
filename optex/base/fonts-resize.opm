@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \setfontsize {Font resizing macros <2022-11-14>} % preloaded in format
+\_codedecl \setfontsize {Font resizing macros <2022-11-08>} % preloaded in format
 
    \_doc -----------------------------
    \`\initunifonts` macro extends \LuaTeX's font capabilities,
@@ -13,7 +13,7 @@
    \`\ufont` is a shortcut of \^`\initunifonts`~`\font`.
    \_cod -----------------------------
 
-\_def\_initunifonts {%
+\_protected\_def \_initunifonts {%
    \_directlua{%
       require('luaotfload-main')
       luaotfload.main()
@@ -23,7 +23,7 @@
    \_glet \_initunifonts=\_relax % we need not to do this work twice
    \_glet \initunifonts=\_relax
 }
-\_def\_ufont {\_initunifonts \_font}
+\_protected\_def \_ufont {\_initunifonts \_font}
 
 \_public \initunifonts \ufont ;
 
@@ -77,7 +77,7 @@
    Note, that the `\_xfontname` output is converted due to optical size data using `\_optfn`.
    \_cod -----------------------------
 
-\_def\_fontlet#1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else
+\_protected\_def \_fontlet #1#2{\_ifx #2=\_ea\_fontlet \_ea#1\_else
    \_ea\_font \_ea#1\_expanded{{\_optfn{\_xfontname#2}}}\_fi}
 \_public \xfontname \fontlet ;
 
@@ -87,15 +87,21 @@
    It changes the current font at the given <size spec>.
    \nl
    \`\resizethefont` is implemented by \^`\newcurrfontsize` using data from
-   the \^`\_sizespec` macro.
+   the \^`\_sizespec` macro.\nl
+   \`\sfont` has the same syntax like `\font` primitive, but declares a
+   macro which selects the font and sets its size properly dependent on the
+   current size.
    \_cod -----------------------------
 
 % \newcurrfontsize{at25pt}
 \_def \_newcurrfontsize {\_ea\_newcurrfontsizeA \_csname \_ea\_csstring \_the\_font \_endcsname}
 \_def \_newcurrfontsizeA #1#2{\_fontlet #1\_font #2\_relax \_fontloaded#1#1}
-
-\_protected\_def \_resizethefont{\_newcurrfontsize\_sizespec}
-\_public \newcurrfontsize \resizethefont ;
+\_protected\_def \_resizethefont {\_newcurrfontsize\_sizespec}
+\_protected\_def \_sfont #1{%
+   \_protected\_edef #1{\_csname _sfont:\_csstring#1\_endcsname \_resizethefont}%
+   \_initunifonts \_ea\_font \_csname _sfont:\_csstring#1\_endcsname
+}
+\_public \newcurrfontsize \resizethefont \sfont ;
 
    \_doc -----------------------------
    The \`\_regtfm` `<font id> <optical size data>`
@@ -261,6 +267,26 @@ behaves like variant selector in the Font Selection System (section~\ref[fontsys
 It takes only information about size from the font context, but it is
 sufficient. You can use it in titles, footnotes, etc. The font size
 depending on surrounding size is automatically selected.
+There is a shortcut \^`\sfont` with the same syntax like `\font` primitive,
+it declares a macro which selects the font and does resizing depending on
+the current size. So, the example above can be realized by
+`\sfont\crimson=[Crimson-Roman]:+onum`.
+
+\secc The `\font`-like commands summary
+
+\begitems
+* `\font` is \TeX/ primitive. When \OpTeX/ starts, then it accepts only
+  classical \TeX/ syntax and doesn't allow to load Unicode fonts.
+  Once \^`\initunifonts` (or \^`\fontfam`) is used, the `\font` primitive is
+  re-initialized: now it accepts extended syntax and it is able to load Unicode
+  OpenType fonts.
+* \^`\ufont` is a shortcut of `\initunifonts \font`. I.e.\ it behaves like
+  `\font` and accepts extended syntax immediatelly.
+* \^`\sfont` has syntax like extended `\font`. It declares a macro which
+  selects the given font and resizes it to the current size (given by
+  \^`\setfontsize`). In various part of document (text, footnotes, titles), the
+  size of this font is selected by the declared macro properly.
+\enditems
 
 
 \secc[fontlet] The \code{\\fontlet} declarator
@@ -291,13 +317,13 @@ able to choose right file if various optical sizes and corresponding file
 names are declared for the font by \^`\_regtfm` or \^`\_regoptsizes` command.
 The command \^`\setfontsize` sets the internal reuirements for
 optical size if the parameter is in the format `at<dimen>` or `mag<factor>`.
-Then the command \^`\resizethefont` or variant selectors try to choose
+Then the command \^`\resizethefont` or \^`\fontlet` or variant selectors try to choose
 the font suitable for the required optical size. For example
 \begtt
 \fontfam[lm]
       The text is printed in font [lmroman10-regular] at 10 pt.
 \setfontsize{at13pt}\rm
-      Now in the text is printed in [lmroman12-regular] at 13 pt.
+      Now, the text is printed in [lmroman12-regular] at 13 pt.
 \endtt
 See also section~\ref[optsizes].
 
@@ -325,8 +351,9 @@ Luaotfload documentation for more information.
 
 \_endinput
 
+2022-11-08 \sfont introduced, \protected: \initunifont, \ufont, \fontlet
 2022-11-07 \fontlet \a\a: bug fixed
-2022-10-14 \ufont itroduced
+2022-10-14 \ufont introduced
 2022-02-22 Font Selection System reimplemented, \fontsel introduced
 2021-05-02 better concept of doc, moving parts to fonts-select
 2021-04-17 \_fontloaded, \_newfontloaded introduced
