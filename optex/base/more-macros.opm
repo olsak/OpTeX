@@ -124,7 +124,7 @@
    \_sdef{_oB:\_csstring#1\_nospaceafter}%
 }
 \_def\_nospaceafter#1{\_ea#1\_romannumeral-`\.\_noexpand}
-\_def\_nospacefuturelet#1#2{_ea\_immediateassignment
+\_def\_nospacefuturelet#1#2{\_ea\_immediateassignment
    \_ea\_futurelet\_ea#1\_ea#2\_romannumeral-`\.\_noexpand}
 
 \_public \opt \optdef \nospaceafter \nospacefuturelet ;
