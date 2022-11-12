@@ -143,6 +143,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
     <li><a href="#bigp">Controlled sizes of parentheses</a>
+    <li><a href="#scriptspacing">More spaces in script style around rel, bin</a>
 </ul>
 
 <li>Tables
@@ -2107,8 +2108,32 @@ The implementation looks like this:
 scanned as balanced text with respect to the given parentheses. For example
 \Bigp f(1+\bigp f(1+f(x))) works as we expect.
 
-
 <p CLASS=datum>(0094) -- P. O. 2022-11-02<p>
+<hr>
+
+<h2><a name="scriptspacing"></a>More spaces in script style around rel, bin</h2>
+
+<p>Classical TeX puts automatically \medmuskip around binary operators and
+\thickmuskip around relations, but only in text and display styles. These
+spaces are missing in script style. Maybe, someone want to add (smaller)
+spaces in these cases too. This can be done by following settings:
+
+<pre>
+\Umathordbinspacing\scriptstyle=1mu
+\Umathbinordspacing\scriptstyle=1mu
+\Umathordbinspacing\crampedscriptstyle=1mu
+\Umathbinordspacing\crampedscriptstyle=1mu
+
+\Umathordrelspacing\scriptstyle=1.5mu
+\Umathrelordspacing\scriptstyle=1.5mu
+\Umathordrelspacing\crampedscriptstyle=1.5mu
+\Umathrelordspacing\crampedscriptstyle=1.5mu
+</pre>
+
+<p>The LuaTeX primitive registers are used here, see section 7.5.2 in LuaTeX
+manual.
+
+<p CLASS=datum>(0095) -- P. O. 2022-11-12<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
