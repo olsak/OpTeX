@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2022-07-01>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2022-11-13>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
@@ -39,7 +39,7 @@
    \_doc -----------------------------
    The listing mode is implemented here. The \`\maxlines`
    is maximal lines of code printed in the listing mode.
-   The \`\_catcodedot` sets dot as letter in listngs (for package
+   The \code{\\catcode`\\.=11} sets dot as letter in listngs (for package
    documentation where `\.foo` sequeces exist).
    \_cod -----------------------------
 
@@ -52,7 +52,7 @@
    \_typosize[8/10]
    \_let\_printverbline=\_printcodeline
    \_ttline=\_inputlineno
-   \_setverb \_catcodedot
+   \_setverb \_catcode`\.=11
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
@@ -74,7 +74,6 @@
 \_edef\_Doc{\_asp\_asp\_bslash _doc}
 \_bgroup \_lccode`~=`\^^I \_lowercase{\_egroup\_edef\_Doctab{\_noexpand~\_bslash _doc}}
 \_edef\_Endcode{\_noexpand\_empty\_bslash _endcode}
-\_def\_catcodedot{\_catcode`\.=11 }
 
    \_doc -----------------------------
    The scanner of the control sequences in the listing mode replaces all
@@ -206,10 +205,9 @@
    catcodes using the `\_afteroad` macro.
    \_cod -----------------------------
 
-\_def\_afterload{\_catcode`\<=13 \_catcode`\`=13 \_catcode`\.=11
-   \_wlog {doc.opm: catcodes of < and ` activated, catcode of . is letter.}%
+\_def\_afterload{\_catcode`\<=13 \_catcode`\`=13
+   \_wlog {doc.opm: catcodes of < and ` activated.}%
 }
-\_catcode`.=11
 
    \_doc -----------------------------
    The \code{<something>} will be print as <something>.
@@ -219,7 +217,7 @@
 \_catcode`\<=13
 
 \_def<#1>{$\langle\hbox{\it#1\/}\rangle$}
-\_everyintt{\_catcode`\<=13 }
+\_everyintt{\_catcode`\<=13 \_catcode`\.=11 }
 
    \_doc -----------------------------
    Main documentation points and hyperlinks to/from it.
@@ -357,6 +355,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2022-11-13 \catcode`.=11: only local settings
 2022-07-01 \_printii improved, colors declaration part added.
 2021-05-15 \_endinput shifted after \_processinput when \_endcode is scanned.
 2021-05-14 \_catcodedot, \_Doctab introduced.
