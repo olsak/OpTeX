@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2021-08-16>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2022-11-13>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -97,6 +97,7 @@
    \_else \_resetnamespace{#1}\_fi
 }
 \_def\_resetnamespace #1{%
+   \_unless \_ifx \_pkglabel\_empty \_endnamespace \_fi
    \_ea \_gdef \_csname namesp:#1\_endcsname {}%
    \_gdef \_pkglabel{_#1}%
    \_directlua{
@@ -341,6 +342,7 @@ can look like.
 
 \endinput
 
+2022-11-13 \_resetnamespace corrected
 2021-08-16 \_wlog moved from basic macros, \_codedecl uses \_wlog only.
 2021-04-25 \_checkexists introduced
 2021-02-15 \_expandafter -> \_ea in \_codedecl
