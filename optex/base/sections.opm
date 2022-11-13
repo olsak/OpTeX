@@ -28,6 +28,7 @@
    \_nobreak\_bigskip
 }
 \_def\_tit{\_scantoeol\_printtit}
+\_let\_intit=\_printtit  % used by \bracedparam
 
 \_public \tit ;
 

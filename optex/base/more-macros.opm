@@ -154,8 +154,8 @@
 \_eoldef\_skiptoeol#1{}
 \_def\_bracedparam#1{\_ifcsname _\_csstring #1:M\_endcsname
     \_csname _\_csstring #1:M\_ea \_endcsname
-    \_else \_csname __in\_csstring #1:M\_ea \_endcsname \_fi
-} 
+    \_else \_csname _in\_csstring #1\_ea \_endcsname \_fi
+}
 \_public \eoldef \skiptoeol \bracedparam ;
 
    \_doc -----------------------------
@@ -174,10 +174,10 @@
    the next line continues.
    \_cod -----------------------------
 
-\_def\_scantoeol#1{\def\_tmp{#1}\_begingroup \_setscancatcodes \_scantoeolA}
+\_def\_scantoeol#1{\_begingroup \_setscancatcodes \_scantoeolA #1}
 \_def\_setscancatcodes{\_setverb \_catcode`\^^M=12\_catcode`\^=7\_catcode`\ =10\_catcode`\^^J=14 }
 \_catcode`\^^M=12 %
-\_def\_scantoeolA#1^^M{\_endgroup \_tmp{#1}}%
+\_def\_scantoeolA#1#2^^M{\_endgroup #1{#2}}%
 \_normalcatcodes %
 
 \_public \scantoeol ;
@@ -298,7 +298,7 @@
 
 \_endcode % -------------------------------------
 
-2022-11-13 \docgen introduced
+2022-11-13 \docgen introduced, \bracedparam corrected, \scantoeol modified
 2022-11-05 \replstring can be expandable using \immediateassigned: \toksapp replaced
 2022-11-03 \nospacefuturelet added.
 2022-10-27 \_savemathsb ...\_restoremathsb added to \load (eg. \load[xstring])
