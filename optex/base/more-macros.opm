@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-05>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-13>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -287,8 +287,18 @@
 
 \_long\_def\_doc #1\_cod {\_skiptoeol}
 
+   \_doc ------------------
+   \`\docgen` `<pkg-name>` uses \^`\skiptoeol` too.
+   \_cod ------------------
+
+\_def\_docgen #1 {\_ea \_docgenA \_input{#1.opm}}
+\_long \_def\_docgenA #1\_endcode #2\_doc {\_skiptoeol}
+
+\_public \docgen ;
+
 \_endcode % -------------------------------------
 
+2022-11-13 \docgen introduced
 2022-11-05 \replstring can be expandable using \immediateassigned: \toksapp replaced
 2022-11-03 \nospacefuturelet added.
 2022-10-27 \_savemathsb ...\_restoremathsb added to \load (eg. \load[xstring])

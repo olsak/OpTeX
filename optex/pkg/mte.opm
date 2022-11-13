@@ -680,6 +680,31 @@ that a specific font family needs different microtypographic data, please
 let me know. I can add extra definitions to appropriate font family
 file.
 
-\_endinput
+\_doc
+   % Run  optex -jobname mte-doc '\docgen mte'
+   % (two times) to generate documentation including references and the index.
 
-Use "optex mte-doc.tex" (twice) to generate documentation from this file.
+   \load [doc]
+
+   \def\elink[#1]#2{%
+      \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#cs:#1]%
+      {\tt\string#2}%
+   }
+   \def\olink[#1]#2{%
+      \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf\#cs:#1]%
+      {\tt\string#2}%
+   }
+   \let\_urllinkcolor=\Cyan
+
+   \printdoctail mte.opm
+   \printdoc     mte.opm
+
+   \nonum\sec Index
+   \begmulti 3
+   \tt \makeindex
+   \endmulti
+
+   \bye
+\_cod
+
+\_endinput

@@ -124,7 +124,6 @@
    \_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1%
 }
 
-
 \_endcode %----------------------------------------------------
 
 
@@ -232,9 +231,35 @@ If the mentioned `\sequence` is defined, then \^`\_codedecl` does the same as
 `\sequence` is defined in the macro file.
 
 It is possible to use the \^`\_doc` ... \^`\_cod` pair between the macro lines.
-The documentation text should be here. It is ignored when macros are read
-but it can be printed using `doc.opm` macros like in this documentation.
+The documentation text should be here. It is ignored when macros are read.
 
+The \^`\_doc` ... \^`\_cod` parts can be printed after \^`\load[doc]`
+using \~`\printdoc` macro, see section~\ref[doc].
+If you have created a documented macro file `pkgname.opm` then you can
+put macros for creating your documentation between
+first pair of \^`\_doc` ... \^`\_cod` used after \^`\_endcode`.
+These macros should \^`\load[doc]` and must to be finished by \^`\bye`.
+Then you have code+documentation together in a single file and
+user can generate the documentation of our package by
+\^`\docgen` used at command line:
+\begtt
+optex -jobname pkgname-doc '\docgen pkgname'
+\endtt
+Example of a code used between the first {\^`\_doc` ... \^`\_cod`} pair
+after \^`\_endcode`:
+\begtt
+\_doc
+   \load [doc]
+   \printdoctail pkgname.opm % prints the documantation written after \_endcode
+   \printdoc     pkgname.opm % prints \_doc...\_cod parts + code before \_endcode
+   \nonum\sec Index
+   \begmulti 3
+      \tt \makeindex         % prints index in three columns
+   \endmulti
+   \bye
+\_cod
+\endtt
+See the end of `mte.opm` file for a real example.
 
 \secc[pkg-namespace] Name spaces for package writers
 
