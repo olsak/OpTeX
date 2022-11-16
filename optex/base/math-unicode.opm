@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2022-11-13>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2022-11-16>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -125,8 +125,8 @@
    documentation) repeatedly from loaded math
    fonts if `nomathparam` is not given. We want to load these parameters only
    from fonts at families 0--3 (and actually we are using only family 1 as main math font).\nl
-   The \^`\_corrmsize` `<factor><space>` can be used just before
-   `\_loadumathfamily`, see section~\ref[math-preload] for more information.\nl
+   The \^`\_mfactor` `<family><space>` sets scaling factor,
+   see section~\ref[math-preload] for more information.\nl
    The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are font
    features for text, script and sscript sizes respectively. They are
    locally re-defined in \^`\mathbox` macro.
@@ -136,10 +136,10 @@
 \_def\_mfontfeatures{mode=base;script=math;}
 
 \_def\_loadumathfamily #1 #2#3 {%
+  \_mfactor#1
   \_font\_mF=\_umathname{#2}{\_textmff   \_mparams{#1}#3} at\_sizemtext \_textfont        #1=\_mF
   \_font\_mF=\_umathname{#2}{\_scriptmff \_mparams{#1}#3} at\_sizemtext \_scriptfont      #1=\_mF
   \_font\_mF=\_umathname{#2}{\_sscriptmff\_mparams{#1}#3} at\_sizemtext \_scriptscriptfont#1=\_mF
-  \_ptmunit=\_ptunit
 }
 \_def\_textmff   {ssty=0;mathsize=1;}
 \_def\_scriptmff {ssty=1;mathsize=2;}
@@ -219,11 +219,12 @@
    \_else \_isfont{#2}\_iffalse \_opwarning{font #2 is unavailable}%
    \_else
       \_newfam#1\_relax
-      \_global\_addto\_normalmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{#3} }%
+      \_sdef{_mfactor:\_the\_numexpr#1\_relax}{#6}%
+      \_global\_addto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
       \_ifx\_relax#4\_relax
-         \_global\_addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{embolden=1.7;} }%
+         \_global\_addto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
       \_else
-         \_global\_addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#4}{#5} }%
+         \_global\_addto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
       \_fi
       \_normalmath
       \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
@@ -231,11 +232,11 @@
 }
 
    \_doc -----------------------------
-   \`\resetmathchars` `<fam> <list of sequences> ;`
-   saves <fam> to \`\_mafam` and applies \`\_resetmathcharsX`
-   to each sequence from <list of sequences>.
+   \`\mathchars` `<fam> {<list of sequences>}`
+   saves <fam> to \`\_mafam` and runs `\foreach` sequence from the <list of sequences>
+   the relevant code settings.
    The `\directlua` chunk prints the 8-digits hexadecimal code of the
-   sequence followed by the sequence itself. The digts are scanned by \`\_resetmathcharsY`
+   sequence followed by the sequence itself. The digts are scanned by \`\_mathcharsB`
    and new `\Umathchardef` and `\Umathcode` is declared. Note that the used
    primitives have the syntax:
    \begtt \catcode`<=13
@@ -244,14 +245,32 @@
    \endtt
    \_cod -----------------------------
 
-\_def\_resetmathchars #1{\_chardef\_mafam=#1\_relax \_xargs \_resetmathcharX}
-\_def\_resetmathcharX#1{\_ea\_resetmathcharY
-   \_directlua{tex.print(string.format("\_pcent08X", \_the#1))}#1}
-\_def\_resetmathcharY#1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
+\_def\_mathchars {\_afterassignment\_mathcharsA \_chardef\_mafam=}
+\_def\_mathcharsA #1{\_foreach #1\_do{\_ea\_mathcharsB
+   \_directlua{tex.print(string.format("\_pcent08X", \_the##1))}##1}%
+}
+\_def\_mathcharsB #1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
    \_Umathchardef #9\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
    \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
 }
-\_public \addUmathfont \resetmathchars ;
+   \_doc -----------------------------
+   \`\mathcodes` `<fam> {<list of pairs>}` sets mathcodes of given
+   characters with explicit <class>es. Each pair can be `<class>{<list of chars>}`
+   and `<list of chars>` can include \`\Urange` `<from>-<to>`.
+   This is reason why we apply `\expanded` to the `<list of chars>`
+   before reading it by \^`\foreach`: the \^`\Urange` is expandable
+   and expands to the relevant list of characters.
+   \_cod -----------------------------
+
+\_def\_mathcodes{\_afterassignment\_mathcodesA\_chardef\_mafam=}
+\_def\_mathcodesA#1{%
+   \_foreach #1\_do ##1##2{%
+      \_ea\_foreach\_expanded{##2}\_do{\_Umathcode `####1=##1\_mafam`####1}%
+   }%
+}
+\_def\_Urange #1-#2{\_fornum `#1..`#2\_do{\_Uchar##1 }}
+
+\_public \addUmathfont \mathchars \mathcodes ;
 
 \_endcode
 
@@ -288,26 +307,59 @@ Example:
 \addUmathfont \xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
 \endtt
 %
-declares `latinmodern-math` as main math font (its bold variant is \"faked bold")
-and the additional math font `\xits` is `XITSMath-Regular` for normal
-printing and `XITSMath-Bold` for bold printing.
+declares `latinmodern-math` as main math font (its bold variant is \"faked bold").
+The additional math font family `\xits` is declared in the example. It uses
+`XITSMath-Regular` for normal printing and `XITSMath-Bold` for bold printing.
 
-All characters used in math formula is printed from main math font by
+All characters used in math formula are printed from main math font by
 default. But you can redeclare a list of characters for printing from
-additional font by \^`\resetmathchars` `\famname <list of sequences> ;`. For
+additional font by \^`\mathchars` `\famname {<list of sequences>}`. For
 example:
 
 \begtt
-\resetmathchars \xits \stareq \triangleq \veeeq \wedgeq ;
+\mathchars \xits {\stareq \triangleq \veeeq \wedgeq}
 \endtt
 %
 sets the characters `\stareq`, `\triangleq`, `\veeeq`, `\wedgeq` from
-the `\xits` additional font. You can see all possible sequences by
+the `\xits` additional font. The <list of sequences> can include arbitrary
+control sequence from the Unicode table. It can be printed by
 `\input print-unimath.opm`.
-If you want to use whole math alphabet from additional math font, use
-`\addto\selector{\fam\famname}`, for example `\addto\cal{\fam\xits}`
+
+The \^`\mathchars` macro keeps the class and slot of declared math objects
+and re-declares only family of them. It is applied to the given control
+sequences (by `\Umathchardef` primitive) and for relevant math codes
+(by `\Umathcode`) too.
+
+Use `\addto\selector{\fam\famname}` if you want to print whole math alphabet
+from an additional math font. For example `\addto\cal{\fam\xits}`
 declares all `\cal` characters from the `\xits` font loaded by
 \^`\addUmathfont`.
+
+The \^`\mathcodes` macro provides comfortable settings of math codes of math
+objects. Its syntax is \^`\mathcodes <family> {<list-of-pairs>}`. Each pair
+in the <list-of-pairs> is `<class-number><character>` (separated by optional
+space) or `<class-number>{<list-of-characters>}`. The <list-of-characters>
+includes declared characters or `\Urange <from>-<to>` which is equal to the
+list of characters beginning <from> and ending <to>, for example
+`\Urange a-d` is equal to `abcd`.
+
+The \^`\mathcodes` macro declares mathcode of given characters by
+\begtt \catcode`<=13
+\Umathcode `<character> = <class-number> <family> `<character>
+\endtt
+
+The \^`\mathcodes` macro sets only math codes, not the relevant control
+sequences typically declared by `\Umathchardef`. If you are using such control
+sequences in math mode, then you can do `\chardef<sequence>=`\code{`}`<character>`
+and set the mathcode of the character. For example:
+\begtt
+\chardef\less=`< \chardef\greater=`>  \chardef\equal=`=
+\mathcodes 0 {3= 4{<(} 5{>)}}
+\endtt
+Then the symbols \code{=()<>} are printed from family 0 (`\rm` text font)
+instead from math font. Moreover, you can use
+`\less`, `\greater` and `\equal` instead of \code{<>=} with
+the same meaning too.
 
 
 \secc Unicode-math macros preloaded in the format
@@ -331,6 +383,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2022-11-16 \resetmathchars removed, \mathchars, \mathcodes introduced
 2022-11-13 \_setfontfamily 0 added.
 2022-07-22 \Umathspaceafterscript setting added.
 2022-06-10 \addUmathfont and \resetmathchars added.

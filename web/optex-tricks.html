@@ -1822,58 +1822,8 @@ you can modify \cal, \frak, \bbchar etc. macros:
 \addto\cal{\fam\stix} % calligraphic will be used from STIX
 </pre>
 
-<p>The \resetmathchars accepts a list of control sequences mentioned in the
-table printed by \input print-unimath.opm. Its syntax is
-<pre>
-\resetmathchars family-name list-of-math-sequences ;
-example:
-\resetmathchars \stix \stareq \triangleq \veeeq \wedgeq ;
-</pre>
-
-<p>The implementation of \addUmathfont and \resetmathchars macros
-were moved to the OpTeX format from version 1.7+. Use them
-directly. If you have older OpTeX version you can declare:
-
-<pre>
-\def\resetmathchars #1{\chardef\mafam=#1\relax \xargs \resetmathcharX}
-\def\resetmathcharX#1{\ea\resetmathcharY
-   \directlua{tex.print(string.format("\pcent08X", \the#1))}#1}
-\def\resetmathcharY#1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
-   \Umathchardef #9\numexpr"#3/2\relax \mafam "#4#5#6#7#8
-   \Umathcode "#4#5#6#7#8=\numexpr"#3/2\relax \mafam "#4#5#6#7#8
-}
-\def\addUmathfont #1#2#3#4#5#6{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
-   \ifx\_ncharrmA\undefined \errmessage{basic Unicode math font must be loaded first}\fi
-   \global\advance \famaddress by1
-   \global\chardef #1=\famaddress
-   \global\addto\_normalmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{#3} }%
-   \ifx\relax#4\relax
-      \global\addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#2}{embolden=1.7;} }%
-   \else
-      \global\addto\_boldmath{\_corrmsize#6 \_loadumathfamily #1 {#4}{#5} }%
-   \fi
-   \_normalmath
-   \wterm{MATH-FONT: added #1=\the#1, normal: "#2", \ifx"#4"\else bold: "#4"\fi}
-}
-\newcount\famaddress  \famaddress=100
-</pre>
-
-<p>The \addUmathfont has six parameters:
-family-name {normal-font}{features} {bold-font}{features} {factor}.
-If "bold-font" is empty then faked bold constructed from normal-font is used.
-The factor is decimal number for size corrections. If it is empty then factor=1.
-The math families are allocated from 101, 102 etc., i.e. macro programmer can
-use the numbers 16..99 for direct addressing (note that 0..4 are reserved by
-TeX, 5..15 are reserved by OpTeX).
-
-<p>The \resetmathchars macro saves the value of family-name to \mafam and
-applies \resetmathcharX to each math-sequence given in the list.
-The \resetmathcharX runs \directlua which returns the value of the
-math-sequence in 8-digits hexa number. First two digits give the family
-number (unsed), next digit is math-type multiplied by two and the rest is
-the Unicode slot number. The \resetmathcharY reads these digits and re-sets
-the given math-sequence by the \Umathchardef primitive and the code by the
-\Umathcode primitive.
+<p>The \addUmathfont macro is implemented in OpTeX itself since June 2022.
+See OpTeX documentation for more information.
 
 <p>This trick was inspired by
 <a href="https://tex.stackexchange.com/questions/573046/">a question at
