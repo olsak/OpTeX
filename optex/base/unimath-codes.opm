@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-07-20>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-11-17>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -171,14 +171,18 @@
    Each math symbol has its declaration in the file `unicode-math-table.tex`
    which is copied to `unimath-table.opm`. The file has the following format:
    {\vitt{unimath-table.opm}\verbinput (70-85) unimath-table.opm }
-   We have to read this information and convert it to the Unicode math codes.
+   We have to read this information and set given control sequences to
+   the relevant Unicode characters using `\chardef`. We don't use `\mathchardef`
+   for them because the want to manage the matcodes (class, family, slot)
+   only at single place: at Unicode characters. Control sequeces declared here
+   are only pointers to these Unicode characters. Exceptions are delimiters and
+   math accents.
    \_cod -----------------------------
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
-      \_ifnum#1=\_Umathcodenum#1 % the code isn't set by mathclass.opm
-          \_Umathchardef#2=0 1 #1 \_Umathcode#1=0 1 #1
-      \_else \_Umathcharnumdef#2=\_Umathcodenum#1 \_fi
+      \_chardef#2=#1 % control sequence is only pointer to Unicode character
+      \_ifnum#1=\_Umathcodenum#1 \_Umathcode#1=0 1 #1 \_fi  % it isn't set by mathclass.opm
       \_ifx#3\_mathopen   \_def#2{\_Udelimiter 4 1 #1 }\_fi
       \_ifx#3\_mathclose  \_def#2{\_Udelimiter 5 1 #1 }\_fi
       \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
@@ -203,10 +207,8 @@
 
 % mathclas defines ! as Ord, plain.tex as Close
 \_Umathcode `! = 5 1 `!  % keep plain.tex declaration
-\_Umathchardef \mathexclam = 5 1 `!
 % mathclas defines ? as Punct, plain.tex as Close
 \_Umathcode `? = 5 1 `?  % keep plain.tex declaration
-\_Umathchardef \mathquestion = 5 1 `?
 
 \_Umathcode `* = 2 1 "02217  % equivalent to \ast, like in plain TeX
 
@@ -222,18 +224,24 @@
 
 \_public \sqrt \cuberoot \fourthroot ;
 
-\_def\_intwithnolimits#1#2 {\_ifx#1\_relax \_else
-   \_ea\_let\_csname\_csstring#1op\_endcsname=#1%
-   \_ea\_def\_ea #1\_ea{\_csname\_csstring#1op\_endcsname \_nolimits}%
-   \_bgroup \_lccode`\~=#2 \_lowercase{\_egroup \_mathcode`~="8000 \_let ~=#1}%
+   \_doc -----------------------------
+   We save the `\mathcode` of `\int` to `\_intop` using `\Umathchardef` and
+   declare Unicode character `\int` as math-active and define it
+   as `\_intop\_nolimits`. We define `\intop` as `\_intop` for users
+   (intergral with normal limits).
+   We do this with other int-like operators listed below too.
+   \_cod -----------------------------
+
+\_def\_intwithnolimits#1{\_ifx#1\_relax \_else
+   \_ea\_Umathcharnumdef\_csname _\_csstring#1op\_endcsname=\_Umathcodenum#1%
+   \_ea\_def \_csname\_csstring#1op\_ea\_endcsname\_ea{\_csname _\_csstring#1op\_endcsname}%
+   \_bgroup \_lccode`\~=#1 \_lowercase{\_egroup
+      \_ea\_def\_ea~\_ea{\_csname _\_csstring#1op\_endcsname\_nolimits}\_mathcode`~="8000 }%
    \_ea \_intwithnolimits \_fi
 }
-\_intwithnolimits \int "0222B \iint "0222C \iiint "0222D
-   \oint "0222E \oiint "0222F \oiiint "02230
-   \intclockwise "02231 \varointclockwise "02232 \ointctrclockwise "02233
-   \sumint "02A0B \iiiint "02A0C \intbar "02A0D \intBar "02A0E \fint "02A0F
-   \pointint "02A15 \sqint "02A16 \intlarhk "02A17 \intx "02A18
-   \intcap "02A19 \intcup "02A1A \upint "02A1B \lowint "02A1C \_relax "0
+\_intwithnolimits \int \iint \iiint \oint \oiint \oiiint
+   \intclockwise \varointclockwise \ointctrclockwise \sumint \iiiint \intbar \intBar \fint
+   \pointint \sqint \intlarhk \intx \intcap \intcup \upint \lowint \_relax
 
 \_protected\_def \vert  {\_Udelimiter 0 1 "07C }
 \_protected\_def \Vert  {\_Udelimiter 0 1 "02016 }
@@ -274,7 +282,6 @@
 
 \_global\_Umathcode    "22EF         = 0 1 "22EF % mathclass says that it is Rel
 \_global\_Umathcode    "002E         = 0 1 "002E % mathclass says that dot is Punct
-\_global\_Umathchardef \unicodecdots = 0 1 "22EF
 
 \_global\_Umathcode `/ = 0 1 `/  % mathclass says that / is Bin, Plain TeX says that it is Ord.
 
@@ -451,6 +458,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-11-17  \Umathchardef replaced by \chardef
 2022-07-20  \Umathcode for copyright declared
 2022-02-22  \rm, \bf etc. moved to font-select, \_marm, \_mabf etc. introduced
 2022-02-08  several wide math accents added

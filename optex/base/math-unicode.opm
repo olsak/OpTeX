@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2022-11-16>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2022-11-17>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -237,21 +237,25 @@
    the relevant code settings.
    The `\directlua` chunk prints the 8-digits hexadecimal code of the
    sequence followed by the sequence itself. The digts are scanned by \`\_mathcharsB`
-   and new `\Umathchardef` and `\Umathcode` is declared. Note that the used
+   and new `\Umathcode` is declared. In case of `\int`-like operators the
+   `\_intop` sequence is redeclared by `\Umathchardef`. Note that the used
    primitives have the syntax:
    \begtt \catcode`<=13
-   \Umathchardef <sequence> <math class> <math family> <slot number>
-   \Umathcode <code> <math class> <math family> <slot number>
+   \Umathchardef <sequence> = <math class> <math family> <slot number>
+   \Umathcode <code>        = <math class> <math family> <slot number>
    \endtt
    \_cod -----------------------------
 
 \_def\_mathchars {\_afterassignment\_mathcharsA \_chardef\_mafam=}
 \_def\_mathcharsA #1{\_foreach #1\_do{\_ea\_mathcharsB
-   \_directlua{tex.print(string.format("\_pcent08X", \_the##1))}##1}%
+   \_directlua{tex.print(string.format("\_pcent08X", \_the\_Umathcode##1))}##1}%
 }
 \_def\_mathcharsB #1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
-   \_Umathchardef #9\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
-   \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
+   \_ifcsname _\_csstring#9op\_endcsname
+      \_ea \_Umathchardef \_csname _\_csstring#9op\_endcsname=1 \_mafam #9\_relax
+   \_else
+      \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
+   \_fi
 }
    \_doc -----------------------------
    \`\mathcodes` `<fam> {<list of pairs>}` sets mathcodes of given
@@ -312,7 +316,7 @@ The additional math font family `\xits` is declared in the example. It uses
 `XITSMath-Regular` for normal printing and `XITSMath-Bold` for bold printing.
 
 All characters used in math formula are printed from main math font by
-default. But you can redeclare a list of characters for printing from
+default. But you can re-declare characters for printing from
 additional font by \^`\mathchars` `\famname {<list of sequences>}`. For
 example:
 
@@ -321,14 +325,13 @@ example:
 \endtt
 %
 sets the characters `\stareq`, `\triangleq`, `\veeeq`, `\wedgeq` from
-the `\xits` additional font. The <list of sequences> can include arbitrary
-control sequence from the Unicode table. It can be printed by
-`\input print-unimath.opm`.
+the `\xits` additional font. The <list of sequences> can include
+control sequences from the `unicode-table.tex`, but no delimiters and math
+accents. These contol sequences can be printed by `\input print-unimath.opm`.
 
 The \^`\mathchars` macro keeps the class and slot of declared math objects
-and re-declares only family of them. It is applied to the given control
-sequences (by `\Umathchardef` primitive) and for relevant math codes
-(by `\Umathcode`) too.
+and re-declares only family of them. It is applied to all control
+sequences given in the parameter. The relevant math codes are re-declared.
 
 Use `\addto\selector{\fam\famname}` if you want to print whole math alphabet
 from an additional math font. For example `\addto\cal{\fam\xits}`
@@ -336,7 +339,7 @@ declares all `\cal` characters from the `\xits` font loaded by
 \^`\addUmathfont`.
 
 The \^`\mathcodes` macro provides comfortable settings of math codes of math
-objects. Its syntax is \^`\mathcodes <family> {<list-of-pairs>}`. Each pair
+objects. Its syntax is \^`\mathcodes` `<family> {<list-of-pairs>}`. Each pair
 in the <list-of-pairs> is `<class-number><character>` (separated by optional
 space) or `<class-number>{<list-of-characters>}`. The <list-of-characters>
 includes declared characters or `\Urange <from>-<to>` which is equal to the
@@ -348,18 +351,10 @@ The \^`\mathcodes` macro declares mathcode of given characters by
 \Umathcode `<character> = <class-number> <family> `<character>
 \endtt
 
-The \^`\mathcodes` macro sets only math codes, not the relevant control
-sequences typically declared by `\Umathchardef`. If you are using such control
-sequences in math mode, then you can do `\chardef<sequence>=`\code{`}`<character>`
-and set the mathcode of the character. For example:
-\begtt
-\chardef\less=`< \chardef\greater=`>  \chardef\equal=`=
-\mathcodes 0 {3= 4{<(} 5{>)}}
-\endtt
-Then the symbols \code{=()<>} are printed from family 0 (`\rm` text font)
-instead from math font. Moreover, you can use
-`\less`, `\greater` and `\equal` instead of \code{<>=} with
-the same meaning too.
+The \^`\mathcodes` macro sets math codes of given Unicode characters.
+The relevant control sequence from `unicode-table.tex` changes its
+behavior too. For example, If you change math code of × then the
+`\times` control sequence will behave like new declared ×.
 
 
 \secc Unicode-math macros preloaded in the format
@@ -383,6 +378,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2022-11-17 \Umathchardef replaced by \chardef
 2022-11-16 \resetmathchars removed, \mathchars, \mathcodes introduced
 2022-11-13 \_setfontfamily 0 added.
 2022-07-22 \Umathspaceafterscript setting added.
