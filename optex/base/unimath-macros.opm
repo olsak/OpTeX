@@ -233,7 +233,7 @@
 
    \_doc -----------------------------
    \`\mathchars` `<fam> {<list of sequences>}`
-   saves <fam> to \`\_mafam` and runs `\foreach` sequence from the <list of sequences>
+   saves <fam> to \`\_mafam` and runs for each sequence from the <list of sequences>
    the relevant code settings.
    The `\directlua` chunk prints the 8-digits hexadecimal code of the
    sequence followed by the sequence itself. The digts are scanned by \`\_mathcharsB`
@@ -359,7 +359,7 @@ behavior too. For example, If you change math code of × then the
 
 \secc Unicode-math macros preloaded in the format
 
-\printdoc math-unicode.opm
+\printdoc unimath-macros.opm
 
 
 \secc[unimath-codes] Macros and codes set when `\loadmath` is processed firstly
