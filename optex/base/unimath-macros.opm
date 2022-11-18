@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2022-11-17>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2022-11-18>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -237,18 +237,25 @@
    the relevant code settings.
    The `\directlua` chunk prints the 8-digits hexadecimal code of the
    sequence followed by the sequence itself. The digts are scanned by \`\_mathcharsB`
-   and new `\Umathcode` is declared. In case of `\int`-like operators the
+   and new `\Umathcode` is declared.\nl
+   If there exist \_d:<sequence> (i.e.\ it is delimiter) then `\Udelcode` is
+   redeclared too. Finally, in case of `\int`-like operators the
    `\_intop` sequence is redeclared by `\Umathchardef`. Note that the used
    primitives have the syntax:
    \begtt \catcode`<=13
    \Umathchardef <sequence> = <math class> <math family> <slot number>
    \Umathcode <code>        = <math class> <math family> <slot number>
+   \Udelcode <code>         = <math family> <slot number>
    \endtt
    \_cod -----------------------------
 
 \_def\_mathchars {\_afterassignment\_mathcharsA \_chardef\_mafam=}
-\_def\_mathcharsA #1{\_foreach #1\_do{\_ea\_mathcharsB
-   \_directlua{tex.print(string.format("\_pcent08X", \_the\_Umathcode##1))}##1}%
+\_def\_mathcharsA #1{\_foreach #1\_do{%
+   \_ifcsname _d:\_csstring##1\_endcsname \_ea \_mathcharsD \_csname _d:\_csstring##1\_endcsname
+   \_else \_mathcharsC ##1\_fi
+}}
+\_def\_mathcharsC #1{\_ea\_mathcharsB
+   \_directlua{tex.print(string.format("\_pcent08X", \_the\_Umathcode#1))}#1%
 }
 \_def\_mathcharsB #1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
    \_ifcsname _\_csstring#9op\_endcsname
@@ -257,6 +264,8 @@
       \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
    \_fi
 }
+\_def\_mathcharsD #1{\_mathcharsC #1\_relax \_Udelcode #1=\_mafam #1\_relax}
+
    \_doc -----------------------------
    \`\mathcodes` `<fam> {<list of pairs>}` sets mathcodes of given
    characters with explicit <class>es. Each pair can be `<class>{<list of chars>}`
@@ -378,6 +387,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2022-11-18 \mathchars improved, \Udelcodes are set too.
 2022-11-17 \Umathchardef replaced by \chardef
 2022-11-16 \resetmathchars removed, \mathchars, \mathcodes introduced
 2022-11-13 \_setfontfamily 0 added.

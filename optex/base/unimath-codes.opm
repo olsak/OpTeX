@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-11-17>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-11-18>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -170,23 +170,28 @@
    \_doc -----------------------------
    Each math symbol has its declaration in the file `unicode-math-table.tex`
    which is copied to `unimath-table.opm`. The file has the following format:
-   {\vitt{unimath-table.opm}\verbinput (70-85) unimath-table.opm }
+   {\vitt{unimath-table.opm}\verbinput (39-46) unimath-table.opm }
    We have to read this information and set given control sequences to
    the relevant Unicode characters using `\chardef`. We don't use `\mathchardef`
    for them because the want to manage the matcodes (class, family, slot)
    only at single place: at Unicode characters. Control sequeces declared here
    are only pointers to these Unicode characters. Exceptions are delimiters and
-   math accents.
+   math accents.\nl
+   If the character is delimiter then we declare \_d:<sequence> to be the
+   `\chardef` equivalent of the character and `\let<sequence>=<character>`
+   because `\left`, `\right` doesn't like `\chardef` equivalent of the
+   character although it has its own delcode.
    \_cod -----------------------------
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
       \_chardef#2=#1 % control sequence is only pointer to Unicode character
       \_ifnum#1=\_Umathcodenum#1 \_Umathcode#1=0 1 #1 \_fi  % it isn't set by mathclass.opm
-      \_ifx#3\_mathopen   \_def#2{\_Udelimiter 4 1 #1 }\_fi
-      \_ifx#3\_mathclose  \_def#2{\_Udelimiter 5 1 #1 }\_fi
+      \_ifx#3\_mathopen   \_setdelimiter#2\_fi
+      \_ifx#3\_mathclose  \_setdelimiter#2\_fi
       \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
    }
+   \_def\_setdelimiter#1{\_expanded{\_let\_cs{_d:\_csstring#1}=#1\_let#1=\Uchar#1}}
    \_globaldefs=1 \_input unimath-table.opm
 \_endgroup
 
@@ -458,6 +463,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-11-18  Delimiters re-implemented
 2022-11-17  \Umathchardef replaced by \chardef
 2022-07-20  \Umathcode for copyright declared
 2022-02-22  \rm, \bf etc. moved to font-select, \_marm, \_mabf etc. introduced
