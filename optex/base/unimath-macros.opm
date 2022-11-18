@@ -333,7 +333,7 @@ example:
 %
 sets the characters `\stareq`, `\triangleq`, `\veeeq`, `\wedgeq` from
 the `\xits` additional font. The <list of sequences> can include
-control sequences from the `unicode-table.tex`, but no delimiters and math
+control sequences from the `unicode-table.tex`, but no math
 accents. These contol sequences can be printed by `\input print-unimath.opm`.
 
 The \^`\mathchars` macro keeps the class and slot of declared math objects
@@ -349,11 +349,11 @@ The \^`\mathcodes` macro provides comfortable settings of math codes of math
 objects. Its syntax is \^`\mathcodes` `<family> {<list-of-pairs>}`. Each pair
 in the <list-of-pairs> is `<class-number><character>` (separated by optional
 space) or `<class-number>{<list-of-characters>}`. The <list-of-characters>
-includes declared characters or `\Urange <from>-<to>` which is equal to the
+includes declared characters or \^`\Urange` `<from>-<to>` which is equal to the
 list of characters beginning <from> and ending <to>, for example
 `\Urange a-d` is equal to `abcd`.
 
-The \^`\mathcodes` macro declares mathcode of given characters by
+The \^`\mathcodes` macro declares mathcode of given characters internally by
 \begtt \catcode`<=13
 \Umathcode `<character> = <class-number> <family> `<character>
 \endtt
