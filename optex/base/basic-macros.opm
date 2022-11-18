@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2022-10-29>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2022-11-18>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -77,11 +77,15 @@
 \_public \cs \trycs ;
 
    \_doc ------------------------------
-   \`\addto` `\macro{<text>}` adds `<text>` to your `\macro`, which must be defined.
+   \`\addto` `\macro{<text>}` adds `<text>` to your `\macro`, which must be defined.\nl
+   \`\aheadto` `\macro{<text>}` defines `\macro` as `<text>` followed by the
+   original `\macro` body.
    \_cod ------------------------------
 
 \_long\_def \_addto #1#2{\_ea\_def\_ea#1\_ea{#1#2}}
-\_public \addto ;
+\_long\_def \_aheadto #1#2{\_edef#1{\_unexpanded{#2}\_unexpanded\_ea{#1}}}
+
+\_public \addto \aheadto ;
 
    \_doc -----------------------------
    \`\incr``<counter>` increases `<counter>` by one globally.
@@ -138,6 +142,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-18: \ahead introduced
 2022-10-29: \_fin introduced
 2021-07-20: \_unresovedrefs removed from \_byehook
 2021-07-18: \_byehook: checking `ref` file consistency added.

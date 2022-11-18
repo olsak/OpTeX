@@ -119,12 +119,8 @@
    The `<font features>` are added to the default
    \`\_mfontfeatures` and to the size-dependent features `ssty=1`
    if script size is asked or `ssty=2` if scriptscriptsize is asked.\nl
-   \`\_mparams``<number>` inserts additional font feature `nomathparam`
-   if the <number> of the family is greater than 3. Lua\TeX/ sets math
-   parameters (thickness of fraction rules etc., see section 7.4 in Lua\TeX/
-   documentation) repeatedly from loaded math
-   fonts if `nomathparam` is not given. We want to load these parameters only
-   from fonts at families 0--3 (and actually we are using only family 1 as main math font).\nl
+   \`\_mparams``<family number>` can insert additional font features
+   dependnig on the <family number>.\nl
    The \^`\_mfactor` `<family><space>` sets scaling factor,
    see section~\ref[math-preload] for more information.\nl
    The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are font
@@ -144,7 +140,7 @@
 \_def\_textmff   {ssty=0;mathsize=1;}
 \_def\_scriptmff {ssty=1;mathsize=2;}
 \_def\_sscriptmff{ssty=2;mathsize=3;}
-\_def\_mparams#1{\_ifnum#1>3 nomathparam;\_fi}
+\_def\_mparams#1{}
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs not to
@@ -212,6 +208,8 @@
    \~`\normalmath` and \~`\boldmath` macros. Note that allocationos using
    \^`\newfam` starts from 43 because numbers 1--42 are reserved for direct
    usage without \^`\newfam`.
+   We use \^`\aheadto` here because we want to read the main family 1 as
+   last one (for definitive setting of math parameters).
    \_cod -----------------------------
 
 \_def\_addUmathfont #1#2#3#4#5#6{% #1: fam (will be set), #2#3: normal font, #4#5: bold font
@@ -220,11 +218,11 @@
    \_else
       \_newfam#1\_relax
       \_sdef{_mfactor:\_the\_numexpr#1\_relax}{#6}%
-      \_global\_addto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
+      \_global\_aheadto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
       \_ifx\_relax#4\_relax
-         \_global\_addto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
       \_else
-         \_global\_addto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
       \_fi
       \_normalmath
       \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
@@ -387,7 +385,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
-2022-11-18 \mathchars improved, \Udelcodes are set too.
+2022-11-18 \mathchars improved, \Udelcodes are set too, \addUmathfont uses \ahead
 2022-11-17 \Umathchardef replaced by \chardef
 2022-11-16 \resetmathchars removed, \mathchars, \mathcodes introduced
 2022-11-13 \_setfontfamily 0 added.

@@ -170,7 +170,7 @@
    \_doc -----------------------------
    Each math symbol has its declaration in the file `unicode-math-table.tex`
    which is copied to `unimath-table.opm`. The file has the following format:
-   {\vitt{unimath-table.opm}\verbinput (39-46) unimath-table.opm }
+   {\vitt{unimath-table.opm}\verbinput (36-41) unimath-table.opm }
    We have to read this information and set given control sequences to
    the relevant Unicode characters using `\chardef`. We don't use `\mathchardef`
    for them because the want to manage the matcodes (class, family, slot)
