@@ -1907,7 +1907,7 @@ More information about such macros can be found in the technical documentation.
 You can use hyperlinks here in order to go to the appropriate place of the technical
 documentation.
 
-\medskip \noindent
+\bgroup \medskip \noindent \typosize[9/11]
 \^`\addto`` \macro{<text>}` adds <text> at the end of `\macro` body.\nl
 \^`\adef` `<char>{<body>}` defines <char> active character with meaning <body>.\nl
 \^`\afterfi` `{<text>}<ignored>\fi` expands to `\fi<text>`.\nl
@@ -1915,6 +1915,7 @@ documentation.
 \~`\_codedecl`` <sequence> {<info>}` is used at beginning of macro files.\nl
 \~`\colordef`` \macro {<mix of colors>}` declares `\macro` as color switch.\nl
 \^`\cs` `{<string>}` expands `\<string>`.\nl
+\^`\cstochar` `<sequence>` converts <sequence> to <character> if there was `\let<sequence>=<character>`.\nl
 \~`\_doc` `...` \~`\_cod` encloses documenation text in the macro code.\nl
 \^`\eoldef`` \macro #1{<body>}` defines `\macro` with parameter separated to end of line.\nl
 \~`\_endcode` closes the part of macro code in macro files.\nl
@@ -1931,8 +1932,8 @@ documentation.
 \^`\ignoreit` `<one>`, \^`\ignoresecond` `<one><two>` ignores given parameter.\nl
 `\expandafter` \^`\ignorept` `\the<dimen>` expands to decimal number <dimen> without `pt`.\nl
 \~`\isempty`, \~`\istoksempty`, \~`\isequal`, \~`\ismacro`, \~`\isdefined`, \~`\isinlist`
-\~`\isfile`, \~`\isfont` do various tests. Example: \~`\isinlist\list{<text>}\iftrue` does
-   `\iftrue` if <text> is in `\list`.\nl
+\~`\isfile`, \~`\isfont` do various tests.\nl
+   Example: \~`\isinlist\list{<text>}\iftrue` does `\iftrue` if <text> is in `\list`.\nl
 \^`\isnextchar`` <char>{<text1>}{<text2>}` performs <text1> if next
    character is <char>, else <text2>.\nl
 \~`\kv` `{<key>}` expands to value when key-value parameters are used.\nl
@@ -1959,7 +1960,7 @@ documentation.
 \^`\wlog`` {<text>}` writes <text> to .log file.\nl
 \^`\wterm`` {<text>}` writes <text> to the terminal and .log file.\nl
 \^`\xargs`` <what> <token> <token> ... ;` repeats <what><token> for each <token>.\nl
-\unpenalty\unskip
+\unpenalty\unskip \par \egroup
 
 \sec Compatibility with Plain \TeX/
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

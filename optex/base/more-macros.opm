@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-13>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-18>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -243,7 +243,22 @@
 \_def\_removespaces #1 {\_isempty{#1}\_iffalse #1\_ea\_removespaces\_fi}
 \_ea\_def \_ea\_ignorept \_ea#\_ea1\_detokenize{pt}{#1}
 
-\public \removespaces \ignorept ;
+\_public \removespaces \ignorept ;
+
+   \_doc -----------------------------
+   If you do `\let\foo=a` then it is not simple to return from `\foo` to the original
+   character code of `a`. You can write \code{`a} but you cannot write \code{`\\foo}.
+   The macro \`\cstochar``<sequence>` solves this problem. If the sequence
+   is equal to a character then it expands to this character (always with
+   catcode 12). If it isn't equal to a character then it expands to nothing.
+   You can say \code{\\expanded{`\\cstochar\\foo}} if you want to extract
+   the character code.
+   \_cod -----------------------------
+
+\_def\_cstochar#1{\_ea\_cstocharA\_meaning#1 {} {} \_fin}
+\_def\_cstocharA#1 #2 #3 #4\_fin{\_isinlist{#1#2}-\_iffalse #3\_fi}
+
+\_public \cstochar ;
 
    \_doc -----------------------------
    You can use expandable \`\bp``{<dimen>}` convertor from
@@ -298,6 +313,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-18 \cstochar introduced
 2022-11-13 \docgen introduced, \bracedparam corrected, \scantoeol modified
 2022-11-05 \replstring can be expandable using \immediateassigned: \toksapp replaced
 2022-11-03 \nospacefuturelet added.
