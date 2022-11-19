@@ -281,7 +281,7 @@
 }
 \_def\_Urange #1-#2{\_fornum `#1..`#2\_do{\_Uchar##1 }}
 
-\_public \addUmathfont \mathchars \mathcodes ;
+\_public \addUmathfont \mathchars \mathcodes \Urange ;
 
 \_endcode
 
