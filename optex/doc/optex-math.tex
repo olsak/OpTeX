@@ -37,6 +37,20 @@
 \def\x`{\bgroup\_setverb\xx}
 \bgroup \lccode\string`\.=\string`\` \lowercase{\egroup \def\xx #1#2.{\i #2 \egroup `#1#2.}}
 
+\bgroup
+\globaldefs=-1
+\def\refs{} \tmpnum=0
+\def\_Xtoc#1#2#3{\incr\tmpnum
+   \ea\addto \ea\refs \expanded{{\noexpand\sdef{r:#3}{\the\tmpnum}}}
+   \scantoeol\ignoreit
+}
+\isfile{optex-doc.ref}\iftrue \input{optex-doc.ref}
+\ea
+\egroup
+\refs
+
+\def\urloptexdoc{https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
+\def\optexdoc[#1]{\ea\ulink\expanded{[\urloptexdoc\#toc:\trycs{r:#1}{}]}}
 
 \hyperlinks\Green\Green
 
@@ -69,8 +83,8 @@ There are more types of extensions: e\TeX, lua\TeX/, Unicode math and
 is appended to the red triangle to inform you about the extension type.
 Nevertheless, \OpTeX/ user doesn't have to worry about it, all extensions
 are available if Unicode Math font is loaded (e.g., by the command
-`\fonfam[lmfonts]`). See section 1.3.3 in \OpTeX/ documentation about
-loading Unicode math fonts.
+`\fonfam[lmfonts]`). See \optexdoc[1.3.3]{section 1.3.3} in \OpTeX/
+documentation about loading Unicode math fonts.
 
 {\iindent=2em
 \bigskip
@@ -109,7 +123,8 @@ The math atoms are \ii single/math/object {\em single math objects} or
   \fnote{In \OpTeX/, the character `_` can be interpreted as a part of
   the control sequence name, not as the subscript constructor. But in common cases,
   constructions of math atoms are interpreted exactly as in plain \TeX. See sections
-  2.2.2 and 2.14 of \OpTeX/ documentation for more details. If you want to
+  \optexdoc[2.2.2]{2.2.2} and \optexdoc[2.15]{2.15}
+  of \OpTeX/ documentation for more details. If you want to
   be sure that `_` is just a subscript constructor in \OpTeX/ then you can set \code{\\catcode`\\_=8}
   but after this, you cannot use control sequences with `_` character.}
   The constructors for exponent `^` and subscript `_` can be used in arbitrary order
@@ -644,8 +659,8 @@ in another than this default shape, then we can use
 \x`\mit`, \x`\rm`, \x`\it`, \x`\bf`, \x`\cal`.
 \new \OpTeX/
 \OpTeX/ supports more such selectors \x`\script`, \x`\frak`, \x`\bbchar`, \x`\bi`, see
-section 1.3.3 in the \OpTeX/ documentation. The math selectors have local
-validity in the group.
+\optexdoc[1.3.3]{section 1.3.3} in the \OpTeX/ documentation.
+The math selectors have local validity in the group.
 
 The control sequences \x`\rm`, \x`\it`, \x`\bf`, and \x`\bi` act as variant selectors
 of fonts in non-math mode (text mode) and they act
@@ -1585,8 +1600,8 @@ characters from main math font and these additional fonts. This can be
 usable if the main math font doesn't include all desired characters or you
 dislike some character shapes from main font. \OpTeX/ enables to load
 additional math fonts by `\addUmathfont` and characters from additional
-fonts can be declared by `\resetmathchars`. See the section 2.16 of \OpTeX/
-documentation for more details about this.
+fonts can be declared by `\mathchars`. See the \optexdoc[2.16]{section 2.16}
+of \OpTeX/ documentation for more details about this.
 
 The rest of this section includes an example which shows another task: how
 to combine main Unicode math font with old 8-bit math font `bbold10.tfm`.

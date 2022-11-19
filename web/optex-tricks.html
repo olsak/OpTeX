@@ -214,6 +214,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#lot">List of figures, list of tables</a>
     <li><a href="#onpage">The text "on page \pgref" printed only sometimes</a>
+    <li><a href="#exlink">Links to sections in external files</a>
 </ul>
 
 <li>Bibliography
@@ -4489,6 +4490,51 @@ includes the label from the last used \ref macro.
 
 <p CLASS=datum>(0087) -- P. O. 2022-06-06<p>
 <hr>
+
+<h2><a name="exlink"></a>Links to sections in external files</h2>
+
+<p>We say \exlink[2.23]{section 2.23} and this creates an active link to
+the given section in a selected document. The example below selects the
+document "OpTeX documentation". If the selected document is created by OpTeX
+then we know that there are links in the format #toc:number, where number is
+serial number of the section (counted from one). We must to convert section
+number to the serial number. This can be done by reading the .ref file
+generated when OpTeX creates the refered document.
+
+<pre>
+\bgroup
+\globaldefs=-1
+\def\refs{} \tmpnum=0
+\def\_Xtoc#1#2#3{\incr\tmpnum
+   \ea\addto \ea\refs \expanded{{\noexpand\sdef{r:#3}{\the\tmpnum}}}
+   \scantoeol\ignoreit
+}
+\isfile{optex-doc.ref}\iftrue \input{optex-doc.ref}
+\ea
+\egroup
+\refs
+
+\def\exurl{https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
+\def\exlink[#1]{\ea\ulink\expanded{[\exurl\#toc:\trycs{r:#1}{}]}}
+</pre>
+
+<p>The optex-doc.ref file is read in a group when \globaldefs=-1, because we
+don't want to rewrite the data read from actual .ref file. The \_Xtoc is
+re-defined in order to save the section numbers from its #3 parameter.
+The control sequences \r:section.number will expand to the serial number.
+
+<p>Another method is to use internal links in the format #ref:label, if
+\label[label] is used in refered document. And links to the control
+sequences processed by doc.opm are in the format #cs:sequence (for main
+doc. point) or #cs:^sequence (for user doc. point). For example
+\ulink[https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:ulink]{text}
+jumps to the
+<a href="https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:ulink">documentation
+of the \ulink macro</a>.
+
+<p CLASS=datum>(0096) -- P. O. 2022-11-19<p>
+<hr>
+
 
 <p CLASS="lmarg">Bibliography</p>
 
