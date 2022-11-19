@@ -4503,14 +4503,14 @@ generated when OpTeX creates the refered document.
 
 <pre>
 \bgroup
-\globaldefs=-1
-\def\refs{} \tmpnum=0
-\def\_Xtoc#1#2#3{\incr\tmpnum
-   \ea\addto \ea\refs \expanded{{\noexpand\sdef{r:#3}{\the\tmpnum}}}
-   \scantoeol\ignoreit
-}
-\isfile{optex-doc.ref}\iftrue \input{optex-doc.ref}
-\ea
+   \globaldefs=-1
+   \def\refs{} \tmpnum=0
+   \def\_Xtoc#1#2#3{\incr\tmpnum
+      \ea\addto \ea\refs \expanded{{\noexpand\sdef{r:#3}{\the\tmpnum}}}
+      \scantoeol\ignoreit
+   }
+   \isfile{optex-doc.ref}\iftrue \input{optex-doc.ref}\fi
+   \ea
 \egroup
 \refs
 
