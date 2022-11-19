@@ -21,11 +21,8 @@ Modifiers:^^J
 
 \_ifmathloading
    \_loadmath {[FiraMath-Regular]}
-   \_addto\_normalmath{\_loadumathfamily 5 {xitsmath-regular}{} }
-   \_addto\_boldmath  {\_loadumathfamily 5 {xitsmath-bold}{} }
-   \_addto\_frak{\_fam5 }\_addto\_cal{\_fam5 } \_public \frak \cal ;
-   \_normalmath
-   \_wterm{MATH-FONT(5): "[XITSMath-Regular/Bold]" -- used for \_string\cal, \_string\frak}
+   \_addUmathfont \_xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
+   \_addto\_frak{\_fam\_xits}\_addto\_cal{\_fam\_xits} \_public \frak \cal ;
    % \bf, \bi from FiraMath:
    \_let\_bsansvariables=\_bfvariables
    \_let\_bsansGreek=\_bfGreek
@@ -34,14 +31,8 @@ Modifiers:^^J
    \_let\_bisansvariables=\_bivariables
    \_let\_bisansgreek=\_bigreek
    % \_resetmathchars <fam-number> <list of \Umathchardef csnames> ;
-   \_def\_resetmathchars #1{\_chardef\_mafam=#1\_relax \_xargs \_resetmathcharX}
-   \_def\_resetmathcharX#1{\_ea\_resetmathcharY
-      \_directlua{tex.print(string.format("\_pcent08X", \_the#1))}#1}
-   \_def\_resetmathcharY#1#2#3#4#5#6#7#8#9{%
-      \_Umathchardef #9\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
-      \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8 }
-   \_resetmathchars 5 \bigtriangleup \bigblacktriangleup \blacktriangle
-       \vartriangle \smallblacktriangleright ; % ... etc. you can add more
+   \_mathchars \_xits {\bigtriangleup \bigblacktriangleup \blacktriangle
+       \vartriangle \smallblacktriangleright} % ... etc. you can add more
 \_fi
 
 \_endcode
