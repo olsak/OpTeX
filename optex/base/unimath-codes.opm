@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-11-18>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2022-11-20>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -189,8 +189,10 @@
       \_ifnum#1=\_Umathcodenum#1 \_Umathcode#1=0 1 #1 \_fi  % it isn't set by mathclass.opm
       \_ifx#3\_mathopen   \_setdelimiter#2\_fi
       \_ifx#3\_mathclose  \_setdelimiter#2\_fi
-      \_ifx#3\_mathaccent \_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
+      \_ifx#3\mathfence   \_setdelimiter#2\_fi
+      \_ifx#3\_mathaccent \_protected\_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
    }
+   \_def\mathfence{F}%
    \_def\_setdelimiter#1{\_expanded{\_let\_cs{_d:\_csstring#1}=#1\_let#1=\Uchar#1}}
    \_globaldefs=1 \_input unimath-table.opm
 \_endgroup
@@ -247,10 +249,6 @@
 \_intwithnolimits \int \iint \iiint \oint \oiint \oiiint
    \intclockwise \varointclockwise \ointctrclockwise \sumint \iiiint \intbar \intBar \fint
    \pointint \sqint \intlarhk \intx \intcap \intcup \upint \lowint \_relax
-
-\_protected\_def \vert  {\_Udelimiter 0 1 "07C }
-\_protected\_def \Vert  {\_Udelimiter 0 1 "02016 }
-\_protected\_def \Vvert {\_Udelimiter 0 1 "02980 }
 
 \_protected\_def \_overbrace    #1{\_mathop {\_Umathaccent  7 1 "023DE{#1}}\_limits}
 \_protected\_def \_underbrace   #1{\_mathop {\_Umathaccent bottom 7 1 "023DF{#1}}\_limits}
@@ -463,6 +461,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2022-11-20  \mathfence's get delimiter code too
 2022-11-18  Delimiters re-implemented
 2022-11-17  \Umathchardef replaced by \chardef
 2022-07-20  \Umathcode for copyright declared
