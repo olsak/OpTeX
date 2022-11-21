@@ -2,7 +2,8 @@
 % mte.opm, Petr Olšák <petr@olsak.net>, 2021
 % See end of the file for more information
 
-\_codedecl \enablemte {MicroTypographic Extension <2021-05-23>}
+\_def \_mte_version {0.1, 2021-05-23}
+\_codedecl \enablemte {MicroTypographic Extension <\_mte_version>}
 \_namespace{mte}
 
     \_doc -------------------
@@ -608,6 +609,7 @@
 \_endcode
 
 \tit MicroTypographic Extensions for \OpTeX/
+\hfill v. \_mte_version
 
 \centerline{\it Petr Olšák, 2021}
 \bigskip
@@ -694,7 +696,6 @@ file.
       \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf\#cs:#1]%
       {\tt\string#2}%
    }
-   \let\_urllinkcolor=\Cyan
 
    \printdoctail mte.opm
    \printdoc     mte.opm

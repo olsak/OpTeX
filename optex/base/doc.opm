@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2022-11-13>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2022-11-21>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
@@ -11,8 +11,10 @@
 \_let \mlinkcolor=\Red    % main doc. points
 \_let \ulinkcolor=\Blue   % user doc. points
 \_let \fnamecolor=\Brown  % file names in listing headers
-\_def \bgverbcolor {\_setcmykcolor{0 0 .3 .03}} % background for listings
-\_hyperlinks \Green \Green
+\_def \bgverbcolor  {\_setcmykcolor{0 0 .3 .03}} % background for listings
+\_def \outlinkcolor {\_setcmykcolor{1 0 1 .2}}   % green for outerlinks
+\_def \inlinkcolor  {\_setcmykcolor{0 1 0 .1}}   % magenta for internal links
+\_hyperlinks \inlinkcolor \outlinkcolor
 \_enlang
 \_enquotes
 
@@ -355,6 +357,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2022-11-21 magenta color for internal links instead green.
 2022-11-13 \catcode`.=11: only local settings
 2022-07-01 \_printii improved, colors declaration part added.
 2021-05-15 \_endinput shifted after \_processinput when \_endcode is scanned.

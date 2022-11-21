@@ -121,10 +121,9 @@
    \_doc -----------------------------
    A few registers are initialized like in plain\TeX/. We absolutely
    don't support the `@`category dance, so `\z@skip`
-   `\z@`, `\p@` etc. are not defined in \OpTeX/. If you need such
-   control sequences then you can initialize them by `\load[plain-at]`.
+   `\z@`, `\p@` etc. are defined but not recommended in \OpTeX/.
 
-   Only the \`\_zo` and \`\_zoskip` (equivalents to `\z@` and `\z@skip`)
+   The \`\_zo` and \`\_zoskip` (equivalents to `\z@` and `\z@skip`)
    are declared here and used in some internal macros of \OpTeX/
    for improving speed.
    \_cod -----------------------------
