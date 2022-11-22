@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-20>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-22>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -303,19 +303,20 @@
 \_long\_def\_doc #1\_cod {\_skiptoeol}
 
    \_doc ------------------
-   \`\docgen` `<pkg-name>` uses \^`\skiptoeol` too.
-   It processes lines before `\_codedecl` because the version text
+   \`\docgen` processes lines before `\_codedecl` because the version text
    in the macro `\_<pkg>_version` can be defined here. The package
-   documentation can print it.
+   documentation can print it. \^`\docgen` prints banner to log because TeX doesn't do it
+   when command line doesn't begin with the main file name after parameters.
    \_cod ------------------
 
 \_def\_docgen #1 {\_ea \_docgenA \_input{#1.opm}}
-\_long \_def\_docgenA #1\_codedecl#2\_endcode #3\_doc {#1\_skiptoeol}
+\_long \_def\_docgenA #1\_codedecl#2\_endcode #3\_doc {#1\_wlog{\_banner}\_skiptoeol}
 
 \_public \docgen ;
 
 \_endcode % -------------------------------------
 
+2022-11-22 \docgen writes banner to log
 2022-11-20 \docgen reads lines before \_codedecl in order to define pkg. version
 2022-11-18 \cstochar introduced
 2022-11-13 \docgen introduced, \bracedparam corrected, \scantoeol modified
