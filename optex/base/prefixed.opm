@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2022-11-13>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2022-11-22>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -55,37 +55,11 @@
 }   
 \_public \public \private \xargs \ea ;
 
-   \_doc -----------------------
-   Each macro file should begin with \`\_codedecl` `\macro {<info>}`.
-   If the `\macro` is defined already then the `\endpinput` protects to read
-   such file more than once. Else the <info> is printed to the terminal
-   and the file is read.\nl
-   The {\`\_endcode`} is defined as `\endinput` in the `optex.ini` file.
-   \`\wterm` `{<text>}` prints the `<text>` to the terminal and to the `.log` file,
-   \`\wlog` `{<text>}` prints the `<text>` only to the `.log` file (as in plain \TeX)
-   \_cod -----------------------
-
-\_def \_codedecl #1#2{%
-   \_ifx #1\_undefined \_wlog{#2}%
-   \_else \_ea \_endinput \_fi
-}
-\_def \_wterm {\_immediate \_write16 }
-\_def \_wlog {\_immediate\_write-1 } % write on log file (only)
-
-\_public \wterm \wlog ;
-
-   \_doc ------------------------
-   The `\optexversion` and `\fmtname` are defined in the `optex.ini` file.
-   Maybe, somebody will need a private version of these macros.
-   \_cod ------------------------
-
-\_private \optexversion \fmtname ;
-
    \_doc -----------------------------
    The `\_mathsbon` and `\_mathsboff` are defined in `math-macros.opm` file.
    Now, we define the macros
    \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}`, \`\_endnamespace`,
-   \`\_nspublic` and \`\_nsprivate`
+   \`\_pkglabel`, \`\_nspublic`, and \`\_nsprivate`
    for package writers, see section~\ref[pkg-namespace].{\hbadness=2200\par}
    \_cod -----------------------------
 
@@ -124,6 +98,50 @@
    \_checkexists \nsprivate {}#1%
    \_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1%
 }
+
+   \_doc -----------------------
+   Each macro file should begin with \`\_codedecl` `\macro {<info>}`.
+   If the `\macro` is defined already then the `\endpinput` protects to read
+   such file more than once. Else the <info> is printed to the terminal
+   and the file is read.
+   The {\`\_endcode`} is defined as `\endinput` in the `optex.ini` file.
+   \`\wterm` `{<text>}` prints the `<text>` to the terminal and to the `.log` file,
+   \`\wlog` `{<text>}` prints the `<text>` only to the `.log` file (as in plain \TeX)
+   \_cod -----------------------
+
+\_def \_codedecl #1#2{%
+   \_ifx #1\_undefined \_wlog{@:[\_basefilename\_currfile] #2}%
+   \_else \_ea \_endinput \_fi
+}
+\_def \_wterm {\_immediate \_write16 }
+\_def \_wlog {\_immediate\_write-1 } % write on log file (only)
+
+\_public \wterm \wlog ;
+
+   \_doc -----------------------------
+   \`\currfile` returns the name of the current input file including its path.\nl
+   \`\basefilename``\currfile` returns base name of
+   the current file, without its path and extension.\nl
+   \`\_nofilepath` `<text>/<with>/<slashes>/\_fin` expands to the last segment
+   separated by slashes.\nl
+   \`\_nofileext` `<filename>.\_fin` expands to the file name without extension.
+   \_cod -----------------------------
+
+\_def\_currfile{\_directlua{tex.print(status.filename)}}
+\_def\_basefilename #1{\_ea\_nofileext\_expanded{\_ea\_ea\_ea\_nofilepath#1/\_fin}.\_fin}
+\_def\_nofilepath #1/#2{\ifx#2\_fin #1\_else \_ea\_nofilepath \_ea#2\_fi}
+\_def\_nofileext #1.#2\_fin{#1}
+
+\_public \currfile \basefilename ;
+
+   \_doc ------------------------------
+   We define \`\_fin` as a useless macro. Suppose that its meaning will be never
+   used for another control sequence. You can use `\_fin` as a final delimiter
+   of a list of tokens and your macro can ask `\ifx\_fin#1` in order to
+   decide that the list of tokens is finalized.
+   \_cod ------------------------------
+
+\_protected\_long \_def \_fin \_fin {}
 
 \_endcode %----------------------------------------------------
 
@@ -216,51 +234,45 @@ features can be lost (printing percent character by `\%` for example).
 
 \secc Macro files syntax
 
-Each segment of \OpTeX/ macros is stored in one file with `.opm` extension
+Segments of \OpTeX/ macros or external macro packages
+are stored in files with `.opm` extension
 (means OPtex Macros). Your local macros should be in a normal `*.tex` file.
 
 The code in macro files starts by \^`\_codedecl` and ends by \^`\_endcode`.
 The \^`\_endcode` is equivalent for `\endinput`, so documentation can follow.
 The \^`\_codedecl` has syntax:
 
-\begtt
-\_codedecl \sequence {Name <version>}
+\begtt \catcode`<=13 \adef!{\string}
+\_codedecl \sequence {<short title> !<<version>>}
 \endtt
 
-If the mentioned `\sequence` is defined, then \^`\_codedecl` does the same as
+If the mentioned `\sequence` is undefined then \^`\_codedecl` prints the message
+\begtt  \catcode`<=13 \adef!{\string}
+@:[<file name>] <short title> !<<version>>
+\endtt
+to the log file and \TeX/ continues with reading the following macros.
+If the `\sequence` is defined, then \^`\_codedecl` acts like
 `\endinput`: this protects from reading the file twice. We suppose, that
 `\sequence` is defined in the macro file.
 
-It is possible to use the \^`\_doc` ... \^`\_cod` pair between the macro lines.
-The documentation text should be here. It is ignored when macros are read.
+It is possible to use the \^`\_doc` ... \^`\_cod` pair between the macro
+definitions. The documentation text should be here.
+It is ignored when macros are read.
 
 The \^`\_doc` ... \^`\_cod` parts can be printed after \^`\load[doc]`
 using \~`\printdoc` macro, see section~\ref[doc].
 If you have created a documented macro file `pkgname.opm` then you can
 put macros for creating your documentation between
 first pair of \^`\_doc` ... \^`\_cod` used after \^`\_endcode`.
-These macros should \^`\load[doc]` and must to be finished by \^`\bye`.
+These macros should \^`\load[doc]` and must be finished by \^`\bye`.
 Then you have code+documentation together in a single file and
 user can generate the documentation of our package by
 \^`\docgen` used at command line:
 \begtt
 optex -jobname pkgname-doc '\docgen pkgname'
 \endtt
-Example of a code used between the first {\^`\_doc` ... \^`\_cod`} pair
-after \^`\_endcode`:
-\begtt
-\_doc
-   \load [doc]
-   \printdoctail pkgname.opm % prints the documantation written after \_endcode
-   \printdoc     pkgname.opm % prints \_doc...\_cod parts + code before \_endcode
-   \nonum\sec Index
-   \begmulti 3
-      \tt \makeindex         % prints index in three columns
-   \endmulti
-   \bye
-\_cod
-\endtt
-See the end of `mte.opm` file for a real example.
+Example of a  \^`\_doc` ... \^`\_cod` code used for creatig the
+documentation using \^`\docgen` can be found in the `mte.opm` file.
 
 \secc[pkg-namespace] Name spaces for package writers
 
@@ -342,6 +354,7 @@ can look like.
 
 \endinput
 
+2022-11-22 \currfile introduced and used in \_codedecl
 2022-11-13 \_resetnamespace corrected
 2021-08-16 \_wlog moved from basic macros, \_codedecl uses \_wlog only.
 2021-04-25 \_checkexists introduced
