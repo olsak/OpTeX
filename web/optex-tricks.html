@@ -68,6 +68,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li> \hisyntax performs syntax highlighting for C, Python, TeX, 
      html and XML languages.
 <li> \draft and \showlabels can be used for printing labels in draft mode.
+<li> Absolute positions on the page.
 <li> Options in key=value dictionaries.
 <li> \lipsum prints the text Lorem ipsum dolor sit.
 <li> \mathbox creates a \hbox in math list with size-context.
@@ -177,7 +178,6 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Macro tricks
 <ul>
     <li><a href="#condi">Structured conditionals</a>
-    <li><a href="#setpos">Absolute positions on the page<a>
     <li><a href="#anodes">Drawing to given nodes</a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
@@ -1740,8 +1740,8 @@ $$ f(x) = \cases{0 &amp; for $x&lt;0$\toright\eqmark \cr
 by the \case macro. The \toright\eqmark is used here. Analogically,
 \toleft\eqmark puts the equation mark to the left margin.
 
-The \toright, \toleft macrs are based on the <a href="#setpos">OpTeX trick 0020</a>
-where the \setpos and \posx macros are defined.
+The \toright, \toleft macrs are based on the \setpos, \posx, \posy macros
+from OpTeX.
 
 <pre>
 \newcount\tomarginno
@@ -2557,7 +2557,7 @@ Example:
 
 <p>This example connects the center of "first" with the center of "C" and the
 center of "third" with the center of "A" by red line. The macro is based on
-absolute positions on the page <a href="#setpos">OpTeX trick 0020</a>,
+absolute positions on the page given by \setpos, \posx and \posy,
 so the material from \tablebefore and \tableafter is placed at given positions
 after second run of TeX.
 
@@ -2595,9 +2595,7 @@ point shifted by given amount right and up, for example
    {\def\expru#1{\expr{#1}bp}\puttext\ibl[2,2]{HELLO}}
 </pre>
 
-<p>The implementation follows. Copy macros fom the
-<a href="#setpos">OpTeX trick 0020</a>
-and add following macros:
+<p>The implementation follows.
 
 <pre>
 \def\tablebefore{\ifvmode \nointerlineskip\null \fi
@@ -3103,58 +3101,9 @@ have the whole construction \if-skipable.
 <p CLASS=datum>(0019) -- P. O. 2020-05-27<p>
 <hr>
 
-<h2><a name="setpos"></a>Absolute positions on the page</h2>
-
-<p>You can write \setpos[label] somewhere and the position of such \setpos[label]
-can be referenced by \posx[label], \posy[label] and \pospg[label].
-The first two macros expand to x and y position measured from left-bottom 
-corner of the page (dimen values) and \pospg[label]
-expands to the page number in the document (counted from one at beginning of
-the document).
-
-<p>These values are available in second (and more) TeX run, because the
-information is saved to ref file and restored from it at the beginning of
-TeX job. If these vaules are not known then mentioned macros expand to 0sp,
-0sp and 0.
-
-<pre>
-\refdecl{
-   \def\Xpos#1#2#3{\sxdef{pos:#1}{{#2}{#3}\_currpage}}
-}
-\def\setpos[#1]{\openref\pdfsavepos
-   \_ewref\Xpos{{#1}\unexpanded{{\the\pdflastxpos}{\the\pdflastypos}}}}
-
-\def\posx [#1]{\_ea \posi   \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
-\def\posy [#1]{\_ea \posii  \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}sp}
-\def\pospg[#1]{\_ea \posiii \romannumeral-`\.\trycs{pos:#1}{{0}{0}{0}{0}}}
-
-\def\posi   #1#2#3#4{#1}
-\def\posii  #1#2#3#4{#2}
-\def\posiii #1#2#3#4{#3}
-</pre>
-
-<p>The coordinates are saved to the .ref file in the format \Xpos{label}{x-pos}{y-pos}.
-The \Xpos macro defines \pos:label as {x-pos}{y-pos}{total-pg}{rel-pg}.
-We need to read only given parameter by \posi, \posii or \posiii auxiliary
-macros. The \romannumeral-`\. trick does (empty) expansion of \trycs until first {
-occurs.
-
-<p>This example shows the usage of \refdecl macro from OpTeX and \pdfsavepos,
-\pdflastxpos, \pdflastypos pdfTeX primitives.
-
-<p>Unusable example: the following code draws the line from current position
-to the left-bottom corner of the page.
-
-<pre>
-Text text\setpos[A]\pdfliteral{q 0 0 m -\bp{\posx[A]} -\bp{\posy[A]} l S Q}
-</pre>
-
-<p CLASS=datum>(0020) -- P. O. 2020-05-27<p>
-<hr>
-
 <h2><a name="anodes"></a>Drawing to given nodes</h2>
 
-<p>We show the application of the previous <a href="#setpos">OpTeX trick 0020</a>.
+<p>We show the application of the \setpos, \posx, \posy privided by OpTeX.
 We can connect two (or more) points at the single page by a line
 (more lines, curves). These points are declared by the position of the current
 point. For example the last word of the first paragraph is connected to the
@@ -3172,8 +3121,7 @@ position by \pdfliteral primitive. The coordinates of the origin is 0,0, the
 coordinates of a point with label [label] (in big points) is given by
 \bpx[label],\bpy[label].
 
-<p>Use macros from previous <a href="#setpos">OpTeX trick 0020</a>
-and these macros:
+<p>Use these macros:
 
 <pre>
 \newcount\posorigin

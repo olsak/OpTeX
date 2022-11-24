@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-22>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2022-11-24>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -288,6 +288,43 @@
 \_public \expr \bp ;
 
    \_doc ------------------
+   You can write \^`\setpos``[<label>]` somewhere and the position of such
+   \^`\setpos``[<label>]` can be referenced by \^`\posx``[<label>]`,
+   \^`\posy``[<label>]` and \^`\pospg``[<label>]`. The first two macros
+   expand to x and y position measured from left-bottom corner of the page
+   (dimen values) and \^`\pospg[<label>]` expands to the page number in the
+   document (counted from one at beginning of the document).
+   These values are available in the second (and more) \TeX/ run, because the
+   information is saved to `.ref` file and restored from it at the beginning of
+   the \TeX/ job. If these vaules are not known then mentioned macros expand to
+   0sp, 0sp and 0. The following example draws the line from current
+   position to the left bottom corner of the page (after second \TeX/ run):
+   \begtt
+   Text text\setpos[A]\pdfliteral{q 0 0 m -\bp{\posx[A]} -\bp{\posy[A]} l S Q}
+   \endtt
+   The coordinates are saved to the `.ref` file in the format
+   \`\_Xpos``{<label>}{<x-pos>}{<y-pos>}`. The \^`\_Xpos` macro defines
+   `\pos:<label>` as `{<x-pos>}{<y-pos>}{<total-pg>}{<rel-pg>}`.
+   We need to read only given parameter by `\_posi`, `\_posii` or `\_posiii`
+   auxiliary macros. The implementation of
+   \`\setpos`, \`\posx` and \`\posy` macros are based on `\padsavepos`
+   `\pdflastxpos` and `\pdflastypos` pdf\TeX/ primitives. The \`\pospg`
+   simply reads the data from the \~`\_currpage` macro.
+   \_cod ------------------
+
+\_def\_Xpos#1#2#3{\_sxdef{pos:#1}{{#2}{#3}\_currpage}}
+\_def\_setpos[#1]{\_openref\_pdfsavepos
+   \_ewref\_Xpos{{#1}\_unexpanded{{\_the\_pdflastxpos}{\_the\_pdflastypos}}}}
+
+\_def\_posx [#1]{\_ea \_posi   \_expanded {\_trycs{pos:#1}{{0}{0}{0}{0}}sp}}
+\_def\_posy [#1]{\_ea \_posii  \_expanded {\_trycs{pos:#1}{{0}{0}{0}{0}}sp}}
+\_def\_pospg[#1]{\_ea \_posiii \_expanded {\_trycs{pos:#1}{{0}{0}{0}{0}}}}
+
+\_def\_posi #1#2#3#4{#1}  \_def\_posii #1#2#3#4{#2}  \_def\_posiii #1#2#3#4{#3}
+
+\_public \setpos \posx \posy \pospg ;
+
+   \_doc ------------------
    The pair {\`\_doc` ... \`\_cod`} is used for documenting macros and to
    printing the technical documentation of the \OpTeX/. The syntax is:
    {\begtt \catcode`\<=13
@@ -316,6 +353,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-24 \setpos, \posx, \posy moved from OpTeX trick here
 2022-11-22 \docgen writes banner to log
 2022-11-20 \docgen reads lines before \_codedecl in order to define pkg. version
 2022-11-18 \cstochar introduced
