@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2022-11-22>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2022-11-24>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -21,15 +21,19 @@
    private form of \`\_ea`
    because there is high probability that `\ea` will be redefined by the user.
    \nl
-   \`\public` `<sequence> <sequence> ... ;` does
+   \`\public` `\<sequence> \<sequence> ... ;` does
    `\let \<sequence> = \_<sequence>` for all sequences.
    \nl
-   \`\private` `<sequence> <sequence> ...;` does
+   \`\private` `\<sequence> \<sequence> ...;` does
    `\let \_<sequence> = \<sequence>` for all sequences.
    \nl
-   \`\_checkexists` `<where> <prefix><sequence>` prints error 
-   if the control sequence propagated to
-   a new name space by `\public` etc. macros is not declared.
+   \`\newpublic``<do>\<sequence>` prints warning if `\<sequence>`
+   is declared already. Then runs `<do>\<sequence>`.\nl
+   \`\_checkexists` `<where> {<sequence-string>}` prints error
+   if the control sequence given by its name <sequence-string>
+   is not declared. This check is used in `\public`, `\private`,
+   `\_nspublic` and `\_nsprivate` macros in order to avoid mistakes
+   in names when declaring new control sequences.
    \nl
    \`\xargs` `<what> <sequence> <sequence> ... ;`
    does `<what><sequence>` for each sequences.
@@ -42,22 +46,26 @@
 \_def \_pkglabel{}
 \_def \_public {\_xargs \_publicA}
 \_def \_publicA #1{%
-   \_checkexists \public _#1%
+   \_checkexists \public {_\_csstring#1}%
    \_ea\_let \_ea#1\_csname  _\_csstring #1\_endcsname
 }
 \_def \_private {\_xargs \_privateA}
 \_def \_privateA #1{%
-   \_checkexists \private {}#1%
+   \_checkexists \private {\_csstring #1}%
    \_ea\_let \_csname  _\_csstring #1\_endcsname =#1%
 }
-\_def\_checkexists #1#2#3{\_unless \_ifcsname #2\_csstring#3\_endcsname
-   \_errmessage {\_string#1: \_bslash#2\_csstring#3 must be declared}\_fi
-}   
-\_public \public \private \xargs \ea ;
+\_def\_checkexists #1#2{\_unless \_ifcsname #2\_endcsname
+   \_errmessage {\_string#1: \_bslash#2 must be declared}\_fi
+}
+\_def\_newpublic #1#2{\_unless\_ifx #2\_undefined
+   \_opwarning{\_string#2 is redefined%
+      \_ifx\_pkglabel\_empty \_else\_space by the \_ea\_ignoreit\_pkglabel\_space package\_fi}\_fi
+   #1#2%
+}
+\_public \public \private \newpublic \xargs \ea ;
 
    \_doc -----------------------------
-   The `\_mathsbon` and `\_mathsboff` are defined in `math-macros.opm` file.
-   Now, we define the macros
+   We define the macros
    \`\_namespace` `{<pkg label>}`,  \`\_resetnamespace` `{<pkg label>}`, \`\_endnamespace`,
    \`\_pkglabel`, \`\_nspublic`, and \`\_nsprivate`
    for package writers, see section~\ref[pkg-namespace].{\hbadness=2200\par}
@@ -85,17 +93,14 @@
    \_directlua{ callback.remove_from_callback("process_input_buffer", "_namespace") }%
    \_gdef \_pkglabel{}%
 }
-
 \_def \_nspublic {\_xargs \_nspublicA}
 \_def \_nspublicA #1{%
-   \_checkexists \nspublic {\_pkglabel _}#1%
-   \_unless\_ifx #1\_undefined
-      \_opwarning{\_ea\_ignoreit\_pkglabel\_space redefines the meaning of \_string#1}\_fi
-   \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
+   \_checkexists \_nspublic {\_pkglabel _\_csstring #1}%
+   \_ea\_newpublic \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
 }
 \_def \_nsprivate {\_xargs \_nsprivateA}
 \_def \_nsprivateA #1{%
-   \_checkexists \nsprivate {}#1%
+   \_checkexists \_nsprivate {\_csstring #1}%
    \_ea\_let \_csname \_pkglabel _\_csstring #1\_endcsname =#1%
 }
 
@@ -300,6 +305,16 @@ defined already. The \^`\_nsprivate` macro does reverse
 operation to it without warnings. Example: you can define `\def\.macro{...}` and then
 set it to the user name space by `\_nspublic \macro;`.
 
+It could happen that a package writer needs to declare a control sequence
+(say `\foo`) directly without setting it in `\_<pkg>_foo` name space
+followed by using \^`\_nspublic`. The \^`\newpublic` prefix should be used in this
+case, for example `\_newpublic\_def\foo` or `\_newpublic\_chardef\foo` or
+`\_newpublic{\_long\_def}\foo`. The \^`\newpublic``<do>\<sequence>` prints
+a warning if the declared `\<sequence>` is defined already and then runs
+`<do>\<sequence>`. The reason of the warning is the same as when
+\^`\_nspublic` warns about doing re-declaration of control sequences already
+declared.
+
 Don't load other packages (which are using their own namespace) inside your
 namespace. Do load them before your \^`\_namespace`~`{<pkg>}` is
 initialized. Or close your namespace by \^`\_endnamespace` and open it again
@@ -354,6 +369,7 @@ can look like.
 
 \endinput
 
+2022-11-24 \newpublic introduced, \_checkexists with only two parameters.
 2022-11-22 \currfile introduced and used in \_codedecl
 2022-11-13 \_resetnamespace corrected
 2021-08-16 \_wlog moved from basic macros, \_codedecl uses \_wlog only.
