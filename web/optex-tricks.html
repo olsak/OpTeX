@@ -1662,6 +1662,10 @@ this with the mathastext.sty package used in LaTeX).
 <p>We assume that the Unicode math font is loaded already and now, we want
 to typeset characters mentioned above from text font in math mode. Try this:
 
+<p>Note: slihtly better implementation is in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>,
+use \load[math].
+
 <pre>
 \loadmath{[texgyretermes-math]} % Math font is loaded: texgyretermes-math, just for testing
 \fontfam[Heros]                 % Text font is loaded: texgyreheros, just for testing
@@ -1743,6 +1747,10 @@ by the \case macro. The \toright\eqmark is used here. Analogically,
 The \toright, \toleft macrs are based on the \setpos, \posx, \posy macros
 from OpTeX.
 
+<p>Note: the same implementation is in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>,
+use \load[math].
+
 <pre>
 \newcount\tomarginno
 \def\toright#1{\_incr\tomarginno {\setpos[tr:\the\tomarginno]%
@@ -1765,7 +1773,7 @@ equation marks but with different suffixes, for example (1.1a), (1.1b).
 We create a macro <code>\subeqmark suffix</code>.
 The <code>\subeqmark a</code> starts
 the bunch of equations with a new number. Following <code>\subeqmark b</code>,
-<code>\subeqmark c</code> etc. uses the same equation number, they differ only by
+<code>\subeqmark c</code> etc. use the same equation number, they differ only by
 given suffixes. For example
 
 <pre>
@@ -1777,7 +1785,7 @@ $$ \eqalignno{
 $$
 See equation~\ref[label].
 $$
-  a^2 + b^2 = c^2 \eqno \eqmark
+  a^2 + b^2 = c^2 \eqmark
 $$
 </pre>
 <p>prints the system of equations with numbers (1a), (1b), (1c) and the (1b) is
@@ -1790,6 +1798,10 @@ referenced in the text. The next Pythagorean theorem has number (2).
 \def\dnumpost{}
 \def\subeqmark#1{\def\dnumpost{#1}\ifx a#1\else \decr\_dnum\fi \eqmark}
 </pre>
+
+<p>Note: the same implementation is in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>,
+use \load[math].
 
 <p CLASS=datum>(0074) -- P. O. 2022-03-08<p>
 <hr>
@@ -1840,51 +1852,10 @@ signs from STIX doesn't look good in single formula.
 <p>The <a href="#addumathfont">previous OpTeX trick</a> implements a macro
 for loading more Unicode math fonts and gives a macro \resetmathchars for
 setting individual math characters as characters from the newly loaded math font.
-Now we implement a method for doing \resetmathchars for all math characters
-which are missing in the basic math setting. For example, we use \fontfam[lm]
-and \input print-unimath.opm shows that doszens slots are empty. We can use
-\addUmathfont for STIXMath-Regular font where almost all slots are
-supported. Now, we need to fill all empty slots by characters from
-STIXMath-Regular:
-<pre>
-\fontfam[lm]
-\addUmathfont \stix {[STIXMath-Regular]}{} {}{} {} % additional font STIX loaded
+The
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>
+implement this issue. Use \load[math].
 
-% fills empty slots from \stix font:
-\fillemptyslots \stix
-
-% Testing the result:
-\input print-unimath.opm
-</pre>
-
-<p>The \fillemptyslots macro is implemented here. We need to use macros
-\resetmathcharX and \resetmathcharY from
-the <a href="#addumathfont">previous OpTeX trick</a>:
-
-<pre>
-\def\UnicodeMathSymbol#1#2#3#4{%
-   \isinlist{\relax\mathord\mathop\mathbin\mathrel\mathpunct}#3\iftrue
-      \def\mathsequence{#2}%
-      \isinlist\intoperators#2\iftrue
-         \edef\mathsequence{\csname\csstring#2op\endcsname}%
-      \fi
-      {\tracinglostchars=0 \global\setbox0=\hbox{$\mathsequence$}}%
-      \ifdim\wd0=0pt \ea\resetmathcharX \mathsequence \fi
-   \fi
-}
-\def\intoperators{\int\iint\iiint\oint\oiint\oiiint
-   \intclockwise\varointclockwise\ointctrclockwise\sumint\iiiint\intbar\intBar
-   \fint\pointint\sqint\intlarhk\intx\intcap\intcup\upint\lowint
-}
-\def\fillemptyslots#1{\chardef\mafam=#1\relax \input unimath-table.opm }
-</pre>
-
-<p>The macro defines the macro \UnicodeMathSymbol used in unimath-table.opm and then
-does \input of this file. All \mahtord,\matop,\mathbin,\mathrel and
-\mathpunct characters are checked and if they give an empty box then they are
-completed from the new math font. Integrals are defined as macros
-(see \_intwithnolimits in unimath-codes.opm), so
-corresponding \...op control sequences are checked and completed.
 
 <p CLASS=datum>(0082) -- P. O. 2022-05-15<p>
 <hr>
@@ -1922,42 +1893,10 @@ code slot is the ASCII code of given letter.
 <p>AMSTeX provides \dots macro which works by the context. If it is surrounded
 by symbols like + - = then it works like \cdots, if it is surrounded by
 comma or similar symbols then it works like \ldots.
-The <a href="http://petr.olsak.net/opmac-tricks-e.html#dots">OPmac trick 0084</a>
-shows one implementation of this feature, but it works only in
-non-Unicode math. So, we show another solution.
+The
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>
+implements this issue. Use \load[math].
 
-<pre>
-\def\declbasemathchars#1{\foreach#1\do{\sxdef{dots:\meaning##1}{}}}
-\def\dots{\relax \ifmmode \ea\specdots \else \_dots \fi}
-\def\specdots{\futurelet\next\specdotsA}
-\def\specdotsA{\ifcsname dots:\meaning\next\endcsname \ldots
-   \else \ischaracter\next \iftrue \cdots
-   \else \ea\specdotsB\scantextokens\ea{\meaning\next}\sepU\Umathchar\sepU\end \fi\fi}
-\def\specdotsB#1\Umathchar#2\sepU#3\end{\ifx^#1^\specdotsC#2\sepU \else \ldots \fi}
-\def\specdotsC"#1"#2"#3\sepU{%
-   \ifcase#1 \ldots\or \cdots\or \cdots\or \cdots\or \cdots\or \cdots\else \ldots \fi}
-\def\ischaracter#1\iftrue{\ea\ischaracterA\scantextokens\ea{\meaning#1}character {}\end}
-\def\ischaracterA#1character #2#3\end{%
-   \ifx\relax#2\relax \cs{iffalse\ea}\else \cs{iftrue\ea}\fi}
-
-\declbasemathchars{, . ; :}
-
-% Test:
-$a_1,\dots,a_n$\quad $a_1+\dots+a_n$
-\bye
-</pre>
-
-<p>The macro \dots is re-defined here in math mode. It reads the following
-token and does \cdots or \ldots. If the following token is a single letter
-then it uses \ldots. If the following token is a single character not
-listed in the \declbasemathchars parameter then it uses \cdots. If it is listed
-in \declbasemathchars paremater then it uses \ldots. If the next token is
-a control sequence declared by \Umathchardef then it uses \cdots for classes
-Op, Bin, Rel, Open, Close and \ldots for other classes. In other cases,
-it uses \ldots.
-
-<p>The \declbasemathchars can be used more than once, the list of declared
-characters are appended when second and more \declbasemathchars is used.
 
 <p CLASS=datum>(0045) -- P. O. 2021-02-12<p>
 <hr>
@@ -2024,7 +1963,11 @@ the same as \Gamma \Bigl[x\bigr]. Moreover, the functional parameter gets its
 own TeX group, so \Bigp G(a\over2) results to G\Bigl({a\over2}\bigr). We add
 two more prefixes \autop and \normalp. First one applies \left, \right to
 the parentheses of the parameter, second one keeps the parentheses unscaled.
-The implementation looks like this:
+The implementation follows.
+
+<p>Note: slihtly better implementation is in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>,
+use \load[math].
 
 <pre>
 \def\bigp#1{#1\fparam\bigl\bigr}
@@ -2084,6 +2027,11 @@ spaces in these cases too. This can be done by following settings:
 
 <p>The LuaTeX primitive registers are used here, see section 7.5.2 in LuaTeX
 manual.
+
+<p>Note: slihtly better implementation is in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>,
+use \load[math].
+
 
 <p CLASS=datum>(0095) -- P. O. 2022-11-12<p>
 <hr>

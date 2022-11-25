@@ -296,9 +296,10 @@
    the page number counted from one at beginning of the document.
    These values are available in the second (and more) \TeX/ run, because the
    information is saved to `.ref` file and restored from it at the beginning of
-   the \TeX/ job. If these vaules are not known then mentioned macros expand to
-   0sp, 0sp and 0. The following example draws the line from current
-   position to the left bottom corner of the page (after second \TeX/ run):
+   the \TeX/ job. If these values are not known then mentioned macros expand to
+   0sp, 0sp and 0. The following example implements `\linefrom[<label>]` and
+   `\lineto[<label>]` macros. The line connecting these two points is drawn
+   (after second \TeX/ run):
    \begtt
    \def\linefrom[#1]{\setpos[#1:f]\drawlinefromto[#1]}
    \def\lineto  [#1]{\setpos[#1:t]}

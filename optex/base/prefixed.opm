@@ -277,8 +277,11 @@ user can generate the documentation of our package by
 \begtt
 optex -jobname pkgname-doc '\docgen pkgname'
 \endtt
-Example of a  \^`\_doc` ... \^`\_cod` code used for creatig the
-documentation using \^`\docgen` can be found in the `mte.opm` file.
+Example of a  \^`\_doc` ... \^`\_cod` code used for creating the
+documentation using \^`\docgen` can be found in the `math.opm` file. You can see
+\ulink[https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf]{its documentation}, especially
+\ulink[https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf\#ref:pkgtemplate]
+{section about creating packages}.
 
 \secc[pkg-namespace] Name spaces for package writers
 

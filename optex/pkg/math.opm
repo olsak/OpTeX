@@ -1,0 +1,592 @@
+% This is macro package used by OpTeX, see http://petr.olsak.net/optex
+% math.opm, Petr Olšák <petr@olsak.net>, 2022
+% This file can serve as an template for other package files
+% See end of the file for more information
+
+\_def\_math_version {0.1, 2022-11-25}
+\_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
+\_namespace{math}
+
+   \_doc
+   \`\bigp`, \`\Bigp`, \`\biggp`, \`\Biggp`, \`\autop`, \`\normalp` are inspired from
+   \tricklink[bigp]{0094}
+   \_cod
+
+\_def\.bigp #1{\.fparam{#1}\_bigl\_bigr}
+\_def\.Bigp #1{\.fparam{#1}\_Bigl\_Bigr}
+\_def\.biggp#1{\.fparam{#1}\_biggl\_biggr}
+\_def\.Biggp#1{\.fparam{#1}\_Biggl\_Biggr}
+\_def\.autop#1{\.fparam{#1}\_left\_right}
+\_def\.normalp#1{\.fparam{#1}\_relax\_relax}
+\_def\.fparam#1#2#3{%
+   \_isequal .{#1}\_iffalse #1\_fi
+   \_let\.bigleft=#2\_let\.bigright=#3\_nospacefuturelet\.next\.fparamA}
+\_def\.fparamA{%
+   \_ifx\.next(\.afterrelax{\.fparamB()}\_fi
+   \_ifx\.next[\.afterrelax{\.fparamB[]}\_fi
+   \_ifx\.next\{\.afterrelax{\.fparamB\{\}}\_fi
+   \_ifx\.next\_bgroup \_def\.lparen{\{}\_def\.rparen{\}}\.afterrelax{\.fparamC}\_fi
+   \_relax
+}
+\_def\.fparamB#1#2{%
+   \_def\.lparen{#1}\_def\.rparen{#2}%
+   \_def\.next#1##1#2{\_trick_ensurebalanced#1#2\.fparamC{##1}}%
+   \.next
+}
+\_def\.fparamC#1{%
+   \_ifx\.bigleft\_left \_mathopen{}\_fi
+   \.bigleft\.lparen{#1}\.bigright\.rparen
+   \_ifx\.bigright\_right \_mathclose{}\_fi
+}
+\_def\.afterrelax#1#2\_relax{\_fi#1}
+
+\_nspublic \bigp \Bigp \biggp \Biggp \autop \normalp ;
+
+   \_doc
+   We need macro \`\.ensurebalanced` for balancing nested parentheses from
+   \tricklink[balancing]{0043}. We use `trick` namespace for these macros.
+   \_cod
+
+\_resetnamespace{trick}
+   \_def\.ensurebalanced#1#2#3{\_immediateassigned{%
+      \_def\.balopen{#1}\_def\.balclose{#2}\_let\.balaction=#3%
+      \_def\.readnextbal##1##2#2{\.ensurebalancedA{##1#2##2}}}%
+      \.ensurebalancedA}
+   \_def\.ensurebalancedA#1{\.isbalanced#1%
+      \_iftrue\_afterfi{\.balaction{#1}}\_else\_afterfi{\.readnextbal{#1}}\_fi}
+   \_def\.isbalanced#1\_iftrue{\_immediateassignment\_tmpnum=0 \.isbalancedA#1{\.isbalanced}}
+   \_def\.isbalancedA#1#{\.countbalanced#1\.isbalanced \.isbalancedB}
+   \_def\.isbalancedB#1{%
+      \_ifx\.isbalanced#1\_afterfi{\_cs{ifnum}\_tmpnum=0 }\_else\_ea\.isbalancedA\_fi}
+   \_def\.countbalanced#1{\_ea\_ifx\.balopen #1\_immediateassignment\_incr\_tmpnum\_fi
+                          \_ea\_ifx\.balclose#1\_immediateassignment\_decr\_tmpnum\_fi
+                          \_ifx\.isbalanced#1\_else\_ea\.countbalanced\_fi}
+\_resetnamespace{math}
+
+   \_doc
+   \`\smartdots` re-sets `\dots` to `\.dots`.
+   The `\.dots` lets `\.next` using `\futurelet` and checks the `\.next`:
+   It it is declared by `\_chardef` then `\.mchar` is the real Unicode character
+   with `\chardef`ed code.
+   If `\.next` is a real Unicode character then `\.mchar` includes it. This
+   is done by the expandable \o`\cstochar` macro provided by \OpTeX/.
+   If `\.next` is something else (i.e.\ `\.mchar` is empty) then print
+   \o`\ldots` else print \o`\cdots` for Op, Bin, Rel, Open, Close math
+   classes of the `\.next` math object or prints \o`\ldots` in other cases.
+   \_cod
+
+\_def\.smartdots {\_let\dots=\.dots}
+\_def\.dots{\_relax \_ifmmode \_ea\.specdots \_else \_dots \_fi}
+\_def\.specdots{\_futurelet\.next\.specdotsA}
+\_def\.specdotsA{%
+   \.ischardef\.next\_iftrue \_edef\.mchar{\_Uchar\.next}%
+   \_else \_edef\.mchar{\_cstochar\.next}%
+   \_fi
+   \_ifx\.mchar\_empty \_ldots
+   \_else \_Umathcharnumdef\.next=\_Umathcode\_ea`\.mchar \_relax
+      \_ifcase \.readclass\.next
+         \_ldots\_or \_cdots\_or \_cdots\_or \_cdots\_or \_cdots\_or \_cdots \_else \_ldots \_fi
+   \_fi
+}
+\_def\.ischardef #1\_iftrue {\_ea\.ischardefA\_meaning#1\_fin}
+\_def\.ischardefA #1#2#3#4#5#6\_fin {\_def\.tmpa{#1#2#3#4#5}\_ifx\.tmpa\.stringchar}
+\_edef\.stringchar{\_string\char}
+\_def\.readclass#1{\_ea\.readclassA\_meaning#1\_fin}
+\_def\.readclassA#1"#2"#3\_fin{#2}
+
+\_nspublic \smartdots ;
+
+   \_doc
+   The control sequences \`\N`, \`\Z`, \`\Q`, \`\R`, \`\C`
+   \`\sgn`, \`\argmin`, \`\argmax`, \`\grad`, \`\rank`, \`\tr`, \`\diag`, \`\Span`,
+   \`\Rng`, \`\Null`, \`\Ker`, \`\Res`, \`\tg`, \`\arctg`,
+   \`\frac`, \`\dfrac`, \`\tfrac`, \`\.`
+   are defined directly in the user space by \o`\_newpublic`.
+   \_cod
+
+\_newpublic\_def \N {{\_bbchar N}}
+\_newpublic\_def \Z {{\_bbchar Z}}
+\_newpublic\_def \Q {{\_bbchar Q}}
+\_newpublic\_def \R {{\_bbchar R}}
+\_newpublic\_def \C {{\_bbchar C}}
+
+\_newpublic\_def \sgn    {\_mathop{\_rm sgn}\_nolimits}
+\_newpublic\_def \argmin {\_mathop{\_rm argmin}}
+\_newpublic\_def \argmax {\_mathop{\_rm argmax}}
+\_newpublic\_def \grad   {\_mathop{\_rm grad}\_nolimits}
+\_newpublic\_def \rank   {\_mathop{\_rm rank}\_nolimits}
+\_newpublic\_def \tr     {\_mathop{\_rm tr}\_nolimits}
+\_newpublic\_def \diag   {\_mathop{\_rm diag}\_nolimits}
+\_newpublic\_def \Span   {\_mathop{\_rm Span}\_nolimits}
+\_newpublic\_def \Rng    {\_mathop{\_rm Rng}\_nolimits}
+\_newpublic\_def \Null   {\_mathop{\_rm Null}\_nolimits}
+\_newpublic\_def \Ker    {\_mathop{\_rm Ker}\_nolimits}
+\_newpublic\_def \Res    {\_mathop{\_rm Res}\_nolimits}
+\_newpublic\_def \tg     {\_mathop{\_rm tg}\_nolimits}
+\_newpublic\_def \arctg  {\_mathop{\_rm arctg}\_nolimits}
+
+\_newpublic\_def \frac  #1#2{{{#1}\_over#2}}
+\_newpublic\_def \dfrac #1#2{{\_displaystyle{{#1}\_over#2}}}
+\_newpublic\_def \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
+
+\_newpublic\_def \.#1{{\_bf#1}}
+
+   \_doc
+   The \`\toright` and  \`\toleft` macros are based on the
+   \o`\setpos` and \o`\posx` macros. The printing point is shifted by `\posx`
+   to the left (i.e.\ to the left boundary of the sheet) and then it is shifted
+   to the desired space by `\kern\hoffset+\hsize`.
+   This idea is moved from \tricklink[torighteq]{0028}.
+   \_cod
+
+\_newcount \.tomarginno
+\_def\.toright #1{\_incr\.tomarginno {\_setpos[_math_tr:\_the\.tomarginno]%
+   \_rlap{\_kern-\_posx[_math_tr:\_the\.tomarginno]\_kern\_hoffset\_kern\_hsize\_llap{#1}}}}
+\_def\.toleft #1{\_incr\.tomarginno {\_setpos[_math_tr:\_the\.tomarginno]%
+   \_rlap{\_kern-\_posx[_math_tr:\_the\.tomarginno]\_kern\_hoffset\_rlap{#1}}}}
+
+\_nspublic \toright \toleft ;
+
+   \_doc
+   The \`\subeqmark` works because the internal \O`\_thednum`
+   is re-defined. The \`\.dnumpost` is added here. If you want to use another format
+   for \O`\_thednum` then you have to add the \`\.dnumpost` to it too.
+   \_cod
+
+\_def \_thednum    {(\_the\_dnum \.dnumpost)}
+\_def\.dnumpost{}
+\_def\.subeqmark #1{\_def\.dnumpost{#1}\_lowercase{\_ifx a#1}\_else \_decr\_dnum\_fi \_eqmark}
+
+\_nspublic \subeqmark ;
+
+   \_doc
+   \`\textvariables`, \`\textdigits`, \`\textmoremath` initialize
+   new two families 5, 6 using `\.textmathini` and sets `\mathcode`s
+   of given characters to these families.
+   Moreover, `\textvariables` adds `\fam` register setting to `\rm` and `\it`
+   selectors and re-set Greek variables to use only math font (because we
+   are not sure if Greek letters are in the current text fonts).
+   \_cod
+
+\_def\.textmathini{%
+   \_fontdef\.mathrm{\_rm}\_fontdef\.mathit{\_it}%
+   \_fontdef\.mathbf{\_bf}\_fontdef\.mathbi{\_bi}%
+   \_addto\_normalmath{%
+      \_setmathfamily    5 \.mathrm
+      \_setmathfamily    6 \.mathit
+   }%
+   \_addto\_boldmath{%
+      \_setmathfamily    5 \.mathbf
+      \_setmathfamily    6 \.mathbi
+   }%
+   \_normalmath
+   \_let\.textmathini=\_relax
+}
+\_def\.textvariables {\.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
+   \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
+   \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
+   \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
+   \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA \_setnablait}
+   \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA \_setnablarm}
+   \_itgreek \_rmGreek
+}
+\_def\.textdigits    {\.textmathini \_mathcodes 5 {7{\_Urange 0-9}}}
+\_def\.textmoremath  {\.textmathini
+   \_mathcodes 5 {5{!?} 2{*+-} 3{=<>} 6{,:;} 0{./|} 4{([\{} 5{\})]}}%
+   \_Umathcode `- = 2 5 "2212  % hyphen behaves like minus in math mode
+}
+\_nspublic \textvariables \textdigits \textmoremath ;
+
+   \_doc
+   \`\replacemissingchars``<family>` defines `\UnicodeMathSymbol` and reads
+   `unimath-table.opm`, i.e.\ it does for each math character following
+   if the character is missing in main math font and if it is present in
+   added font and if it is not already replaced character then apply new math
+   code or `\Umathaccent` definition. Its name is added to `\.alist` or
+   `\.clist`. The new codes are declared by `\matchars<family>{<expanded>\clist}`.
+   The `\.rlist` is the list of characters already replaced. They are not
+   replaced again if a new `\replacemissingchars` is used.
+   \_cod
+
+\_def\.rlist{}
+\_def\.replacemissingchars#1{%
+   \_def\.alist{}\_def\.clist{}
+   \_def\UnicodeMathSymbol##1##2##3##4{%
+      \_iffontchar\_textfont1##1 \_else     % not in main math font
+         \_iffontchar\_textfont#1 ##1       % is presnet in added font
+            \_isinlist\.rlist{##2}\_iffalse % not already replaced
+               \_ifx##3\_mathaccent
+                  \_protected\_def##2{\_Umathaccent fixed 7 #1 ##1 }%
+                  \_addto\.alist{##2}%
+               \_else
+                  \_addto\.clist{##2}%
+      \_fi\_fi\_fi\_fi
+   }
+   \_input unimath-table.opm
+   \_wlog{^^J\_string\replacemissingchars: From \_string\fam=\_string#1 is printed now:^^J%
+         CHARACTERS: \.clist^^JACCENTS: \.alist^^J}%
+   \_ea\_mathchars \_expanded{\_noexpand#1{\.clist}}%
+   \_edef\.rlist{\.rlist\.clist\.alist}%
+   \_def\.alist{}\_def\.clist{}\_let\UnicodeMathSymbol=\_undefined
+}
+\_nspublic \replacemissingchars ;
+
+   \_doc
+   \`\scriptspaces``{<s-rel>}{<s-bin>}{<ss-rel>}{<ss-bin>}`
+   sets internal \LuaTeX/ registers represented by
+   appropriate primitives, see section 7.5 in the \LuaTeX/ manual.
+   \_cod
+
+\_def\.scriptspaces #1#2#3#4{%
+   \_Umathordrelspacing\_scriptstyle=\.orzeromu{#1}\_relax
+   \_Umathrelordspacing\_scriptstyle=\.orzeromu{#1}\_relax
+   \_Umathordrelspacing\_crampedscriptstyle=\.orzeromu{#1}\_relax
+   \_Umathrelordspacing\_crampedscriptstyle=\.orzeromu{#1}\_relax
+   \_Umathordbinspacing\_scriptstyle=\.orzeromu{#2}\_relax
+   \_Umathbinordspacing\_scriptstyle=\.orzeromu{#2}\_relax
+   \_Umathordbinspacing\_crampedscriptstyle=\.orzeromu{#2}\_relax
+   \_Umathbinordspacing\_crampedscriptstyle=\.orzeromu{#2}\_relax
+   \_Umathordrelspacing\_scriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathrelordspacing\_scriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathordrelspacing\_crampedscriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathrelordspacing\_crampedscriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathordbinspacing\_scriptscriptstyle=\.orzeromu{#4}\_relax
+   \_Umathbinordspacing\_scriptscriptstyle=\.orzeromu{#4}\_relax
+   \_Umathordbinspacing\_crampedscriptscriptstyle=\.orzeromu{#4}\_relax
+   \_Umathbinordspacing\_crampedscriptscriptstyle=\.orzeromu{#4}\_relax
+}
+\_def\.orzeromu#1{\_ifx^#1^0mu\_else#1\_fi}
+
+\_nspublic \scriptspaces ;
+
+\_endnamespace
+\_endcode
+
+\sec Summary
+
+This package provides various extensions usable for math typesetting. Mostly
+of them are inspired from
+\ulink[http://petr.olsak.net/optex/optex-tricks.html]{\OpTeX/ tricks} www page.
+
+The following macros are defined in this package:
+\begitems
+* \~`\bigp`, \~`\Bigp`, \~`\biggp`, \~`\Biggp`, \~`\autop`, \~`\normalp`
+  gives better controlling of sizes of parentheses.
+* \~`\smartdots` declared `\dots` macro more intelligent.
+* There are many common math macros for sets or for operators, for example
+  \~`\R` or \~`\sgn`.
+* \~`\toright`, \~`\toleft` puts the \o`\eqmark` to desired position,
+  \~`\subeqmark` prints the given suffix as a part of the equation mark.
+* \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
+* \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
+  enables characters from used text font in math mode
+  (variables, digits, more characters).
+* \~`\replacemissingchars` allows to re-declare all characters missing in math font
+  for printing them from additional math font.
+\enditems
+
+This package is not definitive. I plan to add more features in new versions
+if needed. Moreover, this package gives an example for package writers how
+to write their own packages, see section~\ref[pkgtemplate].
+
+\sec Controlled sizes of parentheses
+
+If you write `$f(x(y+z))$` then the outer parentheses should be bigger.
+Classical Plain \TeX/ provides macros \O`\bigl`, \O`\bigr`, etc., they can
+be used in this manner: `$f\bigl(x(y+z)\bigr)$`. But the source file looks
+bad with such markup. Better is to say that parentheses have to be bigger
+using a single prefix before functional symbol, i.e. `$\bigp f(x(y+z))$`.
+This should be print the same as previous example with \O`\bigl`, \O`\bigr`.
+
+The prefixes \^`\bigp` (big pair), \^`\Bigp` (Big pair),
+\^`\biggp` (bigg pair) and \^`\Biggp` (Bigg pair) are provided,
+they can be used before a functional symbol. The scaled parentheses
+surrounding the functional parameter can be (...) or [...] or `\{`...`\}` or
+\{...\}. I.e.\ `\Bigp\Gamma [x]` is the same as `\Gamma \Bigl[x\bigr]`.
+Moreover, the functional parameter gets its own \TeX/ group, so
+`\Bigp G(a\over2)` results to `G\Bigl({a\over2}\bigr)`.
+There are two more prefixes \^`\autop` and \^`\normalp`. First one applies
+`\left`, `\right` to the parentheses of the parameter, second one keeps
+the parentheses unscaled. If you want to scale the parentheses without
+preceding functional symbol then use dot instead this symbol, for example
+`\Bigp.(a)` is equal to `\Bigl(a\Bigr)`.
+
+Examples:
+\begtt
+$$
+  \displaylines{
+  \Biggp F (1+\biggp g (1+\Bigp f(1+\bigp f(1+f(x))))) \cr
+  f(x(y+z)),\quad  \bigp f(x(y+z)),\quad \autop f (a\over b)\cr
+  \Bigp f(a\over b+c),\quad \Bigp f(x^2\over2),\quad \Bigp.(a\over b)
+  }
+$$
+\endtt
+gives:
+$$
+  \displaylines{
+  \Biggp F (1+\biggp g (1+\Bigp f(1+\bigp f(1+f(x))))) \cr
+  f(x(y+z)),\quad  \bigp f(x(y+z)),\quad \autop f (a\over b)\cr
+  \Bigp f(a\over b+c),\quad \Bigp f(x^2\over2),\quad \Bigp.(a\over b)
+  }
+$$
+
+\sec Intelligent `\dots` like in AMS\TeX
+
+AMS\TeX/ provides \o`\dots` macro which works depending on the context. If it is surrounded
+by symbols like $+$, $-$, $=$ then it works like \o`\cdots`, if it is surrounded by
+comma or similar symbols then it works like \o`\ldots`.
+This package keeps \o`\dots` unchanged but it is changed (and behaves as
+mentioned above) after the \^`\smartdots` declaration.
+
+\smartdots
+You can try this after the \^`\smartdots` declaration:
+\medskip
+
+`$a_1, a_2, \dots, a_n$    ` prints $a_1, a_2, \dots, a_n$,
+
+`$a_1 + a_2 + \dots + a_n$ ` prints $a_1 + a_2 + \dots + a_n$,
+
+
+\sec Basic and typical macros for sets, functions etc.
+
+These typical macros are defined in `math.opm`:
+\^`\N` for $\N$, \^`\Z` for $\Z$, \^`\Q` for $\Q$, \^`\R` for $\R$, \^`\C` for $\C$,
+\^`\sgn`, \^`\argmin`, \^`\argmax`, \^`\grad`, \^`\rank`, \^`\tr`, \^`\diag`, \^`\Span`, \^`\Rng`,
+\^`\Null`, \^`\Ker`, \^`\Res`, \^`\tg`, \^`\arctg`.
+
+I hate the \^`\frac`, \^`\dfrac` and \^`\tfrac` macros defined in \LaTeX/
+but someone may want to use them. This package defines them.
+But I note: usage of `$1\over2$` for $1\over2$
+is much more understandable than \LaTeX's `$\frac12$`.
+
+The vectors and matrices are ususally printed by `{\bf A}{\bf x}`.
+The package provides a shortcut `\.<letter>` to do the same, so user can write
+`\.A\.x` for multiplication of a matrix $\.A$ by a vector $\.x$.
+We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
+`math.opm` can define `\.` differently than the classical meaning \"dotaccent".
+
+\sec Equation marks in atypical cases
+
+We want to put equation marks `\eqmark` in more lines in display mode when we
+are using macros not designed for such case. For example in the lines of
+the `\cases` macro:
+
+\begtt
+$$ f(x) = \cases{0 & for $x<0$\toright\eqmark \cr
+                 1 & otherwise\toright\eqmark } $$
+\endtt
+This puts the equation marks to the right margin in each line generated by
+the `\cases` macro.
+$$ f(x) = \cases{0 & for $x\string<0$\toright\eqmark \cr
+                 1 & otherwise\toright\eqmark }
+$$
+The \^`\toright`\o`\eqmark` is used here. Analogically,
+\^`\toleft`\o`\eqmark` puts the equation mark to the left margin.
+The position of these marks are correct after second or more \TeX/ run
+because \TeX/ needs to read data from its previous run in this case.
+
+Sometime we want to declare a bunch of equations with the same numeric
+equation marks but with different suffixes, for example (1.1a), (1.1b). We
+provide the macro \^`\subeqmark``<suffix>` here.
+If `<suffix>` is `a` or `A` then \^`\subeqmark` starts a new bunch of
+equations with the next number. Following `\subeqmark b`, `\subeqmark c`,
+etc.\ use the same equation number, they differ only by given suffixes:
+You can put `[<label>]` after `<suffix>` for referencing purposes.
+Example:
+
+\begtt
+$$\adef~{\kern.5em }
+  \eqalignno{
+     x + 2y + 3z &= 600 & \subeqmark a \cr
+   12x + ~y - 3z &= -7  & \subeqmark b[label] \cr
+    4x - ~y + 5z &= ~5  & \subeqmark c \cr
+  }
+$$
+The equation~\ref[label] has negative right side. Moreover, it applies
+$$
+  a^2 + b^2 = c^2. \eqmark
+$$
+\endtt
+prints
+$$\adef~{\kern.5em }
+   \eqalignno{
+     x + 2y + 3z &= 600 & \subeqmark a \cr
+   12x + ~y - 3z &= -7  & \subeqmark b[label] \cr
+    4x - ~y + 5z &= ~5  & \subeqmark c \cr
+  }
+$$
+The equation~\ref[label] has negative right side. Moreover, it applies
+$$
+  a^2 + b^2 = c^2. \eqmark
+$$
+
+\sec Setting more spaces in script styles
+
+Classical \TeX/ puts \n`\thickmuskip` around relations and \n`\medmuskip` around
+binary operators only in \n`\textstyle` and \n`\displaystyle`. These spaces are
+missing in \n`\scripstyle` and \n`\scriptscriptstyle`. It means that we get, for
+example
+$$
+  \sum_{i=j+1}^\infty a_i
+$$
+The formula $i=k+1$ has no spaces here, so it looks unattractive. \LuaTeX/
+provides better control of all such spaces, so `math.opm` declares the macro
+\^`\scriptspaces``{<s-rel>}{<s-bin>}{<ss-rel>}{<ss-bin>}` for setting
+these spaces. <s-rel> is \"muskip" value used around relations in \n`\scriptstyle`,
+<s-bin> is \"muskip" used around binary operators in \n`\scriptstyle` and the
+last two parameters gives these spacing in \n`\scriptscriptstyle`.
+If a parameter is empty, it means that it has zero value.
+For example after `\scriptspaces {2mu}{1.3mu}{}{}`
+the formula mentioned above looks like
+$$
+  \scriptspaces {2mu}{1.3mu}{}{}
+  \sum_{i=j+1}^\infty a_i
+$$
+It looks better, doesn't it?
+
+\sec Variables and digits from currently used text font
+
+When Unicode math font is loaded then all variables and digits are printed
+from it in math mode. If you are using text fonts with another visual
+concept then you can see a differences when you use digits in text mode and in
+math mode. You can specify \^`\textdigits` if you want to use digits from
+current text `\rm` font in math and \^`\textvariables` if you want to use
+variables from current text `\it` font in math.
+You can set printing of
++−*/=<>\{([])\} from text `\rm` font in math by \^`\textmoremath`.
+You can inspire from the \^`\textmoremath` macro and set more similar
+characters from text font.
+
+You have to load a text font family (using \o`\fontfam` for example) first and
+use \^`\textdigits`, \^`\textvariables`, \^`\textmoremath` after it. This is
+due to these macros reads {\em current} text \o`\rm` and \o`\it` fonts and set
+them to math printing.
+
+Note that we cannot avoid a visual incompatibility of parentheses when they
+are use in the context \n`\left`, \n`\right`. These parentheses must be printed
+from math font always because text font is unable to create bigger versions of
+them.
+
+\sec Replacing all missing math characters from another font
+
+If we load an additional math font by \o`\addUmathfont`, for example:
+\begtt
+\addUmathfont \xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
+\endtt
+then we can re-declare the code of arbitrary math character in such a way
+that it is printed from this additional font. It can be done by \o`\mathchars`
+provided by \OpTeX/, for example:
+\begtt
+\mathchars \xits {\leftdasharrow \updasharrow \rightdasharrow \downdasharrow}
+\endtt
+But this method enables to re-declare only selected characters. Maybe, you
+want to re-declare {\em all} Unicode math characters which are missing in the main font.
+This can be done by \^`\replacemissingchars`\,`<family>` provided by the
+`math.opm`. For example
+\begtt
+\replacemissingchars \xits
+\endtt
+replaces all characters missing in the main font by characters from the
+`\xits` declared by previous \o`\addUmathfont`.
+The names of all replaced characters are printed in log file.
+If the additional math font doesn't provide all Unicode math characters
+then you can load a next additional math font using another \o`\addUmathfont` and do
+\^`\replacemissingchars`\,`<family>` again. Only those characters not replaced
+by previous steps are replaced.
+
+
+\sec[pkgtemplate] General recommendation for writing packages
+
+This section has nothing common with the subject of this package but this package
+can serve as inspiration for another package writers. It should be a template
+for another `<pkg>.opm` files. We emphasize several principles here.
+Try to run\fnote{Run it three times because Table of contents and Index are created.}
+\begtt
+optex -jobname math-doc '\docgen math'
+\endtt
+for creating this documentation. You can see (from the log file) that the
+`math.opm` is read four times during this process. First one is due to
+\o`\docgen`~`math`. It skips the part before \o`\_endcode` and searches the
+following {`\_doc...\_cod`} pair in the file and processes it (see the end
+of the file `math.opm`). The macros and main instruction about generating
+toc, index, etc.\ are here. First instruction is \o`\load``[doc,math]` which
+initializes `doc` mode of \OpTeX/ and loads `math.opm` secondly because we
+want to show some effects provided by this package. Then there is
+\o`\printdoctail`~`math.opm` which loads the `math.opm` again and prints the
+documentation starting from \o`\_endcode`. Finally, there is
+\o`\printdoc`~`math.opm` which prints the codes mixed by the documentation
+text inside pairs {`\_doc...\_cod`}. This causes the fourth loading of the
+`math.opm` file.
+
+The first part of the `math.opm` file looks like:
+\begtt \catcode`\<=13 \adef!{\string}
+% Optional comments
+
+\_def\_<pkg>_version {<version-number>, <version-date>}
+\_codedecl \pkgsequence {Doing the life more comfortable !<\_<pkg>_version>}
+\_namespace{<pkg>}
+\endtt
+The `\_<pkg>_version` macro should be declared here. The macro should expand
+to version number followed by version date. User can check
+the package version simply by expanding this macro after the package is
+loaded. And we want to have this data only at single place of the file.
+You may check the log file if the text given by `\_codedecl` isn't too long
+and isn't broken to more lines. Keeping single line is better because users can
+`grep @:` on log file in order to get information of all loaded packages
+and their version numbers.
+
+The \o`\_namespace``{<pkg>}` opens the name space used by your package where all
+`\.foo` are internally transformed to `\_<pkg>_foo`. Next part of the file
+includes the code itself documented in {`\_doc...\_cod`} pairs. It is
+finished by \o`\_endnamespace` which finalizes the scope where `\.foo` are
+transformed to `\_<pkg>_foo` and by \o`\_endcode` which does \n`\endinput` when
+the macros are load. Final part of the file after \o`\_endcode` can include
+more detailed documentation.
+
+If you have any idea of creating a macro package, you probably start with
+experimental macros in user name space. It means that there are
+`\def\mymacro` etc. Once such a code is working, you can include it to the
+macro package introduced by \o`\_namespace``{<pkg>}`. You have to go through
+your code carefully sequence per sequence and insert `_` or `.` in front of
+their name. The \"`_`" have to be used if the sequence is a primitive or
+\OpTeX/ macro and the \"`.`" if it is your macro. So, the code fragment
+`\def\mymacro` have to be rewritten to `\_def\.mymacro`. If the macro
+`\mymacro` is intended for usage in the user space, then append
+`\_nspublic \mymacro ;` too.
+
+Sometimes you may want to define a macro only for user space. Then
+use prefix \O`\_newpublic` before your declaration, see declaration of
+ \^`\sgn` in this package as an exampe. The reason is: if
+a user has defined such a macro already then the warning is printed.
+The user can read this warning and declare the macro after
+`\load[<pkg>]` in this case.
+
+   \_doc
+   \load [doc,math]
+   \def\opurl{http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
+   \def\tnurl{http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf}
+   \def\trurl{http://petr.olsak.net/optex/optex-tricks.html}
+   \def\tricklink[#1]#2{\ea\ulink \ea[\trurl\##1]{\OpTeX/ trick #2}}
+   \def\exlink#1#2{\ea\ulink\expanded{[#2\csstring#1]{\hbox{\tt\string#1\,}}}}
+   \def\o`#1`{\exlink#1{\opurl\#cs:^}}
+   \def\O`#1`{\exlink#1{\opurl\#cs:}}
+   \def\n`#1`{\exlink#1{\tnurl\#cs:}}
+   \outlines 0
+
+   \tit Macros for doing math more comfortable
+   \hfill Version: \_math_version \par
+   \centerline{\it Petr Olšák\/\fnotemark1, 2022}
+   \fnotetext{\url{https://petr.olsak.net}}
+
+   \notoc\nonum\sec Table of contents
+   \maketoc
+   \printdoctail math.opm % prints the documantation written after \_endcode
+   \sec Implementation
+   \printdoc     math.opm % prints \_doc...\_cod parts + code before \_endcode
+   \nonum\sec Index
+   \begmulti 3
+      \tt \makeindex      % prints index in three columns
+   \endmulti
+   \bye
+   \_cod
+
