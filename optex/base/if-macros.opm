@@ -329,9 +329,34 @@
 
 \_public \casesby ;
 
+   \_doc -----------------------------
+   \`\casesbyif` `<list of pairs>` is a generalization of the macro \^`\casesby`.
+   Each pair from the `<list of pairs>` is in the format
+   `{<if statement>}{<what to do>}`, only the last pair must have the different
+   format: `\_fin {<what to do else>}`. The `<if statement>` can be arbitrary
+   primitive `\if*` condition (optionally prefixed by `\unless`) and it must be closed
+   in its expansion. It means that `{\ifnum\mycount>0}` is bad, `{\ifnum\mycount>0 }`
+   is correct. Example:
+   \begtt
+   \message {The \tmpnum has \casesbyif
+                     {\ifnum\tmpnum>0 } {positive}
+                     {\ifnum\tmpnum=0 } {equal to zero}
+                     \_fin              {negative}       value}
+   \endtt
+   The \^`\casesbyif` macro works with priciple: first true condifion wins,
+   next conditions are not evaluated.
+   \_cod -----------------------------
+
+\_def\_casesbyif #1{\_casesbyifA #1\_fin}
+\_def\_casesbyifA #1#2\_fin #3{%
+   \_ifx #1\_fin \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
+   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_casesbyC{#3}}{\_casesbyif}}%
+}
+\_public \casesbyif ;
+
 \_endcode
 
-2022-11-26 \casesby introduced
+2022-11-26 \casesby, \casesbyif introduced.
 2022-05-04 \isinlist created expandable.
 2022-03-30 \afterfi defined as \long.
 2021-08-02 more robust \fornum: \fi moved by \afterfi
