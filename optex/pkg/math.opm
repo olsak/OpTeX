@@ -626,7 +626,6 @@ The user can read this warning and declare the macro after
    \printdoctail math.opm % prints the documantation written after \_endcode
    \sec Implementation
    \printdoc     math.opm % prints \_doc...\_cod parts + code before \_endcode
-   \vskip6\baselineskip \penalty0 \vskip-6\baselineskip
    \nonum\sec Index
    \begmulti 3
       \tt \makeindex      % prints index in three columns

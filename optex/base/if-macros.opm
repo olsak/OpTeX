@@ -343,7 +343,7 @@
                      {\ifnum\tmpnum=0 } {equal to zero}
                      \_fin              {negative}       value}
    \endtt
-   The \^`\casesbyif` macro works with priciple: first true condifion wins,
+   The \^`\casesbyif` macro works with principle: first true condition wins,
    next conditions are not evaluated.
    \_cod -----------------------------
 

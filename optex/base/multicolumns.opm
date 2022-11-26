@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begmulti {Balanced columns <2022-05-05>} % preloaded in format
+\_codedecl \begmulti {Balanced columns <2022-11-26>} % preloaded in format
 
    \_doc -----------------------------
    \`\_betweencolumns` or \`\_leftofcolumns` or \`\_rightofcolumns` include
@@ -37,7 +37,9 @@
 
 \_newcount\_mullines
 
-\_def\_begmulti #1 {\_par\_bgroup\_wipeepar \_multiskip \_def\_Ncols{#1}
+\_def\_begmulti #1 {\_par\_bgroup\_wipeepar
+   \_ifnum\_lastpenalty>10000 \_vskip4\_baselineskip\_penalty9999 \_vskip-4\_baselineskip \_fi
+   \_multiskip \_def\_Ncols{#1}
    \_setbox6=\_vbox\_bgroup\_bgroup \_let\_setxhsize=\_relax \_penalty-99
    %% \hsize := column width = (\hsize+\colsep) / n - \colsep
    \_setbox0=\_hbox{\_leftofcolumns\_rightofcolumns}%
@@ -142,6 +144,7 @@
 
 \_endcode % -------------------------------------
 
+2022-11-26 \at least three lines in the beginning of \begmulti at the page
 2022-05-05 `\_betweencolumns` etc. introduced.
 2021-05-20 Colors inside \begmulti...\endmuti, bug fixed
 2020-03-26 Introduced
