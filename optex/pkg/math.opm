@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.1, 2022-11-25}
+\_def\_math_version {0.02, 2022-11-26}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -95,6 +95,24 @@
 \_def\.readclassA#1"#2"#3\_fin{#2}
 
 \_nspublic \smartdots ;
+
+   \_doc
+   \`\smartvert` sets `|` as math-active charcter and declares it
+   equal to `\.autovert` macro. This macro checks two variants: there
+   is single `|` or there is double `||`. It runs \`\.autovertA` or
+   \`\.autoVertA`. These macros find the closing `|` or `||` and use
+   `|` or `‖` in context of `\left`, `\right`. The \`\singlevert`
+   is declared here if a user want to use a single vertical bar.
+   \_cod
+
+\_newpublic \_mathchardef \_singlevert=\_mathcode`|
+\_def\.autovert {\_isnextchar|{\.autoVertA}{\.autovertA}}
+\_def\.autovertA #1|{\_mathopen{}\_mathclose{\_left|#1\_right|}}
+\_def\.autoVertA|#1||{\_mathopen{}\_mathclose{\_left‖#1\_right‖}}
+\_bgroup \_lccode`\~=`\| \_lowercase{\_egroup
+   \_def\.smartvert{\_let~=\.autovert \_mathcode`|="8000 }}
+
+\_nspublic \smartvert ;
 
    \_doc
    The control sequences \`\N`, \`\Z`, \`\Q`, \`\R`, \`\C`
@@ -272,7 +290,8 @@ The following macros are defined in this package:
 \begitems
 * \~`\bigp`, \~`\Bigp`, \~`\biggp`, \~`\Biggp`, \~`\autop`, \~`\normalp`
   gives better controlling of sizes of parentheses.
-* \~`\smartdots` declared `\dots` macro more intelligent.
+* \~`\smartdots` declares `\dots` macro more intelligent.
+  \~`\smartvert` declares \"`|`" for better spacing.
 * There are many common math macros for sets or for operators, for example
   \~`\R` or \~`\sgn`.
 * \~`\toright`, \~`\toleft` puts the \o`\eqmark` to desired position,
@@ -346,6 +365,27 @@ You can try this after the \^`\smartdots` declaration:
 
 `$a_1 + a_2 + \dots + a_n$ ` prints $a_1 + a_2 + \dots + a_n$,
 
+
+\sec Using vertical bars with better spacing
+
+The character \"`|`" is declared with Ord class by default in Plain \TeX/,
+but we are using it typically in the context `$|x|$`. It means there should
+be Open and Close classes. This example gives correct result but try to use
+`$|-1|$` which gives bad spacing: $|-1|$.
+And `$||x||$` gives bad result too.
+
+When you declare \^`\smartvert`, these problems are solved. Moreover, the
+\"`|`" or \"`||`" are expected to be always in pairs and they are scaled by
+`\left` and `\right` primitives automatically. If you don't want to use it
+in a pair, use \^`\singlevert` or `\big|`, or `\Big|` etc. Compare
+the result of `$|\sum a_n|+||x||$`:
+$$
+  \eqalign{
+     |\sum a_n|+||x|| &\quad \hbox{if \scantextokens{`\smartvert`} isn't initialized,}\cr
+     \smartvert
+     |\sum a_n|+||x|| &\quad \hbox{if \scantextokens{`\smartvert`} is initialized.}
+  }
+$$
 
 \sec Basic and typical macros for sets, functions etc.
 
@@ -500,6 +540,9 @@ by previous steps are replaced.
 This section has nothing common with the subject of this package but this package
 can serve as inspiration for another package writers. It should be a template
 for another `<pkg>.opm` files. We emphasize several principles here.
+The basic information can be found in
+\ulink[https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf\#ref:prefixed]
+{section 2.2} of the \OpTeX/ manual.
 Try to run\fnote{Run it three times because Table of contents and Index are created.}
 \begtt
 optex -jobname math-doc '\docgen math'
@@ -583,6 +626,7 @@ The user can read this warning and declare the macro after
    \printdoctail math.opm % prints the documantation written after \_endcode
    \sec Implementation
    \printdoc     math.opm % prints \_doc...\_cod parts + code before \_endcode
+   \vskip6\baselineskip \penalty0 \vskip-6\baselineskip
    \nonum\sec Index
    \begmulti 3
       \tt \makeindex      % prints index in three columns
@@ -590,3 +634,7 @@ The user can read this warning and declare the macro after
    \bye
    \_cod
 
+\endinput
+
+0.02, 2022-11-26: \smartvert introduced
+0.01, 2022-11-25: released
