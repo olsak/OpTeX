@@ -307,7 +307,7 @@
    the `switch` command known from C language. It is expandable macro. The
    <list of cases> is a list of arbitrary number of pairs in the format
    `<token>`\,`{<what to do>}` which must be finalized by the pair
-   `\_fin {<what to do else>}`.
+   `\_finc {<what to do else>}`.
    The usage of \^`\casesby` looks like:
    \begtt \catcode`<=13
    \casesby <token>
@@ -315,17 +315,17 @@
    <token-2> {<what to do if token=token-2>}
    ...
    <token-n> {<what to do if token=token-n>}
-   \_fin     {<what to do in other cases>}
+   \_finc   {<what to do in other cases>}
    \endtt
    The meaning of tokens are compared by `\ifx` primitive.
    The parts `<what to do>` can be finalized by a macro which can read more
    data from input stream as its parameters.
    \_cod ----------------------------
 
-\_long\_def \_casesby #1#2#3{\_ifx #2\_fin \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
-   {#3}{\_ifx#1#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi {\_casesbyC{#3}}{\_casesby#1}}%
+\_long\_def \_casesby #1#2#3{\_ifx #2\_finc \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
+   {#3}{\_ifx#1#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi {\_finc{#3}}{\_casesby#1}}%
 }
-\_long\_def \_casesbyC#1#2\_fin#3{#1}
+\_long\_def \_finc #1#2\_finc#3{#1}
 
 \_public \casesby ;
 
@@ -333,7 +333,7 @@
    \`\casesbyif` `<list of pairs>` is a generalization of the macro \^`\casesby`.
    Each pair from the `<list of pairs>` is in the format
    `{<if statement>}{<what to do>}`, only the last pair must have the different
-   format: `\_fin {<what to do else>}`. The `<if statement>` can be arbitrary
+   format: `\_finc {<what to do else>}`. The `<if statement>` can be arbitrary
    primitive `\if*` condition (optionally prefixed by `\unless`) and it must be closed
    in its expansion. It means that `{\ifnum\mycount>0}` is bad, `{\ifnum\mycount>0 }`
    is correct. Example:
@@ -341,16 +341,16 @@
    \message {The \tmpnum has \casesbyif
                      {\ifnum\tmpnum>0 } {positive}
                      {\ifnum\tmpnum=0 } {equal to zero}
-                     \_fin              {negative}       value}
+                     \_finc             {negative}       value}
    \endtt
    The \^`\casesbyif` macro works with principle: first true condition wins,
    next conditions are not evaluated.
    \_cod -----------------------------
 
-\_def\_casesbyif #1{\_casesbyifA #1\_fin}
-\_def\_casesbyifA #1#2\_fin #3{%
-   \_ifx #1\_fin \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
-   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_casesbyC{#3}}{\_casesbyif}}%
+\_def\_casesbyif #1{\_casesbyifA #1\_finc}
+\_long\_def \_casesbyifA #1#2\_finc #3{%
+   \_ifx #1\_finc \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
+   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#3}}{\_casesbyif}}%
 }
 \_public \casesbyif ;
 

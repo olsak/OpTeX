@@ -38,7 +38,7 @@
 \_newcount\_mullines
 
 \_def\_begmulti #1 {\_par\_bgroup\_wipeepar
-   \_ifnum\_lastpenalty>10000 \_vskip4\_baselineskip\_penalty9999 \_vskip-4\_baselineskip \_fi
+   \_ifnum\_lastpenalty>10000 \_vskip4.5\_baselineskip\_penalty9999 \_vskip-4.5\_baselineskip \_fi
    \_multiskip \_def\_Ncols{#1}
    \_setbox6=\_vbox\_bgroup\_bgroup \_let\_setxhsize=\_relax \_penalty-99
    %% \hsize := column width = (\hsize+\colsep) / n - \colsep
