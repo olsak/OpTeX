@@ -3275,31 +3275,31 @@ depending on used language) with three-digits groups. For example:
 grouping will be calculated by the macro.
 
 <pre>
-\def\num#1 {\isinlist{#1}{.}\iftrue \ea\numG \else \ea\numH\fi#1\relax}
-\def\numG#1.#2\relax{\numH#1\relax\decimaldot\numC#2\relax\relax\relax\relax\relax}
-\def\numH#1\relax{\tmpnum=0 \numA #1\relax \numB#1\relax\relax\relax\relax\relax}
-\def\numA#1{\ifx\relax#1\empty \else \incr\tmpnum \ea\numA \fi}
-\def\numB{\edef\tmp{\the\tmpnum}\divide\tmpnum by3 \multiply\tmpnum by3
-   \ifcase \numexpr\tmp-\tmpnum\relax \ea\numC \or \ea\numD \or \ea\numE\fi}
-\def\numC#1#2#3{#1#2#3\ifx\relax#3\empty\else\ea\numF\fi}
-\def\numD#1{#1\numF}
-\def\numE#1#2{#1#2\numF}
-\def\numF#1#2#3{\ifx\relax#1\empty \else \numsep #1#2#3\ea\numF\fi}
+\def\num #1 {\isinlist{#1}{.}\iftrue \ea\numG \else \ea\numH \fi #1\end}
+\def\numG #1.#2\end {\numH#1\end \decimaldot \numB #2\empty\empty\empty}
+\def\numH#1\end{\numA #1\empty\empty\empty #1\empty}
+\def\numA #1#2#3{\casesbyif
+   {\ifx #1\empty} {\numB}
+   {\ifx #2\empty} {\numB{}}
+   {\ifx #3\empty} {\ea\numB\ignoreit}
+   \_finc          {\numA}
+}
+\def\numB #1#2#3#4{#1#2#3\ifx#4\empty\else \numsep \ea\numB\ea#4\fi}
 \def\numsep{\,}
 \def\decimaldot{.}
 </pre>
 
 <p>The macro \num reads the number separated by space. If it incudes period
-then the front part is processed by \numH and the decimal part by \numC.
+then the front part is processed by \numH and the decimal part by \numB.
 The front part is processed in two steps. First, the macro counts the number of
-digits by \numA and then it inserts spaces by \numB,...\numF.
+digits by \numA and then it inserts spaces by \numB.
 
 <p>We can use this macro in tables with Nn declarator
 (see <a href="#dnaligned">OpTeX trick 0039</a>), but we must add the &amp;
 symbol at the end of the \numH macro:
 
 <pre>
-\def\numH#1\relax{\tmpnum=0 \numA #1\relax \numB#1\relax\relax\relax\relax\relax&amp;}
+\def\numH#1\end{\numA #1\empty\empty\empty#1\empty &amp;}
 
 \def\_tabdeclareN{\the\tabiteml \hfil \num ##\_unsskip}
 \def\_tabdeclaren{##\_unsskip\hfil\the\tabitemr}
@@ -3310,7 +3310,7 @@ symbol at the end of the \numH macro:
 }
 </pre>
 
-<p CLASS=datum>(0040) -- P. O. 2021-02-06<p>
+<p CLASS=datum>(0040) -- P. O. 2021-02-06, used \casesbyif: 2022-11-27<p>
 <hr>
 
 <h2><a name="scantok"></a>Expandable token-per-token scanner</h2>
