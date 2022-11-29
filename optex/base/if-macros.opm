@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2022-11-26>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2022-11-29>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -303,59 +303,60 @@
 \_public \isnextchar ;
 
    \_doc ----------------------------
-   \`\casesby` `<token> <list of cases>` implements something similar to
+   \`\casesof` `<token> <list of cases>` implements something similar to
    the `switch` command known from C language. It is expandable macro. The
    <list of cases> is a list of arbitrary number of pairs in the format
    `<token>`\,`{<what to do>}` which must be finalized by the pair
-   `\_finc {<what to do else>}`.
-   The usage of \^`\casesby` looks like:
+   `\_finc {<what to do else>}`. The optional spaces after <token>s
+   and between listed cases are ignored. The usage of \^`\casesof` looks like:
    \begtt \catcode`<=13
-   \casesby <token>
-   <token-1> {<what to do if token=token-1>}
-   <token-2> {<what to do if token=token-2>}
-   ...
-   <token-n> {<what to do if token=token-n>}
-   \_finc   {<what to do in other cases>}
+   \casesof <token>
+     <token-1> {<what to do if token=token-1>}
+     <token-2> {<what to do if token=token-2>}
+     ...
+     <token-n> {<what to do if token=token-n>}
+     \_finc   {<what to do in other cases>}
    \endtt
    The meaning of tokens are compared by `\ifx` primitive.
    The parts `<what to do>` can be finalized by a macro which can read more
-   data from input stream as its parameters.
+   data from the input stream as its parameters.
    \_cod ----------------------------
 
-\_long\_def \_casesby #1#2#3{\_ifx #2\_finc \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
-   {#3}{\_ifx#1#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi {\_finc{#3}}{\_casesby#1}}%
+\_long\_def \_casesof #1#2#3{\_ifx #2\_finc \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
+   {#3}{\_ifx#1#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi {\_finc{#3}}{\_casesof#1}}%
 }
 \_long\_def \_finc #1#2\_finc#3{#1}
 
-\_public \casesby ;
+\_public \casesof ;
 
    \_doc -----------------------------
-   \`\casesbyif` `<list of pairs>` is a generalization of the macro \^`\casesby`.
+   \`\xcasesof` `<list of pairs>` extends the features of the macro \^`\casesof`.
    Each pair from the `<list of pairs>` is in the format
    `{<if statement>}{<what to do>}`, only the last pair must have the different
    format: `\_finc {<what to do else>}`. The `<if statement>` can be arbitrary
    primitive `\if*` condition (optionally prefixed by `\unless`) and it must be closed
    in its expansion. It means that `{\ifnum\mycount>0}` is bad, `{\ifnum\mycount>0 }`
-   is correct. Example:
+   is correct. Optional spaces between parameters are ignored. Example:
    \begtt
-   \message {The \tmpnum has \casesbyif
+   \message {The \tmpnum has \xcasesof
                      {\ifnum\tmpnum>0 } {positive}
                      {\ifnum\tmpnum=0 } {equal to zero}
                      \_finc             {negative}       value}
    \endtt
-   The \^`\casesbyif` macro works with principle: first true condition wins,
+   The \^`\xcasesof` macro works with principle: first true condition wins,
    next conditions are not evaluated.
    \_cod -----------------------------
 
-\_def\_casesbyif #1{\_casesbyifA #1\_finc}
-\_long\_def \_casesbyifA #1#2\_finc #3{%
+\_def\_xcasesof #1{\_xcasesofA #1\_finc}
+\_long\_def \_xcasesofA #1#2\_finc #3{%
    \_ifx #1\_finc \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
-   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#3}}{\_casesbyif}}%
+   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#3}}{\_xcasesof}}%
 }
-\_public \casesbyif ;
+\_public \xcasesof ;
 
 \_endcode
 
+2022-11-29 renamed to \casesof, \xcasesof.
 2022-11-26 \casesby, \casesbyif introduced.
 2022-05-04 \isinlist created expandable.
 2022-03-30 \afterfi defined as \long.

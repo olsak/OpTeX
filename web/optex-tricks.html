@@ -3279,7 +3279,7 @@ grouping will be calculated by the macro.
 \def\num #1 {\isinlist{#1}{.}\iftrue \ea\numG \else \ea\numH \fi #1\end}
 \def\numG #1.#2\end {\numH#1\end \decimaldot \numB #2\empty\empty\empty}
 \def\numH#1\end{\numA #1\empty\empty\empty #1\empty}
-\def\numA #1#2#3{\casesbyif
+\def\numA #1#2#3{\xcasesof
    {\ifx #1\empty} {\numB}
    {\ifx #2\empty} {\numB{}}
    {\ifx #3\empty} {\ea\numB\ignoreit}
@@ -3311,7 +3311,7 @@ symbol at the end of the \numH macro:
 }
 </pre>
 
-<p CLASS=datum>(0040) -- P. O. 2021-02-06, used \casesbyif: 2022-11-27<p>
+<p CLASS=datum>(0040) -- P. O. 2021-02-06, used \xcasesof: 2022-11-27<p>
 <hr>
 
 <h2><a name="scantok"></a>Expandable token-per-token scanner</h2>
@@ -3388,7 +3388,7 @@ The \paramspaced macro is implemented here:
 <pre>
 \def\paramspaced#1{\ea#1\expanded{{\iffalse}}\fi\paramspacedA}
 \def\paramspacedA{\immediateassignment\futurelet\next\paramspacedB}
-\def\paramspacedB{\casesby\next
+\def\paramspacedB{\casesof\next
    { }     {\paramspacedC}%
    \egroup {\paramspacedC}%
    \bgroup {\paramspacedD}
