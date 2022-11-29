@@ -1,0 +1,26 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Iwona] \Iwona {Sans serif typeface derived from Kurier}
+     {\caps \cond \light \medium \bolder} {\rm \bf \it \bi} {}
+     {[Iwona-Regular]}
+     {\_def\_fontnamegen{[Iwona\_condV\_weightV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \caps ...... caps & small caps^^J
+ \cond ...... condensed variants^^J
+ \light ..... light (only \rm \it)^^J
+ \medium .... medium (only \rm \it)^^J
+ \bolder .... heavy (only \rm \it)
+}}
+
+\_moddef \resetmod {\_fsetV caps={},cond={},weight={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+\_moddef \cond     {\_fsetV cond=Cond }
+\_moddef \light    {\_fsetV weight=Light \_fvars Regular . Italic . }
+\_moddef \medium   {\_fsetV weight=Medium \_fvars Regular . Italic . }
+\_moddef \bolder   {\_fsetV weight=Heavy \_fvars Regular . Italic . }
+\_moddef \nocond   {\_fsetV cond={} }
+
+\_initfontfamily % new font family must be initialized

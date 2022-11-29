@@ -169,6 +169,16 @@
      \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
    }
 
+\_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
+\_faminfo [Kurier] {Two element sans serif typeface} {f-kurier}
+   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
+     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
+   }
+\_faminfo [Iwona] {Sans serif typeface derived from Kurier} {f-iwona}
+   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
+     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
+   }
+
 \_famfrom {tyPoland Lukasz Dziedzic}
 \_faminfo [Lato] {Geometric grotesk, many weights} {f-lato}
    { \hair: {\rm\it} \thin: {\rm\it} \light: {\rm\it} -: {\rm\it}
