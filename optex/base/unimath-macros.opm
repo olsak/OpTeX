@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2022-11-18>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2022-12-01>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -119,8 +119,8 @@
    The `<font features>` are added to the default
    \`\_mfontfeatures` and to the size-dependent features `ssty=1`
    if script size is asked or `ssty=2` if scriptscriptsize is asked.\nl
-   \`\_mparams``<family number>` can insert additional font features
-   dependnig on the <family number>.\nl
+   \`\_mparams` can insert additional font features
+   dependig on the current `\_mfam`.\nl
    The \^`\_mfactor` `<family><space>` sets scaling factor,
    see section~\ref[math-preload] for more information.\nl
    The \`\_textmff`, \`\_scriptmff` and \`\_sscriptmff` are font
@@ -131,16 +131,16 @@
 \_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
 \_def\_mfontfeatures{mode=base;script=math;}
 
-\_def\_loadumathfamily #1 #2#3 {%
-  \_mfactor#1
-  \_font\_mF=\_umathname{#2}{\_textmff   \_mparams{#1}#3} at\_sizemtext \_textfont        #1=\_mF
-  \_font\_mF=\_umathname{#2}{\_scriptmff \_mparams{#1}#3} at\_sizemtext \_scriptfont      #1=\_mF
-  \_font\_mF=\_umathname{#2}{\_sscriptmff\_mparams{#1}#3} at\_sizemtext \_scriptscriptfont#1=\_mF
+\_def\_loadumathfamily{\_afterassignment\_loadumathfamilyA \_chardef\_mfam}
+\_def\_loadumathfamilyA #1#2 {\_mfactor
+  \_font\_mF \_umathname{#1}{\_textmff   \_mparams #2} at\_sizemtext \_textfont        \_mfam=\_mF
+  \_font\_mF \_umathname{#1}{\_scriptmff \_mparams #2} at\_sizemtext \_scriptfont      \_mfam=\_mF
+  \_font\_mF \_umathname{#1}{\_sscriptmff\_mparams #2} at\_sizemtext \_scriptscriptfont\_mfam=\_mF
 }
 \_def\_textmff   {ssty=0;mathsize=1;}
 \_def\_scriptmff {ssty=1;mathsize=2;}
 \_def\_sscriptmff{ssty=2;mathsize=3;}
-\_def\_mparams#1{}
+\_def\_mparams{}
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs not to
@@ -218,11 +218,11 @@
    \_else
       \_newfam#1\_relax
       \_sdef{_mfactor:\_the\_numexpr#1\_relax}{#6}%
-      \_global\_aheadto\_normalmath{\_loadumathfamily #1 {#2}{#3} }%
+      \_global\_aheadto\_normalmath{\_loadumathfamily #1{#2}{#3} }%
       \_ifx\_relax#4\_relax
-         \_global\_aheadto\_boldmath{\_loadumathfamily #1 {#2}{embolden=1.7;} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#2}{embolden=1.7;} }%
       \_else
-         \_global\_aheadto\_boldmath{\_loadumathfamily #1 {#4}{#5} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#4}{#5} }%
       \_fi
       \_normalmath
       \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
@@ -385,6 +385,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2022-12-01 reading number by \_loadumathfamily more robust
 2022-11-18 \mathchars improved, \Udelcodes are set too, \addUmathfont uses \ahead
 2022-11-17 \Umathchardef replaced by \chardef
 2022-11-16 \resetmathchars removed, \mathchars, \mathcodes introduced
