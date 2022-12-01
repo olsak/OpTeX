@@ -133,6 +133,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Math
 <ul>
     <li><a href="#bbchar">\bbchar from AMS fonts when Unicode math font is used</a>
+    <li><a href="#orical">Original \cal from Computer Modern fonts</a>
     <li><a href="#matrixx">More comfortable writing of matrices</a>
     <li><a href="#biglr">Bigger outer parentheses automatically set</a>
     <li><a href="#textinmath">Text fonts in math for variables, digits</a>
@@ -140,7 +141,6 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#subeqmark">Equation marks for sub-equations</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
     <li><a href="#fillemptyslots">Empty math slots from another math font</a>
-    <li><a href="#orical">Original \cal from Computer Modern fonts</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
     <li><a href="#bigp">Controlled sizes of parentheses</a>
@@ -1568,22 +1568,50 @@ influneced by the traditional AMS fonts and it is different than the opinion of
 font designer of the used Unicode math font (Latin Modern math font is
 typical example of this case). Then you can return to the AMS \bbchars
 using the following code <i>after</i> the first \fontfam[] command
-loads the Unicode math font.
+loads the Unicode math font. Try it by $\oribb B$.
 
 <pre>
-\addto\_normalmath{\_loadmathfamily 5 msbm }
-\addto\_boldmath{\_loadmathfamily 5 msbm }
-\def\bbchar{\fam5 \_rmvariables}
+\fontfam[lm]
+\newfam\bbfam
+\addto\_normalmath {\_loadmathfamily \bbfam msbm }
+\addto\_boldmath   {\_loadmathfamily \bbfam msbm }
+\_normalmath
+\def\oribb {\fam\bbfam \_rmvariables}
 </pre>
 
-<p>We need to add \_loadmathfamily 5 to \_normalmath and \_boldmath
-in order to load 8 bit version of math fonts as family 5 (5 is the 
-first unused math family when Unicode math font is loaded). 
-Then we re-define \bbchar macro as
-family5 selector and mathcodes of letters must be "normal" (not Unicoded) 
-when this 8bit font is used (this is done by the \_rmvariables macro).
+<p>We need to add \_loadmathfamily\bbfam to \_normalmath
+in order to load 8 bit version of math fonts at the family \bbfam.
+Unfortunately, there is no bold variants of bbchars, thus we use the same
+for \_boldmath. Then we define \oribb macro as
+family selector and mathcodes of letters must be "normal" (not Unicoded)
+when this 8bit font is used. This is done by the \_rmvariables macro.
 
 <p CLASS=datum>(0001) -- P. O. 2020-04-09<p>
+<hr>
+
+<h2><a name="orical"></a>Original \cal from Computer Modern fonts</h2>
+
+<p>When \fontfam[lm] is used then LatinModern-Math Unicode font is used for
+math. The different calligraphic shapes are here than Knuth designed for his
+Computer Modern fonts. If you want to use his original calligraphic glyphs
+after \fontfam[lm], then you can use \orical instead \cal and the macro
+\orical is defined here:
+
+<pre>
+\fontfam[lm]
+\newfam\calfam
+\addto\_normalmath {\_loadmathfamily \calfam cmsy }
+\addto\_boldmath   {\_loadmathfamily \calfam cmsy }
+\_normalmath
+\def\orical {\fam\calfam \_rmvariables}
+
+% For example:
+\def\P{{\orical P}} % powerset
+</pre>
+
+<p>The concept is the same as in the previous OpTeX trick.
+
+<p CLASS=datum>(0077) -- P. O. 2022-04-19<p>
 <hr>
 
 <h2><a name="matrixx"></a>More comfortable writing of matrices</h2>
@@ -1859,34 +1887,6 @@ implement this issue. Use \load[math].
 
 
 <p CLASS=datum>(0082) -- P. O. 2022-05-15<p>
-<hr>
-
-<h2><a name="orical"></a>Original \cal from Computer Modern fonts</h2>
-
-<p>When \fontfam[lm] is used then LatinModern-Math Unicode font is used for
-math. The different calligraphic shapes are here than Knuth designed for his
-Computer Modern fonts. If you want to use his original calligraphic glyphs
-after \fontfam[lm], then you can use \orical instead \cal and the macro
-\orical is defined here:
-
-<pre>
-\addto\_normalmath{%
-  \_loadmathfamily 5 cmsy % CM Standard symbols
-}
-\_normalmath
-\def\orical{\fornum`A..`Z\do{\Umathcode##1 "0 "5 ##1 }}
-
-% For example:
-\def\P{{\orical P}} % powerset
-</pre>
-
-<p>The new math family (5 in our case) is declared in the internal
-\_normalmath macro. This must be done after \fontfam[lm].
-Then the \orical macro sets (locally) approriate math codes for all
-characters A..Z: the class is zero (Ord character], the family is 5 and the
-code slot is the ASCII code of given letter.
-
-<p CLASS=datum>(0077) -- P. O. 2022-04-19<p>
 <hr>
 
 <h2><a name="dots"></a>Intelligent \dots like in AMSTeX</h2>
