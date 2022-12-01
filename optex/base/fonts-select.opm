@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2022-11-08>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2022-12-01>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -349,8 +349,9 @@
    \`\_famtext` does nothing or prints the text on the terminal.
    \nl
    \`\_faminfo` `[<Family Name>] {<comments>} {<file-name>} {<mod-plus-vars>}`
-   does\nl `\_def \_famf:<familyname> {<file-name>}` or prints information on
-   the terminal.
+   does\nl `\_def \_famf:<familyname> {<file-name>}` (only if <file-name> differs
+   from `f-<familyname>`) or prints information on the terminal. The
+   <mod-plus-vars> data are used when printing the font catalog.
    \nl
    \`\_famalias` `[<Family Alias>]` does `\def \_famf:<familyalias> {<file-name>}`
    where `<file-name>` is stored from the previous `\_faminfo` command. Or
@@ -364,8 +365,8 @@
 \_def\_famtext #1{}
 \_def\_faminfo [#1]#2#3#4{%
    \_lowercase{\_edef\_tmp{\_ea\_removespaces #1 {} }}%
-   \_sdef{_famf:\_tmp}{#3}%
-   \_def\_famfile{#3}%
+   \_edef\_tmpa{f-\_tmp}\_def\_famfile{#3}%
+   \_unless\_ifx\_tmpa\_famfile \_sdef{_famf:\_tmp}{#3}\_fi
 }
 \_def\_famalias [#1]{%
    \_lowercase{\_edef\_tmpa{\_ea\_removespaces #1 {} }}%
@@ -898,6 +899,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2022-12-01  \faminfo saves f-<filename> to the format only when needed
 2022-11-08  \protected: \fontdef, \famvardef, \fontfam
 2022-02-22  Font Selection System reimplemented, \fontsel introduced
 2021-09-24  \_unichars used in \initunifonts
