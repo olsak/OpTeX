@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2022-11-29>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2022-12-02>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -347,7 +347,7 @@
    next conditions are not evaluated.
    \_cod -----------------------------
 
-\_def\_xcasesof #1{\_xcasesofA #1\_finc}
+\_long\_def \_xcasesof #1{\_xcasesofA #1\_finc}
 \_long\_def \_xcasesofA #1#2\_finc #3{%
    \_ifx #1\_finc \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
    {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#3}}{\_xcasesof}}%
@@ -356,6 +356,7 @@
 
 \_endcode
 
+2022-12-02 \xcasesof: its first parameter is \long too.
 2022-11-29 renamed to \casesof, \xcasesof.
 2022-11-26 \casesby, \casesbyif introduced.
 2022-05-04 \isinlist created expandable.
