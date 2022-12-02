@@ -178,6 +178,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Macro tricks
 <ul>
     <li><a href="#condi">Structured conditionals</a>
+    <li><a href="#fiinif">\fi in \if problem</a>
     <li><a href="#anodes">Drawing to given nodes</a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
@@ -3049,6 +3050,52 @@ have the whole construction \if-skipable.
 
 <p CLASS=datum>(0019) -- P. O. 2020-05-27<p>
 <hr>
+
+<h2><a name="fiinif"></a>\fi in \if problem</h2>
+
+<p>TeX uses \if primitives in very specific way. If the condition is
+evaluated as false then TeX skips input stream without expansion of it
+until a matched \fi is reached. TeX observes only \if* primitives, \else and
+\fi (or their equivalents declared by \let) during this skipping process. This
+works relatively good but there may be a problem if we have a parameter
+(say #1) in the skippable part and this parameter includes unpaired \if or
+\fi or something similar. For example:
+<pre>
+\def\test #1{\ifx #1a\message{the \string#1 has meaning of letter a}\fi}
+</pre>
+<p>Suppose that we want to process \test\fi. Then it is expanded to
+<pre>
+\ifx \fi a\message{the \string\fi has meaning of letter a}\fi
+</pre>
+<p>The condition is evaluated as false, so the following text
+<tt>\message{the \string</tt> is skipped and the next \fi matches with starting
+\ifx. The next text <tt>has meaning of letter a}\fi</tt> is processed and gives TeX
+error. Of course, the macro \test works well until its parameter doesn't
+contain an unpaired \if* or \else or \fi.
+
+<p>If we want to have more robust macro \test, we can create a \splitif
+macro which has syntax:
+<pre>
+\splitif{\if condition}{true text}{false text}
+</pre>
+<p>where \if condition is arbitrary \if primitive including its
+conditional parameters, for example
+\ifx#1#2 or \ifnum 0&lt;\mycount etc. The true text is processed if the
+condition gives true, false text is processed if the condition
+gives false. The core idea is that we moved the skipping process
+from \if...\fi skipping to the macro prameter skipping. The \splitif macro
+can be implemented like this:
+<pre>
+\long\def \splitif #1{#1\ea\ignoresecond\else\ea\usesecond\fi}
+</pre>
+<p>Now, our \test macro can look like:
+<pre>
+\def\test #1{\splitif{\ifx #1a}{\message{the \string#1 is the letter a}}{}}
+</pre>
+
+<p CLASS=datum>(0098) -- P. O. 2020-05-27<p>
+<hr>
+
 
 <h2><a name="anodes"></a>Drawing to given nodes</h2>
 
