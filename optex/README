@@ -22,6 +22,17 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.09> Dec 2022:
+       New math.opm package: doing math more comfortable.
+       The math.opm package can be a package template for macro writers.
+       \docgen for printing doucumantation of packages introduced.
+       unimath control sequences are almost all declared by \chardef, no \mathchardef.
+       \casesof, \currfile, \nospaceafter (tools for macro programmers) introduced.
+       \setpos, \posx, \posy moved from OpTeX trick to the format.
+       \sfont, \ufont introduced.
+       More robust \caption parameter.
+       Lato, Kurier, Iwona font families registered.
+       Minor more improvements and bug fixing.
 <1.08> Aug 2022:
        Sorting rules for German, French, Polish, Hungarian, ... added.
        Font files for Montserrat, STIX, XITS, STIXtwo, Overlock added.
