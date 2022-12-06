@@ -1595,10 +1595,8 @@ The following example works:
 \fontfam[lm]
 %% luatexbase.new_luafunction is needed by LuaTeX's pstricks:
 \directlua{
-   local luafunction_cnt = 1
    function luatexbase.new_luafunction(name)
-      luafunction_cnt = luafunction_cnt + 1
-      return luafunction_cnt
+      return \string#lua.get_functions_table() + 1
    end }
 %% we want to suppress loading pgffor from TikZ:
 \let\pgfkeysloaded=\relax
