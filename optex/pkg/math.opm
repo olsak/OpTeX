@@ -45,6 +45,7 @@
    \_doc
    We need macro \`\.ensurebalanced` for balancing nested parentheses from
    \tricklink[balancing]{0043}. We use `trick` namespace for these macros.
+   We try to refer \^`\.ensurebalanced`.
    \_cod
 
 \_resetnamespace{trick}
@@ -168,7 +169,7 @@
    \_doc
    The \`\subeqmark` works because the internal \O`\_thednum`
    is re-defined. The \`\.dnumpost` is added here. If you want to use another format
-   for \O`\_thednum` then you have to add the \`\.dnumpost` to it too.
+   for \O`\_thednum` then you have to add the \^`\.dnumpost` to it too.
    \_cod
 
 \_def \_thednum    {(\_the\_dnum \.dnumpost)}

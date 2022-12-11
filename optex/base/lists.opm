@@ -61,7 +61,7 @@
 \_public \begitems \enditems \itemnum ;
 
    \_doc ----------------------------
-   \`\novspaces` sets \`\listskipamount` to 0pt.
+   \`\novspaces` sets \^`\listskipamount` to 0pt.
    \_cod ----------------------------
 
 \_def\_novspaces {\_removelastskip \_listskipamount=0pt \_relax}
@@ -71,9 +71,9 @@
    Various item marks are saved in `\_item:<letter>` macros.
    You can re-define then or define more such macros.
    The \`\style` `<letter>` does \`\_printitem``={\_item:<letter>}`.
-   More exactly: \^`\begitems` does `\_printitem=`\^`\defaultitem` first,
-   then \`\style` `<letter>` does \`\_printitem``={\_item:<letter>}`
-   when it is used and finally, `\_startitem` alias `*` uses `\_printitem`.
+   More exactly: \^`\begitems` does \^`\_printitem=`\^`\defaultitem` first,
+   then \^`\style` `<letter>` does \^`\_printitem``={\_item:<letter>}`
+   when it is used and finally, `\_startitem` alias `*` uses \^`\_printitem`.
    \_cod -----------------------------
 
 \_def\_style#1{%

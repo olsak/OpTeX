@@ -277,7 +277,7 @@
 \_def\layers{\_layers}
 
    \_doc -----------------------------
-   We must to redefine \`\fnotenumpages` because the data from `.ref` file
+   We must to redefine \^`\fnotenumpages` because the data from `.ref` file
    are less usable for implementing such a feature: the
    footnote should be in more layers repeatedly. But we can suppose that
    each page starts by `\pg;` macro, so we can reset the footnote counter by

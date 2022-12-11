@@ -107,7 +107,7 @@
    The \`\_regtfm` `<font id> <optical size data>`
    registers optical sizes data directly by the font file names.
    This can be used for `tfm` files or OpenType files without
-   various font features. See also \`\_regoptsizes` in section~\ref[optsizes].
+   various font features. See also \^`\_regoptsizes` in section~\ref[optsizes].
    The `\_regtfm` command saves the <optical size data> concerned to the `<font id>`.
    The `<optical size data>` is in the form as shown below in the code where
    `\_regtfm` is used.

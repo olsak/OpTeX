@@ -171,7 +171,7 @@
    First, we read the optional parameter `[<label>]`, if it exists.
    The `\chap`, `\sec` and `\secc` macro reads its parameter using
    \^`\scantoeol`. This causes that they cannot be used inside other macros.
-   Use \`\_inchap`, \`\_insec`, and \`\_insecc` macros directly in such case.
+   Use \^`\_inchap`, \^`\_insec`, and \^`\_insecc` macros directly in such case.
    \_cod ----------------------------
 
 \_optdef\_chap[]{\_trylabel \_scantoeol\_inchap}

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2022-11-21>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2022-12-11>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
@@ -229,26 +229,32 @@
    Link to user documentation point: \code{\\~`\\foo}.
    \_cod -----------------------------
 
+\_def\_docrefcodes{\_catcode`\.=11\_relax}
+
 \_verbchar`
 
-\_def\`#1`{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
-   \_ifcsname cs:\_tmp\_endcsname\_else \_dest[cs:\_tmp]\_fi
+\_def\`{\_bgroup \_docrefcodes \_mainpoint}
+\_def\_mainpoint #1`{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+   \_ifcsname cs:\_tmp\_endcsname \_moremainpoints \_else \_dest[cs:\_tmp]\_fi
    \_sxdef{cs:\_tmp}{}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname
             \_link[cs:^\_tmp]{\mlinkcolor}{\_tt\_csstring\\\_tmp}\_else
             {\_tt\mlinkcolor\_csstring\\\_tmp}\_fi}%
 }
-\_def\^`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+\_def\^`{\_bgroup \_docrefcodes \_docpoint}
+\_def\_docpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
          \_link[cs:\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
    \_futurelet\_next\_cslinkA
 }
 \_def\_cslinkA{\_ifx\_next`\_ea\_ignoreit \_else \_ea\_ea\_ea`\_ea\_string\_fi}
 
-\_def\~`#1{\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
+\_def\~`{\_bgroup \_docrefcodes \_doctpoint}
+\_def\_doctpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
    \_hbox{\_link[cs:^\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
    \_futurelet\_next\_cslinkA
 }
+\_def\_moremainpoints{\_opwarning{Second main documentation point \_bslash\_tmp}}
 
    \_doc -----------------------------
    The \`\fw` macro for forward links to user documentation point (given later)
@@ -357,6 +363,8 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2022-12-11 \_opwaning "Second main documentation point" introduced.
+2022-12-11 \_docrefcodes added (bug due to 2022-11-13 fixed).
 2022-11-21 magenta color for internal links instead green.
 2022-11-13 \catcode`.=11: only local settings
 2022-07-01 \_printii improved, colors declaration part added.

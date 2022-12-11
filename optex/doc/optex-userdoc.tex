@@ -961,7 +961,7 @@ verbatim text is \~`\code{<text>}` (see below).
 If the numerical register \^`\ttline` is set to the non-negative value then
 display verbatim will number the lines. The first line has the number
 \^`\ttline+1` and when the verbatim ends then the \^`\ttline` value is equal to the
-number of the last line printed. Next \^`\begtt...`\^`\endtt` environment will follow
+number of the last line printed. Next \^`\begtt``...`\^`\endtt` environment will follow
 the line numbering. \OpTeX/ sets \^`\ttline=-1` by default.
 
 The indentation of each line in display verbatim is controlled by
@@ -991,7 +991,7 @@ There is an alternative to \^`\everytt` named \^`\everyintt` which is used for
 in-line verbatim surrounded by an \^`\verbchar` or processed by the \~`\code`
 command.
 
-The \^`\everytt` is applied to all \^`\begtt...`\^`\endtt` environments (if it is not
+The \^`\everytt` is applied to all \^`\begtt``...`\^`\endtt` environments (if it is not
 declared in a group). There are tips for such global `\everytt` definitions here:
 
 \begtt \adef!{\char9251 }
@@ -1001,7 +1001,7 @@ declared in a group). There are tips for such global `\everytt` definitions here
 \endtt
 
 \new
-If you want to apply a special code only for one \^`\begtt...`\^`\endtt`
+If you want to apply a special code only for one \^`\begtt``...`\^`\endtt`
 environment then don't set any \^`\everytt` but put desired material at the
 same line where \^`\begtt` is. For example:
 
@@ -1051,12 +1051,12 @@ the first opening bracket. They are processed in the local group.
 For example, `\verbinput \hsize=20cm (-) program.c`.
 
 The \~`\ttline` influences the line numbering by the same way as in
-\~`\begtt...`\~`\endtt` environment. If \~`\ttline=-1` then real line numbers are
+\~`\begtt``...`\~`\endtt` environment. If \~`\ttline=-1` then real line numbers are
 printed (this is the default). If \code{\\ttline<-1} then no line
 numbers are printed.
 
 The \^`\verbinput` can be controlled by \^`\everytt`, \^`\ttindent` just like
-in \~`\begtt...`\~`\endtt`.
+in \~`\begtt``...`\~`\endtt`.
 
 The \~`\begtt`...\~`\endtt` pair or \~`\verbinput` can be used for listings of
 codes. Automatic syntax highlighting is possible, for example

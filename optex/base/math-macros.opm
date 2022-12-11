@@ -368,7 +368,7 @@
 
    \_doc -----------------------------
    \`\big`, \`\Big`, \`\bigg`, \`\Bigg`, \`\bigl`, \`\bigm`, \`\bigr`, \`\Bigl`, \`\Bigm`,
-   \`\Bigr`, \`\biggl`, \`\biggm`, \`\biggr`, \`\Biggl`, \`\Biggm`, \`\Bigg`, \`\Biggr`
+   \`\Bigr`, \`\biggl`, \`\biggm`, \`\biggr`, \`\Biggl`, \`\Biggm`, \`\Biggr`
    are based on the \`\_scalebig` macro because we need the dependency on
    the various sizes of the fonts.
    \_cod -----------------------------
