@@ -204,7 +204,7 @@
 
    \_doc -----------------------------
    If this macro is loaded by \^`\load` then we need to initialize
-   catcodes using the `\_afteroad` macro.
+   catcodes using the `\_afterload` macro.
    \_cod -----------------------------
 
 \_def\_afterload{\_catcode`\<=13 \_catcode`\`=13

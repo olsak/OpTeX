@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.02, 2022-11-26}
+\_def\_math_version {0.03, 2022-12-19}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -34,9 +34,9 @@
    \.next
 }
 \_def\.fparamC#1{%
-   \_ifx\.bigleft\_left \_mathopen{}\_fi
+   \_ifx\.bigleft\_left \_mathopen{}\_bgroup\_fi
    \.bigleft\.lparen{#1}\.bigright\.rparen
-   \_ifx\.bigright\_right \_mathclose{}\_fi
+   \_ifx\.bigright\_right \_egroup\_fi
 }
 \_def\.afterrelax#1#2\_relax{\_fi#1}
 
@@ -129,20 +129,22 @@
 \_newpublic\_def \R {{\_bbchar R}}
 \_newpublic\_def \C {{\_bbchar C}}
 
-\_newpublic\_def \sgn    {\_mathop{\_rm sgn}\_nolimits}
-\_newpublic\_def \argmin {\_mathop{\_rm argmin}}
-\_newpublic\_def \argmax {\_mathop{\_rm argmax}}
-\_newpublic\_def \grad   {\_mathop{\_rm grad}\_nolimits}
-\_newpublic\_def \rank   {\_mathop{\_rm rank}\_nolimits}
-\_newpublic\_def \tr     {\_mathop{\_rm tr}\_nolimits}
-\_newpublic\_def \diag   {\_mathop{\_rm diag}\_nolimits}
-\_newpublic\_def \Span   {\_mathop{\_rm Span}\_nolimits}
-\_newpublic\_def \Rng    {\_mathop{\_rm Rng}\_nolimits}
-\_newpublic\_def \Null   {\_mathop{\_rm Null}\_nolimits}
-\_newpublic\_def \Ker    {\_mathop{\_rm Ker}\_nolimits}
-\_newpublic\_def \Res    {\_mathop{\_rm Res}\_nolimits}
-\_newpublic\_def \tg     {\_mathop{\_rm tg}\_nolimits}
-\_newpublic\_def \arctg  {\_mathop{\_rm arctg}\_nolimits}
+\_newpublic\_def \sgn     {\_mathop{\_rm sgn}\_nolimits}
+\_newpublic\_def \argmin  {\_mathop{\_rm argmin}}
+\_newpublic\_def \argmax  {\_mathop{\_rm argmax}}
+\_newpublic\_def \grad    {\_mathop{\_rm grad}\_nolimits}
+\_newpublic\_def \rank    {\_mathop{\_rm rank}\_nolimits}
+\_newpublic\_def \tr      {\_mathop{\_rm tr}\_nolimits}
+\_newpublic\_def \diag    {\_mathop{\_rm diag}\_nolimits}
+\_newpublic\_def \Span    {\_mathop{\_rm Span}\_nolimits}
+\_newpublic\_def \Rng     {\_mathop{\_rm Rng}\_nolimits}
+\_newpublic\_def \Null    {\_mathop{\_rm Null}\_nolimits}
+\_newpublic\_def \Ker     {\_mathop{\_rm Ker}\_nolimits}
+\_newpublic\_def \Res     {\_mathop{\_rm Res}\_nolimits}
+\_newpublic\_def \tg      {\_mathop{\_rm tg}\_nolimits}
+\_newpublic\_def \cotg    {\_mathop{\_rm cotg}\_nolimits}
+\_newpublic\_def \arctg   {\_mathop{\_rm arctg}\_nolimits}
+\_newpublic\_def \arccotg {\_mathop{\_rm arccotg}\_nolimits}
 
 \_newpublic\_def \frac  #1#2{{{#1}\_over#2}}
 \_newpublic\_def \dfrac #1#2{{\_displaystyle{{#1}\_over#2}}}
@@ -259,20 +261,28 @@
 \_def\.scriptspaces #1#2#3#4{%
    \_Umathordrelspacing\_scriptstyle=\.orzeromu{#1}\_relax
    \_Umathrelordspacing\_scriptstyle=\.orzeromu{#1}\_relax
+   \_Umathrelopspacing \_scriptstyle=\.orzeromu{#1}\_relax
    \_Umathordrelspacing\_crampedscriptstyle=\.orzeromu{#1}\_relax
    \_Umathrelordspacing\_crampedscriptstyle=\.orzeromu{#1}\_relax
+   \_Umathrelopspacing \_crampedscriptstyle=\.orzeromu{#1}\_relax
    \_Umathordbinspacing\_scriptstyle=\.orzeromu{#2}\_relax
    \_Umathbinordspacing\_scriptstyle=\.orzeromu{#2}\_relax
+   \_Umathbinopspacing \_scriptstyle=\.orzeromu{#2}\_relax
    \_Umathordbinspacing\_crampedscriptstyle=\.orzeromu{#2}\_relax
    \_Umathbinordspacing\_crampedscriptstyle=\.orzeromu{#2}\_relax
+   \_Umathbinopspacing \_crampedscriptstyle=\.orzeromu{#2}\_relax
    \_Umathordrelspacing\_scriptscriptstyle=\.orzeromu{#3}\_relax
    \_Umathrelordspacing\_scriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathrelopspacing \_scriptscriptstyle=\.orzeromu{#3}\_relax
    \_Umathordrelspacing\_crampedscriptscriptstyle=\.orzeromu{#3}\_relax
    \_Umathrelordspacing\_crampedscriptscriptstyle=\.orzeromu{#3}\_relax
+   \_Umathrelopspacing \_crampedscriptscriptstyle=\.orzeromu{#3}\_relax
    \_Umathordbinspacing\_scriptscriptstyle=\.orzeromu{#4}\_relax
    \_Umathbinordspacing\_scriptscriptstyle=\.orzeromu{#4}\_relax
+   \_Umathbinopspacing \_scriptscriptstyle=\.orzeromu{#4}\_relax
    \_Umathordbinspacing\_crampedscriptscriptstyle=\.orzeromu{#4}\_relax
    \_Umathbinordspacing\_crampedscriptscriptstyle=\.orzeromu{#4}\_relax
+   \_Umathbinopspacing \_crampedscriptscriptstyle=\.orzeromu{#4}\_relax
 }
 \_def\.orzeromu#1{\_ifx^#1^0mu\_else#1\_fi}
 
@@ -636,5 +646,8 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.03, 2022-12-19: \cotg, \arccotg defined,
+                  \autop: \mathclose{} replaced by \bgroup...\egroup,
+                  \scriptspaces: Rel-Op, Bin-Op spacing added.
 0.02, 2022-11-26: \smartvert introduced
 0.01, 2022-11-25: released
