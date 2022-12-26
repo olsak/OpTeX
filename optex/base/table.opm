@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2022-05-03>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2022-12-26>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -229,9 +229,9 @@
    We don't want vertical line after red A to be in red.
    \_cod -----------------------------
 
-\_def\_tabdeclarec{\_the\_tabiteml \_begingroup\_hfil##\_unsskip\_hfil\_endgroup \_the\_tabitemr}
-\_def\_tabdeclarel{\_the\_tabiteml \_begingroup ##\_unsskip\_hfil\_endgroup \_the\_tabitemr}
-\_def\_tabdeclarer{\_the\_tabiteml \_begingroup\_hfil##\_unsskip\_endgroup \_the\_tabitemr}
+\_def\_tabdeclarec{\_the\_tabiteml \_hfil{##}\_unsskip \_hfil \_the\_tabitemr}
+\_def\_tabdeclarel{\_the\_tabiteml {##}\_unsskip \_hfil\_the\_tabitemr}
+\_def\_tabdeclarer{\_the\_tabiteml \_hfil{##}\_unsskip \_the\_tabitemr}
 
    \_doc -----------------------------
    The \`\_paramtabdeclarep``{<data>}` is invoked when `p{<data>}`
@@ -587,6 +587,7 @@ after the second one.
 
 \_endinput
 
+2022-12-26 \tabdeclare: use {##} in order to allow a\over b in table items
 2022-05-03 \_let\_tablereplstring\_relax removed and {...} encloses whole \_tableB body
 2022-05-02 \_tablereplstrings put in group: bug fix \table in \halign
 2022-02-25 {}->\(begin|end)group in \_tabdeclare(l|r|c), bug when \tabitem(l|r)={$} fixed.
