@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.03, 2022-12-19}
+\_def\_math_version {0.04, 2022-12-26}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -22,11 +22,12 @@
    \_isequal .{#1}\_iffalse #1\_fi
    \_let\.bigleft=#2\_let\.bigright=#3\_nospacefuturelet\.next\.fparamA}
 \_def\.fparamA{%
-   \_ifx\.next(\.afterrelax{\.fparamB()}\_fi
-   \_ifx\.next[\.afterrelax{\.fparamB[]}\_fi
-   \_ifx\.next\{\.afterrelax{\.fparamB\{\}}\_fi
-   \_ifx\.next\_bgroup \_def\.lparen{\{}\_def\.rparen{\}}\.afterrelax{\.fparamC}\_fi
-   \_relax
+   \_casesof \.next
+   (        {\.fparamB()}%
+   [        {\.fparamB[]}%
+   \{       {\.fparamB\{\}}%
+   \_bgroup {\_def\.lparen{\{}\_def\.rparen{\}}\.fparamC}%
+   \_finc   {}%
 }
 \_def\.fparamB#1#2{%
    \_def\.lparen{#1}\_def\.rparen{#2}%
@@ -38,8 +39,6 @@
    \.bigleft\.lparen{#1}\.bigright\.rparen
    \_ifx\.bigright\_right \_egroup\_fi
 }
-\_def\.afterrelax#1#2\_relax{\_fi#1}
-
 \_nspublic \bigp \Bigp \biggp \Biggp \autop \normalp ;
 
    \_doc
@@ -106,7 +105,7 @@
    is declared here if a user want to use a single vertical bar.
    \_cod
 
-\_newpublic \_mathchardef \_singlevert=\_mathcode`|
+\_newpublic\_mathchardef \singlevert=\_mathcode`|
 \_def\.autovert {\_isnextchar|{\.autoVertA}{\.autovertA}}
 \_def\.autovertA #1|{\_mathopen{}\_mathclose{\_left|#1\_right|}}
 \_def\.autoVertA|#1||{\_mathopen{}\_mathclose{\_left‖#1\_right‖}}
@@ -646,6 +645,8 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.04, 2022-12-26: \casesof used in \.fparamA
+                  \singlevert declared instead \_singlevert (bug fix)
 0.03, 2022-12-19: \cotg, \arccotg defined,
                   \autop: \mathclose{} replaced by \bgroup...\egroup,
                   \scriptspaces: Rel-Op, Bin-Op spacing added.
