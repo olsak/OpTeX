@@ -1558,36 +1558,32 @@ QRcode.
 
 <h2><a name="pstricks"></a>Using pstricks</h2>
 
-<p>First of all: pstricks is obsolete method for programming pictures. Now,
-TikZ is used. OpTeX supports TikZ by \load[tikz]. So, the usage of pstricks
-mentioned here is only experimental.
+<p>First of all: pstricks is an obsolete method for programming pictures.
+Nowadays, TikZ has mostly replaced it. You can use TikZ in OpTeX simply with
+\load[tikz]. The following way of using pstricks with OpTeX is only experimental.
 
 <p>Problems:
 <ul>
-<li><p>Pstricks in LuaTeX needs to load a special Lua code which substitutes the
-old PostScript programming used in original pstricks. It is done automatically if
-you do \input pstrick in LuaTeX. But this Lua code needs luatexbase from
-LaTeX which is not supported in OpTeX in full range (only part of luatexbase
-needed for luaotfload is included in the optex.lua basic code). This problem
-can be solved using \directlua which defines luatexbase.new_luafunction.
+<li><p>Pstricks in LuaTeX needs to load special Lua code which substitutes the
+old PostScript used in original pstricks. This is done automatically if
+you do \input pstricks in LuaTeX. But this Lua code needs luatexbase from LaTeX
+which is not supported fully in OpTeX. Since we only need one function
+(luatexbase.new_luafunction), we can provide a reasonable substitute ourselves.
 
-<li><p>The \initunifonts or \fontfam[..] must be loaded because pstricks for
-LuaTeX needs some code from luaotfload.
+<li><p>Pstricks uses different concept of colors than OpTeX. It defines a few
+basic colors, new colors can be defined with \newrgbcolor, \newcmykcolor
+or \definecolor. Since the last one doesn't work directly, we need patch it.
 
-<li><p>Pstricks uses different concept of colors than OpTeX. It defines few
-basic colors and new colors can be defined by \newrgbcolor, \newcmykcolor,
-\definecolor. The last one doesn't work directly, we need to use a patch.
-
-<li><p>pstricks.tex loads pgffor.tex which loads 80 % of Tikz macro codes.
-Looking at loaded files in the log file you cannot be sure if you are using
-TikZ or pstricks:). The pgffor includes third concept of colors from TikZ
-and the pure pstricks color settings are mostly broken. Fortunately, we can
-suppress the pgffor.tex loading using \let\pgfkeysloaded=\relax before
+<li><p>pstricks.tex loads pgffor.tex which additionally loads about 80 % of TikZ
+macros. By looking at loaded files in the log file you cannot be sure whether
+you are using TikZ or pstricks:). pgffor includes yet another concept of colors
+and this mostly breaks pure pstricks color settings. Fortunately, we can
+suppress loading of pgffor.tex by using \let\pgfkeysloaded=\relax before we
 \input psstricks.
 
 <li><p>The optional pst-3dplot extension uses direct color setting in
-\setIIIDplotDefaults and it is broken. We must to declare pstSegmentColor
-before \input pst-3dplot.
+\setIIIDplotDefaults, but it is broken. pstSegmentColor must be defined
+before \input pst-3dplot is used.
 </ul>
 
 The following example works:
@@ -1598,10 +1594,10 @@ The following example works:
    function luatexbase.new_luafunction(name)
       return \string#lua.get_functions_table() + 1
    end }
-%% we want to suppress loading pgffor from TikZ:
+%% we want to suppress loading of pgffor from TikZ:
 \let\pgfkeysloaded=\relax
 \input pstricks
-%% the patch for \definecolor is needed:
+%% a patch for \definecolor is needed:
 \def\definecolor #1#2#3{\cs{new#2colorA}{#1}#3,}
 \def\newrgbcolorA #1#2,#3,#4,{\newrgbcolor{#1}{#2 #3 #4}}
 \def\newcmykcolorA #1#2,#3,#4,#5,{\newcmykcolor{#1}{#2 #3 #4 #5}}
