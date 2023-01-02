@@ -218,6 +218,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#lot">List of figures, list of tables</a>
     <li><a href="#onpage">The text "on page \pgref" printed only sometimes</a>
     <li><a href="#exlink">Links to sections in external files</a>
+    <li><a href="#borderset">Hyperinks with atypical borders</a>
 </ul>
 
 <li>Bibliography
@@ -4588,6 +4589,47 @@ of the \ulink macro</a>.
 <p CLASS=datum>(0096) -- P. O. 2022-11-19<p>
 <hr>
 
+<h2><a name="borderset"></a>Hyperlinks with atypical borders</h2>
+
+<p>The PDF specification declares possibility of borders around the active
+area of hyperlinks. They can be visible on the screen but they are not printed.
+OpTeX sets these borders invisible by default, but user can set the border
+of a specific type of hyperlinks by \def\_"type"border{RGB color values},
+for example \def\_refborder {1 0 0} sets the border around references
+visible in red. Se the OpTeX manual for more information.
+
+<p>If the border is set visible using the above mentioned method, the border
+has its line thickness 0.6 bp and it is a normal rectangle. But PDF
+specification allows other alternatives for such borders, see section "Border
+Styles" in the PDF spec. If you want to set such different style of the
+border than you can use following trick. Define
+
+<pre>
+\def\borderset#1]#2]{]#1}
+</pre>
+<p> and use it by:
+<pre>
+\hyperlinks\relax\relax
+\fnotelinks\relax\relax
+\def\_refborder {1 0 0 \borderset{/BS &lt;&lt;/S/U /W 1&gt;&gt;}}
+\def\_fntborder {1 0 0 \borderset{/BS &lt;&lt;/S/U /W 1&gt;&gt;}}
+</pre>
+
+<p>This example sets the border to be only underline in red, 1 bp thickness,
+for references and footnotes.
+
+<p>Note that not all PDF viewers support all styles mentioned in the PDF
+specification.
+
+<p>This trick defines the \borderset macro which removes the internal text
+]/Border[0 0 .6] hardwired to the \_pdfborder OpTeX macro, returns the
+character ] back and
+inserts given parameter. This parameter can be anything according to the PDF
+specification.
+
+
+<p CLASS=datum>(0100) -- P. O. 2023-01-02<p>
+<hr>
 
 <p CLASS="lmarg">Bibliography</p>
 
