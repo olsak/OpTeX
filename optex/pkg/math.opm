@@ -3,9 +3,29 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.04, 2022-12-26}
+\_def\_math_version {0.05, 2023-01-07}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
+
+   \_doc
+   The `math` package provides options, they can be declared using
+   the \`\mathset``{<options>}` macro. For example `\mathset {vert, dots}`.
+   If you create your own package with options, provide a similar
+   `\<pkg>set` macro. The \`\.kv` macro is similar to \OpTeX's `\kv`, but
+   with specific `pkg:math` dictionary.
+   \_cod
+
+\_def\.mathset #1{%
+   \_edef\.restorekvdict{\_kvdict{\_the\_kvdict}}%
+   \_kvdict{pkg:math}%
+      \_kvx {vert} {\smartvert}%  sets | as math active, to do better |x| or ||x||
+      \_kvx {dots} {\smartdots}%  \dots behaves like \ldots or \cdots
+      \_readkv{#1}%
+   \.restorekvdict
+}
+\_def\.kv #1{{\_trycs{_kv:pkg:math:#1}{\_kvunknown}}}% for accessing values given by \mathset
+
+\_nspublic \mathset ;
 
    \_doc
    \`\bigp`, \`\Bigp`, \`\biggp`, \`\Biggp`, \`\autop`, \`\normalp` are inspired from
@@ -97,7 +117,7 @@
 \_nspublic \smartdots ;
 
    \_doc
-   \`\smartvert` sets `|` as math-active charcter and declares it
+   \`\smartvert` sets `|` as math-active character and declares it
    equal to `\.autovert` macro. This macro checks two variants: there
    is single `|` or there is double `||`. It runs \`\.autovertA` or
    \`\.autoVertA`. These macros find the closing `|` or `||` and use
@@ -314,6 +334,14 @@ The following macros are defined in this package:
   for printing them from additional math font.
 \enditems
 
+Two options are provided by the `math` package. You can set them by
+\^`\mathset``{<options>}` after `\load[math]`, for example
+`\mathset{dots, vert}`. The options are:
+\begitems
+* `dots` sets more inteligent `\dots`, the same as \~`\smartdots`.
+* `vert` sets more inteligent `|`, the same as \~`\smartvert`.
+\enditems
+
 This package is not definitive. I plan to add more features in new versions
 if needed. Moreover, this package gives an example for package writers how
 to write their own packages, see section~\ref[pkgtemplate].
@@ -409,7 +437,7 @@ but someone may want to use them. This package defines them.
 But I note: usage of `$1\over2$` for $1\over2$
 is much more understandable than \LaTeX's `$\frac12$`.
 
-The vectors and matrices are ususally printed by `{\bf A}{\bf x}`.
+The vectors and matrices are usually printed by `{\bf A}{\bf x}`.
 The package provides a shortcut `\.<letter>` to do the same, so user can write
 `\.A\.x` for multiplication of a matrix $\.A$ by a vector $\.x$.
 We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
@@ -609,7 +637,7 @@ their name. The \"`_`" have to be used if the sequence is a primitive or
 
 Sometimes you may want to define a macro only for user space. Then
 use prefix \O`\_newpublic` before your declaration, see declaration of
- \^`\sgn` in this package as an exampe. The reason is: if
+ \^`\sgn` in this package as an example. The reason is: if
 a user has defined such a macro already then the warning is printed.
 The user can read this warning and declare the macro after
 `\load[<pkg>]` in this case.
@@ -645,6 +673,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.05, 2023-01-07: \mathset introduced
 0.04, 2022-12-26: \casesof used in \.fparamA
                   \singlevert declared instead \_singlevert (bug fix)
 0.03, 2022-12-19: \cotg, \arccotg defined,
