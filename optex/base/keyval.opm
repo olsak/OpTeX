@@ -1,26 +1,35 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readkv {Key-value dictionaries <2020-12-21>} % preloaded in format
+\_codedecl \readkv {Key-value dictionaries <2023-01-07>} % preloaded in format
 
    \_doc ----------------------------
-   {\bf Implementation.}
+   {\bf Implementation.}\nl
    The \`\readkv``<list>` expands its parameter and does replace-strings in order to
-   remove spaces around equal signs and after commas. Double commas are
-   removed. Then \`\_kvscan` reads the parameters list finished by the double
-   comma and saves values to `\_kv:<key>` macros.\nl
-   The \`\kv``{<key>}` expands the `\_kv:<key>` macro. If this macro isn't
+   remove spaces around equal signs and after commas.
+   Then \`\_kvscan` reads the parameters list finished by `,\_fin,`
+   and saves values to `\_kv:<dict>:<key>` macros.
+   The `\_kvx:<dict>:<key>` is processed (if it is defined) after it.\nl
+   The \`\kvx``{<key>}{<code>}` defines the `\_kvx:<dict>:<key>` macro.\nl
+   The \`\kv``{<key>}` expands the `\_kv:<dict>:<key>` macro. If this macro isn't
    defined then \`\_kvunknown` is processed. You can re-define it if you want.
+   The \`\iskv``{<key>}\iftrue` (or `\iffalse`) is the test,
+   if the `<key>` is defined in current <dict>.
    \_cod ----------------------------
 
 \_def\_readkv#1{\_ea\_def\_ea\_tmpb\_ea{#1}%
-   \_replstring\_tmpb{= }{=}\_replstring\_tmpb{ =}{=}%
-   \_replstring\_tmpb{, }{,}\_replstring\_tmpb{,,}{,}%
-   \_ea \_kvscan \_tmpb,,=,}
-\_def\_kvscan #1#2=#3,{\_ifx#1,\_else \_sdef{_kv:#1#2}{#3}\_ea\_kvscan\_fi}
-\_def\_kv#1{\_trycs{_kv:#1}{\_kvunknown}}
+   \_replstring\_tmpb{= }{=}\_replstring\_tmpb{ =}{=}\_replstring\_tmpb{, }{,}%
+   \_ea \_kvscan\_tmpb,\_fin,%
+}
+\_def\_kvscan#1,{\_ifx\_fin#1\_empty\_ea\_ignoreit \_else\_ea\_useit \_fi
+   {\_kvscandef #1==\_fin \_kvscan}%
+}
+\_def\_kvscandef#1=#2=#3\_fin{\_sdef{_kv:\_the\_kvdict:#1}{#2}\_trycs{_kvx:\_the\_kvdict:#1}{}}
+\_def\_kvx#1#2{\_sdef{_kvx:\_the\_kvdict:#1}{#2}}
+\_def\_kv#1{\_trycs{_kv:\_the\_kvdict:#1}{\_kvunknown}}
+\_def\_iskv#1#2{#2\_else\_ea\_unless\_fi \_ifcsname _kv:\_the\_kvdict:#1\_endcsname}
 \_def\_kvunknown{???}
 
-\public \readkv \kv ;
+\public \readkv \kvx \kv \iskv ;
 
 \_endcode
 
@@ -64,18 +73,43 @@ The last setting wins.
 Third: the values can be used by the expandable \^`\kv{<key>}` macro.
 The \^`\kv{<key>}` returns `???` if such key is not declared.
 
-You can use keys without values in the parameters list too, but with
-additional care. For example, suppose `draft` option without parameter.
-If a user writes `\myframe [..., draft, ...]{text}` then `\myframe` should behave differently.
-We have to add `DRAFTv=0,` in `\myframedefault` macro.
-Moreover, `\myframe` macro must include preprocessing of `\myframedefault` using
-\^`\replstring` which replaces the occurrence of `draft` by `DRAFTv=1`.
+You can use keys without values in the parameters list too.
+Then you can ask if the key is declared by \^`\iskv``{<key>}\iftrue`
+or the key is undeclared by \^`\iskv``{<key>}\iffalse`.
+For example, you write to your documentation of your code that
+user can set the `draft` option without the value. Then you can do
 \begtt
 \optdef\myframe [] #1{...
-   \ea\addto\ea\myframedefaults\ea{\the\opt}%
-   \replstring\myframedefaults{draft}{DRAFTv=1}%
-   \readkv\myframedefaults
-   ...
-   \ifnum\kv{DRAFTv}=1 draft mode\else normal mode\fi
+   \readkv\myframedefaults \readkv{\the\opt}%
+   \iskv{draft}\iftrue ...draft mode... \else ...final mode... \fi
    ...}
 \endtt
+Maybe, you want to allow not ony `draft` option but `final` option (which is
+opposite to `draft`) too and you want to apply the result from the last given
+option. Then `\iskv` doesn't work because you can only check if both options
+are declared but you don't know what one is given as last. But you can
+use \^`\kvx``{<key>}{<code>}` to declare <code> which is processed when
+the `<key>` is processed by `\readkv`. For example
+\begtt
+\newcount\mydraftmode
+\kvx{draft}{\mydraftmode=1 }
+\kvx{final}{\mydraftmode=0 }
+\optdef\myframe [] #1{...
+   \readkv\myframedefaults \readkv{\the\opt}%
+   \ifnum\mydraftmode=1 ...draft mode... \else ...final mode... \fi
+   ...}
+\endtt
+
+The default dictionary name (where key-value pairs are processed) is
+empty. You can use your specific dictionary if you set
+\^`\kvdict``={<name>}`. Package options can be processed when
+`\kvdict={pkg:<pkg>}`, example is the `\mathset` macro in
+\ulink[https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf]{{\tt math.opm} package}.
+
+Recommendation: If the value of the key-value pair includes `=` or `,` or
+`]`, then use the syntax `<key>={<value>}`.
+
+\_endinput
+
+2023-01-07 \kvdict, \kvx, \iskv added.
+2020-12-21 Released

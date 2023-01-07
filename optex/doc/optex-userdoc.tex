@@ -1944,7 +1944,8 @@ documentation.
    Example: \~`\isinlist\list{<text>}\iftrue` does `\iftrue` if <text> is in `\list`.\nl
 \^`\isnextchar`` <char>{<text1>}{<text2>}` performs <text1> if next
    character is <char>, else <text2>.\nl
-\~`\kv` `{<key>}` expands to value when key-value parameters are used.\nl
+\~`\kv` `{<key>}` expands to value when key-value parameters are used.
+   See also \~`\iskv`, \~`\readkv`, \~`\kvx`.\nl
 \^`\loop` `...` \^`\repeat` is classical Plain \TeX/ loop.\nl
 \^`\mathstyles`` {<math list>}` enables to create macros dependent on current math style.\nl
 \~`\_namespace`` {<pkg>}` declares name space used by package writers.\nl
@@ -1959,7 +1960,6 @@ documentation.
    provide coordinates of absolute position of the \~`\setpos``[<label>]`.
 \~`\private`` <sequence> <sequence> ... ;` declares <sequence>s for private name space.\nl
 \~`\public`` <sequence> <sequence> ... ;` declares <sequence>s for public name space.\nl
-\~`\readkv` `\macro` reads parameters from `\macro` in key-value format.\nl
 \^`\replstring`` \macro{<stringA>}{<stringB>}` replaces all <stringA> to <stringB> in `\macro`.\nl
 \^`\sdef` `{<string>}<parameters>{<body>}` behaves like `\def\<string><parameters>{<body>}`.\nl
 \^`\setctable` and \^`\restorectable` manipulate with stack of catcode tables.\nl

@@ -205,6 +205,14 @@
 \_public \picwidth \picheight ;
 
    \_doc -----------------------------
+   \`\kvdict` is dictionary name when \~`\readkv`, \~`\kvx`, \~`\kv`, and \~`\iskv` are
+   processed. The default is empty.
+   \_cod -----------------------------
+
+\_newtoks \_kvdict
+\_public \kvdict ;
+
+   \_doc -----------------------------
    The \`\everytt` is the token list used in
    \^`\begtt`...\^`\endtt` environment and
    in the verbatim group opened by \^`\verbinput` macro. You can include a
@@ -542,12 +550,10 @@
 %                \_shadow=N \_overlapmargins=N \_hhkern=3pt \_vvkern=3pt}
 
 \_newdimen \_roundness    \_roundness=5mm % used in \clippingoval macro
-
 \_public \ovalparams \circleparams \roundness ;
 
    \_doc -----------------------------
-   \OpTeX/ defines \"Standard \OpTeX/ markup language"%
-   \fnote{Will be developed in 2021.}
+   \OpTeX/ defines \"Standard \OpTeX/ markup language"
    which lists selected commands from chapter~1 and gives their behavior when a
    converter from \OpTeX/ document to HTML or Markdown or \LaTeX/ is used.
    The structure-oriented commands are selected here, but the commands which
