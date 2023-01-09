@@ -18,8 +18,8 @@
 \_def\.mathset #1{%
    \_edef\.restorekvdict{\_kvdict{\_the\_kvdict}}%
    \_kvdict{pkg:math}%
-      \_kvx {vert} {\smartvert}%  sets | as math active, to do better |x| or ||x||
-      \_kvx {dots} {\smartdots}%  \dots behaves like \ldots or \cdots
+      \_kvx {vert} {\.smartvert}%  sets | as math active, to do better |x| or ||x||
+      \_kvx {dots} {\.smartdots}%  \dots behaves like \ldots or \cdots
       \_readkv{#1}%
    \.restorekvdict
 }
@@ -62,9 +62,8 @@
 \_nspublic \bigp \Bigp \biggp \Biggp \autop \normalp ;
 
    \_doc
-   We need macro \`\.ensurebalanced` for balancing nested parentheses from
+   We need macro \`\.ensurebalanced``<open-b><close-b><macro>` for balancing nested parentheses from
    \tricklink[balancing]{0043}. We use `trick` namespace for these macros.
-   We try to refer \^`\.ensurebalanced`.
    \_cod
 
 \_resetnamespace{trick}

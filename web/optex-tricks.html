@@ -205,6 +205,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#beglua">Processing lua code with normal characters</a>
     <li><a href="#dayw">Printing time, date</a>
     <li><a href="#pglists">Listings of all nodes in selected pages</a>
+    <li><a href="#runsystem">Running system commands during document processing</a>
 </ul>
 
 <li>Sections
@@ -4310,6 +4311,44 @@ list \showpgs. Then it used in \_preshipout and unregistered in \_endoutput.
 <p CLASS=datum>(0063) -- P. O. 2021-07-03<p>
 <hr>
 
+<h2><a name="runsystem"></a>Running system commands during document processing</h2>
+
+<p>PdfTeX and XeTeX support \write18 for doing this. But this is not true
+when LuaTeX is used. We must to use the Lua function "os.execute()" instead
+of \write18. This function returns nil and does nothing
+if the --shell-escape is unused at the optex command line (i.e. the execution of shell
+commands is disallowed for security reasons) or it executes the system command and
+returns the exit status.
+We create a simple macro \runsystem{command} which runs the given command.
+You can write, for example:
+<pre>
+\runsystem{ls}
+</pre>
+<p>and the listing of the current directory (in Unix systems)
+is shown on the terminal (of
+course, only if --shell-escape is used at the optex command line).
+
+<p>The \runsystem macro can be defined as follows:
+<pre>
+\newcount\exitstatus
+\def\runsystem#1{\exitstatus=\directlua{
+   texio.write_nl("")
+   local status = os.execute("\luaescapestring{#1}")
+   texio.write("log", "\nbb runsystem{\luaescapestring{#1}} status: " .. (status or -1) .. "\string\n")
+   tex.print(status or -1)
+} }
+</pre>
+<p>The macro \runsystem runs the given command and prints the copy of the
+given command followed by the exit status value to the log file.
+The status value -1 means that the
+--shell-escape is unused, so the executing of system commands is disallowed.
+Moreover, the \exitstatus counter includes the status value after
+\runsystem, you can use it in your following macros.
+
+<p CLASS=datum>(0101) -- P. O. 2023-01-09<p>
+<hr>
+
+
 <p CLASS="lmarg">Sections</p>
 
 <h2><a name="seccc"></a>New level of sections</h2>
@@ -4627,9 +4666,9 @@ character ] back and
 inserts given parameter. This parameter can be anything according to the PDF
 specification.
 
-
 <p CLASS=datum>(0100) -- P. O. 2023-01-02<p>
 <hr>
+
 
 <p CLASS="lmarg">Bibliography</p>
 
