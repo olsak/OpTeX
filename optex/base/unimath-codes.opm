@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2022-11-20>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2023-01-13>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta` etc are redefined here.
@@ -180,7 +180,11 @@
    If the character is delimiter then we declare \_d:<sequence> to be the
    `\chardef` equivalent of the character and `\let<sequence>=<character>`
    because `\left`, `\right` doesn't like `\chardef` equivalent of the
-   character although it has its own delcode.
+   character although it has its own delcode.\nl
+   Because math codes of Greek letters are set by `\itgreek`. `\rmreek`
+   etc.\ macros, we need to keep the access to the real `\mupalpha`, `\mupbeta`
+   etc.\ characters by `\Umatchardef`. This is an exception from the general
+   rule that control sequences are declared by `\chardef`.
    \_cod -----------------------------
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
@@ -191,6 +195,7 @@
       \_ifx#3\_mathclose  \_setdelimiter#2\_fi
       \_ifx#3\mathfence   \_setdelimiter#2\_fi
       \_ifx#3\_mathaccent \_protected\_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
+      \_ifnum#1>"390 \_ifnum#1<"3F6 \_Umathchardef#2=0 1 #1 \_fi\_fi % \muGreek, \mugreek symbols
    }
    \_def\mathfence{F}%
    \_def\_setdelimiter#1{\_expanded{\_let\_cs{_d:\_csstring#1}=#1\_let#1=\Uchar#1}}
@@ -461,6 +466,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2023-01-13  \mupalhpha, \mupbeta, ... bug fix
 2022-11-20  \mathfence's get delimiter code too
 2022-11-18  Delimiters re-implemented
 2022-11-17  \Umathchardef replaced by \chardef

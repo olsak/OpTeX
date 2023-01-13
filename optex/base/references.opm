@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ref {References <2021-04-13>} % preloaded in format
+\_codedecl \ref {References <2022-01-22>} % preloaded in format
 
    \_doc ----------------------------
    \`\_Xpage` `{<gpageno>}{<pageno>}` saves the parameter pair into \`\_currpage`.
@@ -121,5 +121,6 @@ See section \ref[ref-file] for more information about `.ref` file concept.
 
 \_endinput
 
+2022-01-22 ... extended format for \ref, \pgref
 2021-04-13 ... \_slideshook introduced (used by \slides)
 2020-03-03 ... released
