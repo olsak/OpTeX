@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.05, 2023-01-07}
+\_def\_math_version {0.06, 2023-01-14}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -18,12 +18,17 @@
 \_def\.mathset #1{%
    \_edef\.restorekvdict{\_kvdict{\_the\_kvdict}}%
    \_kvdict{pkg:math}%
-      \_kvx {vert} {\.smartvert}%  sets | as math active, to do better |x| or ||x||
-      \_kvx {dots} {\.smartdots}%  \dots behaves like \ldots or \cdots
+      \_nokvx {\_opwarning{\_the\_kvdict: unknown option "##1", ignored}}%
+      \_kvx {vert}     {\.smartvert}%     sets | as math active, to do better |x| or ||x||
+      \_kvx {dots}     {\.smartdots}%     \dots behaves like \ldots or \cdots
+      \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
+      \_kvx {rmchars}  {\.rmchars{##1}}%  does \.rmchars{<list>}
+      \_kvx {vargreek} {\.vargreek{##1}}% does \.vargreek{<list>}
+      \_kvx {text}     {\.dotext{##1}}%   does \.dotext{<list>}
       \_readkv{#1}%
    \.restorekvdict
 }
-\_def\.kv #1{{\_trycs{_kv:pkg:math:#1}{\_kvunknown}}}% for accessing values given by \mathset
+\_def\.kv #1{\_trycs{_kv:pkg:math:#1}{\_kvunknown}}% for accessing values given by \mathset
 
 \_nspublic \mathset ;
 
@@ -199,12 +204,43 @@
 \_nspublic \subeqmark ;
 
    \_doc
+   \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.
+   \_cod
+
+\_def\bfserif{%
+   \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
+   \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}%
+}
+
+   \_doc
+   \`\rmchars``{<list>}` is implemented using \O`\foreach`. The list is
+   expanded first because we want to expand control sequences like `\alpha`
+   to a real character $\_rmgreek \alpha$.\nl
+   \`\vargreek``{<list>}` is implemented using \O`\foreach`. The
+   parameter is not expanded because we want to keep control sequences like
+   `\alpha` unchanged.
+   \_cod
+
+\_def\.rmchars#1{\_ea\_foreach \_expanded{#1}\_do{\_ifx,##1\_else\.rmchar##1\_fi}}
+\_def\.rmchar#1{\_Umathcode`#1=0 1 `#1 }
+
+\_def\.vargreek#1{\_foreach#1\_do{\_ifx,##1\_else \.vargreekchar##1\_fi}}
+\_def\.vargreekchar#1{%
+   \_ifcsname var\_csstring#1\_endcsname \_slet{\_csstring#1}{var\_csstring#1}%
+   \_else \_opwarning{\_string\vargreek: the \_bslash var\_csstring#1\_space doesn't exists}%
+   \_fi
+}
+\_nspublic \rmchars \vargreek ;
+
+   \_doc
    \`\textvariables`, \`\textdigits`, \`\textmoremath` initialize
    new two families 5, 6 using `\.textmathini` and sets `\mathcode`s
    of given characters to these families.
    Moreover, `\textvariables` adds `\fam` register setting to `\rm` and `\it`
    selectors and re-set Greek variables to use only math font (because we
-   are not sure if Greek letters are in the current text fonts).
+   are not sure if Greek letters are in the current text fonts).\nl
+   \`\.dotext``{<list of words>}` runs `\.text<word>` for each <word> in the list.
+   It is used when the option `text={<list of words>}` is used.
    \_cod
 
 \_def\.textmathini{%
@@ -223,8 +259,8 @@
 }
 \_def\.textvariables {\.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
    \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
-   \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
-   \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
+   \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita \_umathrangegreekx01\_greekita}%
+   \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma \_umathrangegreekx010}%
    \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA \_setnablait}
    \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA \_setnablarm}
    \_itgreek \_rmGreek
@@ -234,6 +270,9 @@
    \_mathcodes 5 {5{!?} 2{*+-} 3{=<>} 6{,:;} 0{./|} 4{([\{} 5{\})]}}%
    \_Umathcode `- = 2 5 "2212  % hyphen behaves like minus in math mode
 }
+\_def\.dotext#1{\_foreach #1 \_do
+   ##1 {\_trycs{_math_text##1}{\_opwarning{text option: "##1" unknown}}}}
+
 \_nspublic \textvariables \textdigits \textmoremath ;
 
    \_doc
@@ -326,6 +365,9 @@ The following macros are defined in this package:
 * \~`\toright`, \~`\toleft` puts the \o`\eqmark` to desired position,
   \~`\subeqmark` prints the given suffix as a part of the equation mark.
 * \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
+* \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
+* \~`\rmchars` sets selected characters printed as `\rm`,
+  \~`\vargreek` sets Greek leters to their variants.
 * \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
   enables characters from used text font in math mode
   (variables, digits, more characters).
@@ -333,12 +375,19 @@ The following macros are defined in this package:
   for printing them from additional math font.
 \enditems
 
-Two options are provided by the `math` package. You can set them by
+Six options are provided by the `math` package. You can set them by
 \^`\mathset``{<options>}` after `\load[math]`, for example
-`\mathset{dots, vert}`. The options are:
+`\mathset{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
 \begitems
 * `dots` sets more inteligent `\dots`, the same as \~`\smartdots`.
 * `vert` sets more inteligent `|`, the same as \~`\smartvert`.
+* `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
+* `rmchars={<list>}` sets `\rm` for selected characters, the same as \~`\rmchars`,
+   see section~\ref[rmchars].
+* `vargreek={<list>}` sets variants for Greek letetters, the same as \~`\vargreek`,
+   see section~\ref[rmchars].
+* `text={<list>}` sets \~`\textvariables`, \~`\textdigits`, or \~`\textmoremath`,
+  see section~\ref[textvars].
 \enditems
 
 This package is not definitive. I plan to add more features in new versions
@@ -521,7 +570,57 @@ $$
 $$
 It looks better, doesn't it?
 
-\sec Variables and digits from currently used text font
+\sec `\bf` and `\bi` can do shapes with serifs
+
+\OpTeX/ sets `\bf` and `\bi` math selectors as sans serif, because this
+follows the old traditional math typesetting of vectors and matrices.
+But Knuth's \TeX/ has another default behavior:`\bf` and `\bi` select serifed
+shaped. So, many people consider it as a standard. You can declare \^`\bfserif` if
+you want serifed `\bf` and `\bi` math letters.
+
+\sec[rmchars] Selected upright letters and variants for Greek letters
+
+Some mathematicians claim that the letters $e$, $i$ and $\pi$ in meaning
+\"a constant" should be printed in upright form. \TeX/ prints all variables in
+math italic, but this package enables to set exceptions for some letters.
+For example after \^`\rmchars``{e, i, \pi}`, all occurrences of these three letters
+in math mode will be set in upright shape. If you set this, then the
+well-known math identity `$e^{i\pi}=-1$` looks like this:
+$$
+  {\rm e}^{\rm i\muppi} = -1, \qquad \hbox{compare with:}\quad e^{i\pi} = -1.
+$$
+The syntax is \^`\rmchars``{<list>}`, where <list> is a list of characters
+separated by (optional) commas. The character is `a` to `z` or `A` to `Z` or
+`\alpha` to `\omega`.
+
+If you set a character by `\rmchars` globally and you want to print it in italic
+locally then use `\mit`, for example `{\mit e}` prints $e$.
+
+Several Greek letters have their variant shape:
+`\epsilon`~$\epsilon$, `\varepsilon`~$\varepsilon$,
+`\sigma`~$\sigma$, `\varsigma`~$\varsigma$,
+`\phi`~$\phi$, `\varphi`~$\varphi$,
+`\theta`~$\theta$, `\vartheta`~$\vartheta$,
+`\pi`~$\pi$, `\varpi`~$\varpi$,
+`\kappa`~$\kappa$, `\varkappa`~$\varkappa$,
+`\rho`~$\rho$, `\varrho`~$\varrho$,
+`\Theta`~$\Theta$, `\varTheta`~$\varTheta$.
+Maybe, there is a tradition of usage variant shapes instead of standard ones
+in your mathematics field. Then you can use
+\^`\vargreek``{<list>}`, where <list> includes the list of no-var control
+sequences for these letters (separated by optional comma).
+For example `\vargreek{\epsilon \phi \rho}` causes that `\epsilon` is
+printed as $\varepsilon$, `\phi` as $\varphi$ and `\rho` as $\varrho$.
+
+If you want to declare a Greek letter by both `\vargreek` and `\rmchars`,
+use `\rmchars` first.
+
+The package provides two options `rmchars` and `vargreek`. The equation
+sign must follow and then the `{<list>}` with syntax mentioned above. For example
+`\mathset{vargreek={\epsilon,\rho}}`.
+
+
+\sec[textvars] Variables and digits from currently used text font
 
 When Unicode math font is loaded then all variables and digits are printed
 from it in math mode. If you are using text fonts with another visual
@@ -543,6 +642,12 @@ Note that we cannot avoid a visual incompatibility of parentheses when they
 are use in the context \n`\left`, \n`\right`. These parentheses must be printed
 from math font always because text font is unable to create bigger versions of
 them.
+
+The package provides the option `text={<list of words>}`, each <word> from the
+<list> can be `digits` or `variables` or `moremath`. It runs corresponding macro(s)
+described above. For example `\mathset{text=digits variables}` is equal to the
+declaration of `\textdigits` `\textvariables`.
+
 
 \sec Replacing all missing math characters from another font
 
@@ -672,6 +777,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.06, 2023-01-14: \rmchars, \vargreek, \bfserif introduced
 0.05, 2023-01-07: \mathset introduced
 0.04, 2022-12-26: \casesof used in \.fparamA
                   \singlevert declared instead \_singlevert (bug fix)

@@ -27,7 +27,7 @@
    \_trycs{_kvx:\_the\_kvdict:#1}%
           {\_trycs{_nokvx:\_the\_kvdict}{\_ea\_ignoreit}{#1}\_ea\_ignoreit}{#2}}
 \_def\_kvx#1#2{\_sdef{_kvx:\_the\_kvdict:#1}##1{#2}}
-\_def\_nokvx#1{\_sdef{_nokvx:\_the\_kvdict}##1##2\_fi##3{\_fi#1}}
+\_def\_nokvx#1{\_sdef{_nokvx:\_the\_kvdict}##1\_ea\_ignoreit\_fi##2{\_fi#1}}
 \_def\_kv#1{\_trycs{\_kvcs#1}{\_kvunknown}}
 \_def\_iskv#1#2{#2\_else\_ea\_unless\_fi \_ifcsname\_kvcs#1\_endcsname}
 \_def\_kvcs{_kv:\_the\_kvdict:}
@@ -108,8 +108,8 @@ It is replaced by the actual `<value>`. Example: `\kvx{opt}{\message{opt is #1}}
 then `\readkv{opt=HELLO}` prints \"opt is HELLO".
 
 The \^`\nokvx` `{<code>}` can declare a <code> processed for all <keys>
-undeclared by \^`\kvx`. The `#1` and `#3` can be used in the <code>,
-`#1` is <key>, `#3` is <value>. If `\nokvx` is unused then nothing is done
+undeclared by \^`\kvx`. The `#1` and `#2` can be used in the <code>,
+`#1` is <key>, `#2` is <value>. If `\nokvx` is unused then nothing is done
 for undeclared <key>. Example: `\nokvx{\opwarnig{Unknown option "#1"}}`.
 
 The default dictionary name (where key-value pairs are processed) is
