@@ -1,24 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2023-01-13>} % preloaded on demand by \loadmath
-
-   \_doc -----------------------------
-   The control sequences for `\alpha`, `\beta` etc are redefined here.
-   The `\alpha` expands to the character with Unicode `"03B1`, this is a normal
-   character $α$. You can type it directly in your editor if you know how
-   to do this.
-   \_cod -----------------------------
-
-\_umathnumB="0391
-\_greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa
-   \Lambda \Mu \Nu \Xi \Omicron \Pi \Rho \varTheta \Sigma \Tau \Upsilon \Phi
-   \Chi \Psi \Omega \_relax
-
-\_umathnumB="03B1
-\_greekdef \alpha \beta \gamma \delta \varepsilon \zeta \eta \theta \iota \kappa
-   \lambda \mu \nu \xi \omicron \pi \rho \varsigma \sigma \tau \upsilon
-   \varphi \chi \psi \omega \vardelta \epsilon \vartheta \varkappa \phi
-   \varrho \varpi \_relax
+\_codedecl \_ncharrmA {Uni math codes <2023-01-14>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    The math alphabets are declared here using the
@@ -62,18 +44,59 @@
 \_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
 \_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita}
-\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma}
-\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa}
-\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia}
-\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna}
-\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia}
+\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita \_umathrangegreekx71\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma \_umathrangegreekx710}
+\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa \_umathrangegreekx71\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia \_umathrangegreekx71\_greekbia}
+\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna \_umathrangegreekx71\_greeksna}
+\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia \_umathrangegreekx71\_greeksia}
 \_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA \_setnablait}
 \_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA \_setnablarm}
 \_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA \_setnablabf}
 \_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA \_setnablabi}
 \_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA \_setnablabsans}
 \_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA \_setnablabisans}
+
+   \_doc -----------------------------
+   The control sequences for `\alpha`, `\beta`, etc.\ are redefined here.
+   The `\alpha` expands to the character with Unicode `"03B1`, this is a normal
+   character $α$. You can type it directly in your editor if you know how
+   to do this.
+   \_cod -----------------------------
+
+\_umathnumB="0391
+\_greekdef \Alpha \Beta \Gamma \Delta \Epsilon \Zeta \Eta \Theta \Iota \Kappa
+   \Lambda \Mu \Nu \Xi \Omicron \Pi \Rho \varTheta \Sigma \Tau \Upsilon \Phi
+   \Chi \Psi \Omega \_relax
+
+\_umathnumB="03B1
+\_greekdef \alpha \beta \gamma \delta \varepsilon \zeta \eta \theta \iota \kappa
+   \lambda \mu \nu \xi \omicron \pi \rho \varsigma \sigma \tau \upsilon
+   \varphi \chi \psi \omega \_relax
+
+   \_doc -----------------------------
+   The six other Greek characters can be used in math formulas:
+   $\epsilon, \vartheta, \varkappa, \phi, \varrho, \varpi$.
+   They have somewhat specific Unicodes, so we have to set their mathcodes by
+   a special \`\_umathrangegreekx``<class><family><first>` macro.
+   If <first>${}=0$ then it keeps mathcodes to be character codes.
+   On the other hand, the \`\_umathrangegreek` `<class><family><first>` and
+   \`\_umathrangeGREEK` `<class><family><first>` macros simply call the \^`\_umathrange` macro.
+   \_cod -----------------------------
+
+\_def\epsilon{^^^^03f5} \_def\vartheta{^^^^03d1} \_def\varkappa{^^^^03f0}
+\_def\phi{^^^^03d5}     \_def\varrho{^^^^03f1}   \_def\varpi{^^^^03d6}
+
+\_def\_umathrangegreekx#1#2#3{\_umathnumB=#3\_def\_tmp{#1 #2 }%
+   \_umathrangegreekxA ^^^^03f5^^^^03d1^^^^03f0^^^^03d5^^^^03f1^^^^03d6\_relax
+}
+\_def\_umathrangegreekxA#1{\_ifx#1\_relax \_else
+   \_Umathcode `#1=\_tmp \_numexpr \_ifnum\_umathnumB=0 `#1 \_else \_umathnumB+26\_fi \_relax
+   \_ifnum\_umathnumB>0 \_advance\_umathnumB by1 \_fi
+   \_ea\_umathrangegreekxA \_fi
+}
+\_def\_umathrangeGREEK{\_umathrange{^^^^0391-^^^^03a9}} % \Alpha-\Omega
+\_def\_umathrangegreek{\_umathrange{^^^^03b1-^^^^03c9}} % \alpha-\omega
 
    \_doc -----------------------------
    \`\_setnabla` is used in order to `\nabla` behaves like uppercase Greek
@@ -371,6 +394,8 @@
 \_let \upvartheta=\mupvartheta
 \_let \upphi=\mupphi
 \_let \upvarpi=\mupvarpi
+\_let \varTheta=\mupvarTheta
+\_let \vardelta=\delta
 
    \_doc -----------------------------
    The \`\not` macro is redefined here. If the `\_not!<char>` is defined
@@ -466,6 +491,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2023-01-14  \epsilon, \vartheta, \varkappa, \phi, \varrho, \varpi, ... bug fix
 2023-01-13  \mupalhpha, \mupbeta, ... bug fix
 2022-11-20  \mathfence's get delimiter code too
 2022-11-18  Delimiters re-implemented

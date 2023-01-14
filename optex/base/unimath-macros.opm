@@ -159,12 +159,6 @@
    this part of the Unicode table).
    The `<from>-<to>` clause includes characters like~`A-Z`.
    \nl
-   \`\_umahrangegreek` `\<first>` is the same as
-   `\_umathrange {<alpha>-<omega>}\<first>`.
-   \nl
-   \`\_umahrangeGREEK` `\<first>` is the same as
-   `\_umathrange {<Alpha>-<Omega>}\<first>`.
-   \nl
    \`\_greekdef` `<control sequences> \_relax` defines each control sequence
    as a normal character with codes `\_umathnumB`, `\_umathnumB+1`,
    `\_umathnumB+2` etc. It is used for redefinig the contol sequences for
@@ -194,8 +188,6 @@
          \_advance\_umathnumA by1 \_advance\_umathnumB by1
    \_repeat
 }
-\_def\_umathrangeGREEK{\_umathrange{^^^^0391-^^^^03a9}}
-\_def\_umathrangegreek{\_umathrange{^^^^03b1-^^^^03d6}}
 \_def\_greekdef#1{\_ifx#1\_relax \_else
    \_begingroup \_lccode`X=\_umathnumB \_lowercase{\_endgroup \_def#1{X}}%
    \_advance\_umathnumB by 1
