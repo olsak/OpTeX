@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2022-12-01>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2023-01-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -222,16 +222,34 @@
 }
 
    \_doc -----------------------------
+   The math characters can be given directly (by their Unicode) or by a macro
+   like `\doteq`, `\pm`, etc. These macros simply expand to the math character
+   with its Unicode. And this math character has its `\Umathcode` given by
+   <class>, <family>, <slot-number>. Sometimes, we may want to get these
+   quantities from the given Unicode math character by our macros. It is
+   possible by \`\themathcodeclass``<math-char>`,
+   \`\themathcodefam``<math-char>` and \`\themathcodechar``<math-char>` macros.
+   The parameter <math-char> is a math character or it is a macro like `\doteq`, `\pm`.
+   Moreower, \`\thedelcodefam``<math-char>` and \`\thedelcodechar``<math-char>`
+   return delcode quaitities of givem math character.
+   \_cod -----------------------------
+
+\_def\_getmathcode#1#2{\_directlua{tex.print(tex.get#2code(token.scan_int())[#1])}}
+\_def\_themathcodeclass #1{\_getmathcode 1{math}\_ea`#1 }
+\_def\_themathcodefam   #1{\_getmathcode 2{math}\_ea`#1 }
+\_def\_themathcodechar  #1{\_getmathcode 3{math}\_ea`#1 }
+\_def\_thedelcodefam    #1{\_getmathcode 1{del}\_ea`#1 }
+\_def\_thedelcodechar   #1{\_getmathcode 2{del}\_ea`#1 }
+
+\_public \themathcodeclass \themathcodefam \themathcodechar \thedelcodefam \thedelcodechar ;
+
+   \_doc -----------------------------
    \`\mathchars` `<fam> {<list of sequences>}`
    saves <fam> to \`\_mafam` and runs for each sequence from the <list of sequences>
-   the relevant code settings.
-   The `\directlua` chunk prints the 8-digits hexadecimal code of the
-   sequence followed by the sequence itself. The digts are scanned by \`\_mathcharsB`
-   and new `\Umathcode` is declared.\nl
-   If there exist \_d:<sequence> (i.e.\ it is delimiter) then `\Udelcode` is
-   redeclared too. Finally, in case of `\int`-like operators the
-   `\_intop` sequence is redeclared by `\Umathchardef`. Note that the used
-   primitives have the syntax:
+   the relevant code settings using `\Umathcode` primitive.
+   In case of `\int`-like operators the
+   `\_intop` sequence is redeclared by `\Umathchardef` instead.
+   Note that the used primitives have the syntax:
    \begtt \catcode`<=13
    \Umathchardef <sequence> = <math class> <math family> <slot number>
    \Umathcode <code>        = <math class> <math family> <slot number>
@@ -241,20 +259,12 @@
 
 \_def\_mathchars {\_afterassignment\_mathcharsA \_chardef\_mafam=}
 \_def\_mathcharsA #1{\_foreach #1\_do{%
-   \_ifcsname _d:\_csstring##1\_endcsname \_ea \_mathcharsD \_csname _d:\_csstring##1\_endcsname
-   \_else \_mathcharsC ##1\_fi
-}}
-\_def\_mathcharsC #1{\_ea\_mathcharsB
-   \_directlua{tex.print(string.format("\_pcent08X", \_the\_Umathcode#1))}#1%
-}
-\_def\_mathcharsB #1#2#3#4#5#6#7#8#9{% #9 is given \math-sequence
-   \_ifcsname _\_csstring#9op\_endcsname
-      \_ea \_Umathchardef \_csname _\_csstring#9op\_endcsname=1 \_mafam #9\_relax
+   \_ifcsname _\_csstring##1op\_endcsname
+       \_ea\_Umathchardef \_csname _\_csstring##1op\_endcsname =1 \_mafam \_ea`##1
    \_else
-      \_Umathcode "#4#5#6#7#8=\_numexpr"#3/2\_relax \_mafam "#4#5#6#7#8
+       \_Umathcode \_ea`##1=\_themathcodeclass##1 \_mafam \_themathcodechar##1
    \_fi
-}
-\_def\_mathcharsD #1{\_mathcharsC #1\_relax \_Udelcode #1=\_mafam #1\_relax}
+}}
 
    \_doc -----------------------------
    \`\mathcodes` `<fam> {<list of pairs>}` sets mathcodes of given
@@ -268,10 +278,10 @@
 \_def\_mathcodes{\_afterassignment\_mathcodesA\_chardef\_mafam=}
 \_def\_mathcodesA#1{%
    \_foreach #1\_do ##1##2{%
-      \_ea\_foreach\_expanded{##2}\_do{\_Umathcode `####1=##1\_mafam`####1}%
+      \_ea\_foreach\_expanded{##2}\_do{\_Umathcode `####1=##1\_mafam \_ea`####1}%
    }%
 }
-\_def\_Urange #1-#2{\_fornum `#1..`#2\_do{\_Uchar##1 }}
+\_def\_Urange #1-#2{\_fornum \_ea`#1..\_ea`#2\_do{\_Uchar##1 }}
 
 \_public \addUmathfont \mathchars \mathcodes \Urange ;
 
@@ -343,7 +353,8 @@ in the <list-of-pairs> is `<class-number><character>` (separated by optional
 space) or `<class-number>{<list-of-characters>}`. The <list-of-characters>
 includes declared characters or \^`\Urange` `<from>-<to>` which is equal to the
 list of characters beginning <from> and ending <to>, for example
-`\Urange a-d` is equal to `abcd`.
+`\Urange a-d` is equal to `abcd`. The characters can be given directly or
+by the math sequences like `\times`, `\doteq` too.
 
 The \^`\mathcodes` macro declares mathcode of given characters internally by
 \begtt \catcode`<=13
@@ -377,6 +388,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2023.01-15 \themathcodeclass etc. introduced
 2022-12-01 reading number by \_loadumathfamily more robust
 2022-11-18 \mathchars improved, \Udelcodes are set too, \addUmathfont uses \ahead
 2022-11-17 \Umathchardef replaced by \chardef

@@ -1,9 +1,19 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2023-01-14>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2023-01-15>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
-   The math alphabets are declared here using the
+   The math alphabets are set by
+   \`\_rmvariables`, \`\_bfvariables`, \`\_itvariables`, \`\_bivariables`,
+   \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
+   \`\_bfrakvariables`, \`\_bbvariables`,\nl \`\_sansvariables`,
+   \`\_bsansvariables`, \`\_isansvariables`, \`\_bisansvariables`,
+   \`\_ttvariables`,\nl \`\_itgreek`, \`\_rmgreek,` \`\_bfgreek`, \`\_bigreek`,
+   \`\_bsansgreek`, \`\_bisansgreek`,\nl \`\_itGreek`, \`\_rmGreek`, \`\_bfGreek`,
+   \`\_biGreek`, \`\_bsansGreek`, \`\_bisansGreek`,\nl \`\_rmdigits`,
+   \`\_bfdigits`, \`\_bbdigits`, \`\_sansdigits`, \`\_bsansdigits`,
+   \`\_ttdigits`.\nl
+   They are declared using the
    \^`\_umathrange {<range>}<class><family><starting-code>` macro.
    \_cod -----------------------------
 
@@ -44,18 +54,32 @@
 \_chardef\_greeksnA="1D756  \_chardef\_greeksna="1D770
 \_chardef\_greeksiA="1D790  \_chardef\_greeksia="1D7AA
 
-\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita \_umathrangegreekx71\_greekita}
-\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma \_umathrangegreekx710}
-\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa \_umathrangegreekx71\_greekbfa}
-\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia \_umathrangegreekx71\_greekbia}
-\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna \_umathrangegreekx71\_greeksna}
-\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia \_umathrangegreekx71\_greeksia}
+\_protected\_def\_itgreek    {\_umathrangegreek71\_greekita}
+\_protected\_def\_rmgreek    {\_umathrangegreek71\_greekrma}
+\_protected\_def\_bfgreek    {\_umathrangegreek71\_greekbfa}
+\_protected\_def\_bigreek    {\_umathrangegreek71\_greekbia}
+\_protected\_def\_bsansgreek {\_umathrangegreek71\_greeksna}
+\_protected\_def\_bisansgreek{\_umathrangegreek71\_greeksia}
 \_protected\_def\_itGreek    {\_umathrangeGREEK71\_greekitA \_setnablait}
 \_protected\_def\_rmGreek    {\_umathrangeGREEK71\_greekrmA \_setnablarm}
 \_protected\_def\_bfGreek    {\_umathrangeGREEK71\_greekbfA \_setnablabf}
 \_protected\_def\_biGreek    {\_umathrangeGREEK71\_greekbiA \_setnablabi}
 \_protected\_def\_bsansGreek {\_umathrangeGREEK71\_greeksnA \_setnablabsans}
 \_protected\_def\_bisansGreek{\_umathrangeGREEK71\_greeksiA \_setnablabisans}
+
+\_chardef\_digitrmO=`0
+\_chardef\_digitbfO="1D7CE
+\_chardef\_digitbbO="1D7D8
+\_chardef\_digitsnO="1D7E2
+\_chardef\_digitbsO="1D7EC
+\_chardef\_digitttO="1D7F6
+
+\_protected\_def\_rmdigits    {\_umathrange{0-9}71\_digitrmO}
+\_protected\_def\_bfdigits    {\_umathrange{0-9}71\_digitbfO}
+\_protected\_def\_bbdigits    {\_umathrange{0-9}71\_digitbbO}
+\_protected\_def\_sansdigits  {\_umathrange{0-9}71\_digitsnO}
+\_protected\_def\_bsansdigits {\_umathrange{0-9}71\_digitbsO}
+\_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
 
    \_doc -----------------------------
    The control sequences for `\alpha`, `\beta`, etc.\ are redefined here.
@@ -78,25 +102,27 @@
    The six other Greek characters can be used in math formulas:
    $\epsilon, \vartheta, \varkappa, \phi, \varrho, \varpi$.
    They have somewhat specific Unicodes, so we have to set their mathcodes by
-   a special \`\_umathrangegreekx``<class><family><first>` macro.
-   If <first>${}=0$ then it keeps mathcodes to be character codes.
-   On the other hand, the \`\_umathrangegreek` `<class><family><first>` and
-   \`\_umathrangeGREEK` `<class><family><first>` macros simply call the \^`\_umathrange` macro.
+   a special \`\_umathrangegreekxA` macro used in \`\_umathrangegreek` `<class><family><first>`.
+   If <first>${}=`\_greekrma`$ then it keeps mathcodes to be character codes.
+   On the other hand, the \`\_umathrangeGREEK` `<class><family><first>`
+   simply calls the \^`\_umathrange` macro.
    \_cod -----------------------------
 
 \_def\epsilon{^^^^03f5} \_def\vartheta{^^^^03d1} \_def\varkappa{^^^^03f0}
 \_def\phi{^^^^03d5}     \_def\varrho{^^^^03f1}   \_def\varpi{^^^^03d6}
 
-\_def\_umathrangegreekx#1#2#3{\_umathnumB=#3\_def\_tmp{#1 #2 }%
-   \_umathrangegreekxA ^^^^03f5^^^^03d1^^^^03f0^^^^03d5^^^^03f1^^^^03d6\_relax
+\_def\_umathrangeGREEK{\_umathrange{^^^^0391-^^^^03a9}} % \Alpha-\Omega
+\_def\_umathrangegreek#1#2#3{%
+   \_umathrange{^^^^03b1-^^^^03c9}#1#2#3% \alpha-\omega
+   \_umathnumB=#3\_relax
+   \_umathrangegreekxA ^^^^03f5^^^^03d1^^^^03f0^^^^03d5^^^^03f1^^^^03d6\_relax % \epsilon-\varpi
 }
 \_def\_umathrangegreekxA#1{\_ifx#1\_relax \_else
-   \_Umathcode `#1=\_tmp \_numexpr \_ifnum\_umathnumB=0 `#1 \_else \_umathnumB+26\_fi \_relax
-   \_ifnum\_umathnumB>0 \_advance\_umathnumB by1 \_fi
+   \_Umathcode `#1=\_tmp
+               \_numexpr\_ifnum\_umathnumB=\_greekrma `#1 \_else \_umathnumB+26\_fi \_relax
+   \_unless\_ifnum\_umathnumB=\_greekrma \_advance\_umathnumB by1 \_fi
    \_ea\_umathrangegreekxA \_fi
 }
-\_def\_umathrangeGREEK{\_umathrange{^^^^0391-^^^^03a9}} % \Alpha-\Omega
-\_def\_umathrangegreek{\_umathrange{^^^^03b1-^^^^03c9}} % \alpha-\omega
 
    \_doc -----------------------------
    \`\_setnabla` is used in order to `\nabla` behaves like uppercase Greek
@@ -111,24 +137,6 @@
 \_def \_setnablabi     {\_setnabla"1D735 }
 \_def \_setnablabsans  {\_setnabla"1D76F }
 \_def \_setnablabisans {\_setnabla"1D7A9 }
-
-   \_doc -----------------------------
-   Digits are configured like math alphabets.
-   \_cod -----------------------------
-
-\_chardef\_digitrmO=`0
-\_chardef\_digitbfO="1D7CE
-\_chardef\_digitbbO="1D7D8
-\_chardef\_digitsnO="1D7E2
-\_chardef\_digitbsO="1D7EC
-\_chardef\_digitttO="1D7F6
-
-\_protected\_def\_rmdigits    {\_umathrange{0-9}71\_digitrmO}
-\_protected\_def\_bfdigits    {\_umathrange{0-9}71\_digitbfO}
-\_protected\_def\_bbdigits    {\_umathrange{0-9}71\_digitbbO}
-\_protected\_def\_sansdigits  {\_umathrange{0-9}71\_digitsnO}
-\_protected\_def\_bsansdigits {\_umathrange{0-9}71\_digitbsO}
-\_protected\_def\_ttdigits    {\_umathrange{0-9}71\_digitttO}
 
    \_doc -----------------------------
    The  math alphabets \`\cal`, \`\bbchar`, \`\frak`, \`\script` are re-defined
@@ -168,7 +176,7 @@
    Each Unicode slot carries information about math type. This is saved in
    the file `MathClass-15.txt` which is copied to `mathclass.opm` The file
    has the following format:
-   {\vitt{mathclass.opm}\verbinput (70-85) mathclass.opm }
+   {\vitt{mathclass.opm}\verbinput (70-85) mathclass.opm }%
    We have to read this information and convert it to the `\Umathcode`s.
    \_cod -----------------------------
 
@@ -193,35 +201,28 @@
    \_doc -----------------------------
    Each math symbol has its declaration in the file `unicode-math-table.tex`
    which is copied to `unimath-table.opm`. The file has the following format:
-   {\vitt{unimath-table.opm}\verbinput (36-41) unimath-table.opm }
-   We have to read this information and set given control sequences to
-   the relevant Unicode characters using `\chardef`. We don't use `\mathchardef`
-   for them because the want to manage the matcodes (class, family, slot)
-   only at single place: at Unicode characters. Control sequeces declared here
-   are only pointers to these Unicode characters. Exceptions are delimiters and
-   math accents.\nl
-   If the character is delimiter then we declare \_d:<sequence> to be the
-   `\chardef` equivalent of the character and `\let<sequence>=<character>`
-   because `\left`, `\right` doesn't like `\chardef` equivalent of the
-   character although it has its own delcode.\nl
-   Because math codes of Greek letters are set by `\itgreek`. `\rmreek`
+   {\vitt{unimath-table.opm}\verbinput (36-41) unimath-table.opm }%
+   We have to read this information and set given control sequences as macros
+   which expand to the given Unicode character. This solution enables to use
+   such control sequences in PDF outlines where they expand to the appropriate
+   Unicode character.
+   We don't use `\mathchardef`, we set the matcodes (class, family, slot)
+   only at single place: for Unicode math characters.\nl
+   Because math codes of Greek letters are set by \^`\_itgreek`, \^`\_bfgreek`,
    etc.\ macros, we need to keep the access to the real `\mupalpha`, `\mupbeta`
    etc.\ characters by `\Umatchardef`. This is an exception from the general
-   rule that control sequences are declared by `\chardef`.
+   rule that control sequences are declared by `\chardef`. The second exception
+   is math accents.
    \_cod -----------------------------
 
 \_begingroup  % \input unimath-table.opm (it is a copy of unicode-math-table.tex):
    \_def\UnicodeMathSymbol #1#2#3#4{%
-      \_chardef#2=#1 % control sequence is only pointer to Unicode character
+      \_edef#2{\_Uchar #1}% control sequence is a macro which expands to the Unicode character
       \_ifnum#1=\_Umathcodenum#1 \_Umathcode#1=0 1 #1 \_fi  % it isn't set by mathclass.opm
-      \_ifx#3\_mathopen   \_setdelimiter#2\_fi
-      \_ifx#3\_mathclose  \_setdelimiter#2\_fi
-      \_ifx#3\mathfence   \_setdelimiter#2\_fi
       \_ifx#3\_mathaccent \_protected\_def#2{\_Umathaccent fixed 7 1 #1 }\_fi
       \_ifnum#1>"390 \_ifnum#1<"3F6 \_Umathchardef#2=0 1 #1 \_fi\_fi % \muGreek, \mugreek symbols
    }
    \_def\mathfence{F}%
-   \_def\_setdelimiter#1{\_expanded{\_let\_cs{_d:\_csstring#1}=#1\_let#1=\Uchar#1}}
    \_globaldefs=1 \_input unimath-table.opm
 \_endgroup
 
@@ -268,9 +269,9 @@
    \_cod -----------------------------
 
 \_def\_intwithnolimits#1{\_ifx#1\_relax \_else
-   \_ea\_Umathcharnumdef\_csname _\_csstring#1op\_endcsname=\_Umathcodenum#1%
+   \_ea\_Umathcharnumdef\_csname _\_csstring#1op\_endcsname=\_Umathcodenum\_ea`#1 %
    \_ea\_def \_csname\_csstring#1op\_ea\_endcsname\_ea{\_csname _\_csstring#1op\_endcsname}%
-   \_bgroup \_lccode`\~=#1 \_lowercase{\_egroup
+   \_bgroup \_lccode`\~=\_ea`#1 \_lowercase{\_egroup
       \_ea\_def\_ea~\_ea{\_csname _\_csstring#1op\_endcsname\_nolimits}\_mathcode`~="8000 }%
    \_ea \_intwithnolimits \_fi
 }
@@ -491,6 +492,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2023-01-15  math control sequences are macros, they expand to math characters
 2023-01-14  \epsilon, \vartheta, \varkappa, \phi, \varrho, \varpi, ... bug fix
 2023-01-13  \mupalhpha, \mupbeta, ... bug fix
 2022-11-20  \mathfence's get delimiter code too

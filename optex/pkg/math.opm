@@ -259,8 +259,8 @@
 }
 \_def\.textvariables {\.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
    \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
-   \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita \_umathrangegreekx01\_greekita}%
-   \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma \_umathrangegreekx010}%
+   \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
+   \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
    \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA \_setnablait}
    \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA \_setnablarm}
    \_itgreek \_rmGreek
