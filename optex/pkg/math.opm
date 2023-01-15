@@ -261,8 +261,8 @@
    \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
    \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
    \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
-   \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA \_setnablait}
-   \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA \_setnablarm}
+   \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA}
+   \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA}
    \_itgreek \_rmGreek
 }
 \_def\.textdigits    {\.textmathini \_mathcodes 5 {7{\_Urange 0-9}}}

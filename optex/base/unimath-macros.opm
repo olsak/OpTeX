@@ -143,58 +143,6 @@
 \_def\_mparams{}
 
    \_doc -----------------------------
-   Unicode math font includes all typical math alphabets together, user needs not to
-   load more \TeX/ math families. These math alphabets are encoded by
-   different parts of Unicode table. We need auxiliary macros for setting
-   mathcodes by selected math alphabet.
-   \nl
-   \`\_umathrange` `{<from->-<to>}<class><family>\<first>` sets `\Umathcode`s
-   of the characters in the interval `<from>-<to>` to `\<first>`,
-   `\<first>+1`, `\<first>+2`
-   etc., but \`\_umathcharholes` are skipped
-   (`\_umathcharholes` are parts of the Unicode table not designed for math
-   alphabets, they cause that the math alphabets are
-   not continuously spread out in the table; I mean that the
-   designers were under the influence of drugs when they created
-   this part of the Unicode table).
-   The `<from>-<to>` clause includes characters like~`A-Z`.
-   \nl
-   \`\_greekdef` `<control sequences> \_relax` defines each control sequence
-   as a normal character with codes `\_umathnumB`, `\_umathnumB+1`,
-   `\_umathnumB+2` etc. It is used for redefinig the contol sequences for
-   math Greek `\alpha`, `\beta`, `\gamma` etc.
-   \_cod -----------------------------
-
-\_newcount\_umathnumA  \_newcount\_umathnumB
-
-\_def\_umathcorr#1#2{\_ea#1\_ea{\_the#2}}
-\_def\_umathprepare#1{\_def\_umathscanholes##1[#1]##2##3\_relax{##2}}
-\_def\_umathvalue#1{\_ea\_umathscanholes\_umathcharholes[#1]{#1}\_relax}
-
-\_def\_umathcharholes{% holes in math alphabets:
-   [119893]{"210E}[119965]{"212C}[119968]{"2130}[119969]{"2131}%
-   [119971]{"210B}[119972]{"2110}[119975]{"2112}[119976]{"2133}[119981]{"211B}%
-   [119994]{"212F}[119996]{"210A}[120004]{"2134}%
-   [120070]{"212D}[120075]{"210C}[120076]{"2111}[120085]{"211C}[120093]{"2128}%
-   [120122]{"2102}[120127]{"210D}[120133]{"2115}[120135]{"2119}
-   [120136]{"211A}[120137]{"211D}[120145]{"2124}%
-}
-\_def\_umathrange#1#2#3#4{\_umathnumB=#4\_def\_tmp{#2 #3 }\_umathrangeA#1}
-\_def\_umathrangeA#1-#2{\_umathnumA=`#1\_relax
-   \_loop
-      \_umathcorr\_umathprepare\_umathnumB
-      \_Umathcode \_umathnumA = \_tmp \_umathcorr\_umathvalue{\_umathnumB}
-      \_ifnum\_umathnumA<`#2\_relax
-         \_advance\_umathnumA by1 \_advance\_umathnumB by1
-   \_repeat
-}
-\_def\_greekdef#1{\_ifx#1\_relax \_else
-   \_begingroup \_lccode`X=\_umathnumB \_lowercase{\_endgroup \_def#1{X}}%
-   \_advance\_umathnumB by 1
-   \_ea\_greekdef \_fi
-}
-
-   \_doc -----------------------------
    \`\addUmathfont` `<fam> {[<normal-font>]}{<ffeatures>} {[<bold-font>]}{<ffeatures>} {<factor>}`
    allocates new <fam> using \^`\newfam` and adds loading this font to the
    \~`\normalmath` and \~`\boldmath` macros. Note that allocationos using
@@ -223,13 +171,13 @@
 
    \_doc -----------------------------
    The math characters can be given directly (by their Unicode) or by a macro
-   like `\doteq`, `\pm`, etc. These macros simply expand to the math character
+   like `\doteq`, `\times`, etc. These macros simply expand to the math character
    with its Unicode. And this math character has its `\Umathcode` given by
    <class>, <family>, <slot-number>. Sometimes, we may want to get these
    quantities from the given Unicode math character by our macros. It is
    possible by \`\themathcodeclass``<math-char>`,
    \`\themathcodefam``<math-char>` and \`\themathcodechar``<math-char>` macros.
-   The parameter <math-char> is a math character or it is a macro like `\doteq`, `\pm`.
+   The parameter <math-char> is a math character or it is a macro like `\doteq`, `\times`.
    Moreower, \`\thedelcodefam``<math-char>` and \`\thedelcodechar``<math-char>`
    return delcode quaitities of givem math character.
    \_cod -----------------------------
@@ -388,6 +336,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2023-01-15 \_def\_umathrange moved to unimath-codes.opm
 2023.01-15 \themathcodeclass etc. introduced
 2022-12-01 reading number by \_loadumathfamily more robust
 2022-11-18 \mathchars improved, \Udelcodes are set too, \addUmathfont uses \ahead
