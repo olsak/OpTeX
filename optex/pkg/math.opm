@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.06, 2023-01-14}
+\_def\_math_version {0.06+, 2023-01-14}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -286,7 +286,7 @@
    replaced again if a new `\replacemissingchars` is used.
    \_cod
 
-\_def\.rlist{}
+\_def\.rlist{\sqrt\cuberoot\fourthroot} % they cannot be replaced by \mathchars
 \_def\.replacemissingchars#1{%
    \_def\.alist{}\_def\.clist{}
    \_def\UnicodeMathSymbol##1##2##3##4{%
@@ -302,9 +302,9 @@
    }
    \_input unimath-table.opm
    \_wlog{^^J\_string\replacemissingchars: From \_string\fam=\_string#1 is printed now:^^J%
-         CHARACTERS: \.clist^^JACCENTS: \.alist^^J}%
-   \_ea\_mathchars \_expanded{\_noexpand#1{\.clist}}%
-   \_edef\.rlist{\.rlist\.clist\.alist}%
+         CHARACTERS: \_unexpanded\_ea{\.clist}^^JACCENTS: \_unexpanded\_ea{\.alist}^^J}%
+   \_def\.tmp{\_mathchars #1}\_ea\.tmp\_ea{\.clist}%
+   \_ea\_addto \_ea\.rlist \_ea{\.clist}\_ea\_addto \_ea\.rlist \_ea{\.alist}%
    \_def\.alist{}\_def\.clist{}\_let\UnicodeMathSymbol=\_undefined
 }
 \_nspublic \replacemissingchars ;
@@ -777,6 +777,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+      2023-01-15  \replacemissingchars: bug fixed
 0.06, 2023-01-14: \rmchars, \vargreek, \bfserif introduced
 0.05, 2023-01-07: \mathset introduced
 0.04, 2022-12-26: \casesof used in \.fparamA
