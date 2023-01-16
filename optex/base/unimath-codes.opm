@@ -265,7 +265,7 @@
    which expand to the given Unicode character. This solution enables to use
    such control sequences in PDF outlines where they expand to the appropriate
    Unicode character.
-   We don't use `\mathchardef`, we set the matcodes (class, family, slot)
+   We don't use `\mathchardef`, we set the mathcodes (class, family, slot)
    only at single place: for Unicode math characters. For example for we
    define `\times`:
    \begtt
@@ -299,7 +299,7 @@
    We save the `\mathcode` of `\int` to `\_intop` using `\Umathchardef` and
    declare Unicode character `\int` as math-active and define it
    as `\_intop\_nolimits`. We define `\intop` as `\_intop` for users
-   (intergral with normal limits).
+   (integral with normal limits).
    We do this with other int-like operators listed below too.
    \_cod -----------------------------
 

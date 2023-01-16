@@ -261,7 +261,7 @@
 \_public \cstochar ;
 
    \_doc -----------------------------
-   You can use expandable \`\bp``{<dimen>}` convertor from
+   You can use expandable \`\bp``{<dimen>}` converter from
    \TeX/ `<dimen>` (or from an expression accepted by
    `\dimexpr` primitive) to a decimal value in big points
    (used as natural unit in the PDF format). So, you can write, for example:
@@ -272,6 +272,11 @@
    It expands to the value of the `<expression>` at expand processor level
    with \`\_decdigits` digits after the decimal point.
    The `<expression>` can include `+-*/()` and decimal numbers in common syntax.
+   The math functions (and pi constant) have to be prefixed by `math.`,
+   because it is processed by Lua interpreter. For
+   example `\expr{math.pi*math.sqrt(2)}`.
+   The list of available functions is in
+   \ulink[https://www.lua.org/manual/5.3/manual.html\#6.7]{Lua manual}.
 
    The usage of prefixed versions \`\_expr` or \`\_bp` is more recommended
    because a user can re-define the control sequences `\expr` or `\bp`.

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2022-12-02>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2023-01-16>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -294,16 +294,17 @@
 \_public \isfont ;
 
    \_doc ----------------------------
-   The last macro \`\isnextchar` `<char>{<codeA>}{<codeB>}`
+   The macro \`\isnextchar` `<char>{<codeA>}{<codeB>}`
    has a different syntax than all other is-macros.
    It executes `<codeA>` if next character is equal to <char>.
-   Else the `<codeB>` is executed. The macro is not expandable.
+   Else the `<codeB>` is executed. The macro is expandable.
    \_cod ----------------------------
 
-\_long\_def\_isnextchar#1#2#3{\_begingroup\_toks0={\_endgroup#2}\_toks1={\_endgroup#3}%
-   \_let\_tmp= #1\_futurelet\_next\_isnextcharA
+\_long\_def\_isnextchar#1#2#3{\_immediateassignment
+   \_def\_isnextcharA{\_isnextcharB{#1}{#2}{#3}}%
+   \_immediateassignment\_futurelet \_next \_isnextcharA
 }
-\_def\_isnextcharA{\_the\_toks\_ifx\_tmp\_next0\_else1\_fi\_space}
+\_long\_def\_isnextcharB#1{\_ifx\_next#1\_ea\_ignoresecond\_else\_ea\_usesecond\_fi}
 
 \_public \isnextchar ;
 
@@ -361,6 +362,7 @@
 
 \_endcode
 
+2023-01-16 \isnextchar created expandable.
 2022-12-02 \xcasesof: its first parameter is \long too.
 2022-11-29 renamed to \casesof, \xcasesof.
 2022-11-26 \casesby, \casesbyif introduced.
