@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2023-01-15>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2023-01-17>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -296,18 +296,19 @@
 \_endgroup
 
    \_doc -----------------------------
-   We save the `\mathcode` of `\int` to `\_intop` using `\Umathchardef` and
-   declare Unicode character `\int` as math-active and define it
-   as `\_intop\_nolimits`. We define `\intop` as `\_intop` for users
-   (integral with normal limits).
+   The macro `\int` expands to an <int-character>. We save the `\mathcode`
+   of the <int-character> to `\_int:<int-character>` using `\Umathchardef` and
+   declare <int-character> as math-active and define it
+   as `\_int:<int-character> \_nolimits`. Moreover, we define `\intop` as
+   `\_int:<int-character>`  (it is the itegral with limits like in plain \TeX).
    We do this with other int-like operators listed below too.
    \_cod -----------------------------
 
 \_def\_intwithnolimits#1{\_ifx#1\_relax \_else
-   \_ea\_Umathcharnumdef\_csname _\_csstring#1op\_endcsname=\_Umathcodenum\_ea`#1 %
-   \_ea\_def \_csname\_csstring#1op\_ea\_endcsname\_ea{\_csname _\_csstring#1op\_endcsname}%
+   \_ea\_Umathcharnumdef\_csname _int:#1\_endcsname=\_Umathcodenum\_ea`#1 %
+   \_ea\_def \_csname\_csstring#1op\_ea\_endcsname\_ea{\_csname _int:#1\_endcsname}%
    \_bgroup \_lccode`\~=\_ea`#1 \_lowercase{\_egroup
-      \_ea\_def\_ea~\_ea{\_csname _\_csstring#1op\_endcsname\_nolimits}\_mathcode`~="8000 }%
+      \_ea\_def\_ea~\_ea{\_csname _int:#1\_endcsname\_nolimits}\_mathcode`~="8000 }%
    \_ea \_intwithnolimits \_fi
 }
 \_intwithnolimits \int \iint \iiint \oint \oiint \oiiint
@@ -558,6 +559,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2023-01-17  \int operators re-implemented
 2023-01-15  \mupalpha, \mupbeta etc. have codes from PUA
 2023-01-15  math control sequences are macros, they expand to math characters
 2023-01-14  \epsilon, \vartheta, \varkappa, \phi, \varrho, \varpi, ... bug fix

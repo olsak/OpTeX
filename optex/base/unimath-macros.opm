@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2023-01-15>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2023-01-17>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
@@ -195,8 +195,8 @@
    \`\mathchars` `<fam> {<list of sequences>}`
    saves <fam> to \`\_mafam` and runs for each sequence from the <list of sequences>
    the relevant code settings using `\Umathcode` primitive.
-   In case of `\int`-like operators the
-   `\_intop` sequence is redeclared by `\Umathchardef` instead.
+   In case of `\int`-like operators the <math class>=8 and we only
+   re-declare `\_int:<int-character>` as an operator with the new \^`\_mafam`.
    Note that the used primitives have the syntax:
    \begtt \catcode`<=13
    \Umathchardef <sequence> = <math class> <math family> <slot number>
@@ -207,10 +207,11 @@
 
 \_def\_mathchars {\_afterassignment\_mathcharsA \_chardef\_mafam=}
 \_def\_mathcharsA #1{\_foreach #1\_do{%
-   \_ifcsname _\_csstring##1op\_endcsname
-       \_ea\_Umathchardef \_csname _\_csstring##1op\_endcsname =1 \_mafam \_ea`##1
+   \_chardef\_tmp=\_themathcodeclass##1\_relax
+   \_ifnum\_tmp=8 % \int, \iint, \oint, etc.
+       \_ea\_Umathchardef \_csname _int:##1\_endcsname =1 \_mafam \_ea`##1
    \_else
-       \_Umathcode \_ea`##1=\_themathcodeclass##1 \_mafam \_themathcodechar##1
+       \_Umathcode \_ea`##1=\_tmp \_mafam \_themathcodechar##1
    \_fi
 }}
 
@@ -336,6 +337,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2023-01-17 \mathchars: \int operators re-implemented
 2023-01-15 \_def\_umathrange moved to unimath-codes.opm
 2023.01-15 \themathcodeclass etc. introduced
 2022-12-01 reading number by \_loadumathfamily more robust
