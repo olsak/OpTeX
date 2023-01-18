@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2022-11-24>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2023-01-18>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -269,8 +269,7 @@
    \pdfliteral{q \_bp{.3\hsize-2mm} \_bp{2mm} m 0 \_bp{-4mm} l S Q}
    \endtt
    You can use expandable \`\expr``{<expression>}` for analogical purposes.
-   It expands to the value of the `<expression>` at expand processor level
-   with \`\_decdigits` digits after the decimal point.
+   It expands to the value of the `<expression>` at expand processor level.
    The `<expression>` can include `+-*/()` and decimal numbers in common syntax.
    The math functions (and pi constant) have to be prefixed by `math.`,
    because it is processed by Lua interpreter. For
@@ -278,17 +277,24 @@
    The list of available functions is in
    \ulink[https://www.lua.org/manual/5.3/manual.html\#6.7]{Lua manual}.
 
+   You can set the number of decimal digits after decimal point of the
+   results of `\bp` and `\expr`
+   by optional syntax `\bp[<digits>]{<dimen>}` and
+   `\expr[<digits>]{<expression>}`. Default is \`\_decdigits`.
+
    The usage of prefixed versions \`\_expr` or \`\_bp` is more recommended
    because a user can re-define the control sequences `\expr` or `\bp`.
    \_cod -----------------------------
 
 \_def\_decdigits{3} % digits after decimal point in \_bp and \_expr outputs.
-\_def\_pttopb{%
-   \_directlua{tex.print(string.format('\_pcent.\_decdigits f',
+\_def\_pttopb#1{%
+   \_directlua{tex.print(string.format('\_pcent.#1f',
                token.scan_dimen()/65781.76))}%  pt to bp conversion
 }
-\def\_bp#1{\_ea\_pttopb\_dimexpr#1\_relax}
-\def\_expr#1{\_directlua{tex.print(string.format('\_pcent.\_decdigits f',#1))}}
+\_def\_bp{\_isnextchar[{\_bpA}{\_bpA[\_decdigits]}}
+\_def\_bpA[#1]#2{\_pttopb{#1}\_dimexpr#2\_relax}
+\_def\_expr{\_isnextchar[{\_exprA}{\_exprA[\_decdigits]}}
+\_def\_exprA[#1]#2{\_directlua{tex.print(string.format('\_pcent.#1f',#2))}}
 
 \_public \expr \bp ;
 
@@ -368,6 +374,7 @@
 
 \_endcode % -------------------------------------
 
+2023-01-18 \bp, \expr have optional syntax for setting dec-digits
 2022-11-24 \setpos, \posx, \posy moved from OpTeX trick here
 2022-11-22 \docgen writes banner to log
 2022-11-20 \docgen reads lines before \_codedecl in order to define pkg. version
