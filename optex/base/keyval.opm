@@ -56,7 +56,7 @@ or simply `\myframe {text3}`. You can define `\myframe` as follows:
 \begtt
 \def\myframedefaults{%    defaults:
    frame-color=\Black, % color of frame rules
-   text-color=\Black,  % color ot text inside the frame
+   text-color=\Black,  % color of text inside the frame
    rule-width=0.4pt,   % width of rules used in the frame
    margins=2pt,        % space between text inside and rules.
 }

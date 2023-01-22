@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2022-11-22>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2023-01-22>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -73,7 +73,7 @@
    \_cod ------------------------------
 
 \_def \_cs #1{\_csname#1\_endcsname}
-\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_ea\_endcsname \_else #2\_fi}
+\_def \_trycs#1#2{\_ifcsname #1\_endcsname \_csname #1\_ea\_endcsname \_else \_afterfi{#2}\_fi}
 \_public \cs \trycs ;
 
    \_doc ------------------------------
@@ -142,6 +142,7 @@
 
 \_endcode % -------------------------------------
 
+2023-01-22: \trycs: afterfi used for second parameter
 2022-11-22: \_banner definition moved here
 2022-11-18: \ahead introduced
 2022-10-29: \_fin introduced
