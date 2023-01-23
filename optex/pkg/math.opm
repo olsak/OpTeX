@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.06+, 2023-01-14}
+\_def\_math_version {0.07, 2023-01-23}
 \_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
 \_namespace{math}
 
@@ -141,39 +141,42 @@
    \_doc
    The control sequences \`\N`, \`\Z`, \`\Q`, \`\R`, \`\C`
    \`\sgn`, \`\argmin`, \`\argmax`, \`\grad`, \`\rank`, \`\tr`, \`\diag`, \`\Span`,
-   \`\Rng`, \`\Null`, \`\Ker`, \`\Res`, \`\tg`, \`\arctg`,
+   \`\Rng`, \`\Null`, \`\Ker`, \`\Res`, \`\tg`, \`\cotg`, \`\arctg`, \`\arccotg`,
    \`\frac`, \`\dfrac`, \`\tfrac`, \`\.`
    are defined directly in the user space by \o`\_newpublic`.
+   The \`\.pdef` is a shortcut for `\protected\def`.
    \_cod
 
-\_newpublic\_def \N {{\_bbchar N}}
-\_newpublic\_def \Z {{\_bbchar Z}}
-\_newpublic\_def \Q {{\_bbchar Q}}
-\_newpublic\_def \R {{\_bbchar R}}
-\_newpublic\_def \C {{\_bbchar C}}
+\_def\.pdef{\_protected\_def}
 
-\_newpublic\_def \sgn     {\_mathop{\_rm sgn}\_nolimits}
-\_newpublic\_def \argmin  {\_mathop{\_rm argmin}}
-\_newpublic\_def \argmax  {\_mathop{\_rm argmax}}
-\_newpublic\_def \grad    {\_mathop{\_rm grad}\_nolimits}
-\_newpublic\_def \rank    {\_mathop{\_rm rank}\_nolimits}
-\_newpublic\_def \tr      {\_mathop{\_rm tr}\_nolimits}
-\_newpublic\_def \diag    {\_mathop{\_rm diag}\_nolimits}
-\_newpublic\_def \Span    {\_mathop{\_rm Span}\_nolimits}
-\_newpublic\_def \Rng     {\_mathop{\_rm Rng}\_nolimits}
-\_newpublic\_def \Null    {\_mathop{\_rm Null}\_nolimits}
-\_newpublic\_def \Ker     {\_mathop{\_rm Ker}\_nolimits}
-\_newpublic\_def \Res     {\_mathop{\_rm Res}\_nolimits}
-\_newpublic\_def \tg      {\_mathop{\_rm tg}\_nolimits}
-\_newpublic\_def \cotg    {\_mathop{\_rm cotg}\_nolimits}
-\_newpublic\_def \arctg   {\_mathop{\_rm arctg}\_nolimits}
-\_newpublic\_def \arccotg {\_mathop{\_rm arccotg}\_nolimits}
+\_newpublic\.pdef \N {{\_bbchar N}}
+\_newpublic\.pdef \Z {{\_bbchar Z}}
+\_newpublic\.pdef \Q {{\_bbchar Q}}
+\_newpublic\.pdef \R {{\_bbchar R}}
+\_newpublic\.pdef \C {{\_bbchar C}}
 
-\_newpublic\_def \frac  #1#2{{{#1}\_over#2}}
-\_newpublic\_def \dfrac #1#2{{\_displaystyle{{#1}\_over#2}}}
-\_newpublic\_def \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
+\_newpublic\.pdef \sgn     {\_mathop{\_rm sgn}\_nolimits}
+\_newpublic\.pdef \argmin  {\_mathop{\_rm argmin}}
+\_newpublic\.pdef \argmax  {\_mathop{\_rm argmax}}
+\_newpublic\.pdef \grad    {\_mathop{\_rm grad}\_nolimits}
+\_newpublic\.pdef \rank    {\_mathop{\_rm rank}\_nolimits}
+\_newpublic\.pdef \tr      {\_mathop{\_rm tr}\_nolimits}
+\_newpublic\.pdef \diag    {\_mathop{\_rm diag}\_nolimits}
+\_newpublic\.pdef \Span    {\_mathop{\_rm Span}\_nolimits}
+\_newpublic\.pdef \Rng     {\_mathop{\_rm Rng}\_nolimits}
+\_newpublic\.pdef \Null    {\_mathop{\_rm Null}\_nolimits}
+\_newpublic\.pdef \Ker     {\_mathop{\_rm Ker}\_nolimits}
+\_newpublic\.pdef \Res     {\_mathop{\_rm Res}\_nolimits}
+\_newpublic\.pdef \tg      {\_mathop{\_rm tg}\_nolimits}
+\_newpublic\.pdef \cotg    {\_mathop{\_rm cotg}\_nolimits}
+\_newpublic\.pdef \arctg   {\_mathop{\_rm arctg}\_nolimits}
+\_newpublic\.pdef \arccotg {\_mathop{\_rm arccotg}\_nolimits}
 
-\_newpublic\_def \.#1{{\_bf#1}}
+\_newpublic\.pdef \frac  #1#2{{{#1}\_over#2}}
+\_newpublic\.pdef \dfrac #1#2{{\_displaystyle{{#1}\_over#2}}}
+\_newpublic\.pdef \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
+
+\_newpublic\.pdef \.#1{{\_bf#1}}
 
    \_doc
    The \`\toright` and  \`\toleft` macros are based on the
@@ -478,7 +481,7 @@ $$
 These typical macros are defined in `math.opm`:
 \^`\N` for $\N$, \^`\Z` for $\Z$, \^`\Q` for $\Q$, \^`\R` for $\R$, \^`\C` for $\C$,
 \^`\sgn`, \^`\argmin`, \^`\argmax`, \^`\grad`, \^`\rank`, \^`\tr`, \^`\diag`, \^`\Span`, \^`\Rng`,
-\^`\Null`, \^`\Ker`, \^`\Res`, \^`\tg`, \^`\arctg`.
+\^`\Null`, \^`\Ker`, \^`\Res`, \^`\tg`, \^`\cotg`, \^`\arctg`, \^`\arccotg`.
 
 I hate the \^`\frac`, \^`\dfrac` and \^`\tfrac` macros defined in \LaTeX/
 but someone may want to use them. This package defines them.
@@ -490,6 +493,7 @@ The package provides a shortcut `\.<letter>` to do the same, so user can write
 `\.A\.x` for multiplication of a matrix $\.A$ by a vector $\.x$.
 We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
 `math.opm` can define `\.` differently than the classical meaning \"dotaccent".
+
 
 \sec Equation marks in atypical cases
 
@@ -758,7 +762,7 @@ The user can read this warning and declare the macro after
    \def\n`#1`{\exlink#1{\tnurl\#cs:}}
    \outlines 0
 
-   \tit Macros for doing math more comfortable
+   \tit Macros for doing math more comfortably
    \hfill Version: \_math_version \par
    \centerline{\it Petr Olšák\/\fnotemark1, 2022}
    \fnotetext{\url{https://petr.olsak.net}}
@@ -777,7 +781,8 @@ The user can read this warning and declare the macro after
 
 \endinput
 
-      2023-01-15  \replacemissingchars: bug fixed
+0.07  2023-01-23: \sgn etc. defined as \protected\def.
+      2023-01-15: \replacemissingchars: bug fixed
 0.06, 2023-01-14: \rmchars, \vargreek, \bfserif introduced
 0.05, 2023-01-07: \mathset introduced
 0.04, 2022-12-26: \casesof used in \.fparamA
