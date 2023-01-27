@@ -100,6 +100,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#nonunicode">Fons with non-Unicode encoding</a>
     <li><a href="#ul">Marking parts of text</a>
     <li><a href="#attreffects">Font effects using attributes</a>
+    <li><a href="#varifonts">Using variable fonts</a>
 </ul>
 
 <li>Lists
@@ -645,6 +646,85 @@ no matter what).</p>
 <p>Sadly outline fonts don't work with colors.</p>
 
 <p CLASS=datum>(0064) -- M. Vlasák 2021-07-14</p>
+<hr>
+
+<h2><a name="varifonts"></a>Using variable fonts</h2>
+
+<p>The OpenType standard allows to create a "variable" font. It generates its
+shapes depending on a numeric values of "axes", which is a special font
+feature with a parameter. For example <tt>axes={weight=800}</tt> sets the
+weight of the font shapes to 800 units (it is typically a bold font). The
+slanting amount etc. can be set by "axes" too, if it is implemented into the
+font. Only few fonts support this feature. If it is supported then you can
+have a single font file for all weights, etc. parameters. See
+<a href="https://en.wikipedia.org/wiki/Variable_font">Wiki page</a> for more information.
+
+<p>Suppose, we have download the CrimsonPro-VariableFont_wght.ttf
+and CrimsonPro-Italic-VariableFont_wght.ttf font files from the internet.
+This font supports
+the weight axis. User can set <tt>\wght=500 \rm text</tt> and the given
+weight is used. Moreover, we implement the font modifiers \bolder, which
+increases all weights of \rm, \bf, \it, \bi by 100 and the \lighter modifier
+decreases all weight by 100. User can try:
+
+<pre>
+\fontfam[CrimsonVar]
+
+\rm Roman, \bf Bold, \it Italic, \bi Bold-Italic \par
+\bolder  \rm Roman, \bf Bold, \it Italic, \bi Bold-Italic
+</pre>
+
+<p>In order to provide this, we create f-crimsonvar.opm font file:
+
+<pre>
+\_famdecl [Crimson Var Font] \Crimsonvar
+   {CrimsonPro, the robust Garamond-like font, Variable font}
+   {\lighter \bolder} {\rm \mf \bf \it \mi \bi}
+   {Garamond-Math} {[CrimsonPro-VariableFont_wght]}
+   {\_def\_fontnamegen {%
+      [CrimsonPro\_currV-VariableFont_wght]:axis={weight=\_the\__vf_wghtV};\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \lighter ... All \rm \mf \bf \it \mi \bi are lighter by 1/4 of weight step^^J
+ \bolder .... All \rm \mf \bf \it \mi \bi are bolder by 1/4 of weight step^^J
+}}
+
+\_newcount\__vf_wghtV  \_newcount\__vf_wght \__vf_wght=400
+\_def\__vf_wghtstep{100}
+\_newpublic \_let\wght=\__vf_wght
+
+\_sdef{fv:Crimsonvar:rm}{\__vf_wghtV=\__vf_wght}
+\_sdef{fv:Crimsonvar:bf}{\__vf_wghtV=\__vf_wght \_advance\__vf_wghtV by400 }
+\_sdef{fv:Crimsonvar:it}{\__vf_wghtV=\__vf_wght}
+\_sdef{fv:Crimsonvar:bi}{\__vf_wghtV=\__vf_wght \_advance\__vf_wghtV by400 }
+
+\_addto\_fmodrm {\_cs{fv:\_currfamily:rm}}
+\_addto\_fmodbf {\_cs{fv:\_currfamily:bf}}
+\_addto\_fmodit {\_cs{fv:\_currfamily:it}}
+\_addto\_fmodbi {\_cs{fv:\_currfamily:bi}}
+
+% Modes
+\_moddef \resetmod {\__vf_wghtV=\__vf_wght \_fvars {} {} -Italic -Italic }
+\_moddef \lighter  {\_advance\__vf_wght by-\__vf_wghtstep\_relax}
+\_moddef \bolder   {\_advance\__vf_wght by\__vf_wghtstep\_relax}
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+% Medium variants
+\_famvardef \mf {\bolder\bolder\_rm}
+\_famvardef \mi {\bolder\bolder\_it}
+
+\_initfontfamily % new font family must be initialized
+\_loadmath{[Garamond-Math]}
+\_endcode
+</pre>
+
+<p>The \_fontnamegen uses \the\__vf_wghtV as the axis parameter. It is set
+by \rm, \bf, \it and \bi due to their internal macros \_fmodrm, \_fmodbf
+etc. The \_fvars sets only two variants (Roman and Italic). The bold
+variants are set using different axis weight advanced by 400.
+
+<p CLASS=datum>(0102) -- P. O. 2023-01-27<p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
