@@ -651,13 +651,17 @@ no matter what).</p>
 <h2><a name="varifonts"></a>Using variable fonts</h2>
 
 <p>The OpenType standard allows to create a "variable" font. It generates its
-shapes depending on a numeric values of "axes", which is a special font
-feature with a parameter. For example <tt>axes={weight=800}</tt> sets the
-weight of the font shapes to 800 units (it is typically a bold font). The
-slanting amount etc. can be set by "axes" too, if it is implemented into the
-font. Only few fonts support this feature. If it is supported then you can
-have a single font file for all weights, etc. parameters. See
-<a href="https://en.wikipedia.org/wiki/Variable_font">Wiki page</a> for more information.
+glyphs depending on a numeric values of "axes", which is a special font
+feature with a parameter. For example <tt>axis={wght=800}</tt> sets the
+weight of the font glyphs to 800 units (it is typically a bold font). More axes
+can be provided: <tt>wdth</tt> (width), <tt>slnt</tt> (slant), <tt>opsz</tt>
+(optical size), <tt>ital</tt> (italics). They can be set as comma separated
+list of key=value in the <tt>axis</tt> parameter. Only few fonts support this feature.
+If the feature is supported then you can
+have a single font file for all weights, etc. parameters. See the
+<a href="https://en.wikipedia.org/wiki/Variable_font">Wiki page</a>
+or the <a href="https://web.dev/variable-fonts/">introduction page</a>
+for more information.
 
 <p>Suppose, we have download the CrimsonPro-VariableFont_wght.ttf
 and CrimsonPro-Italic-VariableFont_wght.ttf font files from the internet.
@@ -682,7 +686,7 @@ decreases all weight by 100. User can try:
    {\lighter \bolder} {\rm \mf \bf \it \mi \bi}
    {Garamond-Math} {[CrimsonPro-VariableFont_wght]}
    {\_def\_fontnamegen {%
-      [CrimsonPro\_currV-VariableFont_wght]:axis={weight=\_the\__vf_wghtV};\_fontfeatures}}
+      [CrimsonPro\_currV-VariableFont_wght]:axis={wght=\_the\_numexpr\_wghtV};\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
@@ -690,14 +694,13 @@ Modifiers:^^J
  \bolder .... All \rm \mf \bf \it \mi \bi are bolder by 1/4 of weight step^^J
 }}
 
-\_newcount\__vf_wghtV  \_newcount\__vf_wght \__vf_wght=400
-\_def\__vf_wghtstep{100}
-\_newpublic \_let\wght=\__vf_wght
+\_newcount\__vf_wght \__vf_wght=400   % default weight for \rm
+\_newpublic \_let \wght=\__vf_wght    % user can write: \wght=500 \rm ...
 
-\_sdef{fv:Crimsonvar:rm}{\__vf_wghtV=\__vf_wght}
-\_sdef{fv:Crimsonvar:bf}{\__vf_wghtV=\__vf_wght \_advance\__vf_wghtV by400 }
-\_sdef{fv:Crimsonvar:it}{\__vf_wghtV=\__vf_wght}
-\_sdef{fv:Crimsonvar:bi}{\__vf_wghtV=\__vf_wght \_advance\__vf_wghtV by400 }
+\_sdef{fv:Crimsonvar:rm}{\_fsetV wght={\__vf_wght} }
+\_sdef{fv:Crimsonvar:bf}{\_fsetV wght={\__vf_wght+400} }
+\_sdef{fv:Crimsonvar:it}{\_fsetV wght={\__vf_wght} }
+\_sdef{fv:Crimsonvar:bi}{\_fsetV wght={\__vf_wght+400} }
 
 \_addto\_fmodrm {\_cs{fv:\_currfamily:rm}}
 \_addto\_fmodbf {\_cs{fv:\_currfamily:bf}}
@@ -705,10 +708,9 @@ Modifiers:^^J
 \_addto\_fmodbi {\_cs{fv:\_currfamily:bi}}
 
 % Modes
-\_moddef \resetmod {\__vf_wghtV=\__vf_wght \_fvars {} {} -Italic -Italic }
-\_moddef \lighter  {\_advance\__vf_wght by-\__vf_wghtstep\_relax}
-\_moddef \bolder   {\_advance\__vf_wght by\__vf_wghtstep\_relax}
-\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \resetmod {\_fsetV wght={\__vf_wght} \_fvars {} {} -Italic -Italic }
+\_moddef \lighter  {\_advance\__vf_wght by-100 }
+\_moddef \bolder   {\_advance\__vf_wght by100 }
 
 % Medium variants
 \_famvardef \mf {\bolder\bolder\_rm}
@@ -719,10 +721,10 @@ Modifiers:^^J
 \_endcode
 </pre>
 
-<p>The \_fontnamegen uses \the\__vf_wghtV as the axis parameter. It is set
-by \rm, \bf, \it and \bi due to their internal macros \_fmodrm, \_fmodbf
-etc. The \_fvars sets only two variants (Roman and Italic). The bold
-variants are set using different axis weight advanced by 400.
+<p>The \_fontnamegen uses \the\numexpr\_wghtV as the axis parameter.
+The \_wghtV macro is set by \rm, \bf, \it and \bi due to their internal
+macros \_fmodrm, \_fmodbf etc. It is \wght for normal or \wght+400 for bold variants.
+The \_fvars sets only two variants (Roman and Italic).
 
 <p CLASS=datum>(0102) -- P. O. 2023-01-27<p>
 <hr>
