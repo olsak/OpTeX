@@ -3,8 +3,8 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.07, 2023-01-23}
-\_codedecl \replacemissingchars {Doing math more comfortable <\_math_version>}
+\_def\_math_version {0.08, 2023-01-28}
+\_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
    \_doc
@@ -177,6 +177,31 @@
 \_newpublic\.pdef \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
 
 \_newpublic\.pdef \.#1{{\_bf#1}}
+
+   \_doc
+   \`\eqsystem``{<equations>}` saves its parameter to `\.tmpb`
+   and does a collection of `\_replstring`. It replaces all spaces by `&`
+   (but not the optional first space), it precedes `\mathord` before all `-`
+   (but not if the minus is alone in the column) and runs `\halign`.
+   The \n`\baselineskip` is enlarged by \O`\openup`\`\eqskip`.
+   The \`\.eqitem` prints single item, adds 0.5\`\eqsep` around this item if
+   it isn't empty.
+   \_cod
+
+\_protected \_optdef\.eqsystem[]#1{\_vcenter{%
+   \_def\.tmpb{\.bb#1}%
+   \_replstring\.tmpb{ }{&}\_replstring\.tmpb{\.bb&}{}%
+   \_replstring\.tmpb{-}{\_mathord-}\_replstring\.tmpb{&\_mathord-&}{&-&}%
+   \_let ~=\_relax
+   \_the\_opt \_relax \_openup\.eqskip
+   \_halign{&\_hfil\.eqitem{##}\_cr\.tmpb\_crcr}}%
+}
+\_def\.eqitem#1{\_isempty{#1}\_iffalse
+   \_kern.5\.eqsep $\_displaystyle{{}#1{}}$\_kern.5\.eqsep \_fi}
+\_let\.bb=\_empty
+\_newdimen\.eqskip
+\_newdimen\.eqsep
+\_nspublic \eqsystem \eqskip \eqsep ;
 
    \_doc
    The \`\toright` and  \`\toleft` macros are based on the
@@ -365,6 +390,7 @@ The following macros are defined in this package:
   \~`\smartvert` declares \"`|`" for better spacing.
 * There are many common math macros for sets or for operators, for example
   \~`\R` or \~`\sgn`.
+* \~`\eqsystem` enables to write systems of equations comfortably,
 * \~`\toright`, \~`\toleft` puts the \o`\eqmark` to desired position,
   \~`\subeqmark` prints the given suffix as a part of the equation mark.
 * \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
@@ -476,6 +502,7 @@ $$
   }
 $$
 
+
 \sec Basic and typical macros for sets, functions etc.
 
 These typical macros are defined in `math.opm`:
@@ -495,9 +522,42 @@ We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
 `math.opm` can define `\.` differently than the classical meaning \"dotaccent".
 
 
+\sec System of equations printed by `\eqsystem`
+
+The \^`\eqsystem``{<equations>}` enables to write systems of equations more
+comfortably. The equations are separated by `\cr` and the aligned columns
+are separated by space. For example:
+\begtt
+$$
+  \eqsystem{  x +  y - 2z = 10 \cr
+             2x - 7y +  z = 13 \cr
+             -x +  y ~  ~ = -5 }
+$$
+\endtt
+prints
+$$
+  \eqsystem{  x +  y - 2z = 10 \cr
+             2x - 7y +  z = 13 \cr
+             -x +  y ~  ~ = -5 }
+$$
+Note that empty columns have to be filled by `~` mark.
+There are columns for variables (possibly multiplied by a constant) and for
+binary operators `+` and `-` or relations `=`, `>` etc. or constants. Each column
+is aligned to right. The number of columns is unlimited (we have 7 columns in
+the example above). All given equations are packed to the `\vcenter` box.
+
+The spaces between lines are enlarged by the value of \^`\eqskip`
+and spaces between columns are enlaged by \^`\eqsep`. Both registers are
+set to 0\,pt by default.
+
+The \^`\eqsystem` macro allows optional parameter which is processed inside
+group before printing equations. You can do local settings here, for example
+`\eqsystem[\eqskip=2pt \eqsep=5pt]{...}`.
+
+
 \sec Equation marks in atypical cases
 
-We want to put equation marks `\eqmark` in more lines in display mode when we
+We may want to put equation marks `\eqmark` in more lines in display mode when we
 are using macros not designed for such case. For example in the lines of
 the `\cases` macro:
 
@@ -515,7 +575,7 @@ The \^`\toright`\o`\eqmark` is used here. Analogically,
 The position of these marks are correct after second or more \TeX/ run
 because \TeX/ needs to read data from its previous run in this case.
 
-Sometime we want to declare a bunch of equations with the same numeric
+Sometimes we want to declare a bunch of equations with the same numeric
 equation marks but with different suffixes, for example (1.1a), (1.1b). We
 provide the macro \^`\subeqmark``<suffix>` here.
 If `<suffix>` is `a` or `A` then \^`\subeqmark` starts a new bunch of
@@ -525,12 +585,10 @@ You can put `[<label>]` after `<suffix>` for referencing purposes.
 Example:
 
 \begtt
-$$\adef~{\kern.5em }
-  \eqalignno{
-     x + 2y + 3z &= 600 & \subeqmark a \cr
-   12x + ~y - 3z &= -7  & \subeqmark b[label] \cr
-    4x - ~y + 5z &= ~5  & \subeqmark c \cr
-  }
+$$ \eqsystem[\eqskip=3pt]{
+     x + 2y + 3z = 600 \toright{\subeqmark a}\cr
+   12x +  y - 3z = -7  \toright{\subeqmark b[label]}\cr
+    4x -  y + 5z =  5  \toright{\subeqmark c}\cr }
 $$
 The equation~\ref[label] has negative right side. Moreover, it applies
 $$
@@ -538,11 +596,10 @@ $$
 $$
 \endtt
 prints
-$$\adef~{\kern.5em }
-   \eqalignno{
-     x + 2y + 3z &= 600 & \subeqmark a \cr
-   12x + ~y - 3z &= -7  & \subeqmark b[label] \cr
-    4x - ~y + 5z &= ~5  & \subeqmark c \cr
+$$ \eqsystem[\eqskip=3pt]{
+     x + 2y + 3z = 600 \toright{\subeqmark a}\cr
+   12x +  y - 3z = -7  \toright{\subeqmark b[label]}\cr
+    4x -  y + 5z =  5  \toright{\subeqmark c}\cr
   }
 $$
 The equation~\ref[label] has negative right side. Moreover, it applies
@@ -764,7 +821,7 @@ The user can read this warning and declare the macro after
 
    \tit Macros for doing math more comfortably
    \hfill Version: \_math_version \par
-   \centerline{\it Petr Olšák\/\fnotemark1, 2022}
+   \centerline{\it Petr Olšák\/\fnotemark1, 2022, 2023}
    \fnotetext{\url{https://petr.olsak.net}}
 
    \notoc\nonum\sec Table of contents
@@ -781,6 +838,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.08  2023-01-28: \eqsystem introduced.
 0.07  2023-01-23: \sgn etc. defined as \protected\def.
       2023-01-15: \replacemissingchars: bug fixed
 0.06, 2023-01-14: \rmchars, \vargreek, \bfserif introduced

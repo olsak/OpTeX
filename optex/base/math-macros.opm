@@ -703,7 +703,7 @@
 \_public\displaylines ;
 
    \_doc -----------------------------
-   \`\openup`, \`\eqalignno` and `\leqalignno` macros are copied from
+   \`\openup`, \`\eqalignno` and \`\leqalignno` macros are copied from
    Plain \TeX/ unchanged.
    \_cod -----------------------------
 
