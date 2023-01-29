@@ -180,28 +180,29 @@
 
    \_doc
    \`\eqsystem``{<equations>}` saves its parameter to `\.tmpb`
-   and does a collection of `\_replstring`. It replaces all spaces by `&`
-   (but not the optional first space), it precedes `\mathord` before all `-`
+   and does a collection of `\_replstring`s. It replaces all spaces by `&`
+   (but ignores the optional first and last space), it removes spaces before `\cr`,
+   it precedes `\mathord` before all `-`
    (but not if the minus is alone in the column) and runs `\halign`.
    The \n`\baselineskip` is enlarged by \O`\openup`\`\eqskip`.
-   The \`\.eqitem` prints single item, adds 0.5\`\eqsep` around this item if
-   it isn't empty.
+   Each item adds 0.5\`\eqsep` around it and \`\eqfil` to the left side and
+   `\hfil` to the right side.
    \_cod
 
 \_protected \_optdef\.eqsystem[]#1{\_vcenter{%
-   \_def\.tmpb{\.bb#1}%
-   \_replstring\.tmpb{ }{&}\_replstring\.tmpb{\.bb&}{}%
+   \_def\.tmpb{\.bb#1\.bb}\_replstring\.tmpb{ }{&}%
+   \_replstring\.tmpb{\.bb&}{}\_replstring\.tmpb{&\.bb}{}\_replstring\.tmpb{&\cr}{\cr}%
    \_replstring\.tmpb{-}{\_mathord-}\_replstring\.tmpb{&\_mathord-&}{&-&}%
    \_let ~=\_relax
    \_the\_opt \_relax \_openup\.eqskip
-   \_halign{&\_hfil\.eqitem{##}\_cr\.tmpb\_crcr}}%
-}
-\_def\.eqitem#1{\_isempty{#1}\_iffalse
-   \_kern.5\.eqsep $\_displaystyle{{}#1{}}$\_kern.5\.eqsep \_fi}
+   \_halign{&\_the\.eqfil\_kern.5\.eqsep$\_displaystyle{{}##{}}$\_kern.5\.eqsep\_hfil\_cr
+            \.tmpb\_crcr}%
+}}
 \_let\.bb=\_empty
 \_newdimen\.eqskip
 \_newdimen\.eqsep
-\_nspublic \eqsystem \eqskip \eqsep ;
+\_newtoks\.eqfil   \.eqfil={\_hfill}
+\_nspublic \eqsystem \eqskip \eqsep \eqfil ;
 
    \_doc
    The \`\toright` and  \`\toleft` macros are based on the
@@ -547,8 +548,13 @@ is aligned to right. The number of columns is unlimited (we have 7 columns in
 the example above). All given equations are packed to the `\vcenter` box.
 
 The spaces between lines are enlarged by the value of \^`\eqskip`
-and spaces between columns are enlaged by \^`\eqsep`. Both registers are
-set to 0\,pt by default.
+and the horizontal spaces between columns are enlaged by \^`\eqsep`.
+Both registers are set to 0\,pt by default.
+
+The \^`\eqfil` register is \"left filler" applied to each item in the \^`\eqsystem` columns.
+Its default is `\eqfil={\hfill}`. The right filler is hardwired and it is `\hfil`.
+This makes columns aligned to right by default. For example, when you set
+`\eqfil={\hfil}` then you have columns centered.
 
 The \^`\eqsystem` macro allows optional parameter which is processed inside
 group before printing equations. You can do local settings here, for example
@@ -838,7 +844,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
-0.08  2023-01-28: \eqsystem introduced.
+0.08  2023-01-28: \eqsystem introduced, \eqfil added.
 0.07  2023-01-23: \sgn etc. defined as \protected\def.
       2023-01-15: \replacemissingchars: bug fixed
 0.06, 2023-01-14: \rmchars, \vargreek, \bfserif introduced
