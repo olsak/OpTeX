@@ -152,44 +152,68 @@
 \_endcode %----------------------------------------------------
 
 
-\sec[prefixed] Concept of namespaces of control sequences
+\sec[basic-code] Basic principles of \OpTeX/ sources
 
-\secc Prefixing internal control sequences
+\secc[namespaces] Concept of namespaces of control sequences
 
-All control sequences used in \OpTeX/ are used and defined with `_` prefix.
-The user can be sure that when he/she does `\def\foo` then neither internal macros of
-\OpTeX/ nor \TeX/ primitives will be damaged. For example
-`\def\if{...}` will not damage macros because \OpTeX/'s macros
-are using `\_if` instead of `\if`.
+\OpTeX/ sets the category code of the \"`_`" character to 11 (letter)
+and it is never changed.\fnote
+{This is only singular exception form category codes given by plain \TeX.}
+So, we can always construct multiletter control sequence names from letters
+`A`--`Z`, `a`--`z`, and `_`. The \"letter `_`" works in math mode as a subscript
+constructor because it is set as math active character (see section~\ref[math-macros]).
 
-All \TeX/ primitives are initialized with two representative control
-sequences: `\word` and `\_word`, for example `\hbox` and `\_hbox`.
-The first alternative is reserved for users or such control sequences
-can be re-defined by a user.
+We distinguish following namespaces for multiletter control sequences:
+\begitems
+* Only alphabetical names are in the {\em public namespace}. They are intended
+  for end users when creating a document. Sometimes it is called {\em user
+  namespace} too. For example `\hbox`, `\fontfam`, `\MyMacro`.
+* Only alphabetical lowercase names prefixed by single \"`_`" are in the
+  {\em private namespace}. It is used in \OpTeX/ internal macros.
+  For example `\_hbox`, `\_fontsel`.
+* Names in the form `\_<pkg>_<name>` are in the {\em package namespace},
+  see section~\ref[pkg-namespace]. For example `\_qr_size`, `\_math_alist`.
+* Other names which include \"`_`" but not as the first character can be used
+  too, but with care, see the end of this section.
+\enditems
 
-\OpTeX/ sets the character `_` as letter, so it can be used in
-control sequences. When a control sequence begins with this character
-then it means that it is a primitive or it is used in \OpTeX/ macros as
-internal. User can redefine such prefixed control sequence only
-if he/she explicitly knows what happens.
+All \TeX/ primitives are initialized with two control sequences with the
+same meaning: {\em prefixed} control sequence
+(in private namespace, for example `\_hbox`)
+and {\em unprefixed} control sequence (in public namespace, for example `\hbox`).
+All \OpTeX/ macros intended for end users are initialized in these two forms
+too, for example `\_ref` and `\ref`.
 
-We never change catcode of `_`, so internal macros can be
-redefined by user without problems if it is desired. We don't need
-something like `\makeatletter` from \LaTeX/.
+Users can declare any control sequences in the public namespace without worrying
+that \OpTeX/ behavior is changed. This is because \OpTeX/ uses exclusively
+prefixed control sequences in its macros. For example, a user can declare
+`\def\fi{finito}` and nothing bad happens, if the user doesn't use `\fi` in
+its original primitive meaning. You don't have to know all \TeX/ primitives
+and \OpTeX/ macros, you can declare control sequences for your use in the
+public namespace without limitations and nothing bad will happen.
 
-\OpTeX/ defines all new macros as prefixed. For public usage of such macros,
-we need to set their non-prefixed versions. This is done by
+You can use control sequences from private or package namespace in
+a \"read-only manner" without changing \OpTeX/ behavior too.
+On the other hand, if you re-define a control sequence in the private name
+space, the \OpTeX/ behavior can be changed. You can do it
+but we suppose that you know what you are doing and what \OpTeX/
+behavior is changed.
 
+All multiletter control sequences declared by \OpTeX/ are defined in the private
+namespace first (`\_def\_macro{...}`). If the declared control sequences are
+intended for end users too then they are exported to the public namespace
+after that. It is done by the \^`\public` macro:
 \begtt \catcode`\<=13
 \public <list of control sequences> ;
 \endtt
-
 For example \^`\public`` \foo \bar ;` does `\let\foo=\_foo`, `\let\bar=\_bar`.
 
-At the end of each code segment in \OpTeX/, the `\_public` macro is used. You
-can see which macros are defined for public usage in that code segment.
+There is an exception of the above mentioned principle. Control sequences
+which are alternatives to math characters (`\alpha`, `\forall`, `\subset` etc.)
+are declared only in public name space if they are not used in any internal
+\OpTeX/ macros.
 
-The macro \^`\private` does the reverse job of `\public` with the same syntax.
+The macro \^`\private` does the reverse job of \^`\public` with the same syntax.
 For example `\private \foo \bar ;` does `\let\_foo=\foo`, `\let\_bar=\bar`.
 This should be used when an unprefixed variant of a control sequence is declared
 already but we need the prefixed variant too.
@@ -199,44 +223,32 @@ In this documentation: if both variants of a control sequence are declared
 the unprefixed variant. The code typically defines the prefixed variant
 and then the \^`\public` (or `\_public`) macro is used.
 
-\secc[user-ns] Namespace of control sequences for users
-
-Users can (re)define or (re)declare any control sequence with a name without any `_`.
-This does not make any problem in internal \OpTeX/ macros.\fnote
-{The token `\par` is in user name space too from \OpTeX/ 1.04+ and
-Lua\TeX/ 1.14, see also the end of section~\ref[others].}
-
-User can define or declare control sequences with `_` character, for
-example `\my_control_sequence`, but with the following exceptions:
-
-\begitems
-* Control sequences which begin with `_` are reserved for \TeX/ primitives,
-  \OpTeX/ internal macros and packages internal macros.
-* Multiletter control sequences in the form
-  `\<word>_` or `\<word>_<one-letter>`, where
-  <word> is a sequence of letters, are inaccessible, because they
-  are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
-  `_<one-letter>`. This is important for writing math, for example:
-\begtt  \adef-{_}
-  \int-a^b    ... is interpreted as \int _a^b
-  \max-M      ... is interpreted as \max _M
-  \alpha-{ij} ... is interpreted as \alpha _{ij}
-\endtt
-  This feature is implemented using Lua code at input processor level, see
-  the section~\ref[math-macros] for more details. You can deactivate this feature by
-  \^`\mathsboff`. After this, you can still write
-  `$`$\int$`_a^b$` (Unicode) or `$\int _a^b$` % $∫_a^b$ (Unicode) or $\int _a^b$
-  without problems but `\int``_a^b` yields to undefined control sequence
-  `\int``_a`. You can activate this feature again by \^`\mathsbon`. The
-  effect will take shape from next line read from input file.
-* Control sequences in the form `\_<pkg>_<word>` is intended for package
-  writers as internal macros for a package with `<pkg>` identifier,
-  see section~\ref[pkg-namespace].
-\enditems
-
 The single-letter control sequences like `\%`, `\$`, `\^` etc. are not used
 in internal macros. Users can redefine them, but (of course) some classical
 features can be lost (printing percent character by `\%` for example).
+
+It is very tempting to use control sequence names with `_` in order to
+distinguish more words in the sequence name. If the first character isn't
+`_` then such a name is outside private and package namespaces, so they can
+be used for various purposes. For example `\my_control_sequence`. But there
+is an exception: control sequences in the form `\<word>_` or `\<word>_<one-letter>`,
+where <word> is a sequence of letters, are inaccessible, because they
+are interpreted as `\<word>` followed by `_` or as `\<word>` followed by
+`_<one-letter>`. This feature is activated because we want to write math
+formulae as in plain \TeX, for example:
+\begtt
+  \int_a^b    ... is interpreted as \int _a^b
+  \max_M      ... is interpreted as \max _M
+  \alpha_{ij} ... is interpreted as \alpha _{ij}
+\endtt
+It is implemented using Lua code at input processor level, see
+the section~\ref[math-macros] for more details. You can deactivate this feature by
+\^`\mathsboff`. After this, you can still write
+`$`$\int$`_a^b$` (Unicode) or `$\int _a^b$` % $∫_a^b$ (Unicode) or $\int _a^b$
+without problems but `\int``_a^b` yields to undefined control sequence
+`\int``_a`. You can activate this feature again by \^`\mathsbon`. The
+effect will take shape from next line read from input file.
+
 
 \secc Macro files syntax
 
@@ -272,7 +284,7 @@ put macros for creating your documentation between
 first pair of \^`\_doc` ... \^`\_cod` used after \^`\_endcode`.
 These macros should \^`\load[doc]` and must be finished by \^`\bye`.
 Then you have code+documentation together in a single file and
-user can generate the documentation of our package by
+user can generate the documentation of your package by
 \^`\docgen` used at command line:
 \begtt
 optex -jobname pkgname-doc '\docgen pkgname'
@@ -307,10 +319,10 @@ does `\let\foo = \_<pkg>_foo` for each given sequence when
 \^`\_namespace{<pkg>}` is declared. Moreover, it prints a warning if `\foo` is
 defined already. The \^`\_nsprivate` macro does reverse
 operation to it without warnings. Example: you can define `\def\.macro{...}` and then
-set it to the user name space by `\_nspublic \macro;`.
+set it to the public namespace by `\_nspublic \macro;`.
 
 It could happen that a package writer needs to declare a control sequence
-(say `\foo`) directly without setting it in `\_<pkg>_foo` name space
+(say `\foo`) directly without setting it in `\_<pkg>_foo` namespace
 followed by using \^`\_nspublic`. The \^`\newpublic` prefix should be used in this
 case, for example `\_newpublic\_def\foo` or `\_newpublic\_chardef\foo` or
 `\_newpublic{\_long\_def}\foo`. The \^`\newpublic``<do>\<sequence>` prints
@@ -338,9 +350,9 @@ If you are writing a macro file that is intended to be published for
 \OpTeX/, then you are greatly welcome. You should follow these rules:
 
 \begitems
-* Don't use control sequences from the user namespace in the macro
+* Don't use control sequences from the public namespace in the macro
   bodies if there is no explicit and documented reason to do this.
-* Don't declare control sequences in the user namespace if there are no
+* Don't declare control sequences in the public namespace if there are no
   explicit and documented reasons to do this.
 * Use control sequences from \OpTeX/ and primitive namespace
   in read-only mode, if there is not an explicit and documented reason to
@@ -368,11 +380,12 @@ used directly in \OpTeX/ and from other published macros.
 This extension `.opm` has precedence before `.tex` when
 the \^`\load` macro is used.
 
-The `qrcode.opm` is the first example of how an external macro file for \OpTeX/
+The `math.opm` is a good example of how an external macro file for \OpTeX/
 can look like.
 
 \endinput
 
+2023-01-30 doc. about namespaces rewritten
 2022-11-25 \_resetnamespace: moved \gdef\_namesp:#1 {} to \_namespace
 2022-11-24 \newpublic introduced, \_checkexists with only two parameters.
 2022-11-22 \currfile introduced and used in \_codedecl

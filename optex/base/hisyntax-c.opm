@@ -52,7 +52,7 @@ User can re-declare his/her own colors by `\hicolors` which has precedence
 before `\_hicolors<name>`.
 
 The public variants can be declared if you want to give these token lists to
-the user namespace. But it is not explicitly needed.
+the public namespace. But it is not explicitly needed.
 
 All settings must be global here because the file is typically read inside
 a group and we need not read it repeatedly before each code chunk

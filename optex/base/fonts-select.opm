@@ -733,10 +733,10 @@ Compare ex-height of Termes \rmsans with Heros \rm and Termes.
 \endtt
 
 The variant selectors (declared by \~`\famvardef`) or font
-modifiers (declared by \~`\moddef`) are (typically) control sequences in user name
-space (`\mf`, `\caps`). They are most often declared in font family files and
+modifiers (declared by \~`\moddef`) are (typically) control sequences in the public
+namespace (`\mf`, `\caps`). They are most often declared in font family files and
 they are loaded by \^`\fontfam`. A conflict with such names in
-user namespace can be here. For example: if `\mf` is defined by a user and then
+the public namespace can be here. For example: if `\mf` is defined by a user and then
 `\fontfam[Roboto]` is used then `\famvardef\mf` is performed for Roboto
 family and the original meaning of `\mf` is lost. But \OpTeX/ prints warning
 about it. There are two cases:

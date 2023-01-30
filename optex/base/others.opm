@@ -177,9 +177,9 @@
 \_else % LuaTeX 1.14 or newer:
 
    \_doc -----------------------------
-   We set `\partokenneame` to `\_par` in order to keep the name `\par` in
-   user name space. I.e. a user can say `\def\par{paragraph}` for example
-   without crash of processing the document. Se section~\ref[prefixed] for
+   We set `\partokenneame` to `\_par` in order to keep the name `\par` in the
+   public namespace for end users. I.e.\ a user can say `\def\par{paragraph}` for example
+   without crash of processing the document. Se section~\ref[namespaces] for
    more details about the name space concept.\nl
    Moreover, we set `\partokencontext` to one in order to the `\_par` token
    is inserted not only at empty lines, but also at the end of `\vbox`, `\vtop` and

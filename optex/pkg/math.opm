@@ -750,7 +750,7 @@ This section has nothing common with the subject of this package but this packag
 can serve as inspiration for another package writers. It should be a template
 for another `<pkg>.opm` files. We emphasize several principles here.
 The basic information can be found in
-\ulink[https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf\#ref:prefixed]
+\ulink[https://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf\#ref:basic-code]
 {section 2.2} of the \OpTeX/ manual.
 Try to run\fnote{Run it three times because Table of contents and Index are created.}
 \begtt
@@ -782,7 +782,7 @@ The `\_<pkg>_version` macro should be declared here. The macro should expand
 to version number followed by version date. User can check
 the package version simply by expanding this macro after the package is
 loaded. And we want to have this data only at single place of the file.
-You may check the log file if the text given by `\_codedecl` isn't too long
+You may check the log file if the text given by \o`\_codedecl` isn't too long
 and isn't broken to more lines. Keeping single line is better because users can
 `grep @:` on log file in order to get information of all loaded packages
 and their version numbers.
@@ -795,19 +795,24 @@ transformed to `\_<pkg>_foo` and by \o`\_endcode` which does \n`\endinput` when
 the macros are load. Final part of the file after \o`\_endcode` can include
 more detailed documentation.
 
+If your package requires other packages then insert
+\o`\load``[<package1>,<package2>]` after \o`\_codedecl` and before the the
+\o`\_namespace` command. Each package uses its own namespace, so it is
+important to load these packages before your \o`\_namespace` is opened.
+
 If you have any idea of creating a macro package, you probably start with
-experimental macros in user name space. It means that there are
+experimental macros in the public namespace. It means that there are
 `\def\mymacro` etc. Once such a code is working, you can include it to the
 macro package introduced by \o`\_namespace``{<pkg>}`. You have to go through
 your code carefully sequence per sequence and insert `_` or `.` in front of
-their name. The \"`_`" have to be used if the sequence is a primitive or
-\OpTeX/ macro and the \"`.`" if it is your macro. So, the code fragment
+their names. The \"`_`" prefix have to be used if the sequence is a primitive or
+an \OpTeX/ macro and the \"`.`" prefix if it is your macro. So, the code fragment
 `\def\mymacro` have to be rewritten to `\_def\.mymacro`. If the macro
-`\mymacro` is intended for usage in the user space, then append
-`\_nspublic \mymacro ;` too.
+`\mymacro` is intended for end users, then export it to the
+public name space after it is defined by the \o`\_nspublic` `\mymacro ;` command.
 
-Sometimes you may want to define a macro only for user space. Then
-use prefix \O`\_newpublic` before your declaration, see declaration of
+Sometimes you may want to define a macro only in public namespace. Then
+use prefix \o`\_newpublic` before your declaration, see declaration of
  \^`\sgn` in this package as an example. The reason is: if
 a user has defined such a macro already then the warning is printed.
 The user can read this warning and declare the macro after

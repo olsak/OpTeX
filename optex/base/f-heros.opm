@@ -193,8 +193,8 @@ so the first font from the new family is loaded and it is ready to use it.
 
 \seccc Name conventions
 
-Create font modifiers, new variants, and the `\<Familyselector>` only as public, i.e.
-in user namespace without `_` prefix. We assume that if a user re-defines them then he/she needs
+Create font modifiers, new variants, and the `\<Familyselector>` only in
+public namespace without `_` prefix. We assume that if a user re-defines them then he/she needs
 not them, so we have no problems. If the user's definition was done before loading
 the font family file then it is re-defined and \OpTeX/ warns about it. See the end of
 section~\ref[fontcommands].

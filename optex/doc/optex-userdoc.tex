@@ -1890,9 +1890,9 @@ put it as the first command in your document:
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
 All \TeX/ primitives and almost all \OpTeX/ macros are accesible by two
-names: `\foo` (public or user name space) and `\_foo` (private name space).
+names: `\foo` (public or user namespace) and `\_foo` (private name space).
 For example `\hbox` and `\_hbox` means the same \TeX/ primitive. More about
-it is documented in section~\ref[prefixed].
+it is documented in section~\ref[namespaces].
 
 If this manual refers `\foo` then `\_foo` equivalent exists too. For example,
 we mention the `\addto` macro below. The `\_addto` equivalent exists too, but it
@@ -1901,10 +1901,10 @@ equivalent does not exist. For example, we mention the `\_codedecl` macro below,
 this macro is not available as `\codedecl`.
 
 If you are writing a document or macros specific for the document, then use
-simply user namespace (`\foo`). If you are writing more general macros,
-then use private namespace (`\_foo`), but you should declare your own namespace
+simply public namespace (`\foo`). If you are writing more general macros,
+then you should declare your own namespace
 by \~`\_namespace` macro and you have to follow the naming discipline described in
-section~\ref[pkg-namespace].
+sections~\ref[namespaces] and \ref[pkg-namespace].
 
 The alphabetically sorted list of macros typically usable for macro writers follows.
 More information about such macros can be found in the technical documentation.
