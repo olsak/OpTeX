@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newdimen {Allocators for registers <2022-06-10>} % preloaded in format
+\_codedecl \newdimen {Allocators for registers <2023-02-03>} % preloaded in format
 
    \_doc -----------------------------
    The limits are set first.
@@ -46,9 +46,10 @@
       \_errmessage{No room for a new \_ea\_string\_csname #2\_endcsname}%
    \_else
       \_global#3#1=\_cs{_#2alloc}%
-      \_wlog{\_string#1=\_ea\_string\_csname #2\_endcsname\_the\_cs{_#2alloc}}%
+      \_wloga{\_string#1=\_ea\_string\_csname #2\_endcsname\_the\_cs{_#2alloc}}%
    \_fi
 }
+\_let\_wloga=\_wlog % you can suppress the logging by \_let\_wloga=\_ignoreit
 
    \_doc -----------------------------
    The allocation macros
@@ -177,6 +178,7 @@ the array-like declarator of counters.
 
 \_endinput
 
+2023-02-03  \_wloga introduced
 2022-06-10  \_famalloc set to 42 (answer to the biggest fundamental question)
 2022-03-07  \_noattr allocated
 2022-02-19  \_newlanguage introduced
