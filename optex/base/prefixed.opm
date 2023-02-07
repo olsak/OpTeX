@@ -173,6 +173,8 @@ We distinguish following namespaces for multiletter control sequences:
   For example `\_hbox`, `\_fontsel`.
 * Names in the form `\_<pkg>_<name>` are in the {\em package namespace},
   see section~\ref[pkg-namespace]. For example `\_qr_size`, `\_math_alist`.
+* Names starting with two \"`_`" are in the {\em reserved namespace}. They can be
+  used for internal control sequences in font family files or in similar cases.
 * Other names which include \"`_`" but not as the first character can be used
   too, but with care, see the end of this section.
 \enditems

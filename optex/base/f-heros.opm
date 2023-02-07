@@ -199,6 +199,10 @@ not them, so we have no problems. If the user's definition was done before loadi
 the font family file then it is re-defined and \OpTeX/ warns about it. See the end of
 section~\ref[fontcommands].
 
+If you need to use an internal control sequence declared in your fontfile,
+use the reserved name space with names starting with two `_` followed by family
+indentifier or by `vf` if it relates to variable fonts.
+
 The name of `\<Familyselector>` should begin with an uppercase letter.
 
 Please, look at
