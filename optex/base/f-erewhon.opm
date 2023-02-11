@@ -3,7 +3,7 @@
 \_famdecl [Erewhon] \Erewhon {Derived from Heuristica with slanted variants}
         {\caps} {\rm \bf \it \bi \sl \bs} {Erewhon}
         {[Erewhon-Regular]}
-        {\_def\_fontnamegen {[Erewhon-\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[Erewhon-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
