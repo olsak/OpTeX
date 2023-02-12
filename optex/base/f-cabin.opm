@@ -1,0 +1,43 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Cabin] \Cabin {Inspired by Gill's typefaces + touch of a modernism}
+     {\caps \cond \medium \semibold} {\rm \bf \it \bi} {FiraMath}
+     {[Cabin-Regular]}
+     {\_def\_fontnamegen{[Cabin\_condV-\_currV\_condV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \caps ...... caps & small caps (unavailable in condensed variants)^^J
+ \cond ...... condensed variants^^J
+ \medium .... medium weight (only \rm, \it)^^J
+ \semibold .. semibold weight (only \bf, \bi)^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},cond={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+\_moddef \cond     {\_fsetV cond=Condensed }
+\_moddef \nocond   {\_fsetV cond={} }
+\_moddef \medium   {\_fvars Medium Bold MediumItalic BoldItalic }
+\_moddef \semibold {\_fvars Regular SemiBold Italic SemiBoldItalic }
+
+\_initfontfamily % new font family must be initialized
+
+\_ifmathloading
+   \_loadmath {[FiraMath-Regular]}
+   \_addUmathfont \_xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
+   \_addto\_frak{\_fam\_xits}\_addto\_cal{\_fam\_xits} \_public \frak \cal ;
+   % \bf, \bi from FiraMath:
+   \_let\_bsansvariables=\_bfvariables
+   \_let\_bsansGreek=\_bfGreek
+   \_let\_bsansgreek=\_bfgreek
+   \_let\_bsansdigits=\_bfdigits
+   \_let\_bisansvariables=\_bivariables
+   \_let\_bisansgreek=\_bigreek
+   % \_resetmathchars <fam-number> <list of \Umathchardef csnames> ;
+   \_mathchars \_xits {\bigtriangleup \bigblacktriangleup \blacktriangle
+       \vartriangle \smallblacktriangleright} % ... etc. you can add more
+\_fi
+
+\_endcode
+

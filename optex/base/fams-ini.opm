@@ -132,6 +132,12 @@
    { -,\onum: {\rm\bf\it\bi} }
 \_famalias [Caslon]
 
+\_famfrom {Pablo Impallari, Igino Marini}
+\_faminfo [Cabin] {Inspired by Gill's typefaces + touch of a modernism} {f-cabin}
+   { -,\caps: {\rm\bf\it\bi} \medium: {\rm\it} \semibold: {\bf\bi}
+     \cond: {\rm\bf\it\bi} \cond\medium: {\rm\it} \cond\semibold: {\bf\bi}
+   }
+
 \_famfrom {Adobe, Paul D. Hunt}
 \_faminfo [Source Pro] {Adobe SourceSerifPro, SourceSansPro, SourceCodePro} {f-sourcepro}
    { \elight,\light,-,\bolder: {\rm\it} -,\bolder: {\bf\bi}
