@@ -186,8 +186,8 @@ gives the extended syntax:
 % or
 \font \<font switch> = {<font name>:<font features>} <size spec>
 \endtt
-where <font file name> is name of the OpenType font file without extension
-(extensions `.otf` or `.ttf` are assumed). The braces in the syntax
+where <font file name> is name of the OpenType font file with the extension
+`.otf` or `.ttf` or without it. The braces in the syntax
 are optional, use them when the <font file name> or <font name> includes spaces.
 The original syntax for `tfm` files is also available. Example:
 \begtt
@@ -206,13 +206,31 @@ You can use \^`\ufont` macro which runs \^`\initunifonts` followed by `\font`
 primitive. And \^`\fontfam` does (among other things) \^`\initunifonts`
 too. You need not to specify \^`\initunifonts` if \^`\fontfam` or \^`\ufont` is used.
 
-It seems that you must decide about final size of the font before it is
-loaded by the `\font` primitive. It is not exactly true; \OpTeX/ offers
-powerful possibility to resize the font already loaded on demand.
-See the example at the end of next subsection.
+When \^`\initunifonts` is declared then the `\font` primitive is ready to read
+Type1 fonts too. If you have `file.afm` and `file.pfb` then you can
+declare `\font\f=file.afm` and use `\f`. It means that you needn't to create
+`tfm` files nor `vf` files, you can use Type1 fonts directly.
+They behave as Unicode fonts if the `afm` metrics are implemented correctly
+(with correct names of all included glyphs). But we must to say that Type1
+font format is old technology, the loading of Type1 fonts is not optimized.
+Use OpenType fonts (`otf` of `ttf`) if it is possible.
+
+Let's sum it up.  Suppose that \^`\initunifonts` was used.
+The `\font` primitive is able to load OpenType
+fonts (`otf` or `ttf`), Type1 fonts (`afm` and `pfb`) or classical `tfm` fonts.
+We strongly recommend to prefer OpenType format over Type1 format
+over `tfm` format. The last one desn't support Unicode. If there is nothing
+else left and you must to use `tfm`, then you must to implement re-encoding from
+Unicode to the `tfm` encoding at macro level, see the
+\ulink[http://petr.olsak.net/optex/optex-tricks.html\#nonunicode]{\OpTeX/ trick 0018}
+for example.
 
 
 \secc[setfontsize] The `\setfontsize` macro
+
+It seems that you must decide about final size of the font before it is
+loaded by the `\font` primitive. It is not exactly true; \OpTeX/ offers
+powerful possibility to resize the font already loaded on demand.
 
 The \^`\setfontsize` `{<size spec>}`
 saves the information about `<size spec>`. This information is taken into
