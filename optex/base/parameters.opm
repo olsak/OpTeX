@@ -197,12 +197,16 @@
    parameters locally in the group where \^`\inspic` is used in order to not
    influence the dimensions of other images. But there exist many
    situations you need to put the same dimensions to more images,
-   so you can set this parameter only once before more \^`\inspic` macros.
+   so you can set this parameter only once before more \^`\inspic` macros.\nl
+   More parameters accepted by `\pdfximage` primitive can be set in the
+   \`\picparams` tokens list. For example `\picparams={page3}`
+   selects page 3 from included PDF file.
    \_cod -----------------------------
 
 \_newdimen\_picwidth   \_picwidth=0pt   \_let\picw=\_picwidth
 \_newdimen\_picheight  \_picheight=0pt
-\_public \picwidth \picheight ;
+\_newtoks\_picparams
+\_public \picwidth \picheight \picparams ;
 
    \_doc -----------------------------
    \`\kvdict` is dictionary name when \~`\readkv`, \~`\kvx`, \~`\kv`, and \~`\iskv` are

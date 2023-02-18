@@ -7,9 +7,6 @@
    or new syntax `\inspic{<filename>}`. So, we need to define
    two auxiliary macros \`\_inspicA` and \`\_inspicB`.
 
-   You can include more `\pdfximage` parameters (like `page<number>`)
-   in the \`\_picparams` macro.
-
    All `\inspic` macros are surrounded in `\hbox` in order user can
    write `\moveright\inspic ...` or something similar.
    \_cod -----------------------------
@@ -19,10 +16,8 @@
 \_def\_inspicB #1{%
    \_pdfximage \_ifdim\_picwidth=\_zo  \_else width\_picwidth\_fi
                \_ifdim\_picheight=\_zo \_else height\_picheight\_fi
-               \_picparams {\_the\_picdir#1}%
+               \_the\_picparams {\_the\_picdir#1}%
    \_pdfrefximage\_pdflastximage\_egroup}
-
-\_def\_picparams{}
 
 \_public \inspic ;
 
@@ -48,7 +43,7 @@
 \_newtoks\_inkdefs  \_inkdefs={%
   \_def\makeatletter#1\makeatother{}%
   \_def\includegraphics[#1]#2{\_inkscanpage#1,page=,\_fin \_inspic{\_the\_tmptoks}\_hss}%
-  \_def\_inkscanpage#1page=#2,#3\_fin{\_ifx,#2,\_else\_def\_picparams{page#2}\_fi}%
+  \_def\_inkscanpage#1page=#2,#3\_fin{\_ifx,#2,\_else\_picparams{page#2}\_fi}%
   \_def\put(#1,#2)#3{\_nointerlineskip\_vbox to\_zo{\_vss\_hbox to\_zo{\_kern#1\_picwidth
       \_pdfsave\_hbox to\_zo{#3}\_pdfrestore\_hss}\_kern#2\_picwidth}}%
   \_def\begin#1{\_csname _begin#1\_endcsname}%
