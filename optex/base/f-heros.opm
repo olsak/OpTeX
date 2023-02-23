@@ -32,7 +32,8 @@ Modifiers:^^J
    \_let\_bisansgreek=\_bigreek
    % \_resetmathchars <fam-number> <list of \Umathchardef csnames> ;
    \_mathchars \_xits {\bigtriangleup \bigblacktriangleup \blacktriangle
-       \vartriangle \smallblacktriangleright} % ... etc. you can add more
+       \vartriangle \smallblacktriangleright
+       \unicodevdots \unicodeadots \unicodeddots} % ... etc. you can add more
 \_fi
 
 \_endcode
