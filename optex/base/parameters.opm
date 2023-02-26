@@ -314,16 +314,25 @@
    \nl
    The \`\ilevel` keeps the value of the current nesting level of the items list.
    \nl
-   The \`\listskipamount` gives vertical skip above and below the items list
-   if `\ilevel=1`.
+   The \`\olistskipamount` is vertical skip above and below the items list
+   if `\ilevel=1`.\nl
+   The \`\ilistskipamount` is vertical skip above and below the items list
+   if `\ilevel>1`.\nl
+   The \`\itemskipamount` is vertical skip between list items, but not above the firts
+   and below the last.
    \_cod -----------------------------
 
-\_newtoks\_defaultitem  \_defaultitem={$\_bullet$\_enspace}
+\_newtoks\_defaultitem     \_defaultitem={$\_bullet$\_enspace}
 \_newtoks\_everyitem
 \_newtoks\_everylist
-\_newskip \_listskipamount  \_listskipamount=\_medskipamount
 \_newcount \_ilevel
-\_public \defaultitem \everyitem \everylist \listskipamount \ilevel ;
+\_newskip\_olistskipamount \_olistskipamount=\_medskipamount
+\_newskip\_ilistskipamount \_ilistskipamount=0pt plus.5\_smallskipamount
+\_newskip\_itemskipamount  \_itemskipamount=0pt
+
+\_public \defaultitem \everyitem \everylist \ilevel
+         \olistskipamount \ilistskipamount \itemskipamount ;
+\_let \listskipamount = \_olistskipamount  % for backward compatibility
 
    \_doc -----------------------------
    The \^`\tit` macro includes `\vglue`\`\titskip` above the title of the document.

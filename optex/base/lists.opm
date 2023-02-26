@@ -1,25 +1,21 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begitems {Lists: begitems, enditems <2021-03-10>} % preloaded in format
+\_codedecl \begitems {Lists: begitems, enditems <2022-02-25>} % preloaded in format
 
    \_doc -----------------------------
    \`\_aboveliskip` is used above the list of items,\nl
-   \`\_belowliskip` is used below the list of items and\nl
-   \`\_interliskip` is used between items.\nl
-   \`\_listskipA` is used as `\listskipamount` at level 1 of items.\nl
-   \`\_listskipB` is used as `\listskipamount` at other levels.\nl
-   \`\_setlistskip` sets the skip dependent on the current level of items
+   \`\_belowliskip` is used below the list of items,\nl
+   \`\_setlistskip` sets the skip dependent on the current level of items,\nl
+   \`\_listskipab` is \^`\ilistskipamount` or \^`\olistskipamount`.
    \_cod -----------------------------
 
-\_def\_aboveliskip {\_removelastskip \_penalty-100 \_vskip\_listskipamount}
-\_def\_belowliskip {\_penalty-200 \_vskip\_listskipamount}
-\_def\_interliskip {}
-\_def\_listskipA {\_medskipamount}
-\_def\_listskipB {0pt plus.5\_smallskipamount}
+\_def\_aboveliskip {\_removelastskip \_penalty-100 \_vskip\_listskipab}
+\_def\_belowliskip {\_penalty-200 \_vskip\_listskipab}
+\_newskip\_listskipab
 
 \_def\_setlistskip {%
-   \_ifnum \_ilevel = 1 \_listskipamount = \_listskipA \_relax
-   \_else  \_listskipamount = \_listskipB \_relax
+   \_ifnum \_ilevel = 1 \_listskipab = \_olistskipamount \_relax
+   \_else  \_listskipab = \_ilistskipamount \_relax
    \_fi}
 
    \_doc -----------------------------
@@ -54,17 +50,19 @@
 }
 \_def\_enditems{\_par\_belowliskip\_egroup \_isnextchar\_par{}{\_noindent}}
 
-\_def\_startitem{\_par \_ifnum\_itemnum>0 \_interliskip \_fi
+\_def\_startitem{\_par \_ifnum\_itemnum>0 \_vskip\_itemskipamount \_fi
    \_advance\_itemnum by1
    \_the\_everyitem \_noindent\_llap{\_the\_printitem}\_ignorespaces
 }
 \_public \begitems \enditems \itemnum ;
 
    \_doc ----------------------------
-   \`\novspaces` sets \^`\listskipamount` to 0pt.
+   \`\novspaces` sets \^`\_listskipab` and \^`\itemskipamount` to 0pt.
+   Moreover, it deactivates \^`\_setlistskip` (for inner lists).
    \_cod ----------------------------
 
-\_def\_novspaces {\_removelastskip \_listskipamount=0pt \_relax}
+\_def\_novspaces {\_removelastskip
+   \_listskipab=\_zoskip \_itemskipamount=\_zoskip \_let\_setlistskip=\_relax}
 \_public \novspaces ;
 
    \_doc -----------------------------
@@ -123,6 +121,7 @@
 
 \_endcode % -------------------------------------
 
+2022-02-25 \olistskipamount, \ilistskipamount, \itemskipamount introduced
 2021-03-10 \_ifmmode*\_else\_ea\_startitem\_fi added to * defintition
 2020-04-21 \isnextchar\par added to \enditems
 2020-03-18 introduced
