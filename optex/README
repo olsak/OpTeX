@@ -22,7 +22,7 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
-<1.10> Feb 2022:
+<1.10> Feb 2023:
        key-values improved: \iskv, \kvx, \nokvx introduced.
        unimath-codes: control sequences are macros, no \chardef.
        \bp, \expr: optional syntax for setting the number of digits after decimal point.
