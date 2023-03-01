@@ -144,7 +144,7 @@ file name must include it in lowercase letters. For example, the file
 
 \printdoc hisyntax-c.opm
 
-\OpTeX/ provides `hisyntax-{c,python,tex,html}.opm` files.
+\OpTeX/ provides `hisyntax-{c,lua,python,tex,html}.opm` files.
 You can take inspiration from these files and declare more languages.
 
 Users can re-declare default colors by \^`\hicolors``={<list of color declarations>}`.
