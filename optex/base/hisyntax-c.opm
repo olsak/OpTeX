@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_hisyntaxc {Syntax highlighting for C sources <2020-04-03>}
+\_codedecl \_hisyntaxc {Syntax highlighting for C sources <2023-03-02>}
 
 \_newtoks \_hisyntaxc  \_newtoks \_hicolorsc
 
@@ -69,3 +69,8 @@ keyword is applied in the `\foreach` loop too.
 
 See `hi-sytax.opm` for more information about `\hicolor`, `\replfromto` and
 `\replthis` macros.
+
+\endinput
+
+2023-03-02: more C keywords added
+2020-04-03: released
