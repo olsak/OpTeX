@@ -1,0 +1,18 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Inconsolata] \Inconsolata {Inconsolata monospaced fonts}
+        {\cond} {\rm \bf} {}
+        {[Inconsolatazi4-Regular.otf]}
+        {\_def \_fontnamegen {[Inconsolata\_subV-\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \cond ...... Condensed variants^^J
+}}
+
+\_moddef \resetmod {\_fsetV sub=zi4 \_fvars Regular Bold . . }
+\_moddef \cond     {\_fsetV sub=N   \_fvars Regular Bold . . }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
