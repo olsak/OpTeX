@@ -1,6 +1,6 @@
 % This is macro package used by OpTeX, see http://petr.olsak.net/optex
 
-\_codedecl \tikzpicture {TikZ for OpTeX <2022-02-18>}
+\_codedecl \tikzpicture {TikZ for OpTeX <2023-03-04>}
 \_namespace{pgf}
 \_catcode`\@=11
 \_let\_optexforeach=\foreach
@@ -155,11 +155,17 @@
 \_let\.foreach=\pgffor@foreach  % \_pgf_foreach is \pgffor@foreach
 \_let\foreach=\_optexforeach    % \foreach is OpTeX's \foreach
 
+\_let\.usetikzlibrary=\usetikzlibrary
+\_def\usetikzlibrary#1{\_let\foreach=\.foreach
+   \.usetikzlibrary{#1}\let\foreach=\_optexforeach
+}
+
 % don't worry about reseting catcodes - we are at the end of \opinput'ed file
 \_endnamespace
 \_endcode
 
 History:
+2023-03-04  \_tikz_foreach used during \usetikzlibrary (bug fix).
 2022-03-18  Tikz's \foreach only in its environment.
 2022-03-05  resources management re-implemented.
 2021-07-15  released
