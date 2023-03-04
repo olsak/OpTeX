@@ -152,6 +152,11 @@
    \_cod
 
 \addto \tikz@startup@env {\let\foreach=\pgffor@foreach}
+\_def\pgfutil@InputIfFileExists#1#2#3{%
+   \pgfutil@IfFileExists {#1}%
+   {\_let\foreach\pgffor@foreach\_input #1\_relax\_let\foreach\_optexforeach #2}%
+   {#3}%
+}
 \_let\.foreach=\pgffor@foreach  % \_pgf_foreach is \pgffor@foreach
 \_let\foreach=\_optexforeach    % \foreach is OpTeX's \foreach
 
