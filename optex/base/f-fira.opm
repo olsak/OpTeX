@@ -1,0 +1,48 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Fira] \Fira {FiraSans and FiraMono with FiraMath}
+        {\sans \mono \thin \light \book \medium}
+        {\rm \bf \it \bi}
+        {FiraMath}
+        {[FiraSans-Regular]}
+        {\_def \_fontnamegen {[Fira\_subV-\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (subfamilies):^^J
+ \mono ...... Monospaced variants [Mono]^^J
+Modifiers (face weight):^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Regular (Sans)^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Medium (Sans)^^J
+ \book ...... \rm, \it = Book, \bf, \bi = SemiBold (Sans)^^J
+ \medium .... \rm, \it = Medium, \bf, \bi = ExtraBold/Bold (Sans, Mono)^^J
+}}
+
+\_moddef \resetmod { \_fsetV sub=Sans \_fvars Regular Bold Italic  BoldItalic }
+\_moddef \mono     { \_fsetV sub=Mono \_fvars Regular Bold Oblique BoldOblique }
+
+\_moddef \thin     {\_onlyif sub=Sans: { \_fvars Thin   Regular   ThinItalic    Italic }}
+\_moddef \light    {\_onlyif sub=Sans: { \_fvars Light  Medium    LightItalic   MediumItalic }}
+\_moddef \book     {\_onlyif sub=Sans: { \_fvars Book   SemiBold  BookItalic    SemiBoldItalic }}
+\_moddef \medium   {\_onlyif sub=Sans: { \_fvars Medium ExtraBold MediumItalic  ExtraBoldItalic }%
+                    \_onlyif sub=Mono: { \_fvars Medium Bold      MediumOblique BoldOblique }}
+
+\_initfontfamily % new font family must be initialized
+
+\_ifmathloading
+   \_loadmath {[FiraMath-Regular]}
+   \_addUmathfont \_xits {[XITSMath-Regular]}{} {[XITSMath-Bold]}{} {}
+   \_addto\_frak{\_fam\_xits}\_addto\_cal{\_fam\_xits} \_public \frak \cal ;
+   % \bf, \bi from FiraMath:
+   \_let\_bsansvariables=\_bfvariables
+   \_let\_bsansGreek=\_bfGreek
+   \_let\_bsansgreek=\_bfgreek
+   \_let\_bsansdigits=\_bfdigits
+   \_let\_bisansvariables=\_bivariables
+   \_let\_bisansgreek=\_bigreek
+   % \_resetmathchars <fam-number> <list of \Umathchardef csnames> ;
+   \_mathchars \_xits {\bigtriangleup \bigblacktriangleup \blacktriangle
+       \vartriangle \smallblacktriangleright
+       \unicodevdots \unicodeadots \unicodeddots} % ... etc. you can add more
+\_fi
+
+\_endcode
