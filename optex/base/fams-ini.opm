@@ -210,6 +210,10 @@
 \_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
 
+\_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
+\_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
+   { \thin,\light,\book,-,\medium,\mono,\mono\medium: {\rm\bf\it\bi} }
+
 \_endcode
 
 Once you have prepared a font family file with the name `f-<famname>.opm` and
