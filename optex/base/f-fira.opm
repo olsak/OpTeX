@@ -1,11 +1,11 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Fira] \Fira {FiraSans and FiraMono with FiraMath}
-        {\sans \mono \thin \light \book \medium}
+        {\sans \mono \caps \allsc \nocaps \thin \light \book \medium}
         {\rm \bf \it \bi}
         {FiraMath}
         {[FiraSans-Regular]}
-        {\_def \_fontnamegen {[Fira\_subV-\_currV]:\_fontfeatures}}
+        {\_def \_fontnamegen {[Fira\_subV-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers (subfamilies):^^J
@@ -15,10 +15,17 @@ Modifiers (face weight):^^J
  \light ..... \rm, \it = Light, \bf, \bi = Medium (Sans)^^J
  \book ...... \rm, \it = Book, \bf, \bi = SemiBold (Sans)^^J
  \medium .... \rm, \it = Medium, \bf, \bi = ExtraBold/Bold (Sans, Mono)^^J
+Modifiers (small caps):^^J
+ \caps ...... Caps and small caps (Sans)^^J
+ \allsc ..... Small caps only (Sans)^^J
+ \nocaps .... No small caps^^J
 }}
 
-\_moddef \resetmod { \_fsetV sub=Sans \_fvars Regular Bold Italic  BoldItalic }
-\_moddef \mono     { \_fsetV sub=Mono \_fvars Regular Bold Oblique BoldOblique }
+\_moddef \resetmod { \_fsetV sub=Sans,caps={} \_fvars Regular Bold Italic  BoldItalic }
+\_moddef \mono     { \_fsetV sub=Mono,caps={} \_fvars Regular Bold Oblique BoldOblique }
+\_moddef \caps     { \_fsetV caps=+smcp; }
+\_moddef \allsc    { \_fsetV caps=+smcp;+c2sc; }
+\_moddef \nocaps   { \_fsetV caps={} }
 
 \_moddef \thin     {\_onlyif sub=Sans: { \_fvars Thin   Regular   ThinItalic    Italic }}
 \_moddef \light    {\_onlyif sub=Sans: { \_fvars Light  Medium    LightItalic   MediumItalic }}

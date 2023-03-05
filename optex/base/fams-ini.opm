@@ -212,7 +212,9 @@
 
 \_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
 \_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
-   { \thin,\light,\book,-,\medium,\mono,\mono\medium: {\rm\bf\it\bi} }
+   { \thin,\light,\book,-,\medium,\mono,\mono\medium,%
+     \thin\caps,\light\caps,\book\caps,\caps,\medium\caps,%
+     \thin\allsc,\light\allsc,\book\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
 
 \_famfrom {Raph Levien}
 \_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
