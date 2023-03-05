@@ -23,8 +23,8 @@ Modifiers (small caps):^^J
 
 \_moddef \resetmod { \_fsetV sub=Sans,caps={} \_fvars Regular Bold Italic  BoldItalic }
 \_moddef \mono     { \_fsetV sub=Mono,caps={} \_fvars Regular Bold Oblique BoldOblique }
-\_moddef \caps     { \_fsetV caps=+smcp; }
-\_moddef \allsc    { \_fsetV caps=+smcp;+c2sc; }
+\_moddef \caps     { \_fsetV caps=+smcp;\_ffonum; }
+\_moddef \allsc    { \_fsetV caps=+smcp;+c2sc;\_ffonum; }
 \_moddef \nocaps   { \_fsetV caps={} }
 
 \_moddef \thin     {\_onlyif sub=Sans: { \_fvars Thin   Regular   ThinItalic    Italic }}
