@@ -49,31 +49,93 @@
 
 \_famtext {Other fonts:}
 
-\_famfrom{Antonis Tsolomitis}
-\_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Greek} {f-newcm}
-   { -: {\rm\bf\it\bi} \book: {\rm\it} \ttset: {\rm\bf\it\bi} \book\ttset: {\rm\it}
-     \sans: {\rm\bf\it\bi} \book\sans: {\rm\it}
-     \caps: {\rm\bf} \book\caps: {\rm} }
-\_famalias [NewCM] \_famalias [NewCMfonts]
+\_famfrom {Zygfryd Gardzielewski, Janusz M. Nowacki}
+\_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
+   { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi}
+    \medium,\cond\medium, \light, \cond\light:{\rm\it} }
+\_famalias [Antt]
 
-\_famfrom{STI Pub group, MicroPress Inc., Coen Hoffman}
-\_faminfo [STIX] {Scientific and Technical Information Exchange fonts} {f-stix}
-   { -: {\rm\bf\it\bi} }
+\_famfrom {Arkandis Digital Foundry}
+\_faminfo [Baskervald] {Free variants of classical Baskerville by ADF} {f-baskervald}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [Baskervald ADF] \_famalias [ADFBaskerville]
 
-\_faminfo [XITS] {A fork of STIX with Bold Math variant} {f-xits}
+\_famfrom {Michael Sharpe}
+\_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [BaskervilleF]
+
+\_famfrom {Pablo Impallari, Igino Marini}
+\_faminfo [Cabin] {Inspired by Gill's typefaces + touch of a modernism} {f-cabin}
+   { -,\caps: {\rm\bf\it\bi} \medium: {\rm\it} \semibold: {\bf\bi}
+     \cond: {\rm\bf\it\bi} \cond\medium: {\rm\it} \cond\semibold: {\bf\bi}
+   }
+
+\_famfrom {Craig Rozynski}
+\_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
+   { -,\angular: {\lf\li\rm\it\bf\bi} }
+
+\_famfrom {DejaVu fonts team}
+\_faminfo [DejaVu] {Derived from the Vera fonts} {f-dejavu}
+   { -,\cond,\sans,\sans\cond,\mono: {\rm\bf\it\bi} \light: {\rm} }
+
+\_famfrom {Georg Duffner, Octavio Pardo}
+\_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
+   { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
+     \swash: {\it\bi} -: {\initials} }
+\_famalias [Garamond]
+
+\_famfrom {Adobe, Andrey V. Panov, Michael Sharpe}
+\_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
+   { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
+
+\_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
+\_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
+   { \thin,\light,\book,-,\medium,\mono,\mono\medium,%
+     \thin\caps,\light\caps,\book\caps,\caps,\medium\caps,%
+     \thin\allsc,\light\allsc,\book\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
+
+\_famfrom {George Douros, Benjamin Miller}
+\_faminfo [Garamond Libre] {Free, derived from old style font family} {f-garamondl}
+   { -,\caps: {\rm\bf\it\bi} \swash: {\it\bi} }
+\_famalias [GaramondL]
+
+\_famfrom {George Matthiopoulos, Greek Font Society}
+\_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
 
-\_famfrom{Tiro Typeworks Ltd., R. Mills, J. Hudson, P. Hanslow, C. Hoffman}
-\_faminfo [STIXTwo] {Second version of STIX} {f-stixtwo}
-   { -,\caps: {\rm\it} \medium,\caps\medium: {\rm\it} \bolder,\caps\bolder: {\rm\it}
-     -,\caps: {\bf\bi} }
-\_famalias [STIX2]
+\_famfrom {Raph Levien}
+\_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
+   { -,\cond: {\rm\bf} }
 
-\_famfrom {Philipp H. Poll}
-\_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
-   { -: {\rm\bf\it\bi} \semibold: {\bf\bi}
-     \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
-\_famalias [Libertine] \_famalias [LinLibertine]
+\_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
+\_faminfo [Iwona] {Sans serif typeface derived from Kurier} {f-iwona}
+   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
+     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
+   }
+
+\_famfrom {Uni. of the Aegean}
+\_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
+   { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\bf\bi}
+     \sanssemi: {\rm} -:{\calli}  }
+
+\_famfrom {Daniel Flipo}
+\_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
+   { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans,\caps\mono,\swash: {\rm\bf\it\bi} }
+\_famalias [KP]
+
+\_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
+\_faminfo [Kurier] {Two element sans serif typeface} {f-kurier}
+   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
+     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
+   }
+
+\_famfrom {tyPoland Lukasz Dziedzic}
+\_faminfo [Lato] {Geometric grotesk, many weights} {f-lato}
+   { \hair: {\rm\it} \thin: {\rm\it} \light: {\rm\it} -: {\rm\it}
+     \book: {\rm\it} \bolder: {\rm\it} -: {\bf\bi}
+     \book: {\bf\bi} \bolder: {\bf\bi}
+   }
 
 \_famfrom {Philipp H. Poll, Khaled Hosny}
 \_faminfo [Libertinus] {Free fonts derived from Linux Libertine} {f-libertinus}
@@ -81,20 +143,36 @@
      \caps: {\rm\bf\it\bi} \caps\semibold: {\bf\bi} \caps\sans: {\rm\bf\it}
      -: {\mono\initials\displ\keybr} }
 
-\_famfrom {Daniel Flipo}
-\_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
-   { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans,\caps\mono,\swash: {\rm\bf\it\bi} }
-\_famalias [KP]
+\_famfrom {Philipp H. Poll}
+\_faminfo [Linux Libertine] {Free fonts typically installed on systems} {f-libertine}
+   { -: {\rm\bf\it\bi} \semibold: {\bf\bi}
+     \caps,\sans,\mono,\caps\sans: {\rm\bf\it\bi} -: {\initials\displ\keybr} }
+\_famalias [Libertine] \_famalias [LinLibertine]
 
-\_famfrom {DejaVu fonts team}
-\_faminfo [DejaVu] {Derived from the Vera fonts} {f-dejavu}
-   { -,\cond,\sans,\sans\cond,\mono: {\rm\bf\it\bi} \light: {\rm} }
+\_famfrom {Pablo Impallari, Rodrigo Fuenzalida}
+\_faminfo [LibreCaslon] {Libre Caslon Text, inspired by Caslon} {f-librecaslon}
+   { -,\onum: {\rm\bf\it\bi} }
+\_famalias [Caslon]
 
-\_famfrom {Zygfryd Gardzielewski, Janusz M. Nowacki}
-\_faminfo [Antykwa Torunska] {Traditional Polish font family} {f-antt}
-   { -,\cond,\caps, \caps\cond: {\rm\bf\it\bi}
-    \medium,\cond\medium, \light, \cond\light:{\rm\it} }
-\_famalias [Antt]
+\_famfrom {Eben Sorkin}
+\_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
+   { -,\sans: {\lf\li\rm\it\bf\bi\kf\ki} \caps,\sans\caps: {\rm\it} }
+
+\_famfrom {Julieta Ulanovsky, http://www.zkysky.com.ar}
+\_faminfo [Montserrat] {Inspired from old posters in Montserat in Buenos Aires} {f-montserrat}
+   { -,\caps,\alter: {\rm\bf\it\bi} \xlight,\elight,\light,-,\medium,\semibold: {\rm\it}
+     -,\medium,\semibold: {\bf\bi} }
+
+\_famfrom{Antonis Tsolomitis}
+\_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Greek} {f-newcm}
+   { -: {\rm\bf\it\bi} \book: {\rm\it} \ttset: {\rm\bf\it\bi} \book\ttset: {\rm\it}
+     \sans: {\rm\bf\it\bi} \book\sans: {\rm\it}
+     \caps: {\rm\bf} \book\caps: {\rm} }
+\_famalias [NewCM] \_famalias [NewCMfonts]
+
+\_famfrom {tipo, Dario Manuel Muhafara}
+\_faminfo [Overlock] {fonts simulate Overlock sewing technique} {f-overlock}
+   { -: {\rm\it\bf\bi\kf\ki} }
 
 \_famfrom {Adam Półtawski, Janusz M. Nowacki, Bogusław Jackowski and Piotr Strzelczyk}
 \_faminfo [Poltawski] {Antykwa Poltawskiego, Polish traditional font family} {f-poltawski}
@@ -103,39 +181,13 @@
      \caps: {\rm\bf\it\bi} }
 \_famalias [Antykwa Poltawskiego] \_famalias [Poltawskiego] \_famalias [APoltawskiego]
 
-\_famfrom {Michael Sharpe}
-\_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
-   { -,\caps: {\rm\bf\it\bi} }
-\_famalias [BaskervilleF]
-
-\_famfrom {Arkandis Digital Foundry}
-\_faminfo [Baskervald] {Free variants of classical Baskerville by ADF} {f-baskervald}
-   { -,\caps: {\rm\bf\it\bi} }
-\_famalias [Baskervald ADF] \_famalias [ADFBaskerville]
-
-\_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
-   { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
-
-\_famfrom {Georg Duffner, Octavio Pardo}
-\_faminfo [EB Garamond] {Free variants of classical Garamond} {f-ebgaramond}
-   { -,\caps,\medium,\medium\caps,\semibold,\semibold\caps: {\rm\bf\it\bi}
-     \swash: {\it\bi} -: {\initials} }
-\_famalias [Garamond]
-
-\_famfrom {George Douros, Benjamin Miller}
-\_faminfo [Garamond Libre] {Free, derived from old style font family} {f-garamondl}
-   { -,\caps: {\rm\bf\it\bi} \swash: {\it\bi} }
-\_famalias [GaramondL]
-
-\_famfrom {Pablo Impallari, Rodrigo Fuenzalida}
-\_faminfo [LibreCaslon] {Libre Caslon Text, inspired by Caslon} {f-librecaslon}
-   { -,\onum: {\rm\bf\it\bi} }
-\_famalias [Caslon]
-
-\_famfrom {Pablo Impallari, Igino Marini}
-\_faminfo [Cabin] {Inspired by Gill's typefaces + touch of a modernism} {f-cabin}
-   { -,\caps: {\rm\bf\it\bi} \medium: {\rm\it} \semibold: {\bf\bi}
-     \cond: {\rm\bf\it\bi} \cond\medium: {\rm\it} \cond\semibold: {\bf\bi}
+\_famfrom {Google, Christian Robertson}
+\_faminfo [Roboto] {Geometric grotesk, thin variants included} {f-roboto}
+   { -: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi\kf\ki}
+     \cond: {\lf\li\rm\it\bf\bi}
+     \mono: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi}
+     \ttset: {\tf\lf\rm\bf}
+     \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
    }
 
 \_famfrom {Adobe, Paul D. Hunt}
@@ -149,53 +201,15 @@
    }
 \_famalias [AdobeSource] \_famalias [AdobeSourcePro]
 
-\_famfrom {Uni. of the  Aegean}
-\_faminfo [Kerkis] {Free Bookman alternative with Greek letters} {f-kerkis}
-   { -,\sans: {\rm\bf\it\bi} \caps: {\rm\bf} \semibold: {\bf\bi}
-     \sanssemi: {\rm} -:{\calli}  }
+\_famfrom{STI Pub group, MicroPress Inc., Coen Hoffman}
+\_faminfo [STIX] {Scientific and Technical Information Exchange fonts} {f-stix}
+   { -: {\rm\bf\it\bi} }
 
-\_famfrom {Craig Rozynski}
-\_faminfo [ComicNeue] {Comic Neue sans serif} {f-comicneue}
-   { -,\angular: {\lf\li\rm\it\bf\bi} }
-
-\_famfrom {tipo, Dario Manuel Muhafara}
-\_faminfo [Overlock] {fonts simulate Overlock sewing technique} {f-overlock}
-   { -: {\rm\it\bf\bi\kf\ki} }
-
-\_famfrom {Eben Sorkin}
-\_faminfo [Merriweather] {Modern shapes, sharp serifs} {f-merriweather}
-   { -,\sans: {\lf\li\rm\it\bf\bi\kf\ki} \caps,\sans\caps: {\rm\it} }
-
-\_famfrom {Google, Christian Robertson}
-\_faminfo [Roboto] {Geometric grotesk, thin variants included} {f-roboto}
-   { -: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi\kf\ki}
-     \cond: {\lf\li\rm\it\bf\bi}
-     \mono: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi}
-     \ttset: {\tf\lf\rm\bf}
-     \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
-   }
-
-\_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
-\_faminfo [Kurier] {Two element sans serif typeface} {f-kurier}
-   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
-     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
-   }
-\_faminfo [Iwona] {Sans serif typeface derived from Kurier} {f-iwona}
-   { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
-     \light,\light\cond,\medium,\medium\cond,\bolder,\bolder\cond: {\rm\it}
-   }
-
-\_famfrom {tyPoland Lukasz Dziedzic}
-\_faminfo [Lato] {Geometric grotesk, many weights} {f-lato}
-   { \hair: {\rm\it} \thin: {\rm\it} \light: {\rm\it} -: {\rm\it}
-     \book: {\rm\it} \bolder: {\rm\it} -: {\bf\bi}
-     \book: {\bf\bi} \bolder: {\bf\bi}
-   }
-
-\_famfrom {Julieta Ulanovsky, http://www.zkysky.com.ar}
-\_faminfo [Montserrat] {Inspired from old posters in Montserat in Buenos Aires} {f-montserrat}
-   { -,\caps,\alter: {\rm\bf\it\bi} \xlight,\elight,\light,-,\medium,\semibold: {\rm\it}
-     -,\medium,\semibold: {\bf\bi} }
+\_famfrom{Tiro Typeworks Ltd., R. Mills, J. Hudson, P. Hanslow, C. Hoffman}
+\_faminfo [STIXTwo] {Second version of STIX} {f-stixtwo}
+   { -,\caps: {\rm\it} \medium,\caps\medium: {\rm\it} \bolder,\caps\bolder: {\rm\it}
+     -,\caps: {\bf\bi} }
+\_famalias [STIX2]
 
 \_famfrom {CTU in Prague, Roman Cernohous}
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika}
@@ -206,19 +220,9 @@
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
 
-\_famfrom {George Matthiopoulos, Greek Font Society}
-\_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
+\_famfrom{STI Pub group, MicroPress Inc., Coen Hoffman}
+\_faminfo [XITS] {A fork of STIX with Bold Math variant} {f-xits}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
-
-\_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
-\_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
-   { \thin,\light,\book,-,\medium,\mono,\mono\medium,%
-     \thin\caps,\light\caps,\book\caps,\caps,\medium\caps,%
-     \thin\allsc,\light\allsc,\book\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
-
-\_famfrom {Raph Levien}
-\_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
-   { -,\cond: {\rm\bf} }
 
 \_endcode
 
