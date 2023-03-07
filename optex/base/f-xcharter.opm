@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [XCharter] \XCharter {An extension of Bitstream Charter}
-        {\caps \slant} {\rm \bf \it \bi} {}
+        {\caps \slant} {\rm \bf \it \bi} {XCharter}
         {[XCharter-Roman]}
         {\_def\_fontnamegen {[XCharter-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
@@ -16,6 +16,9 @@ Modifiers:^^J
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
+
+\loadmath{[XCharter-Math]}
+\loadboldmath{[XCharter-Math-Bold]} \to {[XCharter-Math]}
 
 \_endcode
 
