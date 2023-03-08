@@ -1,0 +1,46 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Besley] \Besley {Besley* antique slab serif}
+        {\caps \allsc \nocaps \cond \narrow}
+        {\rm \bf \it \bi \mf \mi \ef \ei \kf \ki} {Schola}
+        {[Besley-Regular]}
+        {\_def\_fontnamegen {[Besley\_subV-\_currV]:script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (width):^^J
+ \cond ....... Condensed variants^^J
+ \narrow ..... Narrow variants^^J
+Modifiers (small caps):^^J
+ \caps ....... Caps and small caps^^J
+ \allsc ...... Small caps only^^J
+ \nocaps ..... No small caps^^J
+Extended variants:^^J
+ \mf, \mi .... Medium, MediumItalic^^J
+ \ef, \ei .... ExtraBold, ExtraBoldItalic^^J
+ \kf, \ki .... Black, BlackItalic^^J
+}}
+
+\_moddef \resetmod {\_fsetV sub={},caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \cond     {\_fsetV sub=Condensed }
+\_moddef \narrow   {\_fsetV sub=Narrow }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \allsc    {\_fsetV caps=+smcp;+c2sc;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_moddef  \medium {\_fvars Medium ExtraBold MediumItalic ExtraBoldItalic }
+\_moddef  \black  {\_fvars Black  .         BlackItalic  . }
+\_private \medium ;
+\_private \black ;
+
+\_famvardef \mf {\_medium \_rm}
+\_famvardef \mi {\_medium \_it}
+\_famvardef \ef {\_medium \_bf}
+\_famvardef \ei {\_medium \_bi}
+\_famvardef \kf {\_black  \_rm}
+\_famvardef \ki {\_black  \_it}
+
+\_initfontfamily
+
+\loadmath{[texgyreschola-math]}
+
+\_endcode

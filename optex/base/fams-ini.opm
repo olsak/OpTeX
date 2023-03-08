@@ -48,6 +48,17 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [Courier]
 
+\_famsrc {https://indestructibletype.com/}
+\_famtext {Typefaces from indestructible type*}
+
+\_famfrom {Owen Earl, indestructible type*}
+\_faminfo [Besley*] {Antique slab serif, inspired by Robert Besley's Clarendon} {f-besley}
+   { -,\narrow,\cond: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki}
+     \caps,\narrow\caps,\cond\caps: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki}
+     \allsc,\narrow\allsc,\cond\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
+\_famalias [Besley]
+
+\_famsrc {CTAN}
 \_famtext {Other fonts:}
 
 \_famfrom{Antonis Tsolomitis}
