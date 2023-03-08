@@ -21,17 +21,17 @@ Modifiers (small caps):^^J
  \nocaps .... No small caps^^J
 }}
 
-\_moddef \resetmod { \_fsetV sub=Sans,caps={} \_fvars Regular Bold Italic  BoldItalic }
-\_moddef \mono     { \_fsetV sub=Mono,caps={} \_fvars Regular Bold Oblique BoldOblique }
-\_moddef \caps     { \_fsetV caps=+smcp;\_ffonum; }
-\_moddef \allsc    { \_fsetV caps=+smcp;+c2sc;\_ffonum; }
-\_moddef \nocaps   { \_fsetV caps={} }
+\_moddef \resetmod {\_fsetV sub=Sans,caps={} \_fvars Regular Bold Italic  BoldItalic }
+\_moddef \mono     {\_fsetV sub=Mono,caps={} \_fvars Regular Bold Oblique BoldOblique }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \allsc    {\_fsetV caps=+smcp;+c2sc;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
 
-\_moddef \thin     {\_onlyif sub=Sans: { \_fvars Thin   Regular   ThinItalic    Italic }}
-\_moddef \light    {\_onlyif sub=Sans: { \_fvars Light  Medium    LightItalic   MediumItalic }}
-\_moddef \book     {\_onlyif sub=Sans: { \_fvars Book   SemiBold  BookItalic    SemiBoldItalic }}
-\_moddef \medium   {\_onlyif sub=Sans: { \_fvars Medium ExtraBold MediumItalic  ExtraBoldItalic }%
-                    \_onlyif sub=Mono: { \_fvars Medium Bold      MediumOblique BoldOblique }}
+\_moddef \thin     {\_onlyif sub=Sans: {\_fvars Thin   Regular   ThinItalic    Italic }}
+\_moddef \light    {\_onlyif sub=Sans: {\_fvars Light  Medium    LightItalic   MediumItalic }}
+\_moddef \book     {\_onlyif sub=Sans: {\_fvars Book   SemiBold  BookItalic    SemiBoldItalic }}
+\_moddef \medium   {\_onlyif sub=Sans: {\_fvars Medium ExtraBold MediumItalic  ExtraBoldItalic }%
+                    \_onlyif sub=Mono: {\_fvars Medium Bold      MediumOblique BoldOblique }}
 
 \_initfontfamily % new font family must be initialized
 
