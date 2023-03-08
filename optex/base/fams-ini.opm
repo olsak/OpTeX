@@ -218,7 +218,7 @@
 
 \_famfrom {Raph Levien}
 \_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
-   { -,\cond: {\rm\bf} }
+   { -,\narrow: {\rm\bf} }
 
 \_endcode
 
