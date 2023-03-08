@@ -58,6 +58,12 @@
      \allsc,\narrow\allsc,\cond\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
 \_famalias [Besley]
 
+\_faminfo [Drafting* Mono] {Monospaced typeface family with small caps} {f-draftingmono}
+   { \thin,\light,-,\medium: {\rm\bf\it\bi}
+     \thin\caps,\light\caps,\caps,\medium\caps: {\rm\bf\it\bi}
+     \thin\allsc,\light\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
+\_famalias [DraftingMono]
+
 \_famsrc {CTAN}
 \_famtext {Other fonts:}
 
