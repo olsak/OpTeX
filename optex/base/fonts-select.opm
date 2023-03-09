@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2022-12-01>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2023-03-09>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -130,7 +130,9 @@
    \_initunifonts \_unichars \_uniaccents
    \_unless\_ifcsname _f:\_csstring#2:main.fam\_endcsname
       \_isfont{#7}\_iffalse
-         \_opwarning{Family [#1] skipped, font "#7" not found}\_ea\_ea\_ea\_endinput \_else
+         \_opwarning{Family [#1] skipped, font "#7" not found}\_endinput
+         \_lowercase{\_ifcsname _fams:#1\_endcsname}\_famsubstitute \_fi
+      \_else
          \_edef\_currfamily {\_csstring #2}\_def\_mathfaminfo{#6}%
          \_wterm {FONT: [#1] -- \_string#2 \_detokenize{(#3)^^J mods:{#4} vars:{#5} math:{#6}}}%
          \_unless \_ifx #2\_undefined
@@ -138,7 +140,7 @@
          \_protected\_edef#2{\_def\_noexpand\_currfamily{\_csstring #2}\_unexpanded{#8\_resetfam}}%
          \_ea \_let \_csname _f:\_currfamily:main.fam\_endcsname =#2%
       \_fi
-   \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_rm \_ea \_endinput \_fi
+   \_else \_csname _f:\_csstring#2:main.fam\_endcsname \_rm \_endinput \_empty\_fi
 }
 \_def\_initfontfamily{%
    \_csname _f:\_currfamily:main.fam\_endcsname \_rm
@@ -308,18 +310,21 @@
    \_cod -----------------------------
 
 \_protected\_def \_fontfam [#1]{%
-   \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
+   \_lowercase{\_edef\_famname{\_ea\_removespaces \_expanded{#1} {} }}%
    \_isfile {f-\_famname.opm}\_iftrue \_opinput {f-\_famname.opm}%
    \_else
        \_tryloadfamslocal
        \_edef\_famfile{\_trycs{_famf:\_famname}{}}%
-       \_ifx\_famfile\_empty \_listfamnames
+       \_ifx\_famfile\_empty
+           \_ifcsname _fams:\_famname \_endcsname \_famsubstitute
+           \_else \_listfamnames
+           \_fi
        \_else \_opinput {\_famfile.opm}%
-   \_fi\_fi
+   \_fi\_empty\_fi
 }
 \_def\_tryloadfamslocal{%
    \_isfile {fams-local.opm}\_iftrue
-      \_opinput {fams-local.opm}\_famfrom={}%
+      \_opinput {fams-local.opm}\_famfrom={}\_famsrc={}%
    \_fi
    \_let \_tryloadfamslocal=\_relax  % need not to load fams-local.opm twice
 }
@@ -341,6 +346,27 @@
 \_public \fontfam ;
 
    \_doc -----------------------------
+   \`\fontfamsub` `[<Family>][<byFamily>]` declares automatic substitution of
+   <Family> by <byFamily> which is done when <Family> is not installed. I.e.
+   if there is no `f-<family>.opm` file or there is no regular font of the
+   family installed.
+   \`\_famsubstitute` is internal macro used in \^`\fontfam` and \^`\_famdecl` macros.
+   It consumes the rest of the macro, runs \^`\nospacefuturelet` in order to
+   do `\endpinput` to the current `f-file` and runs \^`\fontfam` again.
+   The table of such substutitions are saved in the macros `\_fams:<family>`.
+   \_cod -----------------------------
+
+\_def \_fontfamsub [#1]#2[#3]{\_lowercase{\_sxdef{_fams:#1}{#3}}}
+
+\_def\_famsubstitute #1\_empty\_fi{\_fi\_fi\_fi
+   \_wterm {FONT: Family [\_famname] not found, substituted by [\_cs{_fams:\_famname}]}%
+   \_nospacefuturelet\_tmp\_famsubstituteA  % we want to \endinput current f-file
+}
+\_def\_famsubstituteA{\_fontfam[\_cs{_fams:\_famname}]}
+
+\_public \fontfamsub ;
+
+   \_doc -----------------------------
    When the `fams-ini.opm` or `fams-local.opm` files are read then we need
    to save only a mapping from family names or alias names to the font family file
    names. All other information is ignored in this case. But if these files
@@ -360,6 +386,9 @@
    \`\_famfrom` declares type foundry or owner or designer of the font family.
    It can be used in `fams-ini.opm` or `fams-local.opm` and it is printed
    in the font catalog.
+   \nl
+   \`\_famsrc` declares the source, where is the font family from (used in `fams-ini.opm`
+   and if the font isn't found when the fonts catalog is printed).
    \_cod -----------------------------
 
 \_def\_famtext #1{}
@@ -372,10 +401,10 @@
    \_lowercase{\_edef\_tmpa{\_ea\_removespaces #1 {} }}%
    \_sdef{_famf:\_tmpa\_ea}\_ea{\_famfile}%
 }
-\_newtoks\_famfrom
+\_newtoks\_famfrom  \_newtoks\_famsrc
 \_input fams-ini.opm
 \_let\_famfile=\_undefined
-\_famfrom={}
+\_famfrom={} \_famsrc={}
 
    \_doc -----------------------------
    When the \^`\fontfam``[catalog]` is used then the file
@@ -899,6 +928,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2023-03-09  \_famsrc, \fontfamsub introduced
 2022-12-01  \faminfo saves f-<filename> to the format only when needed
 2022-11-08  \protected: \fontdef, \famvardef, \fontfam
 2022-02-22  Font Selection System reimplemented, \fontsel introduced

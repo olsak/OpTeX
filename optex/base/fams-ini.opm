@@ -7,6 +7,7 @@
 \_faminfo [Catalogue] {Catalogue of all registered font families} {fonts-catalog} {}
 \_famalias [Catalog]
 
+\_famsrc {TeXlive}
 \_famtext {Computer Modern like family:}
 
 \_famfrom {GUST}
@@ -198,10 +199,12 @@
      -,\medium,\semibold: {\bf\bi} }
 
 \_famfrom {CTU in Prague, Roman Cernohous}
+\_famsrc {non free font, used in CTU Style, see \url{https://www.cvut.cz/en/ctu-logo}}
 \_faminfo [Technika] {Fonts from visual style of CTU in Prague} {f-technika}
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
 
+\_famsrc {TeXlive}
 \_famfrom {Bitstream, Andrey V. Panov, Michael Sharpe}
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }

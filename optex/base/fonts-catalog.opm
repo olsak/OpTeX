@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {Font catalogue <2022-07-11>} % loaded on demand by \fontfam[catalog]
+\_codedecl \_undefined {Font catalogue <2023-03-09>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
 \_initunifonts
@@ -41,7 +41,9 @@
                   \_iftrue {\_ttfixed \$Default math font\$: \_mathfaminfo \_par}
                   \_else Default math font (\_mathfaminfo): \_the\_catalogmathsample \_par
               \_fi\_fi
-          \_else {\_qquad\_ttfixed ... family skipped, fonts not found in your system.}
+          \_else {\_qquad\_ttfixed ... family skipped, fonts not found in your system.\_nl
+                  \_null\_qquad ... where is the family from:\_nl
+                  \_null\_qquad\_qquad\_the\_famsrc}
        \_fi\_fi\_fi
    \_egroup
 }
@@ -134,6 +136,7 @@ described in the \code{fams-ini.opm} file.
 
 \_endcode % -------------------------------------
 
+2023-03-09  \_famsrc introduced
 2022-07-11  \_raggedbottom added
 2022-02-22  \_ttfixed, \footline set as global, bug fixed
 2020-02-26  released
