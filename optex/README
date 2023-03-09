@@ -22,6 +22,10 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.11> Mar 2023:
+       \fontfamsub: the substitution of missing families introduced.
+       New font family files created.
+       Minor bugs fixed.
 <1.10> Feb 2023:
        key-values improved: \iskv, \kvx, \nokvx introduced.
        unimath-codes: control sequences are macros, no \chardef.
