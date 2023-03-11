@@ -157,6 +157,13 @@
 \_sdef{_mt:today:pt}{\_the\_day~de \_mtext{m\_the\_month}~ de \_the\_year}
 % todo
 
+\_langdata et {Estonian} % ------------------------------------------------
+\_langw et  Peatükk      Tabel       Joonis      Teema
+\_monthw et jaanuar veebruar märts aprill mai juuni
+            juuli august september oktoober november detsember
+\_sdef{_mt:today:et}{\_the\day.~\_mtext{m\_the\_month} \_the\_year}
+\_quotationmarks{„“„“}
+
 \_endcode
 
 2022-10-11: \postexhyphenchar setting added to cs and sk languages
