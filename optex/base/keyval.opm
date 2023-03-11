@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readkv {Key-value dictionaries <2023-01-14>} % preloaded in format
+\_codedecl \readkv {Key-value dictionaries <2023-03-11>} % preloaded in format
 
    \_doc ----------------------------
    {\bf Implementation.}\nl
@@ -27,7 +27,7 @@
    \_trycs{_kvx:\_the\_kvdict:#1}%
           {\_trycs{_nokvx:\_the\_kvdict}{\_ea\_ignoreit}{#1}\_ea\_ignoreit}{#2}}
 \_def\_kvx#1#2{\_sdef{_kvx:\_the\_kvdict:#1}##1{#2}}
-\_def\_nokvx#1{\_sdef{_nokvx:\_the\_kvdict}##1\_ea\_ignoreit\_fi##2{\_fi#1}}
+\_def\_nokvx#1{\_sdef{_nokvx:\_the\_kvdict}##1\_ea\_ignoreit##2{#1}}
 \_def\_kv#1{\_trycs{\_kvcs#1}{\_kvunknown}}
 \_def\_iskv#1#2{#2\_else\_ea\_unless\_fi \_ifcsname\_kvcs#1\_endcsname}
 \_def\_kvcs{_kv:\_the\_kvdict:}
@@ -125,6 +125,8 @@ Recommendation: If the value of the key-value pair includes `=` or `,` or
 
 \_endinput
 
+
+2023-03-11 \nokvx: \fi bug (due to \afterfi in \trycs) fixed.
 2023-01-13 \kvx parameter added, \nokvx introduced.
 2023-01-07 \kvdict, \kvx, \iskv added.
 2020-12-21 Released
