@@ -10,7 +10,7 @@ PDF_FILES = \
 	$(BUILD_DIR)/demo/op-mathalign.pdf \
 	$(BUILD_DIR)/pkg/optex-math-doc.pdf
 
-.PHONY: clean dist test all help pdf format
+.PHONY: all clean dist format help pdf test
 help:
 	@echo "Targets are"
 	@echo " format    Create fmt file"
@@ -18,12 +18,12 @@ help:
 	@echo " all       Create fmt and PDF files"
 	@echo " dist      Create ZIP distribution"
 	@echo " clean     Cleanup"
-format: $(BUILD_DIR)/texmf/web2c/luatex/optex.fmt
-test: pdf
-dist: $(BUILD_DIR)/optex.zip
 all: format pdf
-pdf: $(PDF_FILES)
 dist: $(BUILD_DIR)/optex.zip
+format: $(BUILD_DIR)/texmf/web2c/luatex/optex.fmt
+pdf: $(PDF_FILES)
+test: pdf
+
 
 clean:
 	rm -rf $(BUILD_DIR)
