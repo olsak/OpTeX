@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2022-06-28>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2023-03-12>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -410,24 +410,42 @@
     The \^`\everyii` tokens register is applied before `\noindent`. User can
     declare something special here.
 
-   The \`\_newiiletter``{<letter>}` macro is empty by default. It is invoked if first
-   letter of index entries is changed. You can declare a design between
+   The \`\_newiiletter``{<letter>}{<word>}` macro is empty by default. It is invoked
+   if first letter of index entry is changed. You can declare a design between
    index entries here. You can try, for example:
    \begtt
    \def\_newiiletter#1#2{%
-       \bigskip \hbox{\setfontsize{at15pt}\bf\uppercase{#1}}\medskip}
+       \bigskip \hbox{\setfontsize{at15pt}\bf #1}\nobreak\medskip}
+   \endtt
+   \`\_definefirstii` `<word>&` macro defines \`\_firstii` which is used as the
+   <letter> parameter of the macro \^`\_newiiletter` and for testing if the
+   \"first letter" of the index entry was changed.
+   The `\uppercase` of the real first letter is used by default here.
+   You can re-implement \^`\_definefirstii` if you want. For example,
+   you want to ignore accents above letters for index sub-headers:
+   \begtt
+   \def\_definefirstii#1#2&{%
+      \uppercase{\bgroup \iicodes \uppercase{\egroup\def\_firstii{#1}}}}
+   \def\iicodes{}
+   \def\setiicodes #1#2,{\_ifx^#1^\_else
+      \foreach #2\do{\_addto\iicodes{\uccode`##1=`#1}}
+      \_ea\setiicodes \_fi
+   }
+   \setiicodes AÀÂÄÁ,ĆČ,DĎ,EÈÉËÊĚ,IÍÏÎ,LĹĽ,OÖÓÔ,RŔ,ŚŠ,TŤ,UÙÛÜÚŮŰ,YÝŸ,{},
    \endtt
    \_cod -----------------------------
 
-\_def\_printii #1#2&{%
-   \_ismacro\_lastii{#1}\_iffalse \_newiiletter{#1}{#2}\_def\_lastii{#1}\_fi
-   \_gdef\_currii{#1#2}\_the\_everyii\_noindent
-   \_hskip-\_iindent \_ignorespaces\_printiiA#1#2//}
+\_def\_printii #1&{\_definefirstii #1&%
+   \_ifx\_firstii\_lastii\_else
+      \_ea\_newiiletter\_ea{\_firstii}{#1}\_let\_lastii=\_firstii\_fi
+   \_gdef\_currii{#1}\_the\_everyii\_noindent
+   \_hskip-\_iindent \_ignorespaces\_printiiA#1//}
 \_def\_printiiA #1/{\_if^#1^\_let\_previi=\_currii \_else
    \_ea\_scanprevii\_previi/&\_edef\_tmpb{\_detokenize{#1}}%
    \_ifx\_tmpa\_tmpb \_iiemdash \_else#1 \_gdef\_previi{}\_fi
    \_ea\_printiiA\_fi
 }
+\_def\_definefirstii #1#2&{\_uppercase{\_def\_firstii{#1}}}
 \_def\_iiemdash{\_kern.1em---\_space}
 \_def\_lastii{}
 \_def\_newiiletter#1#2{}
@@ -549,6 +567,7 @@
 
 \_endcode % -------------------------------------
 
+2023-03-12 \_definefirstii introduced
 2022-06-28 \_reversewords for French sorting introduced
 2022-06-28 \_sortingdatalatin covers more languages
 2022-06-28 \_xcompoundchars introduced, comments upgraded (German sorting mentioned)
