@@ -7,7 +7,7 @@
 \_faminfo [Catalogue] {Catalogue of all registered font families} {fonts-catalog} {}
 \_famalias [Catalog]
 
-\_famsrc {TeXlive}
+\_famsrc {CTAN}
 \_famtext {Computer Modern like family:}
 
 \_famfrom {GUST}
@@ -204,7 +204,7 @@
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
 
-\_famsrc {TeXlive}
+\_famsrc {CTAN}
 \_famfrom {Bitstream, Andrey V. Panov, Michael Sharpe}
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }
