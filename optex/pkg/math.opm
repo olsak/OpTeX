@@ -425,15 +425,15 @@
 \_nspublic \scriptspaces ;
 
    \_doc
-   \`\mathclap``{<formula>}`, \`\mathrclap``{<formula>}`, and \`\mathlclap``{<formula>}`
+   \`\mathclap``{<formula>}`, \`\mathrlap``{<formula>}`, and \`\mathllap``{<formula>}`
    are based on the \OpTeX/ macros \O`\setmathstyle` and \O`\usemathstyle`.
    \_cod
 
 \_def\.mathclap#1{{\_setmathstyle \_hbox to0pt{\_hss$\_usemathstyle#1$\_hss}}}
-\_def\.mathrclap#1{{\_setmathstyle \_rlap{$\_usemathstyle#1$}}}
-\_def\.mathlclap#1{{\_setmathstyle \_llap{$\_usemathstyle#1$}}}
+\_def\.mathrlap#1{{{}\_setmathstyle \_rlap{$\_usemathstyle#1$}}}
+\_def\.mathllap#1{{{}\_setmathstyle \_llap{$\_usemathstyle#1$}}}
 
-\_nspublic \mathclap \mathrclap \mathlclap ;
+\_nspublic \mathclap \mathrlap \mathllap ;
 
 \_endnamespace
 \_endcode
@@ -821,7 +821,7 @@ commands similar to ones from \LaTeX/ packages.
 
 \^`\mathclap``{<formula>}` creates `{\hbox to0pt{\hss $<formula>$\hss}}` and
 respects the math style.\nl
-\^`\mathrclap``{<formula>}` and \^`\mathlclap``{<formula>}` is \O`\rlap` and
+\^`\mathrlap``{<formula>}` and \^`\mathllap``{<formula>}` is \O`\rlap` and
 \O`\llap` analogue of \^`\mathclap`.
 
 
