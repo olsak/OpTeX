@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.09, 2023-03-11}
+\_def\_math_version {0.10, 2023-03-12}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -424,6 +424,17 @@
 
 \_nspublic \scriptspaces ;
 
+   \_doc
+   \`\mathclap``{<formula>}`, \`\mathrclap``{<formula>}`, and \`\mathlclap``{<formula>}`
+   are based on the \OpTeX/ macros \O`\setmathstyle` and \O`\usemathstyle`.
+   \_cod
+
+\_def\.mathclap#1{{\_setmathstyle \_hbox to0pt{\_hss$\_usemathstyle#1$\_hss}}}
+\_def\.mathrclap#1{{\_setmathstyle \_rlap{$\_usemathstyle#1$}}}
+\_def\.mathlclap#1{{\_setmathstyle \_llap{$\_usemathstyle#1$}}}
+
+\_nspublic \mathclap \mathrclap \mathlclap ;
+
 \_endnamespace
 \_endcode
 
@@ -803,7 +814,18 @@ then you can load a next additional math font using another \o`\addUmathfont` an
 by previous steps are replaced.
 
 
-\sec[pkgtemplate] General recommendation for writing packages
+\sec Miscelaneous commands
+
+I created various commands at the requests of users. They asked me to create
+commands similar to ones from \LaTeX/ packages.
+
+\^`\mathclap``{<formula>}` creates `{\hbox to0pt{\hss $<formula>$\hss}}` and
+respects the math style.\nl
+\^`\mathrclap``{<formula>}` and \^`\mathlclap``{<formula>}` is \O`\rlap` and
+\O`\llap` analogue of \^`\mathclap`.
+
+
+\sec[pkgtemplate] General recommendation for writing \OpTeX/ packages
 
 This section has nothing common with the subject of this package but this package
 can serve as inspiration for another package writers. It should be a template
@@ -908,6 +930,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.10  2023-03-12: \mathclap etc. introduced.
 0.09  2023-03-11: mstyle, bstyle options introduced.
 0.08  2023-01-28: \eqsystem introduced, \eqfil added.
 0.07  2023-01-23: \sgn etc. defined as \protected\def.
