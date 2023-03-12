@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2021-08-02>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2023-03-12>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -1046,6 +1046,23 @@
 \_public \cramped ;
 
    \_doc -----------------------------
+   \`\setmathstyle` saves current math style
+   (including its cramped/normal subversion) and \`\usemathstyle`
+   restores the saved math style. These macros are based on the \LuaTeX/'s
+   `\mathstyle` primitive,  i.e.\ they don't work in generalized fractions.\nl
+   Usage: `\def\mathclap #1{{\setmathstyle \hbox to0pt{\hss$\usemathstyle#1$\hss}}}`.
+   \_cod
+
+\_newcount\_mstylenum
+\_def\_setmathstyle{\_mstylenum=\_mathstyle\_relax}
+\_def\_usemathstyle{\_ifcase\_mstylenum
+   \_displaystyle\_or \_crampeddisplaystyle\_or \_textstyle\_or \_crampedtextstyle\_or
+   \_scriptstyle\_or \_crampedscriptstyle\_or \_scriptscriptstyle\_or \_crampedscriptscriptstyle
+   \_fi
+}
+\_public \setmathstyle \usemathstyle ;
+
+   \_doc -----------------------------
    The \`\mathbox``{<text>}` macro is copied from OPmac trick 078.
    It behaves like `\hbox{<text>}` but the `<text>` is scaled to a smaller
    size if it is used in scriptstyle or scriptscript style.\nl
@@ -1067,6 +1084,7 @@
 
 \_endcode %---------------------------------------------------
 
+2023-03-12 \setmathstyle, \usemathstyle introduced
 2021-08-02 ssty fontfeatures rewritten
 2021-04-25 \triangleright: typo fixed
 2021-03-22 \(l)eqalignno: \hbox instead \llap, \rlap (\par error suppressed)
