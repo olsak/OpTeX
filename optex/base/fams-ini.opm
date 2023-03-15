@@ -64,6 +64,10 @@
      \thin\allsc,\light\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
 \_famalias [DraftingMono]
 
+\_faminfo [Jost*] {A modern geometric sans-serif} {f-jost}
+   { \hairline,\thin,\light,-,\medium: {\rm\bf\it\bi} -: {\kf\ki} }
+\_famalias [Jost]
+
 \_famsrc {CTAN}
 \_famtext {Other fonts:}
 
