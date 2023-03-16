@@ -53,7 +53,7 @@ $(BUILD_DIR)/doc/%.pdf: doc/%.tex $(BUILD_DIR)/run-optex.sh
 	cp $(^) $(@D)
 	$(BUILD_DIR)/run-optex.sh $(@D) $(basename $(<F) .tex) $(<F)
 
-$(BUILD_DIR)/demo/%.pdf: demo/%.tex $(BUILD_DIR)/run-optex.sh
+$(BUILD_DIR)/demo/%.pdf: demo/%.tex demo/op-biblist.bib demo/op-ring.png demo/op-slides-bg.png $(BUILD_DIR)/run-optex.sh
 	cp $(^) $(@D)
 	$(BUILD_DIR)/run-optex.sh $(@D) $(basename $(<F) .tex) $(<F)
 
