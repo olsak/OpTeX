@@ -59,7 +59,7 @@
   \_def\rotatebox#1#2{\_pdfrotate{#1}#2}%
   \_def\lineheight#1{}%
   \_def\setlength#1#2{}%
-  \_def\transparent#1{}%
+  \_def\transparent#1{\_ea\_transparency\_expanded{\_expr[0]{(1-.5)*255}} }%
   % Inkscape may generate \textbf{\textit{\textsc{TEXT}}}
   \_def\textbf#1{\_begingroup\_let\_it\_bi\_bf #1\_endgroup}%
   \_def\textit#1{\_begingroup\_it #1\_endgroup}%
