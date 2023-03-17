@@ -58,6 +58,10 @@
      \allsc,\narrow\allsc,\cond\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
 \_famalias [Besley]
 
+\_faminfo [Bodoni*] {No-compromises Bodoni for the digital age} {f-bodonimoda}
+   { -,\caps,\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
+\_famalias [Bodoni] \_famalias [BodoniModa]
+
 \_faminfo [Drafting* Mono] {Monospaced typeface family with small caps} {f-draftingmono}
    { \thin,\light,-,\medium: {\rm\bf\it\bi}
      \thin\caps,\light\caps,\caps,\medium\caps: {\rm\bf\it\bi}
