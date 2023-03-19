@@ -121,6 +121,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#carrows">Curved arrows</a>
+    <li><a href="#cancel">Canceled text</a>
     <li><a href="#circletext">Text around a circle</a>
     <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
     <li><a href="#keystrokes">Keystrokes using special images</a>
@@ -1150,6 +1151,43 @@ or \preparedirection (for Bézier curves). Then \rotdata is used inside
 \pdfliteral parameter.
 
 <p CLASS=datum>(0037) -- P. O. 2021-02-05<p>
+<hr>
+
+<h2><a name="cancel"></a>Canceled text</h2>
+
+<p>The macro \cancel type {text} prints text and the line over the text. If the
+type is empty or / then the line is slanted from bottom left to top right. If the
+type is \\ then the line is drawn from top left to bottom right. If the type
+is X or x then both lines are drawn. If the type is - then the horizontal
+line is drawn. The math style inside math formulae is kept. For example
+<pre>
+Test: \cancel\\{hello}, ${\cancel X{a}\over \cancel{b}} + \cancel-{\int_a^b f(x){\rm d}x}$
+</pre>
+
+<p>The \cancel macro is implemented by the code:
+<pre>
+\def\cancel#1#{\isempty{#1}\iftrue \afterfi{\cancel/}
+   \else
+      \lowercase{\casesof #1}
+        /  {\let\cancline=\drawFslash}
+        \\ {\let\cancline=\drawBslash}
+        x  {\def\cancline{\drawBslash\drawFslash}}
+        -  {\let\cancline=\drawHline}
+        \_finc {}%
+      \ea\cancelA
+   \fi
+}
+\def\cancelA{\ifmmode \ea\cancelM \else \ea\cancelT \fi}
+\def\cancelT#1{\setbox0=\hbox{#1}\cancelF} % text mode
+\def\cancelM#1{\mathstyles{\setbox0=\hbox{$\currstyle#1$}\cancelF}} % math mode
+\def\cancelF{\edef\tmp{\cancline}\quitvmode\box0 \pdfliteral{q \useit{\cancelparams} \tmp S Q}}
+\def\drawFslash{\bp{-\wd0} \bp{-\dp0} m 0 \bp{\ht0} l } % forward slash
+\def\drawBslash{\bp{-\wd0} \bp{\ht0} m 0 \bp{-\dp0} l } % backward slash
+\def\drawHline {\bp{-\wd0} \bp{.5ex} m 0 \bp{.5ex} l }  % horizontal line
+\def\cancelparams{1 0 0 RG 1 J .6 w} % color RG linetype J linewidth w
+</pre>
+
+<p CLASS=datum>(0103) -- P. O. 2023-03-19<p>
 <hr>
 
 <h2><a name="circletext"></a>Text around a circle</h2>
