@@ -2803,7 +2803,7 @@ the implementation is this splitting problem:
 \def\begblock{\par\bgroup
    \advance\blocklevel by1 \advance\leftskip by\iindent \rightskip=\leftskip
    \medskip
-   \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
+   \openref\pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}B{\the\pdflastypos}}
    \nobreak \medskip
 }
 \def\endblock{\par\nobreak\medskip
@@ -2882,7 +2882,7 @@ of the next page looks like B{top-pos}E{pos}...B{0}E{pos}.
 
 <p>and run OpTeX twice.
 
-<p CLASS=datum>(0031) -- P. O. 2021-01-13<p>
+<p CLASS=datum>(0031) -- P. O. 2021-01-13, added \openref 2023-03-22<p>
 <hr>
 
 <h2><a name="blockoval"></a>Text blocks in ovals</h2>
