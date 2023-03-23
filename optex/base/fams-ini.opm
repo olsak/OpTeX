@@ -7,7 +7,7 @@
 \_faminfo [Catalogue] {Catalogue of all registered font families} {fonts-catalog} {}
 \_famalias [Catalog]
 
-\_famsrc {TeXlive}
+\_famsrc {CTAN}
 \_famtext {Computer Modern like family:}
 
 \_famfrom {GUST}
@@ -48,6 +48,31 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [Courier]
 
+\_famsrc {https://indestructibletype.com/}
+\_famtext {Typefaces from indestructible type*}
+
+\_famfrom {Owen Earl, indestructible type*}
+\_faminfo [Besley*] {Antique slab serif, inspired by Robert Besley's Clarendon} {f-besley}
+   { -,\narrow,\cond: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki}
+     \caps,\narrow\caps,\cond\caps: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki}
+     \allsc,\narrow\allsc,\cond\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
+\_famalias [Besley]
+
+\_faminfo [Bodoni*] {No-compromises Bodoni for the digital age} {f-bodonimoda}
+   { -,\caps,\allsc: {\rm\mf\bf\ef\kf\it\mi\bi\ei\ki} }
+\_famalias [Bodoni] \_famalias [BodoniModa]
+
+\_faminfo [Drafting* Mono] {Monospaced typeface family with small caps} {f-draftingmono}
+   { \thin,\light,-,\medium: {\rm\bf\it\bi}
+     \thin\caps,\light\caps,\caps,\medium\caps: {\rm\bf\it\bi}
+     \thin\allsc,\light\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
+\_famalias [DraftingMono]
+
+\_faminfo [Jost*] {A modern geometric sans-serif} {f-jost}
+   { \hairline,\thin,\light,-,\medium: {\rm\bf\it\bi} -: {\kf\ki} }
+\_famalias [Jost]
+
+\_famsrc {CTAN}
 \_famtext {Other fonts:}
 
 \_famfrom{Antonis Tsolomitis}
@@ -204,7 +229,7 @@
    { -,\light,\book, \caps, \caps\book: {\rm\bf\it\bi} -:{\stencil} }
 \_famalias [CTU Technika]
 
-\_famsrc {TeXlive}
+\_famsrc {CTAN}
 \_famfrom {Bitstream, Andrey V. Panov, Michael Sharpe}
 \_faminfo [XCharter] {An extension of Bitstream Charter} {f-xcharter}
    { -,\slant,\caps,\caps\slant: {\rm\bf\it\bi} }

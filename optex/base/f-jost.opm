@@ -1,0 +1,32 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Jost] \Jost {Jost* geometric sans-serif}
+        {\hairline \thin \light \medium}
+        {\rm \bf \it \bi \kf \ki} {}
+        {[Jost-400-Book]}
+        {\_def\_fontnamegen {[Jost-\_currV]:script=latn;\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (weight):^^J
+ \hairline ... \rm, \it: Hairline, \bf, \bi: Book^^J
+ \thin ....... \rm, \it: Thin, \bf, \bi: Medium^^J
+ \light ...... \rm, \it: Light, \bf, \bi: SemiBold^^J
+ \medium ..... \rm, \it: Medium, \bf, \bi: Hevy^^J
+Extended Variants:^^J
+ \kf, \ki .... Black, BlackItalic^^J
+}}
+
+\_moddef \resetmod {\_fvars 400-Book     700-Bold   400-BookItalic     700-BoldItalic }
+\_moddef \hairline {\_fvars 100-Hairline 400-Book   100-HairlineItalic 400-BookItalic }
+\_moddef \thin     {\_fvars 200-Thin     500-Medium 200-ThinItalic     500-MediumItalic }
+\_moddef \light    {\_fvars 300-Light    600-Semi   300-LightItalic    600-SemiItalic }
+\_moddef \medium   {\_fvars 500-Medium   800-Hevy   500-MediumItalic   800-HevyItalic }
+\_moddef \black    {\_fvars 900-Black    .          900-BlackItalic    . }
+\_private \black ;
+
+\_famvardef \kf {\_black\_rm}
+\_famvardef \ki {\_black\_it}
+
+\_initfontfamily
+
+\_endcode

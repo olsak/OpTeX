@@ -1,0 +1,30 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [DraftingMono] \DraftingMono {Drafting* Mono monospaced}
+        {\caps \allsc \nocaps \thin \light \medium} {\rm \bf \it \bi} {}
+        {[DraftingMono-Regular]}
+        {\_def\_fontnamegen {[DraftingMono-\_currV]:script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (weight)^^J
+ \thin ..... \rm, \it: Thin, \bf, \bi: Light^^J
+ \light .... \rm, \it: Light, \bf, \bi: Medium^^J
+ \medium ... \rm, \it: Medium, \bf, \bi: Bold^^J
+Modifiers: (small caps)^^J
+ \caps ..... Caps and small caps^^J
+ \allsc .... Small caps only^^J
+ \nocaps ... No small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp; }
+\_moddef \allsc    {\_fsetV caps=+smcp;+c2sc; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_moddef \thin   {\_fvars Thin   Light  ThinItalic   LightItalic }
+\_moddef \light  {\_fvars Light  Medium LightItalic  MediumItalic }
+\_moddef \medium {\_fvars Medium Bold   MediumItalic BoldItalic }
+
+\_initfontfamily
+
+\_endcode

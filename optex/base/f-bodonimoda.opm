@@ -1,0 +1,43 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [BodoniModa] \BodoniModa {No-compromises Bodoni for the digital age}
+        {\caps \allsc \nocaps}
+        {\rm \bf \it \bi \mf \mi \ef \ei \kf \ki} {}
+        {[BodoniModa11pt-Regular]}
+        {\_def\_fontnamegen {[\_optname{bm}pt-\_currV]:script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (small caps):^^J
+ \caps ....... Caps and small caps^^J
+ \allsc ...... Small caps only^^J
+ \nocaps ..... No small caps^^J
+Extended variants:^^J
+ \mf, \mi .... Medium, MediumItalic^^J
+ \ef, \ei .... ExtraBold, ExtraBoldItalic^^J
+ \kf, \ki .... Black, FatfaceItalic^^J
+}}
+
+\_regoptsizes bm BodoniModa?
+    06 <8.5 11 <13.5 16 <20 24 <30 36 <42 48 <60 72 <84 96 <*
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \allsc    {\_fsetV caps=+smcp;+c2sc;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_moddef \medium   {\_fvars Medium  ExtraBold MediumItalic  ExtraBoldItalic }
+\_moddef \black    {\_fvars Black   .         FatfaceItalic . }
+\_private \medium ;
+\_private \black ;
+
+\_famvardef \mf {\_medium \_rm}
+\_famvardef \mi {\_medium \_it}
+\_famvardef \ef {\_medium \_bf}
+\_famvardef \ei {\_medium \_bi}
+\_famvardef \kf {\_black  \_rm}
+\_famvardef \ki {\_black  \_it}
+
+\_initfontfamily
+
+\_endcode
