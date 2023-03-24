@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (iso690) <2022-05-10>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2023-03-24>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
@@ -48,7 +48,6 @@
 \_def\_commonname{%
   \_ifnum\_NameCount=1
      \_firstauthorformat
-     \_ifx\_dobibmark\_undefined \_edef\_dobibmark{\_Lastname}\_fi
   \_else
      \_ifnum0\_namecount=\_NameCount
         \_ifx\_maybeetal\_empty \_bibconjunctionand\_else , \_fi
@@ -57,10 +56,15 @@
   \_fi
 }
 \_def\_authorname{%
+   \_ifx\_authlist\_undefined \_edef\_authlist{\_Lastname,\_Firstname}%
+   \_else \_edef\_authlist{\_authlist;\_Lastname,\_Firstname}\_fi
    \_ifnum\_NameCount>0\_namecount\_relax\_else \_commonname \_fi
    \_ifnum\_NameCount=0\_namecount\_relax \_maybeetal \_fi
 }
-\_let\_editorname=\_authorname
+\_def\_editorname{%
+   \_ifnum\_NameCount>0\_namecount\_relax\_else \_commonname \_fi
+   \_ifnum\_NameCount=0\_namecount\_relax \_maybeetal \_fi
+}
 
 \_def\_prepareauedoptions#1{%
    \_def\_mabyetal{}\_csname lb@abbreviatefalse\_endcsname
@@ -89,14 +93,30 @@
 \_let\_upper=\upper
 
    \_doc -----------------------------
-   Preparing bib-mark (used when `\nonumcitations` is set).
+   Preparing bib-mark (used when \^`\nonumcitations`).
+   The \`\_setbibmark` is run at the end of each record.
+   The \`\_authlist` includes `Lastname,Firstname;Lastname,Fisrtname;`
+   of all authors. If `bibmark` isn't declared explicitly then
+   we create it by the
+   \`\_createbibmark``<year>;<authors-list>;,;,;,;\_fin` macro.
+   It outputs first Lastname (and adds \"et al." if the second author in the
+   <authors-list> is non-empty). Then comma and <year> is appended.
+   A user can redefine the `\_createbibark` macro in the `\bibtexhook`
+   tokens list, if another bibmark format is needed.
+   The macro `\_createbibmark` must be expandable. See also
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#bibmark]{\OpTeX/ trick~0104}.
    \_cod -----------------------------
 
 \_def\_setbibmark{%
-   \_ifx\_dobibmark\_undefined \_def\_dobibmark{}\_fi
+   \_ifx\_authlist\_undefined \_def\_authlist{,;}\_fi
    \_RetrieveFieldIn{bibmark}\_tmp
-   \_ifx\_tmp\_empty \_RetrieveFieldIn{year}\_tmp \_edef\_tmp{\_dobibmark, \_tmp}\_fi
+   \_ifx\_tmp\_empty
+      \_RetrieveFieldIn{year}\_tmp
+      \_edef\_tmp{\_ea\_createbibmark\_expanded{\_tmp;\_authlist};,;,;,;\_fin}\_fi
    \_bibmark=\_ea{\_tmp}%
+}
+\_def\_createbibmark #1;#2,#3;#4,#5\_fin{% #1=year #2=LastName #3=FirstName #4=nextAuthor
+   #2\_ifx^#4^\_else \_Mtext{bib.etal}\_fi, #1%
 }
 
    \_doc -----------------------------
@@ -908,6 +928,7 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
+2023-03-24 ... \_createbibmark introduced
 2022-05-10 ... \. -> \:, collision with \oldaccents fixed.
 2022-02-04 ... \_langinput used in \_setlang
 2021-04-07 ... \biboptions toks declaration moved, bug fixed.

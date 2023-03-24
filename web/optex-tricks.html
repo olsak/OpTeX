@@ -227,6 +227,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Bibliography
 <ul>
     <li><a href="#fullcite">Citations by full bibliographic records</a>
+    <li><a href="#bibmark">Bibmark generator</a>
 </ul>
 
 <li>Slides
@@ -4874,7 +4875,60 @@ your document. The preparing of such file can be done by following code:
 <p>The advantage is that you have the printed text under your own control
 (because you can edit this file) and the disadvantage is, that you have more
 problems after a new bib-record is added to the .bib file. 
+
 <p CLASS=datum>(0092) -- P. O. 2022-10-10<p>
+<hr>
+
+<h2><a name="bibmark"></a>Bibmark generator</h2>
+
+<p>When \nonumcitations is declared then \cite commands print "bibmarks".
+They can be declared in .bib file or by \bib command. If a "bibmark" isn't
+declared for given bib-record, then it is generated in the form: LastName of
+the first author, comma, year. You can declare your own format of these
+generated bibmarks (OpTeX version 1.11+ and newer).
+
+<p>For example, you want to print last names of first three authors followed
+by the year in parenthesis. If there are more than three authors then
+only first author followed by et al. should be written. For example:
+
+<pre>
+\nonumcitations
+\cite[three-authors] % prints: First, Second, and Three (2023)
+\cite[single-author] % prints: First (2023)
+\cite[four-authors]  % prints: First, et al. (2023)
+% suppose, we have relevant bib-records in our .bib file without an explicit bibmark
+</pre>
+
+<p>The implementation:
+
+<pre>
+\bibtexhook{
+   \def\_createbibmark #1;#2,#3;#4,#5;#6,#7;#8,#9\_fin{%
+      \ifx ^#8^%
+        \ifx ^#6^%
+           \ifx ^#4^#2%
+           \else #2, and #4\fi
+        \else #2, #4, and #6\fi
+      \else #2, et al.\fi
+      \space (#1)%
+   }
+}
+\_def\cite[#1]{{\_citeA#1,,,\_printsavedcites}} % no square brackets printed around
+</pre>
+
+<p>The
+<pre>
+\_createbibmark year;Latstname1,Firstname1;Latstname2,Firstname2;etc.\_fin
+</pre>
+<p>macro is re-defined here. If the bib-record has only single author then
+the macro is called in the format
+<pre>
+\_createbibmark year;Latstname,Firstname;,;,;,;\_fin
+</pre>
+It means that other authors #4, #6 and #8 are empty in this case. See also
+section 2.32.6 in the OpTeX documentation.
+
+<p CLASS=datum>(0104) -- P. O. 2023-03-24<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>
