@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (iso690) <2023-03-24>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2023-03-25>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
@@ -56,8 +56,8 @@
   \_fi
 }
 \_def\_authorname{%
-   \_ifx\_authlist\_undefined \_edef\_authlist{\_Lastname,\_Firstname}%
-   \_else \_edef\_authlist{\_authlist;\_Lastname,\_Firstname}\_fi
+   \_ifx\_authlist\_undefined \_edef\_authlist{\_Lastname,\_Firstname,\_Von,\_Junior}%
+   \_else \_edef\_authlist{\_authlist;\_Lastname,\_Firstname,\_Von,\_Junior}\_fi
    \_ifnum\_NameCount>0\_namecount\_relax\_else \_commonname \_fi
    \_ifnum\_NameCount=0\_namecount\_relax \_maybeetal \_fi
 }
@@ -95,9 +95,9 @@
    \_doc -----------------------------
    Preparing bib-mark (used when \^`\nonumcitations`).
    The \`\_setbibmark` is run at the end of each record.
-   The \`\_authlist` includes `Lastname,Firstname;Lastname,Fisrtname;`
-   of all authors. If `bibmark` isn't declared explicitly then
-   we create it by the
+   The \`\_authlist` includes `Lastname,Firstname,Von,Junior`
+   of all authors separated by semicolon (no semicolon at the end of the
+   list). If `bibmark` isn't declared explicitly then we create it by the
    \`\_createbibmark``<year>;<authors-list>;,;,;,;\_fin` macro.
    It outputs first Lastname (and adds \"et al." if the second author in the
    <authors-list> is non-empty). Then comma and <year> is appended.
@@ -928,7 +928,7 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
-2023-03-24 ... \_createbibmark introduced
+2023-03-25 ... \_createbibmark introduced
 2022-05-10 ... \. -> \:, collision with \oldaccents fixed.
 2022-02-04 ... \_langinput used in \_setlang
 2021-04-07 ... \biboptions toks declaration moved, bug fixed.

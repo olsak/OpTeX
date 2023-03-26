@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (simple) <2023-03-24>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (simple) <2023-03-25>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (simple) bibfiles command only}
@@ -17,13 +17,15 @@
 % Formatting of Author/Editor lists:
 
 \_def\_authorname{%
+  \_addauthlist
   \_ifnum\_NameCount>1
      \_ifnum0\_namecount=\_NameCount \_mtext{bib.and}\_else , \_fi
-     \_edef\_authlist{\_authlist;\_Lastname,\_Firstname}%
-  \_else
-     \_edef\_authlist{\_Lastname,\_Firstname}%
   \_fi
   \_bprintc\_Firstname{* }\_bprintc\_Von{* }\_Lastname\_bprintc\_Junior{, *}%
+}
+\_def\_addauthlist{%
+   \_edef\_authlist{\_ifx\_authlist\_undefined \_else \_authlist;\_fi
+                    \_Lastname,\_Firstname,\_Von,\_Junior}%
 }
 \_let\_editorname=\_authorname
 
@@ -84,6 +86,7 @@
    \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
                          \_Inclause
+   \_let\_addauthlist\_relax   % no read authorlist again
    \_bprinta [!editor]    {*,~eds.\ }{}%
    \_bprintb [booktitle]  {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [address]    {*: }{\_bibwarning}%
@@ -101,6 +104,7 @@
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [crossreff]  {In~\_cite[*]. }{%
                          \_bprinta [booktitle]  {*. }{\_bibwarning}%
+                         \_let\_addauthlist\_relax
                          \_bprinta [!editor]    {*,~eds.\ }{\_bibwarning}%
                          \_bprinta [edition]    {*\_mtext{bib.edition}\ }{\_bibwarning}%
                          \_bprinta [address]    {*: }{\_bibwarning}%
