@@ -249,6 +249,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#frontsheet">More pages on single sheet</a>
     <li><a href="#booklet">Printing booklets</a>
+    <li><a href="#directoutput">Direct output of a box to a single page</a>
     <li><a href="#version">Version number of the format</a>
     <li><a href="#diff">Showing differences between versions of the document</a>
     <li><a href="#overleaf">How to run OpTeX at Overleaf</a>
@@ -5347,6 +5348,37 @@ from the document or void page, if NUM>\pdflastximagepages. The sheet-pairs
 are printed in the loop.
 
 <p CLASS=datum>(0089) -- P. O. 2022-06-17<p>
+<hr>
+
+<h2><a name="directoutput"></a>Direct output of a box to a single page</h2>
+
+<p>We create a macro \directoutput box which outputs the given box to the
+page without using \output routine. The page will have the same dimensions as
+the given box (plus \hhkern margins at the left+right side and \vvkern margins
+at the top+bottom side). For example:
+<pre>
+\directoutput \hbox {Hello}  % Creates a small page with the word Hello only.
+\directoutput \vbox {parahraph text} % Creates next page with the paragraph.
+\directoutput \hbox to2cm {A\hfil B} % The box can have a box specification.
+\bye
+</pre>
+<p>Similar features has the "standalone" LaTeX class.
+
+<p>The implemntation uses OpTeX's \_preshipout for colors pre-processing:
+<pre>
+\def\directoutput{\begingroup \afterassignment\directoutputA \setbox0=}
+\def\directoutputA{\aftergroup \directoutputB}
+\def\directoutputB{\_preshipout0\box0
+   \pdfpageheight=\dimexpr\ht0+\dp0+2\vvkern \relax
+   \pdfpagewidth=\dimexpr\wd0+2\hhkern\relax
+   \hoffset=\hhkern \voffset=\vvkern
+   \shipout\box0
+   \incr\pageno
+   \endgroup
+}
+</pre>
+
+<p CLASS=datum>(0105) -- P. O. 2023-03-27<p>
 <hr>
 
 <h2><a name="version"></a>Version number of the format</h2>
