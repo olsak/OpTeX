@@ -208,6 +208,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#dayw">Printing time, date</a>
     <li><a href="#pglists">Listings of all nodes in selected pages</a>
     <li><a href="#runsystem">Running system commands during document processing</a>
+    <li><a href="#visualdebug">Using lua-visual-debug package</a>
 </ul>
 
 <li>Sections
@@ -4470,6 +4471,27 @@ Moreover, the \exitstatus counter includes the status value after
 <p CLASS=datum>(0101) -- P. O. 2023-01-09<p>
 <hr>
 
+<h2><a name="visualdebug"></a>Using lua-visual-debug package</h2>
+
+<p>The <a href="https://www.ctan.org/pkg/lua-visual-debug">lua-visual-debug package</a>
+allows to show the spaces and box borders in the typesetting output. If you
+have installed it then you can try it. Don't use \input lua-visual-debug.sty.
+Use the following commands instead:
+
+<pre>
+\_directlua{ lvd = require("lua-visual-debug")}
+
+\_def \_optexoutput{\_begoutput \_preshipout0\_completepage
+   \_directlua{lvd.show_page_elements(tex.box[0])}
+   \_shipout\_box0 \_endoutput}
+</pre>
+
+<p>The first line loads the relevant Lua code. Next, we have to re-define
+the \output routine in order to run Lua function lvd.show_page_elements just
+before \shipout.
+
+<p CLASS=datum>(0106) -- P. O. 2023-04-14<p>
+<hr>
 
 <p CLASS="lmarg">Sections</p>
 
