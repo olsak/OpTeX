@@ -1,6 +1,6 @@
-%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2023-03-12>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2023-04-15>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathocode
@@ -367,25 +367,42 @@
 \_private \prime ;
 
    \_doc -----------------------------
-   \`\big`, \`\Big`, \`\bigg`, \`\Bigg`, \`\bigl`, \`\bigm`, \`\bigr`, \`\Bigl`, \`\Bigm`,
+   \`\big`, \`\bbig`, \`\Big`, \`\bigg`, \`\Bigg`,
+   \`\bigl`, \`\bigm`, \`\bigr`, \`\bbigl`, \`\bbigm`, \`\bbigr`, \`\Bigl`, \`\Bigm`,
    \`\Bigr`, \`\biggl`, \`\biggm`, \`\biggr`, \`\Biggl`, \`\Biggm`, \`\Biggr`
    are based on the \`\_scalebig` macro because we need the dependency on
    the various sizes of the fonts.
+   The \`\_scalebigcoef``<num>` returns relevant coefficient for these
+   macros. Multiply this coefficient by two and you get the strut
+   height+depth in em units.\nl
+   The \^`\big`, \^`\Big`, \^`\bigg`, \^`\Bigg` macros keep the strut height+depth
+   from plain \TeX/ and \^`\bbig` is a new macro in \OpTeX/. It generates the size
+   1.44\,em beween \^`\big` and  \^`\Big` which is
+   accessible in most of Unicode math fonts (but not in classical `cmex10`).
    \_cod -----------------------------
 
 %{\catcode`\^^Z=\active \gdef^^Z{\not=}} % ^^Z is like \ne in math %obsolete
 
-\_def\_scalebig#1#2{{\_left#1\_vbox to#2\_fontdimen6\_textfont1{}%
-                     \_kern-\_nulldelimiterspace\_right.}}
-\_protected\_def\_big#1{\_scalebig{#1}{.85}}
-\_protected\_def\_Big#1{\_scalebig{#1}{1.15}}
-\_protected\_def\_bigg#1{\_scalebig{#1}{1.45}}
-\_protected\_def\_Bigg#1{\_scalebig{#1}{1.75}}
-\_public \big \Big \bigg \Bigg ;
+\_def\_scalebig#1#2{{\_left#1%
+    \_raise\_Umathaxis\_textstyle\_vbox to\_scalebigcoef{#2}\_fontdimen6\_textfont1{}%
+    \_kern-\_nulldelimiterspace\_right.}}
+\_def\_scalebigcoef#1{\_ifcase #1 0\_or
+% \big (1.2)    \bbig (1.44)    \Big (1.8)    \bigg (2.4)    \Bigg (3.0)
+         .6\_or         .72\_or        .9\_or        1.2\_or        1.5\_else 0\_fi
+}
+\_protected\_def\_big #1{\_scalebig{#1}1}
+\_protected\_def\_bbig#1{\_scalebig{#1}2}
+\_protected\_def\_Big #1{\_scalebig{#1}3}
+\_protected\_def\_bigg#1{\_scalebig{#1}4}
+\_protected\_def\_Bigg#1{\_scalebig{#1}5}
+\_public \big \bbig \Big \bigg \Bigg ;
 
 \_protected\_def\_bigl{\_mathopen\_big}
 \_protected\_def\_bigm{\_mathrel\_big}
 \_protected\_def\_bigr{\_mathclose\_big}
+\_protected\_def\_bbigl{\_mathopen\_bbig}
+\_protected\_def\_bbigm{\_mathrel\_bbig}
+\_protected\_def\_bbigr{\_mathclose\_bbig}
 \_protected\_def\_Bigl{\_mathopen\_Big}
 \_protected\_def\_Bigm{\_mathrel\_Big}
 \_protected\_def\_Bigr{\_mathclose\_Big}
@@ -395,7 +412,8 @@
 \_protected\_def\_Biggl{\_mathopen\_Bigg}
 \_protected\_def\_Biggm{\_mathrel\_Bigg}
 \_protected\_def\_Biggr{\_mathclose\_Bigg}
-\_public \bigl \bigm \bigr \Bigl \Bigm \Bigr \biggl \biggm \biggr \Biggl \Biggm \Biggr ;
+\_public \bigl \bigm \bigr \bbigl \bbigm \bbigr
+         \Bigl \Bigm \Bigr \biggl \biggm \biggr \Biggl \Biggm \Biggr ;
 
    \_doc -----------------------------
    Math relations defined by the \`\jointrel` plain \TeX/ macro:
@@ -1084,6 +1102,7 @@
 
 \_endcode %---------------------------------------------------
 
+2023-04-15 \bbig introduced
 2023-03-12 \setmathstyle, \usemathstyle introduced
 2021-08-02 ssty fontfeatures rewritten
 2021-04-25 \triangleright: typo fixed

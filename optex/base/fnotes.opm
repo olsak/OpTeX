@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2020-05-26>} % preloaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2023-04-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\_gfnotenum` is a counter which counts footnotes globally in the whole document.\nl
@@ -45,7 +45,7 @@
    (from text to footnote and backward).
    \_cod -----------------------------
 
-\_def \_printfnotemark  {$^{\_fnotenum}$}   % default footnote mark
+\_def \_printfnotemark  {\_quitvmode\_hbox{$^{\_fnotenum}$}}   % default footnote mark
 \_def \_printfnotemarkA {\_printfnotemark}  % footnote marks used in text
 \_def \_printfnotemarkB {\_printfnotemark}  % footnote marks used in front of footnotes
 
@@ -188,5 +188,6 @@
 
 \_endcode % -------------------------------------
 
+2023-04-15 \fnote in math mode allowed
 2020-05-26 \mnote up<dimen> implemented
 2020-03-20 released

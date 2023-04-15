@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.10, 2023-03-12}
+\_def\_math_version {0.11, 2023-04-15}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -35,11 +35,12 @@
 \_nspublic \mathset ;
 
    \_doc
-   \`\bigp`, \`\Bigp`, \`\biggp`, \`\Biggp`, \`\autop`, \`\normalp` are inspired from
+   \`\bigp`, \`\bbigp`, \`\Bigp`, \`\biggp`, \`\Biggp`, \`\autop`, \`\normalp` are inspired from
    \tricklink[bigp]{0094}
    \_cod
 
 \_def\.bigp #1{\.fparam{#1}\_bigl\_bigr}
+\_def\.bbigp #1{\.fparam{#1}\_bbigl\_bbigr}
 \_def\.Bigp #1{\.fparam{#1}\_Bigl\_Bigr}
 \_def\.biggp#1{\.fparam{#1}\_biggl\_biggr}
 \_def\.Biggp#1{\.fparam{#1}\_Biggl\_Biggr}
@@ -66,7 +67,7 @@
    \.bigleft\.lparen{#1}\.bigright\.rparen
    \_ifx\.bigright\_right \_egroup\_fi
 }
-\_nspublic \bigp \Bigp \biggp \Biggp \autop \normalp ;
+\_nspublic \bigp \bbigp \Bigp \biggp \Biggp \autop \normalp ;
 
    \_doc
    We need macro \`\.ensurebalanced``<open-b><close-b><macro>` for balancing nested parentheses from
@@ -446,7 +447,7 @@ of them are inspired from
 
 The following macros are defined in this package:
 \begitems
-* \~`\bigp`, \~`\Bigp`, \~`\biggp`, \~`\Biggp`, \~`\autop`, \~`\normalp`
+* \~`\bigp`, \~`\bbigp`, \~`\Bigp`, \~`\biggp`, \~`\Biggp`, \~`\autop`, \~`\normalp`
   gives better controlling of sizes of parentheses.
 * \~`\smartdots` declares `\dots` macro more intelligent.
   \~`\smartvert` declares \"`|`" for better spacing.
@@ -495,7 +496,7 @@ bad with such markup. Better is to say that parentheses have to be bigger
 using a single prefix before functional symbol, i.e. `$\bigp f(x(y+z))$`.
 This should be print the same as previous example with \O`\bigl`, \O`\bigr`.
 
-The prefixes \^`\bigp` (big pair), \^`\Bigp` (Big pair),
+The prefixes \^`\bigp` (big pair), \^`\bbigp` (bbig pair), \^`\Bigp` (Big pair),
 \^`\biggp` (bigg pair) and \^`\Biggp` (Bigg pair) are provided,
 they can be used before a functional symbol. The scaled parentheses
 surrounding the functional parameter can be (...) or [...] or `\{`...`\}` or
@@ -512,7 +513,7 @@ Examples:
 \begtt
 $$
   \displaylines{
-  \Biggp F (1+\biggp g (1+\Bigp f(1+\bigp f(1+f(x))))) \cr
+  \biggp F (1+\Bigp g (1+\bbigp f(1+\bigp f(1+f(x))))) \cr
   f(x(y+z)),\quad  \bigp f(x(y+z)),\quad \autop f (a\over b)\cr
   \Bigp f(a\over b+c),\quad \Bigp f(x^2\over2),\quad \Bigp.(a\over b)
   }
@@ -521,7 +522,7 @@ $$
 gives:
 $$
   \displaylines{
-  \Biggp F (1+\biggp g (1+\Bigp f(1+\bigp f(1+f(x))))) \cr
+  \biggp F (1+\Bigp g (1+\bbigp f(1+\bigp f(1+f(x))))) \cr
   f(x(y+z)),\quad  \bigp f(x(y+z)),\quad \autop f (a\over b)\cr
   \Bigp f(a\over b+c),\quad \Bigp f(x^2\over2),\quad \Bigp.(a\over b)
   }
@@ -930,6 +931,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.11  2023-04-15: \bbigp introduced.
 0.10  2023-03-12: \mathclap etc. introduced.
 0.09  2023-03-11: mstyle, bstyle options introduced.
 0.08  2023-01-28: \eqsystem introduced, \eqfil added.

@@ -532,7 +532,9 @@ atom at its right side.
 The sequence of increasing delimiters can be printed by the following
 macros:
 $$
-  `(` \to (,\quad \x`\big``(` \to \big(,\quad \x`\Big``(` \to \Big(,\quad
+  `(` \to (,\quad \x`\big``(` \to \big(,\quad
+  \x`\bbig``(` \to \bbig(\fnote{Provided only in \OpTeX/.}, \quad
+  \x`\Big``(` \to \Big(,\quad
   \x`\bigg``(` \to \bigg(, \quad \x`\Bigg``(` \to \Bigg(.
 $$
 The `\Bigg<delim>` is not the maximal size of the bracket. Try
@@ -544,10 +546,12 @@ The `\big<delim>` creates Ord atom. We need to create Open atom
 for opening bracket and Close atom for closing bracket more often.
 Then we can use macros
 \x`\bigl``<delim>`,
+\x`\bbigl``<delim>`,
 \x`\Bigl``<delim>`,
 \x`\biggl``<delim>`,
 \x`\Biggl``<delim>` for creating Open atoms and
 \x`\bigr``<delim>`,
+\x`\bbigr``<delim>`,
 \x`\Bigr``<delim>`,
 \x`\biggr``<delim>`,
 \x`\Biggr``<delim>` for creating Close atoms. Unfortunately, the source is not
@@ -555,9 +559,11 @@ too attractive when more sizes of brackets are used, but typographic
 traditions say that we have to distinguish brackets by the size in math
 mode if they are in equal types:
 $$
-  `\Bigl( f\bigl( 2(x+y) + z\bigr) \Bigr)'` \quad \hbox{gives }
-  \Bigl(f\bigl(2(x+y)+z\bigr)\Bigr)'.
+  `\bbigl( f\bigl( 2(x+y) + z\bigr) \bbigr)'` \quad \hbox{gives }
+  \bbigl(f\bigl(2(x+y)+z\bigr)\bbigr)'.
 $$
+The `math.opm` package from \OpTeX/ provides doing this more comfortable.
+
 
 \secc Horizontally scalable objects: math accents
 
