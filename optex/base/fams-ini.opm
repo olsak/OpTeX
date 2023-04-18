@@ -169,8 +169,8 @@
    { \elight,\light,-,\bolder: {\rm\it} -,\bolder: {\bf\bi}
      \sans\elight,\sans\light,\sans,\sans\bolder: {\rm\it} \sans,\sans\bolder: {\bf\bi}
      \elight\caps,\light\caps,\caps,\bolder\caps: {\rm} \caps,\bolder\caps: {\bf}
-     \sans\elight\caps,\sans\light\caps,\sans\caps,\sans\bolder\caps: {\rm\it}
-     \sans\caps,\sans\bolder\caps: {\bf\bi}
+     \sans\elight\caps,\sans\light\caps,\sans\caps,\sans\bolder\caps: {\rm}
+     \sans\caps,\sans\bolder\caps: {\bf}
      \mono\elight,\mono\light,\mono,\mono\medium,\mono\bolder: {\rm\it} \mono,\mono\bolder: {\bf\bi}
    }
 \_famalias [AdobeSource] \_famalias [AdobeSourcePro]
