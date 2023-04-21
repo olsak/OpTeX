@@ -320,7 +320,7 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_slet{_print:booklet}{_print:generic}
-\_slet{_print:incolleciton}{_print:generic}
+\_slet{_print:incollection}{_print:generic}
 \_slet{_print:manual}{_print:generic}
 \_slet{_print:proceedings}{_print:generic}
 \_slet{_print:techreport}{_print:generic}
@@ -798,7 +798,7 @@ respectively.
 The reason for this entry is to give to you the possibility to set the format of
 entry by your own decision. The most of data are concentrated in the ednote field.
 
-\secccc The `@BOOKLET`, `@INCOLLECION`, `@MANUAL`, `@PROCEEDINGS`, `@TECHREPORT`, `@UNPUBLISHED` entries
+\secccc The `@BOOKLET`, `@INCOLLECTION`, `@MANUAL`, `@PROCEEDINGS`, `@TECHREPORT`, `@UNPUBLISHED` entries
 
 These entries are equivalent to `@MICS` entry because we need to save the
 simplicity. They are implemented only for (almost) backward compatibility
