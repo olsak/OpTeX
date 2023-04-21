@@ -1,0 +1,21 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Heuristica] \Heuristica {Extends the Utopia font}
+        {} {\rm \bf \it \bi} {}
+        {[Heuristica-Regular]}
+        {\_def\_fontnamegen {[Heuristica-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+No modifiers.^^J
+% \caps ...... caps & small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

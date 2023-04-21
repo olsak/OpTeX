@@ -139,6 +139,10 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [Baskervald ADF] \_famalias [ADFBaskerville]
 
+\_famfrom {Andrey V. Panov}
+\_faminfo [Heuristica] {Extends the Utopia font} {f-heuristica}
+   { -: {\rm\bf\it\bi} }
+
 \_faminfo [Erewhon] {Derived from Heuristica with slanted variants} {f-erewhon}
    { -: {\rm\bf\it\bi\sl\bs} \caps: {\rm\bf\it\bi} }
 
