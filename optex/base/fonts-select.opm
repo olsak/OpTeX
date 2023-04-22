@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2023-03-09>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2023-04-22>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -458,12 +458,15 @@
 
    \_doc -----------------------------
    \`\setletterspace` is based on the
-   special font features provided by `luaotfload` package.
+   special font features provided by `luaotfload` package.\nl
    The \`\setwordspace` recalculates the `\fontdimen2,3,4`
    of the font using the \`\setwsp` macro which is used by the
    \^`\_fontselA` macro. It activates a dummy font feature `+Ws` too in
    order the font is reloded by the `\font` primitive (with independent
    `\fontdimen` registers).
+   If the \^`\setwordspace` is used again to the same font then we need to
+   reset `\fondimen` registers first. It is done by `\_sws:<fontname>`
+   macro which keeps the original values of the `\fontdimen`s.\nl
    \`\setfontcolor` is kept here only for backward compatibility but not
    recommended. Use real color switches and the \^`\transparency` instead.
    \_cod -----------------------------
@@ -481,7 +484,11 @@
 }
 \_def\_setwsp #1{}
 \_def\_setwspA #1{\_ifx/#1\_ea\_setwspB \_else\_afterfi{\_setwspC#1}\_fi}
-\_def\_setwspB #1/#2/#3/#4{\_fontdimen2#4=#1\_fontdimen2#4%
+\_def\_setwspB #1/#2/#3/#4{%
+   \_csname _sws:\_fontname#4\_endcsname \_relax
+   \_ea\_xdef \_csname _sws:\_fontname#4\_endcsname
+      {\_foreach 234\_do{\_fontdimen##1#4=\_the\_fontdimen##1#4}}%
+   \_fontdimen2#4=#1\_fontdimen2#4%
    \_fontdimen3#4=#2\_fontdimen3#4\_fontdimen4#4=#3\_fontdimen4#4}
 \_def\_setwspC #1/{\_setwspB #1/#1/#1/}
 
@@ -928,6 +935,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2023-04-22  \setwordspace: \fontdimens reset, bug fixed.
 2023-03-09  \_famsrc, \fontfamsub introduced
 2022-12-01  \faminfo saves f-<filename> to the format only when needed
 2022-11-08  \protected: \fontdef, \famvardef, \fontfam
