@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (simple) <2023-03-25>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (simple) <2023-04-22>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (simple) bibfiles command only}
@@ -99,7 +99,7 @@
 }
 \_slet{_print:inproceedings}{_print:inbook}
 
-\_sdef{_print:incolection}{%
+\_sdef{_print:incollection}{%
    \_bprinta [!author]    {*.\ }{\_bibwarning}%
    \_bprintb [title]      {{\_em##1}\:\ }{\_bibwarning}%
    \_bprinta [crossreff]  {In~\_cite[*]. }{%

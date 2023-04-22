@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {BIB style (iso690) <2023-03-25>} % loaded on demand by \usebib
+\_codedecl \_undefined {BIB style (iso690) <2023-04-22>} % loaded on demand by \usebib
 
 \_ifx\_optexbibstyle\_undefined \_errmessage
    {This file can be read by: \_string\usebib/? (iso690) bibfiles command only}
@@ -928,6 +928,7 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
+2023-04-22 ... incollection: typo corrected
 2023-03-25 ... \_createbibmark introduced
 2022-05-10 ... \. -> \:, collision with \oldaccents fixed.
 2022-02-04 ... \_langinput used in \_setlang
