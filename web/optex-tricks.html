@@ -101,6 +101,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ul">Marking parts of text</a>
     <li><a href="#attreffects">Font effects using attributes</a>
     <li><a href="#varifonts">Using variable fonts</a>
+    <li><a href="#fakecaps">Small caps if font doesn't provide it</a>
 </ul>
 
 <li>Lists
@@ -731,6 +732,36 @@ macros \_fmodrm, \_fmodbf etc. It is \wght for normal or \wght+400 for bold vari
 The \_fvars sets only two variants (Roman and Italic).
 
 <p CLASS=datum>(0102) -- P. O. 2023-01-27<p>
+<hr>
+
+<h2><a name="fakecaps"></a>Small caps if font doesn't provide it</h2>
+
+<p>Sometimes the font doesn't provide Caps and small caps font feature
+(cmsp) but we need this feature. For example DejaVu font doesn't have small
+capitals. We can do alternative small capitals using following
+trick with the macro \fakecaps{Here is a Text}. Note that real small
+capitals created by font designer individually for each character are much better.
+
+<pre>
+\def\fakecaps#1{\def\tmp{#1}\replstring\tmp{ }{{ }}%
+   {\ea\let \ea\fupper \the\font \uccode`'=`'
+    \setfontsize{mag.8}\setff{+upper;embolden=1.1}\setwordspace{1.25}\fontsel
+    \ea\foreach\tmp\do{\ifnum\uccode`##1=`##1{\fupper##1}\else ##1\fi}}}
+</pre>
+
+<p>The macro works only with a font registered in Font selection system (i.e.
+implemented by font family files). The current font is set to \fupper and
+then it is scaled by the magnification factor 0.8, the font features +upper and embolden=1.1
+are added and the word space of the scaled font is scaled back to the value
+of the original font. The macro parameter is processed token by token using
+\foreach (spaces are prepared before by \replstring) and if \uccode of the
+character is equal to the character code the \fupper is used. The character
+' (for example in the word don't) must be printed with original font, so its
+\uccode is changed.
+
+<p>Compare solutions at <a href="https://tex.stackexchange.com/questions/682572">tex.stacexchange</a>.
+
+<p CLASS=datum>(0107) -- P. O. 2023-04-23<p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
