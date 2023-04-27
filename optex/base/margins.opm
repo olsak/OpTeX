@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \margins {Macros for margins setting <2021-03-15>} % preloaded in format
+\_codedecl \margins {Macros for margins setting <2023-04-27>} % preloaded in format
 
     \_doc ----------------------------
     \`\margins``/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>`
@@ -36,9 +36,11 @@
       \_fi\_fi
       \_if 1#1\_shiftoffset=0pt \_def\_prepoffsets{}\_else \_if 2#1% double-page layout
          \_shiftoffset = \_dimexpr \_pgwidth -\_hsize -2\_hoffset \_relax
-         \_def\_prepoffsets{\_ifodd\_pageno \_else \_advance\_hoffset \_shiftoffset \_fi}%
+         \_def\_prepoffsets{\_ifodd\_pageno \_else \_advance\_hoffset \_shiftoffset \_fi
+                            \_setpagerightoffset}%
       \_else \_opwarning{use \_string\_margins/1 or \_string\_margins/2}%
    \_fi\_fi\_fi
+   \_setpagerightoffset
 }
 \_def\_setpagedimens{\_isnextchar({\_setpagedimensB}{\_setpagedimensA}}
 \_def\_setpagedimensA#1 {\_ifcsname _pgs:#1\_endcsname
@@ -74,7 +76,28 @@
 
 \_public \magscale ;
 
+   \_doc -----------------------------
+   When left-to-right direction of typesetting is selected (default) then
+   \"main vertical line" of the page has `\hoffset` distance from the left
+   paper border and all lines at the page start here and run to the right side
+   (exceptions can be done by `\moveleft` or `\moveright`, of course). When we
+   have set right-to-left direction (using `\textdir TRT`, for example), then
+   the \"main vertical line" is at the same position but lines run to the left,
+   i.e.\ typically outside the paper. But when `\pagedir TRT` is set too,
+   then this main vertical line has `\pagerightoffset+1in` distance from the
+   {\em right} paper border and thus right-to-left lines are visible on the
+   paper. We have to set `\pagerightoffset` for such cases properly in the
+   macro \`\_setpagerightoffset`.
+   It must be called whenever `\hoffset` is changed.
+   \_cod -----------------------------
+
+\_def\_setpagerightoffset{%
+   \_pagerightoffset=\_dimexpr\_pdfpagewidth-\_xhsize-\_hoffset-1in\_relax
+}
+\_setpagerightoffset
+
 \_endcode % -----------------------------------------
 
+2023-04-27 \_setpagerightoffset for TRT typesetting introduced
 2021-03-15 \_setxhsize added
 2020-03-14 released

@@ -136,7 +136,7 @@
    \_replstring\_tmpb{[||]}{{gb|}}%
    \_replstring\_tmpb{ }{{ }}%
    \_replstring\_tmpb{://}{{://}}%
-   \_ea\_ulink \_ea[\_ea{\_tmpa}] {\_urlfont \_ea\_urlA\_tmpb\_fin}%
+   \_ea\_ulink \_ea[\_ea{\_tmpa}] {\_urlfont \_textdirection=0 \_ea\_urlA\_tmpb\_fin}%
 }}
 \_def\_urlA#1{\_ifx\_fin#1\_else \_urlC{}{#1}\_fi}
 \_def\_urlB#1{\_ifx\_fin#1\_else \_urlC{\_urlxskip}{#1}\_fi}

@@ -48,7 +48,7 @@
    `\hsize` value is eventually changed by the user in this environment.
    \_cod -----------------------------
 
-\_newdimen \_xhsize
+\_newdimen \_xhsize  \_xhsize=\_hsize
 \_def\_setxhsize {\_global\_xhsize=\_hsize \_global\_let\_setxhsize=\_relax}
 
    \_doc -----------------------------
