@@ -271,7 +271,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
-2022-04-28 \_optexoutput introduced
+2022-04-28 \_optexshipout introduced
 2022-10-22 \_normalbaselines added to \makehead/foot/line
 2022-03-07 \_resetattrs instead \_resetcolor
 2021-07-16 output routine supports colors via attributes
