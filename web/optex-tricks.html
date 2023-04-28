@@ -108,6 +108,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#multilist">List items multi-numbered at arbitrary level</a>
     <li><a href="#easylist">Depth of the list given by number of *</a>
+    <li><a href="#deflists">Definition lists</a>
 </ul>
 
 <li>Verbatim
@@ -854,6 +855,37 @@ package easylist (see texdoc easylist).
 </pre>
 
 <p CLASS=datum>(0048) -- P. O. 2021-02-17<p>
+<hr>
+
+<h2><a name="deflists"></a>Definition lists</h2>
+
+<p>We create a "\style d" for OpTeX lists which prints definition lists by the
+following syntax:
+
+<pre>
+\begitems \style d
+* {word} description of the word.
+* {other} another description.
+\enditems
+</pre>
+
+It creates
+<ul>
+<b>word</b> description of the word.<br>
+<b>other</b> another description.
+</ul>
+
+<p>The implementation should be:
+
+<pre>
+\sdef{_item:d}{\aftergroup\dword}
+\def\dword#1#2{{\bf#2 }\ignorespaces}
+</pre>
+
+<p>You can declare another format in these macros. For examle various color
+selection, another font selection, another kerning etc.
+
+<p CLASS=datum>(0108) -- P. O. 2023-04-27<p>
 <hr>
 
 
