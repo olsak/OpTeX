@@ -37,17 +37,10 @@
    The color literals are added to the `\box0` using
    the \^`\_preshipout``<destination box number><box specification>` pseudo-primitive.
    It is defined using lua code, see section~\ref[lua].
-   Finally the `\_shipout` primitive is used. We want to use `\hoffset`
-   value and not `\pagerightoffset` during shipout, so the `\pagedir`
-   and `\box0` are set to TLT. If a user sets different value of `\pagedir`
-   in the document, it is irrelevant for this `\shipout` process.
+   Finally the `\_shipout` primitive is used.
    \_cod -----------------------------
 
-\_def \_optexshipout #1{%
-   \_setbox0=\_completepage
-   \_preshipout0\_box0
-   \_pagedirection=0 \_boxdirection0=0 \_shipout\_box0
-}
+\_def \_optexshipout #1{\_setbox0=#1\_preshipout0\_box0 \_shipout\_box0 }
 
    \_doc -----------------------------
    The `\hsize` value can be changed at various places in the document but
