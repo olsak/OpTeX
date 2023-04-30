@@ -146,6 +146,8 @@
 \_preplang tk       Turkmen         tk        tk                22
 \_preplang hsb      Uppersorbian    hsb       hsb               22
 
+\_preplang he       Hebrew          he        {}                00
+
    \_doc -----------------------------
    \`\_preplangmore` `<lang-id><space>{<text>}` declares more activities
    of the language switch. The <text> is processed whenever
