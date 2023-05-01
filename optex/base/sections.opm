@@ -212,7 +212,7 @@
    \_cod ----------------------------
 
 \_def \_printrefnum [#1@#2]{\_leavevmode % we must be in horizontal mode
-   \_ifnonum \_else #1\_therefnum #2\_fi
+   \_ifnonum \_else #1\_numprint\_therefnum #2\_fi
    \_wlabel \_therefnum  % references, if `\label[<label>]` is declared
    \_ifnotoc \_else \_incr \_tocrefnum
        \_dest[toc:\_the\_tocrefnum]%

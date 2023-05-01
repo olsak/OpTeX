@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \margins {Macros for margins setting <2023-04-29>} % preloaded in format
+\_codedecl \margins {Macros for margins setting <2023-05-01>} % preloaded in format
 
     \_doc ----------------------------
     \`\margins``/<pg> <fmt> (<left>,<right>,<top>,<bot>)<unit>`
@@ -96,8 +96,23 @@
 }
 \_setpagerightoffset % setting default value from default values
 
+   \_doc -----------------------------
+   Page numbers and numbers of (sub)sections have to be printed in
+   left-to-right mode even though the document mode is right-to-left.
+   We print these numbers via \`\_numprint``{<number>}` in \OpTeX/ macros.
+   The `\_numprint` is `\_useit` by default (i.e.\ do nothing special)
+   because we have left-to-right mode as default. But a user can define
+   \begtt
+   \_def\_numprint#1{{\textdir TLT #1}}
+   \endtt
+   if the document is set to right-to-left mode.
+   \_cod -----------------------------
+
+\_let\_numprint=\_useit
+
 \_endcode % -----------------------------------------
 
+2023-05-01 \_numprint for page numbers, section numbers introduced
 2023-04-29 \_setpagerightoffset for TRT typesetting introduced again
 2021-03-15 \_setxhsize added
 2020-03-14 released

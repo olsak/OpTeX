@@ -493,7 +493,7 @@
    \_cod -----------------------------
 
 \_newtoks\_headline   \_headline={}
-\_newtoks\_footline   \_footline={\_hss\_rmfixed \_folio \_hss}
+\_newtoks\_footline   \_footline={\_hss\_rmfixed \_numprint\_folio \_hss}
 \_public \headline \footline ;
 
    \_doc -----------------------------

@@ -59,7 +59,7 @@
    \_bgroup
       \_leftskip=\_iindent \_rightskip=2\_iindent
       \_ifischap \_advance\_leftskip by \_iindent \_fi
-      \_def\_pgn{\_ilink[pg:#6]}%
+      \_def\_pgn##1{\_ilink[pg:#6]{\_numprint{##1}}}%
       \_the\_everytocline
       \_ifcsname _tocl:#1\_endcsname
          \_cs{_tocl:#1}{#3}{\_scantextokens{#5}}{#7}\_par
@@ -92,7 +92,7 @@
    \_cod ----------------------------------
 
 \_def\_llaptoclink#1{\_noindent
-   \_llap{\_ilink[toc:\_the\_tocrefnum]{\_enspace#1\_kern.4em}\_kern.1em}}
+   \_llap{\_ilink[toc:\_the\_tocrefnum]{\_enspace\_numprint{#1}\_kern.4em}\_kern.1em}}
 \_def\_tocdotfill{\_nobreak\_leaders\_hbox to.8em{\_hss.\_hss}\_hskip 1em plus1fill\_relax}
 \_def\_nofirst #1{\_ifnum \_lastpenalty=11333 \_else #1\_fi}
 \_def\_tocpar{\_nobreak \_hskip-2\_iindent\_null \_par}
