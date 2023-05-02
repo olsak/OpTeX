@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2022-10-19>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2023-05-02>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -423,7 +423,7 @@
 \_optdef\_eqmark []{\_trylabel \_ineqmark}
 \_def\_ineqmark{\_incr\_dnum
   \_ifinner\_else\_eqno \_fi
-  \_wlabel\_thednum \_hbox{\_thednum}%
+  \_wlabel\_thednum \_hbox{\_numprint\_thednum}%
 }
 \_public \eqmark ;
 
@@ -467,12 +467,13 @@
 
 \_def \_printnumberedpar #1#2{\_par
    \_noindent\_wlabel #1%
-   {\_bf #2 #1\_istoksempty\_opt\_iffalse \_space \_the\_opt \_fi.}\_space
+   {\_bf #2 \_numprint{#1}\_istoksempty\_opt\_iffalse \_space \_the\_opt \_fi.}\_space
    \_ignorespaces
 }
 
 \_endcode % -------------------------------------
 
+2023-05-02 \_numprint used
 2022-10-19 More robust \caption (two opened groups, \_printcaption introduced)
 2022-08-02 Penalties in \_printsec, \_printsecc changed
 2022-07-11 \_printchap: \_prevdepth=0pt added, see issue 100
