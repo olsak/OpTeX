@@ -102,6 +102,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#attreffects">Font effects using attributes</a>
     <li><a href="#varifonts">Using variable fonts</a>
     <li><a href="#fakecaps">Small caps if font doesn't provide it</a>
+    <li><a href="#autokern">Modification kerning data in fonts</a>
 </ul>
 
 <li>Lists
@@ -763,6 +764,40 @@ character is equal to the character code the \fupper is used. The character
 <p>Compare solutions at <a href="https://tex.stackexchange.com/questions/682572">tex.stacexchange</a>.
 
 <p CLASS=datum>(0107) -- P. O. 2023-04-23<p>
+<hr>
+
+<h2><a name="autokern"></a>Modification kerning data in fonts</h2>
+
+<p>Sometimes, you can decide that the kerning of a pair of characters should
+be better that the font designer suggested. If you are using Opentype fonts
+then you can re-define kerning data or add more information using Lua code:
+
+<pre>
+\fontfam[lm]
+\directlua
+  {fonts.handlers.otf.addfeature
+    {
+    name = "kern-hyph-v",    % name of a new font feature
+    type = "kern",
+    data = {
+    ["-"] = { ["V"] = -150}, % kern between - and V reduced
+    }
+  }
+}
+Test: \setff{kern-hyph-v}\rm Finite-Valued.
+</pre>
+
+<p>This example introduces a new font feature "kern-hyph-v" with kerning
+data of hyphen-character followed by V. Note, the name of the font feature
+must be in lowercase. Then, all fonts loaded with this new font feature have
+their kerning data modified as declared.
+
+<p>If you use the name of the font feature "kern" then all fonts loaded
+after such a declaration have modified kerning data. It means that you have
+to declare \initunifonts first, then \directlua with kerning data modification
+and then \fontfam.
+
+<p CLASS=datum>(0109) -- P. O. 2023-05-07<p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
