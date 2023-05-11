@@ -11,7 +11,7 @@
 \_famtext {Computer Modern like family:}
 
 \_famfrom {GUST}
-\_faminfo [Latin Modern] {TeX Gyre fonts based on Coputer Modern} {f-lmfonts}
+\_faminfo [Latin Modern] {TeX Gyre fonts based on Computer Modern} {f-lmfonts}
    { -,\nbold,\sans,\sans\nbold,\slant,\ttset,\ttset\slant,\ttset\caps,%
        \ttprop,\ttprop\bolder,\quotset: {\rm\bf\it\bi}
        \caps: {\rm\it}
