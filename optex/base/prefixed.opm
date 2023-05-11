@@ -383,7 +383,8 @@ This extension `.opm` has precedence before `.tex` when
 the \^`\load` macro is used.
 
 The `math.opm` is a good example of how an external macro file for \OpTeX/
-can look like.
+can look like. Another good and short example is
+\ulink[https://tex.stackexchange.com/questions/684406\#684406]{here}.
 
 \endinput
 
