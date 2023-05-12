@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_famdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Coputer Modern}
+\_famdecl [Latin Modern] \LMfonts {TeX Gyre fonts based on Computer Modern}
         {\roman \sans \quotset \ttset \ttprop \ttlight \ttcond \upital
          \dunhill submods:\caps \slant \nbold \bolder} {\rm \bf \it \bi \tt} {LM}
         {[lmroman10-regular]}
