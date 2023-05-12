@@ -164,6 +164,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#dnaligned">The decimal point aligned in the table</a>
     <li><a href="#tnote">Table notes</a>
     <li><a href="#tnodes">Positioning in the table</a>
+    <li><a href="#rowformat">Format valid for each columns in given row</a>
 </ul>
 
 <li>Text blocks
@@ -2888,6 +2889,33 @@ Note that t(tab-num):l(col-num) can differ from t(tab-num):r(col-num -1)
 if \tabskip is non-zero.
 
 <p CLASS=datum>(0050) -- P. O. 2021-03-09<p>
+<hr>
+
+<h2><a name="rowformat"></a>Format valid for each columns in given row</h2>
+
+<p>We create the macro \rowformat{selectors} which can be given before first
+item in a table row and the selectors are applied for each items in this row.
+For example \rowformat{\Red\bf} causes that all items in the given row are
+bold and red.
+
+<pre>
+\def\itemfmt{\ifnum\colnum=1 \gdef\itemfmtA{}\else \itemfmtA\fi}
+\def\rowformat#1{\gdef\itemfmtA{#1}#1\ignorespaces}
+
+\tabiteml={\enspace\itemfmt}
+
+\table {ccc}{
+  \rowformat{\bf}
+  bold &amp; text &amp; here \cr
+  n &amp; m &amp; p \cr
+  1 &amp; 2 &amp; 3
+}
+</pre>
+
+<p>The \rowformat macro works ony if \tabiteml includes the
+\itemfmt macro as shown in the example above.
+
+<p CLASS=datum>(0110) -- P. O. 2021-05-12<p>
 <hr>
 
 <p CLASS="lmarg">Text blocks</p>
