@@ -180,6 +180,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#linnum">Line numbers in the left side of the formatted text</a> 
     <li><a href="#firstline">First line of the paragraph with a different font</a>
     <li><a href="#widows">Extra \vsize space for solving widows</a>
+    <li><a href="#twocol">Two-column mode allowing for footnotes</a>
 </ul>
 
 <li>Macro tricks
@@ -3327,6 +3328,76 @@ already). The \corrvsize macro advances \vsize by plus or minus one
 \baselineskip if the macro \vs:pageno is defined.
 
 <p CLASS=datum>(0081) -- P. O. 2022-05-06<p>
+<hr>
+
+<h2><a name="twocol"></a>Two-column mode allowing for footnotes</h2>
+
+<p>OpTeX provides \begmulti ... \endmulti environment which prints more
+columns, but the columns are implemented using \vsplit primitive, so it
+doesn't provide \inserts inside the columns, especially footnotes.
+
+<p>The experimental macro pair \twocol ...\endtwocol shown here supports
+footnotes. We get a similar design as used in TUGboat, i.e. each article
+begins with its title and abstract at full \hsize and then two columns
+starts. The last two columns are not balanced at the end of the article. You
+can try the following code:
+
+<pre>
+\fontfam[lm]
+\newcount\numcolumn
+\newdimen\xvsize
+
+\def\twocol{\par\penalty0 \setbox0=\vbox\bgroup \hsize=.48\hsize \hbadness=9000 }
+\def\endtwocol{\egroup
+   \_setxhsize \global\xvsize=\vsize % save the global values of \hsize, \vsize
+   \begingroup
+      \maxdeadcycles=1000
+      \numcolumn=0
+      \headline={} \footline={}   % internal \output routine without\head/foot lines
+      \output={\incr\gpageno \incr\numcolumn
+         \immediate\_wref\_Xpage{{\the\gpageno}{\folio}}%
+         \global\setbox\numexpr100+\numcolumn=\_completepage % no \sipout, only save box
+         \ifnum\numcolumn=2 \global\vsize=\xvsize \fi        % correct \vsize after first two columns
+         \ifnum\outputpenalty>-20000 \else\dosupereject\fi
+      }
+      \ifdim\pagetotal>0pt % if the current page is non empty , we move it to \box100
+         \numcolumn=-1
+         \tmpdim=\dimexpr\pagegoal-\pagetotal-\bigskipamount\relax
+         \vsize=\dimexpr\pagetotal+\prevdepth\relax
+         \vfil\supereject
+         \global\vsize=\tmpdim
+      \fi
+      \unvbox0            % now, we break \box0 to columns using internal output routine
+      \vfil\supereject
+   \endgroup
+   \ifvoid100 \else \box100 \bigskip \fi  % print the original current page content
+   \fornumstep 2: 1..\numcolumn \do {     % print columns
+      \line{\box\numexpr100+##1\hfil \box\numexpr101+##1}\vfil\break
+   }
+}
+
+%% TEST:
+\lorem[1]  % text printed with full \hsize
+\twocol    % two column mode starts
+  \lorem[1-20]
+  Text\fnote{This is a footnote.}.
+  \lorem[21-30]
+\endtwocol % two column mode ends
+\bye
+</pre>
+
+<p>The material between \twocol ...\endtwocol is saved to the \box0 and then
+the internal \output routine is configured and \unvbox0 \vfil\supereject is
+processed with this internal routine. It doesn't do \shipout but saves the
+completed boxes to \box101, \box102, etc. Finally, these boxes are printed
+using original \output routine in the \fornumstep loop.
+If there is a full-\hsize material in the current page before
+\twocol ...\endtwocol starts then it is moved to the \box100 using internal
+\output routine and then it is re-used before printing columns. The \vsize
+is modified for first two columns in such case.
+
+
+<p CLASS=datum>(0111) -- P. O. 2023-05-14<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
