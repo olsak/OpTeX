@@ -181,6 +181,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#firstline">First line of the paragraph with a different font</a>
     <li><a href="#widows">Extra \vsize space for solving widows</a>
     <li><a href="#twocol">Two-column mode allowing for footnotes</a>
+    <li><a href="#toppage">Two-column mode with full size top inserts</a>
 </ul>
 
 <li>Macro tricks
@@ -3346,33 +3347,34 @@ can try the following code:
 \fontfam[lm]
 \newcount\numcolumn
 \newdimen\xvsize
+\def\vsizecorr{} \def\trytopins#1{}  % they are re-defined in OpTeX trick 0112
 
-\def\twocol{\par\penalty0 \setbox0=\vbox\bgroup \hsize=.48\hsize \hbadness=9000 }
+\def\twocol{\par\penalty0 \setbox0=\vbox\bgroup \hsize=.48\hsize \hbadness=5000 }
 \def\endtwocol{\egroup
    \_setxhsize \global\xvsize=\vsize % save the global values of \hsize, \vsize
    \begingroup
-      \maxdeadcycles=1000
+      \maxdeadcycles=1000 \vbadness=5000
       \numcolumn=0
       \headline={} \footline={}   % internal \output routine without\head/foot lines
-      \output={\incr\gpageno \incr\numcolumn
-         \immediate\_wref\_Xpage{{\the\gpageno}{\folio}}%
-         \global\setbox\numexpr100+\numcolumn=\_completepage % no \sipout, only save box
-         \ifnum\numcolumn=2 \global\vsize=\xvsize \fi        % correct \vsize after first two columns
+      \output={\incr\numcolumn
+         \global\setbox\numexpr10000+\numcolumn=\_completepage      % no \shipout, only save box
+         \ifodd\numcolumn\else \global\vsize=\xvsize \vsizecorr \fi % correct \vsize for next page
          \ifnum\outputpenalty>-20000 \else\dosupereject\fi
       }
-      \ifdim\pagetotal>0pt % if the current page is non empty , we move it to \box100
+      \ifdim\pagetotal>0pt % if the current page is non empty , we move it to \box10000
          \numcolumn=-1
          \tmpdim=\dimexpr\pagegoal-\pagetotal-\bigskipamount\relax
          \vsize=\dimexpr\pagetotal+\prevdepth\relax
          \vfil\supereject
          \global\vsize=\tmpdim
       \fi
-      \unvbox0            % now, we break \box0 to columns using internal output routine
+      \vsizecorr \unvbox0  % now, we break \box0 to columns using internal output routine
       \vfil\supereject
    \endgroup
-   \ifvoid100 \else \box100 \bigskip \fi  % print the original current page content
+   \vsize=\xvsize
+   \ifvoid10000 \else \unvbox10000 \bigskip \fi  % print the original current page content
    \fornumstep 2: 1..\numcolumn \do {     % print columns
-      \line{\box\numexpr100+##1\hfil \box\numexpr101+##1}\vfil\break
+      \line{\box\numexpr10000+##1\hfil \box\numexpr10001+##1}\trytopins{##1}\vfil\break
    }
 }
 
@@ -3389,15 +3391,69 @@ can try the following code:
 <p>The material between \twocol ...\endtwocol is saved to the \box0 and then
 the internal \output routine is configured and \unvbox0 \vfil\supereject is
 processed with this internal routine. It doesn't do \shipout but saves the
-completed boxes to \box101, \box102, etc. Finally, these boxes are printed
+completed boxes to \box10001, \box10002, etc. Finally, these boxes are printed
 using original \output routine in the \fornumstep loop.
-If there is a full-\hsize material in the current page before
-\twocol ...\endtwocol starts then it is moved to the \box100 using internal
+If there is a full page width material in the current page before
+\twocol ...\endtwocol starts then it is moved to the \box10000 using internal
 \output routine and then it is re-used before printing columns. The \vsize
 is modified for first two columns in such case.
 
+<p>If you want to insert a typesetting material above columns, see the OpTeX trick
+<a href="http://petr.olsak.net/optex/optex-tricks.html#toppage">0112</a>.
 
 <p CLASS=datum>(0111) -- P. O. 2023-05-14<p>
+<hr>
+
+<h2><a name="toppage"></a>Two-column mode with full size top inserts</h2>
+
+<p>We use the previous OpTeX trick
+<a href="http://petr.olsak.net/optex/optex-tricks.html#twocol">0111</a>.
+Moreover, we enable to insert a vertical materlial with full page width
+to top parts of selected pages. Note that \topinsert itself puts the
+material only to the top of the column.
+
+<p>The macro \toppage{pagenum}{vertical material} is implemented here.
+It puts the vertical material to the top of given page. Let currpage
+is the page where \twocol ...\endtwocol starts. Then the vertical material
+is inserted to the page currpage-1+pagenum page, i.e. if pagenum=1 then it will
+be at currpage, if pagenum=2 then it will be at the next page etc.
+A collection of \toppage macros have to be used before \twocol
+is started. For example:
+<pre>
+\toppage1 {\Magenta \hrule\centerline{\vrule height1.5cm width1cm}\hrule}
+\toppage3 {\Red \hrule\centerline{\vrule height1cm width1cm}\hrule}
+\toppage4 {\Green \hrule height1.5cm width\hsize}
+\lorem[1]  % text printed with full \hsize
+\twocol    % two column mode starts
+  \lorem[1-17]
+  \topinsert \Blue \hrule height1cm width\hsize \endinsert % will be on the top of a column
+  \lorem[18-20]
+  Text\fnote{This is a footnote.}. % footnotes work
+  \lorem[21-30]
+\endtwocol % two column mode ends
+</pre>
+
+<p>The implementation is based on the previous OpTeX trick
+<a href="http://petr.olsak.net/optex/optex-tricks.html#twocol">0111</a>.
+Use its code and define macros \toppage, \vsizecorr and \trytopins:
+<pre>
+\def\toppage#1{\setbox\numexpr 11000+#1=\vbox}
+\def\vsizecorr{\ifvoid \numexpr11001+\numcolumn/2\relax \else \global\advance\vsize by
+   -\dimexpr\ht\numexpr11001+\numcolumn/2\relax+\skip\topins+\bigskipamount \relax \fi
+}
+\def\trytopins#1{\ifvoid\numexpr11000+#1/2\relax \else
+   \topinsert \unvbox\numexpr11000+#1/2\relax \endinsert \fi
+}
+</pre>
+
+<p>The macro \toppage just saves the vertical material to the box
+11000+pagenum. If the page currently processed by \endtwocol corresponds with non-empty box
+11000+pagenum then \vsize of columns is scaled down by the height of this box
+plus the space between top material and columns below it.
+Finally, the boxes 11000+pagenum  are printed using the \trytopins
+when default \output routine is active, i.e. inside the \fornumstep loop.
+
+<p CLASS=datum>(0112) -- P. O. 2023-05-15<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
