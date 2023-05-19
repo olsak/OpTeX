@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2022-12-26>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2023-05-19>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -270,12 +270,16 @@
 
 \_def\_tableparB{%
    \_baselineskip=\_normalbaselineskip \_lineskiplimit=\_zo \_noindent
-   \_raise\_ht\_tstrutbox\_null \_hskip\_zo \_relax
+   \_unless\_ifx\_tabstrutA\_empty \_raise\_ht\_tstrutbox\_null \_fi
+   \_hskip\_zo \_relax
 }
 \_def\_tableparC{%
    \_unsskip
-   \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_null\_fi
+   \_unless\_ifx\_tabstrutA\_empty
+      \_ifvmode\_vskip\_dp\_tstrutbox \_else\_lower\_dp\_tstrutbox\_null\_fi
+   \_fi
 }
+
 
    \_doc -----------------------------
    Users put optional spaces around the table item typically, i.e.\ they write
@@ -587,6 +591,7 @@ after the second one.
 
 \_endinput
 
+2023-05-19 \_tableparB,C: no strut when \tskip is processed (bug fixed).
 2022-12-26 \tabdeclare: use {##} in order to allow a\over b in table items
 2022-05-03 \_let\_tablereplstring\_relax removed and {...} encloses whole \_tableB body
 2022-05-02 \_tablereplstrings put in group: bug fix \table in \halign
