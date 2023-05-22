@@ -1,9 +1,9 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2023-04-15>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2023-05-22>} % preloaded in format
 
    \_doc -----------------------------
-   The category code of the character `_` remains as the letter (11) and the mathocode
+   The category code of the character `_` remains as the letter (11) and the mathcode
    of it is `"8000`.
    It means that it is an active character in math mode. It is defined as the subscript prefix.
 
@@ -36,7 +36,9 @@
    \_directlua{
    callback.add_to_callback("process_input_buffer",
      function (str)
-       return string.gsub(str.." ", "(\_nbb[a-zA-Z]+)_([a-zA-Z]?[^_a-zA-Z])", "\_pcent 1 _\_pcent 2")
+        str, num = string.gsub(str.." ", \_gsubrule)
+        if num>0 then str = string.gsub(str, \_gsubrule) end % \phi_i\rho_j -> \phi _i\rho _j
+        return str
      end, "_mathsb") }%
    \_global\_mathsbtrue
 }
@@ -44,6 +46,8 @@
    \_directlua{ callback.remove_from_callback("process_input_buffer", "_mathsb") }%
    \_global \_mathsbfalse
 }
+\_edef\_gsubrule{"(\_nbb[a-zA-Z]+)_([a-zA-Z]?[^_a-zA-Z])", "\_pcent 1 _\_pcent 2"}
+
 \_public \mathsboff \mathsbon ;
 
    \_doc -----------------------------
@@ -1102,6 +1106,7 @@
 
 \_endcode %---------------------------------------------------
 
+2023-05-22 \mathsbon: \alpha_i\beta_j -> \alpha _i\beta _j (bug fixed)
 2023-04-15 \bbig introduced
 2023-03-12 \setmathstyle, \usemathstyle introduced
 2021-08-02 ssty fontfeatures rewritten
