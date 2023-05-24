@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2023-05-22>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2023-05-24>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -36,6 +36,7 @@
    \_directlua{
    callback.add_to_callback("process_input_buffer",
      function (str)
+        local num
         str, num = string.gsub(str.." ", \_gsubrule)
         if num>0 then str = string.gsub(str, \_gsubrule) end % \phi_i\rho_j -> \phi _i\rho _j
         return str
@@ -1106,6 +1107,7 @@
 
 \_endcode %---------------------------------------------------
 
+2023-05-24 \matsbon: "local num" added
 2023-05-22 \mathsbon: \alpha_i\beta_j -> \alpha _i\beta _j (bug fixed)
 2023-04-15 \bbig introduced
 2023-03-12 \setmathstyle, \usemathstyle introduced
