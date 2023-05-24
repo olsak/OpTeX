@@ -22,6 +22,12 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.12> May 2023:
+       Support for right-to-left (Hebrew) typesseting introduced.
+       More features in math.opm style.
+       \_createbibmark in bib-styles introduced.
+       Heuristica and more font-files added.
+       Minor more improvements and bug fixes.
 <1.11> Mar 2023:
        \fontfamsub: the substitution of missing families introduced.
        New font family files created.
