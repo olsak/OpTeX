@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2023-04-22>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2023-05-30>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -413,17 +413,19 @@
    pairs. The user can declare different samples and different behavior of
    the catalog, see the end of catalog listing for more information.
    The default parameters
-   \`\catalogsample`, \`\catalogmathsample`, \`\catalogonly` and
-   \`\catalogexclude` of the catalog are declared here.
+   \`\catalogsample`, \`\catalogmathsample`, \`\catalogonly`,
+   \`\catalogexclude` and \`\catalognextfam` of the catalog are declared here.
    \_cod -----------------------------
 
 \_newtoks \_catalogsample
 \_newtoks \_catalogmathsample
 \_newtoks \_catalogonly
 \_newtoks \_catalogexclude
+\_newtoks \_catalognextfam
 \_catalogsample={ABCDabcd Qsty fi fl áéíóúüů řžč ÁÉÍÓÚ ŘŽČ 0123456789}
+\_catalognextfam={\_bigskip}
 
-\_public \catalogonly \catalogexclude \catalogsample \catalogmathsample ;
+\_public \catalogonly \catalogexclude \catalogsample \catalogmathsample \catalognextfam ;
 
    \_doc -----------------------------
    The font features are managed in the \`\_fontfeatures` macro.
@@ -935,6 +937,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2023-05-30  \catalognextfam introduced.
 2023-04-22  \setwordspace: \fontdimens reset, bug fixed.
 2023-03-09  \_famsrc, \fontfamsub introduced
 2022-12-01  \faminfo saves f-<filename> to the format only when needed

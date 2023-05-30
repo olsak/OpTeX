@@ -3,14 +3,15 @@
 \_famdecl [Heuristica] \Heuristica {Extends the Utopia font}
         {} {\rm \bf \it \bi} {}
         {[Heuristica-Regular]}
-        {\_def\_fontnamegen {[Heuristica-\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[Heuristica-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 No modifiers.^^J
-% \caps ...... caps & small caps^^J
+  \caps ...... caps & small caps (\rm only)^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={} \_fvars regular bold italic bolditalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
 

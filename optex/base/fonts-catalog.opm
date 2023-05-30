@@ -33,7 +33,7 @@
        \_iftrue \def\_cataloglist{.}\_fi
        \_ifx\_cataloglist\_empty
        \_ifx^#4^\_else
-          \_bigskip {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}
+          \_the\_catalognextfam {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}
           \_input #3.opm
           \_ifexistfam \_nobreak\_medskip \_dosamples #4:{}
               \_ifx\_mathfaminfo\_empty
@@ -88,6 +88,8 @@
 
 \_endgroup
 
+\_the\_catalognextfam {}
+
 \parindent=0pt
 
 \nonum\sec Customization of the catalog
@@ -127,6 +129,11 @@ printed but families listed in the \code{\\catalogexclude} are excluded. For exa
 \endtt
 
 The \code{\\cataogexclude} is empty by default.
+
+\bigskip The material printed at the beginning of each font family is stored in the
+\code{\\catalognextfam} tokens register. Default value is \code{\\bigskip} but you can
+set (for example) \code{\\catalognextfam={\\vfil\\break}} in order to start
+each font family on a next page.
 
 \bigskip The font families printed in the catalogue must be declared by the
 \code{\\_faminfo} command in the file \code{fams-ini.opm} (declarations used
