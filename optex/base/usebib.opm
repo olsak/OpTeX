@@ -318,7 +318,7 @@ The following control sequences can be used in these macros:
 
 \begitems
 * `\_NameCount`: the number of the currently processed author in the list
-* `\_namecont`: the total number of the authors in the list
+* `\_namecount`: the total number of the authors in the list
 * `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior`: the parts of the name.
 \enditems
 

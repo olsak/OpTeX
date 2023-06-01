@@ -1,4 +1,4 @@
-%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_codedecl \cite {Cite, Biblioraphy <2021-04-13>} % preloaded in format
 
@@ -97,7 +97,7 @@
    \_cod -----------------------------
 
 \_def\_citeA #1#2,{\_if#1,\_else
-   \_if *#1\_addcitelist{*}\_ea\_skiptorelax \_fi
+   \_if *#1\_addcitelist{*}\_sxdef{_bib:\_bibp*}{}\_ea\_skiptorelax \_fi
    \_ifcsname _bib:\_bibp#1#2\_endcsname \_else
       \_addcitelist{#1#2}%
       \_opwarning{{\_the\_bibpart} \_noexpand\cite [#1#2] unknown. Try to TeX me again}\_openref

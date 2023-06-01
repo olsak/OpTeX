@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {Font catalogue <2023-03-09>} % loaded on demand by \fontfam[catalog]
+\_codedecl \_undefined {Font catalogue <2023-06-01>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
 \_initunifonts
@@ -33,12 +33,12 @@
        \_iftrue \def\_cataloglist{.}\_fi
        \_ifx\_cataloglist\_empty
        \_ifx^#4^\_else
-          \_the\_catalognextfam {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}
+          \_the\_catalognextfam {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}\_nobreak
           \_input #3.opm
           \_ifexistfam \_nobreak\_medskip \_dosamples #4:{}
               \_ifx\_mathfaminfo\_empty
               \_else \_istoksempty\_catalogmathsample
-                  \_iftrue {\_ttfixed \$Default math font\$: \_mathfaminfo \_par}
+                  \_iftrue {\_nobreak \_ttfixed \$Default math font\$: \_mathfaminfo \_par}
                   \_else Default math font (\_mathfaminfo): \_the\_catalogmathsample \_par
               \_fi\_fi
           \_else {\_qquad\_ttfixed ... family skipped, fonts not found in your system.\_nl
@@ -143,6 +143,7 @@ described in the \code{fams-ini.opm} file.
 
 \_endcode % -------------------------------------
 
+2023-06-01  \_catalognextfam introduced, \_nobreak inserted
 2023-03-09  \_famsrc introduced
 2022-07-11  \_raggedbottom added
 2022-02-22  \_ttfixed, \footline set as global, bug fixed
