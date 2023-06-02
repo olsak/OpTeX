@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2023-03-12>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2023-06-02>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -203,11 +203,14 @@
    The \`\_preparesorting` `\,<string>` converts `<string>` to `\_tmpb`
    with respect to the data initialized in \^`\_setprimarysorting` or
    \^`\_setsecondarysorting`.\nl
-   The compoud characters are converted by the \`\_docompound` macro.
+   The part of the string after `^^^` is ignored (you can have the same
+   sorting key for different things) and
+   the compoud characters are converted by the \`\_docompound` macro.
    \_cod -----------------------------
 
 \_def \_preparesorting #1{%
-   \_edef \_tmpb {\_ea\_ignoreit\_csstring #1}% \,<string> -> <string>
+   \_edef \_tmpb {\_ea\_ignoreit\_csstring #1}%        \,<string> -> <string>
+   \_edef\_tmpb{\_ea \_stripfromcaret \_tmpb ^^^\_fin}% <string>^^^<ignore> -> <string>
    \_ea \_docompound \_compoundchars \_relax:{}       % replace compound characters
    \_lowercase \_ea{\_ea\_def \_ea\_tmpb \_ea{\_tmpb}}% convert in respect to \_sortingdata
    \_ea\_replstring \_ea\_tmpb \_ea{\_csstring\^^I}{}% remove ignored characters
@@ -215,6 +218,7 @@
 \_def \_docompound #1:#2 {%
    \_ifx\_relax#1\_else \_replstring\_tmpb {#1}{#2}\_ea\_docompound \_fi
 }
+\_def\_stripfromcaret #1^^^#2\_fin{#1}
 
    \_doc -----------------------------
    Macro \`\_isAleB` `\,<string1> \,<string2>` returns the result of comparison
@@ -567,6 +571,7 @@
 
 \_endcode % -------------------------------------
 
+2023-06-02 \_stripfromcaret introduced
 2023-03-12 \_definefirstii introduced
 2022-06-28 \_reversewords for French sorting introduced
 2022-06-28 \_sortingdatalatin covers more languages
