@@ -125,7 +125,7 @@
    distinguished by <bibpart>, the \`\_addcitelist``{<label>}` macro
    must add the <label> to given `\_ctlst:<bibpart>/`.\nl
    When `\_addcitelist` is processed before \^`\usebib`,
-   then \`\_citeI``[<label>]` is added. \^`\usebib` will use this list for selecting
+   then \^`\_citeI``[<label>]` is added. \^`\usebib` will use this list for selecting
    right records from `.bib` file. Then \^`\usebib` sets
    `\_ctlst:<bibpart>/` to `\_write`.\nl
    If `\_addcitelist` is processed after \^`\usebib`, then

@@ -835,19 +835,19 @@ yearprint value) is also used in the text-oriented bib-marks when
 `\nonumcitations` is set.
 
 If you have some problems with name sorting, you can use the hidden field
-`key`, which is used for sorting instead of the \"Lastname Firstname(s)"
-of authors. If the `key` field is unset then the \"Lastname Firstname(s)"
+`sortedby`, which is used for sorting instead of the \"Lastname Firstname(s)"
+of the first author. If the `sortedby` field is unset then the \"Lastname Firstname(s)"
 is used for sorting normally. Example:
 
 \begtt
 author    = "Světla Čmejrková",
-key       = "Czzmejrkova Svetla",
+sortedby  = "Czzmejrkova Svetla",
 \endtt
 
 This entry is now sorted between C and D.
 
 The norm recommends placing the auto-citations at the top of the list of
-references. You can do this by setting  `key = "@"`, to each entry with your
+references. You can do this by setting  `sortedby = "@"`, to each entry with your
 name because the `@` character is sorted before `A`.
 
 

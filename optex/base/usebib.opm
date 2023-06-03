@@ -1,139 +1,267 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \MakeReference {Reading bib databases <2022-02-04>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2023-06-01>} % loaded on demand by \usebib
 
    \_doc -----------------------------
-   Loading the `librarian.tex` macro package. See `texdoc librarian`
-   for more information about it.
-
-   We want to ignore `\errmessage` and we want not to create `\jobname.lbr`
-   file.
+   First, we implement the scanner of `.bib` files. Unfortunately, the format of
+   these files isn't \TeX/ friendly, so we must to do more work.
+   \`\readbibs` `{<bib-bases>}` reads <bib-bases> files
+   (i.e. the Bib\TeX/ format) and converts it to the macros
+   `\_be:<bib-part>/<label>` with key-value pairs, as described in the
+   section~\ref[readbibs].
    \_cod -----------------------------
 
-\_def\errmessage#1{}
-\_def\newwrite#1{\_csname lb@restoreat\_endcsname \_endinput}
-\_def\_tmpb{\_catcode`\_=12 \_input librarian \_catcode`\_=11 }\_tmpb
-\_let\errmessage=\_errmessage
-\_let\newwrite=\_newwrite
+\_newcount\_aunum
+\_newcount\_NameCount
+\_def\_eaddto#1#2{\_ea\_addto\_ea#1\_ea{#2}}
 
-\_private \BibFile \ReadList \SortList \SortingOrder \NameCount \AbbreviateFirstname
-   \CreateField \RetrieveFieldInFor \RetrieveFieldIn \RetrieveField ;
+\_def\_readbibs #1{%
+   \_begingroup
+      \_everyeof{@{}}\_foreach#1,\_do##1,{\_ea\_nextat\_input{##1.bib}}%
+   \_endgroup
+}
+\_public \readbibs ;
 
    \_doc -----------------------------
-   The `\usebib` command.
+   The \`\_nextat` macro skips the text to the first `@`, and starts
+   the \`\_bibentry` macro which reads `@<ENTRY>{<data>}`.
    \_cod -----------------------------
 
-\_def\_usebib/#1 (#2) #3 {%
-  \_let\_citeI=\_relax \_xdef\_citelist{\_trycs{_ctlst:\_bibp}{}\_trycs{_ctlstB:\_bibp}{}}%
-  \_global \_ea\_let \_csname _ctlst:\_bibp\_endcsname =\_write
-  \_ifx\_citelist\_empty
-     \_opwarning{No cited items. \_noexpand\usebib ignored}%
-  \_else
-     \_bgroup \_par
-        \_emergencystretch=.3\_hsize
-        \_def\_optexbibstyle{#2}%
-        \_setctable\_optexcatcodes
-        \_input bib-#2.opm
-        \_the \_bibtexhook
-        \_ifcsname _mt:bib.and:\_cs{_lan:\_the\_language}\_endcsname \_else
-           \_opwarning{\_string\usebib: No phrases for language
-                       "\_cs{_lan:\_the\_language}" (using "en")}%
-           \_language=0 \_chardef\_documentlanguage=0
-        \_fi
-        \_def\_tmp##1[*]##2\_relax{\_def\_tmp{##2}}\_ea\_tmp\_citelist[*]\_relax
-        \_ifx\_tmp\_empty\_else % there was \nocite[*] used.
-           \_setbox0=\_vbox{\_hsize=\_maxdimen \_def\_citelist{}\_adef@{\_readbibentry}%
-           \_input #3.bib
-           \_ea}\_ea\_def\_ea\_citelist\_ea{\_citelist}%
-        \_fi
-        \_def\_citeI[##1]{\_csname lb@cite\_endcsname{##1}{\_bibp}{}{}}\_citelist
-        \_BibFile{#3}%
-        \_if s#1\_SortList{\_bibp}\_fi
-        \_ReadList{\_bibp}%
-        \_restorectable
-     \_egroup
-  \_fi
+\_long\_def\_nextat#1@{\_bgroup\_catcode` =9 \_ea\_egroup\_bibentry}
+\_def\_bibentry #1#{\_ifx^#1^\_else \_afterfi{\_bibentryA{#1}}\_fi}
+\_def\_bibentryA #1#2{\_lowercase{\_def\_entrytype{#1}}%
+   \_ismacro\_entrytype{comment}\_iffalse  % comment is ignored
+   \_ismacro\_entrytype{string}\_iftrue    % string is reported as unsupported
+      \_opwarning{\_string\usebib: @STRING entry isn't supported}%
+   \_else
+      \_edef\_entrydata{[@]{\_entrytype}}%
+      {\_bibentryB #2\_fin}%               % read a "normal" bib entry
+   \_fi\_fi
+   \_nextat
 }
-\_def\_readbibentry#1#{\_readbibentryA}
-\_def\_readbibentryA#1{\_readbibentryB#1,,\_relax!.}
-\_def\_readbibentryB#1#2,#3\_relax!.{\_addto\_citelist{\_citeI[#1#2]}}
+\_def\_bibentryB #1#2,#3\_fin{\_def\_citekey{#1#2}\_def\_bibentryC{\_nextfield #3,\_fin}%
+   \_ifcsname _be:\_bibp*\_endcsname
+      \_bibentryC
+      \_global\_addto\_citelist{\_citeI[#1#2]}
+   \_else
+   \_ea\_ifx \_begincsname _be:\_bibp#1#2\_endcsname \_empty
+      \_bibentryC
+   \_fi\_fi
+}
+\_def\_nextfield #1{\_ifx,#1\_ea\_nextfield   % skip commas from previous field
+   \_else \_ifx\_fin#1\_ea\_ea\_ea\_bibentryF % finalize bib entry
+   \_else \_def\_fieldname{#1}\_ea\_ea\_ea\_nextfieldA % first letter of fieldname found
+   \_fi\_fi
+}
+\_def\_nextfieldA #1{% next letters of field name until = is found
+   \_ifx=#1\_afterfi{\_nospacefuturelet\_next\_nextfieldB}%
+   \_else \_addto\_fieldname{#1}%
+   \_ea\_nextfieldA \_fi
+}
+\_def\_nextfieldB {% reading field data
+   \_casesof\_next
+   "        {\_nextfieldC}%  name = "data",
+   \_bgroup {\_nextfieldD}%  name = {data},
+   \_finc   {\_nextfieldE}%  name = data,
+}
+\_def\_nextfieldC "#1"{\_nextfieldD{#1}}
+\_def\_nextfieldD #1{\_def\_fielddata{#1}\_nextfieldF}
+\_def\_nextfieldE #1,{\_nextfieldD{#1}}
+
+\_def\_nextfieldF{% finalize field
+   \_lowercase\_ea{\_ea\_def\_ea\_fieldname\_ea{\_fieldname}}% case insensitive field name
+   \_eaddto\_entrydata{\_ea[\_fieldname]}%
+   \_ismacro\_fieldname{author}\_iftrue \_ea\_auscan\_ea{\_fielddata}[author]\_else
+   \_ismacro\_fieldname{editor}\_iftrue \_ea\_auscan\_ea{\_fielddata}[editor]\_else
+   \_eaddto\_entrydata{\_ea{\_fielddata}}\_fi\_fi
+   \_sdef{_fd:\_fieldname\_ea}\_ea{\_fielddata}%
+   \_nextfield
+}
+\_def\_bibentryF {% finalize entry
+   \_preparebibsorting
+   \_global\_ea\_let \_csname _be:\_bibp\_citekey\_endcsname = \_entrydata
+}
 
    \_doc -----------------------------
-   Corrections in librarian macros.
+   The `\_auscan``{<authors/editors-names>}[<field-name>]` reads the specific Bib\TeX/
+   format menitoned in section~\ref[readbibs] and converts them to
+   `{<Lastname>}{<Firstname>}{<Von>}{<Junior>}` for each author/editor. The result
+   includes $4k$ subfields (where $k$ is number of the authors/editors) and
+   it is saved to the `\_entrydata` and the
+   `[authornum]{`$k$`}` or `[editornum]{`$k$`}` is added.
+
+   The `\_auscanA` macro does the loop over authors separated by `and`.
+   Each single author has its `\_tmpb` macro with `X` and `x`. Each letter
+   corresponds to single word of the name (`X`: begins with uppercase, `x`:
+   begins with lowercase). For example Leonardo Piero da Vinci has `\_tmpb`
+   macro `XXxX.`. If there are commas in after some words, then these commas
+   are in `\_tmpb` macro too, for example da Vinci, Piero Leonardo has its
+   `\_tmpb` macro `xX,XX.`. The number of commas is saved to `\_tmpnum`.
+   The `\_auscanB` macro does a slight modifications of the `\_tmpb` macro as
+   mentioned in comments. Then the macro
+   `\_auscanD``<tpmb-pattern>;{<WordA>}{<WordB>}{<WordC>}...` is executed.
+   It saves given words due to the `\_tmpb` pattern to the macros
+   `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior` in a loop. Finally, the contents of
+   these macros are saved to `\_fiedldata` and then to the `\_entrydata`.
    \_cod -----------------------------
 
-\_tmpnum=\_catcode`\@  \_catcode`\@=11
-\_def\lb@checkmissingentries#1,{% we needn't \errmessage here, only \opmacwarning
-  \_def\lb@temp{#1}%
-  \_unless\_ifx\lb@temp\lb@eoe
-    \lb@ifcs{#1}{fields}%
-            {}%
-            {\_opwarning{\_string\usebib: entry [#1] isn't found in .bib}}%
-    \_ea\lb@checkmissingentries
-  \_fi
+\_def\_auscan#1[#2]{\_def\_auname{}\_def\_fielddata{}\_def\_tmpb{}\_aunum=0\_tmpnum=0
+   \_auscanA #1 and {}
+   \_eaddto\_entrydata{\_ea{\_fielddata}[#2num]}%
+   \_eaddto\_entrydata{\_ea{\_the\_aunum}}%
 }
-\_def\lb@readentry#1#2#3,{% space before key have to be ingnored
-  \_def\lb@temp{#2#3}%      we need case sensitive keys
-  \_def\lb@next{\_ea\lb@gotoat\lb@gobbletoeoe}%
-  \lb@ifcs\lb@temp{requested}%
-          {\_let\lb@entrykey\lb@temp
-           \lb@ifcs\lb@entrykey{fields}{}%
-                {\lb@defcs\lb@entrykey{fields}{}%
-                 \_lowercase{\lb@addfield{entrytype}{#1}}%
-                 \_let\lb@next\lb@analyzeentry}}{}%
-  \lb@next
+\_def\_auscanA #1 {%
+   \_ifx^#1^\_else
+      \_isequal{#1}{and}\_iftrue
+         \_incr\_aunum
+         \_addto\_tmpb{.}%
+         \_auscanB
+         \_ea\_auscanX \_auname
+         \_def\_auname{}\_def\_tmpb{}\_tmpnum=0
+      \_else
+         \_lowercase{\_isequal{#1}}{#1}\_iftrue \_addto\_tmpb{x}\_else \_addto\_tmpb{X}\_fi
+         \_def\_tmp{#1^}\_isinlist\_tmp{,^}%
+         \_iftrue
+             \_ea\_auscanC\_tmp \_addto\_tmpb{,}\_incr\_tmpnum
+         \_else
+             \_def\_tmp{#1}%
+         \_fi
+         \_eaddto\_auname{\_ea{\_tmp}}%
+      \_fi
+      \_ea\_auscanA
+   \_fi
 }
-\_let\lb@compareA=\lb@compare
-\_let\lb@preparesortA=\lb@preparesort
-\_def\lb@compare#1\lb@eoe#2\lb@eoe{% SpecialSort:
-  \_ifx\lb@sorttype\lb@namestring
-     \_ifx\_sortfield\_undefined \lb@compareA#1\lb@eoe#2\lb@eoe
-     \_else
-        \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@entrykey\lb@temp
-        \_ifx\lb@temp\_empty \_toks1={#1\lb@eoe}\_else \_toks1=\_ea{\lb@temp\lb@eoe}\_fi
-        \_ea\_RetrieveFieldInFor\_ea{\_sortfield}\lb@currententry\lb@temp
-        \_ifx\lb@temp\_empty \_toks2={#2\lb@eoe}\_else \_toks2=\_ea{\lb@temp\lb@eoe}\_fi
-        \_edef\lb@temp{\_noexpand\lb@compareA\_space\_the\_toks1 \_space\_the\_toks2}\lb@temp
-     \_fi
-  \_else \lb@compareA#1\lb@eoe#2\lb@eoe \_fi
+\_def\_auscanB{%
+   \_ifcase\_tmpnum  % 0 commas:  XXX. -> XX:X. ; XxxXX. -> X:xxXX. ;  xXX. -> :xXX. ; First:Last
+      \_isinlist\_tmpb{x}\_iffalse \_replstring\_tmpb{X.}{:X.}\_else
+      \_ea\_auscanT\_tmpb;\_iffalse \_replstring\_tmpb{Xx}{X:x}\_fi\_fi
+   \_or             % 1 comma:  XX,XXX -> XX,,XXX, Junior part is empty
+      \_replstring\_tmpb{,}{,,}\_tmpnum=2
+   \_fi             % 2 commas: XX,XX,XXX no changes, generic format: Last, Junior, First
+   \_def\_Firstname{}\_def\_Lastname{}\_def\_Von{}\_def\_Junior{}%
 }
-\_def\lb@preparesort#1#2\lb@eoe{%
-  \_if#1-%
-    \_def\lb@sorttype{#2}%
-  \_else
-    \_def\lb@sorttype{#1#2}%
-  \_fi
-  \lb@preparesortA#1#2\lb@eoe
+\_def\_auscanT #1#2;\_iffalse{\_ifx#1x\_def\_tmpb{:x#2}\_else} % xXX. -> :xXX.
+\_def\_auscanX {\_ea\_auscanD\_tmpb;}
+\_def\_auscanD #1#2;{%
+   \_def\_tmpb{#2}%
+   \_casesof #1
+   . {\_auscanF}                              % dot is last character, do final job
+   , {\_decr\_tmpnum \_auscanX}               % Lastname->Junior or Junior->Firstname
+   : {\_tmpnum=2 \_auscanX}                   % Firstname->Lastname
+   X {\_auscanE\_Firstname\_Junior\_Lastname} % add data due to the \tmpnum value
+   x {\_auscanE\_Firstname\_Junior\_Von}      % Von instead Lastname
+   \_finc {}%
 }
-\_def\_SpecialSort#1{\_def\_sortfield{#1}}
-\_def\WriteImmediateInfo#1{}  % the existence of .lbr file bocks new reading of .bib
-\_catcode`\@=\_tmpnum
+\_def\_auscanE#1#2#3{\_ifcase\_tmpnum \_ea\_auscanS\_ea#1\_or \_ea\_auscanS\_ea#2\_else
+                                  \_ea\_auscanS\_ea#3\_fi}
+\_def\_auscanS#1#2{% #1=\Firstname or \Lastname or etc., #2=word to be inserted
+   \_ifx#1\_empty \_def#1{#2}\_else \_addto#1{ #2}\_fi
+   \_auscanX
+}
+\_def\_auscanF{% final work of \auscanX
+   \_eaddto\_fielddata{\_ea{\_Lastname}}\_eaddto\_fielddata{\_ea{\_Firstname}}%
+   \_eaddto\_fielddata{\_ea{\_Von}}\_eaddto\_fielddata{\_ea{\_Junior}}%
+}
+\_def\_auscanC #1,^{\_def\_tmp{#1}}  % removing final comma: Word,^ -> Word
 
    \_doc -----------------------------
-   Main action per each entry.
+   The \`\_citelist` includes \`\_citeI``[<label>]`
+   commands. The \^`\usebib` macro runs this lists in order to print references.
+   Each \^`\_citeI``[<label>]` prints single bib entry given by the <label>.
+   It opens a group, sets macros `\_fd:<field-name>` to `<field-data>` and runs
+   \^`\_printentry`. Finally, it closes TeX group,
+   so all macros `\_fd:<field-name>` have their initial (undefined) value.\nl
+   The \`\_getfield``[<field-name>]\macro` does `\def\macro{<field-data>}`.
    \_cod -----------------------------
 
-\_def\MakeReference{\_par \_bibskip
-  \_bibgl\_advance\_bibnum by1
+\_def\_citeI[#1]{%
+   \_begingroup
+      \_ea\_ifx \_begincsname _be:\_bibp#1\_endcsname \_empty
+         \_opwarning{\_string\usebib: entry [#1] isn't found in .bib}%
+      \_else
+         \_ea\_ea\_ea\_foreach \_csname _be:\_bibp#1\_endcsname \_do[##1]##2{\_sdef{_fd:##1}{##2}}%
+         \_def\_entrykey{#1}%
+         \_printentry
+      \_fi
+   \_endgroup
+}
+\_def\_getfield[#1]#2{%
+   \_ifcsname _fd:#1\_endcsname
+       \_ea\_ea\_ea \_def \_ea\_ea\_ea #2\_ea\_ea\_ea {\_csname _fd:#1\_endcsname}%
+   \_else \_def#2{}%
+   \_fi
+}
+
+   \_doc -----------------------------
+   \`\_preparebibsorting` is called repeatedly for each bib entry when its reading from
+   `.bib` file is finished. Its main goal is to do
+   `\gdef\_bes:<citekey> {\;<sorting-rule>^^^<citekey>}`.
+   Note that the part of the control sequence name after `^^^` is ignored during sorting.
+   The default \^`\_preparebibsorting`
+   macro creates <sorting-rule> in the form: <Lastnames> <Firstnames> <Von>
+   <Junior> of the first author followed by <year> from `year` field.
+   If you want a different rule of sorting, you can re-define this macro
+   using `\bibtexhook` or in your bib-style file. Some tips (for example reverse
+   order of years) will be in the \OpTeX/ tricks.\nl
+   \`\_dobibsorting``\_citelist` sorts the `\_citelist` and runs it.
+   \_cod -----------------------------
+
+\_def\_preparebibsorting{%
+   \_getfield[sortedby]\_sortedby
+   \_ifx\_sortedby\_empty   % explicitly given [sortedby] field has precedence
+      \_def\_sortedby{}%
+      \_getfield[author]\_tmp  % sorting by author firstly
+      \_ifx\_tmp\_empty \_else \_ea\_preparebibsortingA\_tmp \_fin \_fi
+      \_getfield[year]\_tmp    % soering by year secondly
+      \_ifx\_tmp\_empty \_else \_eaddto\_sortedby{\_tmp}\_fi
+      \_edef\_sortedby{\_sortedby}%  we need to run macros aka \"e etc.
+      \_edef\_sortedby{\_ea\_removeoutbraces\_sortedby {\_fin}}% remove braces
+   \_fi
+   \_sxdef{_bes:\_citekey\_ea}\_ea{\_csname;\_detokenize\_ea{\_sortedby}^^^\_citekey\_endcsname}%
+}
+\_def\_preparebibsortingA#1#2#3#4#5\_fin {% names of the first author used by sorting:
+   \_def\_sortedby{#1 }%                         Lastname
+   \_ifx^#2^\_else \_addto\_sortedby{#2 }\_fi  % Firstname
+   \_ifx^#3^\_else \_addto\_sortedby{#3 }\_fi  % Von
+   \_ifx^#4^\_else \_addto\_sortedby{#4 }\_fi  % Junior
+}
+\_def\_dobibsorting{%
+   {\_def\_citeI[##1]{\_ea\_citeIs\_csname _bes:##1\_endcsname{##1}}%
+    \_edef\_citelist{\_ea}\_citelist % converting \_citelist
+    \_dosorting\_citelist \_ea}%
+}
+\_def\_citeIs#1#2{\_eaddto\_citelist{#1}%
+   \_ea\_gdef#1{\_citeI[#2]\_ea\_glet#1=\_undefined \_glet#1=\_undefined}%
+}
+
+   \_doc -----------------------------
+   The \`\_printentry` macro prints bibliographic reference entry.
+   It prints <bibnum> or <bimark> (including hyperlinks) and they are
+   followed by printing the entry data. The format is given by the \^`\_printbib`
+   macro and by `\_print:<entrytype>` declared in the bib-style file.
+   \_cod -----------------------------
+
+\_def\_printentry {\_par \_bibskip
+  \_bibgl\_incr\_bibnum
   \_isdefined{_bim:\_bibp\_the\_bibnum}\_iftrue
      \_edef\_tmpb{\_csname _bim:\_bibp\_the\_bibnum\_endcsname}%
      \_bibmark=\_ea{\_tmpb}%
   \_else \_bibmark={}\_fi
-  \_edef\_tmpb{\EntryKey}%
-  \_noindent \_dbib\EntryKey
+  \_edef\_tmpb{\_entrykey}%
+  \_noindent \_dbib\_entrykey
   \_printbib
   {%
-     \_RetrieveFieldIn{entrytype}\_entrytype
+     \_getfield[@]\_entrytype
      \_csname _print:BEGIN\_endcsname
      \_isdefined{_print:\_entrytype}\_iftrue
         \_csname _print:\_entrytype\_endcsname
      \_else
         \_ifx\_entrytype\_empty \_else
-           \_opwarning{Entrytype @\_entrytype\_space from [\EntryKey] undefined}%
+           \_opwarning{Entrytype @\_entrytype\_space from [\_entrykey] undefined}%
            \_csname _print:misc\_endcsname
      \_fi\_fi
      \_csname _print:END\_endcsname
-     \_wbib \EntryKey {\_the\_bibnum}{\_the\_bibmark}%
+     \_wbib \_entrykey {\_the\_bibnum}{\_the\_bibmark}%
   }\_par
 }
 
@@ -147,13 +275,13 @@
    \_def\_bibfieldname{#2#3}%
    \_if!#2\_relax
       \_def\_bibfieldname{#3}%
-      \_RetrieveFieldIn{#3}\_bibfield
+      \_getfield[#3]\_bibfield
       \_ifx\_bibfield\_empty\_else
-         \_RetrieveFieldIn{#3number}\_namecount
-         \_def\_bibfield{\_csname _Read#3\_ea\_endcsname \_csname _pp:#3\_endcsname}%
+         \_getfield[#3num]\_namecount
+         \_def\_bibfield{\_loopauthors{#3}}% read author/edior field in a loop
       \_fi
    \_else
-      \_RetrieveFieldIn{#2#3}\_bibfield
+      \_getfield[#2#3]\_bibfield
    \_fi
    \_if^#1^%
       \_ifx\_bibfield\_empty \_ea\_ea\_ea \_doemptyfield
@@ -163,36 +291,122 @@
 }
 \_def\_dofullfield#1#2{\_def\_dofield##1{#1}\_ea\_dofield\_ea{\_bibfield}}
 \_def\_doemptyfield#1#2{\_def\_dofield##1{#2}\_ea\_dofield\_ea{\_bibfield}}
-\_let\_Readauthor=\ReadAuthor  \_let\_Readeditor=\ReadEditor
-\_def\_bprintaA #1#2{\_ifx\_bibfield\_empty #2\_else\_bprintaB #1**\_eee\_fi}
-\_def\_bprintaB #1*#2*#3\_eee{\_if^#3^#1\_else\_ea\_bprintaC\_ea{\_bibfield}{#1}{#2}\_fi}
+\_def\_bprintaA #1#2{\_ifx\_bibfield\_empty #2\_else\_bprintaB #1**\_fin\_fi}
+\_def\_bprintaB #1*#2*#3\_fin{\_ifx^#3^#1\_else\_ea\_bprintaC\_ea{\_bibfield}{#1}{#2}\_fi}
 \_def\_bprintaC #1#2#3{#2#1#3}
 \_def\_bprintc#1#2{\_bprintcA#1#2**\_relax}
 \_def\_bprintcA#1#2*#3*#4\_relax{\_ifx#1\_empty \_else \_if^#4^#2\_else#2#1#3\_fi\_fi}
 \_def\_bprintv [#1]#2#3{\_def\_tmpa{#2}\_def\_tmpb{#3}\_bprintvA #1,,}
 \_def\_bprintvA #1,{%
    \_if^#1^\_tmpb\_else
-      \_RetrieveFieldIn{#1}\_tmp
+      \_getfield[#1]\_tmp
       \_ifx \_tmp\_empty
       \_else \_tmpa \_def\_tmpb{}\_def\_tmpa{}%
       \_fi
    \_ea \_bprintvA
    \_fi
 }
-\_sdef{_pp:author}{\_letNames\_authorname}
-\_sdef{_pp:editor}{\_letNames\_editorname}
-\_def\_letNames{\_let\_Firstname=\Firstname \_let\_Lastname=\Lastname
-   \_let\_Von=\Von \_let\_Junior=\Junior
-}
 
    \_doc -----------------------------
-   Various macros + multilingual. Note that \`\_nobibwarnlist` is used in
-   \`\_bibwarning` and it is set by \^`\nobibwarning` macro.
+   \`\_loopauthors``{<field-name>}` does a loop over all authors/editors in
+   the `author` or `editor` field. For each author/edtor we do:
+   \begitems
+   * Set `\_NameCount` to the position number of the currently processed author/editor.
+   * Define `\_Lastname`, `\_Firstname`, `\_Junior`, `\_Von`, `\_After` macros.
+   * Run `\_authorname` or `\_editorname` macro (defined in the bib style file).
+   \enditems
+   \_cod -----------------------------
+
+\_def\_loopauthors #1{%
+   \_NameCount=0
+   \_ea\_ea\_ea\_foreach\_csname _fd:#1\_endcsname \_do ##1##2##3##4{%
+      \_advance\_NameCount by1
+      \_def\_Lastname{##1}\_def\_Firstname{##2}\_def\_Von{##3}\_def\_Junior{##4}%
+      \_csname _#1ini\_endcsname \_csname _#1name\_endcsname
+}}
+\_def\_authorini{} % ready for \_AbbreviateFirstname or similar...
+\_def\_editorini{}
+
+   \_doc -----------------------------
+   \`\_bibwarning` can be used if the manatory field is missing.
+   Note that \`\_nobibwarnlist` is used here, it is set by \^`\nobibwarning` macro.
    \_cod -----------------------------
 
 \_def\_bibwarning{%
-   \_ea\_isinlist \_ea\_nobibwarnlist\_ea{\_ea,\EntryKey,}\_iffalse
-       \_opwarning{Missing field "\_bibfieldname" in [\EntryKey]}\_fi}
+   \_ea\_isinlist \_ea\_nobibwarnlist\_ea{\_ea,\_entrykey,}\_iffalse
+       \_opwarning{Missing field "\_bibfieldname" in [\_entrykey]}\_fi}
+
+   \_doc -----------------------------
+   \`\_AbbreviateFirstname`, \`\_RetrieveFieldIn`, \`\_RetrieveField` are here only for
+   backward comaptibility with previous macros based on the librarian package.
+   The \`\_CreateField`, \`\_SortingOrder`, and \`\_SpecialSort` are dummy
+   macros because the sorting is implemented by a slightly different way
+   than in librarian package.
+   \_cod -----------------------------
+
+\_def\_AbbreviateFirstname{\_addto\_authorini{\_abbrevnames\_Firstname}}
+\_def\_abbrevnames#1{% Karolina Pondelickova-Maslova -> K. P.-M.
+   \_edef#1{\_ea\_foreach #1 \_do ##1##2 {##1.%
+                \_foreach ##2-{}\_do ####1-####2{\_ifx^####2^\_else-####2.\_fi} }^%
+   }\_replstring#1{ ^}{}%
+}
+\_def\_RetrieveFieldIn#1{\_getfield[#1]}
+\_def\_RetrieveField#1{\_trycs{_fd:#1}{}}
+\_def\_CreateField#1{}
+\_def\_SortingOrder#1#2{}
+\_def\_SpecialSort#1{}
+
+   \_doc -----------------------------
+   The \^`\usebib` command is defined as `\input{usebib.opm}\_usebib` in the
+   format. So, the command is re-defined here and it is run again with the new
+   meaning.\nl
+   The \^`\usebib` macro defined here reads `\_ctlst:<bibpart>/` and `\_ctlstB:<bibpart>/`
+   (they include a list of `\_citeI[<label>]`) and merges them to a single `\_citelist`.
+   The `\_be:<bibpart>/<label>` is set to empty for each member of the `\_citelist`.
+   The \^`\readbibs` macro read only the entries having set `\_be:<bibpart>/<label>`
+   to empty and re-defines them to actual data of the entry. Other entries are ignored
+   in `.bib` files. The exception is presence of the macro `\_be:<bibpart>/*`.
+   If this macro is set then all entries are read by \^`\readbibs` and the `\_citelist`
+   is created during reading the `.bib` files. Then the style file is read in a group,
+   the \^`\readbibs` macro reads given `.bib` files and resulting `\_citelist`
+   is processed: i.e.\ the macros \^`\_citeI` print desired entries.
+   \_cod -----------------------------
+
+\_def\_usebib/#1 (#2) #3 {%
+   \_ifcsname _ctlst:\_bibp\_endcsname
+       \_slet{_citelist}{_ctlst:\_bibp}\_else \_def\_citelist{}\_fi
+   \_ea \_foreach\_citelist \_do ##1[##2]{\_sdef{_be:\_bibp##2}{}}%
+   \_ifcsname _ctlstB:\_bibp\_endcsname
+     \_ea\_ea\_ea\_foreach \_csname _ctlstB:\_bibp\_endcsname \_do ##1[##2]{%
+         \_ifcsname _be:\_bibp##2\_endcsname
+         \_else \_addto\_citelist{\_citeI[##2]}\_sdef{_be:\_bibp##2}{}%
+         \_fi
+     }%
+   \_fi
+   \_global \_ea\_let \_csname _ctlst:\_bibp\_endcsname =\_write
+   \_ifx\_citelist\_empty
+     \_opwarning{No cited items. \_noexpand\usebib ignored}%
+   \_else
+     \_bgroup
+        \_par
+        \_emergencystretch=.3\_hsize
+        \_def\_optexbibstyle{#2}%
+        \_setctable\_optexcatcodes
+        \_input bib-#2.opm
+        \_the \_bibtexhook
+        \_ifcsname _mt:bib.and:\_cs{_lan:\_the\_language}\_endcsname \_else
+           \_opwarning{\_string\usebib: No phrases for language
+                       "\_cs{_lan:\_the\_language}" (using "en")}%
+           \_language=0 \_chardef\_documentlanguage=0
+        \_fi
+        \_ifx#1c\_def\_preparebibsorting{}\_def\_dobibsorting{}\_fi
+        \_ifcsname _be:\_bibp*\_endcsname \_def\_citelist{}\_fi % \_citelist will be created
+        \_readbibs {#3}%
+        \_dobibsorting\_citelist
+        \_restorectable
+     \_egroup
+   \_fi
+}
 
 \_endcode
 
@@ -230,6 +444,7 @@ of labels (without spaces) where missing mandatory fields will be no warned.
 Old `.bib` files may use the obscure notation for accents like `{\"o}`.
 Recommendation: convert such old files to Unicode encoding. If you are
 unable to do this then you can set \^`\bibtexhook={`\^`\oldaccents}`.
+
 
 \secc Notes for bib-style writers
 
@@ -335,18 +550,10 @@ and, etal, edition, citedate, volume, number, prepages, postpages, editor,
 editors, available, availablealso, bachthesis, masthesis, phdthesis
 are defined already, see the end of section~\ref[langphrases].
 
-If you are using non-standard field-names in .bib database and bib-style,
-you have to declare them by `\_CreateField {<fieldname>}`.
-
-You can declare `\_SortingOrder` in the manner documented by librarian package.
-
-User or author of the bib-style can create the hidden field which has a
-precedence while sorting names. Example:
-
-\begtt
-\CreateField {sortedby}
-\SpecialSort {sortedby}
-\endtt
+The `sortedby` field is declared by \~`\readbibs` as a special field where
+sorting phrase can be specified. If it is present then it has precedence
+before default sorting phrase generated by \^`\_preparebibsorting` from the
+lastname, firstnames of the first author and from the year.
 Suppose that the .bib file includes:
 \begtt
 ...
@@ -361,37 +568,68 @@ If you need (for example) to place the auto-citations before other citations,
 then you can mark your entries in `.bib` file by `sortedby = "@"`, because this
 character is sorted before `A`.
 
+\secc[readbibs] Direct reading of `.bib` files
+
+\^`\readbibs` `{<bib-bases>}` is internally used (by \^`\usebib`)
+for reading `.bib` databases in Bib\TeX/ format. The <bib-bases> is
+comma separated list of file names (without `.bib` extension, without
+spaces). These files are read and \^`\readbibs` creates macros
+`\_be:<bibpart>/<label>`, where <label> is the label of the reference record.
+These macros include key-value pairs `[<field name>]{<field data>}`.
+The first pair is `[@]{<entry type>}`.
+For example, if we have in the `.bib` file:
+\begtt
+@Book { tbn,
+   author = "Petr Olšák",
+   TITle  = {\TeX{}book naruby},
+   publisher = "Konvoj",
+   year      = 2001,
+}
+\endtt
+then the `\_be:/tbn` macro is created with the content:
+\begtt
+[@]{BOOK}[author]{{Olšák}{Petr}{}{}}[authornum]{1}[title]{\TeX{}book naruby}%
+[publisher]{Konvoj}[year]{2001}
+\endtt
+If you do `\slet{tmp}{_be:/tbn}` then you can print the data (for example) by:
+\begtt
+\ea\foreach \tmp \do [#1]#2{\wterm{field-name: "#1", data: "#2"}}
+\endtt
+or you can do `\ea\foreach \tmp \do [#1]#2{\sdef{bib-field:#1}{#2}}` to enable
+direct acces to the scanned data.
+
+Note that entry type and field names are converted lower-case by the `\readbibs` macro.
+
+Not all entries are recorded during rading the `.bib` file: only those referenced by
+a `\cite` command in the document. If `\nocite[*]` is used then all entries
+are recorded.
+
+The \^`\readbibs` macro doesn't convert fields data, but there are two exceptions:
+author and editor fields. These fields have very specific format with
+various alternatives, see \url{https://nwalsh.com/tex/texhelp/bibtx-23.html}.
+Shortly speaking, more authors are divided by the `and` keyword and names of a single
+author must be separated to four subfields: <Lastnames>, <Firstnames>, <Von>,
+<Junior>. Only the <Lastnames> subfield must be nonempty. The input can look like
+\begtt
+Leonardo Piero da Vinci
+or
+da Vinci, Leonardo Piero
+\endtt
+and both these variants are converted to `{Vinci}{Leonardo Piero}{da}{}`.
+The <Von> part is rekognized as a word with only lowercase letters. In
+general, the name can be written without commas: <Firstnames> <Von>
+<Lastnames> or with single comma: <Von> <Lastnames>, <Firstnames> or with two
+commas: <Von> <Lastnames>, <Junior>, <Firstnames> and all these variants are
+converted to the quaternion `{<Lastnames>}{<Firstnames>}{<Von>}{<Junior>}`
+by the \^`\readbibs` macro.
+If there are more than single author, then each author is saved in four
+subfields side by side, so you have 4 or 8 or 12 etc.\ subfildeds in the
+author/editor data field. You can read them by
+`\foreach <author-data>\do #1#2#3#4{...}`.
+
 \_endinput
 
 History:
 --------
-2022-02-04  reading tail of languages.opm removed
-2021-04-30  \RetrieveField declared as private, bug fixed.
-2021-04-13  \bibpart implemented
-2021-04-13  \_bibgl introduced (used by \slides)
-2021-03-12  \_citelistB added before first test.
-2021-02-15  \_expandafter -> \_ea
-Apr. 2014:  released in OPmac
-Jan. 2016:  "first entry wins" implemented
-Apr. 2016:  \readentry -> \readbibentry, \usebib->\MakeReference
-Feb. 2018:  \input librarian does not create \jobname.lbr
-
-% Source:
-
-% opmac-bib
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Petr Olsak, version Feb. 2018 (beta)
-
-% This is module for OPmac macros, see http://petr.olsak.net/opmac.html
-% The command:
-%    \usebib/<sorttype> (<style>) (bibfiles>
-% for direct reading .bib files by OPmac macros (without bibTeX) is implemented here.
-% The implementation depends on librarian.tex package by Paul Isambert.
-% Use:
-%    \input opmac  \input opmac-bib
-% or simply:
-%    \input opmac-bib
-% before using the command \usebib.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% end
-
+2023-06-02: macros re-implemeted, librarian package no more needed.
+2018 - 2023-06-01  usebib.opm based on librarian package, like in OPmac.
