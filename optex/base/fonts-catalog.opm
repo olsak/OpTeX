@@ -1,13 +1,13 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {Font catalogue <2023-06-01>} % loaded on demand by \fontfam[catalog]
+\_codedecl \_undefined {Font catalogue <2023-06-04>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
 \_initunifonts
 \_raggedbottom
 \_begingroup
 
-\_istoksempty\_catalogmathsample \_iftrue \_noloadmath \_fi
+\_istoksempty\_catalogmathsample \_iftrue \_noloadmath \_else \_input{unimath-codes.opm}\_fi
 \_global\_font\_ttfixed=[LMMono10-Regular]\_relax
 \_fontlet\_smalltt=\_ttfixed at7pt
 \_suppressfontnotfounderror=1
@@ -26,6 +26,7 @@
 
 \_def\_faminfo [#1]#2#3#4{%
    \_bgroup
+       \_rightskip=0sp plus 1fill
        \_lowercase{\_edef\_famname{\_ea\_removespaces #1 {} }}%
        \_edef\_act{\_noexpand\_isinlist{,\_cataloglist,}{,\_famname,}}\_act
        \_iftrue \def\_cataloglist{}\_fi
@@ -33,9 +34,11 @@
        \_iftrue \def\_cataloglist{.}\_fi
        \_ifx\_cataloglist\_empty
        \_ifx^#4^\_else
-          \_the\_catalognextfam {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}\_nobreak
+          \_the\_catalognextfam
+          {\_ttfixed\_string\fontfam [#1] -- (#2)\_par}\_nobreak
           \_input #3.opm
-          \_ifexistfam \_nobreak\_medskip \_dosamples #4:{}
+          \_ifexistfam
+              \_nobreak\_medskip \_dosamples #4:{}\_par
               \_ifx\_mathfaminfo\_empty
               \_else \_istoksempty\_catalogmathsample
                   \_iftrue {\_nobreak \_ttfixed \$Default math font\$: \_mathfaminfo \_par}
@@ -60,14 +63,15 @@
 }
 \_def\_dosamplesB#1{%
    \_ifx\_relax#1 \_else
+      \_ifhmode \_nl \_fi
       {\_ttfixed \_detokenize\_ea{\_usemodifiers}\_detokenize{#1}\_unskip:}
       {\_usemodifiers #1\_ea\_ifx\_the\_font \_nullfont
           \_ttfixed ... This font isn't available in your system.%
-      \_else \_the\_catalogsample \_fi }\_par
+      \_else \_the\_catalogsample \_fi }%
       \_ea \_dosamplesB \_fi
 }
 
-\_def\_wlog#1{\_nobreak\_smallskip
+\_def\_wlog#1{\_smallskip
    \_hbox to\_hsize{\_hskip25pt
       \_edef\_tmp{#1}\_replstring\_tmp{^^J}{\_endgraf}%
       \_smalltt \_noindent \_ea \string \_csname \_currfamily\_endcsname
@@ -143,6 +147,7 @@ described in the \code{fams-ini.opm} file.
 
 \_endcode % -------------------------------------
 
+2023-06-04  line breaking optimized
 2023-06-01  \_catalognextfam introduced, \_nobreak inserted
 2023-03-09  \_famsrc introduced
 2022-07-11  \_raggedbottom added
