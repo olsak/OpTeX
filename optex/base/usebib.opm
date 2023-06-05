@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2023-06-01>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2023-06-05>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -16,6 +16,7 @@
 \_def\_eaddto#1#2{\_ea\_addto\_ea#1\_ea{#2}}
 
 \_def\_readbibs #1{%
+   \_ifcsname _be:\_bibp*\_endcsname \_def\_citelist{}\_fi % \_citelist will be created
    \_begingroup
       \_everyeof{@{}}\_foreach#1,\_do##1,{\_ea\_nextat\_input{##1.bib}}%
    \_endgroup
@@ -31,12 +32,14 @@
 \_def\_bibentry #1#{\_ifx^#1^\_else \_afterfi{\_bibentryA{#1}}\_fi}
 \_def\_bibentryA #1#2{\_lowercase{\_def\_entrytype{#1}}%
    \_ismacro\_entrytype{comment}\_iffalse  % comment is ignored
+   \_ismacro\_entrytype{texcode}\_iftrue   % TeX code is processed
+      \_endgroup #2\_begingroup \_everyeof{@{}}\_else
    \_ismacro\_entrytype{string}\_iftrue    % string is reported as unsupported
-      \_opwarning{\_string\usebib: @STRING entry isn't supported}%
+      \_opwarning{\_string\usebib: @STRING entry isn't supported, try to use @TEXCODE}%
    \_else
       \_edef\_entrydata{[@]{\_entrytype}}%
       {\_bibentryB #2\_fin}%               % read a "normal" bib entry
-   \_fi\_fi
+   \_fi\_fi\_fi
    \_nextat
 }
 \_def\_bibentryB #1#2,#3\_fin{\_def\_citekey{#1#2}\_def\_bibentryC{\_nextfield #3,\_fin}%
@@ -165,11 +168,11 @@
 \_def\_auscanC #1,^{\_def\_tmp{#1}}  % removing final comma: Word,^ -> Word
 
    \_doc -----------------------------
-   The \`\_citelist` includes \`\_citeI``[<label>]`
+   The \^`\_citelist` includes \`\_citeI``[<label>]`
    commands. The \^`\usebib` macro runs this lists in order to print references.
    Each \^`\_citeI``[<label>]` prints single bib entry given by the <label>.
    It opens a group, sets macros `\_fd:<field-name>` to `<field-data>` and runs
-   \^`\_printentry`. Finally, it closes TeX group,
+   \^`\_printentry`. Finally, it closes \TeX/ group,
    so all macros `\_fd:<field-name>` have their initial (undefined) value.\nl
    The \`\_getfield``[<field-name>]\macro` does `\def\macro{<field-data>}`.
    \_cod -----------------------------
@@ -203,7 +206,7 @@
    If you want a different rule of sorting, you can re-define this macro
    using `\bibtexhook` or in your bib-style file. Some tips (for example reverse
    order of years) will be in the \OpTeX/ tricks.\nl
-   \`\_dobibsorting``\_citelist` sorts the `\_citelist` and runs it.
+   \`\_dobibsorting``\_citelist` sorts the \^`\_citelist` and runs it.
    \_cod -----------------------------
 
 \_def\_preparebibsorting{%
@@ -361,13 +364,9 @@
    format. So, the command is re-defined here and it is run again with the new
    meaning.\nl
    The \^`\usebib` macro defined here reads `\_ctlst:<bibpart>/` and `\_ctlstB:<bibpart>/`
-   (they include a list of `\_citeI[<label>]`) and merges them to a single `\_citelist`.
+   (they include a list of `\_citeI[<label>]`) and merges them to a single \`\_citelist`.
    The `\_be:<bibpart>/<label>` is set to empty for each member of the `\_citelist`.
-   The \^`\readbibs` macro read only the entries having set `\_be:<bibpart>/<label>`
-   to empty and re-defines them to actual data of the entry. Other entries are ignored
-   in `.bib` files. The exception is presence of the macro `\_be:<bibpart>/*`.
-   If this macro is set then all entries are read by \^`\readbibs` and the `\_citelist`
-   is created during reading the `.bib` files. Then the style file is read in a group,
+   Then the style file is read in a group,
    the \^`\readbibs` macro reads given `.bib` files and resulting `\_citelist`
    is processed: i.e.\ the macros \^`\_citeI` print desired entries.
    \_cod -----------------------------
@@ -400,7 +399,6 @@
            \_language=0 \_chardef\_documentlanguage=0
         \_fi
         \_ifx#1c\_def\_preparebibsorting{}\_def\_dobibsorting{}\_fi
-        \_ifcsname _be:\_bibp*\_endcsname \_def\_citelist{}\_fi % \_citelist will be created
         \_readbibs {#3}%
         \_dobibsorting\_citelist
         \_restorectable
@@ -573,7 +571,7 @@ character is sorted before `A`.
 \^`\readbibs` `{<bib-bases>}` is internally used (by \^`\usebib`)
 for reading `.bib` databases in Bib\TeX/ format. The <bib-bases> is
 comma separated list of file names (without `.bib` extension, without
-spaces). These files are read and \^`\readbibs` creates macros
+spaces). These files are read and \^`\readbibs` defines macros
 `\_be:<bibpart>/<label>`, where <label> is the label of the reference record.
 These macros include key-value pairs `[<field name>]{<field data>}`.
 The first pair is `[@]{<entry type>}`.
@@ -586,7 +584,8 @@ For example, if we have in the `.bib` file:
    year      = 2001,
 }
 \endtt
-then the `\_be:/tbn` macro is created with the content:
+and the \^`\bibpart` is empty (default value)
+then the `\_be:/tbn` macro is defined with the content:
 \begtt
 [@]{BOOK}[author]{{Olšák}{Petr}{}{}}[authornum]{1}[title]{\TeX{}book naruby}%
 [publisher]{Konvoj}[year]{2001}
@@ -600,9 +599,23 @@ direct acces to the scanned data.
 
 Note that entry type and field names are converted lower-case by the `\readbibs` macro.
 
-Not all entries are recorded during rading the `.bib` file: only those referenced by
-a `\cite` command in the document. If `\nocite[*]` is used then all entries
-are recorded.
+There are two special entry types: `@COMMENT{<ignored text>}` and
+`@TEXCODE{<processed text>}`. The <ignored text> is ignored, the
+<processed text> is executed by \TeX/. The definitions of macros used in other
+entries in data of fields can be here. If the `\usebib` is used then
+the <processed text> is executed inside a
+\TeX/ group, so the assignment is locally valid only during creating the
+reference list. The BiB\TeX/'s `@STRING{}` isn't supported. All others entry
+types are interpreted as {\em reference entry} and they are interpreted as
+described above. An optional balanced text between entries in `.bib` files
+is ignored.
+
+If the macro `\_be:<bibpart>/*` is defined then the \^`\readbibs` macro reads
+all entries from `.bib` files and creates \~`\_citelist`. If the
+`\_be:<bibpart>/*` is undefined then
+the \^`\readbibs` macro reads only entries with <label> where
+`\_be:<bibpart>/<label>` is set to the empty macro. After reading, the
+macros `\_be:<bibpart>/<label>` are globally re-defined as described above.
 
 The \^`\readbibs` macro doesn't convert fields data, but there are two exceptions:
 author and editor fields. These fields have very specific format with
@@ -631,5 +644,6 @@ author/editor data field. You can read them by
 
 History:
 --------
+2023-06-05: @TEXCODE introduced + more consistent doc
 2023-06-02: macros re-implemeted, librarian package no more needed.
 2018 - 2023-06-01  usebib.opm based on librarian package, like in OPmac.
