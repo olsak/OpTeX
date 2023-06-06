@@ -235,6 +235,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#fullcite">Citations by full bibliographic records</a>
     <li><a href="#bibmark">Bibmark generator</a>
+    <li><a href="#reverseyear">Sorting bib records by reverse year</a>
 </ul>
 
 <li>Slides
@@ -5205,6 +5206,49 @@ It means that other authors #4, #6 and #8 are empty in this case. See also
 section 2.32.6 in the OpTeX documentation.
 
 <p CLASS=datum>(0104) -- P. O. 2023-03-24<p>
+<hr>
+
+<h2><a name="reverseyear"></a>Sorting bib records by reverse year</h2>
+
+<p>OpTeX from version 1.12+ implements its own macros for reading .bib files
+and sorting bib records. We don't provide a user-comfortable macro with
+sorting options, because OpTeX concept is: copy macros from OpTeX's base
+code and re-define them to meet your needs. For example, you want to implement
+reverse sorting by year field, i.e. from newer to older.
+
+<p>The default sorting rule is: sort by Lastname, Fisrtnames (and maybe by
+von and Junior) of the first author and if the records are equal from this
+point of view, then sort them by year ascending. Maybe, you want to use the
+same rule but sort by year descending. So, you can copy the macro
+\_preparebibsorting, name it \bibsorting and modify it. Finally, you have to
+put the command
+<pre>
+\_let\_preparebibsorting=\bibsorting
+</pre>
+
+<p>to your bib-style file or you can put it to the \bibtexhook.
+<pre>
+\def\bibsorting{%
+   \_getfield[sortedby]\_sortedby
+   \_ifx\_sortedby\_empty   % explicitly given [sortedby] field has precedence
+      \_def\_sortedby{}%
+      \_getfield[author]\_tmp  % sorting by author firstly
+      \_ifx\_tmp\_empty \_else \_ea\_preparebibsortingA\_tmp \_fin \_fi
+      \_getfield[year]\_tmp    % soering by year secondly
+      \_ifx\_tmp\_empty \_else
+        \_edef\_tmp{\_the\_numexpr 10000-\_tmp\_relax}% ------ reverse year
+        \_eaddto\_sortedby{\_tmp}\_fi
+      \_edef\_sortedby{\_sortedby}%  we need to run macros aka \"e etc.
+      \_edef\_sortedby{\_ea\_removeoutbraces\_sortedby {\_fin}}% remove braces
+   \_fi
+   \_sxdef{_bes:\_citekey\_ea}\_ea{\_csname;\_detokenize\_ea{\_sortedby}^^^\_cit
+}
+\bibtexhook={\_let\_preparebibsorting=\bibsorting}
+</pre>
+
+<p>Note the line "------- reverse year", it is added to the original macro.
+
+<p CLASS=datum>(0113) -- P. O. 2023-06-06<p>
 <hr>
 
 <p CLASS="lmarg">Slides</p>

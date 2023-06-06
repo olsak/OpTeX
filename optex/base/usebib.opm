@@ -6,9 +6,7 @@
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
    these files isn't \TeX/ friendly, so we must to do more work.
    \`\readbibs` `{<bib-bases>}` reads <bib-bases> files
-   (i.e. the Bib\TeX/ format) and converts it to the macros
-   `\_be:<bib-part>/<label>` with key-value pairs, as described in the
-   section~\ref[readbibs].
+   (i.e. the Bib\TeX/ format).
    \_cod -----------------------------
 
 \_newcount\_aunum
@@ -24,8 +22,12 @@
 \_public \readbibs ;
 
    \_doc -----------------------------
-   The \`\_nextat` macro skips the text to the first `@`, and starts
-   the \`\_bibentry` macro which reads `@<ENTRY>{<data>}`.
+   The \`\_nextat` macro skips the text in the `.bib` file to the next `@`, and starts
+   the \`\_bibentry` macro which reads `@<entry type>{<data>}` from the `.bib` file.
+   Each reference entry is conveted to the \`\_entrydata`
+   macro and then `\_glet \_be:<bib-part>/<label> = \_entrydata` is done.
+   The \^`\_entrydata` includes key-value pairs, as described in the
+   section~\ref[readbibs].
    \_cod -----------------------------
 
 \_long\_def\_nextat#1@{\_bgroup\_catcode` =9 \_ea\_egroup\_bibentry}
@@ -51,6 +53,16 @@
       \_bibentryC
    \_fi\_fi
 }
+\_def\_bibentryF {% finalize entry
+   \_preparebibsorting
+   \_global\_ea\_let \_csname _be:\_bibp\_citekey\_endcsname = \_entrydata
+}
+
+   \_doc -----------------------------
+   \`\_nextfield` reads next field name and saves it to the \`\_fieldname`
+   and then reads field data and saves it to the \`\_fielddata`.
+   \_cod -----------------------------
+
 \_def\_nextfield #1{\_ifx,#1\_ea\_nextfield   % skip commas from previous field
    \_else \_ifx\_fin#1\_ea\_ea\_ea\_bibentryF % finalize bib entry
    \_else \_def\_fieldname{#1}\_ea\_ea\_ea\_nextfieldA % first letter of fieldname found
@@ -80,29 +92,25 @@
    \_sdef{_fd:\_fieldname\_ea}\_ea{\_fielddata}%
    \_nextfield
 }
-\_def\_bibentryF {% finalize entry
-   \_preparebibsorting
-   \_global\_ea\_let \_csname _be:\_bibp\_citekey\_endcsname = \_entrydata
-}
 
    \_doc -----------------------------
-   The `\_auscan``{<authors/editors-names>}[<field-name>]` reads the specific Bib\TeX/
+   The \`\_auscan``{<authors/editors-names>}[<field-name>]` reads the specific Bib\TeX/
    format menitoned in section~\ref[readbibs] and converts them to
    `{<Lastname>}{<Firstname>}{<Von>}{<Junior>}` for each author/editor. The result
    includes $4k$ subfields (where $k$ is number of the authors/editors) and
    it is saved to the `\_entrydata` and the
    `[authornum]{`$k$`}` or `[editornum]{`$k$`}` is added.
 
-   The `\_auscanA` macro does the loop over authors separated by `and`.
+   The \`\_auscanA` macro does the loop over authors separated by `and`.
    Each single author has its `\_tmpb` macro with `X` and `x`. Each letter
    corresponds to single word of the name (`X`: begins with uppercase, `x`:
    begins with lowercase). For example Leonardo Piero da Vinci has `\_tmpb`
    macro `XXxX.`. If there are commas in after some words, then these commas
    are in `\_tmpb` macro too, for example da Vinci, Piero Leonardo has its
    `\_tmpb` macro `xX,XX.`. The number of commas is saved to `\_tmpnum`.
-   The `\_auscanB` macro does a slight modifications of the `\_tmpb` macro as
+   The \`\_auscanB` macro does a slight modifications of the `\_tmpb` macro as
    mentioned in comments. Then the macro
-   `\_auscanD``<tpmb-pattern>;{<WordA>}{<WordB>}{<WordC>}...` is executed.
+   \`\_auscanD``<tpmb-pattern>;{<WordA>}{<WordB>}{<WordC>}...` is executed.
    It saves given words due to the `\_tmpb` pattern to the macros
    `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior` in a loop. Finally, the contents of
    these macros are saved to `\_fiedldata` and then to the `\_entrydata`.
@@ -175,6 +183,7 @@
    \^`\_printentry`. Finally, it closes \TeX/ group,
    so all macros `\_fd:<field-name>` have their initial (undefined) value.\nl
    The \`\_getfield``[<field-name>]\macro` does `\def\macro{<field-data>}`.
+   If the field isn't declared then the `\macro` is empty.
    \_cod -----------------------------
 
 \_def\_citeI[#1]{%
@@ -203,10 +212,7 @@
    Note that the part of the control sequence name after `^^^` is ignored during sorting.
    The default \^`\_preparebibsorting`
    macro creates <sorting-rule> in the form: <Lastnames> <Firstnames> <Von>
-   <Junior> of the first author followed by <year> from `year` field.
-   If you want a different rule of sorting, you can re-define this macro
-   using `\bibtexhook` or in your bib-style file. Some tips (for example reverse
-   order of years) will be in the \OpTeX/ tricks.\nl
+   <Junior> of the first author followed by <year> from `year` field.\nl
    \`\_dobibsorting``\_citelist` sorts the \^`\_citelist` and runs it.
    \_cod -----------------------------
 
@@ -281,7 +287,6 @@
       \_def\_bibfieldname{#3}%
       \_getfield[#3]\_bibfield
       \_ifx\_bibfield\_empty\_else
-         \_getfield[#3num]\_namecount
          \_def\_bibfield{\_loopauthors{#3}}% read author/edior field in a loop
       \_fi
    \_else
@@ -313,15 +318,17 @@
 
    \_doc -----------------------------
    \`\_loopauthors``{<field-name>}` does a loop over all authors/editors in
-   the `author` or `editor` field. For each author/edtor we do:
+   the `author` or `editor` field. It defines \`\_namecount` as total nuber
+   of authors/editors. Then for each author/edtor it do:
    \begitems
-   * Set `\_NameCount` to the position number of the currently processed author/editor.
-   * Define `\_Lastname`, `\_Firstname`, `\_Junior`, `\_Von`, `\_After` macros.
-   * Run `\_authorname` or `\_editorname` macro (defined in the bib style file).
+   * Set \`\_NameCount` to the position number of the currently processed author/editor.
+   * Define \`\_Lastname`, \`\_Firstname`, \`\_Junior`, \`\_Von`, \`\_After` macros.
+   * Run \^`\_authorname` or \^`\_editorname` macro (defined in the bib style file).
    \enditems
    \_cod -----------------------------
 
 \_def\_loopauthors #1{%
+   \_getfield[#1num]\_namecount % total persons in the author/editor fields
    \_NameCount=0
    \_ea\_ea\_ea\_foreach\_csname _fd:#1\_endcsname \_do ##1##2##3##4{%
       \_advance\_NameCount by1
@@ -414,7 +421,7 @@
 The file `usebib.opm` implements the command
 \~`\usebib/<sorttype> (<style>) <bibfiles>`
 where `<sorttype>` is one letter `c` (references ordered by citation order in
-the text) or `s` (references ordered by key in the style file),
+the text) or `s` (references sorted usually by authors and years),
 `<style>` is the part of the name `bib-<style>.opm` of the style file
 and `<bibfiles>` are one or more `.bib` file names without suffix separated by
 comma without space. Example:
@@ -422,11 +429,10 @@ comma without space. Example:
 \begtt
 \usebib/s (simple) mybase,yourbase
 \endtt
-
 This command reads the `<bibfiles>` directly and creates the list of
 bibliographic references (only those declared by \~`\cite[]` or
-\~`\nocite[]` in the text). The formatting of such references is defined in the style
-file.
+\~`\nocite[]` in the document). The formatting of such references is defined in
+the style~file.
 
 The principle \"first entry wins" is used. Suppose `\usebib/s (simple) local,global`.
 If an entry with the same label is declared in `local.bib` and in
@@ -491,12 +497,12 @@ macros for a more comfortable setting of printing rules:
 *   The part <if not defined> can include
     the \^`\_bibwarning` command if the <field-name> is mandatory.
 * \^`\_bprintb` `[<field-name>]  {<if defined>} {<if not defined>}`. The same as
-    `\_bprinta`, but the `##1` parameter is used instead `*`. Differences: `##1`
+    \^`\_bprinta`, but the `##1` parameter is used instead `*`. Differences: `##1`
     parameter can be used more than once and can be enclosed in nested
     braces. The `*` parameter can be used at most once and cannot be enclosed
-    in braces. Warning: if the `\_bprintb` commands are nested (`\_bprintb` in
-    `\_bprintb`), then you need to write the `####1` parameter for internal `\_bprintb`.
-    But if `\_bprinta` commands are nested then the parameter is not duplicated.
+    in braces. Warning: if the \^`\_bprintb` commands are nested (`\_bprintb` in
+    \^`\_bprintb`), then you need to write the `####1` parameter for internal `\_bprintb`.
+    But if \^`\_bprinta` commands are nested then the parameter is not duplicated.
 * \^`\_bprintc` `\macro {<if non-empty>}`. The <if non-empty> part is executed if
     `\macro` is non-empty. The `*` parameter can be used, it is replaced by
     the `\macro`.
@@ -531,17 +537,17 @@ in order to declare the format of printing each individual name.
 The following control sequences can be used in these macros:
 
 \begitems
-* `\_NameCount`: the number of the currently processed author in the list
-* `\_namecount`: the total number of the authors in the list
-* `\_Lastname`, `\_Firstname`, `\_Von`, `\_Junior`: the parts of the name.
+* \^`\_NameCount`: the number of the currently processed author in the list
+* \^`\_namecount`: the total number of the authors in the list
+* \^`\_Lastname`, \^`\_Firstname`, \^`\_Von`, \^`\_Junior`: the parts of the name.
 \enditems
 
-The whole style file is read in the group during the `\usebib` command is executed
+The whole style file is read in the group during the \^`\usebib` command is executed
 before typesetting the reference list. Each definition or setting is local
 here.
 
 The auto-generated phrases (dependent on current language) can be used in
-bib-style files by `\_mtext{bib.<identifier>}`, where <ident> is an identifier of
+bib-style files by `\_mtext{bib.<identifier>}`, where <identifier> is an identifier of
 the phrase and the phrase itself is defined by
 `\_sdef{_mt:bib.<identifier>:<language>}{<phrase>}`. See section~\ref[langphrases]
 for more detail. Phrases for <identifiers>:
@@ -551,14 +557,12 @@ are defined already, see the end of section~\ref[langphrases].
 
 The `sortedby` field is declared by \~`\readbibs` as a special field where
 sorting phrase can be specified. If it is present then it has precedence
-before default sorting phrase generated by \^`\_preparebibsorting` from the
+before default sorting phrase generated by \~`\_preparebibsorting` from the
 lastname, firstnames of the first author and from the year.
 Suppose that the .bib file includes:
 \begtt
-...
 author   = "Jan Chadima",
 sortedby = "Hzzadima Jan",
-...
 \endtt
 Now, this author is sorted between H and I, because the Ch digraph in this
 name has to be sorted by this rule.
@@ -566,6 +570,10 @@ name has to be sorted by this rule.
 If you need (for example) to place the auto-citations before other citations,
 then you can mark your entries in `.bib` file by `sortedby = "@"`, because this
 character is sorted before `A`.
+
+If you want to declare a different sorting rule, you can re-define the
+\^`\_preparebibsorting` macro. The example is in the
+\ulink[http://petr.olsak.net/optex/optex-tricks.html\#reverseyear]{\OpTeX/ trick 0113}.
 
 \secc[readbibs] Direct reading of `.bib` files
 
@@ -607,7 +615,7 @@ entries in data of fields can be here. If the `\usebib` is used then
 the <processed text> is executed inside a
 \TeX/ group, so the assignment is locally valid only during creating the
 reference list. The BiB\TeX/'s `@STRING{}` isn't supported. All others entry
-types are interpreted as {\em reference entry} and they are interpreted as
+types are interpreted as a {\em reference entry} and they are interpreted as
 described above. An optional balanced text between entries in `.bib` files
 is ignored.
 
