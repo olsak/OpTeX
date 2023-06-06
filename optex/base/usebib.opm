@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2023-06-05>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2023-06-06>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -181,6 +181,7 @@
    \_begingroup
       \_ea\_ifx \_begincsname _be:\_bibp#1\_endcsname \_empty
          \_opwarning{\_string\usebib: entry [#1] isn't found in .bib}%
+         \_global\_slet{_bes:#1}{_relax}%
       \_else
          \_ea\_ea\_ea\_foreach \_csname _be:\_bibp#1\_endcsname \_do[##1]##2{\_sdef{_fd:##1}{##2}}%
          \_def\_entrykey{#1}%
@@ -644,6 +645,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+1023-06-06: \_slet{_bes:#1}{_relax}: bugfix when label not found and sorting
 2023-06-05: @TEXCODE introduced + more consistent doc
 2023-06-02: macros re-implemeted, librarian package no more needed.
 2018 - 2023-06-01  usebib.opm based on librarian package, like in OPmac.
