@@ -252,6 +252,11 @@
 \_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
    { -,\narrow: {\rm\bf} }
 
+\_famfrom {Alexey Kryukov}
+\_faminfo [OldStandard] {inspired by a typeface most commonly used in old books} {f-oldstandard}
+   { -,\caps: {\rm\bf\it\bi} }
+
+
 \_endcode
 
 Once you have prepared a font family file with the name `f-<famname>.opm` and
