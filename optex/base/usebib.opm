@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2023-06-06>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2023-06-07>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -286,6 +286,7 @@
    \_if!#2\_relax
       \_def\_bibfieldname{#3}%
       \_getfield[#3]\_bibfield
+      \_getfield[#3num]\_namecount % total persons in the author/editor fields
       \_ifx\_bibfield\_empty\_else
          \_def\_bibfield{\_loopauthors{#3}}% read author/edior field in a loop
       \_fi
@@ -318,8 +319,9 @@
 
    \_doc -----------------------------
    \`\_loopauthors``{<field-name>}` does a loop over all authors/editors in
-   the `author` or `editor` field. It defines \`\_namecount` as total nuber
-   of authors/editors. Then for each author/edtor it do:
+   the `author` or `editor` field. The \`\_namecount`
+   (total nuber of authors/editors) was defined in
+   \^`\_bprintb`. Then for each author/edtor it do:
    \begitems
    * Set \`\_NameCount` to the position number of the currently processed author/editor.
    * Define \`\_Lastname`, \`\_Firstname`, \`\_Junior`, \`\_Von`, \`\_After` macros.
@@ -328,7 +330,6 @@
    \_cod -----------------------------
 
 \_def\_loopauthors #1{%
-   \_getfield[#1num]\_namecount % total persons in the author/editor fields
    \_NameCount=0
    \_ea\_ea\_ea\_foreach\_csname _fd:#1\_endcsname \_do ##1##2##3##4{%
       \_advance\_NameCount by1
@@ -653,7 +654,8 @@ author/editor data field. You can read them by
 
 History:
 --------
-1023-06-06: \_slet{_bes:#1}{_relax}: bugfix when label not found and sorting
+2023-06-07: bug fix (\_namecount declaration)
+2023-06-06: \_slet{_bes:#1}{_relax}: bugfix when label not found and sorting
 2023-06-05: @TEXCODE introduced + more consistent doc
 2023-06-02: macros re-implemeted, librarian package no more needed.
 2018 - 2023-06-01  usebib.opm based on librarian package, like in OPmac.
