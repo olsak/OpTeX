@@ -946,7 +946,7 @@ Other options in the option field are silently ignored.
 
 \_endinput
 
-2023-06-23 ... ONLINE entry introduced 
+2023-06-23 ... @ONLINE entry introduced 
 2023-04-22 ... incollection: typo corrected
 2023-03-25 ... \_createbibmark introduced
 2022-05-10 ... \. -> \:, collision with \oldaccents fixed.
