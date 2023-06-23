@@ -156,6 +156,14 @@
    \_bprinta [institution] {*.\ }{}%
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
+\_sdef{_print:online}{%
+   \_bprinta [!author]    {*.\ }{}%
+   \_bprintb [title]      {{\_em##1}\:\ }{}%
+   \_bprinta [howpublished] {*.\ }{}%
+   \_bprinta [institution] {*.\ }{}%
+   \_bprinta [series]     {*.\ }{}%
+   \_bprintb [url]        {\_preurl\_url{##1}. }{\_bibwarning}%
+}
 \_sdef{_print:misc}{%
    \_bprinta [!author]    {*.\ }{}%
    \_bprintb [title]      {{\_em##1}\:\ }{}%

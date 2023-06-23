@@ -10,7 +10,7 @@
 % vlna.opm is based on Lua code from the package `luavlna` (by Michal Hoftich
 % and Miro Hrončok). See `texdoc luavlna` or end of this file for more information.
 
-\_codedecl \singlechars {Preventing single-chars prepositions and more <2021-01-08>}
+\_codedecl \singlechars {Preventing single-chars prepositions and more <2023-06-23>}
 
 \_namespace{vlna}
 
@@ -34,11 +34,10 @@
 
    set_singlechars = function(lang,chars)
      if (lang == "") then return nil end
-     local utf_gmatch = unicode.utf8.gmatch
      local chars = chars  or ""
      local singlechars = {}
-     for char in unicode.utf8.gmatch(chars,"(\_csstring\%a)") do
-       singlechars[char] = true
+     for pos, char in utf8.codes(chars) do
+       singlechars[utf8.char(char)] = true
      end
      luavlna.singlechars(lang,singlechars)
    end
