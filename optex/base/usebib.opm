@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2023-06-07>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2023-06-25>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -85,6 +85,7 @@
 
 \_def\_nextfieldF{% finalize field
    \_lowercase\_ea{\_ea\_def\_ea\_fieldname\_ea{\_fieldname}}% case insensitive field name
+   \_ifcsname _fia:\_fieldname\_endcsname \_edef\_fieldname{\_cs{_fia:\_fieldname}}\_fi
    \_eaddto\_entrydata{\_ea[\_fieldname]}%
    \_ismacro\_fieldname{author}\_iftrue \_ea\_auscan\_ea{\_fielddata}[author]\_else
    \_ismacro\_fieldname{editor}\_iftrue \_ea\_auscan\_ea{\_fielddata}[editor]\_else
@@ -92,6 +93,13 @@
    \_sdef{_fd:\_fieldname\_ea}\_ea{\_fielddata}%
    \_nextfield
 }
+
+   \_doc -----------------------------
+   \`\_fieldalias``{<new-name>}{<given-name>}`
+   defines `\_fia:<new_name>` as <given-name>.
+   \_cod -----------------------------
+
+\_def\_fieldalias#1#2{\_lowercase{\_sxdef{_fia:#1}{#2}}}
 
    \_doc -----------------------------
    The \`\_auscan``{<authors/editors-names>}[<field-name>]` reads the specific Bib\TeX/
@@ -465,7 +473,10 @@ The `.bib` files include records in the format:
 \endtt
 %
 see the file `demo/op-biblist.bib` for a real example. The <entry-types> and
-<field-names> are case insensitive.
+<field-names> are case insensitive. More field-names can behave equally if the
+\^`\_fieldalias``{<new-field-name>}{<given-field-name>}` is used in a style
+file. If a <new-field-name> is declared by this command and it is used in the `.bib`
+file then the effect is the same as if it was used the <given-field-name>.
 
 Ancient Bib\TeX/ has read such files and has generated files appropriate for
 reading by \LaTeX. It has worked with a set of <entry-types>, see the www
@@ -654,6 +665,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+2023-06-25: \_fieldalias introduced
 2023-06-07: bug fix (\_namecount declaration)
 2023-06-06: \_slet{_bes:#1}{_relax}: bugfix when label not found and sorting
 2023-06-05: @TEXCODE introduced + more consistent doc

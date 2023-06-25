@@ -151,24 +151,10 @@
 }
 
    \_doc -----------------------------
-   Non-standard field names.
-   \_cod -----------------------------
-
-\_CreateField {ednote}
-\_CreateField {citedate}
-\_CreateField {numbering}
-\_CreateField {isbn}
-\_CreateField {issn}
-\_CreateField {doi}
-\_CreateField {url}
-\_CreateField {bibmark}
-
-   \_doc -----------------------------
    Sorting.
    \_cod -----------------------------
 
-\_SortingOrder{name,year}{lfvj}
-\_SpecialSort {key}
+\_fieldalias {key} {sortedby}
 
    \_doc -----------------------------
    Supporting macros.
@@ -853,7 +839,8 @@ yearprint value) is also used in the text-oriented bib-marks when
 `\nonumcitations` is set.
 
 If you have some problems with name sorting, you can use the hidden field
-`sortedby`, which is used for sorting instead of the \"Lastname Firstname(s)"
+`sortedby` (or `key` field with the same effect).
+It can be used for sorting instead of the \"Lastname Firstname(s)"
 of the first author. If the `sortedby` field is unset then the \"Lastname Firstname(s)"
 is used for sorting normally. Example:
 
