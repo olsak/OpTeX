@@ -215,6 +215,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#pglists">Listings of all nodes in selected pages</a>
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
+    <li><a href="#sidenotes">Non-overlapping margin notes</a>
 </ul>
 
 <li>Sections
@@ -4745,6 +4746,20 @@ the \output routine in order to run Lua function lvd.show_page_elements just
 before \shipout.
 
 <p CLASS=datum>(0106) -- P. O. 2023-04-14<p>
+<hr>
+
+<h2><a name="sidenotes"></a>Non-overlapping margin notes</h2>
+
+<p>OpTeX provides the \mnote macro which vertically aligns first line of
+the margin note with the line where \mnote is used. This may lead to overlap
+margin notes (for example if they have many lines and are close together.
+User can use \mnoteskip in order to solve this problem manually. But there
+exists another approach which puts the mnotes to suitable places
+automatically. It is based on the Lua code, see
+<a href="https://tex.stackexchange.com/questions/689656#689656">
+the answer at the stack exchange site</a>.
+
+<p CLASS=datum>(0114) -- Max Chernoff, 2023-06-27<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
