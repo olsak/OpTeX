@@ -7,7 +7,7 @@
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
- \caps ...... caps & small caps (\rm, simple alphabet only!)^^J
+ \caps ...... caps & small caps (only \rm with simple alphabet!)^^J
 }}
 
 % Modes
