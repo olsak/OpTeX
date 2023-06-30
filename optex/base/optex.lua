@@ -675,9 +675,9 @@ local function set_node_color(n, color) -- "1 0 0 rg" or "0 g", etc.
         attr = tex_getcount(color_count)
         tex_setcount(color_count, attr + 1)
         local strattr = tostring(attr)
-        token_setmacro("_color::"..color, strattr)
-        token_setmacro("_color:"..strattr, color)
-        token_setmacro("_color-s:"..strattr, string.upper(color))
+        token_setmacro("_color::"..color, strattr, "global")
+        token_setmacro("_color:"..strattr, color, "global")
+        token_setmacro("_color-s:"..strattr, string.upper(color), "global")
     end
     setattribute(todirect(n), color_attribute, attr)
 end
