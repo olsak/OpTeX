@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Basic macros for OpTeX <2023-05-19>} % preloaded in format
+\_codedecl \table {Basic macros for OpTeX <2023-06-27>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -418,7 +418,7 @@
 
 \_long\_def\_frame#1{%
    \_hbox{\_vrule\_vtop{\_vbox{\_hrule\_kern\_vvkern
-      \_hbox{\_kern\_hhkern\_relax#1\_kern\_hhkern}%
+      \_hbox{\_kern\_hhkern{#1}\_kern\_hhkern}%
    }\_kern\_vvkern\_hrule}\_vrule}}
 \_public \frame ;
 
@@ -591,6 +591,7 @@ after the second one.
 
 \_endinput
 
+2023-06-27 \frame: argument in group
 2023-05-19 \_tableparB,C: no strut when \tskip is processed (bug fixed).
 2022-12-26 \tabdeclare: use {##} in order to allow a\over b in table items
 2022-05-03 \_let\_tablereplstring\_relax removed and {...} encloses whole \_tableB body
