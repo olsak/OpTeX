@@ -1,12 +1,13 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2023-01-17>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2023-07-03>} % preloaded in format
 
    \_doc -----------------------------
-   \`\loadmath` `{<Unicode-math font>}` loads the given font. It does:
+   \`\loadmath` `<optional-factor> {<Unicode-math font>}` loads the given font. It does:
    \begitems
    * define \`\_unimathfont` as `<Unicode-math font>`,
    * redefine `\normalmath` and `\boldmath` macros to their Unicode counterparts,
+   * save the `<optional-factor>` as scaling factor, see also \^`\_mfactor`,
    * load the `\_unimathfont` by `\normalmath`,
    * print information about the loaded font on the terminal,
    * redefine all encoding dependent setting by `\input unimath-codes.opm`,
@@ -21,16 +22,17 @@
 \_def\_noloadmath{\_mathloadingfalse}
 \_def\_doloadmath{\_mathloadingtrue}
 
-\_def\_loadmath#1{%
+\_def\_loadmath#1#{\_loadmathA{#1}}
+\_def\_loadmathA#1#2{%
    \_ifmathloading
    \_initunifonts
-   \_isfont{#1}\_iffalse
-      \_opwarning{Math font "#1" not found, skipped...}%
+   \_isfont{#2}\_iffalse
+      \_opwarning{Math font "#2" not found, skipped...}%
    \_else
-      \_def\_unimathfont{#1}%
+      \_sdef{_mfactor:1}{#1}\_def\_unimathfont{#2}%
       \_let\_normalmath = \_normalunimath  \_let\_boldmath = \_boldunimath
       \_normalmath
-      \_wterm {MATH-FONT: "#1" -- unicode math prepared.}%
+      \_wterm {MATH-FONT: "#2" -- unicode math prepared.}%
       \_ifx\_ncharrmA\_undefined \_opinput {unimath-codes.opm}\_fi
       \_mathloadingfalse
    \_fi\_fi}
@@ -237,10 +239,14 @@
 \_endcode
 
 
-The \^`\loadmath` `{<Unicode-math font>}` macro loads math fonts and
+The \^`\loadmath` `<optional-factor> {<Unicode-math font>}` macro loads the given math font and
 redefines all default math-codes using `\input unimath-codes.opm`.
 If Unicode-math font is loaded then \^`\_mathloadingfalse`
 is set, so the new Unicode-math font isn't loaded until \^`\doloadmath` is used.
+
+The `<optional-factor>` is scaling factor of loaded font with respect to the
+size of the text font. It can be used if the used text font and loaded math font have
+incompatible ex height. If missing then the scaling factor is 1.
 
 \^`\loadboldmath` `{<bold-font>} \to {<normal-font>}` loads bold variant only
 if `<normal-font>` was sucessully loaded by the previous `\loadmath`. For example:
@@ -337,6 +343,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2023-07-03 \loadmath: optional scaling factor introduced
 2023-01-17 \mathchars: \int operators re-implemented
 2023-01-15 \_def\_umathrange moved to unimath-codes.opm
 2023.01-15 \themathcodeclass etc. introduced

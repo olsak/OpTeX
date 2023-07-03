@@ -138,7 +138,7 @@
    \`\_mfactor` sets scaling factor for given math fonts family
    related to text font size. It does the setting `\_ptmunit=<factor>\_ptunit` where
    the <factor> is defined by `\sdef{_mfactor:<family>}{<factor>}`.
-   For eample, you can set `\sdef{_mfactor:1}{0.95}` if you found that
+   For example, you can set `\sdef{_mfactor:1}{0.95}` if you found that
    this scaling of math family 1 gives better visual compatibility
    with used text fonts. If not declared then scaling factor is~1.
    \_cod -----------------------------
