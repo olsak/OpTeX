@@ -256,6 +256,9 @@
 \_faminfo [OldStandard] {inspired by a typeface most commonly used in old books} {f-oldstandard}
    { -,\caps: {\rm\bf\it\bi} }
 
+\_famfrom {Séamas Ó Brógáin}
+\_faminfo [Clara] {Clara, a serif font family} {f-clara}
+   { -: {\rm\bf\it\bi} \caps: {\rm} }
 
 \_endcode
 

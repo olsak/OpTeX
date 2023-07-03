@@ -1,0 +1,24 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Clara] \Clara {Clara, a serif font family}
+   {\caps} {\rm \bf \it \bi}
+   {XITSMath} {[clarar]}
+   {\_def\_fontnamegen {[clara\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \caps ...... caps & small caps (only \rm with simple alphabet!)^^J
+}}
+
+% Modes
+\_moddef \resetmod {\_fsetV caps={} \_fvars r b i bi }
+\_moddef \caps     {\_fsetV caps=+smcp; } % onum; set by smcp; feature
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_initfontfamily % New font family must be initialized
+
+\_loadmath {[XITSMath-Regular]}
+\_loadboldmath {[XITSMath-Bold]} \to {[XITSMath-Regular]}
+
+\_endcode
+
