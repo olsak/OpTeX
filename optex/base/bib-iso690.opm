@@ -291,7 +291,7 @@
    \_bprintb [url]        {\_preurl\_url{##1}. }{}%
 }
 \_sdef{_print:phdthesis}{\_def\_thesistype{\_Mtext{bib.phdthesis}}\_cs{_print:thesis}}
-\_sdef{_print:mastershesis}{\_def\_thesistype{\_Mtext{bib.masthesis}}\_cs{_print:thesis}}
+\_sdef{_print:mastersthesis}{\_def\_thesistype{\_Mtext{bib.masthesis}}\_cs{_print:thesis}}
 \_sdef{_print:bachelorsthesis}{\_def\_thesistype{\_Mtext{bib.bachthesis}}\_cs{_print:thesis}}
 
 \_sdef{_print:online}{%
