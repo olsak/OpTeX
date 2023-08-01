@@ -1,0 +1,29 @@
+rockspec_format = "3.0"
+package = "@NAME@"
+version = "@VERSION@-@REVISION@"
+source = {
+  url = "https://petr.olsak.net/ftp/olsak/optex/@NAME@-@VERSION@.zip",
+  tag = "@VERSION@",
+}
+description = {
+  summary = "OpTeX Markup Language Standard (OMLS) parser",
+  detailed = [[
+    OpTeX is the LuaTeX format based on Plain TeX and OPmac. OpTeX
+    Markup Language Standard (OMLS) defines a subset of OpTeX that is
+    suitble for format conversion and analysis. This module provides a
+    Lua implementation of OMLS.
+  ]],
+  homepage = "https://petr.olsak.net/optex/",
+  license = "Public Domain",
+  issues_url = "https://github.com/olsak/OpTeX/issues",
+  maintainer = "Petr Olsak <petr@olsak.net>",
+}
+dependencies = {
+  "lua >= 5.1",
+}
+build = {
+  type = "builtin",
+  modules = {
+    ["omls"] = "src/omls.lua",
+  },
+}
