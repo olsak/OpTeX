@@ -206,6 +206,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#MPxx">Macro parameters selectively expanded</a>
     <li><a href="#addand">Adding "and" before the last item in lists</a>
     <li><a href="#createfile">Creating files with given contents</a>
+    <li><a href="#ispageodd">Testing if currentpage is odd</a>
 </ul>
 
 <li>Lua matters
@@ -4506,6 +4507,45 @@ of \scantoendline because user may want to create an empty file using
 first ^^J by \ignoreit during \write. 
 
 <p CLASS=datum>(0091) -- P. O. 2022-10-07<p>
+<hr>
+
+<h2><a name="ispageodd"></a>Testing if current page is odd</h2>
+
+<p>TeX creates pages asynchronously, so we are unsure what page will be used
+for a material which is created by our macro. For example we need a
+different design of section headers at odd/even pages but we cannot simply say
+\ifodd\pageno in our macro because we are unsure at what page the created
+section header will be printed. But we can implement the desired test using
+.ref file. When the document is processed by TeX again then the .ref file is read
+and the positions of the pages are known.
+
+<p>We implement the testing macro \ispageodd\iftrue (or \iispageodd\iffalse)
+which can be used in our macros like this:
+
+<pre>
+The current page is \ispageodd\iftrue odd (right side)\else even (left side)\fi  
+</pre>
+
+<p>The impplementation is based on \_mnotenum and \_Xmnote used by OpTeX for margin notes.
+It doesn't interferre with the \mnote macro because each occurrence of \mnote or
+\ispageodd has its individual \_mnotenum.
+
+<pre>
+\def\ispageodd#1{%
+   \_incr\_mnotenum 
+   \_ifcsname _mn:\_the\_mnotenum \_endcsname
+       \_expanded{\_let \_noexpand\pgtype =\_cs{_mn:\_the\_mnotenum}}\_else
+       \_let\pgtype=\_right \_opwarning{pageside is unknown, TeX me again}\_openref
+   \_fi
+   \_wref\_Xmnote{}%
+   #1\_else \_ea\_unless\_fi \_ifx\pgtype\_right
+}
+</pre>
+
+<p>Note: the \ispageodd macro isn't expandable and use it in horizontal mode
+or inside a box.
+
+<p CLASS=datum>(0115) -- P. O. 2023-08-01<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
