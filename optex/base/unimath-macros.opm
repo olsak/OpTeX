@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2023-07-03>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2023-08-28>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `<optional-factor> {<Unicode-math font>}` loads the given font. It does:
@@ -135,13 +135,13 @@
 
 \_def\_loadumathfamily{\_afterassignment\_loadumathfamilyA \_chardef\_mfam}
 \_def\_loadumathfamilyA #1#2 {\_mfactor
-  \_font\_mF \_umathname{#1}{\_textmff   \_mparams #2} at\_sizemtext \_textfont        \_mfam=\_mF
-  \_font\_mF \_umathname{#1}{\_scriptmff \_mparams #2} at\_sizemtext \_scriptfont      \_mfam=\_mF
-  \_font\_mF \_umathname{#1}{\_sscriptmff\_mparams #2} at\_sizemtext \_scriptscriptfont\_mfam=\_mF
+  \_font\_mF\_umathname{#1}{\_textmff   \_mparams #2} at\_sizemtext   \_textfont        \_mfam=\_mF
+  \_font\_mF\_umathname{#1}{\_scriptmff \_mparams #2} at\_sizemscript \_scriptfont      \_mfam=\_mF
+  \_font\_mF\_umathname{#1}{\_sscriptmff\_mparams #2} at\_sizemsscript\_scriptscriptfont\_mfam=\_mF
 }
-\_def\_textmff   {ssty=0;mathsize=1;}
-\_def\_scriptmff {ssty=1;mathsize=2;}
-\_def\_sscriptmff{ssty=2;mathsize=3;}
+\_def\_textmff   {ssty=0;}  %\_def\_textmff   {ssty=0;mathsize=1;} % aug. 2023:
+\_def\_scriptmff {ssty=1;}  %\_def\_scriptmff {ssty=1;mathsize=2;} % it seems that
+\_def\_sscriptmff{ssty=2;}  %\_def\_sscriptmff{ssty=2;mathsize=3;} % mathsize doesn't work
 \_def\_mparams{}
 
    \_doc -----------------------------
@@ -343,6 +343,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2023-08-28 mathsize doesn't work now
 2023-07-03 \loadmath: optional scaling factor introduced
 2023-01-17 \mathchars: \int operators re-implemented
 2023-01-15 \_def\_umathrange moved to unimath-codes.opm
