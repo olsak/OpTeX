@@ -162,7 +162,7 @@
 \_monthw et jaanuar veebruar märts aprill mai juuni
             juuli august september oktoober november detsember
 \_sdef{_mt:today:et}{\_the\day.~\_mtext{m\_the\_month} \_the\_year}
-\_quotationmarks{„“„“}
+\_quotationmarks et {„“„“}
 
 \_langdata he {Hebrew} % -----------------------------------------------
 \_langw he  פרק      טבלה       איור       נושא
