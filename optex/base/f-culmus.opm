@@ -9,7 +9,7 @@
 Modifiers (subfamilies):^^J
  \roman ...... \rm, \it = Medium, \bf, \bi = Bold (Roman)^^J
  \sans  ...... \rm, \it = Light, \bf, \bi = Bold (Sans)^^J
- \mono  ...... \rm, \it = Book, \bf, \bi = SemiBold (Mono)^^J
+ \mono  ...... \rm, \it = Book, \bf, \bi = Bold (Mono)^^J
 }}
 
 % modifiers (they select a subfamily)
