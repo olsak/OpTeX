@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Culmus] \Culmus {Hebrew fonts from the Culmus project}
-        {\roman \sans \ttset} {\rm \bf \it \bi \tt} {}
+        {\roman \sans \ttset} {\rm \bf \it \bi} {}
         {[DavidCLM-Medium]}
         {\_def\_fontnamegen {[\_subfamV CLM-\_currV]:script=hebr;\_fontfeatures}}
 
