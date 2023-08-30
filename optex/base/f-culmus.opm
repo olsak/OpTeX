@@ -1,0 +1,15 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Culmus] \Culmus {Hebrew fonts from the Culmus project}
+        {\roman \sans \ttset} {\rm \bf \it \bi \tt} {}
+        {[DavidCLM-Medium]}
+        {\_def\_fontnamegen {[\_subfamV CLM-\_currV]:script=hebr;\_fontfeatures}}
+
+
+% main modifiers (they select a subfamily)
+\_moddef \resetmod {\_fsetV subfam=David \_fvars Medium Bold MediumItalic BoldItalic }
+\_moddef \sans     {\_fsetV subfam=Nachlieli \_fvars Light Bold LightOblique BoldOblique }
+\_moddef \ttset    {\_fsetV subfam=MiriamMono \_fvars Book Bold Oblique BoldOblique }
+\_initfontfamily % new font family must be initialized
+
+\_endcode
