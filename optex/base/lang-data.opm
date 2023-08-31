@@ -171,8 +171,8 @@
             {עבודת גמר לתואר בוגר אוניברסיטה} {עבודת גמר לתואר מוסמך אוניברסיטה} {דיסרטציה}
 \_monthw he ינואר פברואר מרץ אפריל מאי יוני
             יולי אוגוסט ספטמבר אוקטובר נובמבר דצמבר
-\_sdef{_mt:today:he}{{\textdir TLT\_the\day} ב\_mtext{m\_the\_month}, {\textdir TLT\_the\_year}}
-\_quotationmarks he {„”‚’‎}
+\_sdef{_mt:today:he}{{\_textdir TLT\_the\_day} ב\_mtext{m\_the\_month}, {\_textdir TLT\_the\_year}}
+\_quotationmarks he {„”‚’}
 
 \_def \_sortingdatahe {%
   /,{ },-,&,@,%
