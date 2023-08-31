@@ -259,6 +259,10 @@
 \_famfrom {Séamas Ó Brógáin}
 \_faminfo [Clara] {Clara, a serif font family} {f-clara}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
+   
+\_famfrom {Maxim Iorsh}
+\_faminfo [Culmus] {Hebrew roman, sans and mono fonts from the Culmus project} {f-culmus}
+   {\roman,\sans,\mono: {\rm\bf\it\bi}}
 
 \_endcode
 

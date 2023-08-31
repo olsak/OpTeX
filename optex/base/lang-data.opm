@@ -162,10 +162,40 @@
 \_monthw et jaanuar veebruar märts aprill mai juuni
             juuli august september oktoober november detsember
 \_sdef{_mt:today:et}{\_the\day.~\_mtext{m\_the\_month} \_the\_year}
-\_quotationmarks{„“„“}
+\_quotationmarks et {„“„“}
+
+\_langdata he {Hebrew} % -----------------------------------------------
+\_langw he  פרק      טבלה       איור       נושא
+\_langb he  {, ו- }  { ועמיתים.} {\,מהדורה} {מצוטט מ-~} {כרך~} {מס׳~} {עמודים~} {עמ׳~} {:מחבר~} {:מחברים~}
+            {זמין מ- } {זמין גם מ- }
+            {עבודת גמר לתואר בוגר אוניברסיטה} {עבודת גמר לתואר מוסמך אוניברסיטה} {דיסרטציה}
+\_monthw he ינואר פברואר מרץ אפריל מאי יוני
+            יולי אוגוסט ספטמבר אוקטובר נובמבר דצמבר
+\_sdef{_mt:today:he}{{\textdir TLT\_the\day} ב\_mtext{m\_the\_month}, {\textdir TLT\_the\_year}}
+\_quotationmarks he {„”‚’‎}
+
+\_def \_sortingdatahe {%
+  /,{ },-,&,@,%
+  אﬡאּאָאַ,בבֿבּ,גגּ,דﬢדּ,הﬣהּ,ווּוֹ,זזּ,ח,טטּ,ייּיִ,%
+  כﬤכּכֿךךּ,לﬥלּ,ממּםﬦ,ננּן,ססּ,עﬠ,פפּפֿףףּ,%
+  צצּ,קקּ,ררּﬧ,ששּשׁשּׁשׂשּׂ,תתּﬨ,%
+  0,1,2,3,4,5,6,7,8,9,'%
+}
+\_def \_ignoredcharshe {%
+^^^^0591,^^^^0592,^^^^0593,^^^^0594,^^^^0595,^^^^0596,^^^^0597,^^^^0598,%
+^^^^0599,^^^^059a,^^^^059b,^^^^059c,^^^^059d,^^^^059e,^^^^059f,%
+^^^^05a0,^^^^05a1,^^^^05a2,^^^^05a3,^^^^05a4,^^^^05a5,^^^^05a6,^^^^05a7,%
+^^^^05a8,^^^^05a9,^^^^05aa,^^^^05ab,^^^^05ac,^^^^05ad,^^^^05ae,^^^^05af,%
+^^^^05b0,^^^^05b1,^^^^05b2,^^^^05b3,^^^^05b4,^^^^05b5,^^^^05b6,^^^^05b7,%
+^^^^05b8,^^^^05b9,^^^^05ba,^^^^05bb,^^^^05bc,^^^^05bd,^^^^05be,^^^^05bf,%
+^^^^05c0,^^^^05c1,^^^^05c2,^^^^05c3,^^^^05c4,^^^^05c5,^^^^05c6,^^^^05c7,%
+^^^^05f3,^^^^05f4%
+}
+\_def \_compoundcharshe {}
 
 \_endcode
 
+2023-08-30: Hebrew data added
 2022-10-11: \postexhyphenchar setting added to cs and sk languages
 2022-10-10: { ed.} changed to {\,ed.}
 2022-08-31: \_sortingdatahu corrected
