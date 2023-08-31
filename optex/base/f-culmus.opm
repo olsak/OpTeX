@@ -19,7 +19,7 @@ Modifiers (subfamilies):^^J
 \_moddef \resetmod {\_fsetV subfam=David \_fvars Medium Bold MediumItalic BoldItalic }
 \_moddef \roman    {\_fsetV subfam=David \_fvars Medium Bold MediumItalic BoldItalic }
 \_moddef \sans     {\_fsetV subfam=Nachlieli \_fvars Light Bold LightOblique BoldOblique }
-\_moddef \mono     {\_fsetV subfam=MiriamMono \_fvars Book Bold Oblique BoldOblique }
+\_moddef \mono     {\_fsetV subfam=MiriamMono \_fvars Book Bold BookOblique BoldOblique }
 \_initfontfamily % new font family must be initialized
 
 \_endcode
