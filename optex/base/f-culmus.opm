@@ -6,6 +6,9 @@
         {\_def\_fontnamegen {[\_subfamV CLM-\_currV]:script=hebr;\_fontfeatures}}
 
 \_wlog{\_detokenize{%
+script=hebr is set by default,^^J
+use e.g \setff{script={}}\rm^^J
+to suppress this.^^J
 Modifiers (subfamilies):^^J
  \roman ...... \rm, \it = Medium, \bf, \bi = Bold (Roman)^^J
  \sans  ...... \rm, \it = Light, \bf, \bi = Bold (Sans)^^J
