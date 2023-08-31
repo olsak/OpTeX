@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+   
+<HTML><HEAD>
+<META HTTP-Equiv="Content-Type" CONTENT="text/html; charset=utf8">
+<link rel="shortcut icon" type="image/x-icon" href="../favicon.ico">
+
+<TITLE>OpTeX</TITLE>
+
+<style type="text/css">
+<!--
+ .lmarg {margin-left: -200px; margin-top: -15px;
+        width: 200px; height: 0px;
+        font-weight: bold;
+        text-align: right;
+        position: relative; top: 15px; left: -15px; 
+        overflow; }
+ .rmarg {margin-left: 13px; margin-top: -15px;
+        width: 270px; height: 0px;
+        text-align: left;
+        position: relative; top: 15px; right: -600px; 
+        overflow; }
+  .datum {text-align: right; margin-bottom: -10px; font-size: 80%}
+  p   { text-align: justify }
+  pre { width: 600px; overflow; }  
+-->
+</style>
+</HEAD>
+<BODY bgcolor="#FFFFFF">
+
+<table width="600" border="0" cellspacing="0" cellpadding="0"
+align="center">
+<tr><td>
+  <div STYLE="text-align: center">
+  <IMG SRC="../img/optex-logo.jpg" ALT="OpTeX" border=0>
+  </div>
+
+
+<h2 style="text-align: center"> LuaTeX format with extended plainTeX macros </h2>
+
+<h2 style="text-align: center"> Bug in luaotfload version 3.24 2023-08-19 </h2>
+
+<p>Unfortunately, OpTeX depends on the package luaotfload which is managed
+by LaTeX team. They are copying most of the code from ConTeXt (by Hans
+Hagen) and they add a few additional features.
+
+<p>The luaotfload package is used by OpTeX for loading Unicode fonts in OpenType
+format. 
+
+<p>The version 3.24 2023-08-19 of the luaotfload package canceled the support of
+<b>mathsize</b> font feature, but OpTeX math typesetting is based on this feature.
+The result is that script size and scriptscript sizes are not smaller than
+text font size, i.e. the Unicode math typesetting is completely broken.
+See also the discussion about this at
+<a href="https://github.com/latex3/luaotfload/issues/261">the luaoftload project
+page</a>.
+
+<p>What you can do: you can apply 
+<a href="https://github.com/olsak/OpTeX/commit/6229a20d4115326f9481b47f9ae1b9dffe1f2602">the patch in OpTeX</a>
+or
+<a href="https://github.com/latex3/luaotfload/commit/90bb476c85e2465a724310f8099ab837dc2f5f15">the patch of luaotfload</a>
+or you can downgrade the luaotfload package to a previous version (before 3.24).
+
+<p>And you can wait for a new release of the luaotfload package...
+
+</td></tr>
+</table>
+
+</BODY></HTML>
