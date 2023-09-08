@@ -208,6 +208,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#addand">Adding "and" before the last item in lists</a>
     <li><a href="#createfile">Creating files with given contents</a>
     <li><a href="#ispageodd">Testing if currentpage is odd</a>
+    <li><a href="#xdetokenize">Not duplicating the hash characters</a>
 </ul>
 
 <li>Lua matters
@@ -4574,6 +4575,30 @@ or inside a box.
 
 <p CLASS=datum>(0115) -- P. O. 2023-08-01<p>
 <hr>
+
+<h2><a name="xdetokenize"></a>Not duplicating the hash characters</h2>
+
+<p>If you do \toks0={A text with # inside it}, \the\toks0, then the
+# character (catcode 6) is duplicated. The same is done if you
+use \detokenize{A text with # inside it}. But we sometimes want to have
+another \detokenize command which doesn't do this duplication. The luatex
+manual mentions that the optional argument -2 of tex.print and tex.sprint works
+like \the\toks. It is not true, it works like \detokenize, moreover,
+the hash characters (catcode 6 transformed to catcode 12) are not duplicated.
+
+<p>You can define
+
+<pre>
+\def\xdetokenize#1{\directlua{tex.sprint(-2,"\luaescapestring{#1}")}}
+</pre>
+
+<p>Then the \xdetokenize expands to the result like \detokenize but each hash
+character with catcode 6 is transformed to the <i>single</i> hash character
+with catcode 12.
+
+<p CLASS=datum>(0117) -- P. O. 2023-09-08<p>
+<hr>
+
 
 <p CLASS="lmarg">Lua matters</p>
 
