@@ -157,7 +157,7 @@
    example:
    \begtt
    \_preplangmore ru {\_frenchspacing \_setff{script=cyrl}\selectcyrlfont}
-   \_addto\_langdefaut {\_setff{}\selectlatnfont}
+   \_addto\_langdefault {\_setff{}\selectlatnfont}
    \endtt
    The macros `\selectcyrlfont` and `\selectlatnfont` are not defined in
    \OpTeX/. If you follow this example, you have to define them after your

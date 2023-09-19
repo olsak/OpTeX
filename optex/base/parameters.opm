@@ -57,6 +57,17 @@
 \_splittopskip=10pt
 
    \_doc -----------------------------
+   The following two registers were introduced to fix a couple of bugs
+   in the \LuaTeX/ engine. When `\matheqdirmode` is positive short
+   skip detection around display equations will work with right to left 
+   typesetting. When `\breakafterdirmode` is set to 1 a glue after a dir
+   node will not be ignored.
+   \_cod -----------------------------
+
+\_matheqdirmode=1
+\_breakafterdirmode=1
+
+   \_doc -----------------------------
    \secc Plain \TeX/ registers
    Allocate registers that are used just like in plain \TeX/.\nl
    \`\smallskipamount`, \`\medskipamount`, \`\bigskipamount`,
