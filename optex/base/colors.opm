@@ -381,6 +381,10 @@ color data. This mapping is used just before each `\shipout` in output routine.
 The \^`\_preshipout` pseudo-primitive is used here, it converts attribute
 values to internal PDF commands for selecting colors.
 
+The concept with color attributes has one limitation: the colors cannot be changed
+inside a ligature unless the ligature is broken manually. It means that
+`{\Red f}i` doesn't lead to the expected result but `{\Red f\null}i` does.
+
 \secc Color mixing
 
 The color mixing processed by the \^`\colordef` is done in the subtractive color
