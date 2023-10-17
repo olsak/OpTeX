@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2023-01-16>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2023-10-17>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -336,6 +336,20 @@
 \_public \casesof ;
 
    \_doc -----------------------------
+   \`\qcasesof` `{<string>} <list of cases>` behaves like \^`\casesof` but it
+   compares phrases with the given <string> using \^`\isequal`.
+   The <list of cases> includes pairs
+   `{<phrase>} {<what to do if string=phrase>}` finalized by a
+   pair `\_finc {<what to do else>}`.
+   \_cod -----------------------------
+
+\_long\_def \_qcasesof #1#2#3{\_ifx\_finc#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi
+   {#3}{\_isequal{#1}{#2}\_iftrue \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
+                                 {\_finc{#3}}{\_qcasesof{#1}}}%
+}
+\_public \qcasesof ;
+
+   \_doc -----------------------------
    \`\xcasesof` `<list of pairs>` extends the features of the macro \^`\casesof`.
    Each pair from the `<list of pairs>` is in the format
    `{<if statement>}{<what to do>}`, only the last pair must have the different
@@ -346,22 +360,23 @@
    \begtt
    \message {The \tmpnum has \xcasesof
                      {\ifnum\tmpnum>0 } {positive}
-                     {\ifnum\tmpnum=0 } {equal to zero}
-                     \_finc             {negative}       value}
+                     {\ifnum\tmpnum=0 } {zero}
+                     \_finc             {negative} value}
    \endtt
    The \^`\xcasesof` macro works with principle: first true condition wins,
    next conditions are not evaluated.
    \_cod -----------------------------
 
-\_long\_def \_xcasesof #1{\_xcasesofA #1\_finc}
-\_long\_def \_xcasesofA #1#2\_finc #3{%
-   \_ifx #1\_finc \_ea\_ignoresecond\_else \_ea\_usesecond\_fi
-   {#3}{#1#2\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#3}}{\_xcasesof}}%
+\_def \_xcasesof {\_nospacefuturelet\_next\_xcasesofA}
+\_def \_xcasesofA {\_ifx\_next\_finc \_ea\_usesecond \_else \_ea \_xcasesofB \_fi}
+\_long\_def \_xcasesofB #1#2{%
+   #1\_ea\_ignoresecond\_else \_ea\_usesecond\_fi {\_finc{#2}}{\_xcasesof}%
 }
 \_public \xcasesof ;
 
 \_endcode
 
+2023-10-17 \qcasesof introduced, \xcasesof reimplemented.
 2023-01-16 \isnextchar created expandable.
 2022-12-02 \xcasesof: its first parameter is \long too.
 2022-11-29 renamed to \casesof, \xcasesof.

@@ -1780,7 +1780,8 @@ because there are 150 paragraphs with neutral text prepared for you.
 The \^`\lipsum` macro is equivalent to \^`\lorem`. Example: \^`\lipsum[1-150]`
 prints all prepared paragraphs.
 
-If the dot follows the argument before closing `]` (for example \^`\lipsum[3.]`)
+If the dot follows the argument before closing `]` (for example \^`\lipsum[3.]`
+or \^`\lipsum[3.1]`)
 then only first sentence from given paragraph is printed.
 
 \secc Logos
@@ -1919,8 +1920,8 @@ documentation.
 \^`\afterfi` `{<text>}<ignored>\fi` expands to `\fi<text>`.\nl
 \^`\basefilename` \^`\currfile` returns the name of the file currently read.\nl
 \^`\bp`` {<dimen expression>}` expands \TeX/ dimension to decimal number in `bp` without unit.\nl
-\^`\casesof` `<token> <list of cases>` expands to a given case by meaning of the `<token>`.
-   See also \^`\xcasesof`.\nl
+\^`\casesof` `<token> <list of cases>` expands to a given case by the given `<token>`.
+   See also \^`\qcasesof`, \^`\xcasesof`.\nl
 \~`\_codedecl`` <sequence> {<info>}` is used at beginning of macro files.\nl
 \~`\colordef`` \macro {<mix of colors>}` declares `\macro` as color switch.\nl
 \^`\cs` `{<string>}` expands `\<string>`.\nl
