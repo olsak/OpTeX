@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2022-05-04>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2023-10-17>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -125,6 +125,34 @@
 \_let \lorem=\lipsum
 
    \_doc -----------------------------
+   Selected macros from \ulink[https://petr.olsak.net/optex/optex-tricks.html]{\OpTeX/ tricks}
+   are registered using \`\_regtrick``<cs-name>`. The <cs-name> is defined
+   as \^`\_loadtrick` `<cs-name> <cs-name>`. When a user runs such a registered
+   <cs-name> then \`\_loadtrick``<cs-name>` reads the appropriate code from the
+   file `optex-tricks.opm` and the <cs-name> is redefined. Finally, <cs-name>  is run again.
+   The first run of <cs-name> must be done in vertical mode.\nl
+   The `optex-tricks.opm` file includes blocks started by `\_trick` followed
+   by the declared <cs-names> followed by semicolon followed by the code
+   with declarations of <cs-names> itself.
+   The `optextrick` name space is used during reading the code from
+   the file. Only registered control sequences are re-defined directly
+   in user name space.
+   \_cod -----------------------------
+
+\_def\_regtrick#1{\_def#1{\_loadtrick#1#1}}
+\_def\_loadtrick#1{\_resetnamespace{optextrick}\_setctable\_optexcatcodes
+   \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
+   \_long\_def\_loadtrickA ##1#1##2;{}%
+   \_wlog{Loading OpTeX trick macros for \_string#1}%
+   \_ea\_loadtrickA \_input {optex-tricks.opm}\_relax\_restorectable
+   \_endnamespace
+}
+\_def\_trick #1;{\_endinput}
+
+\_xargs \_regtrick \begfile \beglua \begLUA \logginglua
+   \sethours \setminutes \setseconds \setweekday \showpglists \runsystem ;
+
+   \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to
    specify something different than `\par` at empty lines. We set `\_par`
    (see bellow) in \OpTeX/ version 1.04+ and newer. Some macros were rewritten
@@ -198,6 +226,7 @@
 
 \_endcode
 
+2023-10-17 \_loadtrick introduced.
 2022-05-04 \lipsum[<num>]. changed to \lipsum[<num>.] to keep macro expandable.
 2022-04-21 syntax \lipsum[<num>]. introduced.
 2022-02-16 declaration of @-names moved here from plain-at.opm.

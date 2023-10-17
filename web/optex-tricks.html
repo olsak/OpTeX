@@ -15,10 +15,11 @@
         text-align: right;
         position: relative; top: 15px; left: -15px; 
         overflow; }
- .rmarg {margin-left: 13px; margin-top: -15px;
+ .rmarg {margin-left: 15px; margin-top: -15px;
         width: 200px; height: 0px;
         text-align: left;
-        position: relative; top: 15px; right: -600px; 
+        position: relative; top: 15px; right: -600px;
+        color: blue;
         overflow; }
   .datum {text-align: right; margin-bottom: -10px; font-size: 80%}
   p   { text-align: justify }
@@ -51,6 +52,11 @@ the mouse.
 <p>If there exists any tip from you, OpTeX user, don't hesitate please and send
 me it. I'll welcome it and save it here (with the author of the solution
 mentioned).
+
+<p>Selected OpTeX tricks can be used directly from OpTeX document without
+need to copy the code, see section 1.7.6 of OpTeX documentation.
+The directly usable macros are marked here by the blue word "autoload:"
+in the right margin.
 
 <p><a href="http://petr.olsak.net/opmac-tricks-e.html">OPmac tricks</a> 
 can be used too but re-implementation of the code is probably
@@ -4190,6 +4196,10 @@ the \cs{lastpp:counter-name:pageno}.
 
 <h2><a name="begfile"></a>Filecontents package features</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\begfile<br>\endfile
+</p>
+
 <p>We implement something similar to filecontents.sty LaTeX package. A user
 can write:
 
@@ -4604,6 +4614,10 @@ with catcode 12.
 
 <h2><a name="beglua"></a>Processing lua code with normal characters</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\beglua<br>\endlua<br>\begLUA<br>\endLUA<br>\logginglua
+</p>
+
 <p>The \directlua primitive processes its argument with current category
 codes of characters. It means that you probably cannot directly use characters
 \, %, and you cannot use -- as prefix of lua comments because the whole
@@ -4664,6 +4678,11 @@ the \directlua primitive. The \luamacros token list is used by
 <hr>
 
 <h2><a name="dayw"></a>Printing time, date</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\sethours<br>\setminutes<br>\setseconds<br>\setweekday<br>
+declared also:<br>\hours<br>\minutes<br>\seconds<br>\weekday<br>\Othe
+</p>
 
 <p>The current date and time are saved in the TeX primitive registers
 \year (current year), \month (current month), \day (the day of the the month) and
@@ -4740,6 +4759,10 @@ to get the day in the week in given date.
 
 <h2><a name="pglists"></a>Listings of all nodes in selected pages</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\showpglists
+</p>
+
 <p>We create macro "\showpglists list-of-pages" which prints the list of all
 nodes in selected pages to the log and to the terminal for debugging
 purposes. For example
@@ -4782,6 +4805,10 @@ list \showpgs. Then it used in \_preshipout and unregistered in \_endoutput.
 <hr>
 
 <h2><a name="runsystem"></a>Running system commands during document processing</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\runsystem
+</p>
 
 <p>PdfTeX and XeTeX support \write18 for doing this. But this is not true
 when LuaTeX is used. We must to use the Lua function "os.execute()" instead

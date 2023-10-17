@@ -1,4 +1,4 @@
-%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 % This file is read from optex-doc.tex
 % Use: optex optex-doc  (three times) to create whole documentation.
@@ -1826,6 +1826,43 @@ put it as the first command in your document:
 \begtt
 \useOpTeX % we are using OpTeX format, no LaTeX :)
 \endtt
+
+\secc \OpTeX/ tricks
+%%%%%%%%%%%%%%%%%%
+
+The page \ulink[https://petr.olsak.net/optex/optex-tricks.html]{\OpTeX/ tricks}
+shows many other features of \OpTeX/. They are of different nature and they
+are typically implemented by short chunks of macro code presented at the
+page.
+
+Selected macros defiend as an \OpTeX/ trick can be used directly from your
+document without copying the code chunks into your macros.
+It is because these macros are \"registered" in \OpTeX/ (by \^`\_regtrick`
+internaly) and if you use such a macro then \OpTeX/ automatically loads the
+appropriate code chunk from an external file. These macros are listed here. More
+information about them are accesible via the external links.
+
+{
+\def\tpg[#1]{\def\tpgurl{https://petr.olsak.net/optex/optex-tricks.html\##1}}
+\def\t#1{\ea\tA\ea{\string#1}\edef\tmp{\csstring#1}\iindex{\tmp}\dest[cs:\tmp]}
+\def\tA#1{\ea\ulink\ea[\tpgurl]{#1}}
+
+\medskip
+\tpg[begfile]\t\begfile, \t\endfile\
+writes a code from the document to the given file.
+
+\tpg[beglua]\t\beglua, \t\begLUA\ enables to write LUA codes as LUA codes.
+
+\tpg[dayw]\t\sethours, \t\setminutes, \t\setseconds, \t\setweekday\
+printing time and date.
+
+\tpg[pglists]\t\showpglists\
+shows good organized list of nodes to the log file.
+
+\tpg[runsystem]\t\runsystem\
+runs the given external systme command.
+
+}
 
 \sec Summary
 %%%%%%%%%%%%

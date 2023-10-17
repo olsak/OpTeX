@@ -1,0 +1,92 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+% Selected OpTeX tricks are here, they are auto-loaded if the macro is used
+
+\_trick 0057 \begfile ;
+%%%%%%%%%%%%
+
+\newwrite\.outfile
+\def\begfile #1 {\_immediate\_openout\.outfile={#1}%
+   \_begingroup \_setverb \_endlinechar=`\^^J \.begfileA
+}
+\_ea\_def\_ea\.begfileA\_ea#\_ea1\_ea^^J\_csstring\\endfile#2^^J{\_endgroup
+   \_immediate\_write\.outfile{#1}\_immediate\_closeout\.outfile
+}
+
+\_trick 0054 \beglua \begLUA \logginglua ;
+%%%%%%%%%%%%
+
+\_newtoks\.luamacros
+\.luamacros={\_let\\=\_nbb \_edef\%{\_csstring\%}\_edef\#{\csstring\#}\_let\n=\_relax}
+\_def\beglua{\.savelineno\_bgroup \_setverb \_endlinechar=`\^^J \.begluaA}
+\_ea\_def\_ea\.begluaA\_ea#\_ea1\_csstring\\endlua^^J{\_egroup\.debuglua{#1}\_directlua{#1}}
+\_def\begLUA{\.savelineno\_bgroup \_setverb \_endlinechar=`\^^J \_catcode`\\=0 \.begLUAA}
+\_def\.begLUAA#1\endLUA^^J{\_the\_luamacros\.debuglua{#1}\_directlua{#1}\_egroup}
+\_def\.savelineno{\_edef\.tmp{\_the\_numexpr\_inputlineno+1}}
+\_let\.debuglua=\_ignoreit
+\_def\.printloglua#1{\_wlog{lua code processed (l.\.tmp):^^J#1-------------}}
+\_def\logginglua{\_let\_debuglua=\_printloglua}
+
+\_trick 0055 \sethours \setminutes \setseconds \setweekday ;
+%%%%%%%%%%%%
+
+\_newcount\.hours \_newcount\.minutes \_newcount\.seconds \_newcount\.weekday
+
+\_def\setminutes{%
+   \.minutes=\_directlua{tex.sprint(\_the\_time\_pcent 60)}\_relax
+   \.hours=\_directlua{tex.sprint(math.floor(\_the\_time/60))}\_relax
+}
+\_let\sethours=\setminutes
+\_def\setseconds{\_ea\.setsecondsA\_pdffeedback creationdate\_relax}
+\_def\.setsecondsA#1#2#3#4#5#6#7#8#9{\.setsecondsB}
+\_def\.setsecondsB#1#2#3#4#5#6#7#8\_relax{\.seconds=#6#7\_relax}
+\_def\setweekday{\.weekday=\_directlua{% Zeller's algorithm:
+      local m, y, K, J
+      m = \_the\_month \_ifnum\_month<3 +12 \_fi
+      y = \_the\_year  \_ifnum\_month<3 -1 \_fi
+      K = y \_pcent 100
+      J = math.floor(y/100)
+      tex.sprint((\_the\_day + math.floor((13*(m+1))/5) + K +
+         math.floor(K/4) + math.floor(J/4) - 2*J + 6)\_pcent 7)
+   }\_relax
+}
+\_def\.Othe#1{\_ifnum#1<10 0\_fi\_the#1}
+
+\_nspublic \hours \minutes \seconds \weekday \Othe ;
+
+\_trick 0063 \showpglists ;
+%%%%%%%%%%%%
+
+\_def\.addshowpglists{\_directlua{
+   local nodetree = require("nodetree")
+   callback.add_to_callback("pre_shipout_filter", function(head)
+         nodetree.print(head)
+         return head
+      end, "showpglists") }}
+\_gdef\.removeshowpglists{\_directlua{
+   callback.remove_from_callback("pre_shipout_filter", "showpglists") }}
+
+\_def\showpglists #1 {\_addto\.showpgs{#1,}}
+\_def\.showpgs{,}
+
+\_addto\_begoutput{%
+   \_ea\_isinlist\_ea\.showpgs\_ea{\_ea,\_the\_pageno,}\_iftrue
+      \.addshowpglists
+      \_addto\_endoutput{\.removeshowpglists}%
+   \_fi
+}
+
+\_trick 0101 \runsystem ;
+%%%%%%%%%%%%
+
+\_newcount\.exitstatus
+\_def\runsystem#1{\.exitstatus=\_directlua{
+   texio.write_nl("")
+   local status = os.execute("\_luaescapestring{#1}")
+   texio.write("log", "\_nbb runsystem{\_luaescapestring{#1}} status: " .. (status or -1) .. "\_string\n")
+   tex.print(status or -1)
+} }
+
+\_nspublic \exitstatus ;
+
+\_trick end ;
