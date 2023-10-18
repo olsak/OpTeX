@@ -2,16 +2,20 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_trick 0057 \begfile ;
+\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-18>} % chunks loaded on demand
+
+\_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
 
 \newwrite\.outfile
 \def\begfile #1 {\_immediate\_openout\.outfile={#1}%
-   \_begingroup \_setverb \_endlinechar=`\^^J \.begfileA
+   \_begingroup \_setverb \_endlinechar=`\^^J \.begfileA^^J%
 }
 \_ea\_def\_ea\.begfileA\_ea#\_ea1\_ea^^J\_csstring\\endfile#2^^J{\_endgroup
-   \_immediate\_write\.outfile{#1}\_immediate\_closeout\.outfile
+   \_ifx^#1^\_else \_immediate\_write\.outfile{\_ignoreit #1}\_fi
+   \_immediate\_closeout\.outfile
 }
+\_let\createfile=\begfile
 
 \_trick 0054 \beglua \begLUA \logginglua ;
 %%%%%%%%%%%%
@@ -90,3 +94,8 @@
 \_nspublic \exitstatus ;
 
 \_trick end ;
+
+\_endcode
+
+2023-10-17 released
+2023-10-18 \createfile added

@@ -149,7 +149,7 @@
 }
 \_def\_trick #1;{\_endinput}
 
-\_xargs \_regtrick \begfile \beglua \begLUA \logginglua
+\_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem ;
 
    \_doc -----------------------------
