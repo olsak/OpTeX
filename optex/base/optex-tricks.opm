@@ -45,11 +45,11 @@
 \_def\.setsecondsA#1#2#3#4#5#6#7#8#9{\.setsecondsB}
 \_def\.setsecondsB#1#2#3#4#5#6#7#8\_relax{\.seconds=#6#7\_relax}
 \_def\setweekday{\.weekday=\_directlua{% Zeller's algorithm:
-      local m, y, K, J
+      local m, y, K, J %
       m = \_the\_month \_ifnum\_month<3 +12 \_fi
       y = \_the\_year  \_ifnum\_month<3 -1 \_fi
-      K = y \_pcent 100
-      J = math.floor(y/100)
+      K = y \_pcent 100 %
+      J = math.floor(y/100) %
       tex.sprint((\_the\_day + math.floor((13*(m+1))/5) + K +
          math.floor(K/4) + math.floor(J/4) - 2*J + 6)\_pcent 7)
    }\_relax
@@ -62,10 +62,10 @@
 %%%%%%%%%%%%
 
 \_def\.addshowpglists{\_directlua{
-   local nodetree = require("nodetree")
-   callback.add_to_callback("pre_shipout_filter", function(head)
-         nodetree.print(head)
-         return head
+   local nodetree = require("nodetree") %
+   callback.add_to_callback("pre_shipout_filter", function(head) %
+         nodetree.print(head) %
+         return head %
       end, "showpglists") }}
 \_gdef\.removeshowpglists{\_directlua{
    callback.remove_from_callback("pre_shipout_filter", "showpglists") }}
@@ -85,17 +85,67 @@
 
 \_newcount\.exitstatus
 \_def\runsystem#1{\.exitstatus=\_directlua{
-   texio.write_nl("")
-   local status = os.execute("\_luaescapestring{#1}")
-   texio.write("log", "\_nbb runsystem{\_luaescapestring{#1}} status: " .. (status or -1) .. "\_string\n")
+   texio.write_nl("") %
+   local status = os.execute("\_luaescapestring{#1}") %
+   texio.write("log", "\_nbb runsystem{\_luaescapestring{#1}} status: " .. (status or -1) .. "\_string\n") %
    tex.print(status or -1)
 } }
 
 \_nspublic \exitstatus ;
 
+\_trick 0103 \cancel ;
+%%%%%%%%%%%%
+
+\_def\cancel#1#{\_isempty{#1}\_iftrue \_afterfi{\cancel/}
+   \_else
+      \_lowercase{\_casesof #1}
+        /  {\_let\.cancline=\.drawFslash}
+        \\ {\_let\.cancline=\.drawBslash}
+        x  {\_def\.cancline{\.drawBslash\.drawFslash}}
+        -  {\_let\.cancline=\.drawHline}
+        \_finc {}%
+      \_ea\.cancelA
+   \_fi
+}
+\_def\.cancelA{\_ifmmode \_ea\.cancelM \_else \_ea\.cancelT \_fi}
+\_def\.cancelT#1{\_setbox0=\_hbox{#1}\.cancelF}% text mode
+\_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle#1$}\_cancelF}}% math mode
+\_def\.cancelF{\_edef\.tmp{\.cancline}\_quitvmode\_box0 \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}}
+\_def\.drawFslash{\_bp{-\_wd0} \_bp{-\_dp0} m 0 \_bp{\_ht0} l }% forward slash
+\_def\.drawBslash{\_bp{-\_wd0} \_bp{\_ht0} m 0 \_bp{-\_dp0} l }% backward slash
+\_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }% horizontal line
+\_ifx\cancelparams\_undefined \_def\cancelparams{1 0 0 RG 1 J .6 w}\_fi % color RG linetype J linewidth w
+
+\_trick 0078 \algol ;
+%%%%%%%%%%%%
+
+\_newtoks \_hisyntaxalg
+\_hisyntaxalg = {
+   \_hicolor K \_bf  % Keywords
+   \_foreach {Require:}{Ensure:}{Input:}
+      {while}{do}{if}{then}{else}{end}{function}{return}{print}
+      {for}{all}{range}{continue}{repeat}{until}{loop}
+      {not}{and}{or}{xor}{true}{false}
+      \_do {\_replthis{\n#1\n}{\z K{#1}}}
+}
+\_def\.algolmath#1${\_catcodetable\_optexcatcodes \_scantextokens{#1}$}
+\_def\.after{\_bgroup \_lccode`~=`! \_lowercase{\_egroup \_gdef\.algolbf##1~}{{\_bf##1}}}
+\_aftergroup\.after
+
+\_def\algol{\_catcode`$=3 %
+   \_everymath={\.algolmath}%
+   \_def\_ttfont{\_rm}%
+   \_adef!{\.algolbf}%
+   \_hisyntax{ALG}%
+}
+\_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
+
 \_trick end ;
 
 \_endcode
 
-2023-10-17 released
+
+
+2023-10-18 \algol, \cancel added
 2023-10-18 \createfile added
+2023-10-17 released

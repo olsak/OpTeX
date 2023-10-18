@@ -127,30 +127,39 @@
    \_doc -----------------------------
    Selected macros from \ulink[https://petr.olsak.net/optex/optex-tricks.html]{\OpTeX/ tricks}
    are registered using \`\_regtrick``<cs-name>`. The <cs-name> is defined
-   as \^`\_loadtrick` `<cs-name> <cs-name>`. When a user runs such a registered
-   <cs-name> then \`\_loadtrick``<cs-name>` reads the appropriate code from the
-   file `optex-tricks.opm` and the <cs-name> is redefined. Finally, <cs-name>  is run again.
-   The first run of <cs-name> must be done in vertical mode.\nl
-   The `optex-tricks.opm` file includes blocks started by `\_trick` followed
+   as \^`\loadtrick` `<cs-name> <cs-name>`. When a user runs such a registered
+   <cs-name> then \`\loadtrick` `<cs-name>` reads the appropriate code from the
+   file `optex-tricks.opm` and the <cs-name> is redefined. Finally, <cs-name>  is run again.\nl
+   The `optex-tricks.opm` file includes blocks started by \^`\_trick` followed
    by the declared <cs-names> followed by semicolon followed by the code
-   with declarations of <cs-names> itself.
+   with declarations of <cs-names> itself. The next \`\_trick` does
+   `\endpinput` of the file. The file is read with `\endlinechar=-1` and `\globaldefs=1`
+   because it can be read inside horizontal mode and/or inside a group.
    The `optextrick` name space is used during reading the code from
    the file. Only registered control sequences are re-defined directly
-   in user name space.
+   in user name space.\nl
+   You can load a code chunk by \^`\loadtrick` `<cs-name>`. This
+   command doesn't run the `<cs-name>`, only loads the appropriate code. It
+   should be usable if you want to load the code before the fisrt usage of
+   the `<cs-name>`.
    \_cod -----------------------------
 
-\_def\_regtrick#1{\_def#1{\_loadtrick#1#1}}
+\_def\_regtrick#1{\_ifx#1\_undefined\_def#1{\_loadtrick#1#1}\_else\_badtrick\_fi}
 \_def\_loadtrick#1{\_resetnamespace{optextrick}\_setctable\_optexcatcodes
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
-   \_long\_def\_loadtrickA ##1#1##2;{}%
-   \_wlog{Loading OpTeX trick macros for \_string#1}%
-   \_ea\_loadtrickA \_input {optex-tricks.opm}\_relax\_restorectable
-   \_endnamespace
+   \_begingroup
+      \_long\_def\_loadtrickA ##1#1##2;{}%
+      \_wlog{Loading OpTeX trick macros for \_string#1}%
+      \_endlinechar=-1 \_globaldefs=1
+      \_ea\_loadtrickA \_input {optex-tricks.opm}\_endgroup
+   \_restorectable \_endnamespace
 }
 \_def\_trick #1;{\_endinput}
+\_public \loadtrick ;
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
-   \sethours \setminutes \setseconds \setweekday \showpglists \runsystem ;
+   \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
+   \cancel \algol ;
 
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to

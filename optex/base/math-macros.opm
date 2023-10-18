@@ -596,8 +596,8 @@
 \_protected\_def\_cong{\_mathrel{\_mathpalette\_overeq\_sim}} % congruence sign
 \_def\_overeq#1#2{\_lower.05em\_vbox{\_lineskiplimit\_maxdimen\_lineskip=-.05em
     \_ialign{$\_math#1\_hfil##\_hfil$\_crcr#2\_crcr=\_crcr}}}
-\_protected\_def\_notin{\_mathrel{\_mathpalette\_cancel\_in}}
-\_def\_cancel#1#2{\_math\_ooalign{$\_hfil#1\_mkern1mu/\_hfil$\_crcr$#1#2$}}
+\_protected\_def\_notin{\_mathrel{\_mathpalette\_icancel\_in}}
+\_def\_icancel#1#2{\_math\_ooalign{$\_hfil#1\_mkern1mu/\_hfil$\_crcr$#1#2$}}
 \_protected\_def\_rightleftharpoons{\_mathrel{\_mathpalette\_rlhp{}}}
 \_def\_rlhp#1{\_vcenter{\_math\_hbox{\_ooalign{\_raise.2em
           \_hbox{$#1\_rightharpoonup$}\_crcr
