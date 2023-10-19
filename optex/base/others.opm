@@ -149,7 +149,7 @@
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
    \_begingroup
       \_long\_def\_loadtrickA ##1#1##2;{}%
-      \_wlog{Loading OpTeX trick macros for \_string#1}%
+      \_wlog{^^JLoading OpTeX trick macros for \_string#1}%
       \_endlinechar=-1 \_globaldefs=1
       \_ea\_loadtrickA \_input {optex-tricks.opm}\_endgroup
    \_restorectable \_endnamespace
@@ -159,7 +159,7 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
-   \cancel \algol ;
+   \directoutput \algol \cancel ;
 
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to

@@ -2,7 +2,7 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-18>} % chunks loaded on demand
+\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-19>} % chunks loaded on demand
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -93,6 +93,43 @@
 
 \_nspublic \exitstatus ;
 
+\_trick 105 \directoutput ;
+%%%%%%%%%%%
+
+\_def\directoutput{\_begingroup \_afterassignment\.directoutputA \_setbox0=}
+\_def\.directoutputA{\_aftergroup \.directoutputB}
+\_def\.directoutputB{\_preshipout0\_box0
+   \_pdfpageheight=\_dimexpr\_ht0+\_dp0+2\_vvkern \_relax
+   \_pdfpagewidth=\_dimexpr\_wd0+2\_hhkern\_relax
+   \_hoffset=\_hhkern \_voffset=\_vvkern
+   \_shipout\_box0
+   \_incr\_pageno
+   \_endgroup
+}
+
+\_trick 0078 \algol ;
+%%%%%%%%%%%%
+
+\_newtoks \_hisyntaxalg
+\_hisyntaxalg = {
+   \_hicolor K \_bf  % Keywords
+   \_foreach {Require:}{Ensure:}{Input:}
+      {while}{do}{if}{then}{else}{end}{function}{return}{print}
+      {for}{all}{range}{continue}{repeat}{until}{loop}
+      {not}{and}{or}{xor}{true}{false}
+      \_do {\_replthis{\n#1\n}{\z K{#1}}}
+}
+\_def\.algolmath#1${\_catcodetable\_optexcatcodes \_scantextokens{#1}$}
+\_ea\_def \_ea\.algolbf \_ea#\_ea1\_directlua{tex.cprint(13,"!")}{{\_bf #1}}
+
+\_def\algol{\_catcode`$=3 %
+   \_everymath={\.algolmath}%
+   \_def\_ttfont{\_rm}%
+   \_adef!{\.algolbf}%
+   \_hisyntax{ALG}%
+}
+\_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
+
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
 
@@ -116,36 +153,11 @@
 \_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }% horizontal line
 \_ifx\cancelparams\_undefined \_def\cancelparams{1 0 0 RG 1 J .6 w}\_fi % color RG linetype J linewidth w
 
-\_trick 0078 \algol ;
-%%%%%%%%%%%%
-
-\_newtoks \_hisyntaxalg
-\_hisyntaxalg = {
-   \_hicolor K \_bf  % Keywords
-   \_foreach {Require:}{Ensure:}{Input:}
-      {while}{do}{if}{then}{else}{end}{function}{return}{print}
-      {for}{all}{range}{continue}{repeat}{until}{loop}
-      {not}{and}{or}{xor}{true}{false}
-      \_do {\_replthis{\n#1\n}{\z K{#1}}}
-}
-\_def\.algolmath#1${\_catcodetable\_optexcatcodes \_scantextokens{#1}$}
-\_def\.after{\_bgroup \_lccode`~=`! \_lowercase{\_egroup \_gdef\.algolbf##1~}{{\_bf##1}}}
-\_aftergroup\.after
-
-\_def\algol{\_catcode`$=3 %
-   \_everymath={\.algolmath}%
-   \_def\_ttfont{\_rm}%
-   \_adef!{\.algolbf}%
-   \_hisyntax{ALG}%
-}
-\_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
-
 \_trick end ;
 
 \_endcode
 
-
-
+2023-10-19 \directoutput added
 2023-10-18 \algol, \cancel added
 2023-10-18 \createfile added
 2023-10-17 released
