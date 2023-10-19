@@ -5181,14 +5181,14 @@ specification.
 We implement something like LaTeX \fullcite command. First, you have to
 load information from .bib file at beginning of your document using
 <pre>
-\readbib (bib-style) bib-base % example: \readbib (simple) op-biblist
+\fcread (bib-style) bib-base % example: \fcread (simple) op-biblist
 </pre>
 and then you can use \fulcite[label]. This command expands to the full
 bibliography record related to the label or the warning about unknown label
 is printed to the log file. The format of the cited records is given by
 used bib-style. You can create your own bib-style if the file bib-simple.opm
 doesn't meet the requirements. Note: style iso690 doesn't work with
-\readbib now.
+\fcread now.
 
 <p>You can mix common \cite, \usebib, etc. commands with new \fullcite commands.
 I.e. you can read your bib-base secondly by the \usebib command in the
@@ -5200,37 +5200,39 @@ The implementation:
 \def\fcitlist{}
 
 \def\xbibadd#1{%
-   \unless \ifcsname fcit:\EntryKey\endcsname
-      \sxdef{fcit:\EntryKey}{}\xdef\fcitlist{\fcitlist\fcit[\EntryKey]}\fi
-   \global \ea\addto\csname fcit:\EntryKey\ea\endcsname\ea{\expanded{#1}}%
+   \unless \ifcsname fcit:\_entrykey\endcsname
+      \sxdef{fcit:\_entrykey}{}\xdef\fcitlist{\fcitlist\fcit[\_entrykey]}\fi
+   \global \ea\addto\csname fcit:\_entrykey\ea\endcsname\ea{\expanded{#1}}%
 }
 \def\ubibfield{\unexpanded\ea{\_bibfield}}
 \def\remdotspace #1. \end #2\relax #3{%
    \ifx ^#2^\else \ea \gdef \csname fcit:#3\endcsname{#1}\fi}
 \def\remdotxspace #1.\ \end #2\relax #3{%
    \ifx ^#2^\else \ea \gdef \csname fcit:#3\endcsname{#1}\fi}
+
 \fcithook{
   \def\_dofullfield#1#2{\def\_dofield##1{#1}\xbibadd{\_ea\_dofield\_ea{\ubibfield}}}
   \def\_dofemptyfield#1#2{\def\_dofield##1{#2}\xbibadd{\_ea\_dofield\_ea{\ubibfield}}}
-  \def\_bprintaB #1*#2*#3\_eee{%
+  \def\_bprintaB #1*#2*#3\_fin{%
      \ifx\_bibfield\readauthor \def\_bibfield{}\readauthor \fi
      \ifx\_bibfield\readeditor \def\_bibfield{}\readeditor \fi
      \xbibadd{\_if^#3^#1\_else\_ea\_bprintaC\_ea{\ubibfield}{#1}{#2}\_fi}}
-  \sdef{_pp:author}{\_letNames \edef\_bibfield{\_bibfield\_authorname}}
-  \sdef{_pp:editor}{\_letNames \edef\_bibfield{\_bibfield\_editorname}}
+  \def\_authorini#1\_endcsname{\edef\_bibfield{\_bibfield\_authorname}}
+  \def\_editorini#1\_endcsname{\edef\_bibfield{\_bibfield\_editorname}}
+  \def\_addauthlist{}
   \def\_bprintv [#1]#2#3{#3}
   \def\_Inclause{\xbibadd{In:~}}
   \def\_dobibmark{}
-  \let\_url=\relax  \let\_ulink=\relax \def\_preurl{}    
+  \let\_url=\relax  \let\_ulink=\relax \def\_preurl{}
   \def\_citelist{\_citeI[*]}
   \let\fcit=\relax
 }
-\def\readauthor{\_csname _Readauthor\_ea\_endcsname \_csname _pp:author\_endcsname}
-\def\readeditor{\_csname _Readeditor\_ea\_endcsname \_csname _pp:editor\_endcsname}
+\def\readauthor{\_loopauthors {author}}
+\def\readeditor{\_loopauthors {editor}}
 
-\def\readbib (#1) #2 {{%
+\def\fcread (#1) #2 {{%
    \setbox0=\vbox{\bibtexhook=\fcithook
-      \bibpart{fullcites}\sdef{_ctlst:\_bibp}{x}\usebib/c (#1) #2 }
+      \bibpart{fullcites}\nocite[*]\usebib/c (#1) #2 }
    \def\fcit[##1]{%
    \ea\ea\ea \remdotspace  \csname fcit:##1\endcsname \end . \end \relax {##1}%
    \ea\ea\ea \remdotxspace \csname fcit:##1\endcsname \end .\ \end \relax {##1}%
@@ -5241,11 +5243,11 @@ The implementation:
 
 <p>If you want to correct bib-records before they are used then you can apply
 \replstring to the commands \fcit:label or you can write all these commands to a
-file, edit this file and use \input file instead \readbib at beginning of
+file, edit this file and use \input file instead \fcread at beginning of
 your document. The preparing of such file can be done by following code:
 
 <pre>
-\readbib (simple) op-biblist  % use your bib-file here
+\fcread (simple) op-biblist  % use your bib-file here
 \newwrite\fcitfile
 \immediate\openout\fcitfile=fullcite-data.tex
 \def\fcit[#1]{\immediate\write\fcitfile {%
@@ -5776,6 +5778,10 @@ are printed in the loop.
 <hr>
 
 <h2><a name="directoutput"></a>Direct output of a box to a single page</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\directoutput
+</p>
 
 <p>We create a macro \directoutput box which outputs the given box to the
 page without using \output routine. The page will have the same dimensions as
