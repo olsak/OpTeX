@@ -133,7 +133,7 @@
    The `optex-tricks.opm` file includes blocks started by \^`\_trick` followed
    by the declared <cs-names> followed by semicolon followed by the code
    with declarations of <cs-names> itself. The next \`\_trick` does
-   `\endpinput` of the file. The file is read with `\endlinechar=-1` and `\globaldefs=1`
+   `\endpinput` of the file. The file is read inside temporary `\vbox` with `\globaldefs=1`
    because it can be read inside horizontal mode and/or inside a group.
    The `optextrick` name space is used during reading the code from
    the file. Only registered control sequences are re-defined directly
@@ -147,11 +147,9 @@
 \_def\_regtrick#1{\_ifx#1\_undefined\_def#1{\_loadtrick#1#1}\_else\_badtrick\_fi}
 \_def\_loadtrick#1{\_resetnamespace{optextrick}\_setctable\_optexcatcodes
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
-   \_begingroup
-      \_long\_def\_loadtrickA ##1#1##2;{}%
-      \_wlog{^^JLoading OpTeX trick macros for \_string#1}%
-      \_endlinechar=-1 \_globaldefs=1
-      \_ea\_loadtrickA \_input {optex-tricks.opm}\_endgroup
+   \_long\_def\_loadtrickA ##1#1##2;{}%
+   \_wlog{Loading OpTeX trick macros for \_string#1}%
+   \_setbox0=\_vbox{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
    \_restorectable \_endnamespace
 }
 \_def\_trick #1;{\_endinput}
@@ -159,7 +157,7 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
-   \directoutput \algol \cancel ;
+   \directoutput \algol \scaleto \scaletof \cancel ;
 
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to

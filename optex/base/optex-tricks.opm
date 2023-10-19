@@ -25,11 +25,11 @@
 \_def\beglua{\.savelineno\_bgroup \_setverb \_endlinechar=`\^^J \.begluaA}
 \_ea\_def\_ea\.begluaA\_ea#\_ea1\_csstring\\endlua^^J{\_egroup\.debuglua{#1}\_directlua{#1}}
 \_def\begLUA{\.savelineno\_bgroup \_setverb \_endlinechar=`\^^J \_catcode`\\=0 \.begLUAA}
-\_def\.begLUAA#1\endLUA^^J{\_the\_luamacros\.debuglua{#1}\_directlua{#1}\_egroup}
+\_def\.begLUAA#1\endLUA^^J{\_the\.luamacros\.debuglua{#1}\_directlua{#1}\_egroup}
 \_def\.savelineno{\_edef\.tmp{\_the\_numexpr\_inputlineno+1}}
 \_let\.debuglua=\_ignoreit
 \_def\.printloglua#1{\_wlog{lua code processed (l.\.tmp):^^J#1-------------}}
-\_def\logginglua{\_let\_debuglua=\_printloglua}
+\_def\logginglua{\_let\.debuglua=\.printloglua}
 
 \_trick 0055 \sethours \setminutes \setseconds \setweekday ;
 %%%%%%%%%%%%
@@ -45,11 +45,11 @@
 \_def\.setsecondsA#1#2#3#4#5#6#7#8#9{\.setsecondsB}
 \_def\.setsecondsB#1#2#3#4#5#6#7#8\_relax{\.seconds=#6#7\_relax}
 \_def\setweekday{\.weekday=\_directlua{% Zeller's algorithm:
-      local m, y, K, J %
+      local m, y, K, J
       m = \_the\_month \_ifnum\_month<3 +12 \_fi
       y = \_the\_year  \_ifnum\_month<3 -1 \_fi
-      K = y \_pcent 100 %
-      J = math.floor(y/100) %
+      K = y \_pcent 100
+      J = math.floor(y/100)
       tex.sprint((\_the\_day + math.floor((13*(m+1))/5) + K +
          math.floor(K/4) + math.floor(J/4) - 2*J + 6)\_pcent 7)
    }\_relax
@@ -62,10 +62,10 @@
 %%%%%%%%%%%%
 
 \_def\.addshowpglists{\_directlua{
-   local nodetree = require("nodetree") %
-   callback.add_to_callback("pre_shipout_filter", function(head) %
-         nodetree.print(head) %
-         return head %
+   local nodetree = require("nodetree")
+   callback.add_to_callback("pre_shipout_filter", function(head)
+         nodetree.print(head)
+         return head
       end, "showpglists") }}
 \_gdef\.removeshowpglists{\_directlua{
    callback.remove_from_callback("pre_shipout_filter", "showpglists") }}
@@ -85,9 +85,9 @@
 
 \_newcount\.exitstatus
 \_def\runsystem#1{\.exitstatus=\_directlua{
-   texio.write_nl("") %
-   local status = os.execute("\_luaescapestring{#1}") %
-   texio.write("log", "\_nbb runsystem{\_luaescapestring{#1}} status: " .. (status or -1) .. "\_string\n") %
+   texio.write_nl("")
+   local status = os.execute("\_luaescapestring{#1}")
+   texio.write("log", "\_nbb runsystem{\_luaescapestring{#1}} status: " .. (status or -1) .. "\_string\n")
    tex.print(status or -1)
 } }
 
@@ -120,15 +120,28 @@
       \_do {\_replthis{\n#1\n}{\z K{#1}}}
 }
 \_def\.algolmath#1${\_catcodetable\_optexcatcodes \_scantextokens{#1}$}
-\_ea\_def \_ea\.algolbf \_ea#\_ea1\_directlua{tex.cprint(13,"!")}{{\_bf #1}}
 
 \_def\algol{\_catcode`$=3 %
    \_everymath={\.algolmath}%
    \_def\_ttfont{\_rm}%
-   \_adef!{\.algolbf}%
+   \_catcode`\!=13
+   \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_def~##1~{\_ifx^##1^!\_else{\_bf##1}\_fi}}%
    \_hisyntax{ALG}%
 }
 \_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
+
+\_trick 0011 \scaleto \scaletof ;
+%%%%%%%%%%%%
+
+\_def\scaleto#1#{\_def\.tmp{#1}\.scaletoA}
+\_def\.scaletoA#1{\_setbox0=\_hbox{{#1}}%
+   \_edef\.tmp{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
+   \_transformbox{\_pdfscale{\.tmp}{\.tmp}}{#1}}
+
+\_def\scaletof#1#{\_def\.tmp{#1}\.scaletofA}
+\_def\.scaletofA#1{\_setbox0=\_hbox{{#1}}%
+   \_edef\.tmpa{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
+   \.scaletoA{\_setfontsize{mag\.tmpa}\_currvar#1}}
 
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
@@ -145,19 +158,19 @@
    \_fi
 }
 \_def\.cancelA{\_ifmmode \_ea\.cancelM \_else \_ea\.cancelT \_fi}
-\_def\.cancelT#1{\_setbox0=\_hbox{#1}\.cancelF}% text mode
-\_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle#1$}\_cancelF}}% math mode
+\_def\.cancelT#1{\_setbox0=\_hbox{#1}\.cancelF} % text mode
+\_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle#1$}\_cancelF}} % math mode
 \_def\.cancelF{\_edef\.tmp{\.cancline}\_quitvmode\_box0 \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}}
-\_def\.drawFslash{\_bp{-\_wd0} \_bp{-\_dp0} m 0 \_bp{\_ht0} l }% forward slash
-\_def\.drawBslash{\_bp{-\_wd0} \_bp{\_ht0} m 0 \_bp{-\_dp0} l }% backward slash
-\_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }% horizontal line
+\_def\.drawFslash{\_bp{-\_wd0} \_bp{-\_dp0} m 0 \_bp{\_ht0} l } % forward slash
+\_def\.drawBslash{\_bp{-\_wd0} \_bp{\_ht0} m 0 \_bp{-\_dp0} l } % backward slash
+\_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }    % horizontal line
 \_ifx\cancelparams\_undefined \_def\cancelparams{1 0 0 RG 1 J .6 w}\_fi % color RG linetype J linewidth w
 
 \_trick end ;
 
 \_endcode
 
-2023-10-19 \directoutput added
+2023-10-19 \directoutput, \scaleto added
 2023-10-18 \algol, \cancel added
 2023-10-18 \createfile added
 2023-10-17 released

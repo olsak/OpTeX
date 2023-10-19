@@ -312,6 +312,10 @@ extensions are already prepared and ready for use.
 
 <h2><a name="scaleto"></a>Text size changed to the desired width</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\scaleto<br>\scaletof
+</p>
+
 <p>We prepare the macro \scaleto size {text} which prints “text” in the current
 font, but rescaled so that the width of “text” is the given size.
 
@@ -1035,6 +1039,7 @@ Our pseudo-code is written between \begtt\algol and \endtt as usual verbatim tex
 The key-words mentioned at pages 1--8 in the algorithms LaTeX documentation are
 written directly in our source code and they are printed in bold font automatically.
 If you want to print another word in bold use a pair of !...!, i.e. write !word!.
+Two !! prints one normal exclamation mark.
 Texts between dollars $...$ are interpreted in math mode. All input characters
 between $...$ are non-verbatim, i.e. the math mode is interpreted as usual.
 Other text (outside math mode) is printed verbatim but in Roman font.
@@ -1083,11 +1088,11 @@ readable. Or you can use common math control sequences in math mode,
       \do {\replthis{\n#1\n}{\z K{#1}}}
 }
 \def\algolmath#1${\catcodetable\_optexcatcodes \scantextokens{#1}$}
-\bgroup \lccode`~=`! \lowercase{\egroup \def\algolbf#1~}{{\bf#1}}
 \def\algol{\catcode`$=3
    \everymath={\algolmath}%
    \def\_ttfont{\rm}%
-   \adef!{\algolbf}%
+   \catcode`\!=13
+   \bgroup \lccode`\~=`\! \lowercase{\egroup \def~##1~{\ifx^##1^!\else{\_bf##1}\fi}}%
    \hisyntax{ALG}%
 }
 \def\var#1{{\it\adef_{\vrule height.4pt width4pt\relax}#1}}
