@@ -705,7 +705,8 @@ The list of items is surrounded by \^`\begitems` and \^`\enditems` commands.
 The asterisk (`*`) is active within this environment and it starts one item.
 The item style can be chosen by the \^`\style` parameter written after \^`\begitems`:
 
-\begtt
+\def\otrickd{\ulink[http://petr.olsak.net/optex/optex-tricks.html\#deflists]{OpTeX trick 0108}}
+\begtt \catcode`|=0
 \style o % small bullet
 \style O % big bullet (default)
 \style - % hyphen char
@@ -717,6 +718,7 @@ The item style can be chosen by the \^`\style` parameter written after \^`\begit
 \style A % items of type A), B), C), ...
 \style x % small rectangle
 \style X % big rectangle
+\style d % definition list, use *{word}, see |otrickd
 \endtt
 
 For example:

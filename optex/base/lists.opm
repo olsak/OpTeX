@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begitems {Lists: begitems, enditems <2022-02-25>} % preloaded in format
+\_codedecl \begitems {Lists: begitems, enditems <2023-10-20>} % preloaded in format
 
    \_doc -----------------------------
    \`\_aboveliskip` is used above the list of items,\nl
@@ -71,11 +71,11 @@
    The \`\style` `<letter>` does \`\_printitem``={\_item:<letter>}`.
    More exactly: \^`\begitems` does \^`\_printitem=`\^`\defaultitem` first,
    then \^`\style` `<letter>` does \^`\_printitem``={\_item:<letter>}`
-   when it is used and finally, `\_startitem` alias `*` uses \^`\_printitem`.
+   when it is used and finally, \^`\_startitem` alias `*` uses \^`\_printitem`.
    \_cod -----------------------------
 
 \_def\_style#1{%
-   \_ifcsname _item:#1\_endcsname \_printitem=\ea{\_csname _item:#1\_endcsname}%
+   \_ifcsname _item:#1\_endcsname \_printitem=\_ea{\_csname _item:#1\_endcsname}%
    \_else \_printitem=\_defaultitem \_fi
 }
 \_sdef{_item:o}{\_raise.4ex\_hbox{$\_scriptscriptstyle\_bullet$} }
@@ -88,6 +88,8 @@
 \_sdef{_item:A}{\_uppercase\_ea{\_athe\_itemnum}) }
 \_sdef{_item:x}{\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
 \_sdef{_item:X}{\_raise.2ex\_fullrectangle{1ex}\_kern.5em}
+\_sedf{_item:d}{\_aftergroup\_dword}}
+\_def\_dword#1#2{{\_bf #2 }\_ignorespaces} % #1 is \_ignorespaces from \_startitem
 
    \_doc -----------------------------
    \`\_athe``{<num>}` returns the `<num>`s lowercase letter from the alphabet.\nl
@@ -121,6 +123,7 @@
 
 \_endcode % -------------------------------------
 
+2023-10-20 \style d moved from OpTeX trick 0108 to the format
 2022-02-25 \olistskipamount, \ilistskipamount, \itemskipamount introduced
 2021-03-10 \_ifmmode*\_else\_ea\_startitem\_fi added to * defintition
 2020-04-21 \isnextchar\par added to \enditems
