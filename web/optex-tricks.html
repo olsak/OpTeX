@@ -54,7 +54,7 @@ me it. I'll welcome it and save it here (with the author of the solution
 mentioned).
 
 <p>Selected OpTeX tricks can be used directly from OpTeX document without
-need to copy the code, see section 1.7.6 of OpTeX documentation.
+need to copy the code, see section 1.7.8 of OpTeX documentation.
 The directly usable macros are marked here by the blue word "autoload:"
 in the right margin.
 
@@ -821,6 +821,10 @@ and then \fontfam.
 
 <h2><a name="multilist"></a>List items multi-numbered at arbitrary level</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\style m<br>\keepstyle
+</p>
+
 <p>We declare the \style m (multi-numbered) of the list. The items are
 numbered similarly as sections, i.e. 1., 2. 2.1, 2.2, 2.2.1, 2.2.2, 2.2.3
 etc. We create macro \keepstyle which propagates the current style to all
@@ -856,6 +860,10 @@ levels.
 
 <h2><a name="easylist"></a>Depth of the list given by number of *</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\easylist
+</p>
+
 <p>We declare the macro \easylist which enables to give the list level
 simply by the number of * used as a prefix. We need not to specify nesting
 \begitems...\enditems. So, if we use the \style m and \keepstyle
@@ -880,7 +888,7 @@ package easylist (see texdoc easylist).
 <p>The implementation:
 
 <pre>
-\def\easylist{\adef*{\countlist}}
+\def\easylist{\adef*{\countlist}\def\enditems{\fornum 1..\ilevel \do{\_enditems}}}
 \def\aast{\countlist}
 \def\countlist{\tmpnum=1 \countlistA}
 \def\countlistA{\futurelet\next\countlistB}
@@ -890,7 +898,6 @@ package easylist (see texdoc easylist).
    \ifnum\tmpnum&gt;\ilevel \fornum \ilevel..\tmpnum-1 \do{\_begitems\easylist}\else
    \ifnum\tmpnum&lt;\ilevel \fornum \tmpnum..\ilevel-1 \do{\_enditems}\fi\fi
    \_startitem}
-\def\enditems{\fornum 1..\ilevel \do{\_enditems}}
 % + macros from OpTeX trick 0047
 </pre>
 
@@ -1120,6 +1127,10 @@ have given \xspaceskip width in the output.
 <hr>
 
 <h2><a name="ttlineref"></a>Verbatim lines referenced in text</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\ttlineref
+</p>
 
 <p>We implement possibility to refer lines printed by \begtt...\endtt if
 these lines are numbered by \ttline>=0. User needs to select a character

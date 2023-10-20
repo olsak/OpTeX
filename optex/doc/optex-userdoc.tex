@@ -1845,7 +1845,8 @@ appropriate code chunk from an external file. These macros are listed here. More
 information about them are accesible via the external links.
 
 {
-\def\tpg[#1]{\def\tpgurl{https://petr.olsak.net/optex/optex-tricks.html\##1}}
+\def\oturl{https://petr.olsak.net/optex/optex-tricks.html}
+\def\tpg[#1]{\edef\tpgurl{\oturl\##1}}
 \def\t#1{\ea\tA\ea{\string#1}\edef\tmp{\csstring#1}\iindex{\tmp}\dest[cs:\tmp]}
 \def\tA#1{\ea\ulink\ea[\tpgurl]{#1}}
 
@@ -1862,6 +1863,9 @@ writes a code from the document to the given file.
 \tpg[directoutput]\t\directoutput\
 puts boxes to standalone pages adatped to the box dimesions.
 
+\tpg[easylist]\t\easylist\
+the depth of list is given by the number of `*`.
+
 \tpg[scaleto]\t\scaleto, \t\scaletof\
 text font size changed to the desired width.
 
@@ -1871,8 +1875,14 @@ runs the given external system command.
 \tpg[dayw]\t\sethours, \t\setminutes, \t\setseconds, \t\setweekday\
 printing time, date, and day of week.
 
+\tpg[multilist]\ea\ulink\ea[\oturl\#multilist]{\string\style\space m}, \t\keepstyle\
+creates lists with items numbered like subsections.
+
 \tpg[pglists]\t\showpglists\
 shows good organized list of nodes of given pages to the log file.
+
+\tpg[ttlineref]\t\ttlineref\
+verbatim lines referenced in text.
 
 }
 

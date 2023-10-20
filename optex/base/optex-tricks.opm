@@ -2,7 +2,7 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-19>} % chunks loaded on demand
+\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-20>} % chunks loaded on demand
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -130,6 +130,13 @@
 }
 \_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
 
+\_trick 0079 \ttlineref ;
+%%%%%%%%%%%%
+
+\_def\ttlineref#1{\_adef#1[##1]{\.setlref{##1}}}
+\_protected\_def\.setlref#1{\_sxdef{ttlin:#1}{\_the\_ttline}}
+\_def\lref[#1]{\_trycs{ttlin:#1}{??}}
+
 \_trick 0011 \scaleto \scaletof ;
 %%%%%%%%%%%%
 
@@ -142,6 +149,28 @@
 \_def\.scaletofA#1{\_setbox0=\_hbox{{#1}}%
    \_edef\.tmpa{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
    \.scaletoA{\_setfontsize{mag\.tmpa}\_currvar#1}}
+
+\_trick 0047 \style m \keepstyle ;
+%%%%%%%%%%%%
+
+\_def\.iprefix#1{}
+\_addto\_setlistskip{\_ifnum\_ilevel>1 \_edef\.iprefix{\.iprefix.\_the\_itemnum}\_fi}
+\_sdef{_item:m}{\.iprefix.\_the\_itemnum. }
+\_def\keepstyle{\_defaultitem=\_printitem}
+
+\_trick 0048 \easylist ;
+%%%%%%%%%%%%
+
+\_def\easylist{\_adef*{\.countlist}\_def\enditems{\_fornum 1..\_ilevel\_do{\_enditems}}}
+\_def\.aast{\.countlist}
+\_def\.countlist{\_tmpnum=1 \.countlistA}
+\_def\.countlistA{\_futurelet\.next\.countlistB}
+\_def\.countlistB{\_ifx\.next\.aast \_ea\.countlistC\_else \_ea\.countlistD \_fi}
+\_def\.countlistC#1{\_incr\_tmpnum \.countlistA}
+\_def\.countlistD{%
+   \_ifnum\_tmpnum>\_ilevel \_fornum \_ilevel..\_tmpnum-1 \_do{\_begitems\easylist}\_else
+   \_ifnum\_tmpnum<\_ilevel \_fornum \_tmpnum..\_ilevel-1 \_do{\_enditems}\_fi\_fi
+   \_startitem}
 
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
@@ -170,6 +199,7 @@
 
 \_endcode
 
+2023-10-20 \style m, \keepstyle, \easylist, \ttlineref added
 2023-10-19 \directoutput, \scaleto added
 2023-10-18 \algol, \cancel added
 2023-10-18 \createfile added

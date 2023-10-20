@@ -157,7 +157,9 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
-   \directoutput \algol \scaleto \scaletof \cancel ;
+   \directoutput \algol \scaleto \scaletof
+   \ttlineref \easylist \keepstyle \cancel ;
+\_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to
