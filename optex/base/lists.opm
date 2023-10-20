@@ -88,7 +88,7 @@
 \_sdef{_item:A}{\_uppercase\_ea{\_athe\_itemnum}) }
 \_sdef{_item:x}{\_raise.3ex\_fullrectangle{.6ex}\_kern.4em}
 \_sdef{_item:X}{\_raise.2ex\_fullrectangle{1ex}\_kern.5em}
-\_sedf{_item:d}{\_aftergroup\_dword}}
+\_sdef{_item:d}{\_aftergroup\_dword}
 \_def\_dword#1#2{{\_bf #2 }\_ignorespaces} % #1 is \_ignorespaces from \_startitem
 
    \_doc -----------------------------
