@@ -158,7 +158,7 @@
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
    \directoutput \algol \scaleto \scaletof
-   \ttlineref \easylist \keepstyle \cancel ;
+   \ttlineref \easylist \keepstyle \fcread \cancel ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------

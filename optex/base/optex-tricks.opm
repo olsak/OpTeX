@@ -2,7 +2,7 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-20>} % chunks loaded on demand
+\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-21>} % chunks loaded on demand
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -172,6 +172,54 @@
    \_ifnum\_tmpnum<\_ilevel \_fornum \_tmpnum..\_ilevel-1 \_do{\_enditems}\_fi\_fi
    \_startitem}
 
+\_trick 0092 \fcread ;
+%%%%%%%%%%%%
+
+\_newtoks\.fcithook
+\_def\.fcitlist{}
+
+\_def\.xbibadd#1{%
+   \_unless \_ifcsname fcit:\_entrykey\_endcsname
+      \_sxdef{fcit:\_entrykey}{}\_xdef\.fcitlist{\.fcitlist\fcititem[\_entrykey]}\_fi
+   \_global \_ea\_addto\_csname fcit:\_entrykey\_ea\_endcsname\_ea{\_expanded{#1}}%
+}
+\_def\.ubibfield{\_unexpanded\_ea{\_bibfield}}
+\_def\.remdotspace #1. \_end #2\_relax #3{%
+   \_ifx ^#2^\_else \_ea \_gdef \_csname fcit:#3\_endcsname{#1}\_fi}
+\_def\.remdotxspace #1.\ \_end #2\_relax #3{%
+   \_ifx ^#2^\_else \_ea \_gdef \_csname fcit:#3\_endcsname{#1}\_fi}
+
+\.fcithook{
+  \_def\_dofullfield#1#2{\_def\_dofield##1{#1}\.xbibadd{\_ea\_dofield\_ea{\.ubibfield}}}
+  \_def\_dofemptyfield#1#2{\_def\_dofield##1{#2}\.xbibadd{\_ea\_dofield\_ea{\.ubibfield}}}
+  \_def\_bprintaB #1*#2*#3\_fin{%
+     \_ifx\_bibfield\.readauthor \_def\_bibfield{}\.readauthor \_fi
+     \_ifx\_bibfield\.readeditor \_def\_bibfield{}\.readeditor \_fi
+     \.xbibadd{\_if^#3^#1\_else\_ea\_bprintaC\_ea{\.ubibfield}{#1}{#2}\_fi}}
+  \_def\_authorini#1\_endcsname{\_edef\_bibfield{\.ubibfield\_authorname}}
+  \_def\_editorini#1\_endcsname{\_edef\_bibfield{\.ubibfield\_editorname}}
+  \_def\_addauthlist{}
+  \_def\_bprintv [#1]#2#3{#3}
+  \_def\_Inclause{\.xbibadd{In:~}}
+  \_def\_dobibmark{}
+  \_let\_url=\_relax  \_let\_ulink=\_relax \_def\_preurl{}
+  \_def\_citelist{\_citeI[*]}
+  \_let\fcititem=\_relax
+}
+\_def\.readauthor{\_loopauthors {author}}
+\_def\.readeditor{\_loopauthors {editor}}
+
+\_def\fcread (#1) #2 {{%
+   \_setbox0=\_vbox{\_bibtexhook=\.fcithook
+      \_bibpart{fullcites}\_nocite[*]\_usebib/c (#1) #2 }
+   \_def\fcititem[##1]{%
+   \_ea\_ea\_ea \.remdotspace  \_csname fcit:##1\_endcsname \_end . \_end \_relax {##1}%
+   \_ea\_ea\_ea \.remdotxspace \_csname fcit:##1\_endcsname \_end .\ \_end \_relax {##1}%
+   }\.fcitlist % removing last .\space or .space from each bib-record
+}}
+\_def\fullcite[#1]{\_trycs{fcit:#1}{??\_opwarning{\_string\fullcite[#1] unknown label}}}
+
+
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
 
@@ -199,6 +247,7 @@
 
 \_endcode
 
+2023-10-21 \fcread, \fullcite added
 2023-10-20 \style m, \keepstyle, \easylist, \ttlineref added
 2023-10-19 \directoutput, \scaleto added
 2023-10-18 \algol, \cancel added
