@@ -1592,55 +1592,60 @@ with rounded corners. For example
 
 <p><IMG SRC="../img/roundframe.png" ALT="rounded frame" border=0>
 
-<p>The frame shown above was created with following parameters settings:
+<p>The implementation introduces 16 parameters and uses the \clipinoval macro:
 
 <pre>
-\def\fmtfirst  #1{\kern2pt\noindent\strut\White\bf #1\parstrut\kern1pt}
-\def\fmtsecond #1{\kern3pt\noindent\strut\Black\rm #1\parstrut\kern1pt}
-\def\betweenfirstsecond {\Yellow\hrule height2pt}
-\roundframeparams {\hsize=6cm \leftskip=3mm \rightskip=3mm \corners=3mm
-   \parindent=0pt \let\titlecolor=\Blue \let\bodycolor=\LightGrey
+\def \roundframedefaults   {% default parameters:
+   round-corner=3mm,        % diameter of corners
+   title-bgcolor=\Blue,     % background color of the title area
+   midrule-color=\Yellow,   % color of the rule between title and text area
+   midrule-width=2pt,       % thickness of the rule between title and text area
+   text-bgcolor=\LightGrey, % background color of the text text area
+   title-color=\White,      % color of title text
+   text-color=\Black,       % color of normal text
+   text-width=6cm,          % text width, frame width = text width + margins
+   text-margins=3mm,        % left and right margins
+   title-font=\bf,          % font of title text
+   text-font=\rm,           % font of normal text
+   text-above=3pt,          % space above firsl line of text
+   text-below=1pt,          % space below first line of text
+   title-above=2pt,         % space above the first line of title
+   title-below=1pt,         % space below te first line of title
+   shadow-width=2pt,        % shadow thickness (if 0pt then no shadow printed)
 }
-\def\bgoval{\inoval[\roundness=\corners \shadow=Y \lwidth=0pt]{\box1}}
+\optdef \roundframe [] #1#2{\bgroup
+   \kvdict{roundframe}% dictionary of used key-value parameters
+   \readkv\roundframedefaults \readkv{\the\opt}%
+   \roundness=\kv{round-corner}\relax
+   \hsize=\kv{text-width}\relax
+   \leftskip=\kv{text-margins}\relax \rightskip=\leftskip
+   \setbox0=\vbox{%
+      \bgbox{\kv{title-bgcolor}}{\kern\kv{title-above}%
+         \noindent\strut\kv{title-color}\kv{title-font}#1\parstrut\kern\kv{title-below}}
+      \kv{midrule-color}\hrule height\kv{midrule-width}%
+      \bgbox{\kv{text-bgcolor}}{\kern\kv{text-above}%
+         \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}
+   \setbox1=\vbox to\dimexpr\ht0-2\roundness{}\wd1=\dimexpr\wd0-2\roundness\relax
+   \hbox{\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
+      \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
+   \egroup
+}
+\def\bgbox#1#2{\setbox0=\vbox{#2}\hbox{\rlap{#1\vrule height\ht0 depth\dp0 width\wd0}\box0}}
+\def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
+\def\roundframeshadow{\raise\roundness\rlap{\edef\_shadowb{\bp{\kv{shadow-width}}}%
+   \inoval[\fcolor=\Grey \roundness=\kv{round-corner} \shadow=Y \lwidth=0pt]{\box1}}}
 </pre>
 
-<p>The \fmtfirst declares formating of title part, the \fmtsecond declares
-formatting of text body part. The macro \betweenfirstsecond is used between
-title and body. \roundframeparams sets next parameters used localy when the
-frame is created. The \corners is diameter of rounded corners.
-The \titlecolor and \bodycolor are background colors of
-appropriate parts. The macro \bgoval need not be defined. If undefined then
-there are no additional effects which can be achieved by printing backgroud
-\inoval. We need it if we want to have \shadow=Y or \lwidth positive.
-
-<p>The implementation looks like this:
+<p>User can set parameters in optional brackets [...], for example
 
 <pre>
-\newdimen\corners  \newtoks\roundframeparams
-\def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
-\def\twobox#1#2#3#4{%
-   \vbox{%
-      \setbox0=\vbox{\fmtfirst{#2}}%
-      \hbox{\rlap{#1\vrule height\ht0 depth\dp0 width\wd0}\box0}
-      \setbox0=\vbox{\fmtsecond{#4}}%
-      \betweenfirstsecond \nointerlineskip
-      \hbox{\rlap{#3\vrule height\ht0 depth\dp0 width\wd0}\box0}
-   }%
-}
-\def\roundframe#1#2{{%
-   \the\roundframeparams \roundness=\corners
-   \setbox0=\twobox\titlecolor{#1}\bodycolor{#2}%
-   \setbox1=\vbox to\dimexpr\ht0-2\corners{}\wd1=\dimexpr\wd0-2\corners\relax
-   \hbox{\ifx\bgoval\undefined \else \raise\corners\rlap{\bgoval}\fi
-         \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
-}}
+\roundframe [text-width=8cm, midrule-color=\Red, midrule-width=3pt]
+            {Title here}
+            {More text}
 </pre>
 
 <p>Note that we need not tikz:). Only OpTeX macros \clipinoval and \inoval are
-used. The macro \twobox \color{title}\color{text} prints the colored parts
-of the frame with sharp corners. Then the macro \clipinoval does rounded
-corners. If we need additional effects then we print \inoval as a part of
-\bgoval macro. It is printed at the background and with empty box1.
+used. 
 
 <p CLASS=datum>(0073) -- P. O. 2022-03-03<p>
 <hr>
