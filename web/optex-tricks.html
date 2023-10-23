@@ -1598,19 +1598,19 @@ with rounded corners. For example
 \def \roundframedefaults   {% default parameters:
    round-corner=3mm,        % diameter of corners
    title-bgcolor=\Blue,     % background color of the title area
+   title-color=\White,      % color of title text
+   title-font=\bf,          % font of title text
+   title-above=2pt,         % space above the first line of title
+   title-below=1pt,         % space below the last line of title
    midrule-color=\Yellow,   % color of the rule between title and text area
    midrule-width=2pt,       % thickness of the rule between title and text area
-   text-bgcolor=\LightGrey, % background color of the text text area
-   title-color=\White,      % color of title text
+   text-bgcolor=\LightGrey, % background color of the text area
    text-color=\Black,       % color of normal text
-   text-width=6cm,          % text width, frame width = text width + margins
-   text-margins=3mm,        % left and right margins
-   title-font=\bf,          % font of title text
    text-font=\rm,           % font of normal text
-   text-above=3pt,          % space above firsl line of text
-   text-below=1pt,          % space below first line of text
-   title-above=2pt,         % space above the first line of title
-   title-below=1pt,         % space below te first line of title
+   text-width=6cm,          % text paragraph width; frame width = text width + margins
+   text-margins=3mm,        % left and right margins
+   text-above=3pt,          % space above the first line of text
+   text-below=1pt,          % space below the last line of text
    shadow-width=2pt,        % shadow thickness (if 0pt then no shadow printed)
 }
 \optdef \roundframe [] #1#2{\bgroup
@@ -1634,9 +1634,12 @@ with rounded corners. For example
 \def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
 \def\roundframeshadow{\raise\roundness\rlap{\edef\_shadowb{\bp{\kv{shadow-width}}}%
    \inoval[\fcolor=\Grey \roundness=\kv{round-corner} \shadow=Y \lwidth=0pt]{\box1}}}
+{\kvdict{roundframe} \ea\foreach\roundframedefaults \do #1#2=#3,{\global\kvx{#1#2}{}}
+ \global\nokvx{\opwarning{\string\roundframe: Unknown option "#1"}}}
 </pre>
 
-<p>User can set parameters in optional brackets [...], for example
+<p>The \optdef macro is used, so a user can set parameters in optional
+brackets [...], for example:
 
 <pre>
 \roundframe [text-width=8cm, midrule-color=\Red, midrule-width=3pt]
@@ -1645,7 +1648,15 @@ with rounded corners. For example
 </pre>
 
 <p>Note that we need not tikz:). Only OpTeX macros \clipinoval and \inoval are
-used. 
+used. The \bgbox{bgcolor}{text} creates a \vbox{text} and puts given
+background color under it. The \box0 is created and \box1 has the same sizes
+without margins given by \roundness. \box1 is used for generating the shadow
+using \inoval.
+
+<p>The last two lines of the code implement warnings if a user gives unknown
+keys (i.e. keys outside the default parameters). All keys from default
+parameters are "registered" by \kvx{key}{} and warning is set for other keys
+using \nokvx.
 
 <p CLASS=datum>(0073) -- P. O. 2022-03-03<p>
 <hr>
