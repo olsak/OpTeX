@@ -2,7 +2,7 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_codedecl \relax {OpTeX tricks ready to autoload <2023-10-21>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-10-23>} % chunks loaded on demand
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -219,6 +219,78 @@
 }}
 \_def\fullcite[#1]{\_trycs{fcit:#1}{??\_opwarning{\_string\fullcite[#1] unknown label}}}
 
+\_trick 0071 \shadedframe ;
+
+\_def\.shadedframedefaults {% defaults:
+   frame-color=\Grey,       % color of frame rules
+   text-color=\Black,       % color ot text inside the frame
+   shadow-color=\LightGrey, % color of shadow
+   bg-color=\Yellow,        % background color inside the frame
+   rule-width=1pt,          % width of rules used in the frame
+   v-margins=4pt,           % vertical space between text and frame
+   h-margins=4pt,           % horizontal space between text and frame
+   shade-width=4pt,         % the width of the shadow
+   text-width=4cm,          % width of the text inside the frame
+}
+\_optdef\shadedframe [] #1{\_bgroup
+      \_readkv\.shadedframedefaults \_readkv{\_the\_opt}%
+      \_vvkern=\_kv{v-margins}\_hhkern=\_kv{h-margins}%
+      \_rulewidth=\_kv{rule-width}\_hsize=\_kv{text-width}\relax
+      \_kv{frame-color}%
+      \_setbox0=\_hbox{\_frame{\_vbox{\_kv{text-color}\_noindent\_ignorespaces#1}}}%
+      \_edef\.htzo{\_the\_ht0}\_edef\.wdzo{\_the\_wd0}%
+      \_kv{shadow-color}%
+      \_hbox{\_vbox{\_hbox{\_rlap{\_kv{bg-color}\_vrule height\_ht0 width\_wd0 depth\_dp0}\_box0}%
+                  \_nointerlineskip \_moveright\_kv{shade-width}
+                     \_hbox{\_vrule height\_kv{shade-width}width\.wdzo}\_kern-\_kv{shade-width}}%
+            \_kern-\_kv{shade-width}\_vrule height\.htzo width\kv{shade-width}}%
+   \_egroup
+}
+
+\_trick 0073 \roundframe ;
+%%%%%%%%%%%%
+
+\_def \.roundframedefaults  {% default parameters:
+   round-corner=3mm,        % diameter of corners
+   title-bgcolor=\Blue,     % background color of the title area
+   title-color=\White,      % color of title text
+   title-font=\_bf,         % font of title text
+   title-above=2pt,         % space above the first line of title
+   title-below=1pt,         % space below the last line of title
+   midrule-color=\Yellow,   % color of the rule between title and text area
+   midrule-width=2pt,       % thickness of the rule between title and text area
+   text-bgcolor=\LightGrey, % background color of the text area
+   text-color=\Black,       % color of normal text
+   text-font=\_rm,          % font of normal text
+   text-width=6cm,          % text paragraph width; frame width = text width + margins
+   text-margins=3mm,        % left and right margins
+   text-above=3pt,          % space above the first line of text
+   text-below=1pt,          % space below the last line of text
+   shadow-width=2pt,        % shadow thickness (if 0pt then no shadow printed)
+}
+\_optdef \roundframe [] #1#2{\_bgroup
+   \_kvdict{_optextrick:roundframe}% dictionary of used key-value parameters
+   \_readkv\.roundframedefaults \_readkv{\_the\_opt}%
+   \_roundness=\_kv{round-corner}\_relax
+   \_hsize=\_kv{text-width}\_relax
+   \_leftskip=\_kv{text-margins}\_relax \_rightskip=\_leftskip
+   \_setbox0=\_vbox{%
+      \.bgbox{\_kv{title-bgcolor}}{\_kern\_kv{title-above}%
+         \_noindent\_strut\_kv{title-color}\_kv{title-font}#1\.parstrut\_kern\_kv{title-below}}
+      \_kv{midrule-color}\_hrule height\_kv{midrule-width}%
+      \.bgbox{\_kv{text-bgcolor}}{\_kern\_kv{text-above}%
+         \_noindent\_strut\_kv{text-color}\_kv{text-font}#2\.parstrut\_kern\_kv{text-below}}}
+   \_setbox1=\_vbox to\_dimexpr\_ht0-2\_roundness{}\_wd1=\_dimexpr\_wd0-2\_roundness\_relax
+   \_hbox{\_unless\_ifdim\_kv{shadow-width}=0pt \.roundframeshadow \_fi
+      \_clipinoval .5\_wd0 .5\_ht0 \_wd0 \_ht0 {\_box0}}%
+   \_egroup
+}
+\_def\.bgbox#1#2{\_setbox0=\_vbox{#2}\_hbox{\_rlap{#1\_vrule height\_ht0 depth\_dp0 width\_wd0}\_box0}}
+\_def\.parstrut{\_par\_kern-\_prevdepth\_kern\_dp\_strutbox}
+\_def\.roundframeshadow{\_raise\_roundness\_rlap{\_edef\_shadowb{\_bp{\_kv{shadow-width}}}%
+   \_inoval[\_fcolor=\Grey \_roundness=\_kv{round-corner} \_shadow=Y \_lwidth=0pt]{\_box1}}}
+{\_kvdict{_optextrick:roundframe} \_ea\_foreach\.roundframedefaults \_do #1#2=#3,{\_global\_kvx{#1#2}{}}
+ \_global\_nokvx{\_opwarning{\_string\roundframe: Unknown option "#1"}}}
 
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
@@ -247,6 +319,7 @@
 
 \_endcode
 
+2023-10-23 \shadedframe, \roundframe  added
 2023-10-21 \fcread, \fullcite added
 2023-10-20 \style m, \keepstyle, \easylist, \ttlineref added
 2023-10-19 \directoutput, \scaleto added

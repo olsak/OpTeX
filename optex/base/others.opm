@@ -147,8 +147,8 @@
 \_def\_regtrick#1{\_ifx#1\_undefined\_def#1{\_loadtrick#1#1}\_else\_badtrick\_fi}
 \_def\_loadtrick#1{\_resetnamespace{optextrick}\_setctable\_optexcatcodes
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
-   \_long\_def\_loadtrickA ##1#1##2;{}%
-   \_wlog{Loading OpTeX trick macros for \_string#1}%
+   \_long\_def\_loadtrickA ##1\_trick##2#1##3;{##1}%
+   \_wlog{Loading trick macros for \_string#1}%
    \_setbox0=\_vbox{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
    \_restorectable \_endnamespace
 }
@@ -157,8 +157,8 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
-   \directoutput \algol \scaleto \scaletof
-   \ttlineref \easylist \keepstyle \fcread \cancel ;
+   \directoutput \algol \scaleto \scaletof \ttlineref \easylist \keepstyle \fcread
+   \shadedframe \roundframe \cancel ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------
