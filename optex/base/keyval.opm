@@ -1,12 +1,12 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readkv {Key-value dictionaries <2023-03-11>} % preloaded in format
+\_codedecl \readkv {Key-value dictionaries <2023-10-23>} % preloaded in format
 
    \_doc ----------------------------
    {\bf Implementation.}\nl
    The \`\readkv``<list>` expands its parameter and does replace-strings in order to
-   remove spaces around equal signs and after commas.
-   Then \`\_kvscan` reads the parameters list finished by `,\_fin,`
+   remove spaces around equal signs and commas.
+   Then \`\_kvscan` reads the parameters list finished by `,\_fin`
    and saves values to `\_kv:<dict>:<key>` macros.
    The `\_kvx:<dict>:<key>` is processed (if it is defined) with parameter
    <value> after it.\nl
@@ -18,11 +18,11 @@
    if the `<key>` is defined in current <dict>.
    \_cod ----------------------------
 
-\_def\_readkv#1{\_ea\_def\_ea\_tmpb\_ea{#1}%
-   \_replstring\_tmpb{= }{=}\_replstring\_tmpb{ =}{=}\_replstring\_tmpb{, }{,}%
-   \_ea \_kvscan\_tmpb,\_fin,}
-\_def\_kvscan#1,{\_ifx\_fin#1\_empty\_ea\_ignoreit \_else\_ea\_useit \_fi
-   {\_kvsd #1==\_fin \_kvscan}}
+\_def\_readkv#1{\_ea\_def\_ea\_tmpb\_ea{#1,}%
+   \_replstring\_tmpb{= }{=}\_replstring\_tmpb{ =}{=}\_replstring\_tmpb{ ,}{,}%
+   \_ea \_nospaceafter \_ea\_kvscan\_tmpb\_fin}
+\_def\_kvscan#1,#2{\_ifx^#1^\_else \_kvsd #1==\_fin \_fi
+   \_ifx\_fin#2\_empty \_ea\_ignoreit \_else\_ea\_useit \_fi {\_kvscan#2}}
 \_def\_kvsd#1=#2=#3\_fin{\_sdef{\_kvcs#1}{#2}%
    \_trycs{_kvx:\_the\_kvdict:#1}%
           {\_trycs{_nokvx:\_the\_kvdict}{\_ea\_ignoreit}{#1}\_ea\_ignoreit}{#2}}
@@ -88,7 +88,7 @@ user can set the `draft` option without the value. Then you can do
    \iskv{draft}\iftrue ...draft mode... \else ...final mode... \fi
    ...}
 \endtt
-Maybe, you want to allow not ony `draft` option but `final` option (which is
+Maybe, you want to allow not only `draft` option but `final` option (which is
 opposite to `draft`) too and you want to apply the result from the last given
 option. Then `\iskv` doesn't work because you can only check if both options
 are declared but you don't know what one is given as last. But you can
@@ -110,7 +110,7 @@ then `\readkv{opt=HELLO}` prints \"opt is HELLO".
 The \^`\nokvx` `{<code>}` can declare a <code> processed for all <keys>
 undeclared by \^`\kvx`. The `#1` and `#2` can be used in the <code>,
 `#1` is <key>, `#2` is <value>. If `\nokvx` is unused then nothing is done
-for undeclared <key>. Example: `\nokvx{\opwarnig{Unknown option "#1"}}`.
+for undeclared <key>. Example: `\nokvx{\opwarning{Unknown option "#1"}}`.
 
 The default dictionary name (where key-value pairs are processed) is
 empty. You can use your specific dictionary by
@@ -123,9 +123,12 @@ Package options can be processed when
 Recommendation: If the value of the key-value pair includes `=` or `,` or
 `]`, then use the syntax `<key>={<value>}`.
 
+A more extensive example can be found in
+\ulink[http://petr.olsak.net/optex/optex-tricks.html\#roundframe]{\OpTeX/ trick 0073}.
+
 \_endinput
 
-
+2023-10-23 minor changes in \readkv, empty key isn't processed.
 2023-03-11 \nokvx: \fi bug (due to \afterfi in \trycs) fixed.
 2023-01-13 \kvx parameter added, \nokvx introduced.
 2023-01-07 \kvdict, \kvx, \iskv added.
