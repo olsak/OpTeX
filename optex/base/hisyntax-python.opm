@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_hisyntaxpython {Syntax highlighting for Python sources <2020-04-04>} 
+\_codedecl \_hisyntaxpython {Syntax highlighting for Python sources <2023-10-25>}
 
 \_newtoks \_hisyntaxpython  \_newtoks \_hicolorspython
 
@@ -57,7 +57,7 @@
    \_replthis{E\e\o+\c}{E+}\_replthis{E\e\o-\c}{E-}   
    \_replthis{\e j}{j\e}
    %
-   \_replfromto{\n\o@\n}{^^J}{\z R{#1}^^J}    % decorators
+   \_replfromto{\b\n\n\o@\n}{^^J}{\z K{@}\z R{#1}^^J}    % decorators
    %
    \_def\o#1{\z O{#1}}
    \_def\c#1\e{\z N{#1}}
@@ -80,3 +80,5 @@ This code was greatly inspired by the OPMac hisyntax macros for Python:
 
 created by Petr Krajnik.
 
+2023-10-25 decorators: hi-syntax corrected
+2020-04-04 released
