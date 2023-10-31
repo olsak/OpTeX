@@ -158,7 +158,8 @@
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \runsystem
    \directoutput \algol \scaleto \scaletof \ttlineref \easylist \keepstyle \fcread
-   \shadedframe \roundframe \cancel \ignoreinspic \keystroke ;
+   \shadedframe \roundframe \cancel \ignoreinspic \keystroke
+   \colortab \crx \crtop \crbot \crmid ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------

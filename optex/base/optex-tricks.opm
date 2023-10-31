@@ -2,7 +2,7 @@
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-10-23>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-10-31>} % chunks loaded on demand
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -341,11 +341,11 @@
 \_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }    % horizontal line
 \_ifx\cancelparams\_undefined \_def\cancelparams{1 0 0 RG 1 J .6 w}\_fi % color RG linetype J linewidth w
 
-\_trick \keystroke ;
-%%%%%%%
+\_trick 0070 \keystroke ;
+%%%%%%%%%%%%
 
 \_ifx\keysize\_undefined \_newdimen\keysize \keysize=1.3em \_fi
-\_ifx\keystrokefont\_undefined \_def\keystrokefont{\_setfontsize{mag.77}\sans\_rm} \_fi
+\_ifx\keystrokefont\_undefined \_def\keystrokefont{\_setfontsize{mag.77}\_cs{sans}\_rm} \_fi
 
 \_newbox\.keylbox  \_newbox\.keymbox  \_newbox\.keyrbox
 \_edef\.picheight{\_the\_picheight}
@@ -365,15 +365,66 @@
       \_raise.33\keysize \_hbox to\_tmpdim{\_hss\_box0\_hss}\_copy\.keyrbox}%
 }
 
+\_trick 0004 \colortab ;
+%%%%%%%%%%%%
+
+\_def\.tabdC{\_futurelet\.next\.setcellcolor##\_fin\_hfil\_hfil}
+\_def\.tabdL{\_futurelet\.next\.setcellcolor##\_fin\_relax\_hfil}
+\_def\.tabdR{\_futurelet\.next\.setcellcolor##\_fin\_hfil\_relax}
+\_def\.tabdP#1{\_futurelet\.next\.setcellcolor##\_fin\_vtop
+    {\_hsize=#1\_relax \_baselineskip=\_normalbaselineskip
+     \_lineskiplimit=0pt \_noindent\.tmp\_unsskip\_lower\_dp\_tstrutbox\_hbox{}}}
+\_def\colortab{\_tablinespace=0pt \_let\_paramtabdeclarep=\.tabdP
+   \_let\_tabdeclarec=\.tabdC \_let\_tabdeclarel=\.tabdL \_let\_tabdeclarer=\.tabdR}
+\_def\.setcellcolor{%
+   \_ifx\.next\_setcolor \_ea\.setcellcolorC\_else \_ea\.setcellcolorD\_fi}
+\_def\.setcellcolorC\_setcolor#1#2#3#4\_fin#5#6{%
+   \_ifx#5\_vtop \_def\.tmp{#4}%
+      \_setbox0=\_hbox{\_the\_tabiteml\_vtop{\_localcolor#6}\_the\_tabitemr}%
+      \_the\_tabstrut {\_localcolor\_setcolor{#1}{#2}{#3}\_vrule width\_wd0}\_kern-\_wd0 \_box0
+   \_else
+      \_setbox0=\_hbox{\_the\_tabiteml\_localcolor#4\_unsskip\_the\_tabitemr}%
+      {\_localcolor\_setcolor{#1}{#2}{#3}%
+       \_the\_tabstrut\_leaders\_vrule\_hskip\_wd0 \_ifx#5\_hfil plus1fil\_fi}\_kern-\_wd0 \_box0
+      \_ifx#6\_hfil
+      {\_kern-.3bp \_localcolor\_setcolor{#1}{#2}{#3}\_leaders\_vrule\_hskip.3bp plus1fil}\_fi
+   \_fi
+}
+\_def\.setcellcolorD{\_ifx\cellcolor\undefined \_let\.next=\.setcellcolorN
+   \_else \_def\.next{\_ea\_ea\_ea\.setcellcolorC\cellcolor}%
+   \_fi \.next
+}
+\_def\.setcellcolorN#1\_fin#2#3{#2\_the\_tabiteml{\_localcolor#1\_unskip}\_the\_tabitemr#3}
+
+\_def\multispanc#1#2#3{\_multispan{#1}%
+   \_ea\_ea\_ea\.cellcolexp#2#3\_fin\_hfil\_hfil\_ignorespaces}
+\_def\.cellcolexp{\_futurelet\.next\.setcellcolor}
+
+\_trick 0005 \crx ;
+%%%%%%%%%%%%
+
+\_newcount\.tabline  \.tabline=1
+\_def\crx {\_crcr \_ifodd\.tabline \.colortabline \_else\_noalign{\_hrule height0pt}\_fi \_incr\.tabline}
+\_def\.colortabline{\_noalign{\_localcolor\LightGrey
+   \_hrule height\ht\_strutbox depth\_dimexpr\_dp\_strutbox +2\_tablinespace\_relax
+   \_kern-\_dimexpr\ht\_strutbox+\_dp\_strutbox +2\_tablinespace}}
+
+\_trick 0007 \crtop \crbot \crmid ;
+%%%%%%%%%%%%
+
+\_def\crtop{\_crcr \_noalign{\_hrule height.6pt \_kern2.5pt}}
+\_def\crbot{\_crcr \_noalign{\_kern2.5pt\_hrule height.6pt}}
+\_def\crmid{\_crcr \_noalign{\_kern1pt\_hrule height.4pt\_kern1pt}}
+
 
 \_trick end ;
 
 \_endcode
 
-todo: \colortab, \crx, \crtop,
-      \longtable, \vcent, \tnote, \tabnode, \pstart, \settabs, \import,
+todo: \longtable, \vcent, \tnote, \tabnode, \pstart, \settabs, \import,
       \incrpp, \ispageodd, \seccc, \makeLOF.
 
+2023-10-31 \ignoreinspic, \keystroke, \colortab, \crx, \crtop, \crbot, \crmid added
 2023-10-23 \shadedframe, \roundframe  added
 2023-10-21 \fcread, \fullcite added
 2023-10-20 \style m, \keepstyle, \easylist, \ttlineref added
