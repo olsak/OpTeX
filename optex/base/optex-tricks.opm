@@ -150,6 +150,29 @@
    \_edef\.tmpa{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
    \.scaletoA{\_setfontsize{mag\.tmpa}\_currvar#1}}
 
+\_trick 0053 \ignoreinspic ;
+%%%%%%%%%%%%
+
+\_def\.trydef #1{\_ifx#1\_undefined \_afterfi{\_def#1}\_else \_afterfi{\_def\.tmp}\_fi}
+\.trydef\nopicw{5cm}
+\.trydef\nopicratio{1.7}
+
+\_let\.inspicBori=\_inspicB
+\_def\.inspicBnew#1{%
+   \_isfile{\_the\_picdir#1}\_iftrue
+      \_edef\.filename{\_the\_picdir#1}%
+      \_setbox0=\_hbox\_bgroup\.inspicBori{#1}% \egroup is in \inspicBori
+   \_else
+      \_edef\.filename{NONE: \_the\_picdir#1}%
+      \_ifdim\_picheight=0pt \_picheight=\_expr{1/\nopicratio}\_picwidth \_fi
+      \_ifdim\_picwidth=0pt \_picwidth=\nopicratio\_picheight \_fi
+      \_ifdim\_picwidth=0pt \_picwidth=\nopicw\_relax \_picheight=\_expr{1/\nopicratio}\_picwidth \_fi
+      \_setbox0=\_hbox to\_picwidth{\_vbox to\_picheight{}\_hss}%
+   \_fi
+   {\LightGrey \_vrule height\_ht0 width\_wd0\Black\_raise1ex\_llap{\.filename\ }}\_egroup
+}
+\_def\ignoreinspic{\_let\_inspicB=\.inspicBnew}
+
 \_trick 0047 \style m \keepstyle ;
 %%%%%%%%%%%%
 
@@ -220,6 +243,7 @@
 \_def\fullcite[#1]{\_trycs{fcit:#1}{??\_opwarning{\_string\fullcite[#1] unknown label}}}
 
 \_trick 0071 \shadedframe ;
+%%%%%%%%%%%%
 
 \_def\.shadedframedefaults {% defaults:
    frame-color=\Grey,       % color of frame rules
@@ -250,7 +274,7 @@
 \_trick 0073 \roundframe ;
 %%%%%%%%%%%%
 
-\_def \.roundframedefaults  {% default parameters:
+\_def \.roundframedefaults {% default parameters:
    round-corner=3mm,        % diameter of corners
    title-bgcolor=\Blue,     % background color of the title area
    title-color=\White,      % color of title text
@@ -289,8 +313,10 @@
 \_def\.parstrut{\_par\_kern-\_prevdepth\_kern\_dp\_strutbox}
 \_def\.roundframeshadow{\_raise\_roundness\_rlap{\_edef\_shadowb{\_bp{\_kv{shadow-width}}}%
    \_inoval[\_fcolor=\Grey \_roundness=\_kv{round-corner} \_shadow=Y \_lwidth=0pt]{\_box1}}}
+\_edef\.tmp{\_the\_kvdict}
 {\_kvdict{_optextrick:roundframe} \_ea\_foreach\.roundframedefaults \_do #1#2=#3,{\_global\_kvx{#1#2}{}}
  \_global\_nokvx{\_opwarning{\_string\roundframe: Unknown option "#1"}}}
+\_kvdict=\_ea{\.tmp} % restoring \_kvdict, because \globaldefs=1
 
 \_trick 0103 \cancel ;
 %%%%%%%%%%%%
@@ -315,9 +341,38 @@
 \_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }    % horizontal line
 \_ifx\cancelparams\_undefined \_def\cancelparams{1 0 0 RG 1 J .6 w}\_fi % color RG linetype J linewidth w
 
+\_trick \keystroke ;
+%%%%%%%
+
+\_ifx\keysize\_undefined \_newdimen\keysize \keysize=1.3em \_fi
+\_ifx\keystrokefont\_undefined \_def\keystrokefont{\_setfontsize{mag.77}\sans\_rm} \_fi
+
+\_newbox\.keylbox  \_newbox\.keymbox  \_newbox\.keyrbox
+\_edef\.picheight{\_the\_picheight}
+\_setbox\.keylbox=\_hbox{\_picheight=\keysize \_inspic{keystroke_left.pdf}}
+\_setbox\.keymbox=\_hbox{\_picheight=\keysize \_inspic{keystroke_middle.pdf}}
+\_setbox\.keyrbox=\_hbox{\_picheight=\keysize \_inspic{keystroke_right.pdf}}
+\_picheight=\.picheight
+
+\_def\keystroke#1{\_setbox0=\_hbox{\keystrokefont#1}%
+   \_leavevmode \_lower.2\keysize \_hbox{\_copy\.keylbox
+      \_tmpdim=\_wd\.keymbox
+      \_ifdim\_wd0>\_tmpdim \_tmpdim=\_wd0 \_fi
+      \_ifdim\_tmpdim>\_wd\.keymbox
+         \_pdfsave \_pdfscale{\_expr{\_bp{\_tmpdim}/\_bp{\_wd\.keymbox}}}{1}%
+            \_rlap{\_copy\.keymbox}\_pdfrestore
+      \_else \_rlap{\_copy\.keymbox}\_fi
+      \_raise.33\keysize \_hbox to\_tmpdim{\_hss\_box0\_hss}\_copy\.keyrbox}%
+}
+
+
 \_trick end ;
 
 \_endcode
+
+todo: \colortab, \crx, \crtop,
+      \longtable, \vcent, \tnote, \tabnode, \pstart, \settabs, \import,
+      \incrpp, \ispageodd, \seccc, \makeLOF.
 
 2023-10-23 \shadedframe, \roundframe  added
 2023-10-21 \fcread, \fullcite added

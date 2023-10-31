@@ -66,9 +66,9 @@
    are read from `\_pgref:<label>` by \`\_pgrefB``{<gpageno>}{<pageno>}{<given-text>}`.
    \nl
    \`\_lastreflabel` keeps the value of the last label read by \^`\ref` or \^`\pgref`.
-   You can use it for example by definig a macro `\pg` by `\def\pg{\pgref[\_lastreflabel]}`
+   You can use it for example by definig a macro \`\pgr` by `\def\pgr{\pgref[\_lastreflabel]}`
    and then you need not repeat the same label in typical situations and you
-   can write for instance: `see section \ref[lab] at page \pg.`
+   can write for instance: `see section \ref[lab] at page \pgr.`
    \_cod ----------------------------
 
 \_def\_ref[#1]{\_xdef\_lastreflabel{#1}\_isnextchar\_bgroup{\_refA}{\_refA{@}}}
