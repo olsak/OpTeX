@@ -201,7 +201,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#import">The import package</a>
     <li><a href="#num">Numbers printed in three-digits groups</a>
     <li><a href="#scantok">Expandable token-per-token scanner</a>
-    <li><a href="#paramspaced">Parametr separated by space or end-group</a>
+    <li><a href="#paramspaced">Parameter separated by space or end-group</a>
     <li><a href="#balancing">Nested brackets of another type than {}</a>
     <li><a href="#addallowbreak">Breaking URL at any point</a>
     <li><a href="#setpage">What page-number is current?</a>
@@ -214,6 +214,8 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#addand">Adding "and" before the last item in lists</a>
     <li><a href="#ispageodd">Testing if currentpage is odd</a>
     <li><a href="#xdetokenize">Not duplicating the hash characters</a>
+    <li><a href="#keysinkey">Key-value lists in a key-value list</a>
+    <li><a href="#putsep">Putting separators between list items</a>
 </ul>
 
 <li>Lua matters
@@ -943,7 +945,7 @@ It creates
 
 <p>You can declare another format in these macros. For examle various color
 selection, another font selection, another kerning etc. The basic
-implmentation (shown here) is included in the format.
+implementation (shown here) is included in the format.
 
 <p CLASS=datum>(0108) -- P. O. 2023-04-27<p>
 <hr>
@@ -3942,7 +3944,7 @@ token list ({,} have catcodes 1,2) then you can define
 <p CLASS=datum>(0042) -- P. O. 2021-02-06<p>
 <hr>
 
-<h2><a name="paramspaced"></a>Parametr separated by space or end-group</h2>
+<h2><a name="paramspaced"></a>Parameter separated by space or end-group</h2>
 
 <p>We want to create a macro with a parameter separated by a space. For
 example \macro text . But sometimes a user may use the macro with bad syntax:
@@ -4622,6 +4624,98 @@ with catcode 12.
 <p CLASS=datum>(0117) -- P. O. 2023-09-08<p>
 <hr>
 
+<h2><a name="keysinkey"></a>Key-value lists in a key-value list</h2>
+
+<p>A <a href="https://tex.stackexchange.com/questions/699712/">stack exchage question</a>
+includes interesting task: how to interpret more key-value lists in a key-value list.
+An example is here:
+<pre>
+\showchapter{%
+    title=My chapter,
+    authors={
+        {name=Peter,affiliation=MIT},
+        {name=Mary,affiliation=UCLA},
+    },
+}
+</pre>
+<p>The data have to be interpreted and printed (for example):
+<pre>
+My chapter
+    Peter, MIT
+    Mary, UCLA
+</pre>
+<p>We can use \readkv at the outer list and \foreach over the authors value.
+<pre>
+\newcount\aunum
+\def\showchapter#1{\readkv{#1} % scanning outer list
+   \iskv{authors}\iftrue       % scanning inner lists
+      \ea\foreach\expanded{\kv{authors}}\do ##1##2,{%
+         \incr\aunum
+         \readkv{##1}%
+         \sxdef{author\the\aunum}{\kv{name}}%
+         \sxdef{affiliation\the\aunum}{\kv{affiliation}}%
+      }
+   \fi
+   \kv{title}\par        % using scanned data:
+   \fornum 1..\aunum \do{%
+      \hskip\parindent \cs{author##1}, \cs{affiliation##1}\par
+   }
+}
+</pre>
+
+<p>The unseparated parameter ##1 is used in \foreach in order to ignore
+spaces before {...}. The authors value have to be expanded before \foreach.
+You can use \expanded (as shown in the code) or 31 \ea before \foreach when
+using \kv{authors} or only three \ea but explicit \csname...\endcsname:
+<pre>
+    \ea\ea\ea \foreach \csname _kv::authors\endcsname \do ##1,##2,{%
+       ...
+    }
+</pre>
+
+<p CLASS=datum>(0118) -- P. O. 2023-10-31<p>
+<hr>
+
+<h2><a name="putsep"></a>Putting separators between list items</h2>
+
+<p>If we are working with lists then we can simply save data into it in the
+format:
+<pre>
+\def\list{{first}{second}{third}{fourth}}
+</pre>
+<p>Then we can simply do \ea\foreach\list \do{...} and many other things are
+easier. Finally, we want to print the list with a separator between items
+(comma+space, for example). This separator should not be printed after the
+last item and, moreover, before the last item should be somewhat different
+separator. We create a macro \putsep \list {separator} {last-separator}
+which re-defines \list from the format above to the format where given
+separators are inserted between items. For example with our example above
+<pre>
+\putsep\list {, } {, and }
+</pre>
+<p>defines \list as
+<pre>
+first, second, third, and fourth
+</pre>
+
+<p>The implementation should be:
+<pre>
+\def\putsep#1#2#3{\def\sep{#2}\def\sepfin{#3}%
+   \unless\ifx#1\empty \edef#1{\ea\putsepA#1\_fin\_empty}\fi
+}
+\def\putsepA#1#2#3{\unexpanded{#1}%
+      \ifx \_fin#2\_else
+         \ifx \_fin#3\sepfin \unexpanded{#2}\_else
+            \sep \afterfi{\afterfi{\putsepA{#2}{#3}}}%
+   \fi\fi
+}
+</pre>
+
+<p>Only unempty lists are redefined. The \edef\list{...} is used, but
+items are not expanded because of \unexpanded.
+
+<p CLASS=datum>(0119) -- P. O. 2023-10-31<p>
+<hr>
 
 <p CLASS="lmarg">Lua matters</p>
 
