@@ -1,8 +1,9 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-% Selected OpTeX tricks are here, they are auto-loaded if the macro is used
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-01>} % chunks loaded on demand
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-10-31>} % chunks loaded on demand
+% Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
+% namespace: optextrick
 
 \_trick 0057 \begfile \createfile ;
 %%%%%%%%%%%%
@@ -416,14 +417,100 @@
 \_def\crbot{\_crcr \_noalign{\_kern2.5pt\_hrule height.6pt}}
 \_def\crmid{\_crcr \_noalign{\_kern1pt\_hrule height.4pt\_kern1pt}}
 
+\_trick 0016 \longtable ;
+%%%%%%%%%%%%
+
+\_def\longtable#1#2{\_goodbreak \_bgroup \_tablinespace=0pt \_let\_zerotabrule=\_empty
+   \_setbox0=\_table{#1}{\.strutT\_relax #2}
+   \_setbox1=\_vbox{\_unvbox0 \_setbox2=\_vbox{}\.revertbox}
+   \_setbox2=\_vbox{\_unvbox2 \_global\_setbox4=\_lastbox\_unskip \_global\_setbox5=\_lastbox\_unskip}
+   \.whatfree4 \_advance\_tmpdim by-.8pt \_ifdim\_tmpdim<\_baselineskip \_vfil\_break \_fi
+   \_offinterlineskip \.crule\.center4\.crule\.center5 \.printboxes
+   \.center5\.crule \_egroup \_goodbreak
+}
+\_def\.whatfree#1{\_tmpdim=\_vsize \_advance\_tmpdim by-\_pagetotal
+   \_advance\_tmpdim by-\_prevdepth \_advance\_tmpdim by-.4pt
+   \_advance\_tmpdim by-\_ht#1 \_advance\_tmpdim by-\_dp#1 \_advance\_tmpdim by-\_ht5 }
+\_def\.revertbox {\_setbox0=\_lastbox\_unskip
+   \_ifvoid0 \_else \_global\_setbox2=\_vbox{\_unvbox2\_box0} \_ea\.revertbox\_fi}
+\_def\.printboxes{\_setbox2=\_vbox{\_unvbox2 \_global\_setbox0=\_lastbox\_unskip}
+   \_ifvoid0 \_else \.whatfree0
+      \_ifdim\_tmpdim<0pt \.center5\.crule\_vfil\_break \.crule\.center4\.crule\.center5 \_fi
+      \.center0 \_nobreak \.printboxes \_fi}
+\_def\.crule{\_centerline{\_hbox to\_wd4{\_hrulefill}}\_nobreak}
+\_def\.center#1{\_centerline{\_copy#1}\_nobreak}
+
+\_def\.strutT {\_vrule height1.8em depth.8em width0pt} % strut for the title
+
+\_trick 0032 \vcent \vbot ;
+%%%%%%%%%%%%
+
+\_def\vbot {\_let\_tableparbox=\_vbox}
+\_def\vcent {\_toksapp\_tabiteml{$}\_tokspre\_tabitemr{$}\_let\_tableparbox=\_vcenter}
+
+\_trick 0046 \tnote ;
+%%%%%%%%%%%%
+
+\_newcount\.tnotenum
+\_def\.tnotelist{}
+\_def\.tnoteformat{$\Red^{\_rm\_athe\.tnotenum}$}
+\_def\tnote#1{\_incr\.tnotenum \.tnoteformat\_global\_addto\.tnotelist{{#1}}}
+\_def\tnoteprint{\_par\_noindent \.tnotenum=0
+   \_ea\_foreach\.tnotelist \_do{\_advance\.tnotenum by1 \.tnoteformat##1 }\_par
+   \_global\.tnotenum=0 \_gdef\.tnotelist{}%
+}
+
+\_trick 0050 \tabnodes \tablebefore ;
+%%%%%%%%%%%%
+
+\_def\tablebefore{\_ifvmode \_nointerlineskip\_null \_fi
+   \_incr\.tndnum \_setpos[t\_the\.tndnum:ori:b]\_ea\.tbpxpy\_ea{\_the\.tndnum}{b}\_decr\.tndnum
+}
+\_def\tableafter {\_setpos[t\_the\_tndnum:ori:e]\_ea\.tbpxpy\_ea{\_the\.tndnum}{e}}
+\_def\.tbpxpy#1#2{%
+   \_def\.tbpx[##1]{\_expr{\_bp{\_posx[t#1:##1]}-\_bp{\_posx[t#1:ori:#2]}}}%
+   \_def\.tbpy[##1]{\_expr{\_bp{\_posy[t#1:##1]}-\_bp{\_posy[t#1:ori:#2]}}}%
+}
+\_newcount\.tndnum \_newcount\.tablerownum
+\_def\.putnodeh#1{\_omit\_relax
+   \_setpos[t\_the\.tndnum:l#1]\_hskip0pt plus1fill\_relax \_setpos[t\_the\.tndnum:r#1]}
+\_def\.putnodelr{\_fornum 1..\_colnum-1\_do{\.putnodeh{##1}&}\.putnodeh{\_the\_colnum}%
+   \_gdef\.putnode{\_noalign{\.putnodev}}\_cr}
+\_def\.putnodev{\_setpos[t\_the\.tndnum:v\_the\.tablerownum]\_incr\.tablerownum}
+\_def\tabnodes{\_incr\.tndnum \.tablerownum=0
+   \_def\_tablepxpreset{\_everycr{}}\_let\.putnode=\.putnodelr \_everycr={\.putnode}}
+
+\_def\itl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1-1}]}}
+\_def\icl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]}
+                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
+\_def\ibl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1}]}}
+\_def\itc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
+                 \_expr{\.tbpy[v\.enum{#1-1}]}}
+\_def\icc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
+                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
+\_def\ibc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
+                 \_expr{\.tbpy[v\.enum{#1}]}}
+\_def\itr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1-1}]}}
+\_def\icr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]}
+                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
+\_def\ibr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1}]}}
+\_def\iwd[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]-(\.tbpx[l\.enum{#2}])}}
+\_def\iht[#1,#2]{\_expr{\.tbpy[v\.enum{#1-1}]-(\.tbpy[v\.enum{#1}])}}
+
+\_def\.enum#1{\_number\_numexpr#1\_relax}
+\_def\ishift #1{\_ea\.ishifta#1}  %  \ishift[2,3][1pt,2.5pt]
+\_def\.ishifta \_expr#1 \_expr#2#3#4,#5]{\_expr{#1+(\_bp{#4})} \_expr{#2+(\_bp{#5})}}
+\_def\tabpos#1#2{#1\_ifx\ishift#2\_afterfi{\_ea\_ea\_ea\_ea\_ea\_ea}\_fi\_ea\.tabposA#2}
+\_def\.tabposA\_expr#1 \_expr#2{\_expr{#1}bp \_expr{#2}bp}
 
 \_trick end ;
 
 \_endcode
 
-todo: \longtable, \vcent, \tnote, \tabnode, \pstart, \settabs, \import,
+todo: \pstart, \settabs, \import,
       \incrpp, \ispageodd, \seccc, \makeLOF.
 
+2023-11-01 \longtable, \vcent, \vbot, \tnote, \tabnodes added
 2023-10-31 \ignoreinspic, \keystroke, \colortab, \crx, \crtop, \crbot, \crmid added
 2023-10-23 \shadedframe, \roundframe  added
 2023-10-21 \fcread, \fullcite added

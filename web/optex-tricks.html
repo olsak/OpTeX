@@ -2665,6 +2665,10 @@ D:tablenum/colnum. Note that the column number \colnum is calculated by the
 
 <h2><a name="longtable"></a>Long table across multiple pages</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\longtable
+</p>
+
 <p>The \table macro runs \halign primitive inside \vbox. This is reason why
 it is unbreakable to multiple pages. But you can deactivate this \vbox. Suppose
 that you have a lot of lines like this:
@@ -2683,7 +2687,7 @@ mode, then all lines are at the left margin of the page box. Maybe, you want
 to see them in the center. This can be done by:
 
 <pre>
-\thistable{tabskipl=0pt plus1fil \tabskipr=\tabskipl}
+\thistable{\tabskipl=0pt plus1fil \tabskipr=\tabskipl}
 \ltable to\hsize {|c|c|}{data &amp; data \cr 
                          data &amp; data \cr 
                 ... much more &amp; data ... \cr} 
@@ -2719,7 +2723,7 @@ last approach allows to repeat a table header at the top of each page again:
    \setbox0=\table{#1}{\strutT\relax #2} 
    \setbox1=\vbox{\unvbox0 \setbox2=\vbox{}\revertbox} 
    \setbox2=\vbox{\unvbox2 \global\setbox4=\lastbox\unskip \global\setbox5=\lastbox\unskip}
-   \whatfree4 \advance\tmpdim by-.8pt \ifdim\tmpdim&le;\baselineskip \vfil\break \fi 
+   \whatfree4 \advance\tmpdim by-.8pt \ifdim\tmpdim&lt;\baselineskip \vfil\break \fi
    \offinterlineskip \crule\center4\crule\center5 \printboxes 
    \center5\crule \egroup \goodbreak 
 }
@@ -2730,7 +2734,7 @@ last approach allows to repeat a table header at the top of each page again:
    \ifvoid0 \else \global\setbox2=\vbox{\unvbox2\box0} \ea\revertbox\fi } 
 \def\printboxes{\setbox2=\vbox{\unvbox2 \global\setbox0=\lastbox\unskip} 
    \ifvoid0 \else \whatfree0 
-      \ifdim\tmpdim&le;0pt \center5\crule\vfil\break \crule\center4\crule\center5 \fi 
+      \ifdim\tmpdim&lt;0pt \center5\crule\vfil\break \crule\center4\crule\center5 \fi
       \center0 \nobreak \printboxes \fi } 
 \def\crule{\centerline{\hbox to\wd4{\hrulefill}}\nobreak} 
 \def\center#1{\centerline{\copy#1}\nobreak} 
@@ -2756,6 +2760,10 @@ OPmac trick 0024.
 <hr>
 
 <h2><a name="tablevcent"></a>Vertically centered paragraphs in table</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\vcent, \vbot
+</p>
 
 <p>The p declarator in the \table macro creates paragraphs in \vtop. It
 means that first line of all paragraphs in one table row is vertically
@@ -2832,6 +2840,10 @@ too, see <a href="#num">OpTeX trick 0040</a>.
 
 <h2><a name="tnote"></a>Table notes</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\tnote<br>declared also:<br>\tnoteprint
+</p>
+
 <p>We create the macro \tnote{text} which can be used in tables. Each
 occurrence prints only a mark in the form ^a, ^b, etc. and saves {text} into
 the memory. When the table is printed then user write \tnoteprint
@@ -2841,9 +2853,10 @@ as footnotes, but works locally for each table.
 <pre>
 \newcount\tnotenum
 \def\tnotelist{}
-\def\tnote#1{\incr\tnotenum $\Red^{\rm\_athe\tnotenum}$\global\addto\tnotelist{{#1}}}
+\def\tnoteformat{$\Red^{\rm\_athe\tnotenum}$}
+\def\tnote#1{\incr\tnotenum \tnoteformat\global\addto\tnotelist{{#1}}}
 \def\tnoteprint{\par\noindent \tnotenum=0
-   \ea\foreach\tnotelist \do{\advance\tnotenum by1 $\Red^{\rm\_athe\tnotenum}$##1 }\par
+   \ea\foreach\tnotelist \do{\advance\tnotenum by1 \tnoteformat##1 }\par
    \global\tnotenum=0 \gdef\tnotelist{}%
 }
 
@@ -2863,6 +2876,11 @@ formating, of course.
 <hr>
 
 <h2><a name="tnodes"></a>Positioning in the table</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\tabnodes,<br>\tablebefore<br>
+declared also:<br>\tableafter,<br>
+\itl, \icl, \ibl,<br>\itc, \icc, \ibc,<br>\itr, \icr, \ibr
 
 <p>We craete macro \tabnodes which creates nodes in the table when
 \thistable{\tabnodes} is declared. You can put graphics or text at these
@@ -2911,13 +2929,16 @@ point shifted by given amount right and up, for example
 \ishift\itl[2,3][1pt,1pt]. The same can be applied to other macros
 \icl, \ibl, \itc, \icc, \ibc, \itr, \icr, \ibr.
 
-<p>You can use resuls from \icc (etc.) macros as argument of \puttext and
-\putpic macros too, but you have to re-define \expru for this case:
+<p>You can use \puttext or \putpic after \tablebefore or \tableafter like
+\pdfliteral, and you can use \ibl etc. macros as coordinates given to \puttext
+ot \putpic. But the se macros have to be prefixed by \tabpos in
+this case. Example:
 
 <pre>
 \tablebefore
-   ...
-   {\def\expru#1{\expr{#1}bp}\puttext\ibl[2,2]{HELLO}}
+   \tabpos\puttext\ibl[2,2]{HELLO}
+   ... or ...
+   \tabpos\puttext\ishift\ibl[2,2][3pt,7pt]{HELLO}
 </pre>
 
 <p>The implementation follows.
@@ -2940,27 +2961,28 @@ point shifted by given amount right and up, for example
 \def\tabnodes{\incr\tndnum \tablerownum=0
    \def\_tablepxpreset{\everycr{}}\let\putnode=\putnodelr \everycr={\putnode}}
 
-\def\itl[#1,#2]{\expru{\tbpx[l\enum{#2}]} \expru{\tbpy[v\enum{#1-1}]}}
-\def\icl[#1,#2]{\expru{\tbpx[l\enum{#2}]}
-                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibl[#1,#2]{\expru{\tbpx[l\enum{#2}]} \expru{\tbpy[v\enum{#1}]}}
-\def\itc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expru{\tbpy[v\enum{#1-1}]}}
-\def\icc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibc[#1,#2]{\expru{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expru{\tbpy[v\enum{#1}]}}
-\def\itr[#1,#2]{\expru{\tbpx[r\enum{#2}]} \expru{\tbpy[v\enum{#1-1}]}}
-\def\icr[#1,#2]{\expru{\tbpx[r\enum{#2}]}
-                \expru{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibr[#1,#2]{\expru{\tbpx[r\enum{#2}]} \expru{\tbpy[v\enum{#1}]}}
-\def\iwd[#1,#2]{\expru{\tbpx[r\enum{#2}]-(\tbpx[l\enum{#2}])}}
-\def\iht[#1,#2]{\expru{\tbpy[v\enum{#1-1}]-(\tbpy[v\enum{#1}])}}
+\def\itl[#1,#2]{\expr{\tbpx[l\enum{#2}]} \expr{\tbpy[v\enum{#1-1}]}}
+\def\icl[#1,#2]{\expr{\tbpx[l\enum{#2}]}
+                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibl[#1,#2]{\expr{\tbpx[l\enum{#2}]} \expr{\tbpy[v\enum{#1}]}}
+\def\itc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expr{\tbpy[v\enum{#1-1}]}}
+\def\icc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
+                \expr{\tbpy[v\enum{#1}]}}
+\def\itr[#1,#2]{\expr{\tbpx[r\enum{#2}]} \expr{\tbpy[v\enum{#1-1}]}}
+\def\icr[#1,#2]{\expr{\tbpx[r\enum{#2}]}
+                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
+\def\ibr[#1,#2]{\expr{\tbpx[r\enum{#2}]} \expr{\tbpy[v\enum{#1}]}}
+\def\iwd[#1,#2]{\expr{\tbpx[r\enum{#2}]-(\tbpx[l\enum{#2}])}}
+\def\iht[#1,#2]{\expr{\tbpy[v\enum{#1-1}]-(\tbpy[v\enum{#1}])}}
 
 \def\enum#1{\number\numexpr#1\relax}
 \def\ishift #1{\ea\ishifta#1}  %  \ishift[2,3][1pt,2.5pt]
-\def\ishifta \expru#1 \expru#2#3#4,#5]{\expru{#1+(\bp{#4})} \expru{#2+(\bp{#5})}}
-\let\expru=\expr
+\def\ishifta \expr#1 \expr#2#3#4,#5]{\expr{#1+(\bp{#4})} \expr{#2+(\bp{#5})}}
+\def\tabpos#1#2{#1\ifx\ishift#2\afterfi{\ea\ea\ea\ea\ea\ea}\fi\ea\tabposA#2}
+\def\tabposA\expr#1 \expr#2{\expr{#1}bp \expr{#2}bp}
 </pre>
 
 <p>The nodes t(tab-num):v(row-num) are created for vertical positioning,
