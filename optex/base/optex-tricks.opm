@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-01>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-03>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -503,6 +503,50 @@
 \_def\tabpos#1#2{#1\_ifx\ishift#2\_afterfi{\_ea\_ea\_ea\_ea\_ea\_ea}\_fi\_ea\.tabposA#2}
 \_def\.tabposA\_expr#1 \_expr#2{\_expr{#1}bp \_expr{#2}bp}
 
+\_trick 0031 \framedblocks ;
+%%%%%%%%%%%%
+
+\_newcount\.blocklevel  % nesting level of blocks
+\_def\begblock{\_par\_bgroup
+   \_advance\.blocklevel by1 \_advance\_leftskip by\_iindent \_rightskip=\_leftskip
+   \_medskip
+   \_openref\_pdfsavepos \_ea\_wref\_ea\.Xblock\_ea{\_ea{\_the\.blocklevel}B{\_the\_pdflastypos}}
+   \_nobreak \_medskip
+}
+\_def\endblock{\_par\_nobreak\_medskip
+   \_pdfsavepos \_ea\_wref\_ea\.Xblock\_ea{\_ea{\_the\.blocklevel}E{\_the\_pdflastypos}}
+   \_medskip \_egroup
+}
+\_newdimen\.frtop \_newdimen\.frbottom % positions of top and bottom text on the pages
+\_pgbackground={%
+   \_slet{_optextrick_tmp}{frm:\_the\_gpageno}
+   \_ifx\.tmp\_undefined \_def\.tmp{}\_fi
+   \.frtop=\_dimexpr \_pdfpageheight-\_voffset+\_smallskipamount\_relax
+   \.frbottom=\_dimexpr\_pdfpageheight-\_voffset-\_vsize-\_medskipamount\_relax
+   \_ifx\.frnext y \_edef\.tmp{B{\_number\.frtop}\.tmp}\_global\_let\.frnext n\_fi
+   \_ea\.printframes \.tmp B{0}E{\_number\.frbottom}
+   \_ifx\frameslist\_empty \_else
+   \_pdfliteral{q 1 0 0 1 0 \_bp{-\_pdfpageheight} cm \frameslist Q}\_fi
+}
+\_def\.printframes B#1#2E#3{\_ifnum#1=0 \_else
+   \printframe {\_hoffset}{#3sp}{\_xhsize}{\_ifnum#1=-1 \_number\.frtop\_else#1\_fi sp-#3sp}
+   \_ifx^#2^\_else \_global\_let\.frnext=y \_let\.printframes=\_relax \_fi
+   \_ea\.printframes\_fi
+}
+\_def\frameslist{}
+\_ifx\printframe\_undefined
+\_def\printframe #1#2#3#4{\_edef\frameslist{\frameslist
+    .8 g \_bp{#1} \_bp{#2} \_bp{#3} \_bp{#4} re f }%
+}
+\_fi
+\_def\framedblocks{} % for autoloading only, it redefines standard \begblock, \endblock
+\_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
+\_refdecl{%
+   \_def\.Xblock#1#2#3{\_ifnum#1=1 \_edef\.tmp{frm:\_ea\_ignoresecond\_currpage}^^J
+      \_unless\_ifcsname \.tmp \_endcsname \_sxdef{\.tmp}{}\_fi^^J
+      \_sxdef{\.tmp}{\_cs{\.tmp}#2{#3}}\_fi}
+}
+
 \_trick end ;
 
 \_endcode
@@ -510,6 +554,7 @@
 todo: \pstart, \settabs, \import,
       \incrpp, \ispageodd, \seccc, \makeLOF.
 
+2023-11-03 \framedblocks added
 2023-11-01 \longtable, \vcent, \vbot, \tnote, \tabnodes added
 2023-10-31 \ignoreinspic, \keystroke, \colortab, \crx, \crtop, \crbot, \crmid added
 2023-10-23 \shadedframe, \roundframe  added
