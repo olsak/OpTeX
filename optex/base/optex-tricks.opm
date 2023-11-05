@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-03>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-05>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -547,13 +547,76 @@
       \_sxdef{\.tmp}{\_cs{\.tmp}#2{#3}}\_fi}
 }
 
+\_trick 0086 \twoblocks ;
+%%%%%%%%%%%%
+
+\_newdimen\.pageblank
+\_newdimen\.columnsht
+
+\_def\.setcolumn{\_advance\_hsize by-\_colsep \_hsize=.5\_hsize \_penalty0 }
+\_def\twoblocks{\_par
+   \_begingroup \_hbadness=5000 \_splittopskip=1em plus1fil \_brokenpenalty=0
+   \_setbox0=\_vbox\_bgroup \.setcolumn
+      \_aftergroup\.twoblocksA
+      \_let\.next=%
+}
+\_def\.twoblocksA{%
+   \_setbox1=\_vbox\_bgroup \.setcolumn
+      \_aftergroup\.twoblocksB
+      \_let\.next=%
+}
+\_def\.twoblocksB{\_setbox2=\_vsplit0 to0pt \_setbox2=\_vsplit1 to0pt \.twoblocksC}
+\_def\.twoblocksC{%
+   \_penalty0 \_vskip\_parskip
+   \_ifdim\_pagegoal=\_maxdimen \.pageblank=\_vsize \_else \.pageblank=\_pagegoal \_fi
+   \_advance\.pageblank by-\_pagetotal
+   \_ifdim\.pageblank<24pt \_vfil\_break \.pageblank=\_vsize \_fi
+   \_ifdim\_ht0>\_ht1 \.columnsht=\_ht0 \_dimen0=\_dp0 \_else \.columnsht=\_ht1 \_dimen0=\_dp1 \_fi
+   \_ifdim\.columnsht>\.pageblank
+      \_setbox2=\_vsplit0 to\.pageblank \_setbox3=\_vsplit1 to\.pageblank
+      \_line{\.xvtop2\_hss\.xvtop3}
+      \_kern-\_baselineskip \_nobreak\_vfil\_break
+      \_ea\.twoblocksC
+   \_else
+      \_line{\.xvtop0\_hss\.xvtop1}
+      \_prevdepth=\_dimen0
+      \_endgroup
+   \_fi
+}
+\_def\.xvtop#1{\_vtop{\_null\_kern-\_splittopskip\_unvbox#1}}
+
+\_trick 0069 \pstart ;
+%%%%%%%%%%%%
+
+\_newcount\.firstlinenum
+\_newcount\.gprevgraf
+
+\_def\pstart{\_par \_setbox0=\_vbox\_bgroup
+   \_def\_par{\_endgraf\_advance\.gprevgraf by\_prevgraf \_prevgraf=0 }}
+\_def\pend{\_par \_global\_tmpnum=\.gprevgraf \_egroup
+   \_ifnum\.firstlinenum=0 \.firstlinenum=1 \_fi
+   \_advance\_tmpnum by\.firstlinenum
+   \.firstlinenum=\_tmpnum \_advance\_tmpnum by-1
+   \_setbox0=\_vbox{\_unvbox0
+      \_setbox2=\_hbox{}
+      \_loop
+         \_unskip\_unskip\_unpenalty \_setbox1=\_lastbox
+         \_ifvoid1 \_else
+            \_global\_setbox2=\_hbox{\_llap{\.pendprintnum}\_box1\_penalty0\_unhbox2}
+            \_advance\_tmpnum by-1
+            \_repeat
+   }\_noindent\_unhbox2 \_par
+}
+\_def\.pendprintnum{\_setfontsize{mag.6}\_rm\_the\_tmpnum\_kern.8em}
+
 \_trick end ;
 
 \_endcode
 
-todo: \pstart, \settabs, \import,
+todo: \settabs, \import,
       \incrpp, \ispageodd, \seccc, \makeLOF.
 
+2023-11-05 \twoblocks, \pstart added
 2023-11-03 \framedblocks added
 2023-11-01 \longtable, \vcent, \vbot, \tnote, \tabnodes added
 2023-10-31 \ignoreinspic, \keystroke, \colortab, \crx, \crtop, \crbot, \crmid added

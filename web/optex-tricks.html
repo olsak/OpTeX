@@ -3148,8 +3148,12 @@ The diameter or rounded corners is set to 10bp.
 
 <h2><a name="twoblocks"></a>Two columns parallel side by side</h2>
 
+<p CLASS=rmarg>
+autoloaded:<br>\twoblocks
+</p>
+
 <p>We implement the macro \twoblocks{first column}{second column}
-which prints two columns side by side, the first line of both columns are
+which prints two columns side by side, the first lines of both columns are
 vertically aligned. If there is no space at the current page, the columns
 are broken to more pages. The macro can be used for bilingual text
 columns. You can use more \twoblocks one by one. The first line of each
@@ -3260,6 +3264,11 @@ on StackExchange includes the need of indented footnotes, like this:
 
 <h2><a name="linnum"></a>Line numbers in the left side of the formatted text</h2>
 
+<p CLASS=rmarg>
+autoloaded:<br>\pstart<br>
+declared also:<br>\pend
+</p>
+
 <p>The <a href="https://tex.stackexchange.com/questions/632832">question</a>
 on the tex.stackexchange
 asks for the line numbers in the left side of the formatted text. The macro package edmac 
@@ -3268,21 +3277,29 @@ If you want to change the output routine, you must to do it with
 recommendation given in the section 2.18 of the OpTeX manual, but old edmac
 macro package does't respect it.
 
+<p>Use \pstart before and \pend after one or more paragraphs.
+Set registers \firstlinenum=num or \linenumincrement if they differ from one.
+
 <p>The solution by wipet does not use edmac, but simply does a box
 manupulation at the post processing state (when \pend is processed):
 
 <pre>
 \newcount\firstlinenum
 \newcount\linenumincrement
+\newcount\gprevgraf
 
-\def\pstart{\par \setbox0=\vbox\bgroup}
+\def\pstart{\par \setbox0=\vbox\bgroup
+   \def\_par{\endgraf\advance\gprevgraf by\prevgraf \prevgraf=0 }%
+}
 \def\pend{\par \global\tmpnum=\prevgraf \egroup
+   \ifnum\firstlinenum=0 \firstlinenum=1 \fi
+   \ifnum\linenumincrement=0 \linenumincrement=1 \fi
    \multiply\tmpnum by\linenumincrement \advance\tmpnum by\firstlinenum
    \firstlinenum=\tmpnum \advance\tmpnum by-1
    \setbox0=\vbox{\unvbox0
       \setbox2=\hbox{}
       \loop
-         \unskip\unpenalty \setbox1=\lastbox
+         \unskip \unskip\unpenalty \setbox1=\lastbox
          \ifvoid1 \else
             \global\setbox2=\hbox{\llap{\printnum}\box1\penalty0\unhbox2}
             \advance\tmpnum by-\linenumincrement 
