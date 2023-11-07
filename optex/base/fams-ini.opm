@@ -139,6 +139,13 @@
    { -,\caps: {\rm\bf\it\bi} }
 \_famalias [Baskervald ADF] \_famalias [ADFBaskerville]
 
+\_famfrom {Undercase Type https://undercase.xyz/}
+\_faminfo [Fraunces] {Display, old-style soft serif typeface} {f-fraunces}
+   { -: {\tf\ti\lf\li\rm\it\mf\mi\bf\bi\kf\ki}
+     \wonky: {\rm\it}
+     \ssoft=70: {\rm\it}
+   }
+
 \_famfrom {Andrey V. Panov}
 \_faminfo [Heuristica] {Extends the Utopia font} {f-heuristica}
    { -: {\rm\bf\it\bi} \caps: {\rm} }

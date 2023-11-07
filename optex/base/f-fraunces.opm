@@ -1,0 +1,69 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Fraunces] \Fraunces {Display, "Old Style" soft serif typeface}
+        {\wonky} {\rm \bf \it \bi} {Bonum}
+        {[Fraunces-VariableFont_SOFT,WONK,opsz,wght]}
+        {\_def\_fontnamegen {[Fraunces-\_currV VariableFont_SOFT,WONK,opsz,wght]:-liga;%
+         axis={wght=\_f_getwght{+300},opsz=\_the\_f_opsz,soft=\_the\_f_soft};\_wonkyV\_fontfeatures}}
+
+% \_f_getwght{+300} returns \the\wght but if \bf or \bi is processed then it returns \wght+300.
+\_def \_f_getwght#1{\_if b\_ea\_ignoresecond\_famv \_the\_numexpr \_f_wght#1\_relax \_else \_the\_f_wght \_fi}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \wonky ..... alternative strokes^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Normal^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Medium^^J
+ \normal .... \rm, \it = Normal, \bf, \bi = Bold^^J
+ \bolder .... \rm, \it = Medium, \bf, \bi = Black^^J%
+Variable font parameters:^^J
+ \wght ...... 100--1000 (default 400): weight of the strokes^^J
+ \opsz ...... 6--144 (default 14): optical size modifiation^^J
+ \ssoft ..... 0--100 (default 0): softness of serifs^^J
+ Use \wght=650 \ssoft=50 (for example). It acts like others font modifiers.^^J%
+Extended variants:^^J
+ \tf \ti .... Thin, ThinItalic^^J
+ \lf \li .... Light, LightItalic^^J
+ \mf \mi .... Medium, MediumItalic^^J
+ \kf \ki .... Black, BlackItalic^^J
+}}
+
+\_ifx\_f_wght\_undefined \_newcount\_f_wght \_f_wght=400 \_newpublic \_let\wght=\_f_wght  \_fi
+\_ifx\_f_opsz\_undefined \_newcount\_f_opsz \_f_opsz=14  \_newpublic \_let\opsz=\_f_opsz  \_fi
+\_ifx\_f_soft\_undefined \_newcount\_f_soft \_f_soft=0   \_newpublic \_let\ssoft=\_f_soft \_fi
+
+\_moddef \resetmod {\_fsetV wonky={} \_fvars {} {} Italic- Italic- }
+\_moddef \wonky    {\_fsetV wonky=+ss01; }
+\_moddef \thin     {\_f_wght=100 }
+\_moddef \light    {\_f_wght=250 }
+\_moddef \normal   {\_f_wght=400 }
+\_moddef \medium   {\_f_wght=550 }
+\_let\_thinM=\thin \_let\_lightM=\light \_let\_mediumM=\medium
+
+\_famvardef \tf    {\_thinM \_rm}
+\_famvardef \ti    {\_thinM \_it}
+\_famvardef \lf    {\_lightM \_rm}
+\_famvardef \li    {\_lightM \_it}
+\_famvardef \mf    {\_mediumM \_rm}
+\_famvardef \mi    {\_mediumM \_it}
+\_famvardef \kf    {\_mediumM \_bf}
+\_famvardef \ki    {\_mediumM \_bi}
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyrebonum-math]}
+
+\_endcode
+
+This is an example of a font-file used for a variable fonts.
+
+\begitems
+* Declare counters with the same names as parameters of axis. 
+* Use `\_ifx\_...\_undefined` in order to more font-files with variable fonts can be loaded.
+* Use `axis={...}` in font features area in the `\_fontnamegen` macro.
+* Print about axis parameters of given font to the log using `\_wlog`.
+* The `\_f_getwght` macro should be declared same in all font-files with variable fonts.
+  It enables \bf and \bi variants implemented as the given shift of the current wght parameter.
+* You can declare more variants by `\famvardef`.
+* You can declare font modifiers and font variants using values of axis parameters.
+\enditems

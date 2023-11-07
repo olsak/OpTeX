@@ -167,7 +167,7 @@ You can declare a new {\em font switch} by `\font` primitive:
 \begtt \catcode`\<=13
 \font \<font switch> = <font file name> <size spec>
 % for example:
-\font \tipa = tipa10 at12pt % the font tipa10 at 10pt is loaded
+\font \tipa = tipa10 at12pt % the font tipa10 at 12pt is loaded
 % usage:
 {\tipa TEXT}  % the TEXT is printed in the loaded font.
 \endtt
