@@ -3745,13 +3745,17 @@ This is second paragraph connected by a line.\setpos[end1]
 
 <h2><a name="tabs"></a>Tabbing macros</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\settabs<br>declared also:<br>\tabs
+</p>
+
 <p>Plain TeX provides tabbing macros but OpTeX does not, bacuase old typewriter
 style for alignment is not preferred. Use \table instead this. 
 Or you can set such typewriter TABs by
 following macros. Moreower, these macros are more intelligent than the Plain
 TeX equivalent.
 
-<p>You can say \settabs 4\column. Then the \hsize is divided to four
+<p>You can say, for example, \settabs 4\columns. Then the \hsize is divided to four
 equal-size parts, each of them begins by a TAB position and the last one
 ends by a TAB position too. I.e. there are five equi-distant TAB positions. 
 Then you can type
@@ -3885,6 +3889,10 @@ is processed.
 <hr>
 
 <h2><a name="import"></a>The import package</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\import<br>re-defined:<br>\input
+</p>
 
 <p>We implement the LaTeX import package (see texdoc import)
 by three lines of the code.
@@ -4219,6 +4227,10 @@ separated (to different pages) from its box.
 
 <h2><a name="perpage"></a>PerPage package features</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\incrpp<br>declared also:<br>\thepp<br>\thepplast<br>\truepage
+</p>
+
 <p>We implement the functionality from LaTeX perpage.sty package.
 User can declare \newcount\mycounter and then the \mycounter can be used by
 following macros:
@@ -4231,7 +4243,7 @@ each page.
 <li>\thepp\mycounter prints (expands to) the value of the internal
 counter prepared by \incrpp.
 
-<li>\truepp expands to the true page number if it is used immediatelly after
+<li>\truepage expands to the true page number if it is used immediatelly after
 \incrpp\mycounter.
 
 <li>\thepplast\mycounter{pageno} expands to the last value of the internal
@@ -4240,7 +4252,7 @@ you want to count the number of objects at given page.
 </ul>
 
 <p>Typically, the \incrpp\mycounter \thepp\mycounter are used in this couple.
-Or use: \incrpp\mycounter \truepp/\thepp\mycounter.
+Or use: \incrpp\mycounter \truepage/\thepp\mycounter.
 
 <p>You must run TeX twice to get references right.
 
@@ -4269,7 +4281,7 @@ vv: \incrpp\mycounter \thepp\mycounter.
 \openref
 \def\thepp#1{\trycs{pp:\csstring#1}{?\the#1}}
 \def\thepplast#1#2{\trycs{lastpp:\csstring#1:#2}{?\the#1}}
-\def\truepp{?\the\pageno}
+\def\truepage{?\the\pageno}
 \def\incrpp#1{\incr#1%
    \isdefined{_pgref:pp:\csstring#1:\the#1}\iftrue
       \edef\tmp{\cs{_pgref:pp:\csstring#1:\the#1}}%
@@ -4277,12 +4289,11 @@ vv: \incrpp\mycounter \thepp\mycounter.
          \sxdef{pp:\csstring#1}{\the\numexpr\cs{pp:\csstring#1}+1\relax}%
       \else \sxdef{pp:\csstring#1}{\trycs{resetpp:\csstring#1}{1}}%
          \sxdef{currpp:\csstring#1}{\tmp}\fi
-      \xdef\truepp{\ea\ea\ea\extractpp \csname currpp:\csstring#1\endcsname}%
-      \sxdef{lastpp:\csstring#1:\truepp}{\cs{pp:\csstring#1}}%
+      \xdef\truepage{\ea\ea\ea\usesecond \csname currpp:\csstring#1\endcsname}%
+      \sxdef{lastpp:\csstring#1:\truepage}{\cs{pp:\csstring#1}}%
    \else \incr\_unresolvedrefs \openref \fi
    \_ewref \_Xlabel {{pp:\csstring#1:\the#1}{}}%
 }
-\def\extractpp[#1]#2{#2}
 </pre>
 
 <p>The \incrpp does whole work. It increments the counter and saves the label
@@ -4296,9 +4307,9 @@ the value of the internal macro. The \cs{currpp:counter-name}
 includes the page where last
 \incrpp\countername was used. The \cs{lastpp:counter-name:pageno} includes
 the last internal number from \cs{pp:counter-name}.
-The \truepp is defined by \incrpp too as expanded \cs{currpp:counter-name} where
+The \truepage is defined by \incrpp too as expanded \cs{currpp:counter-name} where
 the real pageno is extracted, because \cs{currpp:counter-name} has the format
-[pg:gpageno]{pageno} (see section 2.22,
+{gpageno}{pageno} (see section 2.22,
 <a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:_Xlabel">sequence \_Xlabel</a>,
 in the OpTeX manual).
 

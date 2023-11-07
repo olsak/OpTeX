@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-05>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-07>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -609,13 +609,67 @@
 }
 \_def\.pendprintnum{\_setfontsize{mag.6}\_rm\_the\_tmpnum\_kern.8em}
 
+\_trick 0021 \settabs ;
+%%%%%%%%%%%%
+
+\_def\tabs #1\cr{\_setbox0=\_hbox\_bgroup \.tabA #1&\cr&}
+\_def\.tabA #1&{\_ifx\cr#1\_egroup\_box0 \_else
+   \_egroup
+      \_tmpdim=\_maxdimen \_ea\.tabB \.tabsdata {}\_relax
+      \_ifdim \_tmpdim=\_maxdimen \_tmpdim=0pt
+      \_else \_advance\_tmpdim by-\_wd0 \_fi
+   \_setbox0=\_hbox\_bgroup \_unhbox0 \_kern\_tmpdim \_ignorespaces#1\_unskip\_kern1sp
+   \_ea\.tabA \_fi
+}
+\_def\.tabB #1{\_ifx^#1^\_else \_unless\_ifdim \_wd0>#1 \_tmpdim=#1 \.tabC \_fi \_ea\.tabB \_fi}
+\_def\.tabC #1\_relax {\_fi\_fi}
+
+\_def\settabs #1{\_def\.tabsdata{}\_ifx\tabs#1\_ea\.settabstext \_else\_ea\.settabscols \_fi #1}
+\_def\.settabscols #1\columns{\_tmpdim=\_hsize \_divide\_tmpdim by#1\_relax
+   \_fornum 0..#1 \_do {\_edef\.tabsdata{\.tabsdata{\_the\_dimexpr##1\_tmpdim\_relax}}}}
+
+\_def\.settabstext #1#2\cr{\_setbox0=\_hbox\_bgroup \.settabA #2&\cr&}
+\_def\.settabA #1&{\_ifx\cr#1\_egroup \_edef\.tabsdata{\.tabsdata{\_the\_wd0}}\_else
+    #1\_egroup \_edef\.tabsdata{\.tabsdata{\_the\_wd0}}%
+    \_setbox0=\_hbox\_bgroup \_unhbox0
+    \_ea\.settabA \_fi
+}
+\_def\.tabsdata{}  % default: no tabulators set
+
+\_trick 0035 \import ;
+%%%%%%%%%%%%
+
+\_def\import#1#2{\_def\.tmp{\_gtoksapp\_picdir{#1/}\input{#2}}%
+   \_ea\.tmp\_ea\_global\_ea\_picdir\_ea{\_the\_picdir}}
+\_def\input#1{\_input{\_the\_picdir#1}}
+
+\_trick 0051 \incrpp ;
+%%%%%%%%%%%%
+
+\_openref
+\_def\thepp#1{\_trycs{pp:\_csstring#1}{?\_the#1}}
+\_def\thepplast#1#2{\_trycs{lastpp:\_csstring#1:#2}{?\_the#1}}
+\_def\truepage{?\_the\_pageno}
+\_def\incrpp#1{\_incr#1%
+   \_isdefined{_pgref:pp:\_csstring#1:\_the#1}\_iftrue
+      \_edef\.tmp{\_cs{_pgref:pp:\_csstring#1:\_the#1}}%
+      \_ea\_ifx\_csname currpp:\_csstring#1\_endcsname\.tmp
+         \_sxdef{pp:\_csstring#1}{\_the\_numexpr\_cs{pp:\_csstring#1}+1\_relax}%
+      \_else \_sxdef{pp:\_csstring#1}{\_trycs{resetpp:\csstring#1}{1}}%
+         \_sxdef{currpp:\csstring#1}{\.tmp}\_fi
+      \_xdef\truepage{\_ea\_ea\_ea\_usesecond \_csname currpp:\_csstring#1\_endcsname}%
+      \_sxdef{lastpp:\_csstring#1:\truepage}{\_cs{pp:\_csstring#1}}%
+   \_else \_incr\_unresolvedrefs \_openref \_fi
+   \_ewref \_Xlabel {{pp:\csstring#1:\the#1}{}}%
+}
+
 \_trick end ;
 
 \_endcode
 
-todo: \settabs, \import,
-      \incrpp, \ispageodd, \seccc, \makeLOF.
+todo: \ispageodd, \seccc, \makeLOF.
 
+2023-11-07 \settabs \import \incrpp added
 2023-11-05 \twoblocks, \pstart added
 2023-11-03 \framedblocks added
 2023-11-01 \longtable, \vcent, \vbot, \tnote, \tabnodes added

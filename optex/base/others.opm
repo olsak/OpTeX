@@ -160,7 +160,7 @@
    \directoutput \algol \scaleto \scaletof \ttlineref \easylist \keepstyle \fcread
    \shadedframe \roundframe \cancel \ignoreinspic \keystroke
    \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote \tabnodes \tablebefore
-   \framedblocks \twoblocks \pstart ;
+   \framedblocks \twoblocks \pstart \settabs \import \incrpp ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------
