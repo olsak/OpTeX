@@ -4639,6 +4639,10 @@ is equal to one.
 
 <h2><a name="ispageodd"></a>Testing if current page is odd</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\ispageodd
+</p>
+
 <p>TeX creates pages asynchronously, so we are unsure what page will be used
 for a material which is created by our macro. For example we need a
 different design of section headers at odd/even pages but we cannot simply say
@@ -5067,6 +5071,10 @@ the answer at the stack exchange site</a>.
 
 <h2><a name="seccc"></a>New level of sections</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\iniseccc<br>\seccc
+</p>
+
 <p>OpTeX defines \chap, \sec and \secc. A new level \seccc is not defined, but
 we can do it as an exercise of sections programming in OpTeX.
 The \chap has level 1, \sec has level 2, \secc has level 3. So, we will
@@ -5119,6 +5127,7 @@ reseting counters are copied here for greater clarity.
 printing rule of the 4th level of sections:
 
 <pre>
+\_def\iniseccc{} % use it for autoloading this OpTeX trick code before \maketoc
 \_sdef{_tocl:4}#1#2#3{\_advance\_leftskip by2\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
 </pre>
 
@@ -5128,6 +5137,7 @@ printing rule of the 4th level of sections:
 \hyperlinks \Green \Green
 \outlines0
 
+\iniseccc
 \maketoc
 
 \chap  My chapter

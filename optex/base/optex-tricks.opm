@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-07>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-08>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -663,12 +663,54 @@
    \_ewref \_Xlabel {{pp:\csstring#1:\the#1}{}}%
 }
 
+\_trick 0115 \ispageodd ;
+
+\_def\ispageodd#1{%
+   \_incr\_mnotenum
+   \_ifcsname _mn:\_the\_mnotenum \_endcsname
+       \_expanded{\_let \_noexpand\.pgtype =\_cs{_mn:\_the\_mnotenum}}\_else
+       \_let\.pgtype=\_right \_opwarning{pageside is unknown, TeX me again}\_openref
+   \_fi
+   \_wref\_Xmnote{}%
+   #1\_else \_ea\_unless\_fi \_ifx\.pgtype\_right
+}
+
+\_trick 0033 \iniseccc \seccc ;
+
+\_newcount \_secccnum
+\_def \_thesecccnum {\_othe\_chapnum.\_the\_secnum.\_the\_seccnum.\_the\_secccnum}
+
+\_optdef\_seccc[]{\_trylabel \_scantoeol\_inseccc}
+
+\_def\_inseccc #1{\_par \_sectionlevel=4
+   \_def \_savedtitle {#1}% saved to .ref file
+   \_ifnonum \_else {\_globaldefs=1 \_incr\_secccnum \_secccx}\_fi
+   \_edef \_therefnum {\_ifnonum \_space \_else \_thesecccnum \_fi}%
+   \_printseccc{\_scantextokens{#1}}%
+   \_resetnonumnotoc
+}
+\public \seccc ;
+
+\_def \_seccx {\_secccx \_secccnum=0 }
+\_def \_secccx {}
+
+\_def\_printseccc#1{\_par
+   \_abovetitle{\_penalty-100}{\_medskip}
+   {\_bf \_noindent \_raggedright \_printrefnum[@\_quad]#1\_nbpar}%
+   \_nobreak \_belowtitle{\_smallskip}%
+   \_firstnoindent
+}
+
+\_def\iniseccc{} % use it for autoloading the OpTeX trick code before \maketoc
+\_sdef{_tocl:4}#1#2#3{\_advance\_leftskip by2\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
+
 \_trick end ;
 
 \_endcode
 
-todo: \ispageodd, \seccc, \makeLOF.
+todo: \makeLOF.
 
+2023-11-08 \ispageodd, \seccc added
 2023-11-07 \settabs \import \incrpp added
 2023-11-05 \twoblocks, \pstart added
 2023-11-03 \framedblocks added
