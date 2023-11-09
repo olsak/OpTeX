@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-08>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-09>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -704,12 +704,33 @@
 \_def\iniseccc{} % use it for autoloading the OpTeX trick code before \maketoc
 \_sdef{_tocl:4}#1#2#3{\_advance\_leftskip by2\_iindent \_cs{_tocl:2}{#1}{#2}{#3}}
 
+\_trick 0066 \makeLOF \makeLOT \captionT \captionF ;
+%%%%%%%%%%%%
+
+\_def\captionT [#1]#2{\_caption/t[#1]\_ewref\.Xtab{{#1}{\_thetnum}{#2}}\_ignorespaces}
+\_def\captionF [#1]#2{\_caption/f[#1]\_ewref\.Xfig{{#1}{\_thefnum}{#2}}\_ignorespaces}
+
+\_def\.lline#1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+
+\_def\.makell#1#2{\_par
+   \_ifx#1\_undefined \_opwarning{no data for list of #2, try to run TeX again}\_openref
+   \_else #1\_fi
+}
+\_def\makeLOF{\.makell\.loflist{figures}}
+\_def\makeLOT{\.makell\.lotlist{tables}}
+
+\_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
+\_refdecl{%
+\_def\.lotlist{} \_def\.loflist{}^^J
+\_def\.Xtab#1#2#3{\_addto\.lotlist{\.lline{#1}{#2}{#3}}\_ea\_addto\_ea\.lotlist\_ea{\_currpage}}^^J
+\_def\.Xfig#1#2#3{\_addto\.loflist{\.lline{#1}{#2}{#3}}\_ea\_addto\_ea\.loflist\_ea{\_currpage}}
+}
+
 \_trick end ;
 
 \_endcode
 
-todo: \makeLOF.
-
+2023-11-09 \makeLOF, \makeLOT aded
 2023-11-08 \ispageodd, \seccc added
 2023-11-07 \settabs \import \incrpp added
 2023-11-05 \twoblocks, \pstart added

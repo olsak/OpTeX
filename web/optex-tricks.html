@@ -5249,6 +5249,9 @@ structure of outlines is prepared too.
 
 <h2><a name="lot"></a>List of figures, list of tables</h2>
 
+<p CLASS=rmarg>
+autoload:<br>\makeLOF<br>\makeLOT<br>\captionF<br>\captionT
+
 <p>OpTeX provides only \maketoc for making table of contents.
 We create commands \makeLOF for creating a list of figures and \makeLOT for
 creating a list of tables.
@@ -5279,12 +5282,12 @@ about the figure/table to the generated list.
 
 \def\lline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
-\def\makell#1{\par
-   \ifx\lotlist\undefined \opwarning{\noexpand#1 empty, try to run TeX again}
+\def\makell#1#2{\par
+   \ifx#1\undefined \opwarning{no data for list of #2, try to run TeX again}\openref
    \else #1\fi
 }
-\def\makeLOF{\makell\loflist}
-\def\makeLOT{\makell\lotlist}
+\def\makeLOF{\makell\loflist{figures}}
+\def\makeLOT{\makell\lotlist{tables}}
 </pre>
 
 <p>The \refdecl declares new commands used in the ref file in the format:
