@@ -216,6 +216,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#xdetokenize">Not duplicating the hash characters</a>
     <li><a href="#keysinkey">Key-value lists in a key-value list</a>
     <li><a href="#putsep">Putting separators between list items</a>
+    <li><a href="#prepmac">Preparing macros for a simple token-per-token scanner</a>
 </ul>
 
 <li>Lua matters
@@ -4794,6 +4795,49 @@ first, second, third, and fourth
 items are not expanded because of \unexpanded.
 
 <p CLASS=datum>(0119) -- P. O. 2023-10-31<p>
+<hr>
+
+<h2><a name="prepmac"></a>Preparing macros for a simple token-per-token scanner</h2>
+
+<p>Sometimes we want to scan a string saved in a macro by a simple
+token-per-token scanner, for example:
+
+<pre>
+\def\scantok#1{\ifx#1\_fin \else do something with \string#1. \ea\scantok\fi}
+
+\def\macro{abc def, \test.}
+\ea\scantok\macro\_fin
+</pre>
+
+<p>But we have problems with spaces (they are ignored when unseparated #1 is
+used) and with grouping characters {...} (they disables reading
+a guaranteed single token to a #1 parameter).
+
+<p>We create a macro \normalbraces which
+resets the catcodes of { and } to 12 (normal character) in the given macro.
+Moreover, we can use \replstring\macro{ }{{ }} in order to enable reading
+spaces by unseparated parameter. For example:
+
+<pre>
+\def\pertoken#1{\ea\pertokenA#1\_fin}
+\def\pertokenA#1{\ifx#1\_fin \else \afterfi{token is: "\string#1", \pertokenA}\fi}
+
+\def\macro{abc {def\relax gh}\dosomething ijk}
+
+\normalbraces\macro        % braces will be normal characters, catcode 12
+\replstring\macro{ }{{ }}  % spaces are replaced by { }
+
+\pertoken\macro
+</pre>
+<p>It prints: token is: "a", token is: "b", token is: "c", token is: " ", token is: "{",
+token is: "d", token is: "e", token is: "f", token is: "\relax", token is: "g", etc.
+
+<p>The \normalbraces macro can be implemented like this:
+<pre>
+\def\normalbraces#1{{\catcode`{=12 \catcode`}=12 \ea}\ea\def\ea#1\ea{\scantextokens\ea{#1}}}
+</pre>
+
+<p CLASS=datum>(0120) -- P. O. 2023-10-31<p>
 <hr>
 
 <p CLASS="lmarg">Lua matters</p>
