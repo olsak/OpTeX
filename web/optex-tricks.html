@@ -152,7 +152,6 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#torighteq">Equation marks in atypical cases</a>
     <li><a href="#subeqmark">Equation marks for sub-equations</a>
     <li><a href="#addumathfont">Loading additional Unicode math fonts</a>
-    <li><a href="#fillemptyslots">Empty math slots from another math font</a>
     <li><a href="#dots">Intelligent \dots like in AMSTeX</a>
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
     <li><a href="#bigp">Controlled sizes of parentheses</a>
@@ -2221,7 +2220,7 @@ character. Example:
 <pre>
 \fontfam [EBGaramond]  % Garamond family including Garamond-Math is loaded
 \addUmathfont \stix {[STIXMath-Regular]}{} {}{} {} % additional font STIX loaded
-\resetmathchars \stix \triangleq ; % \triangleq will use STIX
+\mathchars \stix {\stareq \triangleq} % \stareq and \triangleq will use STIX
 
 Test: $a \triangleq b$. % All is in Garamond only \triangleq in STIX.
 </pre>
@@ -2242,20 +2241,12 @@ StackExchange</a>, but I recommend to use my answer (wipet's answer) in this
 case becuase combination of basic equal sign from Garamond with other equal
 signs from STIX doesn't look good in single formula.
 
+<p>If you want to replace all missing slots of used main math font by
+characters of another font, use the macro \replacemissingchars, which is defined in
+<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf#cs:^replacemissingchars">math.opm package</a>.
+Use \load[math].
+
 <p CLASS=datum>(0030) -- P. O. 2020-12-02<p>
-<hr>
-
-<h2><a name="fillemptyslots"></a>Empty math slots from another math font</h2>
-
-<p>The <a href="#addumathfont">previous OpTeX trick</a> implements a macro
-for loading more Unicode math fonts and gives a macro \resetmathchars for
-setting individual math characters as characters from the newly loaded math font.
-The
-<a href="https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf">math.opm package</a>
-implement this issue. Use \load[math].
-
-
-<p CLASS=datum>(0082) -- P. O. 2022-05-15<p>
 <hr>
 
 <h2><a name="dots"></a>Intelligent \dots like in AMSTeX</h2>
