@@ -1,0 +1,401 @@
+%% Testing autoloaded OpTeX tricks
+
+% run optex tricks-tests twice and then look at resulting PDF and compare
+% log output with tricks-tests.dlg
+
+\fontfam[lm]
+
+\eoldef\TEST#1{\par
+   \edef\tmp{\detokenize{#1}}
+   \wlog{^^J-------- Testing: \tmp ----------}
+   \medskip
+   \line{\hrulefill\ \lower.5ex\hbox{\tt\tmp}\,\hrulefill}
+   \nobreak\medskip
+}
+\raggedbottom
+
+\TEST \makeLOF \makeLOT
+
+List of figures
+\makeLOF
+
+List of tables
+\makeLOT
+
+in text:
+
+\captionT [labelX]{A short caption} A detail caption \par
+\captionF [labelY]{A short caption} A detail caption \par
+
+\TEST \seccc
+
+\iniseccc
+
+\hyperlinks \Green \Green
+\outlines0
+
+\maketoc
+
+\chap  My chapter
+\sec   Special section
+\secc  This is subsection
+\seccc New level of sub-subsection
+Text.
+\seccc Next text
+Text.
+
+\secc Normal subsection
+
+\seccc Next subsubsection
+
+\TEST \incrpp \thepp \thepplast
+
+\newcount\mycounter
+{
+\headline={The number of objects: \thepplast\mycounter{\the\pageno}\hss}
+
+xx: \incrpp\mycounter \thepp\mycounter,
+yy: \incrpp\mycounter \thepp\mycounter.
+\vfil\break
+zz: \incrpp\mycounter \thepp\mycounter,
+uu: \incrpp\mycounter \thepp\mycounter,
+vv: \incrpp\mycounter \truepage/\thepp\mycounter.
+
+\vfil\break
+}
+
+\TEST \tabs \settabs
+
+\settabs 4\columns
+\tabs first text & second text & third text & fourth text & other text \cr
+
+\settabs\tabs &textA &moretextB &textC\cr
+\tabs a & b & c \cr
+\hbox{textA moretextB textC}
+
+\TEST \pstart \pend
+
+text before
+
+\pstart
+\lorem[1-3]
+\pend
+
+\pstart
+\lorem[2]
+\pend
+
+text after
+
+\TEST \twoblocks
+
+\twoblocks{
+  {\bf The text in English...} \lorem[1-2]
+}
+{
+  {\bf The text in other language...} \lorem[3-4]
+}
+\twoblocks{
+  {\bf Another text in English...} \lorem[5-10]
+}
+{
+  {\bf Another text in other language...} \lorem[15-20]
+}
+
+\TEST \framedblocks
+
+\def\printframe #1#2#3#4{\edef\frameslist{\frameslist
+    q 1 1 0 rg 1 0 0 RG 
+    1 0 0 1 \bp{\hoffset+10bp} \bp{#2+10bp} cm    % origin shifted to the left-bottom
+    \_oval{\bp{\_xhsize-20bp}}{\bp{#4-20bp}}{10} B Q }%
+}
+\framedblocks
+
+\lipsum[1]
+\begblock
+  \lipsum[9]
+  \begblock
+    interni \lipsum[13]
+  \endblock
+\endblock
+
+\TEST \tabnodes \tabpos
+
+\tablebefore
+   \pdfliteral{q 1 0 0 RG \icc[1,1] m \icc[2,3] l S \icc[2,1] m \icc[1,3] l S Q}%
+   \tabpos\puttext\ishift\ibl[2,2][3pt,7pt]{HELLO}
+
+\thistable{\tabnodes \tablinespace=0pt}
+\table{ccc}{
+   first & second & third \cr
+   A     & B      & C
+}
+
+\TEST \tnote
+
+\table{|p{1.5cm}|p{4cm}|}{ % top alignment (default)
+ \crl
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ ffj\tnote{aga} h hjs hjs chjds js sjd\tnote{uga} fgh fshs gf sfhs fh ss shfs fs
+ \crl
+}
+\tnoteprint
+
+\TEST \vcent \vbot
+
+\table{|p{1.5cm\vcent}|p{4cm\vcent}|}{ % vertically centered paragraphs
+ \crl
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
+ \crl
+}
+\medskip
+
+\table{|p{1.5cm\vbot}|p{4cm\vbot}|}{ % vertically centered paragraphs
+ \crl
+ d f g fd s f h d d s r df g h jj f d sd f d f g g t f di ejb  &
+ ff h hjs hjs chjds js sjd fgh fshs gf sfhs fh ss shfs fs
+ \crl
+}
+
+\TEST \longtable
+
+\def\data{head1 & head2 & head22 \cr \tskip5pt}
+\fornum 1..70 \do {\addto\data{data#1 & data#1 & data#1 \cr}}
+\longtable {|c|c|c|}{\data}
+
+\TEST \crtop \crmid \crbot
+
+\thistable={\tabiteml={}\tabitemr={}\rulewidth=.2pt}
+\table{l(\quad)lr}{                           \crtop 
+  \mspan2[c]{Item}         &                  \crlp{1-2} 
+   Animal    & Description & \quad Price (\$) \crmid 
+   Gnat      & per gram    &      13.65       \cr 
+             & each        &       0.01       \cr 
+   Gnu       & stuffed     &      92.50       \cr 
+   Emu       & stuffed     &      33.33       \cr 
+   Armadillo & frozen      &       8.99       \crbot} 
+
+\TEST \crx
+
+\thistable={\tabiteml={\quad}\tabitemr={\quad}}
+\frame{\table{llllll}{\crx
+  aa & bb & cc & dd & ee & ff \crx
+  gg & hh & ii & jj & kk & ll \crx
+  mm & nn & oo & pp & qq & rr \crx
+  ss & tt & uu & vv & ww & xx \crx
+  ab & cd & ef & gh & ij & kl \crx
+  mn & op & qr & st & uv & wx}}
+
+\TEST \colortab
+
+\thistable={\colortab              % colored cells activated
+            \tabstrut={\lower4pt\vbox to15pt{}}        % lines dimensions
+            \tabskip=2pt \everycr={\noalign{\kern2pt}} % spaces between cells
+            \let\cellcolor=\Yellow % default background color
+           }
+\table{clr}{first item      & second & \Blue \White third item \cr
+            next long item  & \Red X & \Green       YES }
+
+\TEST \keystroke
+
+\keystroke{Q} \keystroke{E} \keystroke{R} \keystroke{T} \keystroke{Y}\par
+\keystroke{PgUp} \keystroke{Enter}
+
+\TEST \ignorepis
+
+\ignoreinspic
+
+op-ring picture:
+\par\nobreak
+
+{\picw=7cm \inspic op-ring.png }
+
+non exiting picture:
+
+{\inspic nonex.png }
+
+\TEST \roundframe
+
+\roundframe [text-width=8cm, aha=ugg, midrule-color=\Brown, midrule-width=3pt] 
+            {Title here}
+            {More text}
+
+\bigskip
+
+\roundframe [ um ]
+            {Title here}
+            {More text}
+
+\bigskip
+
+\roundframe {Title here}
+            {Text dgd adhkd had dsglj dagjadg fsj csgsd
+             gs sgls fsglfs gfsl fglf gfs rtyr rire wrurey.}
+
+\TEST \shadedframe
+
+\shadedframe {
+  {\bf Title}:
+  rweyu fiw wi ewyur uwr rwu wruwr rwu rwur uw qu fiw wi ewyur uwr rwu
+  wruwr rwu rwur uw q fiw wi ewyur uwr rwu wruwr rwu rwur uw qwr.
+}
+\bigskip
+
+\shadedframe [frame-color=\Red, bg-color=\Blue, text-color=\White, text-width=6cm] {text}
+
+\TEST \fcread
+
+\fcread (simple) op-biblist
+
+aha \fullcite[texbook] a taky \fullcite[Cmej].
+
+\TEST \easylist
+
+\everylist={\ifcase\ilevel\or \style X \or \style x \else \style - \fi}
+\begitems \easylist
+* Main one
+* Main two
+** sub-item
+*** sub-sub-item
+\enditems
+
+\everylist={}
+\begitems \easylist \style m \keepstyle
+* First proposition.
+** Interesting comment.
+*** A note on the comment.
+*** Another note.
+**** By the way...
+***** This is a subsub...-proposition.
+* Let’s start something new...
+** Next
+** Other
+\enditems
+
+\TEST \style d
+
+\begitems \style d
+*{aha} uff \lipsum[3]
+*{dalsi} muff \lipsum[4.1]
+\enditems
+
+\lipsum[2]
+
+\TEST \ttlineref
+
+\ttline=0
+\begtt \ttlineref §
+first line
+   second special line §[spec]
+   third line
+\endtt
+
+Note that the line \lref[spec] is very interesting.
+
+\TEST \style m
+
+\begitems \style m \keepstyle  % prints:
+* First                        % 1. First
+* Second                       % 2. Second
+  \begitems
+  * Second-A                   %   2.1 Second-A
+  * Second-B                   %   2.2 Second-B
+  \enditems
+* Third                        % 3. Third
+\enditems
+
+\TEST \scaleto
+
+\scaleto 7cm{text}
+
+\scaletof 7cm{text}
+
+\TEST \begfile \createfile \endfile
+
+\begfile{empty}
+\endfile
+
+\createfile {program.c}
+  tady neco je
+\endfile
+
+\TEST \beglua \endlua
+
+\beglua
+function simplify(a,b)     
+  local function gcd(a,b)   
+    if b ~= 0 then
+        return gcd(b, a % b)
+    else
+        return math.abs(a)
+    end
+  end
+  t = gcd(a, b)
+  tex.print("{"..a//t.."\\over "..b//t.."}")
+end
+\endlua
+\def\simplify#1#2{\directlua{simplify(#1,#2)}}
+
+Can I make \TeX/ reduce a fraction automatically?
+
+For example, I would like the fraction
+$$
+  {278\,922\over 74\,088}
+$$
+to be reduced to
+$$
+  \simplify{278922}{74088}
+$$
+
+\TEST \sethours \setseconds \setweekday \hours \minutes \seconds 
+
+\sethours \setseconds
+Current time is \the\hours:\Othe\minutes:\Othe\seconds.
+
+\setweekday
+Current day in the week is
+\ifcase\weekday Sun\or Mon\or Tue\or Wed\or Thu\or Fri\or Sat\fi.
+
+Today is
+\ifcase\month\or Jan\or Feb\or Mar\or Apr\or May\or Jun\or Jul\or
+   Aug\or Sep\or Nov\or Dec\fi, \the\day, \the\year
+\ or in another format: \the\year/\Othe\month/\Othe\day.
+
+\TEST \showpglists
+
+\showpglists 1
+
+\TEST \runsystem
+
+\runsystem{}
+\runsystem{ls}
+
+\TEST \cancel
+
+aha\cancel\\{skrt}.
+
+uff \cancel X{skrt}
+
+\TEST \algol
+
+\begtt \ttlineref § \algol
+Require: $n ≥ 0$
+Ensure: $y = x^n$
+   $y ← 1$
+   $X ← x$
+   $N ← n$
+   while $N ≠ 0$ do !aha! uff §[spec]
+      if $N$ is even then
+         $X_{\rm new} ← X × X$
+         $N ← N/2$
+      else {$N$ is odd}
+         $y ← y × X$
+         $N ← N − 1$
+      end if
+   end while
+\endtt
+
+Dasi zajimavost je na radku~\lref[spec].
+
+\bye
