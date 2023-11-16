@@ -1,4 +1,4 @@
-This is LuaTeX, Version 1.17.0 (TeX Live 2023)  (format=optex 2023.11.11)  12 NOV 2023 09:07
+This is LuaTeX, Version 1.17.0 (TeX Live 2023)  (format=optex 2023.11.15)  15 NOV 2023 22:08
  restricted system commands enabled.
 **trick-tests
 (./trick-tests.tex
@@ -309,6 +309,13 @@ Loading trick macros for \algol
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
 @:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
 \_hisyntaxalg=\toks305
+)
+
+-------- Testing: \correctvsize ----------
+Loading trick macros for \correctvsize
+
+(/home/olsak/texmf/tex/optex/base/optex-tricks.opm
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
 ) [12])</usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm-math/latinmo
 dern-math.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmrom
 an17-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lm
@@ -320,7 +327,7 @@ public/lm/lmroman12-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/
 public/lm/lmroman10-bold.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/
 public/lm/lmroman10-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/openty
 pe/public/lm/lmmono10-regular.otf>
-Output written on trick-tests.pdf (12 pages, 73596 bytes).
+Output written on trick-tests.pdf (12 pages, 73756 bytes).
 
 PDF statistics: 177 PDF objects out of 1000 (max. 8388607)
  127 compressed objects within 2 object streams

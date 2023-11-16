@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-09>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2023-11-15>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -726,10 +726,20 @@
 \_def\.Xfig#1#2#3{\_addto\.loflist{\.lline{#1}{#2}{#3}}\_ea\_addto\_ea\.loflist\_ea{\_currpage}}
 }
 
+\_trick 0121 \correctvsize ;
+%%%%%%%%%%%%
+
+\_def\correctvsize{%
+   \_vsize=\_dimexpr
+      \_expr[0]{\_bp{\_vsize-\_topskip}//\_bp{\_baselineskip}}\_baselineskip
+      +\_topskip \_relax
+}
+
 \_trick end ;
 
 \_endcode
 
+2023-11-15 \correctvsize added
 2023-11-09 \makeLOF, \makeLOT aded
 2023-11-08 \ispageodd, \seccc added
 2023-11-07 \settabs \import \incrpp added

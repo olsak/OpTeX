@@ -216,6 +216,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#keysinkey">Key-value lists in a key-value list</a>
     <li><a href="#putsep">Putting separators between list items</a>
     <li><a href="#prepmac">Preparing macros for a simple token-per-token scanner</a>
+    <li><a href="#correctvsize">Setting \vsize to fit lines exactly to pages</a>
 </ul>
 
 <li>Lua matters
@@ -4830,6 +4831,43 @@ token is: "d", token is: "e", token is: "f", token is: "\relax", token is: "g", 
 
 <p CLASS=datum>(0120) -- P. O. 2023-10-31<p>
 <hr>
+
+<h2><a name="correctvsize">Setting \vsize to fit lines exactly to pages</a></h2>
+
+<p CLASS="rmarg">
+autoload:<br>\correctvsize
+</p>
+
+<p>If you have no stretchable or shrinkable glues in the page (for example
+you set \parskip=0pt or you have a long paragraph across more pages) and you
+have not set \raggedbottom, then you may see warnings in the log file
+"Underfull \vbox while output is active". This warning means that the lines
+cannot be placed one to above according to \baselineskip so that the
+resulting page is exactly \vsize height. You must correct the \vsize so that
+it is a multiple of \baselineskip plus single \topskip. (The \topskip is
+here because it is the distance from the top edge of the resulting vbox to
+the baseline of the first line.
+
+<p>Note, that the default value of \vsize (set by the format) isn't a multiple
+of \baselineskip plus \topskip.
+
+<p>The macro \correctvsize keeps \vsize if it is set correctly as a multiple of
+\baselineskip plus \topskip. Or it sets \vsize to
+the nearest smaller value which meets this requirement.
+
+<pre>
+\def\correctvsize{%
+   \vsize=\dimexpr
+      \expr[0]{\bp{\vsize-\topskip}//\bp{\baselineskip}}\baselineskip
+      +\topskip \relax
+}
+</pre>
+
+<p>This expression says \vsize = C\baselineskip + \topskip, where C
+is calculated as (\vsize-\topskip)//\baselineskip, where // is integer
+division.
+
+<p CLASS=datum>(0121) -- P. O. 2023-10-31<p>
 
 <p CLASS="lmarg">Lua matters</p>
 
