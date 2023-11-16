@@ -1,8 +1,7 @@
-This is LuaTeX, Version 1.17.0 (TeX Live 2023)  (format=optex 2023.11.15)  15 NOV 2023 22:08
+This is LuaTeX, Version 1.17.0 (TeX Live 2023)  (format=optex 2023.11.15)  16 NOV 2023 09:09
  restricted system commands enabled.
 **trick-tests
-(./trick-tests.tex
-This is OpTeX (Olsak's Plain TeX), version <1.12+ May 2023>
+(./trick-tests.tex This is OpTeX (Olsak's Plain TeX), version <1.13 Nov 2023>
 (./trick-tests.ref)
 \openout1 = trick-tests.ref
  (/home/olsak/texmf/tex/optex/base/f-lmfonts.opm
@@ -52,14 +51,14 @@ MATH-FONT: "[latinmodern-math]" -- unicode math prepared.
 Loading trick macros for \makeLOF
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \seccc ----------
 Loading trick macros for \iniseccc
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_secccnum=\count301
 ) [1{/usr/local/texlive/2023/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
@@ -68,21 +67,21 @@ Loading trick macros for \iniseccc
 Loading trick macros for \incrpp
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 ) [2] [3]
 
 -------- Testing: \tabs \settabs ----------
 Loading trick macros for \settabs
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \pstart \pend ----------
 Loading trick macros for \pstart
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_firstlinenum=\count303
 \_optextrick_gprevgraf=\count304
 )
@@ -92,7 +91,7 @@ Loading trick macros for \pstart
 Loading trick macros for \twoblocks
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_pageblank=\dimen295
 \_optextrick_columnsht=\dimen296
 ) [4] [5]
@@ -101,7 +100,7 @@ Loading trick macros for \twoblocks
 Loading trick macros for \framedblocks
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_blocklevel=\count305
 \_optextrick_frtop=\dimen297
 \_optextrick_frbottom=\dimen298
@@ -111,7 +110,7 @@ Loading trick macros for \framedblocks
 Loading trick macros for \tablebefore
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_tndnum=\count306
 \_optextrick_tablerownum=\count307
 )
@@ -120,7 +119,7 @@ Loading trick macros for \tablebefore
 Loading trick macros for \tnote
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_tnotenum=\count308
 )
 
@@ -128,28 +127,28 @@ Loading trick macros for \tnote
 Loading trick macros for \vcent
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \longtable ----------
 Loading trick macros for \longtable
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 ) [7] [8]
 
 -------- Testing: \crtop \crmid \crbot ----------
 Loading trick macros for \crtop
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \crx ----------
 Loading trick macros for \crx
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_tabline=\count309
 )
 
@@ -157,14 +156,14 @@ Loading trick macros for \crx
 Loading trick macros for \colortab
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \keystroke ----------
 Loading trick macros for \keystroke
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \keysize=\dimen299
 \_optextrick_keylbox=\box261
 \_optextrick_keymbox=\box262
@@ -175,7 +174,7 @@ Loading trick macros for \keystroke
 Loading trick macros for \ignoreinspic
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 ) [9</usr/local/texlive/2023/texmf-dist/tex/latex/keystroke/keystroke_left.pdf><
 /usr/local/texlive/2023/texmf-dist/tex/latex/keystroke/keystroke_middle.pdf></us
 r/local/texlive/2023/texmf-dist/tex/latex/keystroke/keystroke_right.pdf>]
@@ -184,7 +183,7 @@ r/local/texlive/2023/texmf-dist/tex/latex/keystroke/keystroke_right.pdf>]
 Loading trick macros for \roundframe
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 WARNING l.222: \roundframe: Unknown option "aha".
 WARNING l.228: \roundframe: Unknown option "um".
@@ -192,14 +191,14 @@ WARNING l.228: \roundframe: Unknown option "um".
 -------- Testing: \shadedframe ----------
 Loading trick macros for \shadedframe
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \fcread ----------
 Loading trick macros for \fcread
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_fcithook=\toks303
 )
 (/home/olsak/texmf/tex/optex/base/usebib.opm
@@ -220,12 +219,12 @@ WARNING l.249: Missing field "publisher" in [talich].
 -------- Testing: \easylist ----------
 Loading trick macros for \easylist
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 Loading trick macros for \keepstyle
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \style d----------
@@ -235,7 +234,7 @@ Loading trick macros for \keepstyle
 Loading trick macros for \ttlineref
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \style m----------
@@ -244,14 +243,14 @@ Loading trick macros for \ttlineref
 Loading trick macros for \scaleto
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \begfile \createfile \endfile ----------
 Loading trick macros for \begfile
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_outfile=\write2
 )
 \openout2 = empty.tex
@@ -263,7 +262,7 @@ Loading trick macros for \begfile
 Loading trick macros for \beglua
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_luamacros=\toks304
 )
 
@@ -272,7 +271,7 @@ Loading trick macros for \beglua
 Loading trick macros for \sethours
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_hours=\count312
 \_optextrick_minutes=\count313
 \_optextrick_seconds=\count314
@@ -284,14 +283,14 @@ Loading trick macros for \sethours
 Loading trick macros for \showpglists
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \runsystem ----------
 Loading trick macros for \runsystem
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_optextrick_exitstatus=\count316
 )
 \runsystem{} status: -1
@@ -300,14 +299,14 @@ Loading trick macros for \runsystem
 -------- Testing: \cancel ----------
 Loading trick macros for \cancel
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 )
 
 -------- Testing: \algol ----------
 Loading trick macros for \algol
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 \_hisyntaxalg=\toks305
 )
 
@@ -315,7 +314,7 @@ Loading trick macros for \algol
 Loading trick macros for \correctvsize
 
 (/home/olsak/texmf/tex/optex/base/optex-tricks.opm
-@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-09>
+@:[optex-tricks] OpTeX tricks ready to autoload <2023-11-15>
 ) [12])</usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm-math/latinmo
 dern-math.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lmrom
 an17-regular.otf></usr/local/texlive/2023/texmf-dist/fonts/opentype/public/lm/lm
