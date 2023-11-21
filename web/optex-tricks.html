@@ -140,6 +140,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tikzcolorlet">Moving OpTeX's colors to TikZ environment</a>
     <li><a href="#tikzqrcode">Shadowed and colored QR codes</a>
     <li><a href="#pstricks">Using pstricks</a>
+    <li><a href="#epic">Tikz pictures created outside OpTeX</a>
 </ul>
 
 <li>Math
@@ -217,6 +218,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#putsep">Putting separators between list items</a>
     <li><a href="#prepmac">Preparing macros for a simple token-per-token scanner</a>
     <li><a href="#correctvsize">Setting \vsize to fit lines exactly to pages</a>
+    <li><a href="#randomitems">Random items from a given set of items</a>
 </ul>
 
 <li>Lua matters
@@ -1921,6 +1923,68 @@ The following example works:
 </pre>
 
 <p CLASS=datum>(0099) -- P. O. 2022-12-06<p>
+<hr>
+
+<h2><a name="epic"></a>Tikz pictures created outside OpTeX</h2>
+
+<p>OpTeX enables creating Tikz pictures directly after \load[tikz] because the
+Tikz macros are designed for plain TeX too. But there are several additional
+LaTeX packages providing more features, but they are working only with
+LaTeX, unfortunately. If you want to use such features then LaTeX have to
+be used. You can create a set set of Tikz pictures by LaTeX using standalone
+class:
+<pre>
+\documentclass[tikz,multi=true]{standalone}
+\begin{document}
+  \begin{tikzpicture}   % picture 1
+    ... code of first picture
+  \end{tikzpicture}
+
+  \begin{tikzpicture}   % picture 2
+    ... code of second picture
+  \end{tikzpicture}
+    ... etc
+\end{document}
+</pre>
+<p>Create the a PDF file from this source by pdflatex, for example. For
+example, the pdf file is named pictures.pdf.
+
+<p>The generated pictures can be loaded by \etikz{number} macro in the OpTeX
+document. The number is the the page number where desired picture is in the
+external LaTeX-generated PDF file. The name of this PDF file have to be defined as
+\tikpdf. The macro \etikz enables optional parameter which gives the
+width of the picture, i.e. \etikz[width]{number} (default is \hsize).
+
+<pre>
+\def\tikzpdf{pictures.pdf}
+
+Here is the first picture: \etikz[5cm]{1}
+
+The second picture has hsize width:
+
+\etikz{2}
+
+\bye
+</pre>
+
+<p>The macro \etikz should be defined:
+
+<pre>
+\optdef\etikz[\hsize]#1{\hbox{%
+   \picwidth=\the\opt \picparams={page#1}\inspic{\tikzpdf}%
+}}
+</pre>
+
+<p>There are advantages of this approach: you needn't to generate large Tikz
+pictures repeatedly during debuging and tuning your OpTeX document and a
+huge amount of Tikz macros need not be loaded. You can create
+Tikz pictures with LaTeX specific additional packages.
+
+<p>Analogical approach can be used for any pictures, graphs etc.
+in various format, no only Tikz. You have to convert them to a PDF file
+and then simply use them.
+
+<p CLASS=datum>(0122) -- P. O. 2023-11-19<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
@@ -4868,6 +4932,65 @@ is calculated as (\vsize-\topskip)//\baselineskip, where // is integer
 division.
 
 <p CLASS=datum>(0121) -- P. O. 2023-10-31<p>
+
+<h2><a name="randomitems"></a>Random items from a given set of items</h2>
+
+<p>The problem is formulated <a href="https://tex.stackexchange.com/questions/522344/">here</a>.
+We want to declare a set of items and then print a given number of these items
+in random order. This macro can be used for generating
+questions for students, for example.
+
+<p>We can declare a set of questions:
+
+<pre>
+\sxdef{item:A}{Question A}
+\sxdef{item:B}{Question B}
+\sxdef{item:C}{Question C}
+\sxdef{item:D}{Question D}
+\sxdef{item:E}{Question E}
+\def\items{ABCDE}
+</pre>
+
+<p>and then select a randomly ordered subset of them and print them:
+
+<pre>
+\usetitems{4} % prints four questions in \begitems ... \enditems environment
+</pre>
+
+<p>If you want to have the same result in each TeX run, then you have to
+initialize random-number generator by \setrandomseed 42 (for example)
+before the first \useitems.
+
+<p>The relevant macros are here:
+
+<pre>
+\def\strlen#1{\directlua{tex.print(string.len("#1"))}}
+
+\def\choosefrom#1{\chardef\chosednum=\uniformdeviate\strlen{#1}
+   \def\outlist{}\tmpnum=-1 \choosefromA#1\_fin
+}
+\def\choosefromA#1{\incr\tmpnum \ifnum\tmpnum=\chosednum
+   \def\outitem{#1}\ea\choosefromB
+   \else \addto\outlist{#1}\ea\choosefromA
+   \fi
+}
+\def\choosefromB#1\_fin{\addto\outlist{#1}}
+
+\def\useitems#1{%
+   \begitems
+      \let\outlist=\items
+      \fornum 0..#1\do {\ea\choosefrom\ea{\outlist}%
+                        \_startitem \cs{item:\outitem}}%
+   \enditems
+}
+</pre>
+
+<p>\choosefrom{list-of-tokens} chooses one token from given list
+randomly and returns it in `\outitem` macro. The list
+without chosen item is returned in `\outlist` macro.
+
+<p CLASS=datum>(0123) -- P. O. 2023-11-21<p>
+
 
 <p CLASS="lmarg">Lua matters</p>
 
