@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readkv {Key-value dictionaries <2023-10-23>} % preloaded in format
+\_codedecl \readkv {Key-value dictionaries <2023-11-24>} % preloaded in format
 
    \_doc ----------------------------
    {\bf Implementation.}\nl
@@ -12,8 +12,10 @@
    <value> after it.\nl
    The \`\kvx``{<key>}{<code>}` defines the `\_kvx:<dict>:<key>#1` macro
    and \`\nokvx``{<code>}` defines the `\_nokvx:<dict>:<key>` macro.\nl
-   The \`\kv``{<key>}` expands the `\_kv:<dict>:<key>` macro. If this macro isn't
-   defined then \`\_kvunknown` is processed. You can re-define it if you want.\nl
+   The \`\trykv``{<key>}{<code>}`
+   returns unexpanded value of <key> if declared, else it runs <code>.\nl
+   The \`\kv``{<key>}` returns expanded value of <key> if declared,
+   else returns expanded value of `.notdef` key else expands \`\_kvunknown`.\nl
    The \`\iskv``{<key>}\iftrue` (or `\iffalse`) is the test,
    if the `<key>` is defined in current <dict>.
    \_cod ----------------------------
@@ -28,12 +30,14 @@
           {\_trycs{_nokvx:\_the\_kvdict}{\_ea\_ignoreit}{#1}\_ea\_ignoreit}{#2}}
 \_def\_kvx#1#2{\_sdef{_kvx:\_the\_kvdict:#1}##1{#2}}
 \_def\_nokvx#1{\_sdef{_nokvx:\_the\_kvdict}##1\_ea\_ignoreit##2{#1}}
-\_def\_kv#1{\_trycs{\_kvcs#1}{\_kvunknown}}
+\_def\_trykv#1{\_ea\_trykvA \_begincsname\_kvcs#1\_endcsname \_ignoreit}
+\_def\_trykvA#1{\_ifx #1\_ignoreit \_ea\_useit\_else \_unexpanded\_ea{#1}\_fi}
+\_def\_kv#1{\_expanded{\_trykv{#1}{\_trykv{.\_csstring\notdef}{\_kvunknown}}}}
 \_def\_iskv#1#2{#2\_else\_ea\_unless\_fi \_ifcsname\_kvcs#1\_endcsname}
 \_def\_kvcs{_kv:\_the\_kvdict:}
 \_def\_kvunknown{???}
 
-\public \readkv \kvx \nokvx \kv \iskv ;
+\public \readkv \kvx \nokvx \kv \trykv \iskv ;
 
 \_endcode
 
@@ -75,7 +79,13 @@ register. First: we read default parameters by \^`\readkv\myframedefaults`
 and secondly the actual parameters are read by \^`\readkv{\the\opt}`.
 The last setting wins.
 Third: the values can be used by the expandable \^`\kv{<key>}` macro.
-The \^`\kv{<key>}` returns `???` if such key is not declared.
+The \^`\kv{<key>}` returns `???` if such a <key> isn't declared
+but if `.notdef` key is declared then its value is returned in this case.
+
+The \^`\kv{<key>}` macro fully expands the value of key. If you don't want to expand
+the value, use \^`\trykv``{<key>}{<code>}`. It returns unexpanded value of <key> if
+declared else returns expanded <code>. For example
+`\edef\macro{\trykv{key}{}}` defines `\macro` as the unexpanded value of the `key`.
 
 You can use keys without values in the parameters list too.
 Then you can ask if the key is declared by \^`\iskv``{<key>}\iftrue`
@@ -114,7 +124,7 @@ for undeclared <key>. Example: `\nokvx{\opwarning{Unknown option "#1"}}`.
 
 The default dictionary name (where key-value pairs are processed) is
 empty. You can use your specific dictionary by
-\^`\kvdict``={<name>}`. Then `\redakv`, `\kv`, `\iskv`, `\kvx` and `\nokvx`
+\^`\kvdict``={<name>}`. Then `\redakv`, `\kv`, `\trykv`, `\iskv`, `\kvx` and `\nokvx`
 macros use this named dictionary of <key>/<value> pairs.
 Package options can be processed when
 `\kvdict={pkg:<pkg>}`, example is the `\mathset` macro in
@@ -128,6 +138,7 @@ A more extensive example can be found in
 
 \_endinput
 
+2023-11-24 \trykv introduced.
 2023-10-23 minor changes in \readkv, empty key isn't processed.
 2023-03-11 \nokvx: \fi bug (due to \afterfi in \trycs) fixed.
 2023-01-13 \kvx parameter added, \nokvx introduced.

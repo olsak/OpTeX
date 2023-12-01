@@ -4785,7 +4785,7 @@ My chapter
 \newcount\aunum
 \def\showchapter#1{\readkv{#1} % scanning outer list
    \iskv{authors}\iftrue       % scanning inner lists
-      \ea\foreach\expanded{\kv{authors}}\do ##1##2,{%
+      \ea\foreach\expanded{\trykv{authors}{}}\do ##1##2,{%
          \incr\aunum
          \readkv{##1}%
          \sxdef{author\the\aunum}{\kv{name}}%
