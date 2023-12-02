@@ -107,6 +107,11 @@
      \caps: {\rm\bf\it\bi} \caps\semibold: {\bf\bi} \caps\sans: {\rm\bf\it}
      -: {\mono\initials\displ\keybr} }
 
+\_famfrom{Victor Gaultney}
+\_faminfo [Gentium] {Serif free fonts, support Greek, Cyrrilic, IPA} {f-gentium}
+   { -,\caps,\book,\book\caps: {\rm\bf\it\bi} }
+\_famalias [GentiumPro]
+
 \_famfrom {Daniel Flipo}
 \_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
    { -,\light,\sans,\mono, \caps, \caps\light, \caps\sans,\caps\mono,\swash: {\rm\bf\it\bi} }

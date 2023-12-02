@@ -1,0 +1,26 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Gentium] \Gentium {Serif free fonts, support Greek, Cyrillic, IPA}
+        {\caps} {\rm \bf \it \bi} {Termes}
+        {[GentiumPlus-Regular]}
+        {\_def\_fontnamegen {[Gentium\_bkV Plus-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ \caps ...... caps & small caps^^J
+ \book ...... Book variants (a little bolder)^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fsetV bk={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \book     {\_fsetV bk=Book }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[texgyretermes-math]}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+
