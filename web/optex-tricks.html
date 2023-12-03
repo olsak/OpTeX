@@ -221,6 +221,13 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#randomitems">Random items from a given set of items</a>
 </ul>
 
+<li>Simple templates
+<ul>
+    <li><a href="#petiteannonce">Adverts for notice boards with phone numbers</a>
+    <li><a href="#confpin">Pins for conference patricipants</a>
+    <li><a href="#tickets">More tickets from a pdf to individual pages</a>
+</ul>
+
 <li>Lua matters
 <ul>
     <li><a href="#beglua">Processing lua code with normal characters</a>
@@ -4990,6 +4997,168 @@ randomly and returns it in `\outitem` macro. The list
 without chosen item is returned in `\outlist` macro.
 
 <p CLASS=datum>(0123) -- P. O. 2023-11-21<p>
+
+<p CLASS="lmarg">Simple templates</p>
+
+<h2><a name="petiteannonce"></a>Adverts for notice boards with phone numbers</h2>
+
+<p>We want to create an advert that we would pin down on some notice board
+in a mall with phone number repeated on strips. We can use following
+template:
+
+<pre>
+\fontfam[lm]
+
+\def\width{10cm}
+\def\title {Vend Baignoire enfant}
+\def\phone {02 99 yy yy yy}
+\setbox1=\hbox{\picw=\dimexpr\width/2 \inspic{baignoire.JPG}}
+\setbox2=\vbox to\ht1{\hsize=\dimexpr\width/2-5mm \parindent=0pt
+   \vss
+   Vend baignoire enfant.\par
+   Dimensions 80\,cm × 30\,cm\par
+   Prix 20 €
+   \vss
+}
+\setbox3=\hbox{\kern1.8mm\rotbox{90}{\ \phone\ }\kern1.7mm}
+
+\directoutput\frame{\vbox{\hsize=\width \lineskip=2mm
+  \medskip
+  \line{\typosize[14/]\ \dotfill\ \title\ \dotfill\ }
+  \medskip
+  \line{\kern2mm\box2\hss \box1\kern2mm}
+  \line{\dotfill}
+  \centerline{\fornum 1..14\do{\copy3\vrule}\box3}
+}}
+\bye
+</pre>
+
+<p>You can run this example if you have the image baignoire.JPG in the
+current directory. It is from petiteannonce LaTeX package. Of course, you
+can change the \title, \phone, text, image file etc. as required.
+
+<p>The result is a single page with the single advert with page dimensions
+derived from the advert size. We probably
+want to put this single avert to A4 page and repeat it more times at
+single A4 page and finally, we want to cut the prited page. This can be done by
+the <a href="#tickets">OpTeX trick 0126</a>.
+
+<p>Note that we needn't to create an special package for this purpose. We are
+using TeX primitives, we can modify the template shown here and we can do
+the task with a few lines of the code.
+
+<p CLASS=datum>(0124) -- P. O. 2023-12-03<p>
+
+<h2><a name="confpin"></a>Pins for conference patricipants</h2>
+
+<p>The following macro creates pins for conference participants:
+
+<pre>
+\fontfam[Roboto]  \cond\typosize[12/19]
+\parindent=0pt
+
+\hhkern=0pt \vvkern=0pt
+\def\confpin#1#2{%
+   \directoutput\vbox to50.8mm{\hsize=70mm % dimensions of the pin is here
+      \vskip10mm
+      \centerline{\setfontsize{at15pt}\bf#1}
+      \centerline{\bf#2}
+      \rulewidth=2pt \line{\quad \hrulefill\quad}
+      \nointerlineskip \vskip4mm
+      \line{\quad\vtop{\hsize=50mm \typosize[8/11] \kern0pt\confdata}\hss
+            \vtop{\kern0pt\copy\logobox}}
+      \vss
+   }
+}
+\def\confdata {Animal annual meeting (AAM)\par
+               In the gardens\par
+               April 1, 2000}
+\newbox\logobox
+\setbox\logobox=\vbox{\picw=25mm \kern-2mm\inspic{op-ring.png}}
+
+\confpin{Camelus dromedarius}{North Africa}
+\confpin{Urocyon cinereoargenteus}{America}
+\confpin{Galago moholi}{South Africa}
+\confpin{Dasypus novemcintus}{South America}
+\confpin{Rhinocerus sondaicus}{Java}
+\confpin{Canis lupus}{Northern sphere}
+\confpin{Ramphastus spec.}{South Amerika}
+\confpin{Panthera tigris sondaica}{Java}
+\confpin{Hippocampus spec.}{the ocean}
+\confpin{Anthonomus grandis}{Mexico}
+\confpin{Petrogale penicillata}{Australia}
+\confpin{Tarsius spec.}{Sumatra}
+
+\bye
+</pre>
+
+<p>The example prints each pin on a single "page" in the pdf output. If we
+want to print more of them on a single A4 page, then we can use
+the <a href="#tickets">OpTeX trick 0126</a>.
+
+<p CLASS=datum>(0125) -- P. O. 2023-12-03<p>
+
+
+<h2><a name="tickets"></a>More tickets from a pdf to individual pages</h2>
+
+<p>If we prepare an advert or a set of pins for conference participants or
+bussines cards or address labels
+or something similar in a pdf (so called tickets) with single "ticket"
+per page in the pdf with its real dimensions,
+then we can put more tickets per a real page, print them
+and cut them by scissors.
+
+Suppose that we have prepared pins for conference participants using previous
+<a href="#confpin">OpTeX trick 0125</a> in a pdf file pins.pdf. Then we can
+use following code:
+
+<pre>
+\def\tikets{pins.pdf} % pdf file name, one tiket per page is here
+\def\repeat{1}        % each ticket is printed \repeat times
+\def\dist{10mm 10mm}  % horizontal and vertical distance between tikets
+
+\margins/1 a4 (3,3,5,5)mm  % paper A4, 3mm margins
+\nopagenumbers
+
+% corners: \corner0: right up, 1: left up, 2: left down, 3: right down
+\def\corner#1{\pdfliteral{q \rot{#1} 0 0 cm .2w 0 10 m 0 3 l 3 0 m 10 0 l S Q}}
+\def\rot#1{\ifcase#1 1 0 0 1\or 0 1 -1 0\or -1 0 0 -1\or 0 -1 1 0\fi}
+% \let\corner=\ignoreit % use this command if you don't want crop marks
+\def\dotiket{%
+   \vbox{\offinterlineskip \halign{##\hfil&amp;##\cr
+      \corner1&amp;\corner0\cr
+      \corner2\inspic{\tikets}\corner3\cr
+   }}%
+}
+% printing all tikets in a single paragraph:
+\afterassignment\lineskip \dimen0=\dist
+\rightskip=0pt plus1fil \parindent=0pt \raggedbottom
+\setbox0=\dotiket % page 1, we get \pdflastximagepages
+\noindent
+\fornum 1..\pdflastximagepages \do
+   {\picparams={page#1}\ifnum#1>1 \setbox0=\dotiket \fi
+   \fornum 1..\repeat \do {\copy0\hskip\dimen0}}
+
+\bye
+</pre>
+
+<p>If you have prepared an advert using
+<a href="#petiteannonce">OpTeX trick 0124</a> then you can use the same code,
+only the first three lines differ:
+
+<pre>
+\def\tikets{baignoire.pdf} % pdf file name, one tiket per page is here
+\def\repeat{6}             % each ticket is printed \repeat times
+\def\dist{0mm 0mm}         % horizontal and vertical distance
+</pre>
+
+<p>If you don't need the cropmarks then use \let\corner=\ignoreit.
+
+<p>The tickets are printed as words to a single paragraph. The number of
+tickets per line and per page depends on the size of the tickets, on
+the distance between them and on the output page size declared by \margins.
+
+<p CLASS=datum>(0126) -- P. O. 2023-12-03<p>
 
 
 <p CLASS="lmarg">Lua matters</p>
