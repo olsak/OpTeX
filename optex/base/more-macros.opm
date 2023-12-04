@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2023-01-18>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2023-12-04>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -270,7 +270,8 @@
    \endtt
    You can use expandable \`\expr``{<expression>}` for analogical purposes.
    It expands to the value of the `<expression>` at expand processor level.
-   The `<expression>` can include `+-*/()` and decimal numbers in common syntax.
+   The `<expression>` can include `+-*/^()` and decimal numbers in common syntax.
+   Moreover, `a//b` means integer division and `a\%b` is remainder.
    The math functions (and pi constant) have to be prefixed by `math.`,
    because it is processed by Lua interpreter. For
    example `\expr{math.pi*math.sqrt(2)}`.
@@ -297,6 +298,21 @@
 \_def\_exprA[#1]#2{\_directlua{tex.print(string.format('\_pcent.#1f',#2))}}
 
 \_public \expr \bp ;
+
+   \_doc ----------------------------- 
+   The \^`\expr` and \^`\bp` macros return their results with given number of decimal
+   digits even if there are trailing zeros. There is the \^`\nnum` macro to
+   \"normalize" such decimal numbers. \`\nnum``{<number>}` expands its parameter
+   and removes trailing zeros after decimal point and removes the decimal point
+   if nothing follows. For example, use `\nnum{\expr[10]{<expression>}}`.
+   The `\nnum` macro is fully expandable.
+   \_cod -----------------------------
+
+\_def\_nnum #1{\_ea\_nnumA\_expanded{#1}.\_fin}
+\_def\_nnumA #1.#2\_fin{#1\_ifx~#2~\_else \_nnumB #20.\_fin \_fi}
+\_def\_nnumB #10.#2\_fin{\_ifx~#2~\_nnumC#1\_else \_nnumB #1.0.\_fin \_fi}
+\_def\_nnumC #1.{\_ifx~#1~\_else .#1\_fi}
+\_public \nnum ;
 
    \_doc ------------------
    You can write \^`\setpos``[<label>]` somewhere and the position of such
@@ -374,6 +390,7 @@
 
 \_endcode % -------------------------------------
 
+2023-12-04 \nnum introduced
 2023-01-18 \bp, \expr have optional syntax for setting dec-digits
 2022-11-24 \setpos, \posx, \posy moved from OpTeX trick here
 2022-11-22 \docgen writes banner to log
