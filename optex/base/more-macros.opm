@@ -299,7 +299,7 @@
 
 \_public \expr \bp ;
 
-   \_doc ----------------------------- 
+   \_doc -----------------------------
    The \^`\expr` and \^`\bp` macros return their results with given number of decimal
    digits even if there are trailing zeros. There is the \^`\nnum` macro to
    \"normalize" such decimal numbers. \`\nnum``{<number>}` expands its parameter
