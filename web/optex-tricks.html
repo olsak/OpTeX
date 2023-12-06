@@ -236,6 +236,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
+    <li><a href="#selnolig">Selective suppression of ligatures</a>
 </ul>
 
 <li>Sections
@@ -5430,6 +5431,58 @@ automatically. It is based on the Lua code, see
 the answer at the stack exchange site</a>.
 
 <p CLASS=datum>(0114) -- Max Chernoff, 2023-06-27<p>
+<hr>
+
+<h2><a name="selnolig"></a>Selective suppression of ligatures</h2>
+
+<p>The Lua code from <a href="https://ctan.org/pkg/selnolig">selnolig LaTeX package</a>
+works in OpTeX too. You can set rules for creating ligatures by patterns.
+See selnolig documentation for more information.
+
+<p>You need to have the selnolig package instaled.
+To initialize its features you can write:
+
+<pre>
+\directlua{require("selnolig.lua")}  % loading Lua code
+\directlua{enableselnolig()}         % switch selnolig on
+
+\def\nolig#1#2{\directlua{ suppress_liga("#1","#2") }}
+\def\keeplig#1{\directlua{ always_keep_liga("#1") }}
+
+{\catcode`@=11 \newif\if@noftligs  \newif\if@broadfset  \newif\if@hdligset
+\def\ProvidesPackage#1[#2]{}
+\@noftligstrue   % select true or false
+\@broadfsettrue  % select true or false
+\@hdligsettrue   % select true or false
+%\input selnolig-english-patterns.sty  % choose English patterns or:
+\input selnolig-german-patterns.sty    % choose German patterns
+}
+</pre>
+
+<p>The Lua code from <a href="https://ctan.org/pkg/ligtype">ligtype LaTeX package</a>
+works in OpTeX too. It does similar work like selnolig, see its
+documentation.
+
+<p>You need to have the ligtype package instaled.
+To initialize its features you can write:
+
+<pre>
+\fontfam[lm]                        % needs Unicode fonts loaded
+\directlua{require("ligtype.lua")}  % loading Lua code
+\directlua{ligtype_on()}            % switch ligtype on
+% \directlua{ligtype_no_short_f()}  % noshortf option
+% \directlua{ligtype_all_short_f()} % allshortf option
+% \directlua{ligtype_make_marks()}  % makemarks option
+% \directlua{ligtype_no_default()}  % nodefault option
+% \directlua{ligtype_lig_list()}    % liglist option
+% \directlua{ligtype_con_notes()}   % connotes option
+% \addto\bye{\directlua{ligtype_write_ligs()}} % kerntest option
+</pre>
+
+<p>The ligtype package initializes German patterns for suppression of ligatures
+by default.
+
+<p CLASS=datum>(0127) -- Mico Loretan (selnolig), Thomas Kelkel (ligtype) 2023-12-06<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
