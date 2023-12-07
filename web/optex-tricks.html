@@ -237,6 +237,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
     <li><a href="#selnolig">Selective suppression of ligatures</a>
+    <li><a href="#timer">Measuring elapsed time of OpTeX processing</a>
 </ul>
 
 <li>Sections
@@ -5476,13 +5477,76 @@ To initialize its features you can write:
 % \directlua{ligtype_no_default()}  % nodefault option
 % \directlua{ligtype_lig_list()}    % liglist option
 % \directlua{ligtype_con_notes()}   % connotes option
-% \addto\bye{\directlua{ligtype_write_ligs()}} % kerntest option
+% \addto\_byehook{\directlua{ligtype_write_ligs()}} % kerntest option
 </pre>
 
 <p>The ligtype package initializes German patterns for suppression of ligatures
 by default.
 
 <p CLASS=datum>(0127) -- Mico Loretan (selnolig), Thomas Kelkel (ligtype) 2023-12-06<p>
+<hr>
+
+<h2><a name="timer"></a>Measuring elapsed time of OpTeX processing</h2>
+
+<p>We will implement a Lua timer, as described at
+<a href="https://tex.stackexchange.com/questions/703096#703253">tex.stackexchange</a>.
+You can put \timerstart{label} \timerstop{label} anywhere in your macros or
+document and then \timerprint{label} prints the elapsed time between
+\timerstart{label} and \timerstop{label}. Moreover, you can initialize
+\timerstart{point} and then use "\TIMER name " at more points in your code. The
+\TIMER macro prints immediately elapsed time from \timerstart{point} or
+from previous \TIMER.
+
+<p>You have to run
+<pre>
+optex --socket document
+</pre>
+<p>if you want to use this measurement, because the socket library has to be
+initialized.
+
+<p>If you try to measure elapsed time of whole document, then keep in mind
+that additional time is elapsed when OpTeX loads its format and initializes
+and when endgame routines are processed. If you try to run time routine from command
+line (i.e. <tt>time optex --socket document</tt>) then you can see a small difference:
+time reports about 0.2 seconds more than whole document measured by \timerprint.
+When I try to do the same with LuaLaTeX, I see 0.6 second more time than measurement
+by \timerprint because LuaLaTeX initializes many Lua routines (like luaotfload) in \everyjob.
+
+<p>The implementation:
+<pre>
+\directlua{
+  timer = timer or {} % table to hold time performance
+  local socket = require('socket')
+  local time_stat = time_stat or {}
+  local gettime = socket.gettime
+
+  time_stat["total"] = 0 % start time measurement
+
+  function start_time_measure(field) % param "done" indicates timer was stopped
+      time_stat[field] = {start = gettime(), done = false}
+  end
+
+  function stop_time_measure(field) % stop time measurement
+      if not time_stat[field].done then
+         time_stat[field] = {total = gettime() - time_stat[field].start, done=true}
+      end
+  end
+
+  timer.start = start_time_measure
+  timer.stop  = stop_time_measure
+  timer.statistics = function(name) return time_stat[name].total end
+} % !! run optex with option --socket
+
+\def\timerstart#1{\directlua{timer.start("#1")}}
+\def\timerstop#1{\directlua{timer.stop("#1")}}
+\def\timerprint#1{\wterm{\directlua{
+   timer.stop("#1")
+   tex.print("elapsed time (#1):", string.format('\%.5f',timer.statistics("#1")).." s")
+}}}
+\def\TIMER #1 {\message{^^JTIMER point #1:}\timerprint{point}\timerstart{point}}
+</pre>
+
+<p CLASS=datum>(0128) -- Yiannis Lazarides, P. O. 2023-12-07<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
