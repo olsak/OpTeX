@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2023-10-17>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2023-12-07>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -95,8 +95,8 @@
    \_immediateassignment \_long\_gdef\_fbody#2{\_testparam##1..\_iftrue #3\_ea\_fbody\_fi}%
    \_fbody #1#2\_finbody\_getforstack
 }
-\_def\_testparam#1#2#3\_iftrue{\_ifx###1\_empty\_ea\_finbody\_else}
-\_def\_finbody#1\_finbody{}
+\_long\_def\_testparam#1#2#3\_iftrue{\_ifx###1\_empty\_ea\_finbody\_else}
+\_long\_def\_finbody#1\_finbody{}
 
 \_long\_def\foreach #1\do#2#{\_isempty{#2}\_iftrue
    \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
@@ -376,6 +376,7 @@
 
 \_endcode
 
+2023-12-07 \_testparam define \long (big fixed)
 2023-10-17 \qcasesof introduced, \xcasesof reimplemented.
 2023-01-16 \isnextchar created expandable.
 2022-12-02 \xcasesof: its first parameter is \long too.
