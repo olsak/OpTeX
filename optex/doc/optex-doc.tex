@@ -112,14 +112,31 @@ document \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]
 
 \nonum\chap Index
 
+\input primitives
+
 \noindent
-There are all control sequences used in \OpTeX/ except \TeX/ primitives.
-If you want to know something about \TeX/ primitives then you can use another index from
-\ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#ref:index]{\TeX/ in a Nutshell}.
+Control sequences declared by \OpTeX/ have page list here and they are
+internal links to their main documentation point. \TeX/ primitives used by
+\OpTeX/ have no page list here and they are external links to
+\ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]{\TeX/ in a Nutshell}
+to the place where the primitive is briefly described.
+%Only primitives used in \OpTeX/ macros are listed here. There are much more
+%primitives implemented in \LuaTeX/, see
+%\ulink[https://www.pragma-ade.com/general/manuals/luatex.pdf]{\LuaTeX/ manual},
+%section \"primitives".
 
 % active links directly to the main documentation point but not to the pages:
-\def\_printii #1&{\noindent\hskip-\iindent \link[cs:#1]\Blue{\bslash #1} }
+\def\_printii #1&{%
+   \noindent\hskip-\iindent
+   \ea\ifx \csname,#1\endcsname \empty % primitive
+      \_iindex{#1}\_dest[cs:#1]% main documentation point for primitives is in the Index
+      \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#cs:#1]{\bslash#1}
+      \ea\ea\ea\nopages
+   \else \link[cs:#1]\Blue{\bslash #1} % OpTeX macro
+   \fi
+}
 \def\_pgprintA #1{#1}
+\def\nopages#1&{*\_par}
 \begmulti 3 \tt \makeindex \endmulti
 
 \bye

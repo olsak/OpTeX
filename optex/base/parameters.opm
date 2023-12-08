@@ -144,8 +144,8 @@
 \_voffset=25mm
 \_hsize=160mm    % 210mm (from A4 size) - 2*25mm (default margins)
 \_vsize=244mm    % 297mm (from A4 size) - 2*25mm (default margins) -3mm baseline correction
-\_pagewidth=210 true mm
-\_pageheight=297 true mm
+\_pdfpagewidth=210 true mm
+\_pdfpageheight=297 true mm
 
    \_doc -----------------------------
    If you insist on plain \TeX/ values of these parameters then you can
@@ -162,8 +162,8 @@
    \_voffset=0pt
    \_hsize=6.5in
    \_vsize=8.9in
-   \_pagewidth=8.5 true in
-   \_pageheight=11 true in
+   \_pdfpagewidth=8.5 true in
+   \_pdfpageheight=11 true in
    \_nonfrenchspacing
 }
 \_public \plaintexsetting ;
