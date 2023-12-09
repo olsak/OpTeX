@@ -112,8 +112,6 @@ document \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf]
 
 \nonum\chap Index
 
-\input primitives
-
 \noindent
 Control sequences declared by \OpTeX/ have page list here and they are
 internal links to their main documentation point. \TeX/ primitives used by
@@ -129,7 +127,7 @@ to the place where the primitive is briefly described.
 \def\_printii #1&{%
    \noindent\hskip-\iindent
    \ea\ifx \csname,#1\endcsname \empty % primitive
-      \_iindex{#1}\_dest[cs:#1]% main documentation point for primitives is in the Index
+      \_dest[cs:#1]% main documentation point for primitives is in the Index
       \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#cs:#1]{\bslash#1}
       \ea\ea\ea\nopages
    \else \link[cs:#1]\Blue{\bslash #1} % OpTeX macro

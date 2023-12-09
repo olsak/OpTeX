@@ -4,6 +4,9 @@
 
 \def\addprimitive#1{\_ea\addprimitiveA \_csname,\_csstring#1\_endcsname}
 \def\addprimitiveA#1{\ifx#1\relax\_addto\_iilist#1\fi \_gdef#1{}}
+\def\_intlink{\_link[cs:\_tmpa]{\choosecolor}{\_csstring\\\_tmpb}}
+\def\choosecolor{\_ea\ifx\csname,\_tmpa\endcsname\empty \primcolor\else\ulinkcolor\fi}
+\def\primcolor{\setcmykcolor{.7 0 .7 .5}}
 
 \xargs\addprimitive
 %\above
@@ -112,6 +115,7 @@
 \if
 \ifcase
 \ifcat
+\ifcsname
 \ifdim
 \ifeof
 \iffalse
@@ -202,6 +206,7 @@
 \openout
 \outer
 \output
+\outputmode
 \outputpenalty
 \over
 \overfullrule
