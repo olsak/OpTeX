@@ -149,7 +149,7 @@
 
    \_doc -----------------------------
    If you insist on plain \TeX/ values of these parameters then you can
-   call the `\plaintexsetting` macro.
+   call the \`\plaintexsetting` macro.
    \_cod -----------------------------
 
 \_def\_plaintexsetting{%

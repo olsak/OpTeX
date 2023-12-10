@@ -120,19 +120,18 @@
 \_newdimen \tmpdim  \_newdimen \_tmpdim
 
    \_doc -----------------------------
-   A few registers are initialized like in plain\TeX/. We absolutely
+   A few registers: \`\maxdimen`, \`\hideskip` and
+   \`\centering` are initialized like in plain\TeX/. We absolutely
    don't support the `@`category dance, so `\z@skip`
-   `\z@`, `\p@` etc. are defined but not recommended in \OpTeX/.
-
-   The \`\_zo` and \`\_zoskip` (equivalents to `\z@` and `\z@skip`)
-   are declared here and used in some internal macros of \OpTeX/
-   for improving speed.
+   `\z@`, `\p@` etc. are defined but not recommended.
+   The \`\_zo`, \`\_zoskip` and \`\voidbox` (equivalents to
+   `\z@`, `\z@skip` and `\voidb@x`) are preferred in \OpTeX.
    \_cod -----------------------------
 
 \_newdimen\_maxdimen \_maxdimen=16383.99999pt % the largest legal <dimen>
-\_newdimen\_zo \_zo=0pt
 \_newskip\_hideskip \_hideskip=-1000pt plus 1fill % negative but can grow
 \_newskip\_centering \_centering=0pt plus 1000pt minus 1000pt
+\_newdimen\_zo \_zo=0pt
 \_newskip\_zoskip \_zoskip=0pt plus0pt minus0pt
 \_newbox\_voidbox % permanently void box register
 
