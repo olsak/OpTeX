@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2022-12-11>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2023-12-10>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General decalarations.
@@ -41,8 +41,6 @@
    \_doc -----------------------------
    The listing mode is implemented here. The \`\maxlines`
    is maximal lines of code printed in the listing mode.
-   The \code{\\catcode`\\.=11} sets dot as letter in listngs (for package
-   documentation where `\.foo` sequeces exist).
    \_cod -----------------------------
 
 \_newcount \_maxlines   \_maxlines=100000
@@ -54,7 +52,7 @@
    \_typosize[8/10]
    \_let\_printverbline=\_printcodeline
    \_ttline=\_inputlineno
-   \_setverb \_catcode`\.=11
+   \_setverb
    \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
    \_adef{ }{\ }\_adef\^^I{\t}\_parindent=\_ttindent \_parskip=0pt
    \_def\t{\_hskip \_dimexpr\_tabspaces em/2\_relax}%
@@ -88,7 +86,8 @@
    the first `_` or `.` is removed from `\_tmpa` and the test is repeated.
    \_cod -----------------------------
 
-\_def\_makecs{\_def\_tmpa{}\_futurelet\_next\_makecsA}
+\_def\_makecs{\_def\_tmpa{}\_futurelet\_next\_makecsD}
+\_def\_makecsD{\_if.\_next \_ea\_makecsB \_else \_ea\_makecsA \_fi} % \.foo is accepted
 \_def\_makecsA{\_ifcat a\_noexpand\_next \_ea\_makecsB \_else \_ea\_makecsF \_fi}
 \_def\_makecsB#1{\_addto\_tmpa{#1}\_futurelet\_next\_makecsA}
 \_def\_makecsF{\_let\_tmpb=\_tmpa
@@ -363,6 +362,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2023-12-10 \catcode`.=11 removed, issue solved by \_makecsD.
 2022-12-11 \_opwaning "Second main documentation point" introduced.
 2022-12-11 \_docrefcodes added (bug due to 2022-11-13 fixed).
 2022-11-21 magenta color for internal links instead green.
