@@ -8,6 +8,8 @@
    \begtt
    \addto \dospecials{\do\_}
    \endtt
+   \`\active` is character constant 13, we can use it in the context
+   \code{\\catcode`}<character>\code{=\\active}.
    \_cod -----------------------------
 
 \_def\_dospecials {\do\ \do\\\do\{\do\}\do\$\do\&%
@@ -138,6 +140,7 @@
    \_doc -----------------------------
    The \`\strutbox` is declared as 10pt size dependent (like in plain \TeX), but
    the macro `\_setbaselineskip` (from `fonts-opmac.opm`) redefines it.
+   The `\strut` macro puts the \^`\strutbox`.
    \_cod -----------------------------
 
 \_newbox\_strutbox
@@ -162,8 +165,8 @@
    \_doc -----------------------------
    Tabbing macros are omitted because they are obsolete.
    \nl
-   Indentation and others. \`\textindent`, \`\item`, \`\itemitem`,
-   \`\narrower`, \`\raggedright`, \`\ttraggedright`, \`\leavevmode`.
+   Indentation and similar macros are defined here: \`\hang`, \`\textindent`,
+   \`\item`, \`\itemitem`, \`\narrower`, \`\raggedright`, \`\ttraggedright`, \`\leavevmode`.
    \_cod -----------------------------
 
 \_def \_hang {\_hangindent\_parindent}
@@ -181,7 +184,7 @@
 
    \_doc -----------------------------
    Few character codes are set for backward compatibility. But old obscurities
-   (from plain TeX) based on \`\mathhexbox`
+   (from plain \TeX) based on \`\mathhexbox`
    are not supported -- an error message and recommendation
    to directly using the desired character is implemented by the
    \`\_usedirectly` macro).
@@ -219,7 +222,7 @@
 \_public \mathhexbox ;
 
    \_doc -----------------------------
-   The \`\_unichars` macro is run in \~`\initunifonts`,
+   The \`\_unichars` macro is run when Unicode font family is loaded,
    Unicodes are used instead old plain \TeX/ settings.
    \_cod -----------------------------
 
@@ -263,6 +266,9 @@
    macro \`\oldaccents` which defines accented macros.
    \nl
    Much more usable is to define these control sequences for other purposes.
+   \nl
+   The \`\_uniaccents` macro redeclares codes for accents and it is run when
+   Unicode font family is loaded.
    \_cod -----------------------------
 
 \_def \_oldaccents {%
@@ -342,7 +348,7 @@
    \rightarrowfill \leftarrowfill \downbracefill \upbracefill ;
 
    \_doc -----------------------------
-   The last part of plain \TeX/ macros: \`\magnification`, \`\bye`.
+   The last part of plain \TeX/ macros: \`\magnification`, \`\showhyphens`, \`\bye`.
    Note that math macros are defined in the `math-macros.opm` file
    (section~\ref[math-macros]).
    \_cod -----------------------------
@@ -361,7 +367,7 @@
 \_public \showhyphens \bye ;
 
    \_doc -----------------------------
-   Plain \TeX/ reads `hyphen.tex` with patterns as `\language=0`. We do the same.
+   Plain \TeX/ reads `hyphen.tex` with patterns when \^`\language``=0`. We do the same.
    \_cod -----------------------------
 
 \_lefthyphenmin=2 \_righthyphenmin=3 % disallow x- or -xx breaks

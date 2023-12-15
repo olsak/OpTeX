@@ -24,14 +24,14 @@
 \_endcode %---------------------------------------------------
 
 The format in Lua\TeX/ can download only non-Unicode fonts. Latin Modern EC is
-loaded here. These fonts are totally unusable in LuaTeX when languages with out
+loaded here. These fonts are totally unusable in \LuaTeX/ when languages with out
 of ASCII or ISO-8859-1 alphabets are used (for example Czech). We load only
 a few 8bit fonts here especially for simple testing of the format.
 But, if the user needs to do more serious work, he/she can
-use `\fontfam` macro to load a selected font family of Unicode fonts.
+use \^`\fontfam` macro to load a selected font family of Unicode fonts.
 
 We have a dilemma: when the Unicode fonts cannot be preloaded in the format then the basic
-font set can be loaded by `\everyjob`. But why to load a set of fonts at the
+font set can be loaded by \^`\everyjob`. But why to load a set of fonts at the
 beginning of every job when it is highly likely that the user will
 load something completely different. Our decision is: there is a basic 8bit
 font set in the format (for testing purposes only) and the user should load
