@@ -181,7 +181,9 @@
    \`\themathcodefam``<math-char>` and \`\themathcodechar``<math-char>` macros.
    The parameter <math-char> is a math character or it is a macro like `\doteq`, `\times`.
    Moreower, \`\thedelcodefam``<math-char>` and \`\thedelcodechar``<math-char>`
-   return delcode quaitities of givem math character.
+   return delcode quaitities of given math character.
+   All these commands use the common Lua code defined in
+   the \`\_getmathcode``<code>{<math or del>}<character number>` macro.
    \_cod -----------------------------
 
 \_def\_getmathcode#1#2{\_directlua{tex.print(tex.get#2code(token.scan_int())[#1])}}

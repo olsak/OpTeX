@@ -347,7 +347,10 @@
    names from plain\TeX/ with `@` character are re-written in a more readable
    form.\nl
    \`\sp` is an alternative for `^`. The \`\sb` alternative for `_` was defined
-   at line 27 of the file `math-macros.opm`.
+   at line 27 of the file `math-macros.opm`.\nl
+   \`\_thinsk`, \`\_medsk`, \`\_thicksk` and \`\_thinneg` should be used
+   instead `\,`, `\>`, `\;` and `\!` in macros because a user can re-define
+   these single-letter sequences.
    \_cod -----------------------------
 
 \_let\_sp=^ \public \sp ;

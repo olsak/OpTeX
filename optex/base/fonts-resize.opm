@@ -62,7 +62,8 @@
    The `\fontname` primitive returns the <font file name> optionally
    followed by <size spec>. The \`\xfontname` macro expands to <font file name>
    without <size spec>. We need to remove the part `<space>at<dimen>` from
-   `\fontname` output. The letters `at` have category 12.
+   `\fontname` output. The letters `at` have category 12 in the \`\_stringat`
+   macro.
    \_cod -----------------------------
 
 \_edef\_stringat{\_string a\_string t}
