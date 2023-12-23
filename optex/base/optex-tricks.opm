@@ -97,13 +97,14 @@
 \_trick 105 \directoutput ;
 %%%%%%%%%%%
 
-\_def\directoutput{\_begingroup \_afterassignment\.directoutputA \_setbox0=}
+\_newbox\.outbox
+\_def\directoutput{\_begingroup \_afterassignment\.directoutputA \_setbox\.outbox=}
 \_def\.directoutputA{\_aftergroup \.directoutputB}
-\_def\.directoutputB{\_preshipout0\_box0
-   \_pdfpageheight=\_dimexpr\_ht0+\_dp0+2\_vvkern \_relax
-   \_pdfpagewidth=\_dimexpr\_wd0+2\_hhkern\_relax
+\_def\.directoutputB{\_preshipout\.outbox\_box\.outbox
+   \_pdfpageheight=\_dimexpr\_ht\.outbox+\_dp\.outbox+2\_vvkern \_relax
+   \_pdfpagewidth=\_dimexpr\_wd\.outbox+2\_hhkern\_relax
    \_hoffset=\_hhkern \_voffset=\_vvkern
-   \_shipout\_box0
+   \_shipout\_box\.outbox
    \_incr\_pageno
    \_endgroup
 }

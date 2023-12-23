@@ -198,7 +198,8 @@
 }
 
    \_doc -----------------------------
-   The  math alphabets \`\cal`, \`\bbchar`, \`\frak`, \`\script` are re-defined
+   The  math alphabets \`\cal`, \`\bbchar`, \`\frak`, \`\script`,
+   \`\misans`, \`\mbisans` are re-defined
    here. The \`\_marm`, \`\_mabf`, \`\_mait`, \`\_mabi`, \`\_matt`
    used in \^`\rm`, \^`\bf`, \^`\it`, \^`\bi` are re-defined too.\nl
    You can redefine them again if you need different behavior (for example
@@ -548,7 +549,7 @@
 \secc More Unicode-math examples
 
 Example of using additional math font is in section 5.3 in the
-\ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]{\tt optex-math.pdf} documentation
+\ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]{\tt optex-math.pdf} documentation.
 More examples are in the
 \ulink[http://petr.olsak.net/optex/optex-tricks.html]{OpTeX tricks} and in the
 \ulink[https://petr.olsak.net/ftp/olsak/optex/math-doc.pdf]{math.opm} package.

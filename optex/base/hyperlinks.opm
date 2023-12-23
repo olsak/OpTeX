@@ -6,11 +6,12 @@
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
    destination is declared in the format `<type>:<spec>`. If the \^`\hyperlinks`
    command in not used, then `\dest` does nothing else it is set to `\_destactive`.
-   The \`\_destactive` is implemented by `\_pdfdest` primitive. It creates a box
+   The \`\_destactive` is implemented by `\_pdfdest` primitive. It creates a
+   box using \`\_destbox``[<type>:<spec>]`
    in which the destination is shifted by \`\_destheight`. The reason is that
    the destination is exactly at the top border of the PDF viewer but we want to see
-   the line where the destination is. The destination box is positioned by a
-   different way dependent on the current vertical or horizontal mode.
+   the line where the destination is. The destination box is positioned
+   differently dependent on the current vertical or horizontal mode.
    \_cod ----------------------------
 
 \_def\_destheight{1.4em}

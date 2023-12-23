@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2023-10-17>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2023-12-23>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -105,13 +105,14 @@
     first sentence from the paragraph <number> using \`\_lipsumdot`.
     \_cod ----------------------------
 
+\_newbox\_nonebox
 \_def\_lipsumtext[#1]{\_lipsumload\_cs{_lip:#1}}
 \_def\_lipsum[#1]{\_lipsumA #1.]{#1}}
 \_def\_lipsumA #1.#2]#3{\_ifx^#2^\_lipsumB #1\_empty-\_empty\_fin \_else \_lipsumdot[#1].\_fi}
 \_def\_lipsumB #1-#2\_empty#3\_fin{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{{%
-   \_setbox0=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
+   \_setbox\_nonebox=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
       \_def\SetLipsumLanguage##1{}%
       \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
@@ -149,7 +150,7 @@
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
    \_long\_def\_loadtrickA ##1\_trick##2#1##3;{##1}%
    \_wlog{Loading trick macros for \_string#1}%
-   \_setbox0=\_vbox{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
+   \_setbox\_nonebox=\_vbox{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
    \_restorectable \_endnamespace
 }
 \_def\_trick #1;{\_endinput}
@@ -238,6 +239,7 @@
 
 \_endcode
 
+2023-12-23 \_nonebox instead box 0 introduced.
 2023-10-17 \_loadtrick introduced.
 2022-05-04 \lipsum[<num>]. changed to \lipsum[<num>.] to keep macro expandable.
 2022-04-21 syntax \lipsum[<num>]. introduced.

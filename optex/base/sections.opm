@@ -156,7 +156,7 @@
 
    \_doc ----------------------------
    The \`\notoc` and \`\nonum` prefixes are implemented by
-   internal `\_ifnotoc` and `\_ifnonum`. They are reset
+   internal \`\_ifnotoc` and \`\_ifnonum`. They are reset
    after each chapter/section/subsection by the \`\_resetnonumnotoc` macro.
    \_cod ----------------------------
 
