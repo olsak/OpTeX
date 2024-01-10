@@ -1,0 +1,26 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [fbb] \FBembo {Bembo–like fonts derived from Cardo}
+        {\caps \swash} {\rm \bf \it \bi} {}
+        {[fbb-Regular]}
+        {\_def\_fontnamegen {[fbb-\_currV]:script=latn;\_capsV\_swaV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps + old digits^^J
+ \swash ..... alternative Q letter and some other characters^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},swa={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \swash    {\_fsetV swa=+swsh;+salt; }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See historical notice in texdoc fbb.
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

@@ -254,6 +254,11 @@
 \_faminfo [GFSBodoni] {Based on Bodoni with greek letters} {f-gfsbodoni}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
 
+\_famfrom {David J. Perry, Michael Sharpe}
+\_faminfo [fbb] {Bembo–like fonts derived from Cardo} {f-fbb}
+   { -,\caps: {\rm\bf\it\bi} \swash: {\rm} }
+\_famalias [Bembo] \_famalias [FBembo]
+
 \_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
 \_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
    { \thin,\light,\book,-,\medium,\mono,\mono\medium,%
