@@ -97,8 +97,16 @@
 \_def \_nspublic {\_xargs \_nspublicA}
 \_def \_nspublicA #1{%
    \_checkexists \_nspublic {\_pkglabel _\_csstring #1}%
-   \_ea\_newpublic \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
-}
+   \_ea\_newpublic \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname%
+   % export _bracedparam:<_pkglabel>_<#1> if present
+   \_ifcsname _bracedparam:\_pkglabel _\_csstring #1\_endcsname%
+      \_ifcsname _bracedparam:\_csstring #1\_endcsname%
+         \_opwarning{\_bslash _bracedparam:\_csstring #1 is redefined%
+         \_ifx\_pkglabel\_empty \_else\_space by the \_ea\_ignoreit\_pkglabel\_space package\_fi}%
+      \_fi%
+      \_slet{_bracedparam:\_csstring #1}{_bracedparam:\_pkglabel _\_csstring #1}%
+   \_fi}
+
 \_def \_nsprivate {\_xargs \_nsprivateA}
 \_def \_nsprivateA #1{%
    \_checkexists \_nsprivate {\_csstring #1}%

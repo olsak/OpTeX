@@ -28,7 +28,11 @@
    \_nobreak\_bigskip
 }
 \_def\_tit{\_scantoeol\_printtit}
-\_let\_intit=\_printtit  % used by \bracedparam
+\_let\_intit=\_printtit  % for backward compatibility
+
+
+\_sdef{_bracedparam:_tit}#1{\_printtit{#1}} % used by \bracedparam
+\_slet{_bracedparam:tit}{_bracedparam:_tit}
 
 \_public \tit ;
 
@@ -171,7 +175,8 @@
    First, we read the optional parameter `[<label>]`, if it exists.
    The `\chap`, `\sec` and `\secc` macro reads its parameter using
    \^`\scantoeol`. This causes that they cannot be used inside other macros.
-   Use \^`\_inchap`, \^`\_insec`, and \^`\_insecc` macros directly in such case.
+   In this case use \^`\bracedparam` or use the  \^`\_inchap`, \^`\_insec`,
+   and \^`\_insecc` macros directly.
    \_cod ----------------------------
 
 \_optdef\_chap[]{\_trylabel \_scantoeol\_inchap}
@@ -200,6 +205,12 @@
    \_printsecc{\_scantextokens{#1}}%
    \_resetnonumnotoc
 }
+
+% used by \bracedparam
+\_sdef{_bracedparam:_chap}#1{\_inchap{#1}} \_slet{_bracedparam:chap}{_bracedparam:_chap}
+\_sdef{_bracedparam:_sec}#1{\_insec{#1}}   \_slet{_bracedparam:sec}{_bracedparam:_sec}
+\_sdef{_bracedparam:_secc}#1{\_insecc{#1}} \_slet{_bracedparam:secc}{_bracedparam:_secc}
+
 \_public \chap \sec \secc ;
 
    \_doc ----------------------------
@@ -326,6 +337,8 @@
 \_eoldef\_seclp#1{\_par \_ifnum\_lastpenalty=0 \_removelastskip\_medskip\_fi
    \_noindent{\_bf #1}\_vadjust{\_nobreak}\_nl\_ignorepars}
 \_def\_ignorepars{\_isnextchar\_par{\_ignoresecond\_ignorepars}{}}
+
+\_slet{_bracedparam:seclp}{_bracedparam:_seclp} % used by \bracedparam
 
 \_public \secl ;
 
