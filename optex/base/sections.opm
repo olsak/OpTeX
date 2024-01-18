@@ -31,8 +31,8 @@
 \_let\_intit=\_printtit  % for backward compatibility
 
 
-\_sdef{_bracedparam:_tit}#1{\_printtit{#1}} % used by \bracedparam
-\_slet{_bracedparam:tit}{_bracedparam:_tit}
+\_sdef{_eol:_tit}#1{\_printtit{#1}} % used by \bracedparam
+\_slet{_eol:tit}{_eol:_tit}
 
 \_public \tit ;
 
@@ -207,9 +207,9 @@
 }
 
 % used by \bracedparam
-\_sdef{_bracedparam:_chap}#1{\_inchap{#1}} \_slet{_bracedparam:chap}{_bracedparam:_chap}
-\_sdef{_bracedparam:_sec}#1{\_insec{#1}}   \_slet{_bracedparam:sec}{_bracedparam:_sec}
-\_sdef{_bracedparam:_secc}#1{\_insecc{#1}} \_slet{_bracedparam:secc}{_bracedparam:_secc}
+\_sdef{_eol:_chap}#1{\_inchap{#1}} \_slet{_eol:chap}{_eol:_chap}
+\_sdef{_eol:_sec}#1{\_insec{#1}}   \_slet{_eol:sec}{_eol:_sec}
+\_sdef{_eol:_secc}#1{\_insecc{#1}} \_slet{_eol:secc}{_eol:_secc}
 
 \_public \chap \sec \secc ;
 
@@ -338,7 +338,7 @@
    \_noindent{\_bf #1}\_vadjust{\_nobreak}\_nl\_ignorepars}
 \_def\_ignorepars{\_isnextchar\_par{\_ignoresecond\_ignorepars}{}}
 
-\_slet{_bracedparam:seclp}{_bracedparam:_seclp} % used by \bracedparam
+\_slet{_eol:seclp}{_eol:_seclp} % used by \bracedparam
 
 \_public \secl ;
 

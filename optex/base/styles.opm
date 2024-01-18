@@ -37,7 +37,7 @@
    \_eoldef\_author##1{\_removelastskip\_bigskip
       {\_leftskip=0pt plus1fill \_rightskip=\_leftskip \_it \_noindent ##1\_par}\_nobreak\_bigskip
    }
-   \_slet{_bracedparam:author}{_bracedparam:_author}
+   \_slet{_eol:author}{_eol:_author}
    \_public \author ;
    \_parindent=1.2em \_iindent=\_parindent \_ttindent=\_parindent
    \_footline={\_global\_footline={\_hss\_rmfixed\_folio\_hss}}

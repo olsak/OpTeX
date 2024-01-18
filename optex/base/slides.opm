@@ -51,7 +51,7 @@
 \_eoldef\_subtit#1{\_vskip20pt {\_leftskip=0pt plus1fill \_rightskip=\_leftskip
    \_subtitfont #1\_nbpar}}
 
-\_slet{_bracedparam:subtit}{_bracedparam:_subtit}
+\_slet{_eol:subtit}{_eol:_subtit}
 
    \_doc -----------------------------
    The \`\pshow``<num>` prints the text in invisible

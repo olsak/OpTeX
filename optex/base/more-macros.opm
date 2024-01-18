@@ -145,15 +145,15 @@
    \_cod -----------------------------
 
 \_def\_eoldef #1{\_def #1{\_begingroup \_catcode`\^^M=12 \_eoldefA #1}%
-   \_ea\_def\_csname _bracedparam:\_csstring #1\_endcsname}
+   \_ea\_def\_csname _eol:\_csstring #1\_endcsname}
 \_catcode`\^^M=12 %
-\_def\_eoldefA #1#2^^M{\_endgroup\_csname _bracedparam:\_csstring #1\_endcsname{#2}}%
+\_def\_eoldefA #1#2^^M{\_endgroup\_csname _eol:\_csstring #1\_endcsname{#2}}%
 \_normalcatcodes %
 
 \_eoldef\_skiptoeol#1{}
-\_def\_bracedparam#1{\_ifcsname _bracedparam:\_csstring #1\_endcsname\_else%
-   \_errmessage {\_bslash bracedparam: \_bslash _bracedparam:\_csstring #1 must be defined}\_fi%
-   \_csname _bracedparam:\_csstring #1\_ea \_endcsname}
+\_def\_bracedparam#1{\_ifcsname _eol:\_csstring #1\_endcsname\_else%
+   \_errmessage {\_bslash bracedparam: \_bslash _eol:\_csstring #1 must be defined}\_fi%
+   \_csname _eol:\_csstring #1\_ea \_endcsname}
 
 \_public \eoldef \skiptoeol \bracedparam ;
 
