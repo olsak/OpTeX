@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2023-12-04>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2024-01-18>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -130,6 +130,15 @@
 \_public \opt \optdef \nospaceafter \nospacefuturelet ;
 
    \_doc -----------------------------
+   \`\_noprefix` `<cs>` works like `\csstring` `<cs>`, but ignores not only
+   the first backlash but the second~\"`_`" ignores too (if it follows the
+   backslash).
+   \_cod -----------------------------
+
+\_def\_noprefix#1{\_ea\_noprefixA \_csstring#1\_empty\_fin}
+\_def\_noprefixA #1#2\_fin{\_if _#1\_else #1\_fi #2}
+
+   \_doc -----------------------------
    The declarator \`\eoldef``\macro #1{<replacement text>}` defines a `\macro`
    which scans its parameter to the end of the current line.
    This is the parameter `#1` which can be used in the `<replacement text>`.
@@ -146,15 +155,16 @@
    \_cod -----------------------------
 
 \_def\_eoldef #1{\_def #1{\_begingroup \_catcode`\^^M=12 \_eoldefA #1}%
-   \_ea\_def\_csname _\_csstring #1:M\_endcsname}
+   \_ea\_def\_csname _eol:\_noprefix #1\_endcsname}
 \_catcode`\^^M=12 %
-\_def\_eoldefA #1#2^^M{\_endgroup\_csname _\_csstring #1:M\_endcsname{#2}}%
+\_def\_eoldefA #1#2^^M{\_endgroup\_csname _eol:\_noprefix #1\_endcsname{#2}}%
 \_normalcatcodes %
 
 \_eoldef\_skiptoeol#1{}
-\_def\_bracedparam#1{\_ifcsname _\_csstring #1:M\_endcsname
-    \_csname _\_csstring #1:M\_ea \_endcsname
-    \_else \_csname _in\_csstring #1\_ea \_endcsname \_fi
+
+\_def\_bracedparam#1{%
+   \_trycs{_eol:\_noprefix#1}%
+      {\_errmessage{\_string#1 isn't defined by \_string\eoldef}}%
 }
 \_public \eoldef \skiptoeol \bracedparam ;
 
@@ -390,6 +400,7 @@
 
 \_endcode % -------------------------------------
 
+2024-01-18 \bracedparam reimplemented.
 2023-12-04 \nnum introduced
 2023-01-18 \bp, \expr have optional syntax for setting dec-digits
 2022-11-24 \setpos, \posx, \posy moved from OpTeX trick here

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2023-05-02>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2024-01-18>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -28,7 +28,7 @@
    \_nobreak\_bigskip
 }
 \_def\_tit{\_scantoeol\_printtit}
-\_let\_intit=\_printtit  % used by \bracedparam
+\_sdef{_eol:tit}{\_printtit} % used by \bracedparam
 
 \_public \tit ;
 
@@ -178,6 +178,10 @@
 \_optdef\_sec []{\_trylabel \_scantoeol\_insec}
 \_optdef\_secc[]{\_trylabel \_scantoeol\_insecc}
 \_def\_trylabel{\_istoksempty\_opt\_iffalse \_label[\_the\_opt]\_fi}
+
+\_sdef{_eol:chap}{\_inchap} % used by \bracedparam
+\_sdef{_eol:sec}{\_insec}
+\_sdef{_eol:secc}{\_insecc}
 
 \_def\_inchap #1{\_par \_sectionlevel=1
    \_def \_savedtitle {#1}% saved to .ref file
@@ -473,6 +477,7 @@
 
 \_endcode % -------------------------------------
 
+2024-01-18 \tit, \chap, \sec, \secc: added cooperation with new \bracedparam
 2023-05-02 \_numprint used
 2022-10-19 More robust \caption (two opened groups, \_printcaption introduced)
 2022-08-02 Penalties in \_printsec, \_printsecc changed
