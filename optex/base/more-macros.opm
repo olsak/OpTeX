@@ -144,7 +144,7 @@
    This is the parameter `#1` which can be used in the `<replacement text>`.
    The catcode of the `\endlinechar` is reset temporarily when the parameter is scanned. 
 
-   The macro defined by `\eoldef` cannot be used with its parameter inside
+   The macro defined by \^`\eoldef` cannot be used with its parameter inside
    other macros because the catcode dancing is not possible here. But the
    \`\bracedparam``\macro{<parameter>}` can be used here. The `\bracedparam`
    is a prefix that re-sets temporarily the `\macro` to a `\macro` with
@@ -164,7 +164,7 @@
 
 \_def\_bracedparam#1{%
    \_trycs{_eol:\_noprefix#1}%
-      {\_errmessage{\_string#1 isn't defined by \_string\eoldef}}%
+      {\_errmessage{\_string\bracedparam: \_string#1 isn't defined by \_string\eoldef}}%
 }
 \_public \eoldef \skiptoeol \bracedparam ;
 

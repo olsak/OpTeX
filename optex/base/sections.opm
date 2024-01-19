@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2024-01-18>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2024-01-19>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -28,7 +28,7 @@
    \_nobreak\_bigskip
 }
 \_def\_tit{\_scantoeol\_printtit}
-\_sdef{_eol:tit}{\_printtit} % used by \bracedparam
+\_sdef{_eol:tit}{\_printtit} % enables \bracedparam\tit{title}
 
 \_public \tit ;
 
@@ -179,9 +179,9 @@
 \_optdef\_secc[]{\_trylabel \_scantoeol\_insecc}
 \_def\_trylabel{\_istoksempty\_opt\_iffalse \_label[\_the\_opt]\_fi}
 
-\_sdef{_eol:chap}{\_inchap} % used by \bracedparam
-\_sdef{_eol:sec}{\_insec}
-\_sdef{_eol:secc}{\_insecc}
+\_sdef{_eol:chap}{\_inchap} % enebles \bracedparam\chap{title}
+\_sdef{_eol:sec}{\_insec}   % enables \bracedparam\sec{title}
+\_sdef{_eol:secc}{\_insecc} % enables \bracedparam\secc{title}
 
 \_def\_inchap #1{\_par \_sectionlevel=1
    \_def \_savedtitle {#1}% saved to .ref file
@@ -321,12 +321,14 @@
    `\secl3` is `\secc` and all more levels (for <number>$>3$)
    are printed by the common \`\_seclp` macro. It declares only a simple design.
    If there is a requirement to use such more levels then the book designer can
-   define something different here.
+   define something different here.\nl
+   The variant `\_eol:secl` is defined to enable \^`\bracedparam``\secl<number> {<title-text>}`.
    \_cod -----------------------------
 
-\_def\_secl{\_afterassignment\_secla \_sectionlevel=}
+\_def\_secl{\_let\_secle=\_ea \_afterassignment\_secla \_sectionlevel=}
+\_sdef{_eol:secl}{\_def\_secle{\_ea\_bracedparam\_ea}\_afterassignment\_secla \_sectionlevel=}
 \_def\_secla{\_ifcase\_sectionlevel
-   \_or\_ea\_chap\_or\_ea\_sec\_or\_ea\_secc\_else\_ea\_seclp\_fi}
+   \_or \_secle\_chap \_or \_secle\_sec \_or \_secle\_secc \_else \_ea \_seclp\_fi}
 \_eoldef\_seclp#1{\_par \_ifnum\_lastpenalty=0 \_removelastskip\_medskip\_fi
    \_noindent{\_bf #1}\_vadjust{\_nobreak}\_nl\_ignorepars}
 \_def\_ignorepars{\_isnextchar\_par{\_ignoresecond\_ignorepars}{}}
@@ -477,6 +479,7 @@
 
 \_endcode % -------------------------------------
 
+2024-01-19 \bracedparam\secl enalbed
 2024-01-18 \tit, \chap, \sec, \secc: added cooperation with new \bracedparam
 2023-05-02 \_numprint used
 2022-10-19 More robust \caption (two opened groups, \_printcaption introduced)
