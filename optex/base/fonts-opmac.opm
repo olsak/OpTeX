@@ -171,10 +171,12 @@
    \_ea\_ifx \_the\_font \_tenbi \_additcorr \_bf  \_else
    \_it \_aftergroup\_afteritcorr\_fi\_fi\_fi
 }
-\_def\_additcorr{\_ifdim\_lastskip>\_zo
-   \_skip0=\_lastskip \_unskip\_italcorr \_hskip\_skip0 \_else\_italcorr \_fi}
+\_def\_additcorr{\_ifhmode \_ifdim\_lastskip>\_zo
+   \_skip0=\_lastskip \_unskip \_additcorrA \_hskip\_skip0 \_else \_additcorrA \_fi\_fi}
+\_def\_additcorrA{\_ifnum\_lastpenalty=\_zo \_italcorr \_else
+    \_ea\_unpenalty \_ea\_italcorr \_ea\_penalty \_the\_lastpenalty \_relax \_fi}
 \_def\_afteritcorr{\_futurelet\_next\_afteritcorrA}
-\_def\_afteritcorrA{\_ifx\_next.\_else\_ifx\_next,\_else \_italcorr \_fi\_fi}
+\_def\_afteritcorrA{\_ifhmode \_ifx\_next.\_else\_ifx\_next,\_else \_italcorr \_fi\_fi\_fi}
 \_let\_italcorr=\/
 
    \_doc -----------------------------
@@ -218,6 +220,7 @@
 \_endcode % -------------------------------------
 
 History:
+2024-01-25 \em: \_additcorr reimplemented to be more robust
 2022-02-22 \_setmainvalues: only \rm initialized
 2021-03-10 \boldify corrected
 2021-03-09 \mfontsrule and \_setmathfonts introduced
