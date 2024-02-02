@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \public {Prefixing and code syntax <2024-01-18>} % preloaded in format
+\_codedecl \public {Prefixing and code syntax <2024-02-02>} % preloaded in format
 
    \_doc ---------
    All \TeX/ primitives have alternative control sequence `\_hbox` `\_string`, ...
@@ -97,9 +97,9 @@
 \_def \_nspublic {\_xargs \_nspublicA}
 \_def \_nspublicA #1{%
    \_checkexists \_nspublic {\_pkglabel _\_csstring #1}%
-   \_ea\_newpublic \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
    \_ifcsname _eol:\_ea\_ignoreit\_pkglabel _\_csstring #1\_endcsname % defined by \eoldef
       \_slet {_eol:\_csstring #1}{_eol:\_ea\_ignoreit\_pkglabel _\_csstring #1}\_fi
+   \_ea\_newpublic \_ea\_let \_ea#1\_csname \_pkglabel _\_csstring #1\_endcsname
 }
 \_def \_nsprivate {\_xargs \_nsprivateA}
 \_def \_nsprivateA #1{%
@@ -390,7 +390,8 @@ can look like. Another good and short example is
 
 \endinput
 
-2024-01-18 \_nspublic modified in order to \eoldef+\pracedparam
+2024-02-02 \_nspublicA bug correction (#1 may be set as \outer)
+2024-01-18 \_nspublic modified in order to \eoldef+\bracedparam
 2023-01-30 doc. about namespaces rewritten
 2022-11-25 \_resetnamespace: moved \gdef\_namesp:#1 {} to \_namespace
 2022-11-24 \newpublic introduced, \_checkexists with only two parameters.
