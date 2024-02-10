@@ -55,7 +55,7 @@
    \_cod -----------------------------
 
 \_newdimen \_xhsize  \_xhsize=\_hsize
-\_def\_setxhsize {\_global\_xhsize=\_hsize \_global\_let\_setxhsize=\_relax}
+\_def\_setxhsize {\_global\_xhsize=\_hsize \_glet\_setxhsize=\_relax}
 
    \_doc -----------------------------
    \`\gpageno` counts pages from one in the whole document
@@ -215,7 +215,7 @@
 
 \_def \_draft {\_pgbackground={\_draftbox{\_draftfont DRAFT}}%
    \_fontdef\_draftfont{\_setfontsize{at10pt}\_bf}%
-   \_global\_let\_draftfont=\_draftfont
+   \_glet\_draftfont=\_draftfont
 }
 \_def \_draftbox #1{\_setbox0=\_hbox{\_setgreycolor{.8}#1}%
    \_kern.5\_vsize \_kern\_voffset \_kern4.5\_wd0

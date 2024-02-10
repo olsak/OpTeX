@@ -54,9 +54,9 @@
 % since this allows, for example, `\let\_par=\cr \obeylines \halign{...'
 {\_catcode`\^^M=13 % these lines must end with %
   \_gdef\_obeylines{\_catcode`\^^M=13\_let^^M\_par}%
-  \_global\_let^^M=\_par} % this is in case ^^M appears in a \write
+  \_glet^^M=\_par} % this is in case ^^M appears in a \write
 \_def\_obeyspaces{\_catcode`\ =13 }
-{\_obeyspaces\_global\_let =\_space}
+{\_obeyspaces\_glet =\_space}
 \_public \obeylines \obeyspaces ;
 
    \_doc -----------------------------

@@ -212,7 +212,7 @@
 \_def \_rmfixed {% used in default \footline
    {\_ifdim\_mainfosize=0pt \_mainfosize=10pt \_fi
     \_fontdef\_tenrm{\_setfontsize{at\mainfosize}\_resetmod\_rm}%
-    \_global\_let\_rmfixed=\_tenrm}% next use will be font switch only
+    \_glet\_rmfixed=\_tenrm}% next use will be font switch only
    \_rmfixed
 }
 \_let \rmfixed = \_tenrm % user can redefine it
