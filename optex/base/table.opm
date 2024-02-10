@@ -195,8 +195,8 @@
 \_def\_addtabitemx{\_ifnum\_colnum>0
    \_addtabdata{&}\_addto\_ddlinedata{&\_dditem}\_fi
    \_advance\_colnum by1 \_let\_tmpa=\_relax
-   \_ifnum\_colnum>1 \_ea\_addtabdata\_ea{\_ea\_colnum\_the\_colnum\_relax}\_fi}
-\_def\_addtabdata#1{\_tabdata\_ea{\_the\_tabdata#1}}
+   \_ifnum\_colnum>1 \_etoksapp\_tabdata{\_colnum\_the\_colnum\_relax}\_fi}
+\_def\_addtabdata{\_toksapp\_tabdata}
 
    \_doc -----------------------------
    This code converts `||` or `|` from `\table` <declaration> to the <converted declaration>.
