@@ -629,7 +629,7 @@ a register then \OpTeX/ macros still work without change.
 \_endinput
 
 History:
-2023-09-19 ... \matheqdirmode and \breakafterdirmode set (relevant when RTR typesetting)
+2023-09-19 ... \matheqdirmode and \breakafterdirmode set (relevant when RTL typesetting)
 2021-04-13 ... \bibpart added
 2021-04-07 ... \biboptions added, bug from iso690 fixed
 2020-04-04 ... \tabspaces added
