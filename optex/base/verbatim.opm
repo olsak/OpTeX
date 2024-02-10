@@ -208,7 +208,7 @@
    \_def\_tmpb{#1}%  cmds used in local group
    \_ifx\_vifilename\_tmpa \_else
       \_openin\_vifile={#3}%
-      \_global\_viline=0 \_global\_let\_vifilename=\_tmpa
+      \_global\_viline=0 \_glet\_vifilename=\_tmpa
       \_ifeof\_vifile
          \_opwarning{\_string\verbinput: file "#3" unable to read}
          \_ea\_ea\_ea\_skiptorelax

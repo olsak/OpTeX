@@ -117,7 +117,7 @@
       \_def\SetLipsumLanguage##1{}%
       \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
       \_opinput {lipsum.ltd.tex}%
-      \_global\_let\_lipsumload=\_empty
+      \_glet\_lipsumload=\_empty
    }}}
 \_def\_lipsumdot[#1]{\_lipsumload \_ea\_ea\_ea \_lipsumdotA \_csname _lip:#1\_endcsname.\_fin}
 \_def\_lipsumdotA #1.#2\_fin {#1}

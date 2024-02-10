@@ -35,7 +35,7 @@
    `\_wref\_Xlabel{<label>}{<text>}`.
    \_cod ----------------------------
 
-\_def\_label[#1]{\_isempty{#1}\_iftrue \_global\_let \_lastlabel=\_undefined
+\_def\_label[#1]{\_isempty{#1}\_iftrue \_glet \_lastlabel=\_undefined
   \_else \_isdefined{l0:#1}%
      \_iftrue \_slideshook\_opwarning{Duplicated label [#1], ignored}\_else \_xdef\_lastlabel{#1}\_fi
   \_fi \_ignorespaces
@@ -47,7 +47,7 @@
      \_printlabel\_lastlabel
      \_ewref \_Xlabel {{\_lastlabel}{#1}}%
      \_sxdef{_lab:\_lastlabel}{#1}\_sxdef{l0:\_lastlabel}{}%
-     \_global\_let\_lastlabel=\_undefined
+     \_glet\_lastlabel=\_undefined
   \_fi
 }
 \_public \label \wlabel ;
