@@ -736,6 +736,22 @@
       +\_topskip \_relax
 }
 
+\_trick 0129 \pgforeground ;
+%%%%%%%%%%%%
+
+\_newtoks \pgforeground
+
+\_addto\_makefootline{
+   \_istoksempty\pgforeground \_iffalse
+      \_vskip-\_prevdepth
+      \_vskip-\_vsize
+      \_vskip-\_voffset
+      \_istoksempty\_footline \_iffalse \_vskip-\_footlinedist \_fi
+      \_nointerlineskip
+      \_moveleft\_hoffset \_vbox{\_the\pgforeground}
+   \_fi
+}
+
 \_trick end ;
 
 \_endcode

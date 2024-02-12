@@ -189,6 +189,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#widows">Extra \vsize space for solving widows</a>
     <li><a href="#twocol">Two-column mode allowing for footnotes</a>
     <li><a href="#toppage">Two-column mode with full size top inserts</a>
+    <li><a href="#pgforeground">Material added to the foreground of each page</a>
 </ul>
 
 <li>Macro tricks
@@ -3671,6 +3672,56 @@ Finally, the boxes 11000+pagenum  are printed using the \trytopins
 when default \output routine is active, i.e. inside the \fornumstep loop.
 
 <p CLASS=datum>(0112) -- P. O. 2023-05-15<p>
+<hr>
+
+<h2><a name="pgforeground"></a>Material added to the foreground of each page</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\pgforeground
+</p>
+
+<p>OpTeX output routine provides \pgbackground tokens list which can declare
+a vertical material added to the background of each page. It means that the
+normal text overwrites this material.
+
+<p>We implement analogous tokens list \pgforeground which can declare a
+vertical material added to the foreground of each page. It means that this material
+overwrites the normal text of the document. You can specify, for example
+
+<pre>
+\pgforeground{\Green \hrule width\pagewidth height3cm}
+</pre>
+
+<p>and the green rectangle is appended at the upper edge of each page. This
+rectangle overwrites the text of the document, if there is any.
+
+<p>The implementation:
+
+<pre>
+\newtoks\pgforeground
+
+\addto\_makefootline{
+   \istoksempty\pgforeground \iffalse
+      \vskip-\prevdepth
+      \vskip-\vsize
+      \vskip-\voffset
+      \istoksempty\footline \iffalse \vskip-\footlinedist \fi
+      \nointerlineskip
+      \moveleft\hoffset \vbox{\the\pgforeground}
+   \fi
+}
+</pre>
+
+<p>The code is appended to the \_makefootline macro which is called after page
+body is created in the OpTeX output routine.
+This code is somewhat tricky, because we have to return the current typesetting
+point upwards to the upper edge. We have it just under the last box with
+(probably) nonzero depth. So, we have to return by this depth (\prevdepth)
+and by the page size (\vsize) and by the upper margin size (\voffset).
+Moreover, if there is nonempty \footline, we have to return by \footlinedist
+too.  
+
+<p CLASS=datum>(0129) -- P. O. 2024-02-12<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
