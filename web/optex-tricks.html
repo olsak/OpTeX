@@ -220,6 +220,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#prepmac">Preparing macros for a simple token-per-token scanner</a>
     <li><a href="#correctvsize">Setting \vsize to fit lines exactly to pages</a>
     <li><a href="#randomitems">Random items from a given set of items</a>
+    <li><a href="#onlyifnew">Only define a macro if it is not already defined</a>
 </ul>
 
 <li>Simple templates
@@ -5050,6 +5051,51 @@ randomly and returns it in `\outitem` macro. The list
 without chosen item is returned in `\outlist` macro.
 
 <p CLASS=datum>(0123) -- P. O. 2023-11-21<p>
+
+<h2><a name="onlyifnew"></a>Only define a macro if it is not already defined</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\onlyifnew
+</p>
+
+<p>LaTeX has <code>\providecommand{\NAME}{...}</code> that only defines
+<code>\NAME</code> if it was not already defined. We can achieve this in
+OpTeX by wrapping <code>\def\NAME{...}</code> inside
+<code>\isdefined{\NAME}\iffalse ...\fi</code>. However, this will get
+verbose if we need to define many macros in this manner. Therefore, we
+implement a similar functionality as a prefix macro
+<code>\onlyifnew</code>.
+
+<p>Usage examples:
+
+<pre>\onlyifnew\def\mymacro#1{...}
+\onlyifnew\let\myfont=\bf  \onlyifnew\let\myfont\bf
+\onlyifnew\slet{myfont}{bf}
+\onlyifnew\newtoks\mytoks
+\onlyifnew{\protected\long\def}\foo#1{...}
+</pre>
+
+<p>In the last case, it could be useful to define a shortcut such as:
+<pre>\def\mylpdef{\onlyifnew{\protected\long\def}}
+\mylpdef\foo#1{...}</pre>
+
+<p>The implementation:
+
+<pre>\def \onlyifnew#1#2{\begingroup%
+   \edef\tmpA{\csstring #2}%
+   \edef\tmpB{\string #2}%
+   \ea\ifcsname\tmpA\endcsname%
+   \ifx\tmpA\tmpB% #2 has no backslash
+   \def\onlyifnewA{#1{onlyifnewB}}\else%
+   \def\onlyifnewA{#1\onlyifnewB}\fi%
+   \else%
+   \ifx\tmpA\tmpB%
+   \def\onlyifnewA{#1{#2}}\else%
+   \def\onlyifnewA{#1#2}\fi%
+   \fi\ea\endgroup\onlyifnewA}
+</pre>
+
+<p CLASS=datum>(0130) -- Robert Bachmann 2024-02-13<p>
 
 <p CLASS="lmarg">Simple templates</p>
 

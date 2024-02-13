@@ -752,12 +752,31 @@
    \_fi
 }
 
+\_trick 0130 \onlyifnew ;
+%%%%%%%%%%%%
+
+\_def \onlyifnew#1#2{\_begingroup%
+   \_edef\.tmpA{\_csstring #2}%
+   \_edef\.tmpB{\_string #2}%
+   \_ea\_ifcsname\.tmpA\_endcsname%
+   \_ifx\.tmpA\.tmpB% #2 has no backslash
+   \_def\.onlyifnewA{#1{_optextrick_onlyifnewB}}\_else%
+   \_def\.onlyifnewA{#1\_optextrick_onlyifnewB}\_fi%
+   \_else%
+   \_ifx\.tmpA\.tmpB%
+   \_def\.onlyifnewA{#1{#2}}\_else%
+   \_def\.onlyifnewA{#1#2}\_fi%
+   \_fi\_ea\_endgroup\.onlyifnewA}
+
+%%%%%%%%%%%%
 \_trick end ;
 
 \_endcode
 
+2024-02-13 \onlyifnew added
+2024-02-12 \pgforeground added
 2023-11-15 \correctvsize added
-2023-11-09 \makeLOF, \makeLOT aded
+2023-11-09 \makeLOF, \makeLOT added
 2023-11-08 \ispageodd, \seccc added
 2023-11-07 \settabs \import \incrpp added
 2023-11-05 \twoblocks, \pstart added
