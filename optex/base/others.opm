@@ -162,7 +162,8 @@
    \shadedframe \roundframe \cancel \ignoreinspic \keystroke
    \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote \tabnodes \tablebefore
    \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
-   \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground ;
+   \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground
+   \onlyifnew  ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------
