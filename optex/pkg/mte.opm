@@ -658,7 +658,7 @@ You can define your own protrusion or expansion values: copy macros
 as you wish using `\def`. Such definition has precedence.
 Similar definitions can be in some font family files too, so: do your
 definition after all `\fontfam` if you want to keep the precedence.
-All such definitions must be performed before the `\mteinit` command.
+All such definitions must be performed before the \^`\enablemte` command.
 
 You can use `\def\_mte_P` for data of protrusion for all fonts
 which has general precedence. For example, if you want to protrude hyphen

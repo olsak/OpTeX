@@ -716,7 +716,15 @@ function optex.hook_into_luaotfload()
     end)
 end
 
+-- \`\_beglocalcontrol` `<tokens>` `\_endlocalcontrol` runs `<tokens>` fully at
+-- expand processor level despite the fact that `<tokens>` processes unexpandable commands.
+
+define_lua_command("_beglocalcontrol", function()
+	return tex.runtoks(token.get_next, true)
+end)
+
    -- History:
+   -- 2022-01-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
    -- 2022-08-24 luaotfload transparency with attributes added
    -- 2022-03-07 transparency in the colorize() function, current_tr added

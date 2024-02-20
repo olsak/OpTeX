@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \TeX {Logos TeX, LuaTeX, etc. <2020-02-28>} % preloaded in format
+\_codedecl \TeX {Logos TeX, LuaTeX, etc. <2024-02-12>} % preloaded in format
 
    \_doc ----------------------------
    Despite plain \TeX/ each macro for logos ends by \`\ignoreslash`.
@@ -19,6 +19,18 @@
 \_def\_ignoreslash {\_isnextchar/\_ignoreit{}}
 
 \_public \TeX \OpTeX \LuaTeX \XeTeX \ignoreslash ;
+
+   \_doc ----------------------------
+   The  \`\ConTeXt` logo is implemented as in the \ConTeXt/ format itself.
+   The kerning between \"Con" and \"\TeX/t" is calculated by measuring the kerning
+   between the letters \"T" and \"e".
+   \_cod ----------------------------
+
+\_protected\_def \_ConTeXt{\_begingroup
+    Con\_setbox0=\_hbox{T\_kern\_zo e}\_setbox1=\_hbox{Te}{\_kern\_dimexpr\_wd1 -\_wd0}%
+    \_TeX t\_endgroup\_ignoreslash}
+
+\_public \ConTeXt ;
 
    \_doc -----------------------------
    The \`\_slantcorr` macro expands to the slant-correction of the current font. It is
@@ -53,9 +65,12 @@
    \_def\TeX{TeX\_ignslash}\_def\OpTeX{OpTeX\_ignslash}%
    \_def\LuaTeX{LuaTeX\_ignslash}\_def\XeTeX{XeTeX\_ignslash}%
    \_def\LaTeX{LaTeX\_ignslash}\_def\OPmac{OPmac\_ignslash}%
+   \_def\ConTeXt{ConTeXt\_ignslash}%
    \_def\CS{CS}\_def\csplain{csplain\_ignslash}%
 }
 \_public \ignslash ;
 
 \_endcode
 
+2024-02-12  ConTeXt logo added.
+2020-02-28  Released.

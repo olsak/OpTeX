@@ -22,6 +22,11 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.14> Feb 2024:
+       More links in doc: TeX primitives linked to TeX in a Nutshell.
+       \trykv returns unexpanded value of the key=value pair.
+       \bracedparam reimplemented, improved.
+       \optdef can create an expandable macro.
 <1.13> Nov 2023:
        \usebib completely reimplemented, libranian package not needed from now.
        Selected OpTeX tricks are automatically loaded when a relevant macro is used.

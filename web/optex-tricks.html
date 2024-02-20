@@ -189,6 +189,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#widows">Extra \vsize space for solving widows</a>
     <li><a href="#twocol">Two-column mode allowing for footnotes</a>
     <li><a href="#toppage">Two-column mode with full size top inserts</a>
+    <li><a href="#pgforeground">Material added to the foreground of each page</a>
 </ul>
 
 <li>Macro tricks
@@ -219,6 +220,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#prepmac">Preparing macros for a simple token-per-token scanner</a>
     <li><a href="#correctvsize">Setting \vsize to fit lines exactly to pages</a>
     <li><a href="#randomitems">Random items from a given set of items</a>
+    <li><a href="#onlyifnew">Only define a macro if it is not already defined</a>
 </ul>
 
 <li>Simple templates
@@ -3673,6 +3675,56 @@ when default \output routine is active, i.e. inside the \fornumstep loop.
 <p CLASS=datum>(0112) -- P. O. 2023-05-15<p>
 <hr>
 
+<h2><a name="pgforeground"></a>Material added to the foreground of each page</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\pgforeground
+</p>
+
+<p>OpTeX output routine provides \pgbackground tokens list which can declare
+a vertical material added to the background of each page. It means that the
+normal text overwrites this material.
+
+<p>We implement analogous tokens list \pgforeground which can declare a
+vertical material added to the foreground of each page. It means that this material
+overwrites the normal text of the document. You can specify, for example
+
+<pre>
+\pgforeground{\Green \hrule width\pagewidth height3cm}
+</pre>
+
+<p>and the green rectangle is appended at the upper edge of each page. This
+rectangle overwrites the text of the document, if there is any.
+
+<p>The implementation:
+
+<pre>
+\newtoks\pgforeground
+
+\addto\_makefootline{
+   \istoksempty\pgforeground \iffalse
+      \vskip-\prevdepth
+      \vskip-\vsize
+      \vskip-\voffset
+      \istoksempty\footline \iffalse \vskip-\footlinedist \fi
+      \nointerlineskip
+      \moveleft\hoffset \vbox{\the\pgforeground}
+   \fi
+}
+</pre>
+
+<p>The code is appended to the \_makefootline macro which is called after page
+body is created in the OpTeX output routine.
+This code is somewhat tricky, because we have to return the current typesetting
+point upwards to the upper edge. We have it just under the last box with
+(probably) nonzero depth. So, we have to return by this depth (\prevdepth)
+and by the page size (\vsize) and by the upper margin size (\voffset).
+Moreover, if there is nonempty \footline, we have to return by \footlinedist
+too.  
+
+<p CLASS=datum>(0129) -- P. O. 2024-02-12<p>
+<hr>
+
 <p CLASS="lmarg">Macro tricks</p>
 
 <h2><a name="condi"></a>Structured conditionals</h2>
@@ -4999,6 +5051,51 @@ randomly and returns it in `\outitem` macro. The list
 without chosen item is returned in `\outlist` macro.
 
 <p CLASS=datum>(0123) -- P. O. 2023-11-21<p>
+
+<h2><a name="onlyifnew"></a>Only define a macro if it is not already defined</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\onlyifnew
+</p>
+
+<p>LaTeX has <code>\providecommand{\NAME}{...}</code> that only defines
+<code>\NAME</code> if it was not already defined. We can achieve this in
+OpTeX by wrapping <code>\def\NAME{...}</code> inside
+<code>\isdefined{\NAME}\iffalse ...\fi</code>. However, this will get
+verbose if we need to define many macros in this manner. Therefore, we
+implement a similar functionality as a prefix macro
+<code>\onlyifnew</code>.
+
+<p>Usage examples:
+
+<pre>\onlyifnew\def\mymacro#1{...}
+\onlyifnew\let\myfont=\bf  \onlyifnew\let\myfont\bf
+\onlyifnew\slet{myfont}{bf}
+\onlyifnew\newtoks\mytoks
+\onlyifnew{\protected\long\def}\foo#1{...}
+</pre>
+
+<p>In the last case, it could be useful to define a shortcut such as:
+<pre>\def\mylpdef{\onlyifnew{\protected\long\def}}
+\mylpdef\foo#1{...}</pre>
+
+<p>The implementation:
+
+<pre>\def \onlyifnew#1#2{\begingroup%
+   \edef\tmpA{\csstring #2}%
+   \edef\tmpB{\string #2}%
+   \ea\ifcsname\tmpA\endcsname%
+   \ifx\tmpA\tmpB% #2 has no backslash
+   \def\onlyifnewA{#1{onlyifnewB}}\else%
+   \def\onlyifnewA{#1\onlyifnewB}\fi%
+   \else%
+   \ifx\tmpA\tmpB%
+   \def\onlyifnewA{#1{#2}}\else%
+   \def\onlyifnewA{#1#2}\fi%
+   \fi\ea\endgroup\onlyifnewA}
+</pre>
+
+<p CLASS=datum>(0130) -- Robert Bachmann 2024-02-13<p>
 
 <p CLASS="lmarg">Simple templates</p>
 

@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2023-06-25>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2024-02-18>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -16,7 +16,10 @@
 \_def\_readbibs #1{%
    \_ifcsname _be:\_bibp*\_endcsname \_def\_citelist{}\_fi % \_citelist will be created
    \_begingroup
-      \_everyeof{@{}}\_foreach#1,\_do##1,{\_ea\_nextat\_input{##1.bib}}%
+      \_everyeof{@{}}\_foreach#1,\_do##1,{%
+          \_isfile{##1.bib}\_iftrue \_ea\_nextat\_input{##1.bib}
+          \_else \_opwarning{\_string\usebib: Missing ##1.bib file}
+          \_fi}%
    \_endgroup
 }
 \_public \readbibs ;
@@ -448,17 +451,24 @@ If an entry with the same label is declared in `local.bib` and in
 `global.bib` too then the first wins. So, you can set exceptions in your
 `local.bib` file for your document.
 
-The `bib-<style>.opm` declares entry types (like `@BOOK`, `@ARTICLE`) and declares
+The `bib-<style>.opm` file declares entry types (like `@BOOK`, `@ARTICLE`) and declares
 their mandatory and optional fields (like `author`, `title`). When
 a mandatory field is missing in an entry in the `.bib` file then a warning is printed on the
 terminal about it. You can suppress such warnings by command
 \^`\nobibwarning`~`[<bib-labels>]`, where <bib-labels> is a comma-separated list
 of labels (without spaces) where missing mandatory fields will be no warned.
 
-Old `.bib` files may use the obscure notation for accents like `{\"o}`.
-Recommendation: convert such old files to Unicode encoding. If you are
-unable to do this then you can set \^`\bibtexhook={`\^`\oldaccents}`.
+Users may redefine declarations and the formatting rules given by the macros
+from the style~file. Such a re-definition have to be included in the
+\^`\bibtexhook` token list, because the \^`\usebib` macro opens group, reads
+the macros from the style~file, then executes \^`\bibtexhook` (it is empty
+by default), then reads data from the `.bib` files, then prints the desired
+records and finally, it closes the group.
 
+For example, \^`\bibtexhook={`\^`\oldaccents}` can be set if
+your old `.bib` files use an obscure notation for accents like `{\"o}`.
+Recommendation: converting such old `.bib` files to Unicode encoding is much
+more conceptual solution of this problem.
 
 \secc Notes for bib-style writers
 
@@ -665,6 +675,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+2024-02-18: missing .bib files checked, doc improved
 2023-06-25: \_fieldalias introduced
 2023-06-07: bug fix (\_namecount declaration)
 2023-06-06: \_slet{_bes:#1}{_relax}: bugfix when label not found and sorting
