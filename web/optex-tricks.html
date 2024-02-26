@@ -260,6 +260,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#fullcite">Citations by full bibliographic records</a>
     <li><a href="#bibmark">Bibmark generator</a>
+    <li><a href="#fmtauthor">Format author names when \nonumcitations is set</a>
     <li><a href="#reverseyear">Sorting bib records by reverse year</a>
 </ul>
 
@@ -6120,7 +6121,46 @@ the macro is called in the format
 It means that other authors #4, #6 and #8 are empty in this case. See also
 section 2.32.6 in the OpTeX documentation.
 
+<p>Another approach is described in the <a href="#fmtauthor">OpTeX trick 0131</a>
+
 <p CLASS=datum>(0104) -- P. O. 2023-03-24<p>
+<hr>
+
+<h2><a name="fmtauthor"></a>Format author names when \nonumcitations is set</h2>
+
+<p>We want to control the format of author names in \cite when \nonumcitations is set.
+Both styles <tt>iso690</tt> and <tt>simple</tt> define \_createbibmark which
+prints only the last name of the first author and adds "et al." if there are more
+than one author. We introduce the macro \fmtauthor. User can define it as
+required. For example, the last name is printed and "von" part is prefixed if
+it isn't empty. Maximal three authors are printed:
+
+<pre>
+\nonumcitations
+\def\fmtauthor #1,#2,#3,#4;{\ifx^#3^\else #3 \fi #1} % expands to [von ]Lastname
+
+\bibtexhook{
+   \def\_createbibmark #1;#2,#3;#4,#5;#6,#7;#8,#9\_fin {%
+      \ifx^#4^%
+         \fmtauthor #2,#3;% single author
+      \else \ifx ^#6^%
+         \fmtauthor #2,#3; and \fmtauthor #4,#5;% two authors
+      \else \ifx ^#8^%
+         \fmtauthor #2,#3;, \fmtauthor #4,#5; and \fmtauthor #6,#7;% three authors
+      \else
+         \fmtauthor #2,#3;, \fmtauthor #4,#5;, \fmtauthor #6,#7; et al.% more authors
+      \fi\fi\fi
+      \ifx^#1^\else , #1\fi %  year, if it exists
+   }
+}
+</pre>
+
+<p>The \fmtauthor macro gets four parameters: last name, first name, von, junior.
+The \fmtauthor macro defined in this example prints the last name and if von is
+not empty, then von+space is prefixed. The \_createbibmark deals separately with the
+printing of one author, two authors, three authors and more authors.
+
+<p CLASS=datum>(0131) -- P. O. 2024-02-26<p>
 <hr>
 
 <h2><a name="reverseyear"></a>Sorting bib records by reverse year</h2>
