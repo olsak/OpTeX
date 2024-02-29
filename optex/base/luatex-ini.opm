@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfprimitive {LuaTeX initialization code <2020-02-21>} % preloaded in format
+\_codedecl \pdfprimitive {LuaTeX initialization code <2024-02-29>} % preloaded in format
 
 \_let\_pdfpagewidth        \pagewidth
 \_let\_pdfpageheight       \pageheight
@@ -79,6 +79,8 @@
 \_protected\_def \_pdfmapline        {\_pdfextension mapline }
 \_protected\_def \_pdftrailer        {\_pdfextension trailer }
 \_protected\_def \_pdfglyphtounicode {\_pdfextension glyphtounicode }
+\_protected\_def \_pdfrunninglinkoff {\_pdfextension linkstate 1 }
+\_protected\_def \_pdfrunninglinkon  {\_pdfextension linkstate 0 }
 
 \_protected\_edef\_pdfcompresslevel       {\_pdfvariable compresslevel}
 \_protected\_edef\_pdfobjcompresslevel    {\_pdfvariable objcompresslevel}
@@ -115,7 +117,8 @@
    \pdfsetmatrix \pdfsave \pdfrestore \pdfobj \pdfrefobj \pdfannot
    \pdfstartlink \pdfendlink \pdfoutline \pdfdest \pdfthread \pdfstartthread
    \pdfendthread \pdfinfo \pdfcatalog \pdfnames \pdfincludechars \pdffontattr
-   \pdfmapfile \pdfmapline \pdftrailer \pdfglyphtounicode \pdfcompresslevel
+   \pdfmapfile \pdfmapline \pdftrailer \pdfglyphtounicode
+   \pdfcompresslevel \pdfrunninglinkoff \pdfrunninglinkon
    \pdfobjcompresslevel \pdfdecimaldigits \pdfgamma \pdfimageresolution
    \pdfimageapplygamma \pdfimagegamma \pdfimagehicolor \pdfimageaddfilename
    \pdfpkresolution \pdfinclusioncopyfonts \pdfinclusionerrorlevel
@@ -132,3 +135,8 @@
 \_endcode
 
 Common pdf\TeX/ primitives equivalents are declared here. Initial values are set.
+
+\_endinput
+
+2024-02-29 \pdfrunninglinkoff \pdfrunninglinkon added
+2020-02-21 released

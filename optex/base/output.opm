@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2023-04-28>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2024-02-29>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another
@@ -78,7 +78,7 @@
      \_resetattrs
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
-     \_makeheadline
+     \_pdfrunninglinkoff \_makeheadline \_pdfrunninglinkon
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}% \pagebody in plainTeX
      \_makefootline}%
 }
@@ -116,8 +116,8 @@
   \_ifvoid\_topins \_else \_unvbox\_topins\_fi
   \_dimen0=\_dp255 \_unvbox255 % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
-    \_vskip\_skip\_footins
-    \_footnoterule \_unvbox\_footins\_fi
+    \_pdfrunninglinkoff \_vskip\_skip\_footins
+    \_footnoterule \_unvbox\_footins \_pdfrunninglinkon \_fi
   \_kern-\_dimen0 \_vskip \_pgbottomskip
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}
@@ -264,6 +264,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2024-02-29 \_pdfrunninglinkoff, \_pdfrunninglinkon used
 2022-04-28 \_optexshipout introduced
 2022-10-22 \_normalbaselines added to \makehead/foot/line
 2022-03-07 \_resetattrs instead \_resetcolor
