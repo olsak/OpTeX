@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.11, 2023-04-15}
+\_def\_math_version {0.12, 2024-03-02}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -21,6 +21,7 @@
       \_nokvx {\_opwarning{\_the\_kvdict: unknown option "##1", ignored}}%
       \_kvx {vert}     {\.smartvert}%     sets | as math active, to do better |x| or ||x||
       \_kvx {dots}     {\.smartdots}%     \dots behaves like \ldots or \cdots
+      \_kvx {rmsbsp}   {\.rmsbsp}%        activates x_[text] and x^[text]
       \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
       \_kvx {mstyle}   {\.mstyle{##1}}%   sets mstyle=TeX or ISO or french or upright
       \_kvx {bstyle}   {\.bstyle{##1}}%   sets bstyle=TeX or ISO or upright or OpTeX
@@ -140,6 +141,22 @@
    \_def\.smartvert{\_let~=\.autovert \_mathcode`|="8000 }}
 
 \_nspublic \smartvert ;
+
+   \_doc
+   \`\rmsbsp` activates `^` and `_` so they check the next character.
+   If it is `[` then `\mathbox` is used for subscript or superscript, else
+   normal behavior of subscript or superscript is kept.
+   \_cod
+
+\_def\.rmsbsp{%
+   \_adef ^{\_isnextchar[{\.rmsp}{\_sp}}
+   \_adef _{\_isnextchar[{\.rmsb}{\_sb}}
+   \_def\.rmsp[##1]{\_sp{\_mathbox{##1}}}
+   \_def\.rmsb[##1]{\_sb{\_mathbox{##1}}}
+   \_catcode `\^=12   \_catcode`\_=11
+   \_mathcode`_="8000 \_mathcode`^="8000
+}
+\_nspublic \rmsbsp ;
 
    \_doc
    The control sequences \`\N`, \`\Z`, \`\Q`, \`\R`, \`\C`
@@ -451,6 +468,7 @@ The following macros are defined in this package:
   gives better controlling of sizes of parentheses.
 * \~`\smartdots` declares `\dots` macro more intelligent.
   \~`\smartvert` declares \"`|`" for better spacing.
+* \~`\rmsbsp` activates roman subscripts and superscripts in `[...]`.
 * There are many common math macros for sets or for operators, for example
   \~`\R` or \~`\sgn`.
 * \~`\eqsystem` enables to write systems of equations comfortably,
@@ -473,6 +491,7 @@ Eight options are provided by the `math` package. You can set them by
 \begitems
 * `dots` sets more inteligent `\dots`, the same as \~`\smartdots`.
 * `vert` sets more inteligent `|`, the same as \~`\smartvert`.
+* `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
 * `mstyle=<style>`, `bstyle=<style>` are math styles explained in section~\ref[mstyle].
 * `rmchars={<list>}` sets `\rm` for selected characters, the same as \~`\rmchars`,
@@ -565,6 +584,12 @@ $$
      |\sum a_n|+||x|| &\quad \hbox{if \scantextokens{`\smartvert`} is initialized.}
   }
 $$
+
+
+\sec Roman subscript and superscript in `[...]`
+
+When you declare \^`\rmsbsp`, then you can write `x_[text]` or `x^[text]`
+and it is equivalent to `x_{\mathbox{text}}` or `x^{\mathbox{text}}`.
 
 
 \sec Basic and typical macros for sets, functions etc.
@@ -931,6 +956,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.12  2024-03-02  \rmsbsp introduced.
 0.11  2023-04-15: \bbigp introduced.
 0.10  2023-03-12: \mathclap etc. introduced.
 0.09  2023-03-11: mstyle, bstyle options introduced.
