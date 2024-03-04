@@ -5082,17 +5082,17 @@ implement a similar functionality as a prefix macro
 
 <p>The implementation:
 
-<pre>\def \onlyifnew#1#2{\begingroup%
+<pre>\def \onlyifnew#1#2{\begingroup
    \edef\tmpA{\csstring #2}%
    \edef\tmpB{\string #2}%
-   \ea\ifcsname\tmpA\endcsname%
+   \ea\ifcsname\tmpA\endcsname
    \ifx\tmpA\tmpB% #2 has no backslash
-   \def\onlyifnewA{#1{onlyifnewB}}\else%
-   \def\onlyifnewA{#1\onlyifnewB}\fi%
-   \else%
-   \ifx\tmpA\tmpB%
-   \def\onlyifnewA{#1{#2}}\else%
-   \def\onlyifnewA{#1#2}\fi%
+   \def\onlyifnewA{#1{onlyifnewB}}\else
+   \def\onlyifnewA{#1\onlyifnewB}\fi
+   \else
+   \ifx\tmpA\tmpB
+   \def\onlyifnewA{#1{#2}}\else
+   \def\onlyifnewA{#1#2}\fi
    \fi\ea\endgroup\onlyifnewA}
 </pre>
 
