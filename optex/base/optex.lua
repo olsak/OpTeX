@@ -724,7 +724,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
-   -- 2022-01-18 \_beglocalcontrol added
+   -- 2024-02-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
    -- 2022-08-24 luaotfload transparency with attributes added
    -- 2022-03-07 transparency in the colorize() function, current_tr added
