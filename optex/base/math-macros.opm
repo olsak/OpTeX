@@ -707,7 +707,7 @@
    impossible to use `\eqno` or `\leqno` or \^`\eqmark`.
 
    \OpTeX/ offers
-   `\dislaylines to<dimen>{<formula>\cr<formula>\cr...<formula>}`
+   `\displaylines to<dimen>{<formula>\cr<formula>\cr...<formula>}`
    as an alternative case of usage `\displaylines`. See section 4.3 in the
    \ulink[http://petr.olsak.net/ftp/olsak/optex/optex-math.pdf]
          {Typesetting Math with \OpTeX/}.
