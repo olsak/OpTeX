@@ -94,9 +94,8 @@
     First usage of `\lipsum` reads the \LaTeX/ file `lipsum.ltd.tex`
     by \`\_lipsumload`
     and prints the selected paragraph(s). Next usages of `\lipsum`
-    prints the selected paragraph(s) from memory. This second and more
-    usages of `\lipsum` are fully expandable. If you want to have all
-    printings of `\lipsum` expandable, use dummy `\lipsum[0]` first.
+    prints the selected paragraph(s) from memory.
+	`\lipsum` is fully expandable.
 
     `\lipsum` adds `\_par` after each printed paragraph. If you don't need
     such `\_par` here, use \`\lipsumtext``[<number>]` or `\lipsum[<number>.]`
@@ -111,14 +110,15 @@
 \_def\_lipsumA #1.#2]#3{\_ifx^#2^\_lipsumB #1\_empty-\_empty\_fin \_else \_lipsumdot[#1].\_fi}
 \_def\_lipsumB #1-#2\_empty#3\_fin{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
-\_def\_lipsumload{{%
-   \_setbox\_nonebox=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
+\_def\_lipsumload{\_beglocalcontrol
+   {\_setbox\_nonebox=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
       \_def\SetLipsumLanguage##1{}%
       \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
       \_opinput {lipsum.ltd.tex}%
       \_glet\_lipsumload=\_empty
-   }}}
+   }}%
+   \_endlocalcontrol}
 \_def\_lipsumdot[#1]{\_lipsumload \_ea\_ea\_ea \_lipsumdotA \_csname _lip:#1\_endcsname.\_fin}
 \_def\_lipsumdotA #1.#2\_fin {#1}
 
@@ -242,6 +242,7 @@
 
 \_endcode
 
+2024-03-04 \_beglocalcontrol used in \_lipsumload.
 2024-02-18 \_beglocalcontrol used in \_loadtrik.
 2023-12-23 \_nonebox instead box 0 introduced.
 2023-10-17 \_loadtrick introduced.
