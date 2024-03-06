@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.12, 2024-03-02}
+\_def\_math_version {0.13, 2024-03-06}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -28,6 +28,7 @@
       \_kvx {rmchars}  {\.rmchars{##1}}%  does \.rmchars{<list>}
       \_kvx {vargreek} {\.vargreek{##1}}% does \.vargreek{<list>}
       \_kvx {text}     {\.dotext{##1}}%   does \.dotext{<list>}
+      \_kvx {enablefic}{\.enablefic}%     enables final italic correction
       \_readkv{#1}%
    \.restorekvdict
 }
@@ -453,6 +454,40 @@
 
 \_nspublic \mathclap \mathrlap \mathllap ;
 
+   \_doc
+   \`\enablefic` enables final italic correction. The relevant lua function is
+   registered to `mlist_to_hlist` callback and \`\finalitalcorr` is set to one.
+   \_cod
+
+\_newcount \.finalitalcorr
+\_directlua{
+   function math.final_ital_corr(head, style)
+        if style=="text" and tex.count.\_pkglabel _finalitalcorr>0 then
+            for n in node.traverse(head) do
+                if n.next == nil and n.id == 29 then % last is glyph
+                    local k = font.fonts[n.font].characters[n.char].italic
+                    if not(k==nil) and (k>0) then
+                        local kn = node.new("kern")
+                        kn.kern = k kn.subtype = 3
+                        node.insert_after(head, n, kn) % kern node is inserted
+                    end
+                end
+            end
+        end
+        return head
+   end
+}
+\_def\.enablefic {\_directlua{ % math.final_ital_corr is registered to mlist_to_hlist
+   luatexbase.add_to_callback("mlist_to_hlist",
+       function(head, style, penalties)
+           head = node.mlist_to_hlist(head, style, penalties)
+           return math.final_ital_corr(head, style)
+       end, "italcorr after math")
+   }
+   \.finalitalcorr=1
+}
+\_nspublic \enablefic \finalitalcorr ;
+
 \_endnamespace
 \_endcode
 
@@ -483,6 +518,7 @@ The following macros are defined in this package:
   (variables, digits, more characters).
 * \~`\replacemissingchars` allows to re-declare all characters missing in math font
   for printing them from additional math font.
+* \~`\enablefic` enables final italic correction of inline-math lists.
 \enditems
 
 Eight options are provided by the `math` package. You can set them by
@@ -499,7 +535,9 @@ Eight options are provided by the `math` package. You can set them by
 * `vargreek={<list>}` sets variants for Greek letetters, the same as \~`\vargreek`,
    see section~\ref[rmchars].
 * `text={<list>}` sets \~`\textvariables`, \~`\textdigits`, or \~`\textmoremath`,
-  see section~\ref[textvars].
+  see section~\ref[textvars],
+* `enablefic` enables final italic correction of inline-math lists, does
+  \~`\enablefic`.
 \enditems
 
 This package is not definitive. I plan to add more features in new versions
@@ -840,6 +878,31 @@ then you can load a next additional math font using another \o`\addUmathfont` an
 by previous steps are replaced.
 
 
+\sec Final italic correction
+
+Classical \TeX/ adds italic correction after each Ord atom with a single
+letter from math italic font including the last one in inline-math. \LuaTeX/
+and \OpTeX/ does the same only when classical `tfm` math fonts are used. When
+you switch to Unicode math, the italic correction of the last glyph of the
+inline-math list is lost, unfortunately. Try this:
+
+\begtt
+$T$' the italic correction after $T$ is inserted (classical fonts)
+
+\fontfam[lm]
+$T$' the italic correction after $T$ isn't inserted (Unicode fonts)
+\bye
+\endtt
+
+This package provides the \^`\enablefic` command which enables the classical TeX
+feature: the final italic correction of the inline-math list is automatically added.
+
+When \^`\enablefic` (or `enablefic` option) is declared then you can control
+the behavior of this feature by the \^`\finalitalcorr` register: if it is positive
+then the feature is activated and if it is zero, the feature is deactivated.
+The \^`\enablefic` macro sets \^`\finalitalcorr``=1`.
+
+
 \sec Miscelaneous commands
 
 I created various commands at the requests of users. They asked me to create
@@ -956,6 +1019,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.13  2024-03-06  \enablefic introduced.
 0.12  2024-03-02  \rmsbsp introduced.
 0.11  2023-04-15: \bbigp introduced.
 0.10  2023-03-12: \mathclap etc. introduced.
