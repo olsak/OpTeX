@@ -343,6 +343,8 @@
    pair `\_finc {<what to do else>}`. The `<phrases>` is a single
    phrase or phrases separated by `|` which means \"or". For example
    the pair `{ab|cde|f} {<code>}` runs <code> if the given <string> is `ab` or `cde` or~`f`.
+   The usage of `\qcasesof` can be found in
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#thedimen]{OpTeX trick 0132}.
    \_cod -----------------------------
 
 \_long\_def \_qcasesof #1#2#3{\_ifx\_finc#2\_ea\_ignoresecond \_else \_ea\_usesecond \_fi

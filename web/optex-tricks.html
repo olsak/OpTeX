@@ -221,6 +221,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#correctvsize">Setting \vsize to fit lines exactly to pages</a>
     <li><a href="#randomitems">Random items from a given set of items</a>
     <li><a href="#onlyifnew">Only define a macro if it is not already defined</a>
+    <li><a href="#thedimen">Show dimension values in  given unit</a>
 </ul>
 
 <li>Simple templates
@@ -5097,6 +5098,53 @@ implement a similar functionality as a prefix macro
 </pre>
 
 <p CLASS=datum>(0130) -- Robert Bachmann 2024-02-13<p>
+
+
+<h2><a name="thedimen"></a>Show dimension values in  given unit</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\thedimen
+</p>
+
+<p>The TeX primitive \the shows a dimension only in pt unit. We want to show
+it in other common TeX units, for example \thedimen\hsize mm will show the
+\hsize register in millimeters. We can use the \thedimen macro for various
+diagnostic purposes (in \wterm or \message, for example). It means that it
+must be expandable.
+
+<p>The implementation can be based on \expr and \qcasesof OpTeX macros:
+
+<pre>
+\def\thedimen #1#2#3{\nnum{\expr[5]{%
+   \number\dimexpr#1\relax / 65536 /
+      \qcasesof {#2#3}
+         {pt} {1}
+         {cm} {28.4527559}
+         {mm} {2.84527559}
+         {in} {72.27}
+         {sp} {(1/65536)}
+         {pc} {12}
+         {bp} {1.00375}
+         {dd} {1.070008643}
+         {cc} {12.8401037}
+         {em} {(\number\fontdimen6\font/65536)}
+         {ex} {(\number\fontdimen5\font/65536)}
+         \_finc {5000000000}
+   }}#2#3%
+}
+</pre>
+
+<p>Note that if the given unit is unknown then we divide by a big number to
+reach zero result (\maxdimen and 5 digits precision returns zero with used
+constant). For example, \thedimen\hsize xx returns 0xx.
+
+<p>This solution seems elegant but it is not efficient. More efficient is to
+do \sdef{thedimen:pt}{1} \sdef{thedimen:cm}{28.4527559} etc. and use
+\trycs{thedimen:#2#3}{5000000000} instead \qcasesof. The reason is that
+\qcasseof reads given pairs sequentially until the string matches. But
+\trycs uses internal TeX's hash table.
+
+<p CLASS=datum>(0132) -- P O 2024-03-09<p>
 
 <p CLASS="lmarg">Simple templates</p>
 

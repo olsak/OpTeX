@@ -294,8 +294,9 @@
    by optional syntax `\bp[<digits>]{<dimen>}` and
    `\expr[<digits>]{<expression>}`. Default is \`\_decdigits`.
 
-   The usage of prefixed versions \`\_expr` or \`\_bp` is more recommended
-   because a user can re-define the control sequences `\expr` or `\bp`.
+   The usage of prefixed versions `\_expr` or `\_bp` is more recommended
+   for macro programmers because a user can re-define the control sequences
+   `\expr` or `\bp`.
    \_cod -----------------------------
 
 \_def\_decdigits{3} % digits after decimal point in \_bp and \_expr outputs.

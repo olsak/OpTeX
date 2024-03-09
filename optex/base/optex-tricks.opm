@@ -59,6 +59,25 @@
 
 \_nspublic \hours \minutes \seconds \weekday \Othe ;
 
+\_trick 0132 \thedimen ;
+%%%%%%%%%%%%
+
+\_sdef {_thedimen:pt}{1}
+\_sdef {_thedimen:cm}{28.4527559}
+\_sdef {_thedimen:mm}{2.84527559}
+\_sdef {_thedimen:in}{72.27}
+\_sdef {_thedimen:sp}{(1/65536)}
+\_sdef {_thedimen:pc}{12}
+\_sdef {_thedimen:bp}{1.00375}
+\_sdef {_thedimen:dd}{1.070008643}
+\_sdef {_thedimen:cc}{12.8401037}
+\_sdef {_thedimen:em}{(\number\fontdimen6\font/65536)}
+\_sdef {_thedimen:ex}{(\number\fontdimen5\font/65536)}
+
+\_def\thedimen #1#2#3{\_nnum{\_expr[5]{%
+   \_number\_dimexpr#1\_relax / 65536 / \_trycs{_thedimen:#2#3}{5000000000}}}#2#3}
+
+
 \_trick 0063 \showpglists ;
 %%%%%%%%%%%%
 
@@ -773,6 +792,7 @@
 
 \_endcode
 
+2024-03-09 \thedimen added
 2024-02-13 \onlyifnew added
 2024-02-12 \pgforeground added
 2023-11-15 \correctvsize added
