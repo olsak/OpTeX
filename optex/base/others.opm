@@ -111,7 +111,7 @@
 \_def\_lipsumB #1-#2\_empty#3\_fin{%
    \_fornum #1..\_ifx^#2^#1\_else#2\_fi \_do {\_lipsumtext[##1]\_par}}
 \_def\_lipsumload{\_beglocalcontrol
-   {\_setbox\_nonebox=\_vbox{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
+   {\_setbox\_nonebox=\_vpack{\_tmpnum=0 % vertical mode during \input lipsum.ltd.tex
       \_def\ProvidesFile##1[##2]{}%
       \_def\SetLipsumLanguage##1{}%
       \_def\NewLipsumPar{\_incr\_tmpnum \_sxdef{_lip:\_the\_tmpnum}}%
@@ -151,7 +151,7 @@
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
    \_long\_def\_loadtrickA ##1\_trick##2#1##3;{##1}%
    \_wlog{Loading trick macros for \_string#1}%
-   \_setbox\_nonebox=\_vbox{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
+   \_setbox\_nonebox=\_vpack{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
    \_restorectable \_endnamespace
    \_endlocalcontrol
 }
@@ -242,6 +242,7 @@
 
 \_endcode
 
+2024-03-11 \_lipsumload+\_loadtrick: \vpack used instead \vbox.
 2024-03-04 \_beglocalcontrol used in \_lipsumload.
 2024-02-18 \_beglocalcontrol used in \_loadtrik.
 2023-12-23 \_nonebox instead box 0 introduced.
