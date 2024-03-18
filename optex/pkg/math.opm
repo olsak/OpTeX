@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.13, 2024-03-06}
+\_def\_math_version {0.14, 2024-03-18}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -23,6 +23,7 @@
       \_kvx {dots}     {\.smartdots}%     \dots behaves like \ldots or \cdots
       \_kvx {rmsbsp}   {\.rmsbsp}%        activates x_[text] and x^[text]
       \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
+      \_kvx {flexipa}  {\.flexipa}%       flexible partial symbol
       \_kvx {mstyle}   {\.mstyle{##1}}%   sets mstyle=TeX or ISO or french or upright
       \_kvx {bstyle}   {\.bstyle{##1}}%   sets bstyle=TeX or ISO or upright or OpTeX
       \_kvx {rmchars}  {\.rmchars{##1}}%  does \.rmchars{<list>}
@@ -263,6 +264,43 @@
 }
 
 \_nspublic \bfserif ;
+
+   \_doc
+   \`\flexipa` (or \`\flexiblepartial`) runs
+   \~`\partialsymbolvars` `{it}`\,`{rm}`\,`{bfsans}`\,`{it}`\,`{bfitsans}`.
+   The \`\partialsymbolvars` macro adds two tokens `\.partialvar \m<var>partial`
+   to `\_mit`, `\_marm`, `\_mabf`, `\_mait`, `\_mabi` macros.
+   The \`\.partialvar` macro sets appropriate
+   `\_Umathcode` of the `\.partialchar` to the code given by the parameter
+   `\m<var>partial`. Five macros
+   \`\mbfpartial`, \`\mitpartial`, \`\mbfitpartial`, \`\mbfsanspartial`, \`\mbfitsanspartial`
+   are declared in the macro file `unimath-table.opm`.
+   The math character \`\mrmpartial` (for upright variant) is declared here.
+   \_cod
+
+\_chardef\.partialchar="2202
+\_Umathchardef\.mrmpartial=0 1 \.partialchar
+\_def\.partialvar #1{\_Umathcode \.partialchar 0 1
+                                 \_ifx#1\.mrmpartial \.partialchar \_else\_ea`#1 \_fi
+}
+\_def\.inadd#1#2{\_ea\.inaddA#1{#2}#1}
+\_def\.inaddA\_inmath#1#2#3{\_protected\_def#3{\_inmath{#1#2}}}
+
+\_def\.partialsymbolvars #1#2#3#4#5{%
+   \_ifx\_ncharrmA\_undefined \_opwarning{\_string\flexipa: Unicode math must be loaded first}%
+   \_else
+      \_def\.tmp{\_ea\_addto \_ea\_mit  \_ea {\_ea\.partialvar \_csname m#1partial\_endcsname}}%
+      \_ifx\_mit\mit \.tmp \_let\mit=\_mit \_else \.tmp \_fi
+      \_ea\.inadd \_ea\_marm \_ea {\_ea\.partialvar \_csname m#2partial\_endcsname}%
+      \_ea\.inadd \_ea\_mabf \_ea {\_ea\.partialvar \_csname m#3partial\_endcsname}%
+      \_ea\.inadd \_ea\_mait \_ea {\_ea\.partialvar \_csname m#4partial\_endcsname}%
+      \_ea\.inadd \_ea\_mabi \_ea {\_ea\.partialvar \_csname m#5partial\_endcsname}%
+      \_mit
+   \_fi
+}
+\_def\.flexipa{\.partialsymbolvars {it}{rm}{bfsans}{it}{bfitsans}}
+\_newpublic \_let \flexiblepartial=\.flexipa
+\_nspublic \flexipa \partialsymbolvars \mrmpartial ;
 
    \_doc
    The options `mstyle`, resp. `bstyle` run \`\.mstyle`, resp. \`\.bstyle`
@@ -511,6 +549,7 @@ The following macros are defined in this package:
   \~`\subeqmark` prints the given suffix as a part of the equation mark.
 * \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
 * \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
+* \~`\flexipa` enables flexible partial symbol.
 * \~`\rmchars` sets selected characters printed as `\rm`,
   \~`\vargreek` sets Greek leters to their variants.
 * \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
@@ -521,7 +560,7 @@ The following macros are defined in this package:
 * \~`\enablefic` enables final italic correction of inline-math lists.
 \enditems
 
-Eight options are provided by the `math` package. You can set them by
+Ten options are provided by the `math` package. You can set them by
 \^`\mathset``{<options>}` after `\load[math]`, for example
 `\mathset{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
 \begitems
@@ -529,6 +568,7 @@ Eight options are provided by the `math` package. You can set them by
 * `vert` sets more inteligent `|`, the same as \~`\smartvert`.
 * `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
+* `flexipa` enables flexible partial symbol, the same as \~`\flexipa`.
 * `mstyle=<style>`, `bstyle=<style>` are math styles explained in section~\ref[mstyle].
 * `rmchars={<list>}` sets `\rm` for selected characters, the same as \~`\rmchars`,
    see section~\ref[rmchars].
@@ -821,6 +861,34 @@ sign must follow and then the `{<list>}` with syntax mentioned above. For exampl
 `\mathset{vargreek={\epsilon,\rho}}`.
 
 
+\sec[flexipa] Flexible partial symbol $\partial$
+
+Classical \TeX/ with Computer Modern fonts uses slanted `\partial` symbol
+$\mitpartial$. On the other hand, default setting of Unicode math gives
+upright `\partial` $\rm\partial$ but six variants of this symbol are provided:
+roman (upright) \^`\mrmpartial` $\mrmpartial$, bold \^`\mbfpartial` $\mbfpartial$,
+italic \^`\mitpartial` $\mitpartial$, bold italic \^`\mbfitpartial` $\mbfitpartial$,
+bold sans serif \^`\mbfsanspartial` $\mbfsanspartial$, bold italic sans serif
+\^`\mbfitsanspartial` $\mbfitsanspartial$.
+
+When you declare \^`\flexipa` or \^`\flexiblepartial` or use the `flexipa`
+package option, then the `\partial` symbols get italic variant as default
+and behaves like others Greek symbols: it changes its variant according to
+the `\rm`, `\it`, `\bf`, `\bi` selectors in math mode. You can declare what
+variant of the `\partial` character will be shown at what selector. This can
+be done by the \^`\partialsymbolvars`~`<default> <rm> <bf> <it> <bi>` macro.
+Each of these five parameters can be `{rm}` or `{bf}` or `{it}` or `{bfit}`
+or `{bfsans}` or `{bfitsans}`. For example the third parameter declares
+what variant of the partial symbol is printed when `\bf` selector is used
+in math mode. The `\flexipa` macro runs the following default setting:
+\begtt
+\partialsymbolvars {it} {rm} {bfsans} {it} {bfitsans}
+\endtt
+It means that default is italic variant and when `\rm` is selected then roman
+(upright) variant is printed, when `\bf` is selected then bold sans serif
+variant is printed etc.
+
+
 \sec[textvars] Variables and digits from currently used text font
 
 When Unicode math font is loaded then all variables and digits are printed
@@ -989,6 +1057,7 @@ The user can read this warning and declare the macro after
 `\load[<pkg>]` in this case.
 
    \_doc
+   %  optex -jobname math-doc '\docgen math'
    \load [doc,math]
    \def\opurl{http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
    \def\tnurl{http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf}
@@ -1019,6 +1088,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.14  2024-03-18  \flexipa introduced.
 0.13  2024-03-06  \enablefic introduced.
 0.12  2024-03-02  \rmsbsp introduced.
 0.11  2023-04-15: \bbigp introduced.
