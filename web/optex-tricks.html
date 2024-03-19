@@ -236,6 +236,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#beglua">Processing lua code with normal characters</a>
     <li><a href="#dayw">Printing time, date</a>
     <li><a href="#pglists">Listings of all nodes in selected pages</a>
+    <li><a href="#shownodes">Listing all nodes in the box</a>
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
@@ -5501,6 +5502,38 @@ listings of nodes. The implemetation:
 list \showpgs. Then it used in \_preshipout and unregistered in \_endoutput.
 
 <p CLASS=datum>(0063) -- P. O. 2021-07-03<p>
+<hr>
+
+<h2><a name="shownodes"></a>Listing all nodes in the box</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\shownodes
+</p>
+
+<p>The TeX primitive \showbox stops like an error, so its usage is
+uncomfortable when we are debugging our code. The macro \shownodes behaves like \showbox,
+i.e. its parameter is the number of inspected box. The output is formatted
+by Lua nodetree library like \showpglists (colorized output of all nodes
+inside the box) and doesn't stop TeX.
+
+<pre>
+\def\shownodes#1{%
+   \ifcat\noexpand#1\relax \def\tmp{#1}\tmpnum=#1\ea\shownodesA
+   \else \def\tmp{}\afterfi{\afterassignment\shownodesA \tmpnum=#1}\fi
+}
+\def\shownodesA{%
+   \wterm{==== Box \the\tmpnum\space (\ea\string\tmp):}%
+   \directlua{
+   local nodetree = require("nodetree")
+   nodetree.print(tex.box[\the\tmpnum])
+}}
+</pre>
+
+<p>The first token of the parameter is checked because it can be a character
+constant (declared by \newbox) or the first digit of a direct number. If the first
+case is true then we save the name to the \tmp macro and print it by \wterm.
+
+<p CLASS=datum>(0133) -- P. O. 2024-03-19<p>
 <hr>
 
 <h2><a name="runsystem"></a>Running system commands during document processing</h2>

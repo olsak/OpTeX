@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-02-13>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-03-19>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -99,6 +99,20 @@
       \_addto\_endoutput{\.removeshowpglists}%
    \_fi
 }
+
+\_trick 0133 \shownodes ;
+%%%%%%%%%%%%
+
+\_def\shownodes#1{%
+   \_ifcat\_noexpand#1\_relax \_def\.tmp{#1}\_tmpnum=#1\_ea\.shownodesA
+   \_else \_def\.tmp{}\_afterfi{\_afterassignment\.shownodesA \_tmpnum=#1}\_fi
+}
+\_def\.shownodesA{%
+   \_wterm{==== Box \_the\_tmpnum\_space (\_ea\_string\.tmp):}%
+   \_directlua{
+   local nodetree = require("nodetree")
+   nodetree.print(tex.box[\_the\_tmpnum])
+}}
 
 \_trick 0101 \runsystem ;
 %%%%%%%%%%%%
@@ -792,6 +806,7 @@
 
 \_endcode
 
+2024-03-19 \shownodes added
 2024-03-09 \thedimen added
 2024-02-13 \onlyifnew added
 2024-02-12 \pgforeground added
