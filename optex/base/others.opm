@@ -165,7 +165,7 @@
    \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote \tabnodes \tablebefore
    \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
    \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground
-   \onlyifnew \thedimen ;
+   \onlyifnew \thedimen \rebox \leftfill \rightfill \lrfill ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------

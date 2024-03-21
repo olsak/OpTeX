@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-03-19>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-03-21>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -113,6 +113,38 @@
    local nodetree = require("nodetree")
    nodetree.print(tex.box[\_the\_tmpnum])
 }}
+
+
+\_trick 0134 \rebox \leftfill \rightfill \lrfill ;
+%%%%%%%%%%%%
+
+\_def\rebox{\_directlua{
+   local nod = tex.box[token.scan_int()]      % read head node of the given box
+   if not(nod==nil) and nod.id==1 then        % given box must be \vbox
+       for n in node.traverse(nod.head) do
+           if n.id==0 then                    % i.e. hlist (\hbox)
+               local nn = node.hpack (n.head) % calculate its natural width
+               n.width = nn.width             % save natural width
+               nn.head = nil  node.free (nn)  % remove created box node
+           end
+       end
+       local nn = node.vpack (nod.head)       % calculate main vlist (\vbox) width
+       nod.width = nn.width                   % save this width to nod.width
+       nn.head = nil  node.free (nn)          % remove created box node
+       for n in node.traverse(nod.head) do
+           if n.id==0 then
+               local nn = node.hpack (n.head, nod.width, "exactly") % \hbox to nod.width
+               n.width = nn.width             % save changed hlist (\hbox) parameters
+               n.glue_order = nn.glue_order n.glue_set = nn.glue_set n.glue_sign = nn.glue_sign
+               nn.head = nil  node.free (nn)  % remove created box node
+           end
+       end
+   end
+}}
+\_def\leftfill {\_leftskip=0pt plus1fill \_parindent=0pt }
+\_def\rightfill{\_rightskip=0pt plus1fill \_parindent=0pt }
+\_def\lrfill{\_leftskip=0pt plus1fill \_rightskip=\_leftskip \_parindent=0pt }
+
 
 \_trick 0101 \runsystem ;
 %%%%%%%%%%%%
@@ -806,6 +838,7 @@
 
 \_endcode
 
+2024-03-21 \rebox added
 2024-03-19 \shownodes added
 2024-03-09 \thedimen added
 2024-02-13 \onlyifnew added

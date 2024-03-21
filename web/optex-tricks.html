@@ -237,6 +237,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#dayw">Printing time, date</a>
     <li><a href="#pglists">Listings of all nodes in selected pages</a>
     <li><a href="#shownodes">Listing all nodes in the box</a>
+    <li><a href="#rebox">Lines modification inside \vbox</a>
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
@@ -5534,6 +5535,81 @@ constant (declared by \newbox) or the first digit of a direct number. If the fir
 case is true then we save the name to the \tmp macro and print it by \wterm.
 
 <p CLASS=datum>(0133) -- P. O. 2024-03-19<p>
+<hr>
+
+<h2><a name="rebox"></a>Lines modification inside \vbox</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\rebox<br>\leftfill<br>\rightfill<br>\lrfill
+</p>
+
+<p>User can do \setbox0=\vbox{...} (or \vtop{...}) and then the created box
+can be modified by \rebox0 before usage \box0 (or \unvbox0). The \rebox
+macro works in more steps. First, it changes all \hbox'es inside the vertical
+list of given \vbox to their natural sizes. Then it measures the width of
+the outer \vbox (say, it is W). Finally, it modifies again all \hbox'es
+inside the \vbox by \hbox to W specification. You can see the effect if a
+paragraph is processed inside this \vbox, i.e. all lines have \hsize width
+first. The \rebox macro finds a widest line (in its natural width) and all
+lines are re-boxed to this width. It means that the left and right boundary
+of the resulting \vbox is given by this widest line although the stretchable
+\leftskip or \rightskip is used. If you use macros
+\leftfill or \rightfill or \lrfill before processing the paragraph and then use
+\rebox, the result is comparable with \vbox{\halign{\hfill#\cr...}} (ragged
+left) or \vbox{\halign{#\hfill\cr...}} (ragged right) or
+\vbox{\halign{\hfill#\hfill\cr...}} (centered), but you don't need to give
+\cr manually at the end of each line. Or you can use \break or \nl instead
+\cr.
+
+<p>Example:
+<pre>
+\newbox\mybox
+\setbox\mybox=\vbox{\hsize=7cm \lrfill \lorem[1.]}
+
+Compare:
+
+classical result: \frame{\copy\mybox}
+
+\rebox\mybox
+re-boxed result:  \frame{\box\mybox}
+</pre>
+
+<p>The implementation is an exercise of node and list manipulation in Lua.
+
+<pre>
+\def\rebox{\directlua{
+   local nod = tex.box[token.scan_int()]      % read head node of the given box
+   if not(nod==nil) and nod.id==1 then        % given box must be \vbox
+       for n in node.traverse(nod.head) do
+           if n.id==0 then                    % i.e. hlist (\hbox)
+               local nn = node.hpack (n.head) % calculate its natural width
+               n.width = nn.width             % save natural width
+               nn.head = nil  node.free (nn)  % remove created box node
+           end
+       end
+       local nn = node.vpack (nod.head)       % calculate main vlist (\vbox) width
+       nod.width = nn.width                   % save this width to nod.width
+       nn.head = nil  node.free (nn)          % remove created box node
+       for n in node.traverse(nod.head) do
+           if n.id==0 then
+               local nn = node.hpack (n.head, nod.width, "exactly") % \hbox to nod.width
+               n.width = nn.width             % save changed hlist (\hbox) parameters
+               n.glue_order = nn.glue_order n.glue_set = nn.glue_set n.glue_sign = nn.glue_sign
+               nn.head = nil  node.free (nn)  % remove created box node
+           end
+       end
+   end
+}}
+\def\leftfill {\leftskip=0pt plus1fill \parindent=0pt }
+\def\rightfill{\rightskip=0pt plus1fill \parindent=0pt }
+\def\lrfill{\leftfill \rightfill }
+</pre>
+
+<p>This feature cannot be fully implemented just by TeX primitives \setbox,
+\unvbox, \lastbox etc. because the \vbox list can include nodes which are
+inaccessible by these TeX primitives.
+
+<p CLASS=datum>(0134) -- P. O. 2024-03-21<p>
 <hr>
 
 <h2><a name="runsystem"></a>Running system commands during document processing</h2>
