@@ -457,7 +457,7 @@
    \.initexpansion   % luacode, ex table initialized
    \_protrudechars=2
    \_adjustspacing=2
-   \_def\.features{protrusion=p\.var;expansion=ex}% pr/pi and ex tables used
+   \_def\.features{protrusion=p\.var;expansion=ex;}% pr/pi and ex tables used
    \_reloading \_currvar
 }
 \_def\.disablemte {%
