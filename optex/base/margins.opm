@@ -105,7 +105,7 @@
    The `\_numprint` is `\_useit` by default (i.e.\ do nothing special)
    because we have left-to-right mode as default. But a user can define
    \begtt
-   \_def\_numprint#1{{\textdir TLT #1}}
+   \_def\_numprint#1{{\_textdir TLT #1}}
    \endtt
    if the document is set to right-to-left mode.
    \_cod -----------------------------

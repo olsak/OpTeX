@@ -159,8 +159,8 @@
 
 \_nspublic \exitstatus ;
 
-\_trick 105 \directoutput ;
-%%%%%%%%%%%
+\_trick 0105 \directoutput ;
+%%%%%%%%%%%%
 
 \_newbox\.outbox
 \_def\directoutput{\_begingroup \_afterassignment\.directoutputA \_setbox\.outbox=}
@@ -173,6 +173,17 @@
    \_incr\_pageno
    \_endgroup
 }
+
+\_trick 0135 \directchar ;
+
+\_protected\_def\directchar{\_ifmmode \_ea\_Uchar\_else \_quitvmode \_ea\.directcharA\_fi}
+\_def\.directcharA{\_directlua{
+   local n = node.new(29, 256)
+   n.font = font.current()
+   n.char = token.scan_int()
+   node.write(n)
+}}
+
 
 \_trick 0078 \algol ;
 %%%%%%%%%%%%
@@ -838,6 +849,7 @@
 
 \_endcode
 
+2024-04-15 \directchar added
 2024-03-21 \rebox added
 2024-03-19 \shownodes added
 2024-03-09 \thedimen added

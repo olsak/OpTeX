@@ -241,6 +241,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
+    <li><a href="#directchar">Printig a character regardless font ligature setting</a>
     <li><a href="#selnolig">Selective suppression of ligatures</a>
     <li><a href="#timer">Measuring elapsed time of OpTeX processing</a>
 </ul>
@@ -5687,6 +5688,49 @@ automatically. It is based on the Lua code, see
 the answer at the stack exchange site</a>.
 
 <p CLASS=datum>(0114) -- Max Chernoff, 2023-06-27<p>
+<hr>
+
+<h2><a name="directchar"></a>Printig a character regardless font ligature setting</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\directchar
+</p>
+
+<p>We know the \char primitive which prints the character with given Unicode
+and the \Uchar primitive which makes a token with category 12 and with given
+Unicode. If a font is loaded with the font feature +tlig (it is default for
+text fonts in OpTeX) then some characters are not printed directly.
+Especially the " character is transformed to “ at font level. So, \char`"
+does the same as " alone: it prints “. But we want to print the " character
+directly although the +tlig font feature isn't deactivated. We can use
+\directchar number for such purposes (directly printed character). It locally
+deactivates the ligature processing for printing the character with given
+Unicode. Try this:
+
+<pre>
+\fontfam[lm]
+Test: \char`", nolig: \directchar`".
+</pre>
+
+<p>For example, you can declare \protected\adef"{\directchar`"\relax}
+if you want to print double prime quotes although the +tlig font feature is
+set. Or define the macro \protected\def\primeqquote{\directchar`"\relax}
+for printing this character.
+
+<pre>
+\protected\def\directchar{\ifmmode \ea\Uchar\else \quitvmode \ea\directcharA\fi}
+\def\directcharA{\directlua{
+   local n = node.new(29, 256)
+   n.font = font.current()
+   n.char = token.scan_int()
+   node.write(n)
+}}
+</pre>
+
+<p>The glyph node with given character is inserted to the current horizontal
+list directly by Lua code. This method bypasses the font ligature processing.
+
+<p CLASS=datum>(0135) -- P. O. 2024-04-15<p>
 <hr>
 
 <h2><a name="selnolig"></a>Selective suppression of ligatures</h2>
