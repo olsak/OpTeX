@@ -210,7 +210,7 @@
 \_def\l{\_errmessage{\_usedirectly ł}}
 \_def\L{\_errmessage{\_usedirectly Ł}}
 %\def\_{\_ifmmode \kern.06em \vbox{\hrule width.3em}\else _\fi} % obsolete
-\_def\_{\_hbox{_}}
+\_protected\_def\_{\_relax \_ifmmode \_hbox{_}\_else _\_fi}
 \_def\dag{\_errmessage{\_usedirectly †}}
 \_def\ddag{\_errmessage{\_usedirectly ‡}}
 \_def\copyright{\_errmessage{\_usedirectly ©}}
@@ -375,6 +375,7 @@
 
 \_endcode % -------------------------------------
 
+2024-04-28 ... \_ corrected
 2022-10-11 ... \_unichars extended
 2022-02-19 ... \input hyphen.tex moved here (format file is 80k smaller)
 2021-09-24 ... \_unichars introduced
