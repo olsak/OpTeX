@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.14, 2024-03-18}
+\_def\_math_version {0.15, 2024-04-28}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -21,6 +21,7 @@
       \_nokvx {\_opwarning{\_the\_kvdict: unknown option "##1", ignored}}%
       \_kvx {vert}     {\.smartvert}%     sets | as math active, to do better |x| or ||x||
       \_kvx {dots}     {\.smartdots}%     \dots behaves like \ldots or \cdots
+      \_kvx {interval} {\_let\_=\.interval}% enables \_<0,1)
       \_kvx {rmsbsp}   {\.rmsbsp}%        activates x_[text] and x^[text]
       \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
       \_kvx {flexipa}  {\.flexipa}%       flexible partial symbol
@@ -125,6 +126,23 @@
 \_def\.readclassA#1"#2"#3\_fin{#2}
 
 \_nspublic \smartdots ;
+
+   \_doc
+   The macro \`\.interval` reads following tokens until the `)` or `>` is found in the input
+   queue and replaces \code{<} to `\langle` and `>` to rangle. The reading and replacing
+   process saves the tokens to the `\intevalL` macro only and finaly this macro is launched.
+   \_cod
+
+\_def\.interval{\_def\.intervalL{}\.intervalA}
+\_def\.intervalA{\_nospacefuturelet\.next\.intervalB}
+\_def\.intervalB{\_ifx\.next\_bgroup \_ea\.intervalC \_else \_ea\.intervalD \_fi}
+\_def\.intervalC#1{\_addto\.intervalL{{#1}}\.intervalA}
+\_def\.intervalD#1{\_casesof #1
+   < {\_addto\.intervalL{\langle}\.intervalA}
+   > {\_addto\.intervalL{\rangle}\.intervalL}
+   ) {\_addto\.intervalL{)}\.intervalL}
+   \_finc {\_addto\.intervalL{#1}\.intervalA}%
+}
 
    \_doc
    \`\smartvert` sets `|` as math-active character and declares it
@@ -560,11 +578,12 @@ The following macros are defined in this package:
 * \~`\enablefic` enables final italic correction of inline-math lists.
 \enditems
 
-Ten options are provided by the `math` package. You can set them by
+Following options are provided by the `math` package. You can set them by
 \^`\mathset``{<options>}` after `\load[math]`, for example
 `\mathset{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
 \begitems
 * `dots` sets more inteligent `\dots`, the same as \~`\smartdots`.
+* `interval` sets `\_` as prefix of intervals, see section~\ref[interval].
 * `vert` sets more inteligent `|`, the same as \~`\smartvert`.
 * `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
@@ -640,6 +659,28 @@ You can try this after the \^`\smartdots` declaration:
 `$a_1, a_2, \dots, a_n$    ` prints $a_1, a_2, \dots, a_n$,
 
 `$a_1 + a_2 + \dots + a_n$ ` prints $a_1 + a_2 + \dots + a_n$,
+
+
+\sec[interval] Creating intervals more comfortable
+
+Several math books uses `\langle`, `\rangle` for denoting the interval boundary
+if the boundary number is element of the interval too. For example  `$\langle 0,1)$`
+is printed as $\langle 0,1)$ and it
+means an interval from zero to one, zero is element of the interval but one
+isn't. The \TeX/ source of such math books looks badly because we cannot mark
+them like \code{$<0,1)$} because it prints $\string<0,1)$ but we want $\langle 0,1)$.
+
+This package creates the \^`\.interval` macro which can be set to be equal to `\_`
+(using the `interval` option). Then `\_`  can be used just before the interval
+as a prefix. The \code{<} or `>` are automatically replaced by `\langle`, `\rangle`
+if `\_` is prefixed. So, you can write \code{$\\_<0,1)$} or `$\_(0,1>$` or \code{$\\_<0,1>$}
+or `$\_(0,1)$` in order to get $\langle0,1)$ or $(0,1\rangle$ or $\langle0,1\rangle$
+or $(0,1)$. The source with such intervals looks better.
+
+Note that `interval` option does `\let\_=`\^`\.interval`, so the original
+meaning of the `\_` control sequence (from plain \TeX/) is re-defined.
+The `\_` control sequence can be used for this purpose because
+the next token is `(` or \code{<}, i.e. it is non-letter.
 
 
 \sec Using vertical bars with better spacing
@@ -1088,6 +1129,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.15  2024-04-28  \_ as interval prefix added.
 0.14  2024-03-18  \flexipa introduced.
 0.13  2024-03-06  \enablefic introduced.
 0.12  2024-03-02  \rmsbsp introduced.
