@@ -64,8 +64,10 @@
    node will not be ignored.
    \_cod -----------------------------
 
+\_ifx\_matheqdirmode\_undefined \_else
 \_matheqdirmode=1
 \_breakafterdirmode=1
+\_fi
 
    \_doc -----------------------------
    \secc Plain \TeX/ registers
@@ -629,6 +631,7 @@ a register then \OpTeX/ macros still work without change.
 \_endinput
 
 History:
+2024-04-30 ... \matheqdirmode set only if it is defined (LuaTeX 1.15 and newer).
 2023-09-19 ... \matheqdirmode and \breakafterdirmode set (relevant when RTL typesetting)
 2021-04-13 ... \bibpart added
 2021-04-07 ... \biboptions added, bug from iso690 fixed
