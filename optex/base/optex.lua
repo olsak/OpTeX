@@ -723,6 +723,69 @@ define_lua_command("_beglocalcontrol", function()
 	return tex.runtoks(token.get_next, true)
 end)
 
+-- \`\_replstring` `\macro [nested]{<textA>}{<textB>}` replaces all occurrences 
+-- of `<textA>` by `<textB>` in the `\macro` body.
+
+local scan_toks = token.scan_toks
+local put_next = token.put_next
+local create = token.create
+local lbrace = create(string.byte('{'))
+local rbrace = create(string.byte('}'))
+define_lua_command("_replstring", function()
+    local macro_name = create(token.scan_csname())
+    put_next(create('_expandafter'),
+    lbrace,macro_name,rbrace)
+    local macro_body = scan_toks()
+    local nested = token.scan_keyword('nested')
+    local find = scan_toks()
+    local replace = scan_toks()
+    local find_length = #find
+    local replace_length = #replace
+    local range = #macro_body - find_length + 1
+    local i = 1
+    local nested_level = 0
+    while i <= range do
+        if not nested then 
+            if macro_body[i].tok == lbrace.tok then 
+  	        nested_level = nested_level + 1
+            elseif macro_body[i].tok == rbrace.tok then
+  	        nested_level = nested_level - 1
+            end
+        end
+        if nested_level > 0 then i = i+1 else
+            for j = 0, find_length - 1 do
+                if not nested then
+                    if macro_body[i + j].tok == lbrace.tok then
+      	                nested_level = nested_level + 1
+      	                i = i+j+1
+      	              break
+                    end 
+                end
+                if (macro_body[i + j].tok ~= find[j+1].tok) then
+        	    i = i+j+1
+        	  break
+                else
+                    if j == find_length - 1 then
+                        for t = 0, find_length - 1 do
+                            table.remove(macro_body,i)
+                        end
+                        for t = 0, replace_length - 1 do
+                            table.insert(macro_body,i+t,replace[t+1])
+                        end
+                            range = #macro_body - find_length + 1
+                            i = i+replace_length
+                      break
+                    end 
+                end
+            end
+        end
+    end
+    put_next(rbrace)
+    put_next(macro_body)
+    put_next(create('_immediateassignment'),
+    create('_def'),macro_name,lbrace)
+end)
+
    -- History:
    -- 2024-02-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
