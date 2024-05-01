@@ -377,6 +377,7 @@
 
 \_endcode % -------------------------------------
 
+2024-05-01 \replstring reimplemented in lua
 2024-02-10 \optdef reimplemented, it can create expandable macros now.
 2024-01-18 \bracedparam reimplemented.
 2023-12-04 \nnum introduced

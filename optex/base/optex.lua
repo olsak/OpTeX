@@ -787,6 +787,7 @@ define_lua_command("_replstring", function()
 end)
 
    -- History:
+   -- 2024-05-01 \replstring reimplemented in lua
    -- 2024-02-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
    -- 2022-08-24 luaotfload transparency with attributes added
