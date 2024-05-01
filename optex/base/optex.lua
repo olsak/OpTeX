@@ -731,6 +731,7 @@ local put_next = token.put_next
 local create = token.create
 local lbrace = create(string.byte('{'))
 local rbrace = create(string.byte('}'))
+local def_token = create('_def')
 define_lua_command("_replstring", function()
     local macro_name = create(token.scan_csname())
     put_next(create('_expandafter'),
@@ -780,10 +781,11 @@ define_lua_command("_replstring", function()
             end
         end
     end
-    put_next(rbrace)
-    put_next(macro_body)
-    put_next(create('_immediateassignment'),
-    create('_def'),macro_name,lbrace)
+    tex.runtoks(function()    
+        put_next(rbrace)
+        put_next(macro_body)
+        put_next(def_token,macro_name,lbrace)
+    end)
 end)
 
    -- History:
