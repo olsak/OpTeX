@@ -184,6 +184,72 @@
    node.write(n)
 }}
 
+\_trick 0136 \xreplstring ;
+
+\_directlua{%
+local scan_toks = token.scan_toks
+local put_next = token.put_next
+local create = token.create
+local lbrace = create(string.byte('{'))
+local rbrace = create(string.byte('}'))
+define_lua_command('xreplstring', function()
+    local macro_name = create(token.scan_csname())
+    put_next(create'_expandafter',
+    lbrace,macro_name,rbrace)
+    local macro_body = scan_toks(false,false)
+    local nested = token.scan_keyword('nested')
+    local find = scan_toks(false,false)
+    local replace = scan_toks(false,false)
+    local find_length = \_csstring\#find
+    local replace_length = \_csstring\#replace
+    local range = \_csstring\#macro_body - find_length + 1
+    local i = 1
+    local nested_level = 0
+    while i <= range do
+        if not nested then
+            if macro_body[i].tok == lbrace.tok then
+               nested_level = nested_level + 1
+            elseif macro_body[i].tok == rbrace.tok then
+               nested_level = nested_level - 1
+            end
+        end
+        if nested_level > 0 then i = i+1 else
+            for j = 0, find_length - 1 do
+                if not nested then
+                    if macro_body[i + j].tok == lbrace.tok then
+                        nested_level = nested_level + 1
+                        i = i+j+1
+                      break
+                    end
+                end
+                if (macro_body[i + j].tok \_csstring\~= find[j+1].tok) then
+                    i = i+j+1
+                  break
+                else
+                    if j == find_length - 1 then
+                        for t = 0, find_length - 1 do
+                            table.remove(macro_body,i)
+                        end
+                        for t = 0, replace_length - 1 do
+                            table.insert(macro_body,i+t,replace[t+1])
+                        end
+                            range = \_csstring\#macro_body - find_length + 1
+                            i = i+replace_length
+                      break
+                    end
+                end
+            end
+        end
+    end
+    put_next(rbrace)
+    put_next(macro_body)
+    put_next(create'_def',macro_name,lbrace)
+    if macro_name.protected then
+        put_next(create'_protected')
+    end
+end)
+}
+\_let\xreplstring=\xreplstring % we want to keep the meanig after group
 
 \_trick 0078 \algol ;
 %%%%%%%%%%%%
@@ -849,6 +915,7 @@
 
 \_endcode
 
+2024-05-02 \xreplstring added
 2024-04-15 \directchar added
 2024-03-21 \rebox added
 2024-03-19 \shownodes added

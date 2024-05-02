@@ -244,6 +244,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#directchar">Printig a character regardless font ligature setting</a>
     <li><a href="#selnolig">Selective suppression of ligatures</a>
     <li><a href="#timer">Measuring elapsed time of OpTeX processing</a>
+    <li><a href="#xreplstring">Expandable replstring with more features</a>
 </ul>
 
 <li>Sections
@@ -5847,6 +5848,94 @@ by \timerprint because LuaLaTeX initializes many Lua routines (like luaotfload) 
 
 <p CLASS=datum>(0128) -- Yiannis Lazarides, P. O. 2023-12-07<p>
 <hr>
+
+<h2><a name="xreplstring"></a>Expandable \replstring with more features</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\xreplstring
+</p>
+
+<p>The classical \replstring macro doesn't work well in special cases:
+\def\tmpb{xx{yy}xx} \replstring\tmpb{xx}{zz}, result is zzyyzz, braces are lost
+due to classical TeX behavior with macros with separated parameters.
+We keep this bug as a curiosity because re-implementation needs to create
+more complicated and time consuming macro. If it isn't an obstacle for
+you, then you can use following implementation \xreplstring. It behaves like
+\replstring, removes mentioned bug and is based on Lua code.
+
+<p>Moreover, \xreplstring adds new features: ...
+
+<pre>
+\directlua{%
+local scan_toks = token.scan_toks
+local put_next = token.put_next
+local create = token.create
+local lbrace = create(string.byte('{'))
+local rbrace = create(string.byte('}'))
+define_lua_command('xreplstring', function()
+    local macro_name = create(token.scan_csname())
+    put_next(create'_expandafter',
+    lbrace,macro_name,rbrace)
+    local macro_body = scan_toks(false,false)
+    local nested = token.scan_keyword('nested')
+    local find = scan_toks(false,false)
+    local replace = scan_toks(false,false)
+    local find_length = \csstring\#find
+    local replace_length = \csstring\#replace
+    local range = \csstring\#macro_body - find_length + 1
+    local i = 1
+    local nested_level = 0
+    while i &lt= range do
+        if not nested then
+            if macro_body[i].tok == lbrace.tok then
+                nested_level = nested_level + 1
+            elseif macro_body[i].tok == rbrace.tok then
+                nested_level = nested_level - 1
+            end
+        end
+        if nested_level > 0 then i = i+1 else
+            for j = 0, find_length - 1 do
+                if not nested then
+                    if macro_body[i + j].tok == lbrace.tok then
+                        nested_level = nested_level + 1
+                        i = i+j+1
+                      break
+                    end
+                end
+                if (macro_body[i + j].tok \csstring\~= find[j+1].tok) then
+                    i = i+j+1
+                  break
+                else
+                    if j == find_length - 1 then
+                        for t = 0, find_length - 1 do
+                            table.remove(macro_body,i)
+                        end
+                        for t = 0, replace_length - 1 do
+                            table.insert(macro_body,i+t,replace[t+1])
+                        end
+                            range = \csstring\#macro_body - find_length + 1
+                            i = i+replace_length
+                      break
+                    end
+                end
+            end
+        end
+    end
+    put_next(rbrace)
+    put_next(macro_body)
+    put_next(create'_def',macro_name,lbrace)
+    if macro_name.protected then
+        put_next(create'_protected')
+    end
+end)
+}
+</pre>
+
+See also <a href="https://github.com/olsak/OpTeX/issues/173">this discussion</a>.
+
+<p CLASS=datum>(0136) -- Udi-Fogiel, 2024-05-02<p>
+<hr>
+
 
 <p CLASS="lmarg">Sections</p>
 

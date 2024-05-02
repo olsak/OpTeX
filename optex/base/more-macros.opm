@@ -216,6 +216,10 @@
    \def\replAB#1{\immediateassigned{\def\tmp{#1}\replstring\tmp{A}{B}}\the\_tmptoks}
    \replAB {text A \and A} % expands to "text B \and B"
    \endtt
+
+   There exists another limitation of the \^`\replstring` macro, see
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#xreplstring]{\OpTeX/ trick 0136}.
+   The expandable \^`\xreplstring` macro is defined by Lua code here.
    \_cod -----------------------------
 
 \_newtoks\_tmptoks
