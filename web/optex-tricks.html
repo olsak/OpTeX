@@ -5863,8 +5863,35 @@ more complicated and time consuming macro. If it isn't an obstacle for
 you, then you can use following implementation \xreplstring. It behaves like
 \replstring, removes mentioned bug and is based on Lua code.
 
-<p>Moreover, \xreplstring adds new features: ...
+<p>Moreover, \xreplstring adds new features:
 
+<uL>
+<li>The full syntax of \xreplstring is
+<pre>
+\xreplstring\macro [nested]{textA}{textB}.
+</pre>
+If the optional nested keyword is present, \xreplstring will replace textA even if it
+is nested inside groups, for example \def\tmpb{x{yy}x} \replstring\tmpb nested{yy}{zz},
+result is x{zz}x. In addition, when using this keyword, balanced braces are allowed in textA.
+
+<li>After one expansion \xreplstring\macro{textA}{textB} expands to
+\_def\macro{macro body after replacement} (or prefixed with \_protected if \macro is protected),
+thus protected macros stays protected after replacement, and it is possible to use prefixes such
+as \global (for a global replacement), or \immediateassignment, if the latter is used, after
+one expansion \macro is redefined and nothing is left in the input stream.
+
+<li>The first argument of \xreplstring must be an unbraced macro, you can't use
+\xreplstring{\macro}{a}{b}. The last two arguments are scanned similar to the argument
+of \detokenize. If you want to expand the last arguments once you
+can do
+<pre>
+\def\foo{a{ab}b}
+\def\bar{ab}
+\def\baz{c}
+\xreplstring\foo nested\ea{\bar}\ea{\baz}
+</pre>
+</ul>
+The implementation:
 <pre>
 \directlua{%
 local scan_toks = token.scan_toks
@@ -5903,7 +5930,7 @@ define_lua_command('xreplstring', function()
                     end
                 end
                 if (macro_body[i + j].tok \csstring\~= find[j+1].tok) then
-                    i = i+j+1
+                    i = i+1
                   break
                 else
                     if j == find_length - 1 then

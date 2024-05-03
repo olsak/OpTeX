@@ -223,7 +223,7 @@ define_lua_command('xreplstring', function()
                     end
                 end
                 if (macro_body[i + j].tok \_csstring\~= find[j+1].tok) then
-                    i = i+j+1
+                    i = i+1
                   break
                 else
                     if j == find_length - 1 then
@@ -247,9 +247,8 @@ define_lua_command('xreplstring', function()
     if macro_name.protected then
         put_next(create'_protected')
     end
-end)
+end,'global') % we want to keep the meanig after group
 }
-\_let\xreplstring=\xreplstring % we want to keep the meanig after group
 
 \_trick 0078 \algol ;
 %%%%%%%%%%%%
