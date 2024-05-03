@@ -5865,11 +5865,9 @@ you, then you can use following implementation \xreplstring. It behaves like
 
 <p>Moreover, \xreplstring adds new features:
 
-<uL>
-<li>The full syntax of \xreplstring is
-<pre>
+<ul>
+<li>The full syntax is
 \xreplstring\macro [nested]{textA}{textB}.
-</pre>
 If the optional nested keyword is present, \xreplstring will replace textA even if it
 is nested inside groups, for example \def\tmpb{x{yy}x} \replstring\tmpb nested{yy}{zz},
 result is x{zz}x. In addition, when using this keyword, balanced braces are allowed in textA.
@@ -5884,13 +5882,13 @@ one expansion \macro is redefined and nothing is left in the input stream.
 \xreplstring{\macro}{a}{b}. The last two arguments are scanned similar to the argument
 of \detokenize. If you want to expand the last arguments once you
 can do
-<pre>
-\def\foo{a{ab}b}
-\def\bar{ab}
-\def\baz{c}
-\xreplstring\foo nested\ea{\bar}\ea{\baz}
-</pre>
 </ul>
+<pre>
+     \def\foo{a{ab}b}
+     \def\bar{ab}
+     \def\baz{c}
+     \xreplstring\foo nested\ea{\bar}\ea{\baz}
+</pre>
 The implementation:
 <pre>
 \directlua{%
