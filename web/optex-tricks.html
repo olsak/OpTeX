@@ -241,10 +241,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#runsystem">Running system commands during document processing</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
-    <li><a href="#directchar">Printig a character regardless font ligature setting</a>
+    <li><a href="#directchar">Printing a character regardless font ligature setting</a>
     <li><a href="#selnolig">Selective suppression of ligatures</a>
     <li><a href="#timer">Measuring elapsed time of OpTeX processing</a>
     <li><a href="#xreplstring">Expandable replstring with more features</a>
+    <li><a href="#replmacro">Patching macros using regular expressions</a>
 </ul>
 
 <li>Sections
@@ -4817,7 +4818,7 @@ the hash characters (catcode 6 transformed to catcode 12) are not duplicated.
 <p>You can define
 
 <pre>
-\def\xdetokenize#1{\directlua{tex.sprint(-2,"\luaescapestring{#1}")}}
+\def\xdetokenize#1{\directlua{tex.sprint(-2,"\luaescapestring{\unexpanded{#1}}")}}
 </pre>
 
 <p>Then the \xdetokenize expands to the result like \detokenize but each hash
@@ -5691,7 +5692,7 @@ the answer at the stack exchange site</a>.
 <p CLASS=datum>(0114) -- Max Chernoff, 2023-06-27<p>
 <hr>
 
-<h2><a name="directchar"></a>Printig a character regardless font ligature setting</h2>
+<h2><a name="directchar"></a>Printing a character regardless font ligature setting</h2>
 
 <p CLASS="rmarg">
 autoload:<br>\directchar
@@ -5961,6 +5962,98 @@ See also <a href="https://github.com/olsak/OpTeX/issues/173">this discussion</a>
 <p CLASS=datum>(0136) -- Udi-Fogiel, 2024-05-02<p>
 <hr>
 
+<h2><a name="replmacro"></a>Patching macros using regular expressions</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\replmacro
+</p>
+<p>The OpTeX's \replstring macro enables to do only simple substitutions in
+macros with no parameters. We create more general \replmacro macro which
+enables arbitrary modification of existing macro (maybe with parameters).
+The modification is done using Lua string.gsub() function, which is based on
+regular expressions, see section 6.4.1 of Lua documentation for more
+information.
+
+<p>The \replmacro has following syntax:
+<pre>
+\replmacro \sequence {prefixes} {parameters} {body} {body2}
+</pre>
+
+<p>where \sequence must be defined as a macro and it is re-defined by
+\replmacro. The substitution rules given by {prefixes}, {parameters},
+{body} and {body2} are applied to the existing prefixes, parameters and body
+of the \sequence macro. The substitution rule can be
+<ul>
+<li>{} ... no changes are done, or
+<li>{"pattern","repl"} ... the pattern is substituted
+    by repl in all occurrences of the pattern, or
+<li>{"pattern","repl",num} ... the pattern is substituted
+    by repl in first num occurrences of the pattern.
+</ul>
+<p>See also string.gsub() in section 6.4 of Lua documentation.
+
+<p>The substitution rule {body2} is typically empty.
+If it isn't then it is applied to the
+body of the macro just after {body} rule but before the macro is newly
+defined. This enables (for instance) to replace the occurrences of
+{ using {body} rule and } using {body2} rule, i.e. the resulting
+body of the macro is balanced text again before it is defined.
+
+<p>The \replmacro expands the given macro by \meaning primitive first (i.e.
+there are tokens with only 12 and 10 category codes).
+Then it divides the \meaning output to three parts: prefixes (like
+\protected\long), macro parameters (like #1:#2) and body of the macro. Then
+each part is modified by string.gsub() individually by the relevant rule
+and finally, the macro is newly defined with current setting of category codes.
+
+<p>Specific characters used in pattern and repl should be escaped:
+<ul>
+<li>Special TeX characters \{}#~% must be escaped by backslash, for example
+    \\, \%, \~ . The {} don't have to be escaped if they form a balanced text.
+<li>The character " must be escaped by backslash if it is treated as normal
+    character between "...".
+<lI>The pattern magic characters ^$()%.[]*+-? have to be
+    escaped in pattern declaration by \% if they are treated as normal
+    characters. For example \%[ is normal [ or \%\% is normal
+    percent character.
+</ul>
+
+<p>For example, after
+<pre>
+\protected\long \def\macro #1:#2{(#2)(#1)}
+\replmacro\macro {"\\protected",""} {"$","(\#3)"} {"^", "\\run{\#3}"} {}
+</pre>
+<p>
+the \macro is re-defined to be equivalent to
+<pre>
+\long \def\macro #1:#2(#3){\run{#3}(#2)(#1)}
+</pre>
+<p>because "$" means end of string and ^ means beginning of the string.
+
+<p>The implementation:
+<pre>
+\def\replmacro #1{\ea\replmacroA\ea#1\meaning#1\relax}
+\def\replmacroA #1#2:#3->#4\relax#5#6#7#8{%
+   {\let\\=\nbb \edef\"{\string\"}%
+    \xargs\replmacroB \{\}\$\&amp;\#\^\~;\ea
+   }\ea\replmacroC\ea#1\directlua{
+      local prefixes="\luaescapestring{#2}"
+      local params="\luaescapestring{#3}"
+      local body="\luaescapestring{#4}"
+      prefixes = string.gsub(prefixes,"macro","")
+      \ifx;#5;\else prefixes = string.gsub(prefixes, #5)\fi
+      \ifx;#6;\else params   = string.gsub(params, #6)\fi
+      \ifx;#7;\else body     = string.gsub(body, #7)\fi
+      \ifx;#8;\else body     = string.gsub(body, #8)\fi
+      tex.sprint("{"..prefixes.."}{"..params.."}{"..body.."}")
+   }%
+}
+\def\replmacroB #1{\edef#1{\csstring#1}}
+\def\replmacroC #1#2#3#4{\useit#2\def#1#3{#4}}
+</pre>
+
+<p CLASS=datum>(0137) -- P. O. 2024-05-06<p>
+<hr>
 
 <p CLASS="lmarg">Sections</p>
 

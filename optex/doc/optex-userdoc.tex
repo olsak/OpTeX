@@ -1920,23 +1920,26 @@ dispalys line numbers of the marked text in the margin.
 \tpg[rebox]\t\rebox\
 modifies the vbox: its width will be equal to the wider line.
 
+\tpg[replmacro]\t\replmacro\
+enables to patch existing macros using regular expression rules.
+
 \tpg[roundframe]\t\roundframe\
 colored frames with rounded corners and many options.
-
-\tpg[shadedframe]\t\shadedframe\
-colored rectangular frames with simple shadows.
-
-\tpg[shownodes]\t\shownodes\
-prints the list of nodes to the terminal.
-
-\tpg[scaleto]\t\scaleto, \t\scaletof\
-text font size changed to the desired width.
 
 \tpg[runsystem]\t\runsystem\
 runs the given external system command.
 
+\tpg[shadedframe]\t\shadedframe\
+colored rectangular frames with simple shadows.
+
+\tpg[scaleto]\t\scaleto, \t\scaletof\
+text font size changed to the desired width.
+
 \tpg[seccc]\t\seccc, \t\iniseccc\
 implements new level of subsubsections.
+
+\tpg[shownodes]\t\shownodes\
+prints the list of nodes to the terminal.
 
 \tpg[dayw]\t\sethours, \t\setminutes, \t\setseconds, \t\setweekday\
 printing time, date, and day of week.
@@ -2028,7 +2031,6 @@ behaves like \~`\replstring` but is expandable and adds more features.
 
 ~hyperlinks' {color-in}{color-out} % PDF links activate as clickable
 ~outlines' {level}   % PDF will have a table of contents in the left tab
-
 ~magscale'[factor]  % resize typesetting, line/page breaking unchanged
 ~margins'/pg format (left, right, top, bottom)unit % margins setting
 ~report' ~letter' ~slides'  % style declaration macros

@@ -220,6 +220,8 @@
    There exists another limitation of the \^`\replstring` macro, see
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#xreplstring]{\OpTeX/ trick 0136}.
    The expandable \^`\xreplstring` macro is defined by Lua code here.
+   And \ulink[http://petr.olsak.net/optex/optex-tricks.html\#replmacro]{\OpTeX/ trick 0137}
+   defines \^`\replmacro` which enables more general modifications of macros by regular expressions.
    \_cod -----------------------------
 
 \_newtoks\_tmptoks
