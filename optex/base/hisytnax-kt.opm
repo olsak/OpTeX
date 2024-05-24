@@ -1,0 +1,122 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+%% Author: Vojtěch Hořánek, <https://github.com/vojta-horanek/hisyntax-kt>
+
+\_codedecl \_hisyntaxkt {Syntax highlighting for Kotlin sources <2024-05-18>}
+
+\_newtoks \_hisyntaxkt  \_newtoks \_hicolorskt
+
+\_global\_hicolorskt={     % colors for Kotlin language
+   \_hicolor C \Grey       % Comments
+   \_hicolor D \Green      % Documentation comments
+   \_hicolor W \Yellow     % Warnings
+   \_hicolor S \Green      % Strings   
+   \_hicolor K \Blue       % Keywords
+   \_hicolor F \Blue       % Std. functions
+   \_hicolor A \Yellow     % Annotations
+   \_hicolor N \Cyan       % Numbers
+   \_hicolor T \Brown      % Templates
+   \_hicolor I \Grey       % Imports
+   \_hicolor O \Magenta    % Others
+}
+
+\_global\_hisyntaxkt={%
+   \_the\_hicolorskt
+   \_let\c=\_relax \_let\e=\_relax \_let\o=\_relax
+   % comments
+   \_replthis   {FIXME}          {\z W{FIXME}}%               FIXME in comment
+   \_replthis   {TODO}           {\z W{TODO}}%                TODO in comment
+   \_replfromto {/**}{*/}        {\x D{/**#1*/}}%             /**...*/ documentation
+   \_replfromto {/*}{*/}         {\x C{/*#1*/}}%              /*...*/ multi-line
+   \_replfromto {//}{^^J}        {\z C{//#1}^^J}%             //... single-line
+   % strings
+   \_replfromto {\_csstring\$\_csstring\{}{\_csstring\}}%     string template expression ${tmp}
+                {\z T{\_csstring\$\_csstring\{#1\_csstring\}}}%
+   \_replfromto {\_csstring\$}{\n}  {\x T{\_csstring\$#1}}%   string template $tmp
+   \_replthis   {\_string\"}     {{\_string\"}}%              \" string escape
+   \_replfromto {"}{"}           {\x S{"#1"}}%                "..." string
+   % characters
+   \_replthis   {\_string\'}     {{\_string\'}}%              \' char escape
+   \_replfromto {'}{'}           {\x S{'#1'}}%                '.' character
+   % others
+   \_replfromto {\n@}{\n}        {\z A{@#1}}%                 annotations
+   \_replfromto {package}{^^J}   {\z K{package}\z I{#1}^^J}%  package...
+   \_replfromto {import}{^^J}    {\z K{import}\z I{#1}^^J}%   import...
+   \_replfromto {return@}{\n}    {\z K{return}\z O{@#1}}%     return@...
+   \_replfromto {continue@}{\n}  {\z K{continue}\z O{@#1}}%   continue@...
+   \_replfromto {break@}{\n}    {\z K{break}\z O{@#1}}%       break@...
+   % Special characters
+   \_replthis{;}{\z C{;}} % semi-collon
+   \_replthis{?:}{\n\o?:\n} % elvis operator
+   \_edef\_tmpa {()\_string{\_string}+-*/=[]<>,:\_pcent\_string&|!}% non-letters
+   \_ea \_foreach \_tmpa 
+      \_do {\_replthis{#1}{\n\o#1\n}}
+   %
+   \_foreach % keywords
+      {as}{as?}{break}{class}{continue}{do}{else}{false}{for}{fun}%
+      {if}{in}{!in}{interface}{is}{!is}{null}{object}{package}%
+      {return}{super}{this}{throw}{true}{try}{typealias}{typeof}%
+      {val}{var}{when}{while}{by}{catch}{constructor}{dynamic}%
+      {finally}{get}{import}{init}{set}{value}{class}{where}%
+      {abstract}{actual}{annotation}{companion}{const}{crossinline}%
+      {data}{enum}{expect}{external}{final}{infix}{inline}{inner}%
+      {internal}{lateinit}{noinline}{open}{operator}{out}{override}%
+      {private}{protected}{public}{reified}{sealed}{suspend}{tailrec}%
+      {vararg}{it}{equals}{compareTo}{get()}{get}{set}{set(value)}%
+      \_do {\_replthis{\n#1\n}{\z K{#1}}}
+   %
+   \_foreach % standard library extension functions
+      {all}{also}{any}{apply}{asIterable}{asSequence}{associate}%
+      {associateBy}{associateByTo}{associateTo}{associateWith}%
+      {associateWithTo}{average}{chunked}{contains}{count}{distinct}%
+      {distinctBy}{drop}{dropLast}{dropLastWhile}{dropWhile}{elementAt}%
+      {elementAtOrElse}{elementAtOrNull}{filter}{filterIndexed}%
+      {filterIndexedTo}{filterIsInstance}{filterIsInstanceTo}{filterNot}%
+      {filterNotNull}{filterNotNullTo}{filterNotTo}{filterTo}{find}%
+      {findLast}{first}{firstNotNullOf}{firstNotNullOfOrNull}%
+      {firstOrNull}{flatMap}{flatMapIndexed}{flatMapIndexedTo}%
+      {flatMapTo}{fold}{foldIndexed}{foldRight}{foldRightIndexed}%
+      {forEach}{forEachIndexed}{getOrElse}{getOrNull}{groupBy}%
+      {groupByTo}{groupingBy}{indexOf}{indexOfFirst}{indexOfLast}%
+      {intersect}{iterator}{joinTo}{joinToString}{last}{lastIndexOf}%
+      {lastOrNull}{let}{map}{mapIndexed}{mapIndexedNotNull}%
+      {mapIndexedNotNullTo}{mapIndexedTo}{mapNotNull}{mapNotNullTo}%
+      {mapTo}{max}{maxBy}{maxByOrNull}{maxOf}{maxOfOrNull}{maxOfWith}%
+      {maxOfWithOrNull}{maxOrNull}{maxWith}{maxWithOrNull}{min}{minBy}%
+      {minByOrNull}{minOf}{minOfOrNull}{minOfWith}{minOfWithOrNull}%
+      {minOrNull}{minus}{minusElement}{minWith}{minWithOrNull}{none}%
+      {onEach}{onEachIndexed}{partition}{plus}{plusElement}{random}%
+      {randomOrNull}{reduce}{reduceIndexed}{reduceIndexedOrNull}%
+      {reduceOrNull}{reduceRight}{reduceRightIndexed}%
+      {reduceRightIndexedOrNull}{reduceRightOrNull}{repeat}%
+      {requireNoNulls}{reverse}{reversed}{runningFold}%
+      {runningFoldIndexed}{runningReduce}{runningReduceIndexed}{scan}%
+      {scanIndexed}{shuffle}{single}{singleOrNull}{slice}{sortBy}%
+      {sortByDescending}{sortDescending}{sorted}{sortedBy}%
+      {sortedByDescending}{sortedDescending}{sortedWith}{subtract}{sum}%
+      {sumBy}{sumByDouble}{sumOf}{take}{takeIf}{takeLast}%
+      {takeLastWhile}{takeUnless}{takeWhile}{toBooleanArray}%
+      {toByteArray}{toCharArray}{toCollection}{toDoubleArray}%
+      {toFloatArray}{toHashSet}{toIntArray}{toList}{toLongArray}%
+      {toMutableList}{toMutableSet}{toSet}{toShortArray}{union}%
+      {windowed}{withIndex}{zip}{zipWithNext}{contract}%
+      \_do {\_replthis{.#1\n}{.\z F{#1}}%
+           \_replthis{\n#1\n}{\z F{#1}}}% invoke operators ( and { begin with \n 
+   %
+   \_replthis{.}{\n.\n} % numbers
+   \_foreach 0123456789
+      \_do {\_replfromto{\n#1}{\n}{\c#1##1\e}}
+   \_replthis{\e.\c}{.}
+   \_replthis{\e.\n}{.\e}
+   \_replthis{\n.\c}{\c.}
+   \_replthis{e\e\o+\c}{e+}\_replthis{e\e\o-\c}{e-}
+   \_replthis{E\e\o+\c}{E+}\_replthis{E\e\o-\c}{E-}
+   \_def\c#1\e{\z N{#1}}
+   \_def\o#1{\z O{#1}} % others
+}
+
+\_endcode %------------------------------------------------
+
+
+\endinput
+
+2024-05-18: First version
