@@ -235,12 +235,6 @@ function callback.add_to_callback(name, fn, description)
         err("missing description when adding a callback to '%s'", name)
     end
 
-    for _, desc in ipairs(callback_description[name] or {}) do
-        if desc == description then
-            err("for callback '%s' there already is '%s' added", name, description)
-        end
-    end
-
     if type(fn) ~= "function" then
         err("expected Lua function to be added as '%s' for callback '%s'", description, name)
     end
