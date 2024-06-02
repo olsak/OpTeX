@@ -743,6 +743,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2024-06-02 more checking in add_to_callback and remove_from_callback
    -- 2024-02-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
    -- 2022-08-24 luaotfload transparency with attributes added

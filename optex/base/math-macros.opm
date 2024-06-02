@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2023-05-24>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2024-06-02>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -33,18 +33,18 @@
 
 \_newifi\_ifmathsb   \_mathsbfalse
 \_def \_mathsbon {%
-   \_directlua{
+   \_ifmathsb \_else \_directlua{
    callback.add_to_callback("process_input_buffer",
      function (str)
         local num
         str, num = string.gsub(str.." ", \_gsubrule)
         if num>0 then str = string.gsub(str, \_gsubrule) end % \phi_i\rho_j -> \phi _i\rho _j
         return str
-     end, "_mathsb") }%
+     end, "_mathsb") }\_fi
    \_global\_mathsbtrue
 }
 \_def \_mathsboff {%
-   \_directlua{ callback.remove_from_callback("process_input_buffer", "_mathsb") }%
+   \_ifmathsb \_directlua{ callback.remove_from_callback("process_input_buffer", "_mathsb") }\_fi
    \_global \_mathsbfalse
 }
 \_edef\_gsubrule{"(\_nbb[a-zA-Z]+)_([a-zA-Z]?[^_a-zA-Z])", "\_pcent 1 _\_pcent 2"}
@@ -1110,6 +1110,7 @@
 
 \_endcode %---------------------------------------------------
 
+2024-06-02 don't apply \mathsbon twice
 2023-05-24 \matsbon: "local num" added
 2023-05-22 \mathsbon: \alpha_i\beta_j -> \alpha _i\beta _j (bug fixed)
 2023-04-15 \bbig introduced
