@@ -12,7 +12,8 @@ local optex = _ENV.optex or {}
 _ENV.optex = optex
 
 -- Error function used by following functions for critical errors.
-local function err(message)
+local function err(...)
+    local message = fmt(...)
     error("\nerror: "..message.."\n")
 end
 --
@@ -192,11 +193,11 @@ local valid_callback_types = {
 -- `call_callback`. A default function is only needed by "exclusive" callbacks.
 function callback.create_callback(name, cbtype, default)
     if callback_types[name] then
-        err("cannot create callback '"..name.."' - it already exists")
+        err("cannot create callback '%s' - it already exists", name)
     elseif not valid_callback_types[cbtype] then
-        err("cannot create callback '"..name.. "' with invalid callback type '"..cbtype.."'")
+        err("cannot create callback '%s' with invalid callback type '%s'", name, cbtype)
     elseif ctype == "exclusive" and not default then
-        err("unable to create exclusive callback '"..name.."', default function is required")
+        err("unable to create exclusive callback '%s', default function is required", name)
     end
 
     callback_types[name] = cbtype
@@ -227,7 +228,21 @@ function callback.add_to_callback(name, fn, description)
             return call_callback(name, ...)
         end)
     else
-        err("cannot add to callback '"..name.."' - no such callback exists")
+        err("cannot add '%s' to callback '%s' - no such callback exists", description, name)
+    end
+
+    if not description or description == "" then
+        err("missing description when adding a callback to '%s'", name)
+    end
+
+    for _, desc in ipairs(callback_description[name] or {}) do
+        if desc == description then
+            err("for callback '%s' there already is '%s' added", name, description)
+        end
+    end
+
+    if type(fn) ~= "function" then
+        err("expected Lua function to be added as '%s' for callback '%s'", description, name)
     end
 
     -- add function to callback list for this callback
@@ -249,6 +264,10 @@ function callback.remove_from_callback(name, description)
             index = i
             break
         end
+    end
+
+    if not index then
+        err("can't remove '%s' from callback '%s': not found", description, name)
     end
 
     table.remove(descriptions, index)
@@ -293,7 +312,7 @@ function callback.call_callback(name, ...)
     local functions = callback_functions[name] or {default_functions[name]}
 
     if cbtype == nil then
-        err("cannot call callback '"..name.."' - no such callback exists")
+        err("cannot call callback '%s' - no such callback exists", name)
     elseif cbtype == "exclusive" then
         -- only one function, atleast default function is guaranteed by
         -- create_callback
@@ -483,7 +502,7 @@ callback.add_to_callback("finish_pdffile", function()
         local obj = resource_dict_objects[type]
         pdf.immediateobj(obj, tostring(dict))
     end
-end)
+end, "_pageresources")
 --
 -- \medskip\secc[lua-colors] Handling of colors and transparency using attributes^^M
 --
