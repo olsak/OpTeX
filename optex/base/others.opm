@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2023-12-23>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2024-06-27>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -145,7 +145,8 @@
    the `<cs-name>`.
    \_cod -----------------------------
 
-\_def\_regtrick#1{\_ifx#1\_undefined\_def#1{\_loadtrick#1#1}\_else\_badtrick\_fi}
+\_def\_regtrick#1{\_ifx#1\_undefined\_def#1{\_loadtrickD#1}\_else\_badtrick\_fi}
+\_def\_loadtrickD#1{\_loadtrick#1#1}
 \_def\_loadtrick#1{\_beglocalcontrol
    \_resetnamespace{optextrick}\_setctable\_optexcatcodes
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
@@ -243,6 +244,7 @@
 
 \_endcode
 
+2024-06-27 \_loadtrickD introduced in order to save format size.
 2024-03-11 \_lipsumload+\_loadtrick: \vpack used instead \vbox.
 2024-03-04 \_beglocalcontrol used in \_lipsumload.
 2024-02-18 \_beglocalcontrol used in \_loadtrik.
