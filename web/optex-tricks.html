@@ -6071,7 +6071,28 @@ the \macro is re-defined to be equivalent to
 
 <h2><a name="luaif"></a>Conditionals evaluated by Lua</h2>
 
-...
+We can write conditionals in Lua language, i.e. we can use ==, >=,
+&amp;=, &amp;, >, and, or, not, parentheses in such conditionals.
+For example, after
+\def\a{3} and \def\b{5}, we can write
+<pre>
+\luaif {\a>=0}  \iftrue yes \else no \fi % returns yes
+\luaif {\a==\b} \iftrue yes \else no \fi % returns no
+\luaif {\a>=0 and (\a>0 and \b>0)} \iftrue yes \else no \fi % returns yes
+</pre>
+
+<p>Note, you cannot use ~= relation because ~ is active macro in TeX. The
+following implemnation introduces \x macro with usage \x= instead ~=. If you
+are using \luaif in you macros for a package, define \.x and use \.x= (i.e.
+in your name space) because \x is a control sequence probably used by a user
+for another purposes.
+
+<p>The implementation:
+
+<pre>
+\def\luaif#1#2{\directlua{if not(#1) then tex.print("\_nbb unless") end}#2}
+\edef\x{\csstring~}
+</pre>
 
 <p CLASS=datum>(0138) -- P. O. 2024-05-06<p>
 <hr>
