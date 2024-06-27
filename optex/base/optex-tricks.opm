@@ -341,6 +341,22 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\ignoreinspic{\_let\_inspicB=\.inspicBnew}
 
+\_trick 0040 \tdnum ;
+%%%%%%%%%%%%
+
+\_def\tdnum #1 {\_isinlist{#1}{.}\_iftrue \_ea\.tdnumG \_else \_ea\.tdnumH \_fi #1\_end}
+\_def\.tdnumG #1.#2\_end {\.tdnumH#1\_end \.decdot \.tdnumB #2\_empty\_empty\_empty}
+\_def\.tdnumH#1\_end{\.tdnumA #1\_empty\_empty\_empty #1\_empty}
+\_def\.tdnumA #1#2#3{\_xcasesof
+   {\_ifx #1\_empty} {\.tdnumB}
+   {\_ifx #2\_empty} {\.tdnumB{}}
+   {\_ifx #3\_empty} {\_ea\.tdnumB\_ignoreit}
+   \_finc          {\.tdnumA}
+}
+\_def\.tdnumB #1#2#3#4{#1#2#3\_ifx#4\_empty\_else \.numsep \_ea\.tdnumB\_ea#4\_fi}
+\_def\.numsep{\,}
+\_def\.decdot{.}
+
 \_trick 0047 \style m \keepstyle ;
 %%%%%%%%%%%%
 

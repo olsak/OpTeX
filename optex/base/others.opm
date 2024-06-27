@@ -166,7 +166,7 @@
    \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
    \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground
    \onlyifnew \thedimen \rebox \leftfill \rightfill \lrfill \directchar
-   \xreplstring \replmacro ;
+   \xreplstring \replmacro \tdnum ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc -----------------------------

@@ -200,7 +200,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
     <li><a href="#import">The import package</a>
-    <li><a href="#num">Numbers printed in three-digits groups</a>
+    <li><a href="#tdnum">Numbers printed in three-digits groups</a>
     <li><a href="#scantok">Expandable token-per-token scanner</a>
     <li><a href="#paramspaced">Parameter separated by space or end-group</a>
     <li><a href="#balancing">Nested brackets of another type than {}</a>
@@ -246,6 +246,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#timer">Measuring elapsed time of OpTeX processing</a>
     <li><a href="#xreplstring">Expandable replstring with more features</a>
     <li><a href="#replmacro">Patching macros using regular expressions</a>
+    <li><a href="#luaif">Conditionals evaluated by Lua</a>
 </ul>
 
 <li>Sections
@@ -2910,8 +2911,8 @@ numbers aligned by decimal point.
 first column runs the scanner \scannum which reads the number separated by
 space. It means that we must write space after numbers and before &amp; or \cr.
 
-<p>There exists more powerfull macro \num which can be used in tables
-too, see <a href="#num">OpTeX trick 0040</a>.
+<p>There exists more powerfull macro \tdnum which can be used in tables
+too, see <a href="#tdnum">OpTeX trick 0040</a>.
 
 <p CLASS=datum>(0039) -- P. O. 2021-02-06<p>
 <hr>
@@ -3770,6 +3771,9 @@ have the whole construction \if-skipable.
    Yes \else No \fi
 </pre>
 
+<p>See also another approach:
+<a href="#luaif">conditional evaluated by Lua</a>
+
 <p CLASS=datum>(0019) -- P. O. 2020-05-27<p>
 <hr>
 
@@ -4040,6 +4044,10 @@ in imported files. So, we need not to define \subimport.
 
 <h2><a name="num"></a>Numbers printed in three-digits groups</h2>
 
+<p CLASS="rmarg">
+autoload:<br>\tdnum
+</p>
+
 <p>The long number should be printed with spaces (or another symbol
 depending on used language) with three-digits groups. For example:
 
@@ -4049,37 +4057,43 @@ depending on used language) with three-digits groups. For example:
          25.145 17
 </pre>
 
-<p>We can write \num 2365121 or \num 10115.1 or \num 25.14517 and the
-grouping will be calculated by the macro.
+<p>We can write \tdnum 2365121 or \tdnum 10115.1 or \tdnum 25.14517 and the
+grouping will be calculated by the macro. The name \tdnum means
+Three-Digits-NUMber-format. The macro is fully expandable.
 
 <pre>
-\def\num #1 {\isinlist{#1}{.}\iftrue \ea\numG \else \ea\numH \fi #1\end}
-\def\numG #1.#2\end {\numH#1\end \decimaldot \numB #2\empty\empty\empty}
-\def\numH#1\end{\numA #1\empty\empty\empty #1\empty}
-\def\numA #1#2#3{\xcasesof
-   {\ifx #1\empty} {\numB}
-   {\ifx #2\empty} {\numB{}}
-   {\ifx #3\empty} {\ea\numB\ignoreit}
-   \_finc          {\numA}
+\def\tdnum #1 {\isinlist{#1}{.}\iftrue \ea\tdnumG \else \ea\tdnumH \fi #1\end}
+\def\tdnumG #1.#2\end {\tdnumH#1\end \decdot \tdnumB #2\empty\empty\empty}
+\def\tdnumH#1\end{\tdnumA #1\empty\empty\empty #1\empty}
+\def\tdnumA #1#2#3{\xcasesof
+   {\ifx #1\empty} {\tdnumB}
+   {\ifx #2\empty} {\tdnumB{}}
+   {\ifx #3\empty} {\ea\tdnumB\ignoreit}
+   \_finc          {\tdnumA}
 }
-\def\numB #1#2#3#4{#1#2#3\ifx#4\empty\else \numsep \ea\numB\ea#4\fi}
+\def\tdnumB #1#2#3#4{#1#2#3\ifx#4\empty\else \numsep \ea\tdnumB\ea#4\fi}
 \def\numsep{\,}
-\def\decimaldot{.}
+\def\decdot{.}
 </pre>
 
-<p>The macro \num reads the number separated by space. If it incudes period
-then the front part is processed by \numH and the decimal part by \numB.
+<p>The macro \tdnum reads the number separated by space. If it incudes period
+then the front part is processed by \tdnumH and the decimal part by \tdnumB.
 The front part is processed in two steps. First, the macro counts the number of
-digits by \numA and then it inserts spaces by \numB.
+digits by \tdnumA and then it inserts spaces by \tdnumB.
+
+<p>Note, that if you are using autoloaded version of \tdnum and you want to
+have nondefault \numsep or \decdot then you have to run
+\loadtrick \tdnum and then you can define \def\_optextrick_numsep{...} or
+\def\_optextrick_decdot{...} and then you can use \tdnum.
 
 <p>We can use this macro in tables with Nn declarator
 (see <a href="#dnaligned">OpTeX trick 0039</a>), but we must add the &amp;
-symbol at the end of the \numH macro:
+symbol at the end of the \tdnumH macro:
 
 <pre>
-\def\numH#1\end{\numA #1\empty\empty\empty#1\empty &amp;}
+\def\tdnumH#1\end{\tdnumA #1\empty\empty\empty#1\empty &amp;}
 
-\def\_tabdeclareN{\the\tabiteml \hfil \num ##\_unsskip}
+\def\_tabdeclareN{\the\tabiteml \hfil \tdnum ##\_unsskip}
 \def\_tabdeclaren{##\_unsskip\hfil\the\tabitemr}
 
 \table{|c|Nn|}{\crl
@@ -6053,6 +6067,13 @@ the \macro is re-defined to be equivalent to
 </pre>
 
 <p CLASS=datum>(0137) -- P. O. 2024-05-06<p>
+<hr>
+
+<h2><a name="luaif"></a>Conditionals evaluated by Lua</h2>
+
+...
+
+<p CLASS=datum>(0138) -- P. O. 2024-05-06<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>

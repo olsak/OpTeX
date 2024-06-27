@@ -189,7 +189,7 @@
 \_public \foreachdef ;
 
    \_doc ----------------------------
-   \secc Is-macros
+   \secc Is-macros and selection of cases
    There are a collection of macros
    \^`\isempty`, \^`\istoksempty`, \^`\isequal`, \^`\ismacro`,
    \^`\isdefined`, \^`\isinlist`, \^`\isfile` and \^`\isfont`
