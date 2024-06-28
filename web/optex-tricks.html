@@ -6078,11 +6078,11 @@ For example, after
 <pre>
 \luaif {\a>=0}  \iftrue yes \else no \fi % returns yes
 \luaif {\a==\b} \iftrue yes \else no \fi % returns no
-\luaif {\a>=0 and (\a>0 and \b>0)} \iftrue yes \else no \fi % returns yes
+\luaif {\a>=0 and (\a>0 or \b>0)} \iftrue yes \else no \fi % returns yes
 </pre>
 
 <p>Note, you cannot use ~= relation because ~ is active macro in TeX. The
-following implemnation introduces \x macro with usage \x= instead ~=. If you
+following implementation introduces an \x macro with usage \x= instead ~=. If you
 are using \luaif in you macros for a package, define \.x and use \.x= (i.e.
 in your name space) because \x is a control sequence probably used by a user
 for another purposes.
