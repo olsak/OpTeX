@@ -22,6 +22,11 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.15> Jun 2024:
+       \qcasesof improved: more alternative patterns can be declared using |.
+       \loadtrick is exandable now.
+       More OpTeX tricks added.
+       Minor improvements and minor bug fixes.
 <1.14> Feb 2024:
        More links in doc: TeX primitives linked to TeX in a Nutshell.
        \trykv returns unexpanded value of the key=value pair.
