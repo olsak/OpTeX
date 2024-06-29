@@ -179,7 +179,7 @@
 \_optdef\_secc[]{\_trylabel \_scantoeol\_insecc}
 \_def\_trylabel{\_istoksempty\_opt\_iffalse \_label[\_the\_opt]\_fi}
 
-\_sdef{_eol:chap}{\_inchap} % enebles \bracedparam\chap{title}
+\_sdef{_eol:chap}{\_inchap} % enables \bracedparam\chap{title}
 \_sdef{_eol:sec}{\_insec}   % enables \bracedparam\sec{title}
 \_sdef{_eol:secc}{\_insecc} % enables \bracedparam\secc{title}
 
@@ -292,7 +292,7 @@
 
    The \`\_insertmark``{<title text>}` saves `\mark` in the format
    `{<title-num>} {<title-text>}`, so it can be printed \"as is" in
-   `\headline` (see the space between them), or you can define a formating
+   `\headline` (see the space between them), or you can define a formatting
    macro with two parameters for processing these data, if you need it.
    \_cod -----------------------------
 
@@ -378,12 +378,12 @@
    * \^`\_thecapnum` ...   expands to `\the<letter>num` (caption number).
    \enditems
    The macro \^`\_printcaptiont` (or `f`) is processed inside group and the
-   `\_par` can be run after this group. If you want to re-define formating
+   `\_par` can be run after this group. If you want to re-define formatting
    parameters for `\_par`, do this in the macro \^`\_captionformat`.
    The \`\_captionsep` inserts a separator between auto-generated
    caption number and the following caption text. Default separator
    is `\_enspace` but if the caption text starts with dot or colon, then
-   the space is not inserted. A user can wite `\caption/t: My table`
+   the space is not inserted. A user can write `\caption/t: My table`
    and \"{\bf Table 1.1:} My table" is printed. You can re-define
    the \^`\_captionsep` macro if you want to use another separator.
    \_cod -----------------------------
@@ -479,7 +479,7 @@
 
 \_endcode % -------------------------------------
 
-2024-01-19 \bracedparam\secl enalbed
+2024-01-19 \bracedparam\secl enabled
 2024-01-18 \tit, \chap, \sec, \secc: added cooperation with new \bracedparam
 2023-05-02 \_numprint used
 2022-10-19 More robust \caption (two opened groups, \_printcaption introduced)
@@ -489,7 +489,7 @@
 2021-02-09 \thisoutline implemented
 2021-01-26 \_nl: \unskip added
 2021-01-11 \secl introduced
-2021-01-05 \_thednum printed in text mode in its both occurences.
+2021-01-05 \_thednum printed in text mode in its both occurrences.
 2020-04-28 \_secfonts etc: \_boldify is last.
 2020-04-22 \_chapx, \_secx, \_seccx rewritten
 2020-03-14 introduced

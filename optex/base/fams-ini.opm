@@ -108,7 +108,7 @@
      -: {\mono\initials\displ\keybr} }
 
 \_famfrom{Victor Gaultney}
-\_faminfo [Gentium] {Serif free fonts, support Greek, Cyrrilic, IPA} {f-gentium}
+\_faminfo [Gentium] {Serif free fonts, support Greek, Cyrillic, IPA} {f-gentium}
    { -,\caps,\book,\book\caps: {\rm\bf\it\bi} }
 \_famalias [GentiumPro]
 
@@ -319,7 +319,7 @@ The `fams-ini.opm` and `fams-local.opm` files can use the macros
 }
 \medskip
 
-The \^`\_faminfo` commad has the syntax:
+The \^`\_faminfo` command has the syntax:
 \begtt \catcode`\<=13
 \_faminfo [<Family Name>] {<comments>} {<file-name>}
      { <mod-plus-vars> }

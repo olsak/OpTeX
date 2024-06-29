@@ -194,7 +194,7 @@
    them only for 10\,pt typesetting). The `\skewchar` of some math families are
    set here too.\nl
    \^`\_setmathparam \Umathspaceafterscript` is used instead `\scriptspace`
-   setting because \LuaTeX/ ingnores `\scriptspace` in most cases. There is
+   setting because \LuaTeX/ ignores `\scriptspace` in most cases. There is
    small difference from classical \TeX/: we set \"scaled"
    `\Umathspaceafterscript` dependent on textstyle, scriptstyle, etc.\ sizes.
    The \`\_scriptspacefactor` is set to 0.05 which gives the same result
@@ -251,7 +251,7 @@ For example
 
 2022-12-01  reading number by \_loadmathfamily, \_setmathfamily more robust
 2022-11-16: \_corrmsize removed, \_mfactor introduced
-2022-09-04: \crampedstyles setings added.
+2022-09-04: \crampedstyles settings added.
 2022-07-22: \_setmathparam\_Umathspaceafterscript added.
 2022-02-22: \rm, \it, etc moved to fonts-select, \_marm, \_mait etc. introduced
 2020-05-06: \itfam, \ttfam removed, (Unicode math preferred)

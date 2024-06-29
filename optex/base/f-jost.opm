@@ -11,7 +11,7 @@ Modifiers (weight):^^J
  \hairline ... \rm, \it: Hairline, \bf, \bi: Book^^J
  \thin ....... \rm, \it: Thin, \bf, \bi: Medium^^J
  \light ...... \rm, \it: Light, \bf, \bi: SemiBold^^J
- \medium ..... \rm, \it: Medium, \bf, \bi: Hevy^^J
+ \medium ..... \rm, \it: Medium, \bf, \bi: Heavy^^J
 Extended Variants:^^J
  \kf, \ki .... Black, BlackItalic^^J
 }}

@@ -160,7 +160,7 @@
    \.usetikzlibrary{#1}\let\foreach=\_optexforeach
 }
 
-% don't worry about reseting catcodes - we are at the end of \opinput'ed file
+% don't worry about resetting catcodes - we are at the end of \opinput'ed file
 \_endnamespace
 \_endcode
 

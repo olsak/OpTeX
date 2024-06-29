@@ -385,7 +385,7 @@
    height+depth in em units.\nl
    The \^`\big`, \^`\Big`, \^`\bigg`, \^`\Bigg` macros keep the strut height+depth
    from plain \TeX/ and \^`\bbig` is a new macro in \OpTeX/. It generates the size
-   1.44\,em beween \^`\big` and  \^`\Big` which is
+   1.44\,em between \^`\big` and  \^`\Big` which is
    accessible in most of Unicode math fonts (but not in classical `cmex10`).
    \_cod -----------------------------
 
@@ -1121,13 +1121,13 @@
 2021-03-19 allow text mode \{ and \}
 2021-02-15 \_mathbox redefines \_textmff etc. in order to respect optical sizes
 2021-02-04 \_bordermatrixwithdelims introduced.
-2021-01-23 better expession for math styles in \matrix
+2021-01-23 better expression for math styles in \matrix
 2021-01-22 bad use of \_stylenum in \matrix + bad value (bug fix: \_stylenum->\_mtstylenum)
 2020-12-17 \box0->\hbox{\box0} in \_finphant and \_finsmash, see https://tex.stackexchange.com/questions/574997/
 2020-06-14 \borermatrix, \cases corrected
 2020-06-13 \adots introduced, \matrix smaller in T mode too.
 2020-06-03 \notin corrected
-2020-06-02 $$\par$$ error is supressed, so we define \(l)eqalign(no), \displayines as \long
+2020-06-02 $$\par$$ error is suppressed, so we define \(l)eqalign(no), \displayines as \long
 2020-05-30 \cases: group added in the second column.
            "\displaylines to<size>" implemented and documented.
 2020-05-11 \let\|=\Vert, bug fixed

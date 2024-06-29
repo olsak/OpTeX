@@ -431,7 +431,7 @@ end,'global') % we want to keep the meanig after group
 
 \_def\.shadedframedefaults {% defaults:
    frame-color=\Grey,       % color of frame rules
-   text-color=\Black,       % color ot text inside the frame
+   text-color=\Black,       % color of text inside the frame
    shadow-color=\LightGrey, % color of shadow
    bg-color=\Yellow,        % background color inside the frame
    rule-width=1pt,          % width of rules used in the frame

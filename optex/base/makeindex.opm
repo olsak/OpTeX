@@ -142,8 +142,8 @@
    French sorting rule says: if the words are the same except for accents
    then accented letters are sorted after unaccented leters but
    read the words from their end in the second pass.
-   For example corect sorting is: cote $\lt$ côte $\lt$ coté
-   $\lt$ côté. This rule can be activated if the contol sequence
+   For example correct sorting is: cote $\lt$ côte $\lt$ coté
+   $\lt$ côté. This rule can be activated if the control sequence
    \`\_secondpass``<lang-tag>` is set to \^`\_reversewords`.
    For example, `lang-data.opm` declares `\_let\_secondpassfr=\_reversewords`.
 
@@ -151,7 +151,7 @@
    Preparing to primary pass is performed by the \`\_setprimarysorting` macro
    implemented here.
    The <lang-tag> is saved to the \^`\_sortinglang` macro when sorting is
-   initialized in \^`\_dosorting` (it is typicaly derived from current `\language` value).
+   initialized in \^`\_dosorting` (it is typically derived from current `\language` value).
    The \^`\_setprimarysorting` is called from \^`\_dosorting` macro and all
    processing of sorting is in a group. It sets actual
    \^`\_sortingdata`, \^`\_compoundchars` and \^`\_ignoredchars` if given language
@@ -254,7 +254,7 @@
    words are equal in the primary pass. It runs \^`\_setsecondarysorting` if it
    was not initialized already. Then prepares compared words to `\_tmpa` and
    `\_tmpb` and corrects them by \^`\_prepsecondpass` if needed.
-   Finaly, the test is recursively done by the macro \`\_testAleBsecondaryX`
+   Finally, the test is recursively done by the macro \`\_testAleBsecondaryX`
    `<converted-string1>0\_relax<converted-string2>1\_relax`
    \_cod -----------------------------
 
@@ -352,7 +352,7 @@
 }
 
    \_doc -----------------------------
-   French rules needs reverese reading the words in the second pass.
+   French rules needs reverse reading the words in the second pass.
    The \`\_reversewords` is activated in this case and it adds
    new job to the macro \`\_prepsecondpass`: it reverses the letters in
    the compared words (saved in `\_tmpa` and `\_tmpb`) by the expandable
@@ -579,6 +579,6 @@
 2022-03-18 \iid didn't ignore space, bug fixed
 2022-02-19 \_sotringdataen etc. moved to lang-data.opm file
 2021-02-15 \_expandafter -> \_ea
-2021-02-01 secodary sorting: start from code 65
+2021-02-01 secondary sorting: start from code 65
 2020-04-21 \isempty \iffalse ... \fi added to \iindex
 2020-03-26 introduced

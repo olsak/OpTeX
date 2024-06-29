@@ -66,11 +66,11 @@
 {\it\hfil Petr Olšák, 2021}\bigskip
 
 The \OpTeX/ markup language standard (OMLS) declares a list of control
-sequences used in \OpTeX/ documents including their syntax and sematic. The
+sequences used in \OpTeX/ documents including their syntax and semantics. The
 listed control sequences in OMLS in section~\ref[listcs] in table~\ref[alistcs]
 are called {\it known} and other control sequences are {\it unknown}.
 
-The main reason for OMLS is to give instructions on how to program convertors
+The main reason for OMLS is to give instructions on how to program converters
 from \OpTeX/ documents to another formats (Html, Markdown, \LaTeX/) or how
 to interpret the \OpTeX/ document sources in such applications as
 {\tt texcount} or text editors\fnote
@@ -103,7 +103,7 @@ document directly by \OpTeX/ and using a cnv-program. The second difference is
 that the expansion process of macros is not implemented in cnv-programs in
 its full range. We respect that the result of cnv-programs will be different
 than from processing directly by \OpTeX/. But this is not a bug, this is
-the feature. We concentrate on the fixed syntax and sematic given by OMLS of the
+the feature. We concentrate on the fixed syntax and semantics given by OMLS of the
 \OpTeX/ document and we throw behind the head the typographical
 exactness of the document which can be done only directly by \TeX/ (and it is
 exactly described in \TeX/book, for example).
@@ -148,7 +148,7 @@ taken into account. The rule with a smaller number has precedence.
   {this is great simplification of real \TeX/ modes.}.
   The document processing starts in v-mode.
 * In v-mode: a `<non-space>` character or a control sequence listed
-  in table~\ref[vtohmode] swithes to h-mode.
+  in table~\ref[vtohmode] switches to h-mode.
 * In h-mode: an `<empty-line>` or a control sequence listed in table~\ref[htovmode] switches to v-mode.\r[htov]
 * The switching from v-mode to h-mode \: a paragraph begins.
 * The switching from h-mode to v-mode \: the current paragraph ends.
@@ -391,7 +391,7 @@ beginning of the line. The list of `%%:` declarators follows:
   cnv-program name instead output format is given here.
 * `%%:do <format-or-app> <action>` -- does an `<action>` if `<format-or-app>`
   is output format or used cnv\hbox{-}program name. The `<action>` syntax depends
-  on used cnv-program and it typicaly does a change in its configuration or
+  on used cnv-program and it typically does a change in its configuration or
   give a command to it.
 * `%%:skip <formats-or-apps>` -- ignores all following lines until another `%%:` occurs
   if the output format or application name is included in the `<formats-or-apps>`
@@ -445,7 +445,7 @@ output of the \LaTeX/ source file.
 
 \bigskip
 \label[alistcs]
-\caption/t List of known control sequences alphabeticaly sorted.
+\caption/t List of known control sequences alphabetically sorted.
 \cskip
 \begblock
 \raggedright \printknowncs
@@ -611,7 +611,7 @@ the text enclosed between `\begmulti <number><space>` and matching
 * \.`\ulink[<url>]{<text>}` creates `<text>` as an external link which points
   to `<url>`. The `\<character>` is interpreted as `<character>` only in
   `<url>` parameter.
-* \.`\label[<label>]` sets the `<label>`. First following occurence of `\chap`, `\sec`,
+* \.`\label[<label>]` sets the `<label>`. First following occurrence of `\chap`, `\sec`,
   `\secc`, `\caption` or `\eqmark` sets this `<label>` as bounded to its
   position in the document.
 * \.`\ref[<label>]` should create an internal link to the position given by
@@ -659,7 +659,7 @@ the text enclosed between `\begmulti <number><space>` and matching
   If <letter> is `t` then <caption-head> is `Table` followed
   by an auto-generated number. If the <letter> is `f` then <caption-head> is
   `Figure` followed by an auto-generated number. The configuration of
-  cnv-programs shoud allow different words than default `Table` or `Figure` (for
+  cnv-programs should allow different words than default `Table` or `Figure` (for
   example, if another language is used).
 * \.`\table<ignored>{<declaration>}{<data>}` should create a table. The fidelity
   rate of created output depends heavily on the used cnv-program and the output
@@ -676,7 +676,7 @@ the text enclosed between `\begmulti <number><space>` and matching
     should be added here.
   * Spaces around `&` and before end-row separator are ignored.
   * \.`\noalign{<text>}` and \.`\tskip <dimen>` should be ignored.
-  * Colum declarators in <declaration> should be interpreted: `l` (left aligned), `c` (center
+  * Column declarators in <declaration> should be interpreted: `l` (left aligned), `c` (center
     aligned), `r` (right aligned) or `p{<ignored>}` (paragraph-like item).
   * The `<number><letter>` or `<number>{<text>}` should be interpreted as
     `<number>`-times repeated `<letter>` or `<text>` in `<declaration>`.

@@ -27,7 +27,7 @@
    \_doc -----------------------------
    The \`\_nextat` macro skips the text in the `.bib` file to the next `@`, and starts
    the \`\_bibentry` macro which reads `@<entry type>{<data>}` from the `.bib` file.
-   Each reference entry is conveted to the \`\_entrydata`
+   Each reference entry is converted to the \`\_entrydata`
    macro and then `\_glet \_be:<bib-part>/<label> = \_entrydata` is done.
    The \^`\_entrydata` includes key-value pairs, as described in the
    section~\ref[readbibs].
@@ -299,7 +299,7 @@
       \_getfield[#3]\_bibfield
       \_getfield[#3num]\_namecount % total persons in the author/editor fields
       \_ifx\_bibfield\_empty\_else
-         \_def\_bibfield{\_loopauthors{#3}}% read author/edior field in a loop
+         \_def\_bibfield{\_loopauthors{#3}}% read author/editor field in a loop
       \_fi
    \_else
       \_getfield[#2#3]\_bibfield
@@ -331,7 +331,7 @@
    \_doc -----------------------------
    \`\_loopauthors``{<field-name>}` does a loop over all authors/editors in
    the `author` or `editor` field. The \`\_namecount`
-   (total nuber of authors/editors) was defined in
+   (total number of authors/editors) was defined in
    \^`\_bprintb`. Then for each author/edtor it do:
    \begitems
    * Set \`\_NameCount` to the position number of the currently processed author/editor.
@@ -361,7 +361,7 @@
 
    \_doc -----------------------------
    \`\_AbbreviateFirstname`, \`\_RetrieveFieldIn`, \`\_RetrieveField` are here only for
-   backward comaptibility with previous macros based on the librarian package.
+   backward compatibility with previous macros based on the librarian package.
    The \`\_CreateField`, \`\_SortingOrder`, and \`\_SpecialSort` are dummy
    macros because the sorting is implemented by a slightly different way
    than in librarian package.
@@ -551,7 +551,7 @@ Such \"bibmark" is saved to the `.ref` file and used in next \TeX/ run as
 
 Moreover, the bib-style writer must declare the format of
 special fields `author` and `editor`. These fields include a
-list of names, each name is precessed individually in a loop. The
+list of names, each name is processed individually in a loop. The
 \^`\_authorname` or \^`\_editorname` is called for each name on the list.
 The bib-style writer must define
 the \`\_authorname` and \`\_editorname` commands
@@ -626,7 +626,7 @@ If you do `\slet{tmp}{_be:/tbn}` then you can print the data (for example) by:
 \ea\foreach \tmp \do [#1]#2{\wterm{field-name: "#1", data: "#2"}}
 \endtt
 or you can do `\ea\foreach \tmp \do [#1]#2{\sdef{bib-field:#1}{#2}}` to enable
-direct acces to the scanned data.
+direct access to the scanned data.
 
 Note that entry type and field names are converted lower-case by the `\readbibs` macro.
 

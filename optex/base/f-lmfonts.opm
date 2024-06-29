@@ -99,7 +99,7 @@ Note: Text fonts support optical sizes, but LatinModern-Math only for scripts.^^
 \_moddef \upital   {\_fsetV subfam=mu \_fvars r . . . }
 \_moddef \dunhill  {\_fsetV subfam=du \_fvars r . sl . }
 
-% submodifiers (they select special vaiants in a subfamily)
+% submodifiers (they select special variants in a subfamily)
 \_moddef \nbold    {\_onlyif subfam=rm,ss,tp: {\_fvars r b i bi }}
 \_moddef \bolder   {\_onlyif subfam=rm,ss,tp: {\_fvars r bx i bxi }}
 \_moddef \slant    {\_onlyif subfam=rm:       {\_fvars r bx isl bxisl }%

@@ -10,7 +10,7 @@ Variants:^^J
  \rm \bf \it \bi ... classical variants^^J
  \mf \mi .... medium regular and medium italics (between normal and bold)^^J
 Modifiers:^^J
- \cond ...... condensed (italic is not avalable for \cond variants)^^J
+ \cond ...... condensed (italic is not available for \cond variants)^^J
  \medium .... sets \mf \bf \mi \bi family
 }}
 

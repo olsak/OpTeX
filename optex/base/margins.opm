@@ -65,7 +65,7 @@
     \_doc ----------------------------
     \`\magscale` `[<factor>]` does `\mag=<factor>` and recalculates page
     dimensions to their true values.\nl
-    \`\_truedimen``<dimen-register>` retunrs true value of <dimen-register>
+    \`\_truedimen``<dimen-register>` returns true value of <dimen-register>
     regardless of `\mag`.
     \_cod ----------------------------
 

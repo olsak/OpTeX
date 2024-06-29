@@ -130,7 +130,7 @@
    \_doc
    The macro \`\.interval` reads following tokens until the `)` or `>` is found in the input
    queue and replaces \code{<} to `\langle` and `>` to rangle. The reading and replacing
-   process saves the tokens to the `\intevalL` macro only and finaly this macro is launched.
+   process saves the tokens to the `\intevalL` macro only and finally this macro is launched.
    \_cod
 
 \_def\.interval{\_def\.intervalL{}\.intervalA}
@@ -582,9 +582,9 @@ Following options are provided by the `math` package. You can set them by
 \^`\mathset``{<options>}` after `\load[math]`, for example
 `\mathset{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
 \begitems
-* `dots` sets more inteligent `\dots`, the same as \~`\smartdots`.
+* `dots` sets more intelligent `\dots`, the same as \~`\smartdots`.
 * `interval` sets `\_` as prefix of intervals, see section~\ref[interval].
-* `vert` sets more inteligent `|`, the same as \~`\smartvert`.
+* `vert` sets more intelligent `|`, the same as \~`\smartvert`.
 * `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
 * `flexipa` enables flexible partial symbol, the same as \~`\flexipa`.
@@ -1012,7 +1012,7 @@ then the feature is activated and if it is zero, the feature is deactivated.
 The \^`\enablefic` macro sets \^`\finalitalcorr``=1`.
 
 
-\sec Miscelaneous commands
+\sec Miscellaneous commands
 
 I created various commands at the requests of users. They asked me to create
 commands similar to ones from \LaTeX/ packages.
@@ -1117,7 +1117,7 @@ The user can read this warning and declare the macro after
 
    \notoc\nonum\sec Table of contents
    \maketoc
-   \printdoctail math.opm % prints the documantation written after \_endcode
+   \printdoctail math.opm % prints the documentation written after \_endcode
    \sec Implementation
    \printdoc     math.opm % prints \_doc...\_cod parts + code before \_endcode
    \nonum\sec Index

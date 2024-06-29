@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_famdecl [Baskerville] \Baskerville {Free vaiants of classical Baskerville}
+\_famdecl [Baskerville] \Baskerville {Free variants of classical Baskerville}
         {\caps} {\rm \bf \it \bi} {}
         {[BaskervilleF-Regular]}
         {\_def \_fontnamegen {[BaskervilleF-\_currV]:script=latn;\_capsV\_fontfeatures}}

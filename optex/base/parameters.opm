@@ -331,7 +331,7 @@
    if `\ilevel=1`.\nl
    The \`\ilistskipamount` is vertical skip above and below the items list
    if `\ilevel>1`.\nl
-   The \`\itemskipamount` is vertical skip between list items, but not above the firts
+   The \`\itemskipamount` is vertical skip between list items, but not above the first
    and below the last.
    \_cod -----------------------------
 
@@ -604,7 +604,7 @@
 The behavior of document processing by \OpTeX/ is
 controlled by {\em parameters}. The parameters are
 \begitems
-* primitive registers used in build-in algorithms of \TeX/,
+* primitive registers used in built-in algorithms of \TeX/,
 * registers declared and used by \OpTeX/ macros.
 \enditems
 Both groups of registers have their type: number, dimension, skip, token
@@ -612,7 +612,7 @@ list.
 
 The registers are represented by their names (control sequences). If the user
 re-defines this control sequence then the appropriate register exists
-steadily and build-in algorithms are using it without change. But user
+steadily and built-in algorithms are using it without change. But user
 cannot access its value in this case. \OpTeX/ declares two control sequences
 for each register: prefixed (private) and unprefixed (public). \OpTeX/ macros use only
 prefixed variants of control sequences. The user should use the unprefixed variant

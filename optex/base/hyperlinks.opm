@@ -77,7 +77,7 @@
    \nl
    \`\ilink``[<type>:<spec>]{<text>}` is equivalent to \^`\link` but
    the `<color>` is used from \^`\hyperlinks` declaration
-   (or it is overwriten by `\def\_<type>linkcolor`).
+   (or it is overwritten by `\def\_<type>linkcolor`).
    \nl
    \`\ulink``[<url>]{<text>}` creates external link.
    The `<url>` is detokenized with `\escapechar=-1` before it is used, so
@@ -122,7 +122,7 @@
    are typical skips used for special characters, their meaning is
    documented in the code below. You can change them.
    Default values: penalty 9990 is inserted between each pair of normal
-   chararacters, penalty 100 is inserted after special charcters, nobreak before special
+   characters, penalty 100 is inserted after special characters, nobreak before special
    characters. The URL can be broken at any place using these default
    values. If you want to disable breaking between normal characters, say
    `\let\_urlxskip=\nobreak`.

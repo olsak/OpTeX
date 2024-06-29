@@ -234,7 +234,7 @@
    The \`\_setflcolors` uses the \^`\_setcolor` macro to separate filling (non-stroking)
    color and stroking color.
    The \`\_coc` macro means \"create oval or circle" and it expands to
-   the stroking primitve `S` or filling primitive `f` or boh `B`. Only boundary
+   the stroking primitive `S` or filling primitive `f` or boh `B`. Only boundary
    stroking is performed after `\fcolor=\relax`. You cannot combine
    `\fcolor=\relax` with `\shadow=Y`.
    \_cod -----------------------------
@@ -349,7 +349,7 @@
    this effect. The `\shadowlevels+1/2` level is equal to the shifted given path.
    \_cod -----------------------------
 
-\_def\_shadowlevels{9}         % number of layers for blurr effect
+\_def\_shadowlevels{9}         % number of layers for blur effect
 \_def\_shadowdarknessA{0.025}  % transparency of first shadowlevels/2 layers
 \_def\_shadowdarknessB{0.07}   % transparency of second half of layers
 \_def\_shadowmoveto{1.8 -2.5}  % vector defines shifting layer (in bp)
@@ -454,5 +454,5 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 2022-03-03: \_coc introduced
 2021-07-16: \inoval, \incircle are more simple, using attribitecolor features
 2021-03-19: \inkinspic: pictures in subdirectories, bug fixed
-2020-12-21: \puttext: \box0 in goup, bugfix
+2020-12-21: \puttext: \box0 in group, bugfix
 2020-04-12: \_public \clipinoval \clipincircle ; added, bug fixed

@@ -6,7 +6,7 @@
 \_codedecl \optexminim_loaded  {Minim compatibility for \OpTeX/ (v\_optexminim_version)}
 
    \_doc
-   When we want to use minim with \OpTeX/, we need to accomodate for their
+   When we want to use minim with \OpTeX/, we need to accommodate for their
    differences. Particularly in allocations. Because of Esger Renkema's
    graciousness, minim has been modified in ways that make it easier to
    integrate with \OpTeX/. So even when the two formats normally disagree on a
@@ -55,7 +55,7 @@
    doesn't define their Lua variants.
 
    * \LuaTeX/ allocators from `ltluatex.tex` (like `\newattribute`). Subset of
-   these is in \OpTeX/ (only atributes, which are also allocatable in Lua, and
+   these is in \OpTeX/ (only attributes, which are also allocatable in Lua, and
    catcode tables). But minim tries to be compatible with \LaTeX/ and patches
    its routines if it detects them.
    \enditems
@@ -96,7 +96,7 @@
    Both \LaTeX/ and the minim inspired catcode table allocators initialize the
    catcode tables with `\initcatcodetable` (i.e. ini\TeX/ catcodes). \OpTeX/
    merely allocates the registers. \LuaTeX/ doesn't allow to activate
-   unitialized catcode table, therefore activation with either
+   uninitialized catcode table, therefore activation with either
    `\initcatcodetable` or `\savecatcodetable` is necessary before use. To
    ensure compatibility with foreign macros, we also issue `\initcatcodetable`
    on allocation in the public version of `\newcatcodetable`.
@@ -184,5 +184,5 @@
 \_catcode`\:=11
 \_let\_shipout\minim:shipout:new
 
-% catcodes changes don't propage, since this file is loaded with \opinput
+% catcodes changes don't propagate, since this file is loaded with \opinput
 \_endcode

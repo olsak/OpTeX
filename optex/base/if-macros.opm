@@ -112,7 +112,7 @@
    The test in the \`\_fornumB` says: if (<to> $\string<$ <current number>
    AND <step> is positive) or if (<to> $>$ <current number> AND <step> is
    negative) then close loop by `\_getforstack`. Sorry, the condition is
-   writen by somewhat cryptoid \TeX/ language.}
+   written by somewhat cryptoid \TeX/ language.}
    \_cod -----------------------------
 
 \_def\_fornum#1..#2\_do{\_fornumstep 1:#1..#2\_do}
@@ -175,7 +175,7 @@
    \foreachdef\mymacro #1,{[#1]}
    \mymacro{a,b,cd,efg,}
    \endtt
-   expands to [a][b][cd][efg]. Such user defined macros are more effecive during processing
+   expands to [a][b][cd][efg]. Such user defined macros are more effective during processing
    than `\foreach` itself because they need not to operate with the for-stack.
    \_cod ----------------------------
 

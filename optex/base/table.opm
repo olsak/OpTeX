@@ -76,10 +76,10 @@
 
    If `pxto` keyword was used, then we set the virtual unit \^`\tsize` to
    `-\hsize` first. Then the first attempt of the table is created in box 0.
-   All collums where `p{..\tsize}` is used, are created as empty in this first
+   All columns where `p{..\tsize}` is used, are created as empty in this first
    pass. So, the `\wd0` is the width of all other columns.
    The \^`\_tsizesum` includes the sum of \^`\tsize`'s in `\hsize` units
-   after firts pass. The desired table width is stored in the `\_tmpdim`, so
+   after first pass. The desired table width is stored in the `\_tmpdim`, so
    `\_tmpdim-\_wd0` is the rest which have to be filled by \^`\tsize`s.
    Then the \^`\tsize` is re-calculated and the real table is
    printed by `\halign` in the second pass.
@@ -103,7 +103,7 @@
       \_ifdim \_tmpdim >\_zo \_else \_tsizesum=\_zo \_fi
       \_ifdim \_tsizesum >\_zo \_tsize =\_expr{\_number\_hsize/\_number\_tsizesum}\_tmpdim
       \_else \_tsize=\_zo \_fi
-      \_tsizes % retoring values if there is a \table pxto inside a \table pxto.
+      \_tsizes % restoring values if there is a \table pxto inside a \table pxto.
       \_setbox0=\_null \_halign \_tableC
     \_else
       \_halign\_tablew \_tableC
@@ -305,7 +305,7 @@
 
    \_doc -----------------------------
    The \`\fS` macro is more tricky. The \^`\_tableparbox` isn't printed
-   immediatelly, but `\setbox2=` is prefixed by the macro \`\_tableparA`,
+   immediately, but `\setbox2=` is prefixed by the macro \`\_tableparA`,
    which is empty by default (used in \^`\_tablepar`). The \`\_tableparD`
    is processed after the box is set: it checks if there is only one line
    and prints `\hbox to\hsize{\hfil<this line>\hfil}` in this case. In other

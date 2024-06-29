@@ -2652,7 +2652,7 @@ In short:
 * `version=number` ... Number 0 to 40 linearly depends on the density of QRcode.
                    The 0 means that the density is automatically selected.
 
-* `level=letter`   ... L, M, Q o H (low, medium, quality, hight) sets the amount 
+* `level=letter`   ... L, M, Q o H (low, medium, quality, high) sets the amount 
                    of redundancy in the code in order of error recovering.
 
 * `tight`   ... Code without margins.
@@ -2702,6 +2702,6 @@ The `\_qr_data` macro is saved after each \qrcode calculation in the format
 square and second parameter includes size^2 ones or zeros which means black
 or white modules (scanned left to right, top to bottom). Another information
 can be retrieved from `\_qr_text` macro (encoded text before expanding) and
-`\_qr_etext` macro (raw encoded text, each charater is detokeinized).
+`\_qr_etext` macro (raw encoded text, each character is detokeinized).
 The macros `\_qr_data`, `\_qr_text` and `\_qr_etext` are saved globally.
 

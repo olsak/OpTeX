@@ -43,7 +43,7 @@ use them in the Font Selection System. But the protected versions of these
 control sequences are used in the Font Selection System.
 
 If the `*.tfm` files are missing during format generation then the format is
-succesfully generated without any pre-loaded fonts. It doesn't matter if each
+successfully generated without any pre-loaded fonts. It doesn't matter if each
 document processed by \OpTeX/ declares Unicode fonts. You can create such
 fonts-less format anyway if you set \`\fontspreload` to `\relax` before
 `\input optex.ini`, i.e.:

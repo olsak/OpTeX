@@ -12,7 +12,7 @@ Modifiers:^^J
  \sans ...... sans serif^^J
  \sanssemi .. semibold sans serif (only \rm, accented letters not available)^^J 
 Variant:^^J
- \calli ..... Calligraphic (only upercase, lowercase letters equal to Italic)^^J
+ \calli ..... Calligraphic (only uppercase, lowercase letters equal to Italic)^^J
 }}
 
 \_moddef \resetmod {\_fvars {} -Bold -Italic -BoldItalic }

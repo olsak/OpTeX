@@ -202,7 +202,7 @@ section~\ref[fontcommands].
 
 If you need to use an internal control sequence declared in your fontfile,
 use the reserved name space with names starting with two `_` followed by family
-indentifier or by `vf` if it relates to variable fonts.
+identifier or by `vf` if it relates to variable fonts.
 
 The name of `\<Familyselector>` should begin with an uppercase letter.
 

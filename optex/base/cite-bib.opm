@@ -131,7 +131,7 @@
    If `\_addcitelist` is processed after \^`\usebib`, then
    \`\_Xcite``{<bibpart>/}{<label>}` is saved to the `.ref`
    file. The `\_Xcite` creates `\_ctlstB:<bibpart>/` as a list of saved
-   `\_citeI[<label>]`. Finally, \^`\usebib` concats boths lists `\_ctlst:<bibpart>/`
+   `\_citeI[<label>]`. Finally, \^`\usebib` concats both lists `\_ctlst:<bibpart>/`
    and `\_ctlstB:<bibpart>/` in the second \TeX/ run.
    \_cod ----------------------------
 

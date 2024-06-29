@@ -314,7 +314,7 @@ function callback.call_callback(name, ...)
     if cbtype == nil then
         err("cannot call callback '%s' - no such callback exists", name)
     elseif cbtype == "exclusive" then
-        -- only one function, atleast default function is guaranteed by
+        -- only one function, at least default function is guaranteed by
         -- create_callback
         return functions[1](...)
     elseif cbtype == "simple" then
@@ -360,7 +360,7 @@ call_callback = callback.call_callback
 --
 -- Create \"virtual" callbacks `pre/post_mlist_to_hlist_filter` by setting
 -- `mlist_to_hlist` callback. The default behaviour of `mlist_to_hlist` is kept by
--- using a default function, but it can still be overriden by using
+-- using a default function, but it can still be overridden by using
 -- `add_to_callback`.
 default_functions["mlist_to_hlist"] = node.mlist_to_hlist
 callback.create_callback("pre_mlist_to_hlist_filter", "list")
@@ -392,7 +392,7 @@ end)
 -- is used for coloring based on attributes.
 -- There is however a challenge - how to call this callback? We could redefine
 -- `\shipout` and `\pdfxform` (which both run `ship_out` procedure internally),
--- but they would lose their primtive meaning – i.e. `\immediate` wouldn't work
+-- but they would lose their primitive meaning – i.e. `\immediate` wouldn't work
 -- with `\pdfxform`. The compromise is to require anyone to run
 -- \`\_preshipout``<destination box number><box specification>` just before
 -- `\shipout` or `\pdfxform` if they want to call `pre_shipout_filter` (and
@@ -441,7 +441,7 @@ end, "_tracingmacros")
 -- Traditionally, pdf\TeX/ allowed managing PDF page resources (graphics
 -- states, patterns, shadings, etc.) using a single toks register,
 -- `\pdfpageresources`. This is insufficient due to the expected PDF object
--- structer and also because many \"packages" want to add page resources and
+-- structure and also because many \"packages" want to add page resources and
 -- thus fight for the access to that register. We add a finer alternative,
 -- which allows adding different kinds of resources to a global page resources
 -- dictionary. Note that some resource types (fonts and XObjects) are already
@@ -559,7 +559,7 @@ optex.directpdfliteral = pdfliteral
 -- The function {\Red`colorize`}`(head, current, current_stroke, current_tr)`
 -- goes through a node list and injects PDF literals according to attributes.
 -- Its arguments are the head of the list to be colored and the current color
--- for fills and strokes and the current trasparency attribute.
+-- for fills and strokes and the current transparency attribute.
 -- It is a recursive function – nested
 -- horizontal and vertical lists are handled in the same way. Only the
 -- attributes of “content” nodes (glyphs, rules, etc.) matter. Users drawing

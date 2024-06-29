@@ -176,7 +176,7 @@
    \_else
       \_ifx\_vcomments\_empty\_else  \_printcomments \_def\_vcomments{}\_fi
       \_ifx\_fin#2%
-         \_bgroup \_adef{ }{}\_def\t{}% if the last line is emtpy, we don't print it
+         \_bgroup \_adef{ }{}\_def\t{}% if the last line is empty, we don't print it
          \_ifcat&#1&\_egroup \_ifx\_printverblinenum\_relax \_else \_decr\_ttline \_fi
          \_else\_egroup \_printverbline{#1}\_fi
       \_else

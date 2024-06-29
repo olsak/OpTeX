@@ -127,11 +127,11 @@
    Suppose following example:
    `{\typosize[13/15] Let $M$ be a subset of $R$ and $x\in M$...}`
    If \^`\mfontsrule=1` then \^`\typosize` does not load math fonts
-   immediatelly but at the first math formula. It is done by `\everymath`
+   immediately but at the first math formula. It is done by `\everymath`
    register, but the contents of this register is processed inside the math
    group. If we do `\everymath={\_normalmath}` then this complicated macro
    will be processed three times in your example above. We want only one
-   pocessing, so we do `\everymath={`\`\_setmathfonts``}` and
+   processing, so we do `\everymath={`\`\_setmathfonts``}` and
    this macro closes math mode first, loads fonts and opens math mode again.
    \_cod -----------------------------
 
@@ -183,7 +183,7 @@
    The \`\boldify` macro does `\let\rm\bf`, `\let\it\bi` and
    `\let\normalmath=\boldmath`. All following text will be in bold.
    If should be used after \^`\typosize` or \^`\typoscale` macros.\nl
-   The internal \`\_runboldmath` macro runs `\_boldmath` immediatelly
+   The internal \`\_runboldmath` macro runs `\_boldmath` immediately
    if no delay of the math font loading is set by \^`\_setmainvaluesL`.\nl
    The `\rm`, `\it` in math mode must keep its original meaning.
    \_cod -----------------------------
