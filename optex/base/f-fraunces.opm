@@ -18,7 +18,7 @@ Modifiers:^^J
  \bolder .... \rm, \it = Medium, \bf, \bi = Black^^J%
 Variable font parameters:^^J
  \wght ...... 100--1000 (default 400): weight of the strokes^^J
- \opsz ...... 6--144 (default 14): optical size modifiation^^J
+ \opsz ...... 6--144 (default 14): optical size modification^^J
  \ssoft ..... 0--100 (default 0): softness of serifs^^J
  Use \wght=650 \ssoft=50 (for example). It acts like others font modifiers.^^J%
 Extended variants:^^J

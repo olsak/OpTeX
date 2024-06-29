@@ -36,7 +36,7 @@
 }
 
    \_doc -----------------------------
-   Formating of Author/Editor lists.
+   Formatting of Author/Editor lists.
    \_cod -----------------------------
 
 \_def\_firstauthorformat{%
@@ -484,9 +484,9 @@ can add the secondary name (interpreted as Firstname) after the comma. Example:
 
 \begtt
    author = "Czech\ Technical\ University\ in\ Prague,
-             Faculty\ of\ Electrical\ Engeneering",
+             Faculty\ of\ Electrical\ Engineering",
 \endtt
-output:  CZECH TECHNICAL UNIVERSITY IN PRAGUE, Faculty of Electrical Engeneering.
+output:  CZECH TECHNICAL UNIVERSITY IN PRAGUE, Faculty of Electrical Engineering.
 
 
 \seccc The editor field

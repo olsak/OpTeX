@@ -805,7 +805,7 @@ alternatives:
 * `p{<size>`\^`\fL}` fit left, i.e.\ left justified, ragged right,
 * `p{<size>`\^`\fR}` fit right, i.e.\ right justified, ragged left,
 * `p{<size>`\^`\fC}` fit center, i.e.\ ragged left plus right,
-* `p{<size>`\^`\fS}` fit special, short one-line pararaph centered,
+* `p{<size>`\^`\fS}` fit special, short one-line paragraph centered,
                 long paragraph normal,
 * `p{<size>`\^`\fX}` fit extra, left-right justified but last line centered.
 \enditems
@@ -1252,7 +1252,7 @@ The \^`\ecite[<label>]{<text>}` prints the `<text>` only, but the entry labeled
 <label> is decided as to be cited. If \~`\hyperlinks` is used then <text>
 is linked to the references list.
 
-You can define alternative formating of \^`\cite` command. Example:
+You can define alternative formatting of \^`\cite` command. Example:
 
 \begtt \catcode`\<=13
 \def\cite[#1]{(\rcite[#1])}    % \cite[<label>] creates (27)
@@ -1323,7 +1323,7 @@ You can create more independent lists of references (you are creating proceeding
 for example). Use \^`\bibpart` `{<name>}` to set the scope where \~`\cite`s
 and references list are printed (and interconnected) independent of another
 parts of your document. The \~`\cite` labels used in different parts can be
-the same and they are not affected. References lists can be created manualy
+the same and they are not affected. References lists can be created manually
 by \^`\bib` or from a database by `\usebib`.
 Example:
 
@@ -1338,7 +1338,7 @@ Example:
                                        % \cite prints [1], [2], ... by bib-list BB
 \endtt
 %
-By default, \^`\bibpart` is empty. So \~`\cite`s and the references list are conneted
+By default, \^`\bibpart` is empty. So \~`\cite`s and the references list are connected
 using this empty internal name.
 
 
@@ -1461,7 +1461,7 @@ by default, this means that the image files are searched in the
 current directory. Example: \^`\picdir={img/}` supposes that image files are
 in `img` subdirectory. Note: the directory name must end by `/` in
 the \^`\picdir` declaration.
-More parameters can be inclued using the \^`\picparams` token list.
+More parameters can be included using the \^`\picparams` token list.
 
 Inkscape\fnote
 {A powerful and free Wysiwyg editor for creating vector graphics.}
@@ -1532,7 +1532,7 @@ it treats it as with a zero dimension object.
 \new
 The \^`\transformbox{<transformation>}{<text>}`
 macro solves the problem. This macro puts the transformed
-material into a box with relevant dimensions. The <transfromation> parameter
+material into a box with relevant dimensions. The <transformation> parameter
 includes one or more transformation commands `\pdfsetmatrix`, `\pdfscale`,
 `\pdfrotate` with their parameters. The <text> is transformed text.
 
@@ -1582,7 +1582,7 @@ The default parameters are
 \new
 The macros \^`\clipinoval` `<x> <y> <width> <height> {<text>}`
 and \^`\clipincircle` (with the same parameters)
-print the `<text>` when a clipping path (oval or cirle with given
+print the `<text>` when a clipping path (oval or circle with given
 `<with>` and `<height>` shifted its center by `<x>` to right and by `<y>` to up)
 is used.
 The `\roundness=5mm` is default for \^`\clipinoval` and user can change it.
@@ -1733,7 +1733,7 @@ used in the alternative old syntax `\input <filename><space>` too. The
 second case (\^`\load`) allows specifying a comma-separated list of included files.
 Moreover, it loads each macro file only once, it sets
 temporarily standard category codes during loading and it tries to
-load `<filename>.opm` or `<filename>.tex` or `<filename>`, the first occurence
+load `<filename>.opm` or `<filename>.tex` or `<filename>`, the first occurrence
 wins. Example:
 \begtt
 \load [qrcode, scanbase]
@@ -1840,9 +1840,9 @@ page.
 Selected macros defined as an \OpTeX/ trick can be used directly from your
 document without copying the code chunks into your macros.
 It is because these macros are \"registered" in \OpTeX/ (by \^`\_regtrick`
-internaly) and if you use such a macro then \OpTeX/ automatically loads the
+internally) and if you use such a macro then \OpTeX/ automatically loads the
 appropriate code chunk from an external file. These macros are listed here. More
-information about them are accesible via the external links.
+information about them are accessible via the external links.
 
 {\typosize[9/11]
 \def\oturl{https://petr.olsak.net/optex/optex-tricks.html}
@@ -1867,7 +1867,7 @@ colored cells in the table.
 sets `\vsize` to fit lines exactly to pages.
 
 \tpg[booktabs]\t\crtop, \t\crmid, \t\crbot\
-specific design of tables: only horozontal rules with different thickness.
+specific design of tables: only horizontal rules with different thickness.
 
 \tpg[colorlin]\t\crx\
 alternating colored lines in tables.
@@ -1876,7 +1876,7 @@ alternating colored lines in tables.
 prints the character directly, bypasses the ligature processing.
 
 \tpg[directoutput]\t\directoutput\
-puts boxes to standalone pages adatped to the box dimesions.
+puts boxes to standalone pages adatped to the box dimensions.
 
 \tpg[easylist]\t\easylist\
 the depth of list is given by the number of `*`.
@@ -1903,7 +1903,7 @@ does per-page counting of objects.
 prints given text in a keystroke-like frame.
 
 \tpg[longtable]\t\longtable\
-alows to break a table to more pages and repeates header.
+allows to break a table to more pages and repeats header.
 
 \tpg[lot]\t\makeLOF, \t\makeLOT, \t\captionF, \t\captionT\
 create list of tables and list of figures similar to \^`\maketoc`.
@@ -1915,7 +1915,7 @@ only define a macro if it is not already defined.
 adds material to the foreground of each page.
 
 \tpg[linnum]\t\pstart, \t\pend\
-dispalys line numbers of the marked text in the margin.
+displays line numbers of the marked text in the margin.
 
 \tpg[rebox]\t\rebox\
 modifies the vbox: its width will be equal to the wider line.
@@ -1966,7 +1966,7 @@ creates notes for table data printed just after the table.
 verbatim lines referenced in text.
 
 \tpg[tablevcent]\t\vcent, \t\vbot\ 
-prints paragraphs in tables verticaly centered or placed at bottom.
+prints paragraphs in tables vertically centered or placed at bottom.
 
 \tpg[thedimen]\t\thedimen\
 prints dimen value using selected unit.
@@ -2014,7 +2014,7 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~begmulti' num   % start multicolumn text (num columns)
 ~endmulti'       % end multicolumn text
 
-~cite' [labnames]  % refers to the item in the lits of references
+~cite' [labnames]  % refers to the item in the list of references
 ~rcite' [labnames] % similar to \cite but [] are not printed.
 ~sortcitations' ~shortcitations' ~nonumcitations' % cite format
 ~bib' [labname]  % an item in the list of references
@@ -2041,7 +2041,7 @@ behaves like \~`\replstring` but is expandable and adds more features.
 \sec API for macro writers
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 
-All \TeX/ primitives and almost all \OpTeX/ macros are accesible by two
+All \TeX/ primitives and almost all \OpTeX/ macros are accessible by two
 names: `\foo` (public or user namespace) and `\_foo` (private name space).
 For example `\hbox` and `\_hbox` means the same \TeX/ primitive. More about
 it is documented in section~\ref[namespaces].
@@ -2076,7 +2076,7 @@ documentation.
 \~`\colordef`` \macro {<mix of colors>}` declares `\macro` as color switch.\nl
 \^`\cs` `{<string>}` expands `\<string>`.\nl
 \^`\cstochar` `<sequence>` converts <sequence> to <character> if there was `\let<sequence>=<character>`.\nl
-\~`\_doc` `...` \~`\_cod` encloses documenation text in the macro code.\nl
+\~`\_doc` `...` \~`\_cod` encloses documentation text in the macro code.\nl
 \^`\eoldef`` \macro #1{<body>}` defines `\macro` with parameter separated to end of line.\nl
 \~`\_endcode` closes the part of macro code in macro files.\nl
 \~`\_endnamespace` closes name space declared by \~`\_namespace`.\nl

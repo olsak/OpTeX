@@ -18,7 +18,7 @@
 \_initunifonts
 \_font\.tenemoji=[TwemojiMozilla]:+colr
 \_def\.emojifont{\.tenemoji\_resizethefont}
-\_def\.emoji#1{{\.emojifont\_trycs{_emoji_:#1}{\_opwarning{uknown emoji "#1"}}}}
+\_def\.emoji#1{{\.emojifont\_trycs{_emoji_:#1}{\_opwarning{unknown emoji "#1"}}}}
 
    \_doc -----------------------------
    The mapping from names or aliases to the codes are declared in the

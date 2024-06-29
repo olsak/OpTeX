@@ -39,7 +39,7 @@
    does `<what><sequence>` for each sequences.
    \_cod -----------------
 
-\_let\_ea =\_expandafter  % usefull shortcut
+\_let\_ea =\_expandafter  % useful shortcut
 
 \_long\_def \_xargs #1#2{\_ifx #2;\_else \_ea#1\_ea#2\_ea\_xargs \_ea #1\_fi}
 

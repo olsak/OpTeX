@@ -78,7 +78,7 @@
 \_public \normalcatcodes ;
 
    \_doc -----------------------------
-   The \`\load` `[<filename-list>]` loads files specfied in
+   The \`\load` `[<filename-list>]` loads files specified in
    comma separated `<filename-list>`. The first space (after comma)
    is ignored using the trick `#1#2,`: first parameter is unseparated.
    The `\load` macro saves information about loaded files by setting

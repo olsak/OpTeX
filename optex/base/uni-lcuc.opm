@@ -15945,11 +15945,11 @@ The file `UnicodeData.txt` is read if this file exists in your \TeX/
 distribution. The format is specified
 at \url{http://www.unicode.org/L2/L1999/UnicodeData.html}. We read only `Ll`
 (lowercase letters), `Lu` (upperase letters) and `Lo` (other letters) and
-set appopriate codes. The scanner of `UnicodeData.txt` is implemented here
+set appropriate codes. The scanner of `UnicodeData.txt` is implemented here
 in the group (lines 6 to 15). After the group is closed then
 the file `uni-lcuc.opm` is leaved by `\endinput`.
 
-If the file `UnicodeData.txt` does not exsists then internal data are used.
+If the file `UnicodeData.txt` does not exist then internal data are used.
 They follow to the end of the file `uni-lcuc.opm`.
 
 {\everytt={\typosize[8/10]\_let\_printverbline=\_printcodeline \medskip}\ttline=-1

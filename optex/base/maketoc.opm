@@ -48,7 +48,7 @@
                    text text .................... <pageno>
    \endtt
    Margins given by `\leftskip` and `\rightskip` are denoted by `|` in the
-   examle above.
+   example above.
    \nl
    \`\tocrefnum` is the global counter of all TOC records (used by hyperlinks).
    \_cod ------------------------------------
@@ -85,7 +85,7 @@
    * \`\_tocdotfill` creates dots in the TOC.
    * \`\_nofirst``\macro` applies the `\macro` only if we don't print the first
      record of the TOC.
-   * \`\_tocpar` finalizes one TOC recors whith rlapped `<pageno>`.
+   * \`\_tocpar` finalizes one TOC record with rlapped `<pageno>`.
    * \`\_pgn``{<pageno>}` creates <pageno> as link to real `<gpage>` saved in `#6`
      of \^`\_tocline`. This is temporarily defined in the \^`\_tocline`.
    \enditems
@@ -98,7 +98,7 @@
 \_def\_tocpar{\_nobreak \_hskip-2\_iindent\_null \_par}
 
    \_doc -----------------------------------
-   If you want a special formating of TOC with adding more
+   If you want a special formatting of TOC with adding more
    special lines (no generated as titles from `\chap`, `\sec`, `\secc`), you
    can define `\addtotoc{<level>}{<type>}{<number>}{<o-title>}{<title>}` macro:
    \begtt

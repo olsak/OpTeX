@@ -418,7 +418,7 @@
    (for expansion, all fonts) are empty by default but user can
    declare specific values here. These macros are used last in the
    \`\.allPR`, \`\.allPI`, \`\.allX` macros
-   (used in the lua code bellow), so it has general precedence.
+   (used in the lua code below), so it has general precedence.
    \_cod --------------------
 
 \.trydef \_mte_P {} % user specific, Protrusion
@@ -530,7 +530,7 @@
    \`\.setequivs``<font-switch>`.
    This macro is used in \olink[_newfontloaded]{\_newfontloaded} `<font-switch>`
    which is called by \OpTeX/ if the font is loaded first.
-   The \^`\.setequivs` macro uses data from \^`\.equalcodes` (see bellow)
+   The \^`\.setequivs` macro uses data from \^`\.equalcodes` (see below)
    and sets equal
    \elink[lpcode]{\lpcode}, \elink[rpcode]{\rpcode}, and \elink[efcode]{\efcode}
    for variant characters.

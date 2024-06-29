@@ -50,7 +50,7 @@
    This macro destroys itself, so the value is set only once. Typically it is
    done in \^`\margins` macro or
    when first \^`\_optexoutput` routine is called (see \^`\_begoutput`).
-   Or it is called at the begining of the \^`\begtt`...`\endtt` environment before
+   Or it is called at the beginning of the \^`\begtt`...`\endtt` environment before
    `\hsize` value is eventually changed by the user in this environment.
    \_cod -----------------------------
 
@@ -107,7 +107,7 @@
 }
 
    \_doc -----------------------------
-   The \`\_pagecontents` is similar as in plain \TeX/. The only differnece is
+   The \`\_pagecontents` is similar as in plain \TeX/. The only difference is
    that the \`\_pagedest` is inserted at the top of `\_pagecontents`.\nl
    The \`\_footnoterule` is defined here.
    \_cod -----------------------------
