@@ -106,7 +106,7 @@
 
    \_doc -----------------------------
    The attribute \`\_transpattr` is allocated and set by the
-   \`\transparency``<number>` macro. If such level of the tranparency was
+   \`\transparency``<number>` macro. If such level of the transparency was
    never used in the document then
    \^`\addextgstate{tr<number>}`\code{\{<</ca X /CA X>>\}} is applied
    (where `X` is `(255-<number>)/255`).
@@ -208,7 +208,7 @@
    RGB to CMYK and from CMYK to RGB for given color. It has precedence
    before general formulae used in the \^`\_rgbtocmyk` and \^`\_cmyktorgb`
    macros. Note, that the values <R> <G> <B> <C> <M> <Y> <K> must be given
-   exacly in the same format as in \^`\setcmykcolor` and \^`\setrgbcolor`
+   exactly in the same format as in \^`\setcmykcolor` and \^`\setrgbcolor`
    parameters. For example, `0.5` or `.5` or `.50` are different values from
    point of view of this mapping.
    \_cod -----------------------------
@@ -408,7 +408,7 @@ $$
 $$
 
 You can use minus instead of plus in the linear combination in `\colordef`. The
-given color is substracted in such case and the negative components are
+given color is subtracted in such case and the negative components are
 rounded to zero immediately. For example
 \begtt
 \colordef \Color {\Brown-\Black}

@@ -141,7 +141,7 @@
    in user name space.\nl
    You can load a code chunk by \^`\loadtrick` `<cs-name>`. This
    command doesn't run the `<cs-name>`, only loads the appropriate code. It
-   should be usable if you want to load the code before the fisrt usage of
+   should be usable if you want to load the code before the first usage of
    the `<cs-name>`.
    \_cod -----------------------------
 
@@ -173,7 +173,7 @@
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to
    specify something different than `\par` at empty lines. We set `\_par`
-   (see bellow) in \OpTeX/ version 1.04+ and newer. Some macros were rewritten
+   (see below) in \OpTeX/ version 1.04+ and newer. Some macros were rewritten
    due to this change. And we copy old versions of these changed macros here
    in order to allow to use older Lua\TeX/ versions where `\partokenname` is
    not provided.\nl

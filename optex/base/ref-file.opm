@@ -103,7 +103,7 @@
    We must read `<definitions of your ref macros>` while `#` has the catcode 12,
    because we don't want to duplicate each `#` in the `.ref` file.\nl
    `\refdecl` appends its data to the \`\_refdecldata` macro. It is
-   pushed to the `.ref` file immediatelly only if the file is opened
+   pushed to the `.ref` file immediately only if the file is opened
    already. Otherwise we are waiting to `\openref` because we don't want
    to open the `.ref` file if it is unnecessary.
    \_cod \_fin -----------------

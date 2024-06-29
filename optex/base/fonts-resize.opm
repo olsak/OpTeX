@@ -220,7 +220,7 @@ Let's sum it up.  Suppose that \^`\initunifonts` was used.
 The `\font` primitive is able to load OpenType
 fonts (`otf` or `ttf`), Type1 fonts (`afm` and `pfb`) or classical `tfm` fonts.
 We strongly recommend to prefer OpenType format over Type1 format
-over `tfm` format. The last one desn't support Unicode. If there is nothing
+over `tfm` format. The last one doesn't support Unicode. If there is nothing
 else left and you must to use `tfm`, then you must to implement re-encoding from
 Unicode to the `tfm` encoding at macro level, see the
 \ulink[http://petr.olsak.net/optex/optex-tricks.html\#nonunicode]{\OpTeX/ trick 0018}
@@ -300,7 +300,7 @@ the current size. So, the example above can be realized by
   re-initialized: now it accepts extended syntax and it is able to load Unicode
   OpenType fonts.
 * \^`\ufont` is a shortcut of `\initunifonts \font`. I.e.\ it behaves like
-  `\font` and accepts extended syntax immediatelly.
+  `\font` and accepts extended syntax immediately.
 * \^`\sfont` has syntax like extended `\font`. It declares a macro which
   selects the given font and resizes it to the current size (given by
   \^`\setfontsize`). In various part of document (text, footnotes, titles), the
@@ -334,7 +334,7 @@ implemented in various design sizes: `cmr5`, `cmr6`, `cmr7`, `cmr8`, `cmr9`,
 sizes". Each design size is implemented in its individual font file and \OpTeX/ is
 able to choose right file if various optical sizes and corresponding file
 names are declared for the font by \^`\_regtfm` or \^`\_regoptsizes` command.
-The command \^`\setfontsize` sets the internal reuirements for
+The command \^`\setfontsize` sets the internal requirements for
 optical size if the parameter is in the format `at<dimen>` or `mag<factor>`.
 Then the command \^`\resizethefont` or \^`\fontlet` or variant selectors try to choose
 the font suitable for the required optical size. For example

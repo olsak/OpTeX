@@ -27,7 +27,7 @@
    Big Endian UTF-16 and enclosed to \code{<>}. Example of usage:
    `\pdfunidef\infoauthor{Petr Olšák} \pdfinfo{/Author \infoauthor}`.\nl
    \^`\pdfunidef` does more things than only converting to hexadecimal PDF string.
-   The <text> can be scanned in verbatim mode (it is true becuase \^`\_Xtoc`
+   The <text> can be scanned in verbatim mode (it is true because \^`\_Xtoc`
    reads the <text> in verbatim mode). First `\edef` do
    `\_scantextokens\unexpanded` and second `\edef` expands the parameter
    according to current values on selected macros from `\_regoul`. Then
@@ -118,7 +118,7 @@ This encoding is \TeX/-discomfortable because it looks like
 This example shows a hexadecimal PDF string (enclosed in \code{<>} as opposed
 to the literal PDF string enclosed in `()`). In these strings each byte is
 represented by two hexadecimal characters (`0-9`, `A-F`). You can tell the
-encoding is UTF-16BE, becuase it starts with \"Byte order mark" `FEFF`. Each
+encoding is UTF-16BE, because it starts with \"Byte order mark" `FEFF`. Each
 unicode character is then encoded in one or two byte pairs. The example string
 corresponds to the text \"Cvičení je zátěž a ${\rm x} ∈ 𝕄$". Notice the 4 bytes
 for the last character, $𝕄$. (Even the whitespace would be OK in a PDF file,

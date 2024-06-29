@@ -301,7 +301,7 @@
    of the <int-character> to `\_int:<int-character>` using `\Umathchardef` and
    declare <int-character> as math-active and define it
    as `\_int:<int-character> \_nolimits`. Moreover, we define `\intop` as
-   `\_int:<int-character>`  (it is the itegral with limits like in plain \TeX).
+   `\_int:<int-character>`  (it is the integral with limits like in plain \TeX).
    We do this with other int-like operators listed below too.
    \_cod -----------------------------
 
@@ -321,7 +321,7 @@
    \_cod -----------------------------
 
 \_global\_Udelcode`<=1 "027E8 % these characters have different meaning
-\_global\_Udelcode`>=1 "027E9 % as normal and as delimeter
+\_global\_Udelcode`>=1 "027E9 % as normal and as delimiter
 
 \_mit % default math alphabets setting
 
@@ -501,7 +501,7 @@
 \_negationof \Rightarrow \nRightarrow
 \_negationof \exists  \nexists
 \_negationof \ni      \nni
-\_negationof \paralel \nparalel
+\_negationof \parallel \nparallel
 \_negationof \sim     \nsim
 \_negationof \approx  \napprox
 \_negationof \equiv   \nequiv

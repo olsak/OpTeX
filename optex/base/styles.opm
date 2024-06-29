@@ -9,7 +9,7 @@
    returns to the outer vertical mode a box with `<line-1>`, next box with
    `<line-2>` etc. Each box has its natural width. This is reason why we cannot
    use paragraph mode where each resulting box has the width `\hsize`.
-   The `<eol>` is set active and `\everypar` starts `\hbox{` and acive <eol>
+   The `<eol>` is set active and `\everypar` starts `\hbox{` and active <eol>
    closes this `\hbox` by `}`.
    \_cod -----------------------------
 

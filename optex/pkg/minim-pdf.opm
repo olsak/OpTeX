@@ -91,6 +91,6 @@
 \_cs{\_cs{_lan:\_the\_language}lang}
 
 
-% catcodes changes don't propage, since this file is loaded with \opinput
+% catcodes changes don't propagate, since this file is loaded with \opinput
 \_endnamespace
 \_endcode

@@ -3,7 +3,7 @@
 \_codedecl \printdoc {Macros for documentation printing <2023-12-10>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
-   General decalarations.
+   General declarations.
    \_cod -----------------------------
 
 \_fontfam[lmfonts]
@@ -181,7 +181,7 @@
    When printing Index, we distinguish the Index entries with their main
    documentation point (they are created as links and backslash is added),
    Index entries with only user documentation points have backslash added
-   but no link is created. Other index entries are printed as usuall
+   but no link is created. Other index entries are printed as usual
    without backslash.
    \_cod -----------------------------
 
@@ -223,7 +223,7 @@
    \_doc -----------------------------
    Main documentation points and hyperlinks to/from it.
    Main documentation point: \code{\\`\\foo`}.
-   User documentation point: \code{\\^`\\foo}, first occurence only.
+   User documentation point: \code{\\^`\\foo}, first occurrence only.
    The next occurrences are only links to the main documentation point.
    Link to user documentation point: \code{\\~`\\foo}.
    \_cod -----------------------------
@@ -329,7 +329,7 @@ documentation points are saved to the index.
 
 The listing mode creates all control sequences which are listed in the
 index as an active link to the main documentation point of such control sequence
-and prints them in blue. Moreower, active links are control sequneces of the
+and prints them in blue. Moreower, active links are control sequences of the
 type `\_foo` or `\.foo` although the documentation mentions only `\foo`.
 Another text is printed in black.
 

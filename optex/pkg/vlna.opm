@@ -19,7 +19,7 @@
    point to Lua functions from `luavlna.lua` package.
    We need this package installed.
 
-   We need not `require ltluatex` because `luatexbase.callbaks` are defined
+   We need not `require ltluatex` because `luatexbase.callbacks` are defined
    in the `optex.lua` file and it is part of the OpTeX format.
    \_cod -----------------------------
 

@@ -125,6 +125,6 @@
 
 2023-10-20 \style d moved from OpTeX trick 0108 to the format
 2022-02-25 \olistskipamount, \ilistskipamount, \itemskipamount introduced
-2021-03-10 \_ifmmode*\_else\_ea\_startitem\_fi added to * defintition
+2021-03-10 \_ifmmode*\_else\_ea\_startitem\_fi added to * definition
 2020-04-21 \isnextchar\par added to \enditems
 2020-03-18 introduced
