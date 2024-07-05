@@ -24,7 +24,7 @@ History:
 
 <1.15> Jun 2024:
        \qcasesof improved: more alternative patterns can be declared using |.
-       \loadtrick is exandable now.
+       \loadtrick is expandable now.
        More OpTeX tricks added.
        Minor improvements and minor bug fixes.
 <1.14> Feb 2024:
