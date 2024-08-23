@@ -128,6 +128,7 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Graphics
 <ul>
+    <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#cancel">Canceled text</a>
@@ -1204,6 +1205,68 @@ declared in previous verbatim block.
 <hr>
 
 <p CLASS="lmarg">Graphics</p>
+
+<h2><a name="loadicon"></a>Repeating image in the document</h2>
+
+<p>Sometimes there is an icon or a logo or something similar which is repeated at
+many places in the document. If you use \inspic for each instance of the
+same image then the data of the image is copied to the PDF repeatedly and
+the PDF isn't size optimized. There is a possibility to load the data
+of the image only once into the PDF output and then to use an internal PDF pointer
+to this data when the image is printed repeatedly. This can be done as following:
+
+<pre>
+\newbox\myiconbox
+\setbox\myiconbox=\hbox{\picw=15pt \inspic{myicon.png}} % loading data only once
+
+Now, you can repeat \copy\myiconbox\ at more places,
+here too: \copy\myiconbox\ and \copy\myiconbox. The image
+is printed at each \copy\myiconbox\ and it is created
+as an internal PDF pointer in the PDF file. The PDF size is smaller.
+</pre>
+
+<p>This concept has one disadvance: the image have only single size in the
+document which is set when data is loaded by the \inspic macro. If you use
+em unit here then you have the size given by the current em unit when the
+data image is loaded.
+
+<p>Following macros solve this problem. You can load the data first by
+\loadicon{image} and use it repeatedly by \icon size{image}. The size gives
+the width of the printed image and it can be given by em unit (depending on
+the current font size). If you don't give the size then you get the natural
+size of the image. For example (suppose you have the file myicon.png):
+
+<pre>
+\loadicon{myicon} % data from myicon.png is loaded
+\def\myicon{\lower.4em\hbox{\icon 1.5em{myicon}}}
+
+\typosize[8/10] The small icon \myicon.
+
+\typosize[12/14] The big icon \myicon.
+</pre>
+
+<p>The implementation is based on linear transformations. The image is
+loaded once (in its natural size) by \loadicon and the \icon macro uses
+the \copy\imagebox trick mentioned above with the \pdfscale macro.
+
+<pre>
+\ifx\iconsuffix\undefined \def\iconsuffix{png}\fi % default suffix
+\def\loadicon#1{\ea\newbox\csname #1box\endcsname
+   \setbox\cs{#1box}=\hbox{\picw=0pt \picheight=0pt \inspic{#1.\iconsuffix}}%
+}
+\def\icon#1#{\iconA{#1}}
+\def\iconA#1#2{\quitvmode
+   \ifx^#1^\copy\cs{#2box}\else
+      \edef\coef{\expr[5]{\bp{#1}/\bp{\wd\cs{#2box}}}}% scale coefficient
+      \setbox0=\hbox{\pdfsave \pdfscale{\coef}{\coef}\rlap{\copy\cs{#2box}}\pdfrestore}%
+      \ht0=\coef\ht0 \dp0=\coef\dp0 \wd0=\coef\wd\cs{#2box}%
+      \box0
+   \fi
+}
+</pre>
+
+<p CLASS=datum>(0139) -- P. O. 2024-08-23<p>
+<hr>
 
 <h2><a name="gradients"></a>Color gradients</h2>
 
