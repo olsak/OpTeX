@@ -57,7 +57,7 @@
 
    \_doc ----------------------------
    The expandable versions of logos used in Outlines need the expandable
-   \`\ingnslash` (instead of the \^`\ignoreslash`).
+   \`\ignslash` (instead of the \^`\ignoreslash`).
    \_cod \_fin ----------------------
 
 \_def\_ignslash#1{\_ifx/#1\_else #1\_fi}

@@ -85,7 +85,7 @@
 
    \_doc -----------------------------
    The default values of \`\pg`, i.\,e.\ `\pg;`, `\pg+` and `\pg.` are very simple.
-   They are used when `\showslides` is not specified.
+   They are used when `\slideshow` is not specified.
    \_cod -----------------------------
 
 \_def\_pg#1{\_cs{_spg:#1}}
