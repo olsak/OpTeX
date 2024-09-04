@@ -286,7 +286,7 @@
    \_protected\_edef\_tmpa {%
       \_noexpand\_famdepend\_noexpand#1{_f:\_noexpand\_currfamily:\_csstring#1}}%
    \_ifx #1\tt
-      \_protected\_def\_tt{{\_def\_xfamv{tt}#2\_ea}\_the\_font \_def\_currvar{\_tt}}%
+      \_protected\_def\_tt{{\_def\_xfamv{tt}#2\_ea}\_the\_font \_def\_currvar{\_tt}\_matt}%
       \_let\tt=\_tt
    \_else \_setnewmeaning #1=\_tmpa \famvardef
    \_fi
@@ -800,12 +800,17 @@ about it. There are two cases:
 
 \^`\tt` is an additional special variant selector which is defined as \"select typewriter
 font independently of the current font family". By default, the typewriter font-face
-from LatinModern font family is used.
+from LatinModern font family is used. When using this default `\tt` selector you need not to
+load the LatinModern family (by \^`\fontfam[lm]`) because the font file is explicitly
+specified in the macro \^`\_ttunifont`. The default `\tt` selector
+scales this font without respecting optical sizes.
 
 The \^`\tt` variant selector is used in \OpTeX/ internal macros
-\^`\_ttfont` (verbatim texts) and \^`\_urlfont` (printing URL's).
+\^`\_ttfont` (verbatim texts), \^`\_urlfont` (printing URL's),
+\^`\_printii` (printing index entry when doc macros are activated) and
+\^`\ttraggedright` (plain~\TeX/ macro).
 
-The behavior of \^`\tt` can be re-defined by \^`\famvardef`. For example:
+The \^`\tt` variant selector can be re-defined by \^`\famvardef`. For example:
 
 \begtt
 \fontfam[Cursor]
@@ -818,9 +823,31 @@ Test in URL \url{http://something.org}.
 \endtt
 %
 You can see that \^`\tt` stay family independent. This is a special feature only
-for \^`\tt` selector. New definitions of \^`\_ttfont` and \^`\_urlfont` are done too.
-It is recommended to use `\setff{-liga;-tlig}` to suppress the
+for \^`\tt` selector. It is recommended to use `\setff{-liga;-tlig}` to suppress the
 ligatures in typewriter fonts.
+
+The \^`\famvardef\tt` behaves differently than \^`\famvardef\anythingelse`:
+it creates the \^`\tt` variant selector independent of current font family
+and it redefines both macros `\tt` and `\_tt` in order to all internal \OpTeX/ macros
+based on this selector are working with the new selected font.
+
+If you load \^`\fontfam[lm]` and declare `\famvardef\tt{\LMfonts\ttset\setff{-tlig}\rm}`
+then you get almost the same behavior as the default `\tt` selector does with one
+difference: a new `\tt` selector respects optical sizes declared in
+the LatinModern font family.
+
+You can implement ex-height correction of `\tt` font with
+respect to your font family used for general text. For example:
+
+\begtt
+\load[lm]
+\famvardef\tt{\LMfonts\ttset\setfontsize{mag1.1}\setff{-tlig}\rm}
+... or ...
+\let\oritt=\tt
+\famvardef\tt{\setfontsize{mag1.1}\oritt}
+\endtt
+The second alternative uses the default font from \^`\_ttunifont` without
+respecting optical sizes.
 
 If Unicode math font is loaded then the `\tt` macro selects typewriter
 font-face in math mode too. This face
