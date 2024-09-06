@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begmulti {Balanced columns <2022-11-26>} % preloaded in format
+\_codedecl \begmulti {Balanced columns <2024-09-06>} % preloaded in format
 
    \_doc -----------------------------
    \`\_betweencolumns` or \`\_leftofcolumns` or \`\_rightofcolumns` include
@@ -35,8 +35,6 @@
    `\widowpenalty` and `\clubppenalty` (they are set to 10000 in \OpTeX/).
    \_cod -----------------------------
 
-\_newcount\_mullines
-
 \_def\_begmulti #1 {\_par\_bgroup\_wipeepar
    \_ifnum\_lastpenalty>10000 \_vskip4.5\_baselineskip\_penalty9999 \_vskip-4.5\_baselineskip \_fi
    \_multiskip \_def\_Ncols{#1}
@@ -45,8 +43,6 @@
    \_setbox0=\_hbox{\_leftofcolumns\_rightofcolumns}%
    \_advance\_hsize by-\_wd0 \_advance\_hsize by\_colsep
    \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep
-   \_mullines=0
-   \_def\_par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
 }
 \_def\_endmulti{\_vskip-\_prevdepth\_vfil
    \_ea\_egroup\_ea\_egroup\_ea\_baselineskip\_the\_baselineskip\_relax
@@ -57,9 +53,8 @@
    \_penalty0 % initialize \_pageoal
    \_ifdim\_pagegoal=\_maxdimen \_setcolsize\_vsize
    \_else \_setcolsize{\_dimexpr\_pagegoal-\_pagetotal}\_fi
-   \_ifdim \_dimen1<2\_baselineskip
-     \_vfil\_break \_setcolsize\_vsize \_fi
-   \_ifnum\_mullines<\_tmpnum \_dimen0=\_ht6 \_else \_dimen0=.8\_maxdimen \_fi
+   \_ifdim \_dimen1<2\_baselineskip \_vfil\_break \_setcolsize\_vsize \_fi
+   \_setsplitsize % sets \_dimen0 = \_ht6
    \_divide\_dimen0 by\_Ncols \_relax
    %% split the material to more pages?
    \_ifdim \_dimen0>\_dimen1 \_splitpart
@@ -75,14 +70,12 @@
    \_vbadness=20000 \_dimen6=\_wd6
    \_createcolumns
    \_printcolumns
-   \_dimen0=\_dimen1 \_divide\_dimen0 by\_baselineskip \_multiply\_dimen0 by\_Ncols
-   \_global\_advance\_mullines by-\_dimen0
    \_egroup
 }
 \_def\_splitpart{%
    \_makecolumns % full page
    \_vskip 0pt plus 1fil minus\_baselineskip \_break
-   \_ifnum\_mullines<\_tmpnum \_dimen0=\_ht6 \_else \_dimen0=.8\_maxdimen \_fi
+   \_setsplitsize % sets \_dimen0 = \_ht6
    \_divide\_dimen0 by\_Ncols \_relax
    \_ifx\_balancecolumns\_flushcolumns \_advance\_dimen0 by-.5\_vsize \_fi
    \_setcolsize\_vsize \_dimen2=\_dimen1
@@ -142,8 +135,35 @@
 }
 \_public \begmulti \endmulti ;
 
+   \_doc -----------------------------
+   The accumulated `\box6` (before its splitting to pages and columns) can
+   be very large and we cannot measure it with classical \TeX/ methods because
+   we can get \"dimension too lagre" error or arithmetic overflow.
+   The \TeX/ limit for dimensions is about 5.75\,m. For example,
+   the `\box6` of the index in this document has about 6.5\,m height.
+
+   The \`\_rawht``<box-num>` macro solves this problem.
+   It expands to the height plus depth of
+   given `\vbox` as an integer in points (i.e. the the fraction part of points is
+   stripped and unit isn't appended). The limit $2^{31}$ of such an integer
+   allows us to measure boxes with many kilometers height.
+
+   The trick used in the \`\_setsplitsize` macro sets `\dimen0` to the maximum of
+   `.8\maxdimen` and actual `\ht6`, because 13100 is `.8\maxdimen` in points.
+   This is sufficient because if the `\dimen0` is big then we get $n$
+   columns for full page. This is not the last page where exact calculations
+   for balancing is needed.
+   \_cod -----------------------------
+
+\_def\_setsplitsize{%
+   \_ifnum \_rawht6 > 13100 \_dimen0 = .8\_maxdimen
+   \_else \_dimen0=\_ht6 \_def\_rawht6{0}\_fi
+}
+\_def\_rawht{\_directlua{optex.raw_ht()}}
+
 \_endcode % -------------------------------------
 
+2024-09-06 \_rawht implemented, more robust measurement of big boxes
 2022-11-26 \at least three lines in the beginning of \begmulti at the page
 2022-05-05 `\_betweencolumns` etc. introduced.
 2021-05-20 Colors inside \begmulti...\endmuti, bug fixed

@@ -34,6 +34,30 @@ function optex.mdfive(file)
         tex.print(md5.sumhexa(data))
    end
 end
+
+-- The `optex.raw_ht ()` function measures the height plus depth of given
+-- `\vbox` saved by `\setbox`. It solves \"dimension too large" problem with big boxes.
+-- It is used in the \^`\_rawht` macro.
+
+function optex.raw_ht()
+   local nod = tex.box[token.scan_int()]       -- read head node of the given box
+   local ht = 0
+   if not(nod==nil) and nod.id==1 then         -- given box must be \vbox
+      for n in node.traverse(nod.head) do
+         if n.id==0 or n.id==1 or n.id==2 then -- hbox or vbox or rule
+            ht = ht + n.height + n.depth
+         end
+         if n.id==12 then                      -- glue
+            ht = ht + n.width
+         end
+         if n.id==13 then                      -- kern
+            ht = ht + n.kern
+         end
+      end
+   end
+   tex.print(string.format('%.0f',ht/65536))
+end
+
 --
 -- \medskip\secc[lua-alloc] Allocators^^M
 local alloc = _ENV.alloc or {}
@@ -743,6 +767,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2024-09-06 raw_ht() implemented
    -- 2024-06-02 more checking in add_to_callback and remove_from_callback
    -- 2024-02-18 \_beglocalcontrol added
    -- 2022-08-25 expose some useful functions in `optex` namespace
