@@ -1184,19 +1184,13 @@ Note that the line \lref[spec] is very interesting.
 it saves only the label [spec] for later use. The \lref[spec] expands to 2
 in our example.
 
-<p>The following code implements this feature but only backward
-references (for sake of simplicity).
+<p>The following code implements this feature based on \ref. It works with
+forward references too.
 
 <pre>
-\def\ttlineref#1{\adef#1[##1]{\setlref{##1}}}
-\protected\def\setlref#1{\sxdef{ttlin:#1}{\the\ttline}}
-\def\lref[#1]{\trycs{ttlin:#1}{??}}
+\def\ttlineref#1{\adef#1[##1]{\label[ttline:##1]\wlabel{\the\ttline}}}
+\def\lref[#1]{\ref[ttline:#1]}
 </pre>
-
-<p>You can use the same labels in following verbatim blocks. They are
-silently rewritten by new line numbers. We suppose that the \lref[label] are used
-immediately after printed verbatim block and only with labels really
-declared in previous verbatim block.
 
 <p>You can use this trick with combination of previous
 <a href="#algol">OpTeX trick 0078</a>

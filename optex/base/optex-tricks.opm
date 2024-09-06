@@ -298,12 +298,11 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
 
-\_trick 0079 \ttlineref ;
+\_trick 0079 \ttlineref \lref ;
 %%%%%%%%%%%%
 
-\_def\ttlineref#1{\_adef#1[##1]{\.setlref{##1}}}
-\_protected\_def\.setlref#1{\_sxdef{ttlin:#1}{\_the\_ttline}}
-\_def\lref[#1]{\_trycs{ttlin:#1}{??}}
+\_def\ttlineref#1{\_adef#1[##1]{\_label[ttline:##1]\_wlabel{\_the\_ttline}}}
+\_def\lref[#1]{\_ref[ttline:#1]}
 
 \_trick 0011 \scaleto \scaletof ;
 %%%%%%%%%%%%
