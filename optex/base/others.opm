@@ -184,13 +184,6 @@
 
 \_ifx\_partokenname\_undefined % LuaTeX 1.13 or older:
 
-   \_def\_begmulti #1 {\_par\_bgroup\_wipeepar\_multiskip\_penalty0 \_def\_Ncols{#1}
-      \_setbox6=\_vbox\_bgroup\_bgroup \_let\_setxhsize=\_relax \_penalty-99
-      \_advance\_hsize by\_colsep
-      \_divide\_hsize by\_Ncols  \_advance\_hsize by-\_colsep
-      \_mullines=0
-      \_def\par{\_ifhmode\_endgraf\_global\_advance\_mullines by\_prevgraf\_fi}%
-   }
    \_def\_incaption {\_bgroup
       \_ifcsname _\_tmpa num\_endcsname \_ea\_incr \_csname _\_tmpa num\_endcsname
       \_else \_opwarning{Unknown caption /\_tmpa}\_fi
