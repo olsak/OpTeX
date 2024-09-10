@@ -1,0 +1,56 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Plex] \Plex
+   {IBM Plex font family}
+   {\serif \sans \mono
+    \thin \elight \light \regular \text \medium \semibold
+    \cond \nocond}
+   {\rm \bf \it \bi}
+   {}%% No math!
+   {IBMPlexSerif-Regular}
+   {\_def\_fontnamegen {[IBMPlex\_subV-\_currV]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Subfamilies:^^J
+ \serif .... Serif (default)^^J
+ \sans ..... Sans serif^^J
+ \mono ..... Mono^^J%
+Weight modifiers:^^J
+ \thin ........ \rm \it = thin, \bf \bi = light^^J
+ \elight ...... \rm \it = extra light, \bf \bi = regular^^J
+ \light ....... \rm \it = light, \bf \bi = medium^^J
+ \regular ..... \rm \it = regular, \bf \bi = bold (default)^^J
+ \text ........ \rm \it = text, \bf \bi = bold^^J
+ \medium ...... \rm \it = medium, \bf \bi = bold^^J
+ \semibold .... \rm \it = regular, \bf \bi = semibold^^J%
+Modifiers:^^J
+ \cond \nocond .... Condensed (sans serif only)^^J%
+}}
+
+\_moddef \resetmod {\__Plex_nocond \__Plex_serif \__Plex_regularVars}
+
+\_def\__Plex_nocond      {\_fsetV cond={} }
+\_def\__Plex_serif       {\_fsetV sub=Serif }
+\_def\__Plex_regularVars {\_fvars Regular Bold Italic BoldItalic }
+
+\_moddef \serif {\__Plex_serif}
+\_moddef \sans  {\_fsetV sub={Sans\_condV} }
+\_moddef \mono  {\_fsetV sub=Mono }
+
+\_moddef \thin     {\_fvars Thin Light ThinItalic LightItalic }
+\_moddef \elight   {\_fvars ExtraLight Regular ExtraLightItalic Italic }
+\_moddef \light    {\_fvars Light Medium LightItalic MediumItalic }
+\_moddef \regular  {\__Plex_regularVars}
+\_moddef \text     {\_fvars Text Bold TextItalic BoldItalic }
+\_moddef \medium   {\_fvars Medium Bold MediumItalic BoldItalic }
+\_moddef \semibold {\_fvars Regular SemiBold Italic SemiBoldItalic }
+
+\_moddef \cond   {\_fsetV cond=Condensed }
+\_moddef \nocond {\__Plex_nocond}
+
+\_initfontfamily
+
+\_endcode
+
+Official font repository:
+https://github.com/IBM/plex

@@ -276,10 +276,26 @@
 \_famfrom {Séamas Ó Brógáin}
 \_faminfo [Clara] {Clara, a serif font family} {f-clara}
    { -: {\rm\bf\it\bi} \caps: {\rm} }
-   
+
 \_famfrom {Maxim Iorsh}
 \_faminfo [Culmus] {Hebrew roman, sans and mono fonts from the Culmus project} {f-culmus}
    {\roman,\sans,\mono: {\rm\bf\it\bi}}
+
+\_famfrom {IBM, Mike Abbink, Paul van der Laan, Pieter van Rosmalen}
+\_faminfo [Plex]
+   {IBM Plex font family}
+   {f-plex}
+   { \thin,\elight,\light,-,\text: {\rm\it}
+     \semibold,-: {\bf\bi}
+     \sans\thin,\sans\elight,\sans\light,\sans,\sans\text: {\rm\it}
+     \sans\semibold,\sans: {\bf\bi}
+     \cond\sans\thin,\cond\sans\elight,\cond\sans\light,%
+     \cond\sans,\cond\sans\text: {\rm\it}
+     \cond\sans\semibold,\cond\sans: {\bf\bi}
+     \mono\thin,\mono\elight,\mono\light,\mono,\mono\text: {\rm\it}
+     \mono\semibold,\mono: {\bf\bi}
+   }
+\_famalias[IBM Plex]
 
 \_endcode
 
