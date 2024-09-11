@@ -94,11 +94,11 @@
 \_def\_balancecolumns{\_bgroup \_setbox7=\_copy6 % destination height: \dimen0
    \_ifdim\_dimen0>\_baselineskip \_else \_dimen0=\_baselineskip \_fi
    \_vbadness=20000 \_dimen6=\_wd6 \_dimen1=\_dimen0
-   \_def\_tmp{\_createcolumns
+   \_def\_trybalance{\_createcolumns
       \_ifvoid6 \_else
          \_advance \_dimen1 by.2\_baselineskip
          \_setbox6=\_copy7
-         \_ea \_tmp \_fi}\_tmp
+         \_ea \_trybalance \_fi}\_trybalance
    \_printcolumns
    \_egroup
 }
