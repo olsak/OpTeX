@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [OldStandard] \Oldstandard {inspired by a typeface most commonly used in old books}
-        {\caps} {\rm \bf \it \bi} {}
+        {\caps} {\rm \bf \it \bi} {OldStandard}
         {[OldStandard-Regular]}
         {\_def\_fontnamegen {[OldStandard-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
@@ -14,6 +14,8 @@ Modifier:^^J
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_initfontfamily % new font family must be initialized
+
+\_loadmath {[OldStandard-Math]}
 
 \_endcode
 
