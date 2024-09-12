@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [fbb] \FBembo {Bembo–like fonts derived from Cardo}
-        {\caps \swash} {\rm \bf \it \bi} {}
+        {\caps \swash} {\rm \bf \it \bi} {adjusted Garamond-Math}
         {[fbb-Regular]}
         {\_def\_fontnamegen {[fbb-\_currV]:script=latn;\_capsV\_swaV\_fontfeatures}}
 
@@ -16,6 +16,8 @@ Modifier:^^J
 \_moddef \swash    {\_fsetV swa=+swsh;+salt; }
 
 \_initfontfamily % new font family must be initialized
+
+\_loadmath 1.06 {[Garamond-Math]} % x-size adjusted Garamond-Math
 
 \_endcode
 
