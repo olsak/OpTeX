@@ -10,7 +10,7 @@ Modifiers:^^J
  \caps ...... caps & small caps^^J
  \slant ..... slanted Regular, Bold^^J%
 Variants:^^J
- \sl ... slanted Regular, \sb ... slanted Bold^^J
+ \sl ... slanted Regular, \bs ... slanted Bold^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic Bolditalic }

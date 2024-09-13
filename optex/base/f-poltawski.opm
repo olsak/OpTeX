@@ -13,7 +13,7 @@ Modifiers:^^J
  \expd ...... semi expanded, designed for 8pt size^^J
  \cond ...... semi condensed, designed for 12pt size^^J
  \ccond ..... condensed, designed for 17pt size^^J
- \osize ..... auto-sitches between \ccond \cond \noexpd \expd \eexpd by size^^J
+ \osize ..... auto-switches between \ccond \cond \noexpd \expd \eexpd by size^^J
  \caps ...... caps & small caps^^J
 }}
 

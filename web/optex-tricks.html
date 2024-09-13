@@ -13,7 +13,7 @@
         width: 200px; height: 0px;
         font-weight: bold;
         text-align: right;
-        position: relative; top: 15px; left: -15px; 
+        position: relative; top: 15px; left: -15px;
         overflow; }
  .rmarg {margin-left: 15px; margin-top: -15px;
         width: 200px; height: 0px;
@@ -23,7 +23,7 @@
         overflow; }
   .datum {text-align: right; margin-bottom: -10px; font-size: 80%}
   p   { text-align: justify }
-  pre { width: 600px; overflow; }  
+  pre { width: 600px; overflow; }
 -->
 </style>
 
@@ -41,9 +41,9 @@ align="center">
 <h1 STYLE="text-align: center">OpTeX - tips, tricks, howto</h1>
 
 
-<p>This page includes solutions of various tasks when 
+<p>This page includes solutions of various tasks when
 <a href="http://petr.olsak.net/optex/">OpTeX</a> is used.
-Each solution would be ``small'', it means you can see whole solution at
+Each solution would be "small", it means you can see whole solution at
 once in your www browser. The constellation of each solution is similar: user
 description followed by macro code followed by explanation of the macro
 code. User can copy and paste the macro code to his/her document simply by
@@ -58,7 +58,7 @@ need to copy the code, see section 1.7.8 of OpTeX documentation.
 The directly usable macros are marked here by the blue word "autoload:"
 in the right margin.
 
-<p><a href="http://petr.olsak.net/opmac-tricks-e.html">OPmac tricks</a> 
+<p><a href="http://petr.olsak.net/opmac-tricks-e.html">OPmac tricks</a>
 can be used too but re-implementation of the code is probably
 needed because OPmac uses different internal macros than OpTeX.
 The important OPmac tricks will be re-implemented here soon.
@@ -71,7 +71,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li> \transformbox applies linear transformations.
 <li> \oval, \circle create colored oval or circle around text.
 <li> \clipinoval, \clipincircle declare clipping path for images.
-<li> \hisyntax performs syntax highlighting for C, Python, TeX, 
+<li> \hisyntax performs syntax highlighting for C, Python, TeX,
      html and XML languages.
 <li> \draft and \showlabels can be used for printing labels in draft mode.
 <li> Absolute positions on the page.
@@ -85,7 +85,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li> \crlp is implemented for tables.
 <li> Tables to given width.
 <li> Variations of paragraphs with p declarator.
-<li> Vertical centered text in more rows in tables. 
+<li> Vertical centered text in more rows in tables.
 <lI> Eqbox: equal width of boxes across whole document.
 <li> \slides style allows to create presentations.
 <li> \usebib reads directly .bib databases without any external program.
@@ -184,7 +184,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Different formatting
 <ul>
     <li><a href="#fnindent">Indented footnotes</a>
-    <li><a href="#linnum">Line numbers in the left side of the formatted text</a> 
+    <li><a href="#linnum">Line numbers in the left side of the formatted text</a>
     <li><a href="#firstline">First line of the paragraph with a different font</a>
     <li><a href="#numparit">Numbered paragraph with a different font</a>
     <li><a href="#widows">Extra \vsize space for solving widows</a>
@@ -350,15 +350,15 @@ font, but rescaled so that the width of “text” is the given size.
    \edef\tmp{\expr{\bp{\tmp}/\bp{\wd0}}}%
    \transformbox{\pdfscale{\tmp}{\tmp}}{#1}}
 
-\scaleto 7cm {text} % the "text" has 7cm width 
+\scaleto 7cm {text} % the "text" has 7cm width
 </pre>
 
-<p>The desired dimension is saved to the \tmp macro and \scaletoA does the real work. It 
+<p>The desired dimension is saved to the \tmp macro and \scaletoA does the real work. It
 saves the text to \hbox 0 and calculate the coefficient of scaling as \tmp/\wd0.
 This coefficient is saved to \tmp again and used in the \transformbox{\pdfscale}{} macro.
 
-<p>You can compare the solution of similar task in OPmac trick 027. 
-You can see that we have more powerful tools for calculation than in OPmac: 
+<p>You can compare the solution of similar task in OPmac trick 027.
+You can see that we have more powerful tools for calculation than in OPmac:
 \bp converts the dimension to Adobe points and \expr calculates the ratio.
 
 <p>If you are using a font family with optical sizes, then we need to scale
@@ -372,9 +372,9 @@ to right optical size. Then we can use \scaletof size {text}.
 </pre>
 
 <p>The \setfontsize{mag factor} is calculated, where the factor is the
-scale ratio calculated and saved in the \tmpa. 
-When the font is changed then the result is not exactly 
-the desired width, because new font have a little different proportions. 
+scale ratio calculated and saved in the \tmpa.
+When the font is changed then the result is not exactly
+the desired width, because new font have a little different proportions.
 So previous \scaletoA is called again to reach the exact accuracy.
 
 <p CLASS=datum>(0011) -- P. O. 2020-05-06<p>
@@ -385,9 +385,9 @@ So previous \scaletoA is called again to reach the exact accuracy.
 <p>The TeX distribitions include OTF fonts FontAwesome5Free-Solid-900,
 FontAwesome5Brands-Regular-400 and FontAwesome5Free-Regular-400
 with icons (dingbats) like keyboard, house, faces etc. See the
-<a href="http://mirrors.ctan.org/fonts/fontawesome5/doc/fontawesome5.pdf">documentation 
-   from fontawesome5 LaTeX package</a> 
-where all these dingbats are listed. 
+<a href="http://mirrors.ctan.org/fonts/fontawesome5/doc/fontawesome5.pdf">documentation
+   from fontawesome5 LaTeX package</a>
+where all these dingbats are listed.
 We want to use them. The following macro code does it:
 
 <pre>
@@ -400,21 +400,21 @@ We want to use them. The following macro code does it:
 \protected\def\fabran{\tenfabran\resizethefont}
 \def\__fontawesome_def_icon:nnnnn#1#2#3#4#5{%
    \ifx^#1^\else
-      \getfourtokens\tmp#3\relax 
+      \getfourtokens\tmp#3\relax
       \protected\edef#1{{\csname fa\tmp\endcsname \char#5}}%
    \fi
 }
 \def\getfourtokens#1#2#3#4#5#6\relax{\def#1{#2#3#4#5}}
 \input fontawesome5-mapping.def
 \__fontawesome_def_icon:nnnnn{\faWifi}{wifi}{free3}{213}{"F1EB}
-</pre> 
+</pre>
 
 <p>Now, you can use all control sequences listed in the fontawesome5
-documentation. For example \faHouseUser, \faAngry, \faApple, etc. 
+documentation. For example \faHouseUser, \faAngry, \faApple, etc.
 The alternative syntax like \faIcon{Angry} is not supported.
-A few icons are in its "regular" variants. They are listed as 
-\faAngry[regular] in the fontawesone5 documentation. 
-These icons are available by the \faregul prefix in uour macro, 
+A few icons are in its "regular" variants. They are listed as
+\faAngry[regular] in the fontawesone5 documentation.
+These icons are available by the \faregul prefix in uour macro,
 i.e. \faregul\faAngry.
 
 <p><b>Notice to the implementation</b>. The three fonts with dingbats are
@@ -1016,7 +1016,7 @@ the constant values in order all ovals have the same height plus depth.
 
 <p>The reason of this error: the parameter text is tokenized when the
 parameter is read. The first ` is run after this parameter is completely read. It
-changes catcodes but nothing is read directly from file at this time, so 
+changes catcodes but nothing is read directly from file at this time, so
 such catcode setting is ineffective.
 
 <p>We know that the usage of \code{...} is 100% working, but we must escape
@@ -1041,7 +1041,7 @@ of the macro:
 \verbii\table{cc}{ a &amp; `\table` \cr b &amp; `&amp;` }
 </pre>
 
-<p>The \verbii can be used before \table macro or similar macros 
+<p>The \verbii can be used before \table macro or similar macros
 where the second parameter is important.
 
 <p>Implementation note: We read the parameter first with category codes
@@ -1049,7 +1049,7 @@ set by \verbC. The \endgroup in the \verbG restores the original category
 codes and the macro parameter is represented by \scantextokens{#1}. When
 this parameter is processed then the current category codes are used again.
 The \verbii macro read parameters like \verbii\table pxto10cm{cc}{...}.
-This is the reason of the existence of the \verbiiA auxiliary macro. 
+This is the reason of the existence of the \verbiiA auxiliary macro.
 
 <p>This solution doesn't work in special cases when there are unpaired
 braces {} in the verbatim parameter and with macros where the scanned
@@ -2070,7 +2070,7 @@ and then simply use them.
 
 <h2><a name="bbchar"></a>\bbchar from AMS fonts when Unicode math font is used</h2>
 
-<p>When \fontfam[] is used and \noloadmath is not declared 
+<p>When \fontfam[] is used and \noloadmath is not declared
 then a relevant math font from Unicode math fonts
 is loaded too. The single font includes more math alphabets together: math
 italics, roman, calligraphic, fractur, greek letters, bbchars etc.
@@ -2141,7 +2141,7 @@ spaces instead of ampersands.
 $$
   \x\pmatrix{x_1 x_2 x_3\cr 12 11 10} = \left[\x\matrix{12 11 10\cr y_1 y_2 y_3}\right]
 $$
-</pre> 
+</pre>
 
 <p CLASS=datum>(0010) -- P. O. 2020-04-09<p>
 <hr>
@@ -2664,18 +2664,18 @@ autoload:<br>\crx
   ss &amp; tt &amp; uu &amp; vv &amp; ww &amp; xx \crx
   ab &amp; cd &amp; ef &amp; gh &amp; ij &amp; kl \crx
   mn &amp; op &amp; qr &amp; st &amp; uv &amp; wx}}
-</pre>            
+</pre>
 
 <p>We need to define the \crx macro which inserts the grey rule before each
 odd line into the vertical list:
 
 <pre>
-\newcount\tabline  \tabline=1 
-\def\crx{\crcr \ifodd\tabline \colortabline \else\noalign{\hrule height0pt}\fi 
-         \global\advance\tabline by1 } 
-\def\colortabline{\noalign{\localcolor\LightGrey 
-   \hrule height\ht\strutbox depth\dimexpr\dp\strutbox +2\tablinespace\relax 
-   \kern-\dimexpr\ht\strutbox+\dp\strutbox +2\tablinespace}} 
+\newcount\tabline  \tabline=1
+\def\crx{\crcr \ifodd\tabline \colortabline \else\noalign{\hrule height0pt}\fi
+         \global\advance\tabline by1 }
+\def\colortabline{\noalign{\localcolor\LightGrey
+   \hrule height\ht\strutbox depth\dimexpr\dp\strutbox +2\tablinespace\relax
+   \kern-\dimexpr\ht\strutbox+\dp\strutbox +2\tablinespace}}
 </pre>
 
 <p>The \tabline counter counts the lines in the table and inserts the
@@ -2702,32 +2702,32 @@ They have the following example in the documentation:
 
 <pre>
 \thistable={\tabiteml={}\tabitemr={}\rulewidth=.2pt}
-\table{l(\quad)lr}{                           \crtop 
-  \mspan2[c]{Item}         &amp;                  \crlp{1-2} 
-   Animal    &amp; Description &amp; \quad Price (\$) \crmid 
-   Gnat      &amp; per gram    &amp;      13.65       \cr 
-             &amp; each        &amp;       0.01       \cr 
-   Gnu       &amp; stuffed     &amp;      92.50       \cr 
-   Emu       &amp; stuffed     &amp;      33.33       \cr 
-   Armadillo &amp; frozen      &amp;       8.99       \crbot} 
+\table{l(\quad)lr}{                           \crtop
+  \mspan2[c]{Item}         &amp;                  \crlp{1-2}
+   Animal    &amp; Description &amp; \quad Price (\$) \crmid
+   Gnat      &amp; per gram    &amp;      13.65       \cr
+             &amp; each        &amp;       0.01       \cr
+   Gnu       &amp; stuffed     &amp;      92.50       \cr
+   Emu       &amp; stuffed     &amp;      33.33       \cr
+   Armadillo &amp; frozen      &amp;       8.99       \crbot}
 </pre>
 
 <p>We only need to define \crtop, \crmid, \crbot macros:
 
 <pre>
-\def\crtop{\crcr \noalign{\hrule height.6pt \kern2.5pt}} 
-\def\crbot{\crcr \noalign{\kern2.5pt\hrule height.6pt}} 
-\def\crmid{\crcr \noalign{\kern1pt\hrule height.4pt\kern1pt}} 
+\def\crtop{\crcr \noalign{\hrule height.6pt \kern2.5pt}}
+\def\crbot{\crcr \noalign{\kern2.5pt\hrule height.6pt}}
+\def\crmid{\crcr \noalign{\kern1pt\hrule height.4pt\kern1pt}}
 </pre>
 
 <p>We need to set default rulewidth for this table to .2pt
-(it is generated by \crlp{1-2}). Other rules have explicitly declared 
+(it is generated by \crlp{1-2}). Other rules have explicitly declared
 thickness.
 We have to remove the spaces left in the first cell and right in
 the last cell because the rules have to be aligned with the text. This is a
 reason why the \tabitemr and \tabiteml are empty. The space between first
 and second column is created by (\quad) in the declaration. The same space
-before third column is caused by \quad before "Price". 
+before third column is caused by \quad before "Price".
 
 <p CLASS=datum>(0007) -- P. O. 2020-04-10<p>
 <hr>
@@ -2735,10 +2735,10 @@ before third column is caused by \quad before "Price".
 <h2><a name="decdigits"></a>Decimal digits aligned by the decimal point</h2>
 
 <p>We declare new column letter N with numeric parameter: it gives the
-maximal number of the digits used after the decimal point in the column. 
+maximal number of the digits used after the decimal point in the column.
 Table items can be in the form "xxx.xx" or ".xxx" or "xxx.". All these
 variants are aligned by the decimal point. The decimal point itself is
-printed by the \decimalpoint macro, which can be defined as period or 
+printed by the \decimalpoint macro, which can be defined as period or
 as comma (comma is used in Czech traditional typography for decimal numbers).
 The latest form "xxx." is aligned too but the decimal point is not printed.
 If the table item does not have any decimal point (for example it is the
@@ -2746,13 +2746,13 @@ title of the column) then the text is centered.
 
 <pre>
 \def\decimalpoint{.}
-\def\_paramtabdeclareN#1{\the\tabiteml\hfil\adigit{#1}##.\relax\the\tabitemr} 
+\def\_paramtabdeclareN#1{\the\tabiteml\hfil\adigit{#1}##.\relax\the\tabitemr}
 \def\adigit#1#2.#3{\ifx\relax#3\hfil#2\_unsskip\hfil \else
     \tmpdim=.5em \tmpdim=#1\tmpdim $#2$%
     \_ea \ifx.#3\relax\phantom\decimalpoint \else \decimalpoint \fi
     \_ea \adigitA\fi #3%
 }
-\def\adigitA#1.\relax{\hbox to\tmpdim{$#1$\hss}} 
+\def\adigitA#1.\relax{\hbox to\tmpdim{$#1$\hss}}
 
 % test:
 
@@ -2771,24 +2771,24 @@ declaration, so we are sure that the scanning of the parameter finishes.
 If this compensatory decimal point is scanned (i.e. no decimal point is in the
 item data, #3 is \relax) then we write the text centered. Else we write left
 part of the number, \decimalpoint (or \phantom\decimalpoint if no digits
-follows) and the rest is printed in the box with fixed width given by the 
-number of digits declared in N parameter. 
+follows) and the rest is printed in the box with fixed width given by the
+number of digits declared in N parameter.
 
 <p>If you don't want to specify the maximal number of digits, you can
 declare D column declarator (without parameter) and use the \eqbox macro
-from OpTeX, see section 
-<a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:^eqbox">2.30.4</a>. 
+from OpTeX, see section
+<a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#cs:^eqbox">2.30.4</a>.
 You have to run TeX two times.
 
 <pre>
 \def\decimalpoint{.}
-\def\_tabdeclareD{\the\tabiteml\hfil\adigitD##.\relax\the\tabitemr} 
+\def\_tabdeclareD{\the\tabiteml\hfil\adigitD##.\relax\the\tabitemr}
 \def\adigitD#1.#2{\ifx\relax#2\hfil#1\_unsskip\hfil \else
     $#1$%
     \_ea \ifx.#2\relax\phantom\decimalpoint \else \decimalpoint \fi
     \adigitAD\fi #2%
 }
-\def\adigitAD#1.\relax{\eqbox l[D:\the\tabnum/\the\colnum]{$#1$}} 
+\def\adigitAD#1.\relax{\eqbox l[D:\the\tabnum/\the\colnum]{$#1$}}
 
 \newcount\tabnum
 \everytable{\global\advance\tabnum by1}
@@ -2796,8 +2796,8 @@ You have to run TeX two times.
 
 <p>We must to specify the label for \eqbox uniquely in whole document. So we
 have to set numbers to each table and use the label in the form
-D:tablenum/colnum. Note that the column number \colnum is calculated by the 
-\table macro and it is available for each column used in this macro. 
+D:tablenum/colnum. Note that the column number \colnum is calculated by the
+\table macro and it is available for each column used in this macro.
 
 <p CLASS=datum>(0015) -- P. O. 2020-05-20<p>
 <hr>
@@ -2815,9 +2815,9 @@ that you have a lot of lines like this:
 <pre>
 \def\ltable{\bgroup \let\_tablebox=\egroup \table} % the \vbox is deactivated
 
-\ltable{|c|c|}{data &amp; data \cr 
-               data &amp; data \cr 
-      ... much more &amp; data ... \cr} 
+\ltable{|c|c|}{data &amp; data \cr
+               data &amp; data \cr
+      ... much more &amp; data ... \cr}
 </pre>
 
 <p>Now, the \halign can work in main vertical mode and its lines are breakable to
@@ -2827,9 +2827,9 @@ to see them in the center. This can be done by:
 
 <pre>
 \thistable{\tabskipl=0pt plus1fil \tabskipr=\tabskipl}
-\ltable to\hsize {|c|c|}{data &amp; data \cr 
-                         data &amp; data \cr 
-                ... much more &amp; data ... \cr} 
+\ltable to\hsize {|c|c|}{data &amp; data \cr
+                         data &amp; data \cr
+                ... much more &amp; data ... \cr}
 </pre>
 
 <p>OK, the table is in the center. But \crl does not do what we want. We can use
@@ -2842,14 +2842,14 @@ page. You can re-define \crli like this:
            \def\crli{\_crli \noalign{\penalty0\kern-.4pt}\_crli\noalign{\nobreak}}}
 \ltable to\hsize{|c|c|}{\crli
                   data &amp; data \crli
-                  data &amp; data \crli 
-         ... much more &amp; data ... \crli} 
+                  data &amp; data \crli
+         ... much more &amp; data ... \crli}
 </pre>
 
 <p>The trick is based on the fact, that there are two horizontal rules (one
 over another) between each lines. If a page break occurs (at \penalty0)
 then one horizontal rule is at the bottom and second one at the top of next
-page. 
+page.
 
 <p>The tricks above are only very simple examples of long tables. If you
 need something more smart then you can use fixed width of table items and
@@ -2858,35 +2858,35 @@ from OpTeX. Or you can resample the boxes created by \halign. This
 last approach allows to repeat a table header at the top of each page again:
 
 <pre>
-\def\longtable#1#2{\goodbreak \bgroup \tablinespace=0pt \let\_zerotabrule=\empty 
-   \setbox0=\table{#1}{\strutT\relax #2} 
-   \setbox1=\vbox{\unvbox0 \setbox2=\vbox{}\revertbox} 
+\def\longtable#1#2{\goodbreak \bgroup \tablinespace=0pt \let\_zerotabrule=\empty
+   \setbox0=\table{#1}{\strutT\relax #2}
+   \setbox1=\vbox{\unvbox0 \setbox2=\vbox{}\revertbox}
    \setbox2=\vbox{\unvbox2 \global\setbox4=\lastbox\unskip \global\setbox5=\lastbox\unskip}
    \whatfree4 \advance\tmpdim by-.8pt \ifdim\tmpdim&lt;\baselineskip \vfil\break \fi
-   \offinterlineskip \crule\center4\crule\center5 \printboxes 
-   \center5\crule \egroup \goodbreak 
+   \offinterlineskip \crule\center4\crule\center5 \printboxes
+   \center5\crule \egroup \goodbreak
 }
-\def\whatfree#1{\tmpdim=\vsize \advance\tmpdim by-\pagetotal 
-   \advance\tmpdim by-\prevdepth \advance\tmpdim by-.4pt 
-   \advance\tmpdim by-\ht#1 \advance\tmpdim by-\dp#1 \advance\tmpdim by-\ht5 } 
-\def\revertbox {\setbox0=\lastbox\unskip 
-   \ifvoid0 \else \global\setbox2=\vbox{\unvbox2\box0} \ea\revertbox\fi } 
-\def\printboxes{\setbox2=\vbox{\unvbox2 \global\setbox0=\lastbox\unskip} 
-   \ifvoid0 \else \whatfree0 
+\def\whatfree#1{\tmpdim=\vsize \advance\tmpdim by-\pagetotal
+   \advance\tmpdim by-\prevdepth \advance\tmpdim by-.4pt
+   \advance\tmpdim by-\ht#1 \advance\tmpdim by-\dp#1 \advance\tmpdim by-\ht5 }
+\def\revertbox {\setbox0=\lastbox\unskip
+   \ifvoid0 \else \global\setbox2=\vbox{\unvbox2\box0} \ea\revertbox\fi }
+\def\printboxes{\setbox2=\vbox{\unvbox2 \global\setbox0=\lastbox\unskip}
+   \ifvoid0 \else \whatfree0
       \ifdim\tmpdim&lt;0pt \center5\crule\vfil\break \crule\center4\crule\center5 \fi
-      \center0 \nobreak \printboxes \fi } 
-\def\crule{\centerline{\hbox to\wd4{\hrulefill}}\nobreak} 
-\def\center#1{\centerline{\copy#1}\nobreak} 
+      \center0 \nobreak \printboxes \fi }
+\def\crule{\centerline{\hbox to\wd4{\hrulefill}}\nobreak}
+\def\center#1{\centerline{\copy#1}\nobreak}
 
 \def\strutT {\vrule height1.8em depth.8em width0pt} % strut for the title
 
-\longtable {|c|c|c|}{ head1 &amp; head2 &amp; head22 \cr % title 
+\longtable {|c|c|c|}{ head1 &amp; head2 &amp; head22 \cr % title
                                              \tskip5pt
                       data2 &amp; data2 &amp; data2 \cr
                       data3 &amp; data3 &amp; data3 \cr
-                      data4 &amp; data4 &amp; data4 \cr 
-                       data &amp; data  &amp; data \cr 
-              ... much more &amp; data  &amp; data ...} 
+                      data4 &amp; data4 &amp; data4 \cr
+                       data &amp; data  &amp; data \cr
+              ... much more &amp; data  &amp; data ...}
 </pre>
 
 <p>The head1 , head2 and head22 is repeated with rules above and below this
@@ -3168,7 +3168,7 @@ bold and red.
 
 <p CLASS=rmarg>
 autoload:<br>\framedblock<br>
-re-defined:<br>\beglock, \endblock<br>
+re-defined:<br>\begblock, \endblock<br>
 declared also:<br>\printframe,<br>(if undeclared)<br>
 used and declared also:<br>\frameslist
 </p>
@@ -3410,8 +3410,8 @@ declared also:<br>\pend
 
 <p>The <a href="https://tex.stackexchange.com/questions/632832">question</a>
 on the tex.stackexchange
-asks for the line numbers in the left side of the formatted text. The macro package edmac 
-mentioned here is not usable for OpTeX because it changes the output routine. 
+asks for the line numbers in the left side of the formatted text. The macro package edmac
+mentioned here is not usable for OpTeX because it changes the output routine.
 If you want to change the output routine, you must to do it with
 recommendation given in the section 2.18 of the OpTeX manual, but old edmac
 macro package doesn't respect it.
@@ -3441,12 +3441,12 @@ manipulation at the post processing state (when \pend is processed):
          \unskip \unskip\unpenalty \setbox1=\lastbox
          \ifvoid1 \else
             \global\setbox2=\hbox{\llap{\printnum}\box1\penalty0\unhbox2}
-            \advance\tmpnum by-\linenumincrement 
+            \advance\tmpnum by-\linenumincrement
             \repeat
    }\noindent\unhbox2 \par
 }
 \def\printnum{\setfontsize{mag.6}\rm\the\tmpnum\kern.8em}
-</pre> 
+</pre>
 
 <p>The single paragraph surrounded by \pstart...\pend is processed first in
 the \vbox. The lines from this paragraph are moved from the vertical list to
@@ -3788,7 +3788,7 @@ point upwards to the upper edge. We have it just under the last box with
 (probably) nonzero depth. So, we have to return by this depth (\prevdepth)
 and by the page size (\vsize) and by the upper margin size (\voffset).
 Moreover, if there is nonempty \footline, we have to return by \footlinedist
-too.  
+too.
 
 <p CLASS=datum>(0129) -- P. O. 2024-02-12<p>
 <hr>
@@ -3798,14 +3798,14 @@ too.
 <h2><a name="condi"></a>Structured conditionals</h2>
 
 <p>The usage of \if* conditionals is very uncomfortable if we need to
-use some structured logical expression in our macros 
-with brackets () and logical AND, OR. This is not implemented at 
+use some structured logical expression in our macros
+with brackets () and logical AND, OR. This is not implemented at
 TeX primitive level, unfortunately. But we can use the following trick:
 
 <pre>
 \def\cond[#1:#2]{#1 1\else0\fi}
 
-%%        IF      (           a=a     AND          c=c      ) OR          e=f       then 
+%%        IF      (           a=a     AND          c=c      ) OR          e=f       then
 \ifnum 0&lt;\numexpr ( \cond[\ifx aa:\fi] * \cond[\ifx cc:\fi] ) + \cond[\ifx ef:\fi] \relax
      YES \else NO \fi
 </pre>
@@ -3823,11 +3823,11 @@ have the whole construction \if-skipable.
 
 <pre>
 \def\IMPL#1{\IMPLa#1\relax}
-\def\IMPLa#1=>#2\relax{\ifnum #1>#2 0\else 1\fi} 
+\def\IMPLa#1=>#2\relax{\ifnum #1>#2 0\else 1\fi}
 
-\ifnum 0&lt;\numexpr 
+\ifnum 0&lt;\numexpr
 %        (         a=a      =>           c=d     ) AND          2=2        then
-   \IMPL{ \cond[\if aa:\fi] => \cond[\if cd:\fi] } * \cond[\ifnum2=2:\fi] \relax 
+   \IMPL{ \cond[\if aa:\fi] => \cond[\if cd:\fi] } * \cond[\ifnum2=2:\fi] \relax
    Yes \else No \fi
 </pre>
 
@@ -3939,14 +3939,14 @@ autoload:<br>\settabs<br>declared also:<br>\tabs
 </p>
 
 <p>Plain TeX provides tabbing macros but OpTeX does not, bacuase old typewriter
-style for alignment is not preferred. Use \table instead this. 
+style for alignment is not preferred. Use \table instead this.
 Or you can set such typewriter TABs by
 following macros. Moreower, these macros are more intelligent than the Plain
 TeX equivalent.
 
 <p>You can say, for example, \settabs 4\columns. Then the \hsize is divided to four
 equal-size parts, each of them begins by a TAB position and the last one
-ends by a TAB position too. I.e. there are five equi-distant TAB positions. 
+ends by a TAB position too. I.e. there are five equi-distant TAB positions.
 Then you can type
 
 <pre>
@@ -3956,8 +3956,8 @@ Then you can type
 <p>The left boundary of the first text is aligned with first TAB position. The
 next text is aligned to next TAB position. But it needs not to be exactly the second
 one: all TAB positions which are left to the actual text position are
-ignored and the first non-ignored TAB position is used. 
-This means that the text is never overlapped. This is real behavior 
+ignored and the first non-ignored TAB position is used.
+This means that the text is never overlapped. This is real behavior
 of old typewriters. Go to a Museum of Technology and try it.
 This is the significant difference from plain TeX macros.
 
@@ -3969,21 +3969,21 @@ This is the significant difference from plain TeX macros.
 
 <p>Each &amp; or \cr gives one TAB position. If you did not use first &amp;
 immediately after \tabs then first TAB position is shifted from left
-boundary of lines. 
+boundary of lines.
 
 <p>The implementation looks like:
 
 <pre>
 \def\tabs #1\cr{\setbox0=\hbox\bgroup \tabA #1&amp;\cr&amp;}
-\def\tabA #1&amp;{\ifx\cr#1\egroup\box0 \else 
-   \egroup 
+\def\tabA #1&amp;{\ifx\cr#1\egroup\box0 \else
+   \egroup
       \tmpdim=\maxdimen \ea\tabB \tabsdata {}\relax
       \ifdim \tmpdim=\maxdimen \tmpdim=0pt
       \else \advance\tmpdim by-\wd0 \fi
    \setbox0=\hbox\bgroup \unhbox0 \kern\tmpdim \ignorespaces#1\unskip\kern1sp
    \_ea\tabA \fi
 }
-\def\tabB #1{\ifx^#1^\else \unless\ifdim \wd0>#1 \tmpdim=#1 \tabC \fi \ea\tabB \fi} 
+\def\tabB #1{\ifx^#1^\else \unless\ifdim \wd0>#1 \tmpdim=#1 \tabC \fi \ea\tabB \fi}
 \def\tabC #1\relax {\fi\fi}
 
 \def\settabs #1{\def\tabsdata{}\ifx\tabs#1\_ea\settabstext \else\_ea\settabscols \fi #1}
@@ -4000,7 +4000,7 @@ boundary of lines.
 </pre>
 
 <p>The \tabsdata macro includes TAB positions in the format {0pt}{100pt}{200pt}.
-Of course, you can define directly TAB positions by 
+Of course, you can define directly TAB positions by
 \def\tabsdata{{0cm}{2cm}{4cm}{6cm}{8cm}}, for example.
 
 <p>The \tabs macro opens \setbox0=\hbox\bgroup, sets the appropriate text to it, closes
@@ -4568,7 +4568,7 @@ And then we have to ignore this first ^^J by \ignoreit during \write.
 
 <h2><a name="sort"></a>Sorting phrases</h2>
 
-<p>We create a macro \sort with the syntax: \sort list of phrases \endsort. 
+<p>We create a macro \sort with the syntax: \sort list of phrases \endsort.
 The macro sorts the phrases
 in the given list and prints them. Each phrase is in curly braces in the
 given list. For example:
@@ -4594,7 +4594,7 @@ list of control sequences in a macro. The list must be in the form \?first \?sec
 etc. The first character od these cs names (? here, + in the given example)
 are ignored. The control sequences are sorted due to their names and the
 result is saved to the same macro (\slist in the example). The meanings of
-the sorted control sequences are irrelevant during sorting. 
+the sorted control sequences are irrelevant during sorting.
 
 <p>The macro \sort from our example initializes \slist as the empty macro
 and adds the control sequences using \foreach to the \slist in the form
@@ -4854,7 +4854,7 @@ and the positions of the pages are known.
 which can be used in our macros like this:
 
 <pre>
-The current page is \ispageodd\iftrue odd (right side)\else even (left side)\fi  
+The current page is \ispageodd\iftrue odd (right side)\else even (left side)\fi
 </pre>
 
 <p>The implementation is based on \_mnotenum and \_Xmnote used by OpTeX for margin notes.
@@ -4863,7 +4863,7 @@ It doesn't interferre with the \mnote macro because each occurrence of \mnote or
 
 <pre>
 \def\ispageodd#1{%
-   \_incr\_mnotenum 
+   \_incr\_mnotenum
    \_ifcsname _mn:\_the\_mnotenum \_endcsname
        \_expanded{\_let \_noexpand\pgtype =\_cs{_mn:\_the\_mnotenum}}\_else
        \_let\pgtype=\_right \_opwarning{pageside is unknown, TeX me again}\_openref
@@ -6509,7 +6509,7 @@ doesn't meet the requirements. Note: style iso690 doesn't work with
 
 <p>You can mix common \cite, \usebib, etc. commands with new \fullcite commands.
 I.e. you can read your bib-base secondly by the \usebib command in the
-bibliography section in your document. 
+bibliography section in your document.
 
 The implementation:
 <pre>
@@ -6577,7 +6577,7 @@ your document. The preparing of such file can be done by following code:
 
 <p>The advantage is that you have the printed text under your own control
 (because you can edit this file) and the disadvantage is, that you have more
-problems after a new bib-record is added to the .bib file. 
+problems after a new bib-record is added to the .bib file.
 
 <p CLASS=datum>(0092) -- P. O. 2022-10-10<p>
 <hr>
@@ -7041,7 +7041,7 @@ released on CTAN and included in TeXlive.
          \incr\tmpnum \setboxnum\tmpnum
          \repeat
    \ifdim\pdfpagewidth=0pt
-      \setbox0=\csname sheetbox1\endcsname \pdfpagewidth=\wd0 \pdfpageheight=\ht0 \shipout\box0 
+      \setbox0=\csname sheetbox1\endcsname \pdfpagewidth=\wd0 \pdfpageheight=\ht0 \shipout\box0
    \else \shipout\csname sheetbox1\endcsname \fi    % prints scanned boxes as sheet 1
    \incr\pageno \tmpnum=2
    \loop \ifcsname sheetbox\the\tmpnum\endcsname % print \seet 2 \sheet3 etc.
@@ -7296,7 +7296,7 @@ computer and upload again to the Overleaf project. Do it now.
 
 <p>The same is true for unzipped files from optex-recent.zip. They are lost
 in the next TeX run. This is reason why we cannot use files from
-optex-recent.zip when processing OpTeX documents and we must to 
+optex-recent.zip when processing OpTeX documents and we must to
 upload all *.opm files to the Overleaf project <b>again</b>.
 Create the subdirectory <b>optex/</b> (lowercase letters) in the project and upload all
 *.opm files to this directory. The uploader accepts maximum 40 files per one
@@ -7319,11 +7319,11 @@ of Overleaf project, especially op-demo.tex and op-ring.png files. This is only
 for testing.
 
 <p>Select from main Overleaf menu: Compiler: LuaLaTeX, main document:
-op-demo.tex, Code check: Off. 
+op-demo.tex, Code check: Off.
 
 <p>Now, you have optex.fmt, latexmkrc, op-demo.tex, op-ring.png in the main
-directory. Try the button "Recompile" and wait a while 
-(LuaTeX needs to initialize the OTF font databases when it runs first). If 
+directory. Try the button "Recompile" and wait a while
+(LuaTeX needs to initialize the OTF font databases when it runs first). If
 you see the PDF result: "Demonstration", congratulations! The
 first run gives the result without TOC, second "Recompile" gives TOC too.
 
