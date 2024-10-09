@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2024-02-10>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2024-09-09>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -205,37 +205,45 @@
    `\_replacestringsA#1<textA>{...}` and runs
    `\_replacestringsA<foo-body>?<textA>!<textA>`.
    So, `#1` includes the first part of <foo-body> before first <textA>.
-   It is saved to \`\_tmptoks` and `\_replacestringsB` is run in a loop.
-   It finishes processing or appends the next part to `\_tmptoks` separated by
-   <textB> and continues loop. The final part of the macro removes the last `?`
+   It is saved to \`\_tmptoks` and `\_replacestringsB` is run with `\_replacestingsC` in a loop.
+   It finishes processing (if final `!` is scanned) or appends the next part to `\_tmptoks` separated by
+   <textB> and continues loop. The final part of the \^`\replstring` macro removes the last `?`
    from resulting `\_tmptoks` and defines a new version of the `\foo`.
-
-   The \^`\replstring` macro is not expandable, but you can create your
-   expandable macro, for example:
-   \begtt
-   \def\replAB#1{\immediateassigned{\def\tmp{#1}\replstring\tmp{A}{B}}\the\_tmptoks}
-   \replAB {text A \and A} % expands to "text B \and B"
-   \endtt
-
-   There exists another limitation of the \^`\replstring` macro, see
-   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#xreplstring]{\OpTeX/ trick 0136}.
-   The expandable \^`\xreplstring` macro is defined by Lua code here.
-   And \ulink[http://petr.olsak.net/optex/optex-tricks.html\#replmacro]{\OpTeX/ trick 0137}
-   defines \^`\replmacro` which enables more general modifications of macros by regular expressions.
    \_cod -----------------------------
 
 \_newtoks\_tmptoks
 \_catcode`!=3 \_catcode`?=3
-\_def\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
-   \_long\_def\_replacestringsA##1#2{\_tmptoks{##1}\_replacestringsB}%
-   \_long\_def\_replacestringsB##1#2{\_ifx!##1\_relax \_else \_toksapp\_tmptoks{#3##1}%
-                                     \_ea\_replacestringsB\_fi}%
-   \_ea\_replacestringsA #1?#2!#2%
-   \_long\_def\_replacestringsA##1?{\_tmptoks{##1}\_edef#1{\_the\_tmptoks}}%
-   \_ea\_replacestringsA \_the\_tmptoks}
+\_long\_def\_replstring #1#2#3{%  \replstring #1{stringA}{stringB}
+   \_long\_def\_replacestringsA##1#2{\_tmptoks\_ea{##1}\_replacestringsB\_empty}%
+   \_long\_def\_replacestringsB##1#2{\_ea\_replacestringsC\_ea{##1}}%
+   \_long\_def\_replacestringsC##1{\_ifx!##1\_empty\_else
+       \_toksapp\_tmptoks{#3##1}\_ea\_replacestringsB\_ea\_empty\_fi}%
+   \_ea\_replacestringsA \_ea\_empty#1?#2!#2%
+   \_long\_def\_replacestringsA##1?{\_tmptoks\_ea{##1}\_edef#1{\_the\_tmptoks}}%
+   \_ea\_replacestringsA \_ea\_empty\_the\_tmptoks}
 \_normalcatcodes
 
 \_public \replstring ;
+
+   \_doc -----------------------------
+   You can find three special tricks in the \^`\replstring` code:
+   \begitems
+   * Adding and removing `?` character: without this the
+     `\def\b{xxxA}\replstring\b{AA}{BB}` will cause an error.
+   * Using `\_toksapp` instead `\addto`: without this you cannot have $`#`_6$
+     in the string nor in <textA>, <textB>. Moreover, it significantly
+     reduces the calculation time. Unfortunately, it does \^`\replstring` unexpandable.
+   * Using `\_empty` before scanning separated parameters and removing it
+     after scanning by \^`\ea`: without this \TeX/
+     removes braces from `<textA>{xxx}<textA>`.
+   \enditems
+
+   The \^`\replstring` macro isn't expandable. But you can use
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#xreplstring]{\OpTeX/ trick 0136}.
+   The expandable \^`\xreplstring` macro with more features is defined by Lua code here.
+   And \ulink[http://petr.olsak.net/optex/optex-tricks.html\#replmacro]{\OpTeX/ trick 0137}
+   defines \^`\replmacro` which enables more general modifications of macros by regular expressions.
+   \_cod -----------------------------
 
    \_doc -----------------------------
    The \`\catcode` primitive is redefined here. Why?
@@ -408,6 +416,7 @@
 
 \_endcode % -------------------------------------
 
+2024-09-09 \replstring: uses \toksapp (better speed) and \empty (keeps braces)
 2024-02-10 \optdef reimplemented, it can create expandable macros now.
 2024-01-18 \bracedparam reimplemented.
 2023-12-04 \nnum introduced

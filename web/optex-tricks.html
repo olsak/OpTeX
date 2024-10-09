@@ -5930,12 +5930,9 @@ by \timerprint because LuaLaTeX initializes many Lua routines (like luaotfload) 
 autoload:<br>\xreplstring
 </p>
 
-<p>The classical \replstring macro doesn't work well in special cases:
-\def\tmpb{xx{yy}xx} \replstring\tmpb{xx}{zz}, result is zzyyzz, braces are lost
-due to classical TeX behavior with macros with separated parameters.
-We keep this bug as a curiosity because re-implementation needs to create
-more complicated and time consuming macro. If it isn't an obstacle for
-you, then you can use following implementation \xreplstring. It behaves like
+<p>The classical \replstring macro isn't expandable.
+If it is an obstacle for you, then you can use following implementation \xreplstring.
+It behaves like
 \replstring, removes mentioned bug and is based on Lua code.
 
 <p>Moreover, \xreplstring adds new features:
