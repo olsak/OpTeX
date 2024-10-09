@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [New Computer Modern] \NewCM {CM with Book variants, Cyrillic, Greek}
-        {\book \ttset \sans \caps} {\rm \bf \it \bi} {NewCMMath}
+        {\book \ttset \sans \caps} {\rm \bf \it \bi} {NewCM-Regular}
         {[NewCM10-Regular]}
         {\_def\_fontnamegen {[NewCM\_typfV-\_currV]:\_capsV\_fontfeatures}}
 
@@ -31,6 +31,15 @@ Note: use \book\normalmath if you want Math in book-style too.
 \_loadmath {[NewCMMath-Regular]}
 
 \_endcode
+
+If you want to use \book variant in the whole document, you can load
+NewCMMath-Book Unicode math font too. Use the following declaration in this
+case:
+
+\loadmath{NewCMMath-Book}
+\fontfam[newcm]
+\book\rm
+
 
 See the file `f-heros.opm` for information about principles of such
 font-macro-files.
