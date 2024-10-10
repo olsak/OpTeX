@@ -1857,14 +1857,16 @@ information about them are accessible via the external links.
 
 \tpg[cancel]\t\cancel\ prints a given text and the line/cross line over the text.
 
-\tpg[begfile]\t\createfile, \t\begfile, \t\endfile\
-writes a code from the document to the given file.
+\tpg[clipbox]\t\clipbox\ creates a box of given dimensions with clipped content.
 
 \tpg[colortab]\t\colortab\
 colored cells in the table.
 
 \tpg[correctvsize]\t\correctvsize\
 sets `\vsize` to fit lines exactly to pages.
+
+\tpg[begfile]\t\createfile, \t\begfile, \t\endfile\
+writes a code from the document to the given file.
 
 \tpg[booktabs]\t\crtop, \t\crmid, \t\crbot\
 specific design of tables: only horizontal rules with different thickness.
@@ -2019,7 +2021,6 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~sortcitations' ~shortcitations' ~nonumcitations' % cite format
 ~bib' [labname]  % an item in the list of references
 ~usebib'/? (style) bib-base % direct using of .bib file, ? in {s,c}
-
 ~load' [filenames]     % loadaing macro files
 ~fontfam' [FamilyName] % selection of font family
 ~typosize' [font-size/baselineskip] % size setting of typesetting

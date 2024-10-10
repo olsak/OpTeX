@@ -131,6 +131,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#gradients">Color gradients</a>
+    <li><a href="#clipbox">A box with its content clipped</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#cancel">Canceled text</a>
     <li><a href="#circletext">Text around a circle</a>
@@ -1347,6 +1348,50 @@ smaller white oval is drawn over it. Only the boundary remains visible.
 Finally, the text is printed in it.
 
 <p CLASS=datum>(0024) -- P. O. 2020-06-05<p>
+<hr>
+
+<h2><a name="clipbox"></a>A box with its content clipped</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\clipbox
+
+<p>
+The macro \clipbox width height depth shift-x shift-y {content}
+creates a \hbox with given width height and depth. The boundary of this box
+serves like a periscope. The content of the box is shown only inside this
+boundary, it is clipped outside of this boundary. The content put before the
+periscope is shifted by shift-x horizontally and shift-y vertically. All
+five parameters width height depth shift-x shift-y are dimen parameters.
+Example:
+
+<pre>
+Test: \frame{\clipbox 15pt10pt2pt -3pt-3pt{\vbox{\hbox{XXX}\hrule\hbox{XXX}}}}.
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\scanthreedimens{%
+   \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}{\_pcent d}',
+               token.scan_dimen(),token.scan_dimen(),token.scan_dimen()))}%
+}
+\def\clipbox{\ea\ea\ea\clipboxA\scanthreedimens}
+\def\clipboxA#1#2#3#4#{\clipboxB{#1}{#2}{#3}{#4}}
+\def\clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
+   \hbox to #1sp{%
+      \pdfliteral{q 0 \bp{-#3sp} \bp{#1sp} \bp{#2sp+#3sp} re W n}%
+      \puttext #4{#5}%
+      \pdfliteral{Q}%
+      \vrule height#2sp depth#3sp width0pt \hss
+   }%
+}
+</pre>
+
+<p>We scan first three dimens, then the resting two dimens and then we create
+the desired box. The content is inserted when PDF clipping path is active
+and it is shifted by the \puttext macro to the specified position.
+
+<p CLASS=datum>(0141) -- P. O. 2024-09-10<p>
 <hr>
 
 <h2><a name="carrows"></a>Curved arrows</h2>

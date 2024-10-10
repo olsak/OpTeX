@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-05-07>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-09-10>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -316,6 +316,25 @@ end,'global') % we want to keep the meanig after group
 \_def\.scaletofA#1{\_setbox0=\_hbox{{#1}}%
    \_edef\.tmpa{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
    \.scaletoA{\_setfontsize{mag\.tmpa}\_currvar#1}}
+
+\_trick 0141 \clipbox ;
+%%%%%%%%%%%%
+
+\_def\.scanthreedimens{%
+   \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}{\_pcent d}',
+               token.scan_dimen(),token.scan_dimen(),token.scan_dimen()))}%
+}
+
+\_def\clipbox{\_ea\_ea\_ea\.clipboxA\.scanthreedimens}
+\_def\.clipboxA#1#2#3#4#{\.clipboxB{#1}{#2}{#3}{#4}}
+\_def\.clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
+   \_hbox to #1sp{%
+      \_pdfliteral{q 0 \_bp{-#3sp} \_bp{#1sp} \_bp{#2sp+#3sp} re W n}%
+      \_puttext #4{#5}%
+      \_pdfliteral{Q}%
+      \_vrule height#2sp depth#3sp width0pt \_hss
+   }%
+}
 
 \_trick 0053 \ignoreinspic ;
 %%%%%%%%%%%%
@@ -954,6 +973,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-09-10 \clipbox added
 2024-05-07 \replmacro added
 2024-05-02 \xreplstring added
 2024-04-15 \directchar added
