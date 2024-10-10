@@ -109,6 +109,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#varifonts">Using variable fonts</a>
     <li><a href="#fakecaps">Small caps if font doesn't provide it</a>
     <li><a href="#autokern">Modification kerning data in fonts</a>
+    <li><a href="#glyphmove">Move glyphs by any offset</a>
 </ul>
 
 <li>Lists
@@ -843,6 +844,50 @@ to declare \initunifonts first, then \directlua with kerning data modification
 and then \fontfam.
 
 <p CLASS=datum>(0109) -- P. O. 2023-05-07<p>
+<hr>
+
+<h2><a name="glyphmove"></a>Move glyphs by any offset</h2>
+
+<p>The kerning GPOS table shown in the <a href="#autokern">previous trick</a>
+is not the only one type of table we can use. One of them, which OpenType
+defines, is a simple offset GPOS table. This table allows us to move the glyph
+as we want.
+
+<p>We can, for example, move selected glyphs (dashes, operators, etc.)
+vertically up to match capital letters. So we can get the
+<a href="https://learn.microsoft.com/en-us/typography/opentype/spec/features_ae#case">
+"case" font feature</a> if it's missing in our font.
+
+<pre>
+\fontfam[lm]
+\directlua{fonts.handlers.otf.addfeature {
+   name = "lm-case", %% Latin Modern case feature
+   type = "single",
+   data = {["-"] = { 0, 120 },
+        [0x2013] = { 0,  70 }, %% -- and ---
+        [0x2014] = { 0,  70 }}
+}}
+
+{\setff{lm-case}\currvar
+A-B--C---D} not A-B--C---D.
+\bye
+</pre>
+
+<p>This works perfectly, as we are moving only vertically. If you want
+to move vertically, then go for it. But horizontal shifts, unfortunately,
+don't behave as we would expect.
+
+<p>The feature behaves a little bit unexpected and is complicated in terms
+of changing the dimensions of the box containing the glyph. At any offset,
+the box position and width isn't changed. If moving up, the box height
+increases, but moving down decreases the height up to zero. Moving up also
+decreases box depth, if present, up to zero, but moving down doesn't change
+the depth at all.
+
+<p>We must be careful when using the trick. The behavior described above
+can sometimes cause surprising side effects.
+
+<p CLASS="datum">(0140) -- Petr Krajník 2024-10-10<p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
