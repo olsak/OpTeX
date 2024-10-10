@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2024-02-19>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2024-09-10>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -35,6 +35,15 @@
    \begtt \catcode`<=13
    \if<something> \afterfi{<result is true>} \else \afterfi{<result is false>} \fi
    \endtt
+   \`\afterxfi` `{<what to do>}<ignored>\xfipoint` closes all opened
+   `\if..\fi` conditionals until \`\xfipoint` is found and then proceses <what to do>.
+   The <ignored> text must expand to nothing (or spaces only); arbitrary number
+   of opened conditionals can be closed here. Example:
+   \begtt
+   \ifodd#1 \ifodd#2 \afterxfi{odd-odd}  \else \afterxfi{odd-even}  \fi
+   \else    \ifodd#2 \afterxfi{even-odd} \else \afterxfi{even-even} \fi
+   \fi \xfipoint
+   \endtt
    Nested `\if..\afterfi{\if..\afterfi{...}\fi}\fi` are possible. Another approach is mentioned
    in \ulink[http://petr.olsak.net/optex/optex-tricks.html\#fiinif]{OpTeX trick 0098}
    which also solves the `\fi` in `\if` problem.
@@ -42,6 +51,9 @@
 
 \_long\_def \_afterfi#1#2\_fi{\_fi#1}
 \_long\_def \afterfi#1#2\fi{\_fi#1}
+\_let\_xfipoint=\_empty  \_let\xfipoint=\_empty % \xfipoint alone does nothing
+\_long\_def \_afterxfi#1#2\_xfipoint{\_romannumeral#20 #1}
+\_long\_def \afterxfi#1#2\xfipoint{\_romannumeral#20 #1}
 
    \_doc ----------------------------
    \secc Loops
@@ -384,6 +396,7 @@
 
 \_endcode
 
+2024-09-10 \afterxfi implemented.
 2024-02-19 \qcasesof reimplemented, it supports | for more phrases.
 2023-12-07 \_testparam define \long (big fixed).
 2023-10-17 \qcasesof introduced, \xcasesof reimplemented.
