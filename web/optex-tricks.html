@@ -3712,7 +3712,11 @@ already). The \corrvsize macro advances \vsize by plus or minus one
 
 <p>OpTeX provides \begmulti ... \endmulti environment which prints more
 columns, but the columns are implemented using \vsplit primitive, so it
-doesn't provide \inserts inside the columns, especially footnotes.
+doesn't provide \inserts inside the columns, especially footnotes and marks.
+(There exists a
+<a href="https://tex.stackexchange.com/questions/696841">Lua
+solution of this problem</a>, but this OpTeX trick gives another approach
+where a special \output routine is used).
 
 <p>The experimental macro pair \twocol ...\endtwocol shown here supports
 footnotes. We get a similar design as used in TUGboat, i.e. each article
