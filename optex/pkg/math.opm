@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.15, 2024-04-28}
+\_def\_math_version {0.16, 2024-10-17}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -501,12 +501,12 @@
 
    \_doc
    \`\mathclap``{<formula>}`, \`\mathrlap``{<formula>}`, and \`\mathllap``{<formula>}`
-   are based on the \OpTeX/ macros \O`\setmathstyle` and \O`\usemathstyle`.
+   are based on the \OpTeX/ macros \O`\mathstyles` and \O`\currstyle`.
    \_cod
 
-\_def\.mathclap#1{{\_setmathstyle \_hbox to0pt{\_hss$\_usemathstyle#1$\_hss}}}
-\_def\.mathrlap#1{{{}\_setmathstyle \_rlap{$\_usemathstyle#1$}}}
-\_def\.mathllap#1{{{}\_setmathstyle \_llap{$\_usemathstyle#1$}}}
+\_def\.mathclap#1{\_mathstyles{\_hbox to0pt{\_hss$\_currstyle#1$\_hss}}}
+\_def\.mathrlap#1{\_mathstyles{\_rlap{$\_currstyle#1$}}}
+\_def\.mathllap#1{\_mathstyles{\_llap{$\_currstyle#1$}}}
 
 \_nspublic \mathclap \mathrlap \mathllap ;
 
@@ -1129,6 +1129,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.16  2024-10-17  \mathclap, etc.  corrected.
 0.15  2024-04-28  \_ as interval prefix added.
 0.14  2024-03-18  \flexipa introduced.
 0.13  2024-03-06  \enablefic introduced.
