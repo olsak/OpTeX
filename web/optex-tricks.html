@@ -4022,7 +4022,7 @@ crash but returns false. Examples:
 }}
 \def\ismatchA#1#2{\immediateassignment
    \def\ismatchB##1#2##2\relax{\ifx^##2^\ea\unless\fi}%
-   \ismatchB #1\sep#2\relax
+   \ismatchB #1\sep\sep#2\relax
 }
 \def\isinmacro#1{%
    \isinlist{\meaning#1}{->}\iffalse \ea\ignoresecond \else \ea\usesecond \fi

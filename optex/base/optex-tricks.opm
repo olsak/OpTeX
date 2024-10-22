@@ -980,7 +980,7 @@ end,'global') % we want to keep the meanig after group
 }}
 \_def\.ismatchA#1#2{\_immediateassignment
    \_def\.ismatchB##1#2##2\_relax{\_ifx^##2^\_ea\_unless\_fi}%
-   \.ismatchB #1\_sep#2\_relax
+   \.ismatchB #1\_sep\_sep#2\_relax
 }
 \_def\isinmacro#1{%
    \_isinlist{\_meaning#1}{->}\_iffalse \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
