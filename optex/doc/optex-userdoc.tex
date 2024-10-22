@@ -1895,10 +1895,13 @@ the \^`\inspic` commands stop loading images, they are replaced by gray frames.
 \tpg[import]\t\import\
 allows to have subsets of document input files in separate directories.
 
+\tpg[ismatch]\t\ismatch, \t\isinmacro\
+tests, if the given string or the macro body includes the given substring.
+
 \tpg[ispageodd]\t\ispageodd\
 tests, if the current point is at odd page regardless of asynchronous processing.
 
-\tpg[perpage]\t\incrpp. \t\thepp, \t\thepplast, \t\truepage\
+\tpg[perpage]\t\incrpp, \t\thepp, \t\thepplast, \t\truepage\
 does per-page counting of objects.
 
 \tpg[keystrokes]\t\keystroke\
@@ -1995,7 +1998,6 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~maketoc'         % table of contents generation
 ~ii' item1,item2  % insertion the items to the index
 ~makeindex'       % the index is generated
-
 ~label' [labname]  % link target location
 ~ref' [labname]    % link to the chapter, section, subsection, equation
 ~pgref' [labname]  % link to the page of the chapter, section, ...

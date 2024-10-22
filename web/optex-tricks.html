@@ -199,6 +199,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#condi">Structured conditionals</a>
     <li><a href="#fiinif">\fi in \if problem</a>
+    <li><a href="#ismatch">Testing if a substring exists in the string</a>
     <li><a href="#anodes">Drawing to given nodes</a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
@@ -3976,6 +3977,79 @@ can be implemented like this:
 <p CLASS=datum>(0098) -- P. O. 2020-05-27<p>
 <hr>
 
+<h2><a name="ismatch"></a>Testing if a substring exists in the string</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\ismatch<br>\isinmacro
+</p>
+
+<p>We create an expandable macro \ismatch{text}{subtext} which returns true
+if the subtext is included in the text. The \iftrue or \iffalse sequence
+must follow (like in general \is... macros from OpTeX). The given text and
+subtext are detokenized first and then the matching is checked.
+
+<p>Moreover, we create an expandable macro \isinmacro\macro{subtext} which
+has similar usage and returns true if the subtext is included in the macro
+body of the \macro. It behaves similarly like \isinlist provided by OpTeX
+directly but there are three differences: (i) the macro body and the subtext are
+detokenized before checking, (ii) the checked macro can have parameters,
+(iii) if the checked control sequence isn't a macro then \isinmacro doesn't
+crash but returns false. Examples:
+
+<pre>
+\ismatch{xy\foo zz}{z}\iftrue    Yes \else No \fi % prints Yes
+\ismatch{xy\foo zz}{\foo}\iftrue Yes \else No \fi % prints Yes
+\ismatch{xy\foo zz}{\fo}\iftrue  Yes \else No \fi % prints No (\fo space not found)
+\ismatch{xy\foo zz}{fo}\iftrue   Yes \else No \fi % prints Yes
+\isinmacro\TeX{E}\iftrue         Yes \else No \fi % prints Yes
+\isinmacro\TeX{\kern}\iftrue     Yes \else No \fi % prints No (in OpTeX)
+\isinmacro\TeX{\_kern}\iftrue    Yes \else No \fi % prints Yes (in OpTeX)
+\isinmacro\TeX{#}\iftrue         Yes \else No \fi % prints No (no parameters)
+\isinmacro\centerline{#}\iftrue  Yes \else No \fi % prints Yes (parameter exists)
+\isinmacro\expandafter{}\iftrue  Yes \else No \fi % prints No (it isn't macro)
+\isinmacro\TeX{}\iftrue          Yes \else No \fi % prints Yes (it is macro)
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\ismatch#1#2{\ea\ismatchA\directlua{
+   tex.sprint("{")
+   tex.sprint(-2,"\luaescapestring{\unexpanded{#1}}")
+   tex.sprint("}{")
+   tex.sprint(-2,"\luaescapestring{\unexpanded{#2}}")
+   tex.sprint{"}"}
+}}
+\def\ismatchA#1#2{\immediateassignment
+   \def\ismatchB##1#2##2\relax{\ifx^##2^\ea\unless\fi}%
+   \ismatchB #1\sep#2\relax
+}
+\def\isinmacro#1{%
+   \isinlist{\meaning#1}{->}\iffalse \ea\ignoresecond \else \ea\usesecond \fi
+   {\ignoresecond\unless}{\ea\isinmacroA\meaning#1\relax}%
+}
+\def\isinmacroA #1->#2\relax{\ismatch{#2}}
+</pre>
+
+<p>We detokenize the parameters using <a href="#xdetokenize">OpTeX trick 0117</a>
+because we don't want to duplicate hashes.
+The \isinmacro checks the existence of "->" in the \meaning output first (by
+\isinlist which is quicker than \ismatch and can be used in this case).
+This test returns true if the checked control sequence is a macro. If it is true
+then we put the body of the checked macro by \meaning to the #2 parameter of
+\isinmacroA and run \ismatch{#2}{subtext}.
+
+<p>You can also create a \countmatch macro which uses more general
+Lua pattern matching. See the <a href="#replmacro">OpTeX trick 0137</a>
+for inspiration. You can use
+<pre>
+  s, num = string.gsub("text","pattern","") tex.print(num)
+</pre>
+<p>for printing the total number of matches. We leave this task as an
+exercise for readers.
+
+<p CLASS=datum>(0142) -- P. O. 2024-10-22<p>
+<hr>
 
 <h2><a name="anodes"></a>Drawing to given nodes</h2>
 

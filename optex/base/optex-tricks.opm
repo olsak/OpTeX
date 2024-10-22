@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-09-10>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-10-22>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -968,11 +968,34 @@ end,'global') % we want to keep the meanig after group
    \_def\.onlyifnewA{#1#2}\_fi
    \_fi\_ea\_endgroup\.onlyifnewA}
 
+\_trick 0142 \ismatch \isinmacro ;
+%%%%%%%%%%%%
+
+\_def\.ismatch#1#2{\_ea\.ismatchA\_directlua{
+   tex.sprint("{")
+   tex.sprint(-2,"\_luaescapestring{\_unexpanded{#1}}")
+   tex.sprint("}{")
+   tex.sprint(-2,"\_luaescapestring{\_unexpanded{#2}}")
+   tex.sprint{"}"}
+}}
+\_def\.ismatchA#1#2{\_immediateassignment
+   \_def\.ismatchB##1#2##2\_relax{\_ifx^##2^\_ea\_unless\_fi}%
+   \.ismatchB #1\_sep#2\_relax
+}
+\_def\isinmacro#1{%
+   \_isinlist{\_meaning#1}{->}\_iffalse \_ea\_ignoresecond \_else \_ea\_usesecond \_fi
+   {\_ignoresecond\_unless}{\_ea\.isinmacroA\_meaning#1\_relax}%
+}
+\_def\.isinmacroA #1->#2\_relax{\.ismatch{#2}}
+
+\_nspublic \ismatch ;
+
 %%%%%%%%%%%%
 \_trick end ;
 
 \_endcode
 
+2024-10-22 \ismatch, \isinmacro added
 2024-09-10 \clipbox added
 2024-05-07 \replmacro added
 2024-05-02 \xreplstring added
