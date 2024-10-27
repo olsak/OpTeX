@@ -251,6 +251,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#xreplstring">Expandable replstring with more features</a>
     <li><a href="#replmacro">Patching macros using regular expressions</a>
     <li><a href="#luaif">Conditionals evaluated by Lua</a>
+    <li><a href="#mathinexpr">More simple \expr parameters</a>
 </ul>
 
 <li>Sections
@@ -6320,6 +6321,50 @@ for another purposes.
 </pre>
 
 <p CLASS=datum>(0138) -- P. O. 2024-05-06<p>
+<hr>
+
+<h2><a name="mathinexpr"></a>More simple \expr parameters</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\mathinexpr
+</p>
+
+<p>The \expr macro from OpTeX allows any math expression which can use math
+functions from math library as described in section 6.7 of Lua reference.
+By default, all math functions or constants have to be prefixed by "math."
+prefix, i.e. we have to write math.sin(x), math.pi.
+After \mathinexpr declaration at begining of
+our document, we can use math objects directly, i.e. sin(x), pi. Moreover,
+we can set the variables used in \expr by previous \directlua. Example:
+
+<pre>
+\mathinexpr
+
+\directlua {
+   x = -pi/4
+   y = .8
+   z = log(y)
+}
+\expr[7]{sin(x) + cos(y) + z}
+</pre>
+
+The implementation:
+<pre>
+\def\mathinexpr{\directlua{%
+    \foreach{abs}{acos}{asin}{atan}{ceil}{cos}{deg}{exp}%
+      {floor}{fmod}{huge}{log}{max}{maxinteger}{min}{mininteger}{modf}%
+      {pi}{rad}{random}{randomseed}{sin}{sqrt}{tan}{tointeger}{type}{ult}%
+      \do{##1=math.##1 }}%
+}
+</pre>
+
+<p>The \mathinexpr declarator runs \directlua{abs=mat.abs acos=math.acos ...
+ult=math.ult}.
+It means that it introduces abs, acos, etc. names in global name space. Then
+they can be used without the "math." prefix in all Lua expressions. I.e. in setting
+variables by \directlua or in \expr expressions.
+
+<p CLASS=datum>(0143) -- P. O. 2024-10-27<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>

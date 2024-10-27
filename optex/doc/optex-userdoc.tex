@@ -1913,6 +1913,9 @@ allows to break a table to more pages and repeats header.
 \tpg[lot]\t\makeLOF, \t\makeLOT, \t\captionF, \t\captionT\
 create list of tables and list of figures similar to \^`\maketoc`.
 
+\tpg[mathinexpr]\t\mathinexpr\ allows short names `sin(x)`, `log(x)`
+instead `math.sin(x)`, `math.log(x)` in \~`\expr` arguments.
+
 \tpg[onlyifnew]\t\onlyifnew\
 only define a macro if it is not already defined.
 
@@ -2001,7 +2004,6 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~label' [labname]  % link target location
 ~ref' [labname]    % link to the chapter, section, subsection, equation
 ~pgref' [labname]  % link to the page of the chapter, section, ...
-
 ~caption'/t  % a numbered table caption
 ~caption'/f  % a numbered caption for the picture
 ~eqmark'     % a numbered equation

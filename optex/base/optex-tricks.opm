@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-10-22>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-10-27>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -114,6 +114,14 @@
    nodetree.print(tex.box[\_the\_tmpnum])
 }}
 
+\_trick 0143 \mathinexpr ;
+%%%%%%%%%%%%
+
+\_def\mathinexpr{\_directlua{\_foreach{abs}{acos}{asin}{atan}{ceil}{cos}{deg}{exp}%
+      {floor}{fmod}{huge}{log}{max}{maxinteger}{min}{mininteger}{modf}%
+      {pi}{rad}{random}{randomseed}{sin}{sqrt}{tan}{tointeger}{type}{ult}%
+      \_do{##1=math.##1 }}%
+}
 
 \_trick 0134 \rebox \leftfill \rightfill \lrfill ;
 %%%%%%%%%%%%
@@ -995,6 +1003,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-10-27 \mathinexpr added
 2024-10-22 \ismatch, \isinmacro added
 2024-09-10 \clipbox added
 2024-05-07 \replmacro added
