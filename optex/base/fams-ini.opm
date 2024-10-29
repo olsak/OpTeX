@@ -217,6 +217,12 @@
      \caps, \caps\cond: {\rm\bf\it\bi} \caps\ttset: {\rm\bf}
    }
 
+\_famfrom {Google, Matt McInerney, Pablo Impallari, Rodrigo Fuenzalida}
+\_faminfo [Raleway] {Elegant grotesk, nine weights in two variants} {f-raleway}
+   { \thin,\elight,\light,\normal,\medium,\semibold,\bolder: {\rm\it}
+     \semibold,\bolder: {\bf\bi}
+   }
+
 \_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
 \_faminfo [Kurier] {Two element sans serif typeface} {f-kurier}
    { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}

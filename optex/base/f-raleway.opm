@@ -1,0 +1,32 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Raleway] \Raleway {Elegant grotesk, nine weights in two variants}
+        {\thin \elight \light \normal \medium \semibold \bolder} 
+        {\rm \bf \it \bi} {}
+        {[Raleway-Regular]}
+        {\_def\_fontnamegen {[Raleway-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (face weight):^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Light^^J
+ \elight .... \rm, \it = ExtraLight, \bf, \bi = Regular^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Medium^^J
+ \normal .... \rm, \it = Regular, \bf, \bi = SemiBold^^J
+ \medium .... \rm, \it = Medium, \bf, \bi = Bold^^J
+ \semibold .. \rm, \it = SemiBold, \bf, \bi = ExtraBold^^J
+ \bolder .... \rm, \it = Bold, \bf, \bi = Black^^J%
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular SemiBold Regular-Italic SemiBold-Italic }
+\_moddef \thin     {\_fvars Thin Light Thin-Italic Light-Italic }
+\_moddef \elight   {\_fvars ExtraLight Regular ExtraLight-Italic Regular-Italic }
+\_moddef \light    {\_fvars Light Medium Light-Italic Medium-Italic }
+\_moddef \normal   {\_fvars Regular SemiBold Regular-Italic SemiBold-Italic }
+\_moddef \medium   {\_fvars Medium Bold Medium-Italic Bold-Italic }
+\_moddef \semibold {\_fvars SemiBold ExtraBold SemiBold-Italic ExtraBold-Italic }
+\_moddef \bolder   {\_fvars Bold Black Bold-Italic Black-Italic }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
