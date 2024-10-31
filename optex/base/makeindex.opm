@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2023-06-02>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2024-10-31>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -25,7 +25,7 @@
    \_cod -----------------------------
 
 \_def \_sortingdatalatin {%
-  /,{ },-,&,@,%
+  /,{ },_,-,&,@,%
   aAàÀâÂäÄáÁ,%
   ąĄ,%
   bB,%
@@ -282,26 +282,26 @@
 
 \_def\_mergesort #1#2,#3{% by Miroslav Olsak
    \_ifx,#1%                      % prazdna-skupina,neco,  (#2=neco #3=pokracovani)
-      \_addto\_iilist{#2,}%        % dvojice skupin vyresena
+      \_toksapp\_tmptoks{#2,}%        % dvojice skupin vyresena
       \_sortreturn{\_fif\_mergesort#3}%   % \mergesort pokracovani
    \_fi
    \_ifx,#3%                      % neco,prazna-skupina,  (#1#2=neco #3=,)
-      \_addto\_iilist{#1#2,}%      % dvojice skupin vyresena
-      \_sortreturn{\_fif\_mergesort}%      % \mergesort dalsi
+      \_toksapp\_tmptoks{#1#2,}%      % dvojice skupin vyresena
+      \_sortreturn{\_fif\_mergesort}% % \mergesort dalsi
    \_fi
-   \_ifx\_fin#3%                   % neco,konec (#1#2=neco)
-      \_ifx\_empty\_iilist                % neco=kompletni setrideny seznam
-         \_def\_iilist{#1#2}%
+   \_ifx\_fin#3%                  % neco,konec (#1#2=neco)
+      \_if;\_the\_tmptoks;%           % neco=kompletni setrideny seznam
+         \_tmptoks{#1#2}%
          \_sortreturn{\_fif\_fif\_gobbletoend}%   % koncim
       \_else                      % neco=posledni skupina nebo \end
          \_sortreturn{\_fif\_fif       % spojim \indexbuffer+necoa cele znova
-                      \_edef\_iilist{\_ea}\_ea\_mergesort\_iilist#1#2,#3}%
+                      \_tmptoks\_ea{\_ea}\_ea\_mergesort\_the\_tmptoks#1#2,#3}%
    \_fi\_fi                      % zatriduji: p1+neco1,p2+neco2, (#1#2=p1+neco1 #3=p2)
    \_isAleB #1#3\_ifAleB         % p1<p2
-      \_addto\_iilist{#1}%       % p1 do bufferu
+      \_toksapp\_tmptoks{#1}%    % p1 do bufferu
       \_sortreturn{\_fif\_mergesort#2,#3}%         % \mergesort neco1,p2+neco2,
    \_else                       % p1>p2
-      \_addto\_iilist{#3}%       % p2 do bufferu
+      \_toksapp\_tmptoks{#3}%   % p2 do bufferu
       \_sortreturn{\_fif\_mergesort#1#2,}%         % \mergesort p1+neco1,neco2,
    \_fi
    \_relax % zarazka, na ktere se zastavi \sortreturn
@@ -344,11 +344,12 @@
           \_ea\_let \_ea\_compoundchars \_csname _xcompoundchars\_sortinglang\_endcsname
       \_fi  % \_compoundchars can differ in the second pass of sorting
       \_csname _secondpass\_sortinglang \_endcsname % activates \_reversewords if needed
-      \_def \_act##1{\_addto #1{##1,}}%
+      \_def \_act##1{\_toksapp\_tmptoks{##1,}}%
+      \_tmptoks{}%
       \_edef #1{\_ea}\_ea\_xargs \_ea\_act #1;% commas between items added, mergesort initialized
-      \_edef \_iilist{\_ea}\_ea\_mergesort #1\_fin,\_fin
+      \_tmptoks\_ea{\_ea}\_ea\_mergesort \_the\_tmptoks\_fin,\_fin
    \_ea\_endgroup
-   \_ea\_def\_ea#1\_ea{\_iilist}%
+   \_ea\_def\_ea#1\_ea{\_the\_tmptoks}%
 }
 
    \_doc -----------------------------
@@ -571,6 +572,7 @@
 
 \_endcode % -------------------------------------
 
+2024-10-31 \mergesort time-optimized using \toksapp instead \addto
 2023-06-02 \_stripfromcaret introduced
 2023-03-12 \_definefirstii introduced
 2022-06-28 \_reversewords for French sorting introduced

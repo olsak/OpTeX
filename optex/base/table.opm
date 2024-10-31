@@ -37,8 +37,6 @@
    between them) have normal baseline distance.\nl
    The \`\_tableA``{<declaration>}` macro scans the `<declaration>` by
    `\_scantabdata#1\_relax` and continues by processing `{<data>}` by \^`\_tableB`.
-   The trick `\_tmptoks={<data>}\_edef\_tmpb{\_the\_tmptoks}`
-   is used here in order to keep the hash marks in the <data> unchanged.
    \_cod -----------------------------
 
 \_def\_tableA#1{\_egroup

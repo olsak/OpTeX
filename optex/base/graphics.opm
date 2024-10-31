@@ -40,6 +40,7 @@
   \_opinput {\_the\_picdir #1_tex}% file with labels
   \_egroup}
 
+\_newtoks\_tmptoks
 \_newtoks\_inkdefs  \_inkdefs={%
   \_def\makeatletter#1\makeatother{}%
   \_def\includegraphics[#1]#2{\_inkscanpage#1,page=,\_fin \_inspic{\_the\_tmptoks}\_hss}%
