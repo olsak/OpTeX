@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \begmulti {Balanced columns <2024-09-06>} % preloaded in format
+\_codedecl \begmulti {Balanced columns <2024-10-31>} % preloaded in format
 
    \_doc -----------------------------
    \`\_betweencolumns` or \`\_leftofcolumns` or \`\_rightofcolumns` include
@@ -67,7 +67,7 @@
    \_cod -----------------------------
 
 \_def\_makecolumns{\_bgroup % full page, destination height: \dimen1
-   \_vbadness=20000 \_dimen6=\_wd6
+   \_vbadness=20000 \_splitmaxdepth=\_maxdepth \_dimen6=\_wd6
    \_createcolumns
    \_printcolumns
    \_egroup
@@ -163,6 +163,7 @@
 
 \_endcode % -------------------------------------
 
+2024-10-31 \splitmaxdepth set, bug fixed
 2024-09-06 \_rawht implemented, more robust measurement of big boxes
 2022-11-26 \at least three lines in the beginning of \begmulti at the page
 2022-05-05 `\_betweencolumns` etc. introduced.
