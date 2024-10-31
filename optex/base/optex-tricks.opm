@@ -960,6 +960,17 @@ end,'global') % we want to keep the meanig after group
    \_fi
 }
 
+\_trick 0144 \xparshape ;
+%%%%%%%%%%%%
+
+\_newcount\.xprevgraf
+\_def\xparshape{%
+   \.xprevgraf=0
+   \_def\_par{{\_prevgraf=\.xprevgraf\_endgraf}\.xprevgraf=\_prevgraf}%
+   \_parshape}
+\_def\endxparshape{\_par \_let\_par=\_endgraf}
+
+
 \_trick 0130 \onlyifnew ;
 %%%%%%%%%%%%
 
@@ -1003,6 +1014,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-10-31 \xparshape added
 2024-10-27 \mathinexpr added
 2024-10-22 \ismatch, \isinmacro added
 2024-09-10 \clipbox added

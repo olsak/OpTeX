@@ -193,7 +193,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#twocol">Two-column mode allowing for footnotes</a>
     <li><a href="#toppage">Two-column mode with full size top inserts</a>
     <li><a href="#pgforeground">Material added to the foreground of each page</a>
-    <li><a href="#gparshape">\parshape valid for more paragraphs</a>
+    <li><a href="#xparshape">\parshape valid for more paragraphs</a>
 </ul>
 
 <li>Macro tricks
@@ -3890,25 +3890,29 @@ too.
 <p CLASS=datum>(0129) -- P. O. 2024-02-12<p>
 <hr>
 
-<h2><a name="gparshape"></a>\parshape valid for more paragraphs</h2>
+<h2><a name="xparshape"></a>\parshape valid for more paragraphs</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\xparshape<br>\endxparshape
+</p>
 
 <p>TeX primitive \parshape allows to set various shapes of the paragraph.
 Unfortunately, this setting is applied only for one paragraph even if the
 paragraph is shorter than data given by \parshape. Next paragraphs are
 always formatted with normal settings.
 
-<p>We create \gparshape macro which applies its data for all following
-paragraphs until the current group ends or until the \endgparshape is used.
+<p>We create \xparshape macro which applies its data for all following
+paragraphs until the current group ends or until the \endxparshape is used.
 The following example keeps first 7 lines unchanged, then the next 7 lines
 are indented by 6em and next lines have normal size again. It is irrelevant,
 how many following paragraphs are modified by this rule.
 
 <pre>
-\gparshape 15 \fornum1..7\do{0pt\hsize}
+\xparshape 15 \fornum1..7\do{0pt\hsize}
               \fornum1..7\do{6em\dimexpr\hsize-6em}
               0pt\hsize
 \lorem[1-4]
-\endgparshape
+\endxparshape
 </pre>
 
 <p>The implementation uses two tricks. When \par is used in a group (i.e.
@@ -3917,16 +3921,16 @@ how many following paragraphs are modified by this rule.
 paragraph by TeX). Then the \parshape primitive skips first \prevgraf pairs
 of data and uses (\prevgraf+1)-th and next pairs.
 So, we re-define \_par in order to it runs \endgraf in the group
-and sets \prevgraf to \gprevgraf, which keeps the number of lines of all
+and sets \prevgraf to \xprevgraf, which keeps the number of lines of all
 previous paragraphs.
 
 <pre>
-\newcount\gprevgraf
-\def\gparshape{%
-   \gprevgraf=0
-   \def\_par{{\prevgraf=\gprevgraf\endgraf}\gprevgraf=\prevgraf}%
+\newcount\xprevgraf
+\def\xparshape{%
+   \xprevgraf=0
+   \def\_par{{\prevgraf=\xprevgraf\endgraf}\xprevgraf=\prevgraf}%
    \parshape}
-\def\endgparshape{\_par \let\_par=\endgraf}
+\def\endxparshape{\_par \let\_par=\endgraf}
 </pre>
 
 <p>You can use this trick outside OpTeX too. Replace \_par by \par in such a case.

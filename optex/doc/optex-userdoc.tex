@@ -1982,6 +1982,9 @@ prints dimen value using selected unit.
 \tpg[twoblocks]\t\twoblocks\
 allows printing bilingual texts in two columns veritically aligned.
 
+\tpg[xparshape]\t\xparshape\
+behaves like `\parshape` but its declaration is valid for more paragraphs.
+
 \tpg[xreplstring]\t\xreplstring\
 behaves like \~`\replstring` but is expandable and adds more features.
 
@@ -2001,9 +2004,11 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~maketoc'         % table of contents generation
 ~ii' item1,item2  % insertion the items to the index
 ~makeindex'       % the index is generated
+
 ~label' [labname]  % link target location
 ~ref' [labname]    % link to the chapter, section, subsection, equation
 ~pgref' [labname]  % link to the page of the chapter, section, ...
+
 ~caption'/t  % a numbered table caption
 ~caption'/f  % a numbered caption for the picture
 ~eqmark'     % a numbered equation
@@ -2014,6 +2019,7 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~endblock'       % end of block of text
 ~begtt'          % start a verbatim text
 ~endtt'          % end verbatim text
+
 ~verbchar' X     % initialization character X for in-text verbatim
 ~code'           % another alternative for in-text verbatim
 ~verbinput'      % verbatim extract from the external file
@@ -2025,6 +2031,7 @@ behaves like \~`\replstring` but is expandable and adds more features.
 ~sortcitations' ~shortcitations' ~nonumcitations' % cite format
 ~bib' [labname]  % an item in the list of references
 ~usebib'/? (style) bib-base % direct using of .bib file, ? in {s,c}
+
 ~load' [filenames]     % loadaing macro files
 ~fontfam' [FamilyName] % selection of font family
 ~typosize' [font-size/baselineskip] % size setting of typesetting
@@ -2033,6 +2040,7 @@ behaves like \~`\replstring` but is expandable and adds more features.
 
 ~inspic' file.ext    % insert a picture, extensions: jpg, png, pdf
 ~table' {rule}{data} % macro for the tables like in LaTeX
+
 ~fnote' {text}   % footnote (local numbering on each page)
 ~mnote' {text}   % note in the margin (left or right by page number)
 
