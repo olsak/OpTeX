@@ -1113,7 +1113,7 @@ solution.
 <h2><a name="algol"></a>Algorithms printed as pseudo-codes</h2>
 
 <p CLASS="rmarg">
-autoload:<br>\algol<br>declared also:<br>\var
+autoload:<br>\algol<br>\algolkw<br>declared also:<br>\var
 </p>
 
 <p>The LaTeX package bundle <b>algorithms</b> enables to create algorithms formatted by
@@ -1123,8 +1123,9 @@ the printed result and without useless control sequences.
 Our pseudo-code is written between \begtt\algol and \endtt as usual verbatim text.
 The key-words mentioned at pages 1--8 in the algorithms LaTeX documentation are
 written directly in our source code and they are printed in bold font automatically.
-If you want to print another word in bold use a pair of !...!, i.e. write !word!.
-Two !! prints one normal exclamation mark.
+Other key-words with this feature can be declared by \algolkw{word}.
+Another method for printing in bold is using a pair of !...!, i.e. write !word!
+in the source. Two !! prints one normal exclamation mark.
 Texts between dollars $...$ are interpreted in math mode. All input characters
 between $...$ are non-verbatim, i.e. the math mode is interpreted as usual.
 Other text (outside math mode) is printed verbatim but in Roman font.
@@ -1166,7 +1167,7 @@ readable. Or you can use common math control sequences in math mode,
 \newtoks \_hisyntaxalg
 \_hisyntaxalg = {
    \_hicolor K \bf  % Keywords
-   \foreach {Require:}{Ensure:}{Input:}
+   \foreach {Require:}{Ensure:}{Input:}{Output:}{Launch:}
       {while}{do}{if}{then}{else}{end}{function}{return}{print}
       {for}{all}{range}{continue}{repeat}{until}{loop}
       {not}{and}{or}{xor}{true}{false}
@@ -1181,6 +1182,7 @@ readable. Or you can use common math control sequences in math mode,
    \hisyntax{ALG}%
 }
 \def\var#1{{\it\adef_{\vrule height.4pt width4pt\relax}#1}}
+\def\algolkw#1{\toksapp\_hisyntaxalg{\replthis{\n#1\n}{\z K{#1}}}}
 </pre>
 
 <p>You can use \var{variable_name} inside the math mode. The variable_name

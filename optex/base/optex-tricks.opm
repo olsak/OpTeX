@@ -283,13 +283,13 @@ define_lua_command('xreplstring', function()
 end,'global') % we want to keep the meanig after group
 }
 
-\_trick 0078 \algol ;
+\_trick 0078 \algol \algolkw ;
 %%%%%%%%%%%%
 
 \_newtoks \_hisyntaxalg
 \_hisyntaxalg = {
    \_hicolor K \_bf  % Keywords
-   \_foreach {Require:}{Ensure:}{Input:}
+   \_foreach {Require:}{Ensure:}{Input:}{Output:}{Launch:}
       {while}{do}{if}{then}{else}{end}{function}{return}{print}
       {for}{all}{range}{continue}{repeat}{until}{loop}
       {not}{and}{or}{xor}{true}{false}
@@ -305,6 +305,7 @@ end,'global') % we want to keep the meanig after group
    \_hisyntax{ALG}%
 }
 \_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
+\_def\algolkw#1{\_toksapp\_hisyntaxalg{\_replthis{\n#1\n}{\z K{#1}}}}
 
 \_trick 0079 \ttlineref \lref ;
 %%%%%%%%%%%%
