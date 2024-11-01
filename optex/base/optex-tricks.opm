@@ -300,11 +300,11 @@ end,'global') % we want to keep the meanig after group
 \_def\algol{\_catcode`$=3 %
    \_everymath={\.algolmath}%
    \_def\_ttfont{\_rm}%
+   \_def\var##1{{\_it\_adef _{\_vrule height.4pt width4pt depth0pt\_relax}##1}}
    \_catcode`\!=13
    \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_def~##1~{\_ifx^##1^!\_else{\_bf##1}\_fi}}%
    \_hisyntax{ALG}%
 }
-\_def\var#1{{\_it\_adef _{\_vrule height.4pt width4pt\_relax}#1}}
 \_def\algolkw#1{\_toksapp\_hisyntaxalg{\_replthis{\n#1\n}{\z K{#1}}}}
 
 \_trick 0079 \ttlineref \lref ;

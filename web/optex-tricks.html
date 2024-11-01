@@ -1113,7 +1113,7 @@ solution.
 <h2><a name="algol"></a>Algorithms printed as pseudo-codes</h2>
 
 <p CLASS="rmarg">
-autoload:<br>\algol<br>\algolkw<br>declared also:<br>\var
+autoload:<br>\algol<br>\algolkw
 </p>
 
 <p>The LaTeX package bundle <b>algorithms</b> enables to create algorithms formatted by
@@ -1177,11 +1177,11 @@ readable. Or you can use common math control sequences in math mode,
 \def\algol{\catcode`$=3
    \everymath={\algolmath}%
    \def\_ttfont{\rm}%
+   \def\var##1{{\it\adef_{\vrule height.4pt width4pt depth0pt\relax}##1}}
    \catcode`\!=13
    \bgroup \lccode`\~=`\! \lowercase{\egroup \def~##1~{\ifx^##1^!\else{\_bf##1}\fi}}%
    \hisyntax{ALG}%
 }
-\def\var#1{{\it\adef_{\vrule height.4pt width4pt\relax}#1}}
 \def\algolkw#1{\toksapp\_hisyntaxalg{\replthis{\n#1\n}{\z K{#1}}}}
 </pre>
 
