@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-10-27>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-04>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -283,12 +283,15 @@ define_lua_command('xreplstring', function()
 end,'global') % we want to keep the meanig after group
 }
 
-\_trick 0078 \algol \algolkw ;
-%%%%%%%%%%%%
+\_trick 0078 0145 \algol \algolkw \captionA \makeLOA ;
+%%%%%%%%%%%%%%%%%
 
 \_newtoks \_hisyntaxalg
 \_hisyntaxalg = {
    \_hicolor K \_bf  % Keywords
+   \_replfromto {//}{^^J}{\algolcomment{#1}^^J}
+   \_replthis{++}{{++}}\_replthis{--}{{--}}
+   \_replfromto {$}{$}{${#1}$}
    \_foreach {Require:}{Ensure:}{Input:}{Output:}{Launch:}
       {while}{do}{if}{then}{else}{end}{function}{return}{print}
       {for}{all}{range}{continue}{repeat}{until}{loop}
@@ -306,6 +309,40 @@ end,'global') % we want to keep the meanig after group
    \_hisyntax{ALG}%
 }
 \_def\algolkw#1{\_toksapp\_hisyntaxalg{\_replthis{\n#1\n}{\z K{#1}}}}
+\_ifx\algolcomment\_undefined \_def\algolcomment#1{/\kern-.2em/{\it #1}} \_fi
+
+\_newcount\.anum
+\_def \.theanum  {\_othe\_chapnum.\_othe\_secnum.\_the\.anum}
+\_addto\_seccx {\.anum=0 }
+
+\_sdef{_mt:algol:en}{Algorithm} \_sdef{_mt:algol:cs}{Algoritmus}
+
+\_def\captionA {\_isnextchar [{\.capaA}{\.capaA[]}}
+\_def\.capaA [#1]#2\_relax{\_label[#1]%
+   \_incr\.anum
+   \_def\.algoltitle{\_indent\_wlabel{\.theanum}{\_bf\_mtext{algol} \.theanum}%
+                     \_enspace\_rm\_strut\_ignorespaces #2}%
+   \_ewref\.Xalg{{}{\.theanum}{\_nospaceafter\_empty#2}}%
+   \_setbox0=\_vbox\_bgroup \_advance\_hsize by-2\_hhkern \_advance\_hsize by-.8pt
+       \_begingroup \_aftergroup\.createalgol
+}
+\_def\.createalgol{\_egroup % \box0 is completed
+   \_frame{\_vbox{\_medskip\_hbox{\.algoltitle}\_medskip\_hrule\_medskip\_box0\_medskip}}%
+   \_endgroup % of \begtt
+}
+\_def\makeLOA{%
+   \_ifx\.alglist\_undefined \_opwarning{no data for LOA, try to run TeX again}\_openref
+   \_else \.alglist\_fi
+}
+\_def\.alline #1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+
+\_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
+\_refdecl{%
+   \_def\.alglist{}^^J
+   \_def\.Xalg#1#2#3{\_addto\.alglist{\.alline{#1}{#2}{#3}}%
+                     \_ea\_addto\_ea\.alglist\_ea{\_currpage}}^^J
+}
+
 
 \_trick 0079 \ttlineref \lref ;
 %%%%%%%%%%%%
@@ -923,11 +960,11 @@ end,'global') % we want to keep the meanig after group
 \_def\.lline#1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
 \_def\.makell#1#2{\_par
-   \_ifx#1\_undefined \_opwarning{no data for list of #2, try to run TeX again}\_openref
+   \_ifx#1\_undefined \_opwarning{no data for #2, try to run TeX again}\_openref
    \_else #1\_fi
 }
-\_def\makeLOF{\.makell\.loflist{figures}}
-\_def\makeLOT{\.makell\.lotlist{tables}}
+\_def\makeLOF{\.makell\.loflist{LOF}}
+\_def\makeLOT{\.makell\.lotlist{LOT}}
 
 \_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
 \_refdecl{%
@@ -1015,6 +1052,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-11-04 \captionA, \makeLOA added
 2024-10-31 \xparshape added
 2024-10-27 \mathinexpr added
 2024-10-22 \ismatch, \isinmacro added
