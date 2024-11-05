@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-04>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-05>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -283,8 +283,8 @@ define_lua_command('xreplstring', function()
 end,'global') % we want to keep the meanig after group
 }
 
-\_trick 0078 0145 \algol \algolkw \captionA \makeLOA ;
-%%%%%%%%%%%%%%%%%
+\_trick 0078 0145 0146 \algol \algolkw \algolcap \makeLOA \algolnum ;
+%%%%%%%%%%%%%%%%%%%%%%
 
 \_newtoks \_hisyntaxalg
 \_hisyntaxalg = {
@@ -305,7 +305,8 @@ end,'global') % we want to keep the meanig after group
    \_def\_ttfont{\_rm}%
    \_def\var##1{{\_it\_adef _{\_vrule height.4pt width4pt depth0pt\_relax}##1}}
    \_catcode`\!=13
-   \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_def~##1~{\_ifx^##1^!\_else{\_bf##1}\_fi}}%
+   \_bgroup \_lccode`\~=`\!
+            \_lowercase{\_egroup \_protected\_def~##1~{\_ifx^##1^!\_else{\_bf##1}\_fi}}%
    \_hisyntax{ALG}%
 }
 \_def\algolkw#1{\_toksapp\_hisyntaxalg{\_replthis{\n#1\n}{\z K{#1}}}}
@@ -317,7 +318,7 @@ end,'global') % we want to keep the meanig after group
 
 \_sdef{_mt:algol:en}{Algorithm} \_sdef{_mt:algol:cs}{Algoritmus}
 
-\_def\captionA {\_isnextchar [{\.capaA}{\.capaA[]}}
+\_def\algolcap{\_isnextchar [{\.capaA}{\.capaA[]}}
 \_def\.capaA [#1]#2\_relax{\_label[#1]%
    \_incr\.anum
    \_def\.algoltitle{\_indent\_wlabel{\.theanum}{\_bf\_mtext{algol} \.theanum}%
@@ -336,6 +337,15 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\.alline #1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2\_enspace}#3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
+\_def\algolnum{\_ttline=0
+   \_def\_printverbline ##1{\_putttpenalty
+       \_indent
+       \.testindent ##1.\_iftrue \_printverblinenum \_else \_decr\_ttline \_fi
+       \_kern\_ttshift ##1\_par}%
+   \_def\_printverblinenum{\_llap{\_sevenrm \_the\_ttline\_kern.1em}}%
+}
+\_def\.testindent#1#2\_iftrue {\_ea\_ifx#1\_dsp}
+
 \_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
 \_refdecl{%
    \_def\.alglist{}^^J
@@ -343,11 +353,10 @@ end,'global') % we want to keep the meanig after group
                      \_ea\_addto\_ea\.alglist\_ea{\_currpage}}^^J
 }
 
-
 \_trick 0079 \ttlineref \lref ;
 %%%%%%%%%%%%
 
-\_def\ttlineref#1{\_adef#1[##1]{\_label[ttline:##1]\_wlabel{\_the\_ttline}}}
+\_def\ttlineref#1{\_protected\_adef#1[##1]{\_label[ttline:##1]\_wlabel{\_the\_ttline}}}
 \_def\lref[#1]{\_ref[ttline:#1]}
 
 \_trick 0011 \scaleto \scaletof ;
@@ -1052,7 +1061,8 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
-2024-11-04 \captionA, \makeLOA added
+2024-11-05 \algolnum added
+2024-11-04 \algolcap, \makeLOA added
 2024-10-31 \xparshape added
 2024-10-27 \mathinexpr added
 2024-10-22 \ismatch, \isinmacro added

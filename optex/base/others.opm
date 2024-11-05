@@ -162,7 +162,7 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \shownodes \runsystem
-   \directoutput \algol \algolkw \captionA \makeLOA \scaleto \scaletof \ttlineref \lref
+   \directoutput \algol \algolkw \algolcap \algolnum \makeLOA \scaleto \scaletof \ttlineref \lref
    \easylist \keepstyle \fcread \shadedframe \roundframe \cancel \ignoreinspic \keystroke
    \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote \tabnodes \tablebefore
    \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
