@@ -971,30 +971,22 @@ The indentation of each line in display verbatim is controlled by
 Users can change the values of the `\parindent` and \^`\ttindent` independently.
 
 The \^`\begtt` command starts the internal group in which the catcodes are changed.
-\new
-Then the \^`\everytt` tokens register is run. It is empty by default and the user can
-control fine behavior by it. For example, the catcodes can be re-declared here. If
-you need to define an active character in the \^`\everytt`, use \~`\adef` as in the
-following example:
+The group ends by \^`\endtt`.
+You can declare settings valid only inside this group at the same line where
+\^`\begtt` starts. For example:
 
 \begtt \adef@{\string\endtt}
-\everytt={\adef!{?}\adef?{!}}
-\begtt
+\begtt \adef!{?} \adef?{!}
 Each occurrence of the exclamation mark will be changed to
 the question mark and vice versa. Really? You can try it!
 @
 \endtt
 %
-The \~`\adef` command sets its parameter as active {\it after\/}
-the parameter of \^`\everytt` is read. So you don't have to worry about active
-categories in this parameter.
+The \~`\adef` command sets defined character as the given macro.
 
-There is an alternative to \^`\everytt` named \^`\everyintt` which is used for
-in-line verbatim surrounded by an \^`\verbchar` or processed by the \~`\code`
-command.
-
-The \^`\everytt` is applied to all \^`\begtt``...`\^`\endtt` environments (if it is not
-declared in a group). There are tips for such global `\everytt` definitions here:
+You can declare settings valid inside each \^`\begtt`...\^`\endtt` group by
+the \^`\everytt` register.
+There are tips for such global \^`\everytt` declarations here:
 
 \begtt \adef!{\char9251 }
 \everytt={\typosize[9/11]}  % setting font size for verbatim
@@ -1002,16 +994,9 @@ declared in a group). There are tips for such global `\everytt` definitions here
 \everytt={\visiblesp}       % visualization!of!spaces
 \endtt
 
-\new
-If you want to apply a special code only for one \^`\begtt``...`\^`\endtt`
-environment then don't set any \^`\everytt` but put desired material at the
-same line where \^`\begtt` is. For example:
-
-\begtt   \adef@{\string\endtt}
-\begtt   \adef!{?}\adef?{!}
-Each occurrence of ? will be changed to ! and vice versa.
-@
-\endtt
+There is an alternative to \^`\everytt` named \^`\everyintt` which is used for
+all in-line verbatim surrounded by an \^`\verbchar` or processed by the \~`\code`
+command.
 
 The in-line verbatim surrounded by a \^`\verbchar` doesn't work in
 parameter of macros and macro definitions. (It works in titles declared by

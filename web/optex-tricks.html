@@ -1173,7 +1173,8 @@ readable. Or you can use common math control sequences in math mode,
 \_hisyntaxalg = {
    \_hicolor K \bf  % Keywords
    \replfromto {//}{^^J}{\algolcomment{#1}^^J}%
-   \replfromto {$}{$}{${#1}$}%
+   \replthis{++}{{++}}\replthis{--}{{--}}% good spacing of $i++$, $i--$
+   \replfromto {$}{$}{${#1}$}% disables following replaces in math mode
    \foreach {Require:}{Ensure:}{Input:}{Output:}{Launch:}
       {while}{do}{if}{then}{else}{end}{function}{return}{print}
       {for}{all}{range}{continue}{repeat}{until}{loop}
@@ -1274,7 +1275,7 @@ document (similarly like \maketoc creates the Table of contents).
    \ifx\alglist\undefined \opwarning{no data for list of alg, try to run TeX again}\openref
    \else \alglist\fi
 }
-\def\alline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+\def\alline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2\enspace}#3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
 \refdecl{%
    \def\alglist{}^^J
@@ -1323,8 +1324,7 @@ When the verbatim environment is closed then the \lref[label] expands to
 the the corresponding line number where the [label] was used. For example:
 
 <pre>
-\ttline=0
-\begtt \ttlineref §
+\begtt \ttline=0 \ttlineref §
 first line
    second special line §[spec]
    third line
@@ -6689,7 +6689,7 @@ about the figure/table to the generated list.
 \def\captionT [#1]#2{\caption/t[#1]\_ewref\Xtab{{#1}{\_thetnum}{#2}}\ignorespaces}
 \def\captionF [#1]#2{\caption/f[#1]\_ewref\Xfig{{#1}{\_thefnum}{#2}}\ignorespaces}
 
-\def\lline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+\def\lline#1#2#3#4#5{\line{\hskip2em\llap{\bf#2\enspace}#3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
 \def\makell#1#2{\par
    \ifx#1\undefined \opwarning{no data for list of #2, try to run TeX again}\openref

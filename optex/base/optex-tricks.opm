@@ -334,7 +334,7 @@ end,'global') % we want to keep the meanig after group
    \_ifx\.alglist\_undefined \_opwarning{no data for LOA, try to run TeX again}\_openref
    \_else \.alglist\_fi
 }
-\_def\.alline #1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+\_def\.alline #1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2\_enspace}#3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
 \_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
 \_refdecl{%
@@ -957,7 +957,7 @@ end,'global') % we want to keep the meanig after group
 \_def\captionT [#1]#2{\_caption/t[#1]\_ewref\.Xtab{{#1}{\_thetnum}{#2}}\_ignorespaces}
 \_def\captionF [#1]#2{\_caption/f[#1]\_ewref\.Xfig{{#1}{\_thefnum}{#2}}\_ignorespaces}
 
-\_def\.lline#1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2 } #3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
+\_def\.lline#1#2#3#4#5{\_line{\_hskip2em\_llap{\_bf#2\_enspace}#3 \_tocdotfill\ \_ilink[pg:#4]{#5}}}
 
 \_def\.makell#1#2{\_par
    \_ifx#1\_undefined \_opwarning{no data for #2, try to run TeX again}\_openref
