@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2024-09-10>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-09>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -61,11 +61,10 @@
    until `\ifsomething` is false. Then `<codeB>` is not executed and loop is
    finished. This works like in plain \TeX, but implementation is somewhat
    better (you can use `\else` clause after the `\ifsomething`).
-
    There are public version `\loop...\repeat` and private version
    \`\_loop` ...\`\_repeat`. You cannot mix both versions in one loop.
 
-   The `\loop` macro keeps its original plain TeX meaning. It is not
+   The `\loop` macro keeps its original plain \TeX/ meaning. It is not
    expandable and nested `\loop`s are possible only in a \TeX/ group.
    \_cod ----------------------------
 
@@ -74,6 +73,30 @@
 \_let \_repeat=\_fi % this makes \loop...\if...\repeat skippable
 \_let \repeat=\_fi
 \_def \_iterate {\_body \_ea \_iterate \_fi}
+
+   \_doc -----------------------------
+   \`\xloop` `<parameters>\do <codeA> \ifsomething <codeB> \repeat` or\nl
+   \`\_xloop` `<parameters>\_do <codeA> \_ifsomething <codeB> \_repeat`
+   behave analogically like \^`\loop`, but moreover: you can specify a rule of
+   parameters scanning (like in `\def` primitive) and you can
+   use these parameters (i.e. `#1`, `#2`, etc.) in the <codeA> or <codeB>.
+   Each iteration of this loop reads next parameters from the input queue
+   (just after `\repeat`) using the <parameters> rule. Example:
+   \begtt
+   \def\countparams{\tmpnum=0
+      \xloop ##1,\do \ifx\end##1\empty \else \incr\tmpnum \repeat}
+   \def\list{A, B, C}
+   \ea \countparams \list,\end, % \tmpnum = the number of comma separated parameters
+   \endtt
+   Second new feature: the \^`\xloop` macro is expandable,
+   if <codeA> and <codeB> include only expandable macros. This is not the
+   case of previous example but you can prefix `\tmpnum=0` and `\incr` by
+   the `\immediateassignment` \LuaTeX/ primitive and you get expandable macro
+   `\countparams`.
+   \_cod -----------------------------
+
+\_def\xloop#1\do#2\repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
+\_def\_xloop#1\_do#2\_repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
 
    \_doc -----------------------------
    {\_let\_moremainpoints=\_relax
@@ -93,7 +116,7 @@
    Note that `\foreach <list>\do {<what>}` is equivalent to `\foreach <list>\do #1{<what>}`.
 
    Recommendation: it is better to use private variants of \`\_foreach`.
-   When the user writes `\input tikz` then `\foreach` macro is redefined in
+   When the user writes `\load[tikz]` then `\foreach` macro is redefined in
    each TikZ environment.
    The private variants use \`\_do` separator instead `\do` separator.}
    \_cod -----------------------------
@@ -396,6 +419,7 @@
 
 \_endcode
 
+2024-11-09 \xloop implemented.
 2024-09-10 \afterxfi implemented.
 2024-02-19 \qcasesof reimplemented, it supports | for more phrases.
 2023-12-07 \_testparam define \long (big fixed).
