@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-09>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-10>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -95,8 +95,8 @@
    `\countparams`.
    \_cod -----------------------------
 
-\_def\xloop#1\do#2\repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
-\_def\_xloop#1\_do#2\_repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
+\_long\_def\xloop#1\do#2\repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
+\_long\_def\_xloop#1\_do#2\_repeat{\_immediateassignment\_long\_def\_body#1{#2\_ea\_body\_fi}\_body}
 
    \_doc -----------------------------
    {\_let\_moremainpoints=\_relax
@@ -419,7 +419,7 @@
 
 \_endcode
 
-2024-11-09 \xloop implemented.
+2024-11-10 \xloop implemented.
 2024-09-10 \afterxfi implemented.
 2024-02-19 \qcasesof reimplemented, it supports | for more phrases.
 2023-12-07 \_testparam define \long (big fixed).
