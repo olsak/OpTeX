@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-10>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-12>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -290,9 +290,9 @@
    The category codes are relevant here. The macro is expandable.
    \_cod ----------------------------
 
-\_long\_def\_isinlist#1#2{%
+\_long\_def\_isinlist#1#2#3{%
    \_immediateassignment\_long\_def\_isinlistA##1#2##2\_end/_%
-        {\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi}%
+        {\_if\_relax\_detokenize{##2}\_relax \_ea\_unless\_fi#3}%
    \_ea\_isinlistA#1\_endlistsep#2\_end/_%
 }
 \_public \isinlist ;
@@ -303,11 +303,11 @@
    \_cod -----------------------------
 
 \_newread \_testin
-\_def\_isfile #1{%
+\_def\_isfile #1#2{%
    \_openin\_testin ={#1}\_relax
    \_ifeof\_testin \_ea\_unless
    \_else \_closein\_testin
-   \_fi
+   \_fi #2%
 }
 \_public \isfile ;
 
@@ -419,6 +419,7 @@
 
 \_endcode
 
+2024-11-12 \isinlist, \isfile allow space before \iftrue/\iffalse
 2024-11-10 \xloop implemented.
 2024-09-10 \afterxfi implemented.
 2024-02-19 \qcasesof reimplemented, it supports | for more phrases.
