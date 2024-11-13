@@ -3276,7 +3276,8 @@ formatting, of course.
 <p CLASS=rmarg>
 autoload:<br>\tabnodes,<br>\tablebefore<br>
 declared also:<br>\tableafter,<br>
-\itl, \icl, \ibl,<br>\itc, \icc, \ibc,<br>\itr, \icr, \ibr
+\itl, \icl, \ibl,<br>\itc, \icc, \ibc,<br>\itr, \icr, \ibr<br>
+\ishift,\tabpos
 
 <p>We create macro \tabnodes which creates nodes in the table when
 \thistable{\tabnodes} is declared. You can put graphics or text at these
@@ -3287,7 +3288,7 @@ Example:
 \tablebefore
    \pdfliteral{q 1 0 0 RG \icc[1,1] m \icc[2,3] l S \icc[2,1] m \icc[1,3] l S Q}%
 
-\thistable{\tabnodes \tablinespace=0pt}
+\thistable{\tabnodes}
 \table{ccc}{
    first &amp; second &amp; third \cr
    A     &amp; B      &amp; C
@@ -3295,22 +3296,19 @@ Example:
 </pre>
 
 <p>This example connects the center of "first" with the center of "C" and the
-center of "third" with the center of "A" by red line. The macro is based on
+center of "third" with the center of "A" by the red line. The macro is based on
 absolute positions on the page given by \setpos, \posx and \posy,
 so the material from \tablebefore and \tableafter is placed at given positions
 after second run of TeX.
 
-<p>The \tablebefore or \tableafter set the position of the current point as
-origin of coordinate system and following \pdfliteral's can use the macro \icc
+<p>The \tablebefore or \tableafter sets the position of the current point as
+origin of coordinate system and following \pdfliteral's can use the macros \icc
 (and others). They give the positions of table items in bp unit and in
 the current coordinate system. The \tablebefore must be used before \table
 (the graphics act as background of the real table) and \tableafter should be
 used after \table with the same meaning, but the graphics overwrite the table.
 You can use both of them or only one of them at the same page where the
 \table is.
-
-<p>When \tabnodes is used then \tablinespace=0pt is recommended in order to
-correct vertical positioning of the nodes.
 
 <p>There are macros \itl, \icl, \ibl, \itc, \icc, \ibc, \itr, \icr, \ibr. Their
 syntax is \itl[row,column] and they expand to the
@@ -3327,7 +3325,7 @@ point shifted by given amount right and up, for example
 
 <p>You can use \puttext or \putpic after \tablebefore or \tableafter like
 \pdfliteral, and you can use \ibl etc. macros as coordinates given to \puttext
-or \putpic. But the se macros have to be prefixed by \tabpos in
+or \putpic. But these macros have to be prefixed by \tabpos in
 this case. Example:
 
 <pre>
@@ -3340,54 +3338,59 @@ this case. Example:
 <p>The implementation follows.
 
 <pre>
-\def\tablebefore{\ifvmode \nointerlineskip\null \fi
-   \incr\tndnum \setpos[t\the\tndnum:ori:b]\ea\tbpxpy\ea{\the\tndnum}{b}\decr\tndnum
+\newcount\tndnum \newcount\trownum
+\def\tablebefore{\incr\tndnum \ifvmode \null \fi
+   \setpos[t\the\tndnum:ori:b]\ea\tbpxpy\ea{\the\tndnum}{b}\decr\tndnum \nobreak
 }
 \def\tableafter {\setpos[t\the\tndnum:ori:e]\ea\tbpxpy\ea{\the\tndnum}{e}}
 \def\tbpxpy#1#2{%
-   \def\tbpx[##1]{\expr{\bp{\posx[t#1:##1]}-\bp{\posx[t#1:ori:#2]}}}%
-   \def\tbpy[##1]{\expr{\bp{\posy[t#1:##1]}-\bp{\posy[t#1:ori:#2]}}}%
+   \def\tbpx[##1##2]{\expr{\bp{\posx[t#1:##1\the\numexpr##2]}-\bp{\posx[t#1:ori:#2]}}}%
+   \def\tbpy[##1##2]{\expr{\bp{\posy[t#1:##1\the\numexpr##2]}-\bp{\posy[t#1:ori:#2]}}}%
 }
-\newcount\tndnum \newcount\tablerownum
-\def\putnodeh#1{\omit\relax
+\def\putnodeh#1{\immediateassigned{\let\_tabstrutA=\relax\tabiteml{}\tabitemr{}}\relax
    \setpos[t\the\tndnum:l#1]\hskip0pt plus1fill\relax \setpos[t\the\tndnum:r#1]}
-\def\putnodelr{\fornum 1..\colnum-1\do{\putnodeh{##1}&}\putnodeh{\the\colnum}%
-   \gdef\putnode{\noalign{\putnodev}}\cr}
-\def\putnodev{\setpos[t\the\tndnum:v\the\tablerownum]\incr\tablerownum}
-\def\tabnodes{\incr\tndnum \tablerownum=0
-   \def\_tablepxpreset{\everycr{}}\let\putnode=\putnodelr \everycr={\putnode}}
+\def\putnodelr{\fornum 1..\colnum-1\do{\putnodeh{##1}&amp;}\putnodeh{\the\colnum}%
+   \gdef\putnode{\noalign{\putnodebt}}\cr}
+\def\putnodebt{\nup{-\tablinespace}{\putnodeb\incr\trownum \putnodet}%
+   \settskip \gdef\corrposb{\noalign{\advance\trownum by-1 \putnodeb}}}%
+\def\tabnodes{\incr\tndnum \trownum=0 \let\putnode=\putnodelr \everycr={\putnode}%
+   \foreach \crl\_crl \crll\_crll \crli\_crli \crlli\_crlli \do ##1##2{%
+      \def##1{\_crcr\corrposb##2\corrpost
+              \noalign{\initskip \glet\testskip=\ignoresecond \glet\corrposb=\empty}}}%
+   \def\crlp##1{\_crcr\corrposb\_crlp{##1}\corrpost}%
+   \addto\_tskipA {\noalign{\decr\trownum \glet\corrposb=\empty
+      \testskip{\putnodet}{\nup\tablinespace\putnodet}}}%
+   \def\initskip{\gdef\settskip{\gdef\settskip{\glet\testskip=\usesecond}}}\initskip
+   \def\nup##1##2{\kern##1 ##2\kern-##1 }%
+   \def\putnodet{\setpos[t\the\tndnum:t\the\trownum]}%
+   \def\putnodeb{\setpos[t\the\tndnum:b\the\trownum]}%
+   \def\corrpost{\noalign{\putnodet}}%
+}
+\def\itl[#1,#2]{\tbpx[l#2] \tbpy[t#1]}
+\def\icl[#1,#2]{\tbpx[l#2] \expr{(\tbpy[t#1]+(\tbpy[b#1]))/2}}
+\def\ibl[#1,#2]{\tbpx[l#2] \tbpy[b#1]}
+\def\itc[#1,#2]{\expr{(\tbpx[l#2]+(\tbpx[r#2]))/2} \tbpy[t#1]}
+\def\icc[#1,#2]{\expr{(\tbpx[l#2]+(\tbpx[r#2]))/2} \expr{(\tbpy[t#1]+(\tbpy[b#1]))/2}}
+\def\ibc[#1,#2]{\expr{(\tbpx[l#2]+(\tbpx[r#2]))/2} \tbpy[b#1]}
+\def\itr[#1,#2]{\expr{\tbpx[r#2]} \expr{\tbpy[t#1]}}
+\def\icr[#1,#2]{\tbpx[r#2] \expr{(\tbpy[t#1]+(\tbpy[b#1]))/2}}
+\def\ibr[#1,#2]{\tbpx[r#2] \tbpy[b#1]}
+\def\iwd[#1,#2]{\expr{\tbpx[r#2]-(\tbpx[l#2])}}
+\def\iht[#1,#2]{\expr{\tbpy[t#1]-(\tbpy[b#1])}}
 
-\def\itl[#1,#2]{\expr{\tbpx[l\enum{#2}]} \expr{\tbpy[v\enum{#1-1}]}}
-\def\icl[#1,#2]{\expr{\tbpx[l\enum{#2}]}
-                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibl[#1,#2]{\expr{\tbpx[l\enum{#2}]} \expr{\tbpy[v\enum{#1}]}}
-\def\itc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expr{\tbpy[v\enum{#1-1}]}}
-\def\icc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibc[#1,#2]{\expr{(\tbpx[l\enum{#2}]+(\tbpx[r\enum{#2}]))/2}
-                \expr{\tbpy[v\enum{#1}]}}
-\def\itr[#1,#2]{\expr{\tbpx[r\enum{#2}]} \expr{\tbpy[v\enum{#1-1}]}}
-\def\icr[#1,#2]{\expr{\tbpx[r\enum{#2}]}
-                \expr{(\tbpy[v\enum{#1-1}]+(\tbpy[v\enum{#1}]))/2}}
-\def\ibr[#1,#2]{\expr{\tbpx[r\enum{#2}]} \expr{\tbpy[v\enum{#1}]}}
-\def\iwd[#1,#2]{\expr{\tbpx[r\enum{#2}]-(\tbpx[l\enum{#2}])}}
-\def\iht[#1,#2]{\expr{\tbpy[v\enum{#1-1}]-(\tbpy[v\enum{#1}])}}
-
-\def\enum#1{\number\numexpr#1\relax}
-\def\ishift #1{\ea\ishifta#1}  %  \ishift[2,3][1pt,2.5pt]
-\def\ishifta \expr#1 \expr#2#3#4,#5]{\expr{#1+(\bp{#4})} \expr{#2+(\bp{#5})}}
-\def\tabpos#1#2{#1\ifx\ishift#2\afterfi{\ea\ea\ea\ea\ea\ea}\fi\ea\tabposA#2}
-\def\tabposA\expr#1 \expr#2{\expr{#1}bp \expr{#2}bp}
+\def\ishift #1{\ea\ishifta#1}  %  \ishift\icc[2,3][1pt,2.5pt]
+\def\ishifta #1 #2[#3,#4]{\expr{#1+(\bp{#3})} \expr{#2+(\bp{#4})}}
+\def\tabpos#1#2{#1\ifx\ishift#2\ea\tabposA \else \ea\tabposB \fi #2}
+\def\tabposA #1#2[#3]#4#5]{\ea\tabposC\expanded{#1#2[#3][#5] }}
+\def\tabposB #1[#2,#3]{\ea\tabposC#1[#2,#3] }
+\def\tabposC #1 #2 {#1bp #2bp}
 </pre>
 
-<p>The nodes t(tab-num):v(row-num) are created for vertical positioning,
-t(tab-num):l(con-num) and t(tab-num):r(col-num) are created for horizontal
-positioning (left side and right side of given column).
-The t(tab-num):ori:b and t(tab-num):ori:e are nodes for origins at
-\tablebefore and \taleafter respectively. See .ref file for real example.
-Note that t(tab-num):l(col-num) can differ from t(tab-num):r(col-num -1)
-if \tabskip is non-zero.
+<p>The nodes t(tab-num):t(row-num) and t(tab-num):b(tab-num) are created for
+vertical positioning, t(tab-num):l(con-num) and t(tab-num):r(col-num) are
+created for horizontal positioning (left side and right side of given
+column). The t(tab-num):ori:b and t(tab-num):ori:e are nodes for origins at
+\tablebefore and \tableafter respectively. See .ref file for real example.
 
 <p CLASS=datum>(0050) -- P. O. 2021-03-09<p>
 <hr>

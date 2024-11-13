@@ -719,45 +719,52 @@ end,'global') % we want to keep the meanig after group
 \_trick 0050 \tabnodes \tablebefore ;
 %%%%%%%%%%%%
 
-\_def\tablebefore{\_ifvmode \_nointerlineskip\_null \_fi
-   \_incr\.tndnum \_setpos[t\_the\.tndnum:ori:b]\_ea\.tbpxpy\_ea{\_the\.tndnum}{b}\_decr\.tndnum
+\_newcount\.tndnum \_newcount\.trownum
+\_def\tablebefore{\_incr\.tndnum \_ifvmode \_null \_fi
+   \_setpos[t\_the\.tndnum:ori:b]\_ea\.tbpxpy\_ea{\_the\.tndnum}{b}\_decr\.tndnum \_nobreak
 }
-\_def\tableafter {\_setpos[t\_the\_tndnum:ori:e]\_ea\.tbpxpy\_ea{\_the\.tndnum}{e}}
+\_def\tableafter {\_setpos[t\_the\.tndnum:ori:e]\_ea\.tbpxpy\_ea{\_the\.tndnum}{e}}
 \_def\.tbpxpy#1#2{%
-   \_def\.tbpx[##1]{\_expr{\_bp{\_posx[t#1:##1]}-\_bp{\_posx[t#1:ori:#2]}}}%
-   \_def\.tbpy[##1]{\_expr{\_bp{\_posy[t#1:##1]}-\_bp{\_posy[t#1:ori:#2]}}}%
+   \_def\.tbpx[##1##2]{\_expr{\_bp{\_posx[t#1:##1\_the\_numexpr##2]}-\_bp{\_posx[t#1:ori:#2]}}}%
+   \_def\.tbpy[##1##2]{\_expr{\_bp{\_posy[t#1:##1\_the\_numexpr##2]}-\_bp{\_posy[t#1:ori:#2]}}}%
 }
-\_newcount\.tndnum \_newcount\.tablerownum
-\_def\.putnodeh#1{\_omit\_relax
+\_def\.putnodeh#1{\_immediateassigned{\_let\_tabstrutA=\_relax\_tabiteml{}\_tabitemr{}}\_relax
    \_setpos[t\_the\.tndnum:l#1]\_hskip0pt plus1fill\_relax \_setpos[t\_the\.tndnum:r#1]}
 \_def\.putnodelr{\_fornum 1..\_colnum-1\_do{\.putnodeh{##1}&}\.putnodeh{\_the\_colnum}%
-   \_gdef\.putnode{\_noalign{\.putnodev}}\_cr}
-\_def\.putnodev{\_setpos[t\_the\.tndnum:v\_the\.tablerownum]\_incr\.tablerownum}
-\_def\tabnodes{\_incr\.tndnum \.tablerownum=0
-   \_def\_tablepxpreset{\_everycr{}}\_let\.putnode=\.putnodelr \_everycr={\.putnode}}
+   \_gdef\.putnode{\_noalign{\.putnodebt}}\_cr}
+\_def\.putnodebt{\.nup{-\_tablinespace}{\.putnodeb\_incr\.trownum \.putnodet}%
+   \.settskip \_gdef\.corrposb{\_noalign{\_advance\.trownum by-1 \.putnodeb}}}%
+\_def\tabnodes{\_incr\.tndnum \.trownum=0 \_let\.putnode=\.putnodelr \_everycr={\.putnode}%
+   \_foreach \crl\_crl \crll\_crll \crli\_crli \crlli\_crlli \_do ##1##2{%
+      \_def##1{\_crcr\.corrposb##2\.corrpost
+              \_noalign{\.initskip \_glet\.testskip=\_ignoresecond \_glet\.corrposb=\_empty}}}%
+   \_def\crlp##1{\_crcr\.corrposb\_crlp{##1}\.corrpost}%
+   \_addto\_tskipA {\_noalign{\_decr\.trownum \_glet\.corrposb=\_empty
+      \.testskip{\.putnodet}{\.nup\_tablinespace\.putnodet}}}%
+   \_def\.initskip{\_gdef\.settskip{\_gdef\.settskip{\_glet\.testskip=\_usesecond}}}\.initskip
+   \_def\.nup##1##2{\_kern##1 ##2\_kern-##1 }%
+   \_def\.putnodet{\_setpos[t\_the\.tndnum:t\_the\.trownum]}%
+   \_def\.putnodeb{\_setpos[t\_the\.tndnum:b\_the\.trownum]}%
+   \_def\.corrpost{\_noalign{\.putnodet}}%
+}
+\_def\itl[#1,#2]{\.tbpx[l#2] \.tbpy[t#1]}
+\_def\icl[#1,#2]{\.tbpx[l#2] \_expr{(\.tbpy[t#1]+(\.tbpy[b#1]))/2}}
+\_def\ibl[#1,#2]{\.tbpx[l#2] \.tbpy[b#1]}
+\_def\itc[#1,#2]{\_expr{(\.tbpx[l#2]+(\.tbpx[r#2]))/2} \.tbpy[t#1]}
+\_def\icc[#1,#2]{\_expr{(\.tbpx[l#2]+(\.tbpx[r#2]))/2} \_expr{(\.tbpy[t#1]+(\.tbpy[b#1]))/2}}
+\_def\ibc[#1,#2]{\_expr{(\.tbpx[l#2]+(\.tbpx[r#2]))/2} \.tbpy[b#1]}
+\_def\itr[#1,#2]{\_expr{\.tbpx[r#2]} \_expr{\.tbpy[t#1]}}
+\_def\icr[#1,#2]{\.tbpx[r#2] \_expr{(\.tbpy[t#1]+(\.tbpy[b#1]))/2}}
+\_def\ibr[#1,#2]{\.tbpx[r#2] \.tbpy[b#1]}
+\_def\iwd[#1,#2]{\_expr{\.tbpx[r#2]-(\.tbpx[l#2])}}
+\_def\iht[#1,#2]{\_expr{\.tbpy[t#1]-(\.tbpy[b#1])}}
 
-\_def\itl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1-1}]}}
-\_def\icl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]}
-                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
-\_def\ibl[#1,#2]{\_expr{\.tbpx[l\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1}]}}
-\_def\itc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
-                 \_expr{\.tbpy[v\.enum{#1-1}]}}
-\_def\icc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
-                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
-\_def\ibc[#1,#2]{\_expr{(\.tbpx[l\.enum{#2}]+(\.tbpx[r\.enum{#2}]))/2}
-                 \_expr{\.tbpy[v\.enum{#1}]}}
-\_def\itr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1-1}]}}
-\_def\icr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]}
-                 \_expr{(\.tbpy[v\.enum{#1-1}]+(\.tbpy[v\.enum{#1}]))/2}}
-\_def\ibr[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]} \_expr{\.tbpy[v\.enum{#1}]}}
-\_def\iwd[#1,#2]{\_expr{\.tbpx[r\.enum{#2}]-(\.tbpx[l\.enum{#2}])}}
-\_def\iht[#1,#2]{\_expr{\.tbpy[v\.enum{#1-1}]-(\.tbpy[v\.enum{#1}])}}
-
-\_def\.enum#1{\_number\_numexpr#1\_relax}
-\_def\ishift #1{\_ea\.ishifta#1}  %  \ishift[2,3][1pt,2.5pt]
-\_def\.ishifta \_expr#1 \_expr#2#3#4,#5]{\_expr{#1+(\_bp{#4})} \_expr{#2+(\_bp{#5})}}
-\_def\tabpos#1#2{#1\_ifx\ishift#2\_afterfi{\_ea\_ea\_ea\_ea\_ea\_ea}\_fi\_ea\.tabposA#2}
-\_def\.tabposA\_expr#1 \_expr#2{\_expr{#1}bp \_expr{#2}bp}
+\_def\ishift #1{\_ea\.ishifta#1}  %  \ishift\icc[2,3][1pt,2.5pt]
+\_def\.ishifta #1 #2[#3,#4]{\_expr{#1+(\_bp{#3})} \_expr{#2+(\_bp{#4})}}
+\_def\tabpos#1#2{#1\_ifx\ishift#2\_ea\.tabposA \_else \_ea\.tabposB \_fi #2}
+\_def\.tabposA #1#2[#3]#4#5]{\_ea\.tabposC\_expanded{#1#2[#3][#5] }}
+\_def\.tabposB #1[#2,#3]{\_ea\.tabposC#1[#2,#3] }
+\_def\.tabposC #1 #2 {#1bp #2bp}
 
 \_trick 0031 \framedblocks ;
 %%%%%%%%%%%%
