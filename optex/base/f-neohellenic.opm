@@ -1,0 +1,23 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Neohellenic] \Neohellenic {Sans serif fonts + math and full Greek}
+        {\caps} {\rm \bf \it \bi} {Neohellenic}
+        {[GFSNeohellenic]}
+        {\_def\_fontnamegen {[GFSNeohellenic\_currV]:script=latn;\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps (\rm only)^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars {} Bold It BoldIt }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_loadmath {[GFSNeohellenicMath]}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.

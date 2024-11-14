@@ -271,6 +271,11 @@
      \thin\caps,\light\caps,\book\caps,\caps,\medium\caps,%
      \thin\allsc,\light\allsc,\book\allsc,\allsc,\medium\allsc: {\rm\bf\it\bi} }
 
+\_famfrom {GFS, Takis Katsoulidis, George D. Matthiopoulos}
+\_faminfo [Neohellenic] {Sans serif fonts with math and full Greek} {f-neohellenic}
+   { -: {\rm\bf\it\bi} \caps:{\rm} }
+\_famalias [GFS Neohellenic]
+
 \_famfrom {Raph Levien}
 \_faminfo [Inconsolata] {A monospaced font for code listing} {f-inconsolata}
    { -,\narrow: {\rm\bf} }
