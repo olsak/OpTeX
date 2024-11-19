@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2024-06-02>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2024-11-19>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -1101,15 +1101,18 @@
 
 \_def\_mathbox#1{{\_mathstyles{\_hbox{%
    \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
-   \_else
+   \_else \_ifx \_normalmath\_normalunimath
       \_ifnum\_stylenum=2 \_def\_textmff{ssty=1;}\_fi
       \_ifnum\_stylenum=3 \_def\_textmff{ssty=2;}\_def\_scriptmff{ssty=2;}\_fi
-      \_typoscale[\_dobystyle{}{}{700}{500}/]\_fi #1}}}%
+      \_typosize[\_ea\_ignorept\_the\_fontdimen6\_dobystyle{}{}\_scriptfont\_scriptscriptfont1/]%
+   \_else \_typoscale[\_dobystyle{}{}{700}{500}/]%
+   \_fi\_fi #1}}}%
 }
 \_public \mathbox ;
 
 \_endcode %---------------------------------------------------
 
+2024-11-19 \typosize used fo Uni-fonts in \mathbox in order to respect their sizes
 2024-06-02 don't apply \mathsbon twice
 2023-05-24 \matsbon: "local num" added
 2023-05-22 \mathsbon: \alpha_i\beta_j -> \alpha _i\beta _j (bug fixed)
