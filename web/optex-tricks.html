@@ -3378,8 +3378,8 @@ this case. Example:
 \def\iwd[#1,#2]{\expr{\tbpx[r#2]-(\tbpx[l#2])}}
 \def\iht[#1,#2]{\expr{\tbpy[t#1]-(\tbpy[b#1])}}
 
-\def\ishift #1{\ea\ishifta#1}  %  \ishift\icc[2,3][1pt,2.5pt]
-\def\ishifta #1 #2[#3,#4]{\expr{#1+(\bp{#3})} \expr{#2+(\bp{#4})}}
+\def\ishift #1[#2]{\ea\ishiftA#1[#2] }  %  \ishift\icc[2,3][1pt,2.5pt]
+\def\ishiftA #1 #2 #3#4,#5]{\_expr{#1+(\_bp{#4})} \_expr{#2+(\_bp{#5})}}
 \def\tabpos#1#2{#1\ifx\ishift#2\ea\tabposA \else \ea\tabposB \fi #2}
 \def\tabposA #1#2[#3]#4#5]{\ea\tabposC\expanded{#1#2[#3][#5] }}
 \def\tabposB #1[#2,#3]{\ea\tabposC#1[#2,#3] }

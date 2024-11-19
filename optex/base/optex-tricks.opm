@@ -759,8 +759,8 @@ end,'global') % we want to keep the meanig after group
 \_def\iwd[#1,#2]{\_expr{\.tbpx[r#2]-(\.tbpx[l#2])}}
 \_def\iht[#1,#2]{\_expr{\.tbpy[t#1]-(\.tbpy[b#1])}}
 
-\_def\ishift #1{\_ea\.ishifta#1}  %  \ishift\icc[2,3][1pt,2.5pt]
-\_def\.ishifta #1 #2[#3,#4]{\_expr{#1+(\_bp{#3})} \_expr{#2+(\_bp{#4})}}
+\_def\ishift #1[#2]{\_ea\.ishiftA#1[#2] }  %  \ishift\icc[2,3][1pt,2.5pt]
+\_def\.ishiftA #1 #2 #3#4,#5]{\_expr{#1+(\_bp{#4})} \_expr{#2+(\_bp{#5})}}
 \_def\tabpos#1#2{#1\_ifx\ishift#2\_ea\.tabposA \_else \_ea\.tabposB \_fi #2}
 \_def\.tabposA #1#2[#3]#4#5]{\_ea\.tabposC\_expanded{#1#2[#3][#5] }}
 \_def\.tabposB #1[#2,#3]{\_ea\.tabposC#1[#2,#3] }
