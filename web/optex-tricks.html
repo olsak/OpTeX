@@ -178,6 +178,12 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#rowformat">Format valid for each columns in given row</a>
 </ul>
 
+<li>Databases
+<ul>
+    <li><a href="#csvread">Using CSV databases</a>
+    <li><a href="#csvprint">Tips for working with CSV databases</a>
+</ul>
+
 <li>Text blocks
 <ul>
     <li><a href="#greyblock">Text blocks with grey background splittable to more</a>
@@ -3422,6 +3428,205 @@ bold and red.
 <p CLASS=datum>(0110) -- P. O. 2021-05-12<p>
 <hr>
 
+
+<p CLASS="lmarg">Databases</p>
+
+<h2><a name="csvread"></a>Using CSV databases</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\csvread<br>\csvdecl<br>
+defined also:<br>\csvitem,\colname<br>\csvprepare<br>\csvfind<br>\csvunknown
+</p>
+
+<p>We create macros for reading CSV files and using data from them.
+Suppose that we have names.csv file with this content
+
+<pre>
+id, "FirstName","LastName","Address"
+013,"Petr",     "Olšák",   "Prague"
+142,"Ferdinand","Mravenec","U lesa"
+</pre>
+
+<p>Then we do following
+
+<pre>
+\csvread {names.csv}  % reads whole CSV file and saves data (filename with suffix)
+\csvitem(1,2)     % returns item from 1-st row, 2-nd column, i.e. Petr
+\csvitem(1,\colname Address) % returns Prague
+\edef\foo{\csvitem(2,1)} % does \def\foo{142}
+\edef\address{\csvitem(2,\colname Address)} % does \def\address{U lesa}
+\fornum 1..\csvmaxrow \do {\csvitem(#1,\colname LastName) } % prints all data in given column
+\fornum 1..\csvmaxrow \do {\def\e##1{\csvitem(#1,\colname##1)} use \e{id}, \e{Address}, ... \par}
+                  % processes the whole database row by row
+</pre>
+
+<p>The example above shows that we have access to all items in the CSV file after
+\csvread by the macro \csvitem(row,column) and we can replace column number by
+\colname ColumName declared in the CSV file. The \edef\foo{\csvitem(...)} replaces the
+\csvitem(...) by the relevant data and defines \foo. If data include expandable
+macros, they are not expanded by this \edef.
+
+<p>Once \csvread is done, we can prepare a hash table for selected column by
+\csvprepare (column). Then \csvfind(column){Data} can be used. It expands
+to the row number where the Data in the given column is (or zero if Data not
+found):
+
+<pre>
+\csvprepare(\colname LastName) % hash table for searching in LastName column prepared
+\csvitem(\csvfind(\colname LastName){Olšák},\colname FirstName) % returns Petr
+</pre>
+
+<p>We can declare open (o), close (c) and between (b) separators used in the CSV file.
+Just use \csvdecl ocb before \csvread. The default is \csvdecl "", it means that
+data items are separated by comma and can be enclosed in optional "...".
+
+<p>If \csvitem(...) is out of the range then \csvunknown is returned (?? is default).
+
+<p>If you have TeX special characters in the CSV file and you want to
+interpret them as normal characters, you have to set their catcodes in the
+group where \csvread is:
+
+<pre>
+{\catcode`\%=12 \catcode`&=12 \csvread {names.csv}}
+</pre>
+
+<p>You can manipulte with more databases from more CSV files together:
+
+<pre>
+\csvread basename{file} % reads CSV file with given basename
+\csvitem basename(row,column) % returns data from given basename
+\csvprepare basename(column)  % prepares the hash table from given basename
+\csvfind basename(column){Data} % returns row where Data is from given basename
+\csvmaxcolbasename, \csvmaxrowbasename % the number of columns, rows in given basename
+</pre>
+
+<p>Implementation:
+
+<pre>
+\newcount\csvcol \newcount\csvrow
+\def\csvread#1#{\par \bgroup \def\csvb{#1}\csvrow=0 \csvreadA}
+\def\csvreadA#1{\everypar={\readline}\input{#1}%
+   \decr\csvrow \sxdef{csvmaxrow\csvb}{\the\csvrow}
+   \decr\csvcol \sxdef{csvmaxcol\csvb}{\the\csvcol}\egroup}
+\def\csvdecl #1#2#3{%
+   \eoldef\readline##1{\setbox0=\lastbox \par \csvcol=0
+      \ifnum\csvrow=0 \afterfi{\readitem\csvsethead}\else \afterfi{\readitem\csvsetdata}\fi ##1#3\_fin
+      \incr\csvrow}
+   \def\readitem##1##2{\incr\csvcol
+      \ifx##2\_fin \else \afterfi{\ifx ##2#1\afterfi{\readitemA##1}\else \afterfi{\readitemB##1##2}\fi}\fi}
+   \def\readitemA ##1##2#2#3{##1{##2}\readitem##1}
+   \def\readitemB ##1##2#3{##1{##2}\readitem##1}
+} \csvdecl "", % " " , are default data separators
+\def\csvsethead#1{\sxdef{csvcol:\csvb(#1)}{\the\csvcol}\sxdef{csvhead:\csvb(\the\csvcol)}{#1}}
+\def\csvsetdata#1{\global\sdef{csvitem:\csvb(\the\csvrow,\the\csvcol)}{#1}}
+\def\csvitem#1(#2,#3){\immediateassignment\def\csvb{#1}%
+   \ifcsname csvitem:#1(#2,#3)\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else \csvunknown\fi}
+\def\colname#1){\ifcsname csvcol:\csvb(#1)\endcsname \lastnamedcs \else 0\fi)}
+\def\csvunknown{??}
+\def\csvprepare #1(#2){\ifcsname csvmaxrow#1\endcsname
+   \fornum 1..\cs{csvmaxrow#1}\do {\edef\tmp{\csvitem#1(##1,#2)}\sxdef{csvrow:#1(#2)\detokenize\ea{\tmp}}{##1}}%
+   \else \opwarning{\string\csvprepare: CSV database "" wasn't read}\fi}
+\def\csvfind #1(#2)#3{\ifcsname csvrow:#1(#2)\detokenize{#3}\endcsname \lastnamedcs \else 0\fi}
+</pre>
+
+<p>The following macros are globally defined:
+
+<pre>
+after \csvread basename{filename}:
+   \csvitem:basename(row,column) -> data item in given row, column
+   \csvcol:basename(headername) -> column number
+   \csvhead:basename(column) -> header name
+   \csvmaxrowbasename, \csvmaxcolbasename -> total number of rows, of columns
+after \csvprepare basename(column):
+   \csvrow:basename(column)data-item -> row number where data-item is
+</pre>
+
+<p>The other macros simply manipulate with these control sequences.
+
+<p CLASS=datum>(0147) -- P. O. 2024-11-20<p>
+<hr>
+
+<h2><a name="csvprint"></a>Tips for working with CSV databases</h2>
+
+<p CLASS="rmarg">
+\csvloop<br>
+is autoloaded<br>
+together with<br>
+\csvread
+</p>
+
+<p>Suppose that we are using the previous <a href="#csvread">OpTeX trick 0147</a>
+and we show several tips relevant to CSV databases.
+
+<p>We can set the data of CSV database directly in our document
+using <a href="#begfile">OpTeX trick 0057</a>:
+<pre>
+\createfile{names.csv}
+id, "FirstName","LastName","Address"
+013,"Petr",     "Olšák",   "Prague"
+142,"Ferdinand","Mravenec","U lesa"
+\endfile
+</pre>
+
+<p>We can print the whole database by \csvprint{filename} using \table:
+<pre>
+\def\head(#1){\cs{csvhead:(#1)}}
+\def\csvprint#1{{\catcode`\%=12 \catcode`\&=12 \catcode`\#=12 \csvread{#1}}
+   \ea\table\expanded{{|\fornum 1..\csvmaxcol\do{l|}}}{\crl
+      \fornum 1..\csvmaxcol-1 \do {\hfil\bf \head(##1)&} \hfil\bf \head(\csvmaxcol)\crl
+      \fornum 1..\csvmaxrow \do {%
+         \fornum 1..\csvmaxcol-1 \do {\csvitem(##1,####1)&} \csvitem(##1,\csvmaxcol)\cr
+      }\crl
+}}
+%% Try this:
+\csvprint{names.csv}
+</pre>
+
+<p>We can create a macro \csvloop with similar syntax like \DTLforeach from
+LaTeX's datatool.sty. It's syntax is
+
+<pre>
+\csvloop basename(assign list) {text}
+</pre>
+
+<p>where text is applied for each row of the database and before each loop
+step the macros declared in assign list are prepared. The assign list is
+comma separated list of items \macro=header which means that \macro is
+defined as the data item from current row and from column specified by
+header.
+
+<pre>
+\def\csvloop #1(#2)#3{%
+   \def\csvbl{#1}\def\settinglist{}\csvsetting #2,\_fin=\_fin,%
+   \fornum 1..\cs{csvmaxrow#1} \do {\tmpnum=##1 \settinglist #3}%
+}
+\def\csvsetting #1#2=#3,{\ifx#3\_fin \else \addto\settinglist{\csvdef#1{#3}}\ea\csvsetting\fi}
+\def\csvdef#1#2{\edef#1{\csvitem\csvbl(\the\tmpnum,\colname#2)}}
+%% Try this
+\csvread {names.csv}
+\csvloop (\f=FirstName, \l=LastName, \a=Address) {%
+   \l\ \f\ lives at the address: \a \par
+}
+</pre>
+
+<p>Of course, you can use conditionals in the {text} part of the \csvloop
+macro defined above. The following example prints data with only selected ids:
+<pre>
+\def\luaif#1#2{\directlua{if not(#1) then tex.print("\_nbb unless") end}#2}
+\csvread {names.csv}
+\csvloop (\id=id, \f=FirstName, \l=LastName, \a=Address) {%
+   \luaif {\id>0 and \id&lt;100} \iftrue
+      \l\ \f\ lives at the address: \a \par \fi
+}
+</pre>
+
+<p>The <a href="#luaif">OpTeX trick 0138</a> is used in this example.
+
+
+<p CLASS=datum>(0148) -- P. O. 2024-11-20<p>
+<hr>
+
+
 <p CLASS="lmarg">Text blocks</p>
 
 <h2><a name="greyblock"></a>Text blocks with grey background splittable to more pages</h2>
@@ -4102,7 +4307,7 @@ previous paragraphs.
 
 <p>You can use this trick outside OpTeX too. Replace \_par by \par in such a case.
 
-<p CLASS=datum>(0144) -- P. O. 2024-10-2024<p>
+<p CLASS=datum>(0144) -- P. O. 2024-10-29<p>
 <hr>
 
 <p CLASS="lmarg">Macro tricks</p>
@@ -5338,6 +5543,7 @@ using \kv{authors} or only three \ea but explicit \csname...\endcsname:
 
 <p CLASS=datum>(0118) -- P. O. 2023-10-31<p>
 <hr>
+
 
 <h2><a name="putsep"></a>Putting separators between list items</h2>
 
