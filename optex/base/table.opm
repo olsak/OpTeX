@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \table {Macros for tables <2023-06-27>} % preloaded in format
+\_codedecl \table {Macros for tables <2024-11-21>} % preloaded in format
 
    \_doc -----------------------------
    The result of the \`\table``{<declaration>}{<data>}` macro is inserted into
@@ -51,13 +51,14 @@
    \_fi
    \_colnum=0 \_let\_addtabitem=\_addtabitemx
    \_def\_tmpa{}\_tabdata={\_colnum1\_relax}\_scantabdata#1\_relax
-   \_the\_everytable \_bgroup \_catcode`\#=12 \_tableB
+   \_the\_everytable \_tableB
 }
 
    \_doc -----------------------------
-   The \`\_tableB` saves `<data>` to `\_tmpb`
-   and does \^`\replstring`s to prefix each macro \^`\crl` (etc.)
-   by `\_crcr`. See \^`\_tabreplstrings`.
+   The \`\_tableB` saves `<data>` to `\_tmpb`. The `#1` parameter is
+   re-scanned in order to set potential `#` characters inside it as others.
+   This is needed because of `\gdef\_tmpb` and next \^`\replstring`s.
+   They prefix each macro \^`\crl` (etc.) by `\_crcr`. See \^`\_tabreplstrings`.
    The whole `\_tableB` macro is hidden in `{...}` in order to
    there may be `\table` in `\table` and we want to manipulate with
    `&` and `\cr` as with normal tokens in the `\_tabreplstrings`, not as
@@ -90,9 +91,10 @@
    work in special cases here like \code{`\{`} for example.
    \_cod -----------------------------
 
-\_long\_def\_tableB #1{\_egroup
-   {\_def\_tmpb{#1}\_tablereplstrings
-    \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
+\_long\_def\_tableB #1{%
+   {{\_catcode`\#=12 % see OpTeX trick 0117:
+     \_directlua{tex.sprint(-1,"\_luaescapestring{\_unexpanded{\_gdef\_tmpb{#1}}}")}}%
+    \_tablereplstrings \_edef\_tabskipmid{\_the\_tabskip}\_tabskip=\_tabskipl
     \_ifpxto
       \_edef\_tsizes{\_global\_tsizesum=\_the\_tsizesum \_gdef\_noexpand\_tsizelast{\_tsizelast}}%
       \_tsizesum=\_zo \_def\_tsizelast{0}%
@@ -106,6 +108,7 @@
     \_else
       \_halign\_tablew \_tableC
     \_fi
+    \_glet\_tmpb\_undefined
    }\_egroup % \_tablebox\_bgroup is in the \_table macro
 }
 \_def\_tableC{\_ea{\_the\_tabdata\_tabskip=\_tabskipr\_cr \_scantextokens\_ea{\_tmpb\_crcr}}}
@@ -589,6 +592,7 @@ after the second one.
 
 \_endinput
 
+2024-11-21 \_tableB improved (rescan its parameter by \directlua)
 2023-06-27 \frame: argument in group
 2023-05-19 \_tableparB,C: no strut when \tskip is processed (bug fixed).
 2022-12-26 \tabdeclare: use {##} in order to allow a\over b in table items
