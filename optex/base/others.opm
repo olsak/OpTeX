@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2024-09-09>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2024-11-21>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -153,7 +153,8 @@
    \_savecatcodetable\_tmpcatcodes \_catcodetable\_tmpcatcodes
    \_long\_def\_loadtrickA ##1\_trick##2#1##3;{##1}%
    \_wlog{Loading trick macros for \_string#1}%
-   \_setbox\_nonebox=\_vpack{\_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
+   \_setbox\_nonebox=\_vpack{\_let\:=\_trickprefix \_def\_trickseq{#1}%
+      \_globaldefs=1 \_ea\_loadtrickA \_input {optex-tricks.opm}}%
    \_restorectable \_endnamespace
    \_endlocalcontrol
 }
@@ -171,6 +172,19 @@
    \xreplstring \replmacro \tdnum \clipbox \ismatch \isinmacro \mathinexpr \xparshape
    \csvread \csvdecl ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
+
+   \_doc
+   The `\:` is used as a prefix before `\def` etc. in the file `optex-tricks.opm`
+   if the declared control sequence is from user namespace. It checks if a user
+   have defined it before the trick is loaded and prints warning in this case.
+   The `\:` is set to \`\_trickprefix` in the group before trick loading.
+   If a trick includes only one autoloaded control sequence then it
+   needs not to be prefixed by `\:` because if a user redefines it then
+   the usage of it doesn't run autoloading.
+   \_cod
+
+\_def\_trickprefix #1#2{\_ifx#2\_undefined \_else \_def\_tmp{\_loadtrickD#2}\_ifx\_tmp#2\_else
+   \_opwarning{trick by \_ea\_string\_trickseq\_space loaded: \_string#2 redefined}\_fi\_fi #1#2}
 
    \_doc -----------------------------
    Lua\TeX/ version 1.14 and newer provides `\partokenname` which allows to
@@ -239,6 +253,7 @@
 
 \_endcode
 
+2024-11-21 \_trickprefix introduced
 2024-09-09 for old LuaTeX 1.13: \_def\_bemulti removed
 2024-06-27 \_loadtrickD introduced in order to save format size.
 2024-03-11 \_lipsumload+\_loadtrick: \vpack used instead \vbox.
