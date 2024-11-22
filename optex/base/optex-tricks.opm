@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-21>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-22>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -767,45 +767,73 @@ end,'global') % we want to keep the meanig after group
 \_def\.tabposC #1 #2 {#1bp #2bp}
 
 
-\_trick 0147 0148 \csvread \csvdecl ;
-%%%%%%%%%%%%%%%%%
+\_trick 0147 0148 0149 \csvread \csvdecl ;
+%%%%%%%%%%%%%%%%%%%%%%
 
-\_newcount\.csvcol \_newcount\.csvrow
-\:\_def\csvread#1#{\_par \_bgroup \_def\.csvb{#1}\.csvrow=0 \.csvreadA}
+\_newcount\.dbcol \_newcount\.dbrow
+\:\_def\csvread#1#{\_ifcsname dbmaxrow#1\_endcsname
+   \_opwarning{\_noexpand\csvread ignored: database "#1" created already, use another name}%
+   \_ea \_ignoreit
+   \_else \_afterfi{\_par \_bgroup \_def\.dbn{#1}\.dbrow=0 \.csvreadA}\_fi}
 \_def\.csvreadA#1{\_everypar={\.readline}\_input{#1}%
-   \_decr\.csvrow \_sxdef{csvmaxrow\.csvb}{\_the\.csvrow}
-   \_decr\.csvcol \_sxdef{csvmaxcol\.csvb}{\_the\.csvcol}\_egroup}
+   \_decr\.dbrow \_sxdef{dbmaxrow\.dbn}{\_the\.dbrow}
+   \_decr\.dbcol \_sxdef{dbmaxcol\.dbn}{\_the\.dbcol}\_egroup}
 \:\_def\csvdecl #1#2#3{%
-   \_eoldef\.readline##1{\_setbox0=\_lastbox \_par \.csvcol=0
-      \_ifnum\.csvrow=0 \_afterfi{\.readitem\.csvsethead}\_else \_afterfi{\.readitem\.csvsetdata}\_fi ##1#3\_fin
-      \_incr\.csvrow}
-   \_def\.readitem##1##2{\_incr\.csvcol
+   \_eoldef\.readline##1{\_setbox0=\_lastbox \_par \.dbcol=0
+      \_ifnum\.dbrow=0 \_afterfi{\.readitem\.csvsethead}\_else \_afterfi{\.readitem\.csvsetdata}\_fi ##1#3\_fin
+      \_incr\.dbrow}
+   \_def\.readitem##1##2{\_incr\.dbcol
       \_ifx##2\_fin \_else \_afterfi{\_ifx ##2#1\_afterfi{\.readitemA##1}\_else \_afterfi{\.readitemB##1##2}\_fi}\_fi}
    \_def\.readitemA ##1##2#2#3{##1{##2}\.readitem##1}
    \_def\.readitemB ##1##2#3{##1{##2}\.readitem##1}
 } \csvdecl "", % " " , are default data separators
-\_def\.csvsethead#1{\_sxdef{csvcol:\.csvb(#1)}{\_the\.csvcol}\_sxdef{csvhead:\.csvb(\_the\.csvcol)}{#1}}
-\_def\.csvsetdata#1{\_global\_sdef{csvitem:\.csvb(\_the\.csvrow,\_the\.csvcol)}{#1}}
-\:\_def\csvitem#1(#2,#3){\_immediateassignment\_def\.csvb{#1}%
-   \_ifcsname csvitem:#1(#2,#3)\_endcsname \_unexpanded\_ea\_ea\_ea{\_lastnamedcs}\_else \csvunknown\_fi}
-\:\_def\colname#1){\_ifcsname csvcol:\.csvb(#1)\_endcsname \_lastnamedcs \_else 0\_fi)}
-\:\_def\csvunknown{??}
-\:\_def\csvprepare #1(#2){\_ifcsname csvmaxrow#1\_endcsname
-   \_fornum 1..\_cs{csvmaxrow#1}\_do {\_edef\.tmp{\csvitem#1(##1,#2)}\_sxdef{csvrow:#1(#2)\_detokenize\_ea{\.tmp}}{##1}}%
-   \_else \.csvwarn\csvprepare{#1}\_fi}
-\_def\.csvwarn#1#2{\_opwarning{\_string#1: CSV database "#2" wasn't read}}
-\:\_def\csvfind #1(#2)#3{\_ifcsname csvrow:#1(#2)\_detokenize{#3}\_endcsname \_lastnamedcs \_else 0\_fi}
+\_def\.csvsethead#1{\_sxdef{dbcol:\.dbn(#1)}{\_the\.dbcol}\_sxdef{dbhead:\.dbn(\_the\.dbcol)}{#1}}
+\_def\.csvsetdata#1{\_global\_sdef{dbitem:\.dbn(\_the\.dbrow,\_the\.dbcol)}{#1}}
+\:\_def\dbitem#1(#2,#3){\.dbset{#1}%
+   \_ifcsname dbitem:#1(#2,#3)\_endcsname \_unexpanded\_ea\_ea\_ea{\_lastnamedcs}\_else \dbunknown\_fi}
+\_def\.dbset#1{\_immediateassignment\_edef\.dbname{#1}}
+\:\_def\colname#1){\_ifcsname dbcol:\.dbname(#1)\_endcsname \_lastnamedcs \_else 0\_fi)}
+\:\_def\dbhead#1(#2){\_ifcsname dbhead:#1(#2)\_endcsname \_lastnamedcs \_else \_dbunknown \_fi}
+\:\_def\dbunknown{??}
+\_let\.dbitem=\dbitem \_let\.colname=\colname
 
-\_ifx\csvloop\_undefined
-\_def\csvloop #1(#2)#3{\_ifcsname csvmaxrow#1\_endcsname
-   \_def\.csvbl{#1}\_def\.settinglist{}\.csvsetting #2,\_fin=\_fin,%
-   \_fornum 1..\_cs{csvmaxrow#1} \_do {\_tmpnum=##1 \.settinglist #3}%
-   \_else \.csvwarn\csvloop{#1}\_fi
+\:\_def\dbhash #1(#2){%
+   \.onlyifdb #1(#2)\dbhash {%
+      \_fornum 1..\cs{dbmaxrow#1}\_do
+         {\_edef\.tmp{\.dbitem#1(##1,#2)}\.sxadef{dbrow:#1(#2)\_detokenize\_ea{\.tmp}}{##1,}}%
+}}
+\_def\.sxadef#1#2{\_ifcsname#1\_endcsname \_sxdef{#1}{\_cs{#1}#2}\_else\_sxdef{#1}{#2}\_fi}
+\_def\.onlyifdb #1(#2)#3#4{\.dbset{#1}%
+   \_ifcsname dbitem:#1(1,#2)\_endcsname #4\_else
+   \_ifcsname dbmaxrow#1\_endcsname \_opwarning{\_string#3 ignored: missing column \.missingcol(#2) in "#1"}%
+   \_else \_opwarning{\_string#3 ignored: database "#1" isn't created}%
+   \_fi\_fi
 }
-\_def\.csvsetting #1#2=#3,{\_ifx#3\_fin \_else \_addto\.settinglist{\.csvdef#1{#3}}\_ea\.csvsetting\_fi}
-\_def\.csvdef#1#2{\_edef#1{\csvitem\.csvbl(\_the\_tmpnum,\.colname#2)}}
-\_let\.colname=\colname
-\_fi
+\:\_def\dbwhere #1(#2)#3{\.dbset{#1}%
+   \_ifcsname dbrow:#1(#2)\_detokenize{#3}\_endcsname \_ea\_ea\_ea\.firstfromlist\_lastnamedcs;\_else 0\_fi}
+\_def\.missingcol (#1#2){(\_ifx#1\colname \_noexpand#1#2\_else #1#2\_fi)}
+\_def\.firstfromlist #1,#2;{#1}
+
+\:\_def\dbloop #1(#2)#3{\.onlyifdb #1(1)\dbloop {%
+   \_immediateassigned{\_def\.settinglist{}\.dbsetting #2,\_fin=\_fin,}%
+   \_ifcsname dblist:#1\_endcsname
+      \_afterfi{\_ea\_ea\_ea\_foreach\_csname dblist:#1\_endcsname \_do ##1,}%
+   \_else \_afterfi{\_fornum 1..\cs{dbmaxrow#1}\_do}\_fi
+      {\_immediateassigned{\.dbrow=##1 \.settinglist}#3}%
+}}
+\_def\.dbsetting #1#2=#3,{\_ifx#3\_fin \_else \_addto\.settinglist{\.dbdef#1{#3}}\_ea\.dbsetting\_fi}
+\_def\.dbdef#1#2{\_edef#1{\.dbitem\.dbname(\_the\.dbrow,\.colname#2)}}
+\:\_def\dbsort #1(#2){\.onlyifdb #1(#2)\dbsort {% basename column exists:
+   \_def\.dblist{}%
+   \_fornum 1..\cs{dbmaxrow#1} \_do {%
+      \_edef\.tmp{\.dbitem #1(##1,#2)}\_edef\.tmp{\_detokenize\_ea{\.tmp}}%
+      \_ea\_addto \_ea\.dblist \_csname +\.tmp:##1\_endcsname
+      \_sdef{+\.tmp:##1}{##1,}}%
+   \_dosorting\.dblist
+   \_sxdef{dblist:#1}{\.dblist}%
+}}
+\:\_let\dbsortfmt=\_detokenize % you can change it, see OpTeX trick 0150
+
 
 \_trick 0031 \framedblocks ;
 %%%%%%%%%%%%
@@ -1111,6 +1139,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-11-22 \dbloop etc. implemented
 2024-11-21 \: introduced for warning if a macro is re-defined
 2024-11-21 \csvread added
 2024-11-05 \algolnum added

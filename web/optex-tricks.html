@@ -180,7 +180,9 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Databases
 <ul>
-    <li><a href="#csvread">Using CSV databases</a>
+    <li><a href="#csvread">Reading CSV databases</a>
+    <li><a href="#dbwhere">Searching in databases</a>
+    <li><a href="#dbloop">Browsing database lines and sorting them</a>
     <li><a href="#csvprint">Tips for working with CSV databases</a>
 </ul>
 
@@ -3431,11 +3433,11 @@ bold and red.
 
 <p CLASS="lmarg">Databases</p>
 
-<h2><a name="csvread"></a>Using CSV databases</h2>
+<h2><a name="csvread"></a>Reading CSV databases</h2>
 
 <p CLASS="rmarg">
 autoload:<br>\csvread<br>\csvdecl<br>
-defined also:<br>\csvitem,\colname<br>\csvprepare<br>\csvfind<br>\csvunknown
+defined also:<br>\dbitem,\colname<br>\dbhead<br>\dbunknown
 </p>
 
 <p>We create macros for reading CSV files and using data from them.
@@ -3450,95 +3452,84 @@ id, "FirstName","LastName","Address"
 <p>Then we do following
 
 <pre>
-\csvread {names.csv}  % reads whole CSV file and saves data (filename with suffix)
-\csvitem(1,2)     % returns item from 1-st row, 2-nd column, i.e. Petr
-\csvitem(1,\colname Address) % returns Prague
-\edef\foo{\csvitem(2,1)} % does \def\foo{142}
-\edef\address{\csvitem(2,\colname Address)} % does \def\address{U lesa}
-\fornum 1..\csvmaxrow \do {\csvitem(#1,\colname LastName) } % prints all data in given column
-\fornum 1..\csvmaxrow \do {\def\e##1{\csvitem(#1,\colname##1)} use \e{id}, \e{Address}, ... \par}
+\csvread {names.csv}        % reads whole CSV file and saves data to memory
+\dbitem(1,2)                % returns item from 1-st row, 2-nd column, i.e. Petr
+\dbitem(1,\colname Address) % returns Prague
+\dbhead(3)                  % returns LastName
+\edef\foo{\dbitem(2,1)}     % does \def\foo{142}
+\edef\address{\dbitem(2,\colname Address)} % does \def\address{U lesa}
+\fornum 1..\dbmaxrow \do {\dbitem(#1,\colname LastName) } % prints all data in given column
+\fornum 1..\dbmaxrow \do {\def\e##1{\dbitem(#1,\colname##1)} use \e{id}, \e{Address}, ... \par}
                   % processes the whole database row by row
 </pre>
 
 <p>The example above shows that we have access to all items in the CSV file after
-\csvread by the macro \csvitem(row,column) and we can replace column number by
-\colname ColumName declared in the CSV file. The \edef\foo{\csvitem(...)} replaces the
-\csvitem(...) by the relevant data and defines \foo. If data include expandable
+\csvread by the macro \dbitem(row,column) and we can replace column number by
+\colname ColumName declared in the header of the CSV file.
+The \edef\foo{\dbitem(...)} replaces the
+\dbitem(...) by the relevant data and defines \foo. If data include expandable
 macros, they are not expanded by this \edef.
-
-<p>Once \csvread is done, we can prepare a hash table for selected column by
-\csvprepare (column). Then \csvfind(column){Data} can be used. It expands
-to the row number where the Data in the given column is (or zero if Data not
-found):
-
-<pre>
-\csvprepare(\colname LastName) % hash table for searching in LastName column prepared
-\csvitem(\csvfind(\colname LastName){Olšák},\colname FirstName) % returns Petr
-</pre>
 
 <p>We can declare open (o), close (c) and between (b) separators used in the CSV file.
 Just use \csvdecl ocb before \csvread. The default is \csvdecl "", it means that
-data items are separated by comma and can be enclosed in optional "...".
+data items are separated by comma and they can be enclosed in optional "...".
 
-<p>If \csvitem(...) is out of the range then \csvunknown is returned (?? is default).
+<p>If \dbitem(row,column) is out of the range then \dbunknown is returned (?? is default).
 
 <p>If you have TeX special characters in the CSV file and you want to
 interpret them as normal characters, you have to set their catcodes in the
-group where \csvread is:
+group where \csvread is used:
 
 <pre>
-{\catcode`\%=12 \catcode`&=12 \csvread {names.csv}}
+{\catcode`\%=12 \catcode`\&amp;=12 \csvread {names.csv}}
 </pre>
 
-<p>You can manipulte with more databases from more CSV files together:
+<p>You can work with more databases from more CSV files together:
 
 <pre>
-\csvread basename{file} % reads CSV file with given basename
-\csvitem basename(row,column) % returns data from given basename
-\csvprepare basename(column)  % prepares the hash table from given basename
-\csvfind basename(column){Data} % returns row where Data is from given basename
-\csvmaxcolbasename, \csvmaxrowbasename % the number of columns, rows in given basename
+\csvread basename{file} % reads CSV file and sets database name "basename"
+\dbitem basename(row,column) % returns data from given basename
+\dbhead basename(column)     % returns header name from given column and basename
+\dbmaxcolbasename, \dbmaxrowbasename % the number of columns, rows in given basename
 </pre>
 
 <p>Implementation:
 
 <pre>
-\newcount\csvcol \newcount\csvrow
-\def\csvread#1#{\par \bgroup \def\csvb{#1}\csvrow=0 \csvreadA}
+\newcount\dbcol \newcount\dbrow
+\def\csvread#1#{\ifcsname dbmaxrow#1\endcsname
+   \opwarning{\noexpand\csvread ignored: database "#1" created already, use another name}%
+   \ea \ignoreit
+   \else \afterfi{\par \bgroup \def\dbn{#1}\dbrow=0 \csvreadA}\fi}
 \def\csvreadA#1{\everypar={\readline}\input{#1}%
-   \decr\csvrow \sxdef{csvmaxrow\csvb}{\the\csvrow}
-   \decr\csvcol \sxdef{csvmaxcol\csvb}{\the\csvcol}\egroup}
+   \decr\dbrow \sxdef{dbmaxrow\dbn}{\the\dbrow}
+   \decr\dbcol \sxdef{dbmaxcol\dbn}{\the\dbcol}\egroup}
 \def\csvdecl #1#2#3{%
-   \eoldef\readline##1{\setbox0=\lastbox \par \csvcol=0
-      \ifnum\csvrow=0 \afterfi{\readitem\csvsethead}\else \afterfi{\readitem\csvsetdata}\fi ##1#3\_fin
-      \incr\csvrow}
-   \def\readitem##1##2{\incr\csvcol
+   \eoldef\readline##1{\setbox0=\lastbox \par \dbcol=0
+      \ifnum\dbrow=0 \afterfi{\readitem\csvsethead}\else \afterfi{\readitem\csvsetdata}\fi ##1#3\_fin
+      \incr\dbrow}
+   \def\readitem##1##2{\incr\dbcol
       \ifx##2\_fin \else \afterfi{\ifx ##2#1\afterfi{\readitemA##1}\else \afterfi{\readitemB##1##2}\fi}\fi}
    \def\readitemA ##1##2#2#3{##1{##2}\readitem##1}
    \def\readitemB ##1##2#3{##1{##2}\readitem##1}
 } \csvdecl "", % " " , are default data separators
-\def\csvsethead#1{\sxdef{csvcol:\csvb(#1)}{\the\csvcol}\sxdef{csvhead:\csvb(\the\csvcol)}{#1}}
-\def\csvsetdata#1{\global\sdef{csvitem:\csvb(\the\csvrow,\the\csvcol)}{#1}}
-\def\csvitem#1(#2,#3){\immediateassignment\def\csvb{#1}%
-   \ifcsname csvitem:#1(#2,#3)\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else \csvunknown\fi}
-\def\colname#1){\ifcsname csvcol:\csvb(#1)\endcsname \lastnamedcs \else 0\fi)}
-\def\csvunknown{??}
-\def\csvprepare #1(#2){\ifcsname csvmaxrow#1\endcsname
-   \fornum 1..\cs{csvmaxrow#1}\do {\edef\tmp{\csvitem#1(##1,#2)}\sxdef{csvrow:#1(#2)\detokenize\ea{\tmp}}{##1}}%
-   \else \opwarning{\string\csvprepare: CSV database "" wasn't read}\fi}
-\def\csvfind #1(#2)#3{\ifcsname csvrow:#1(#2)\detokenize{#3}\endcsname \lastnamedcs \else 0\fi}
+\def\csvsethead#1{\sxdef{dbcol:\dbn(#1)}{\the\dbcol}\sxdef{dbhead:\dbn(\the\dbcol)}{#1}}
+\def\csvsetdata#1{\global\sdef{dbitem:\dbn(\the\dbrow,\the\dbcol)}{#1}}
+\def\dbitem#1(#2,#3){\dbset{#1}%
+   \ifcsname dbitem:#1(#2,#3)\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else \dbunknown\fi}
+\def\dbset#1{\immediateassignment\edef\dbname{#1}}
+\def\colname#1){\ifcsname dbcol:\dbname(#1)\endcsname \lastnamedcs \else 0\fi)}
+\def\dbhead#1(#2){\ifcsname dbhead:#1(#2)\endcsname \lastnamedcs \else \dbunknown \fi}
+\def\dbunknown{??}
 </pre>
 
-<p>The following macros are globally defined:
+<p>If \readcsv basename{filename} is used then the following macros are globally defined:
 
 <pre>
-after \csvread basename{filename}:
-   \csvitem:basename(row,column) -> data item in given row, column
-   \csvcol:basename(headername) -> column number
-   \csvhead:basename(column) -> header name
-   \csvmaxrowbasename, \csvmaxcolbasename -> total number of rows, of columns
-after \csvprepare basename(column):
-   \csvrow:basename(column)data-item -> row number where data-item is
+   \dbitem:basename(row,column) -> data item in given row, column
+   \dbcol:basename(headername) -> column number
+   \dbhead:basename(column) -> header name
+   \dbmaxrowbasename, \dbmaxcolbasename -> total number of rows, of columns
 </pre>
 
 <p>The other macros simply manipulate with these control sequences.
@@ -3546,84 +3537,232 @@ after \csvprepare basename(column):
 <p CLASS=datum>(0147) -- P. O. 2024-11-20<p>
 <hr>
 
-<h2><a name="csvprint"></a>Tips for working with CSV databases</h2>
+<h2><a name="dbwhere"></a>Searching in databases</h2>
 
 <p CLASS="rmarg">
-\csvloop<br>
-is autoloaded<br>
+\dbhash<br>
+\dbwhere<br>
+are autoloaded<br>
 together with<br>
 \csvread
 </p>
 
-<p>Suppose that we are using the previous <a href="#csvread">OpTeX trick 0147</a>
-and we show several tips relevant to CSV databases.
 
-<p>We can set the data of CSV database directly in our document
+<p>Assume that a database is read by \csvread {filename.csv}
+(see previous <a href="#csvread">OpTeX trick 147</a> and we want to
+search data in it. We can prepare a hash table for selected column by
+\dbhash (column). Then \dbwhere(column){Data} can be used. It expands
+to the row number where the Data in the given column is (or zero if Data not
+found). Suppose the CSV example from previous OpTeX trick. Then:
+
+<pre>
+\csvread {names.csv}
+\dbhash (\colname LastName) % hash table for searching in LastName column prepared
+\dbitem (\dbwhere(\colname LastName){Olšák},\colname FirstName) % returns Petr
+</pre>
+
+<p>\dbwhere(column) returns zero until a hash table for given column is prepared by
+\dbhash(column). You can prepare hash table for more columns. For example,
+\fornum 1..\dbmaxcol \do {\dbhash(#1)} prepares hash tables for all columns
+in the database.
+
+<p>If there is more equal Data item in the column used for searching then
+the line with the first one is returned by \dbwhere. More options shows
+<a href="csvprint">OpTeX trick 0150, Tip 4</a>.
+
+<p>If a named database is crated by \csvread basename{filename.csv} then
+following commands can be used:
+
+<pre>
+\dbhash basename(column)        % prepares the hash table from given basename
+\dbwhere basename(column){Data} % returns row where Data is from given basename
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\dbhash #1(#2){%
+   \onlyifdb #1(#2)\dbhash {%
+      \fornum 1..\cs{dbmaxrow#1}\do
+         {\edef\tmp{\dbitem#1(##1,#2)}\sxadef{dbrow:#1(#2)\detokenize\ea{\tmp}}{##1,}}%
+}}
+\def\sxadef#1#2{\ifcsname#1\endcsname \sxdef{#1}{\cs{#1}#2}\else\sxdef{#1}{#2}\fi}
+\def\onlyifdb #1(#2)#3#4{\dbset{#1}%
+   \ifcsname dbitem:#1(1,#2)\endcsname #4\else
+   \ifcsname dbmaxrow#1\endcsname \opwarning{\string#3 ignored: missing column \missingcol(#2) in "#1"}%
+   \else \opwarning{\string#3 ignored: database "#1" isn't created}%
+   \fi\fi}
+\def\dbwhere #1(#2)#3{\dbset{#1}%
+   \ifcsname dbrow:#1(#2)\detokenize{#3}\endcsname \ea\ea\ea\firstfromlist\lastnamedcs;\else 0\fi}
+\def\missingcol (#1#2){(\ifx#1\colname \noexpand#1#2\else #1#2\fi)}
+\def\firstfromlist #1,#2;{#1}
+</pre>
+
+<p>After \dbhash basename(column) is done then the following control
+sequences are defined:
+
+<pre>
+\dbrow:basename(column)data-item -> comma separated list of row numbers where data-item is
+</pre>
+
+<p>The \dbwhere macro only gets first number of this comma separated list or returns zero.
+The \onlyidfb runs the following code only if the column exists. Otherwise it
+prints warning message.
+
+<p CLASS=datum>(0148) -- P. O. 2024-11-20<p>
+<hr>
+
+<h2><a name="dbloop"></a>Browsing database lines and sorting them</h2>
+
+<p CLASS="rmarg">
+\dbloop<br>
+\dbsort<br>
+\dbsortfmt<br>
+are autoloaded<br>
+together with<br>
+\csvread
+</p>
+
+<p>Assume that a database is read by \csvread {filename.csv}
+(see previous <a href="#csvread">OpTeX trick 147</a> and we want to
+loop over the lines in it more comfortably than directly by \fornum.
+
+<p>We create a macro \dbloop with similar syntax like \DTLforeach from
+LaTeX's datatool.sty. It's syntax is
+
+<pre>
+\dbloop basename(assign list) {text}
+</pre>
+
+<p>where text is applied for each row of the database and before each
+step the macros declared in assign list are prepared. The assign list is
+comma separated list of items \macro=header which means that \macro is
+defined as the data item from current row and from column specified by
+header. The \dbloop is expandable if {text} is expandable and if no warning
+(about missing database) is printed.
+Following example uses the CSV database mentioned in the
+<a href="#csvread">OpTeX trick 147</a>:
+
+<pre>
+\csvread {names.csv}
+\dbloop (\fname=FirstName, \lname=LastName, \address=Address) {%
+   \lname\ \fname\ lives at the address: \address \par
+}
+</pre>
+
+<p>Of course, you can use conditionals in the {text} part of the \dbloop
+macro defined above. The following example prints data with only selected ids:
+<pre>
+\def\luaif#1#2{\directlua{if not(#1) then tex.print("\_nbb unless") end}#2}
+\dbloop (\id=id, \fname=FirstName, \lname=LastName, \address=Address) {%
+   \luaif {\id>0 and \id&lt;100} \iftrue
+      \lname\ \fname\ lives at the address: \address \par \fi
+}
+</pre>
+
+<p>The <a href="#luaif">OpTeX trick 0138</a> was used in this example.
+
+<p>By default, the lines in \dbloop are processed from the first to the last one.
+But, if you run \dbsort (column) before \dbloop, then the lines are sorted
+by the given column.
+<pre>
+\dbsort (\colname Lastname) % data sorted alhabetically by LastName
+\dbloop (\fname=FirstName, \lname=LastName, \address=Address) {%
+   \lname\ \fname\ lives at the address: \address \par
+}
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\dbloop #1(#2)#3{\onlyifdb #1(1)\dbloop {%
+   \immediateassigned{\def\settinglist{}\dbsetting #2,\_fin=\_fin,}%
+   \ifcsname dblist:#1\endcsname
+      \afterfi{\ea\ea\ea\foreach\csname dblist:#1\endcsname \do ##1,}%
+   \else \afterfi{\fornum 1..\cs{dbmaxrow#1}\do}\fi
+      {\immediateassigned{\dbrow=##1 \settinglist}#3}%
+}}
+\def\dbsetting #1#2=#3,{\ifx#3\_fin \else \addto\settinglist{\dbdef#1{#3}}\ea\dbsetting\fi}
+\def\dbdef#1#2{\edef#1{\dbitem\dbname(\the\dbrow,\colname#2)}}
+
+\def\dbsort #1(#2){\onlyifdb #1(#2)\dbsort{% basename column
+   \def\dblist{}%
+   \fornum 1..\cs{dbmaxrow#1} \do {%
+      \edef\tmp{\dbitem #1(##1,#2)}\edef\tmp{\ea\dbsortfmt\ea{\tmp}}%
+      \ea\addto \ea\dblist \csname +\tmp:##1\endcsname
+      \sdef{+\tmp:##1}{##1,}}%
+   \_dosorting\dblist
+   \sxdef{dblist:#1}{\dblist}%
+}}
+\let\dbsortfmt=\detokenize % you can change it, see OpTeX trick 0150, Tip 3
+</pre>
+
+<p>The \dbsort macro runs OpTeX's \_dosorting and saves the result with
+numbers of lines after sorting in the comma separated list to the
+\dblist:basename macro. If such macro exists, the \dbloop uses \foreach over
+the dblist contents else it runs \fornum 1..\dbmaxcolbasename.
+
+<p CLASS=datum>(0149) -- P. O. 2024-11-21<p>
+<hr>
+
+<h2><a name="csvprint"></a>Tips for working with CSV databases</h2>
+
+<p>Suppose that we are using the previous <a href="#csvread">OpTeX trick 0147, 0148, 0149</a>.
+We show several tips relevant to the databases.
+
+<p><b>Tip 1.</b> We can set the data of CSV database directly in our document
 using <a href="#begfile">OpTeX trick 0057</a>:
 <pre>
-\createfile{names.csv}
+\createfile {names.csv}
 id, "FirstName","LastName","Address"
 013,"Petr",     "Olšák",   "Prague"
 142,"Ferdinand","Mravenec","U lesa"
 \endfile
 </pre>
 
-<p>We can print the whole database by \csvprint{filename} using \table:
+<p><b>Tip 2.</b> We can print the whole database by \csvprint{filename} using \table:
 <pre>
-\def\head(#1){\cs{csvhead:(#1)}}
-\def\csvprint#1{{\catcode`\%=12 \catcode`\&=12 \catcode`\#=12 \csvread{#1}}
-   \ea\table\expanded{{|\fornum 1..\csvmaxcol\do{l|}}}{\crl
-      \fornum 1..\csvmaxcol-1 \do {\hfil\bf \head(##1)&} \hfil\bf \head(\csvmaxcol)\crl
-      \fornum 1..\csvmaxrow \do {%
-         \fornum 1..\csvmaxcol-1 \do {\csvitem(##1,####1)&} \csvitem(##1,\csvmaxcol)\cr
+\def\csvprint#1{{\catcode`\%=12 \catcode`\&amp;=12 \catcode`\#=12 \csvread p{#1}}
+   \ea\table\expanded{{|\fornum 1..\dbmaxcol\do{l|}}}{\crl
+      \fornum 1..\dbmaxcol-1 \do {\hfil\bf \dbhead p(##1)&amp;} \hfil\bf \dbhead p(\dbmaxcol)\crl
+      \fornum 1..\dbmaxrow \do {%
+         \fornum 1..\dbmaxcol-1 \do {\dbitem p(##1,####1)&amp;} \dbitem p(##1,\dbmaxcol)\cr
       }\crl
 }}
-%% Try this:
-\csvprint{names.csv}
 </pre>
+Try this: \csvprint{names.csv}
 
-<p>We can create a macro \csvloop with similar syntax like \DTLforeach from
-LaTeX's datatool.sty. It's syntax is
+<p><b>Tip 3.</b> If we want to sort by a column with numbers only then we
+needn't the alphabetical sorting because it isn't equal to sorting by
+numbers. But we can re-define the \dbsortfmt in such a way that the numbers
+are converted to another numbers where alphabetical sorting is correct:
 
 <pre>
-\csvloop basename(assign list) {text}
+{\def\dbsortfmt#1{\expr[0]{11000000000+#1*1000}} \dbsort (\colname values)}
 </pre>
 
-<p>where text is applied for each row of the database and before each loop
-step the macros declared in assign list are prepared. The assign list is
-comma separated list of items \macro=header which means that \macro is
-defined as the data item from current row and from column specified by
-header.
+<p>Now, we can sort numbers from -999999 to 8000000 with optional three
+decimal digits.
+
+<p><b>Tip 4.</b> \dbwhere returns first occurrence of Data. Suppose that there
+are more equal Data in the column where we do searching. For example,
+there isn't only Olšák Petr, but also Olšák Miroslav and Olšák Radek in
+other rows in our CSV file names.csv. Then we can do following:
 
 <pre>
-\def\csvloop #1(#2)#3{%
-   \def\csvbl{#1}\def\settinglist{}\csvsetting #2,\_fin=\_fin,%
-   \fornum 1..\cs{csvmaxrow#1} \do {\tmpnum=##1 \settinglist #3}%
-}
-\def\csvsetting #1#2=#3,{\ifx#3\_fin \else \addto\settinglist{\csvdef#1{#3}}\ea\csvsetting\fi}
-\def\csvdef#1#2{\edef#1{\csvitem\csvbl(\the\tmpnum,\colname#2)}}
-%% Try this
 \csvread {names.csv}
-\csvloop (\f=FirstName, \l=LastName, \a=Address) {%
-   \l\ \f\ lives at the address: \a \par
-}
+\dbhash (\colname LastName)
+\sxdef{dblist:}{\trycs{dbrow:(\colname LastName)Olšák}{}}
+
+\dbloop (\fn=FirstName) {\fn,} % expands to comma separated list Petr, Miroslav, Radek,
 </pre>
 
-<p>Of course, you can use conditionals in the {text} part of the \csvloop
-macro defined above. The following example prints data with only selected ids:
-<pre>
-\def\luaif#1#2{\directlua{if not(#1) then tex.print("\_nbb unless") end}#2}
-\csvread {names.csv}
-\csvloop (\id=id, \f=FirstName, \l=LastName, \a=Address) {%
-   \luaif {\id>0 and \id&lt;100} \iftrue
-      \l\ \f\ lives at the address: \a \par \fi
-}
-</pre>
+<p>The trick is based on the fact, that we create the \dblist: macro with
+the comma separated list of row numbers. This list is normally used
+by \dbloop when \dbsort is preceded. This is the rason why \dbloop accepts
+this list.
 
-<p>The <a href="#luaif">OpTeX trick 0138</a> is used in this example.
-
-
-<p CLASS=datum>(0148) -- P. O. 2024-11-20<p>
+<p CLASS=datum>(0150) -- P. O. 2024-11-22<p>
 <hr>
 
 
