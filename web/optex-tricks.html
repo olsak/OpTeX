@@ -183,7 +183,9 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#csvread">Reading CSV databases</a>
     <li><a href="#dbwhere">Searching in databases</a>
     <li><a href="#dbloop">Browsing database lines and sorting them</a>
-    <li><a href="#csvprint">Tips for working with CSV databases</a>
+    <li><a href="#dbprint">Tips for working with databases</a>
+    <li><a href="#dbcreate">Modifying databases in TeX memory</a>
+    <li><a href="#dbshow">Extracting and writing data from databases</a>
 </ul>
 
 <li>Text blocks
@@ -3498,7 +3500,7 @@ group where \csvread is used:
 <pre>
 \newcount\dbcol \newcount\dbrow
 \def\csvread#1#{\ifcsname dbmaxrow#1\endcsname
-   \opwarning{\noexpand\csvread ignored: database "#1" created already, use another name}%
+   \opwarning{\noexpand\csvread ignored: database "#1" created already}%
    \ea \ignoreit
    \else \afterfi{\par \bgroup \def\dbn{#1}\dbrow=0 \csvreadA}\fi}
 \def\csvreadA#1{\everypar={\readline}\input{#1}%
@@ -3568,7 +3570,7 @@ in the database.
 
 <p>If there is more equal Data item in the column used for searching then
 the line with the first one is returned by \dbwhere. More options shows
-<a href="csvprint">OpTeX trick 0150, Tip 4</a>.
+<a href="dbprint">OpTeX trick 0150, Tip 4</a>.
 
 <p>If a named database is crated by \csvread basename{filename.csv} then
 following commands can be used:
@@ -3588,8 +3590,8 @@ following commands can be used:
 }}
 \def\sxadef#1#2{\ifcsname#1\endcsname \sxdef{#1}{\cs{#1}#2}\else\sxdef{#1}{#2}\fi}
 \def\onlyifdb #1(#2)#3#4{\dbset{#1}%
-   \ifcsname dbitem:#1(1,#2)\endcsname #4\else
-   \ifcsname dbmaxrow#1\endcsname \opwarning{\string#3 ignored: missing column \missingcol(#2) in "#1"}%
+   \ifcsname dbhead:#1(#2)\endcsname #4\else
+   \ifcsname dbmaxrow#1\endcsname \opwarning{\string#3 ignored: undeclared column \missingcol(#2) in "#1"}%
    \else \opwarning{\string#3 ignored: database "#1" isn't created}%
    \fi\fi}
 \def\dbwhere #1(#2)#3{\dbset{#1}%
@@ -3688,24 +3690,25 @@ by the given column.
 \def\dbsort #1(#2){\onlyifdb #1(#2)\dbsort{% basename column
    \def\dblist{}%
    \fornum 1..\cs{dbmaxrow#1} \do {%
-      \edef\tmp{\dbitem #1(##1,#2)}\edef\tmp{\ea\dbsortfmt\ea{\tmp}}%
-      \ea\addto \ea\dblist \csname +\tmp:##1\endcsname
-      \sdef{+\tmp:##1}{##1,}}%
+      \edef\tmp{\dbitem #1(##1,#2)}\edef\tmp{\ea\dbsortfmt\ea{\tmp}{##1}}%
+      \ea\addto \ea\dblist \csname +\tmp\endcsname
+      \sdef{+\tmp}{##1,}}%
    \_dosorting\dblist
    \sxdef{dblist:#1}{\dblist}%
 }}
-\let\dbsortfmt=\detokenize % you can change it, see OpTeX trick 0150, Tip 3
+\def\dbsortfmt#1#2{\detokenize{#1}@#2} % #1 = Data, #2 = row number
+                                       % see also OpTeX trick 0150, Tip 3
 </pre>
 
 <p>The \dbsort macro runs OpTeX's \_dosorting and saves the result with
-numbers of lines after sorting in the comma separated list to the
+numbers of rows after sorting in the comma separated list to the
 \dblist:basename macro. If such macro exists, the \dbloop uses \foreach over
 the dblist contents else it runs \fornum 1..\dbmaxcolbasename.
 
 <p CLASS=datum>(0149) -- P. O. 2024-11-21<p>
 <hr>
 
-<h2><a name="csvprint"></a>Tips for working with CSV databases</h2>
+<h2><a name="dbprint"></a>Tips for working with databases</h2>
 
 <p>Suppose that we are using the previous <a href="#csvread">OpTeX trick 0147, 0148, 0149</a>.
 We show several tips relevant to the databases.
@@ -3720,17 +3723,17 @@ id, "FirstName","LastName","Address"
 \endfile
 </pre>
 
-<p><b>Tip 2.</b> We can print the whole database by \csvprint{filename} using \table:
+<p><b>Tip 2.</b> The whole database can be printed by \dbprint basename() using \table:
 <pre>
-\def\csvprint#1{{\catcode`\%=12 \catcode`\&amp;=12 \catcode`\#=12 \csvread p{#1}}
-   \ea\table\expanded{{|\fornum 1..\dbmaxcol\do{l|}}}{\crl
-      \fornum 1..\dbmaxcol-1 \do {\hfil\bf \dbhead p(##1)&amp;} \hfil\bf \dbhead p(\dbmaxcol)\crl
-      \fornum 1..\dbmaxrow \do {%
-         \fornum 1..\dbmaxcol-1 \do {\dbitem p(##1,####1)&amp;} \dbitem p(##1,\dbmaxcol)\cr
+\def\dbprint #1(#2){\tmpnum=\trycs{dbmaxcol#1}{1}
+   \ea\table\expanded{{|\fornum 1..\tmpnum\do{l|}}}{\crl
+      \fornum 1..\tmpnum-1 \do {\hfil\bf \dbhead#1(##1)&amp;} \hfil\bf \dbhead#1(\the\tmpnum)\crl
+      \fornum 1..\trycs{dbmaxrow#1}{0} \do {%
+         \fornum 1..\tmpnum-1 \do {\dbitem#1(##1,####1)&amp;} \dbitem#1(##1,\the\tmpnum)\cr
       }\crl
 }}
 </pre>
-Try this: \csvprint{names.csv}
+Try this: \csvread {names.csv} \dbprint ().
 
 <p><b>Tip 3.</b> If we want to sort by a column with numbers only then we
 needn't the alphabetical sorting because it isn't equal to sorting by
@@ -3738,11 +3741,13 @@ numbers. But we can re-define the \dbsortfmt in such a way that the numbers
 are converted to another numbers where alphabetical sorting is correct:
 
 <pre>
-{\def\dbsortfmt#1{\expr[0]{11000000000+#1*1000}} \dbsort (\colname values)}
+{\def\dbsortfmt#1#2{\expr[0]{50000000000+(#1)*1000}@\dbitem(#2,\colname Product)@#2}
+ \dbsort (\colname Prices)}
 </pre>
 
-<p>Now, we can sort numbers from -999999 to 8000000 with optional three
-decimal digits.
+<p>Now, we can sort numbers from -4000000 to 4999999 with optional three
+decimal digits. The secondary sorting (if numbers are equal) is done by Product
+and tertiary sorting by row number.
 
 <p><b>Tip 4.</b> \dbwhere returns first occurrence of Data. Suppose that there
 are more equal Data in the column where we do searching. For example,
@@ -3765,6 +3770,162 @@ this list.
 <p CLASS=datum>(0150) -- P. O. 2024-11-22<p>
 <hr>
 
+<h2><a name="dbcreate"></a>Modifying databases in TeX memory</h2>
+
+<p CLASS="rmarg">
+atoloaded:<br>\dbcreate<br>
+declared also:<br>\dbinsert<br>\dbitemset<br>
+and all macros<br>from tricks 0147-0149
+</p>
+
+<p>Suppose that we are working with databases with macros from previous
+OpTeX tricks <a href="#csvread">0147-0150</a>.
+It may happen that we want to create a database and to add data to it by
+individual rows at various states of processing our document. This can be
+done by following macros:
+
+<pre>
+\dbcreate name({head1}{head2}{head3})  % create database name with 3 columns
+\dbinsert name({data1}{data2}{data3})  % inserts a new row to the database name
+\dbitemset name(2,3){data}             % replace item(2,3) with data
+\dbheadset name(3){head}               % replaces header of third column
+</pre>
+
+<p>Once the database is created then the number of columns in it is given by
+the number of heads used in the declaration. It has zero rows when it is created.
+Each \dbinsert insers a next row to an existing database with given data items. If the
+number of the items are less than number of columns, some items are left
+undefined without warning. If the number of items exceeds columns then
+warning is printed and protruding items are ignored.
+The \dbitemset replaces an existing item with given data.
+
+<p>The \dbheadset macro can be used not only for replacing existing headers,
+but also for declaration of new columns.
+If the database name is xx, we can enlarge the number of its columns by
+
+<pre>
+\xdef\dbmaxcolxx{\the\numexpr\dbmaxcolxx+1} \dbheadset xx(\dbmaxcolxx){New-head}
+</pre>
+
+<p>The new column includes unknown items unless \dbitemset is used.
+
+<p>Of course, the \dbinsert, \dbitemset and \dbheadset macros can be used
+with a database created by \csvread macro from OpTeX trick <a href="#csvread">0147</a> too.
+
+<p>Implementation:
+
+<pre>
+\def\dbcreate #1({\ifcsname dbmaxrow#1\endcsname
+   \opwarning{\noexpand\dbcreate ignored: database "#1" created already}%
+   \ea \dbignore \else \afterfi {\bgroup \edef\dbname{#1}\dbcreateA \empty}\fi}
+\def\dbignore #1){}
+\def\dbcreateA #1){\dbcol=0
+   \ea \foreach #1\do{\incr\dbcol
+      \sxdef{dbcol:\dbname(##1)}{\the\dbcol}\sxdef{dbhead:\dbname(\the\dbcol)}{##1}}%
+   \sxdef{dbmaxrow\dbname}{0}\sxdef{dbmaxcol\dbname}{\the\dbcol}%
+   \ifnum\dbcol=0 \sxdef{dbhead:\dbname(1)}{\dbunknown}\fi
+   \egroup
+}
+\def\dbinsert #1({\dbinsertA #1(\empty}
+\def\dbinsertA #1(#2){\onlyifdb #1(1)\dbinsert {%
+   \dbrow=\cs{dbmaxrow#1} \incr\dbrow \dbcol=0 \tmpnum=\cs{dbmaxcol#1}
+   \ea \foreach #2\do
+      {\incr\dbcol \ifnum\dbcol>\tmpnum\else \sxdef{dbitem:#1(\the\dbrow,\the\dbcol)}{##1}\fi}%
+   \ifnum\dbcol>\tmpnum
+      \opwarning{\string\dbinsert: data row larger than max column (\the\tmpnum) in "#1"}\fi
+   \sxdef{dbmaxrow#1}{\the\dbrow}%
+}}
+\def\dbitemset #1(#2,#3)#4{\onlyifdb #1(#3)\dbitemset {\sxdef{dbitem:#1(#2,#3)}{#4}}}
+\def\dbheadset #1(#2)#3{\onlyifdb #1(1)\dbheadset{\colnum=\ea\getrownum \expanded{#2)}\relax
+   \ifnum\colnum=0 \opwarning{\noexpand\dbheadset ignored: bad column \missingcol(#2)}%
+   \else \sxdef{dbcol:#1(#3)}{\the\colnum}\sxdef{dbhead:#1(\the\colnum)}{#3}\fi
+}}
+\def\getrownum #1){#1}
+</pre>
+
+<p>\dbcreate prepares a row with headers. \dbinsert incremets \dbmaxrow and
+inserts data. The \noexpand trick is used here in order to one-column
+database with ({data}) will be correctly scanned to #1.
+
+<p>Extracting data from databases solves the next
+<a href="#dbshow">OpTeX trick 0152</a>
+
+<p CLASS=datum>(0151) -- P. O. 2024-11-23<p>
+<hr>
+
+<h2><a name="dbshow"></a>Extracting and writing data from databases</h2>
+
+<p CLASS="rmarg">
+\dbshow<br>\dbrowshow<br>\dbheadshow<br>\dbwrite<br>
+are autoloaded<br>together with<br>
+\csvread<br>or \dbcreate
+</p>
+
+<p>Suppose that we are working with databases with macros from previous
+OpTeX trick <a href="#dbcreate">0151</a>. Then we sometimes need to extract
+data from databases and to write them to CSV files.
+
+<p>For example, we have a database name. Data from it can be extracted by
+following macros:
+
+<pre>
+\dbshow name()           % expands whole database in format {data1}{data2}{data3}
+\dbshow name("",)        % expands whole database in format "data1","data2","data3"
+\dbshowrow name(3)("",)  % expands single row 3 in format "data1","data2","data3"
+\dbshowhead name("",)    % expands headers in format "head1","head2","head3"
+</pre>
+
+<p>Note that we have to use () in all cases. If there is nothing in them
+the data are formatted by {data1}{data2}{data3}. The second
+possibility is that there are three characters: opening character, closing
+character and separator. Then the data are extracted in the CSV format.
+If the opening+closing characters should be (), then we have to use something
+like this ({();}).
+
+<p>The character used at the end of each database row by \dbshow is defined in
+\dbrowchar. It is ^^J by default. The characters between head row and other
+rows are set in \dhheadchar macro. None is default.
+
+<p>We can show the whole database on the terminal or write it to a file:
+
+<pre>
+\wterm{\dbshow name("",)}    % prints whole database name in the terminal
+\dbwrite name("",){filename} % writes whole database name to the filename
+</pre>
+
+<p>Implementation:
+
+<pre>
+\def\dbshow #1(#2){\onlyifdb #1(1)\dbshow {\immediateassignment\dbcol=\cs{dbmaxcol#1}
+   \fornum 1..\dbcol \do {\dbps{dbhead:#1(##1)}{#2}{##1}}\dbrowchar \dbheadchar
+   \fornum 1..\cs{dbmaxrow#1} \do {\fornum 1..\dbcol \do {%
+      \dbps{dbitem:#1(##1,####1)}{#2}{####1}%
+   }\dbrowchar}
+}}
+\def\dbps #1#2#3{\if\relax\detokenize{#2}\relax {\trycs{#1}{\dbunknown}}\else \dbpsA {#1}#2{#3}\fi}
+\def\dbpsA #1#2#3#4#5{#2\trycs{#1}{\dbunknown}#3\ifnum #5&lt;\dbcol #4\fi} % cs, open, close, between, colnum
+\def\dbrowchar{^^J}  \def\dbheadchar{}
+\def\dbshowrow #1(#2)(#3){\onlyifdb #1(1)\dbshowrow {\immediateassignment\dbcol=\cs{dbmaxcol#1}
+   \fornum 1..\dbcol \do {\dbps{dbitem:#1(#2,##1)}{#3}{##1}}%
+}}
+\def\dbshowhead #1(#2){\onlyifdb #1(1)\dbshowhead {\immediateassignment\dbcol=\cs{dbmaxcol#1}
+   \fornum 1..\dbcol \do {\dbps{dbhead:#1(##1)}{#2}{##1}}%
+}}
+\def\dbwrite #1(#2)#3{\onlyifdb #1(1)\dbwrite {%
+   \immediate\openout\dbout={#3}%
+   \immediate\write\dbout{\dbshow #1(#2)}%
+   \immediate\closeout\dbout
+}}
+\newwrite\dbout
+</pre>
+
+<p>\dbshow does loop over header and then over data. The
+\dbps{cs}{delims}{colnum} prints {\trycs{cs}{}} if delims are empty or prints
+delimiters by \dbpsA. The last delimiter (if current column is equal
+maxcolumn) is not printed.
+
+<p CLASS=datum>(0152) -- P. O. 2024-11-23<p>
+<hr>
 
 <p CLASS="lmarg">Text blocks</p>
 
