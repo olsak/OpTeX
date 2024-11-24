@@ -3689,15 +3689,16 @@ by the given column.
 
 \def\dbsort #1(#2){\onlyifdb #1(#2)\dbsort{% basename column
    \def\dblist{}%
-   \fornum 1..\cs{dbmaxrow#1} \do {%
+   \ifcsname db:sortlist\endcsname \afterfi {\ea\ea\ea\foreach \lastnamedcs \do ##1,}%
+   \else \afterfi{\fornum 1..\cs{dbmaxrow#1}\do}\_fi {%
       \edef\tmp{\dbitem #1(##1,#2)}\edef\tmp{\ea\dbsortfmt\ea{\tmp}{##1}}%
       \ea\addto \ea\dblist \csname +\tmp\endcsname
       \sdef{+\tmp}{##1,}}%
-   \_dosorting\dblist
-   \sxdef{dblist:#1}{\dblist}%
+   \ifx\dblist\empty \else \_dosorting\dblist \fi
+   \sxdef{dblist:#1}{\dblist}\global\slet{db:sortlist}{undefined}%
 }}
-\def\dbsortfmt#1#2{\detokenize{#1}@#2} % #1 = Data, #2 = row number
-                                       % see also OpTeX trick 0150, Tip 3
+\def\dbsortfmt#1#2{\detokenize{#1}|\fmtnum#2;}            % #1 = Data, #2 = row number
+\def\fmtnum #1;{\ea\ignoreit\the\numexpr#1+100000\relax}  % see also OpTeX trick 0150, Tip 3
 </pre>
 
 <p>The \dbsort macro runs OpTeX's \_dosorting and saves the result with
@@ -3737,16 +3738,18 @@ Try this: \csvread {names.csv} \dbprint ().
 
 <p><b>Tip 3.</b> If we want to sort by a column with numbers only then we
 needn't the alphabetical sorting because it isn't equal to sorting by
-numbers. But we can re-define the \dbsortfmt in such a way that the numbers
-are converted to another numbers where alphabetical sorting is correct:
+numbers. We can use \fmtnum for non-negative integers. And what about the
+other numbers? The following example re-defines the \dbsortfmt in such a way
+that the numbers are converted to another numbers where alphabetical sorting
+is correct:
 
 <pre>
-{\def\dbsortfmt#1#2{\expr[0]{50000000000+(#1)*1000}@\dbitem(#2,\colname Product)@#2}
+{\def\dbsortfmt#1#2{\expr[0]{50000000000+(#1)*1000}|\dbitem(#2,\colname Product)|\fmtnum#2;}
  \dbsort (\colname Prices)}
 </pre>
 
 <p>Now, we can sort numbers from -4000000 to 4999999 with optional three
-decimal digits. The secondary sorting (if numbers are equal) is done by Product
+decimal digits. The secondary sorting (if numbers are equal) is done by Product column
 and tertiary sorting by row number.
 
 <p><b>Tip 4.</b> \dbwhere returns first occurrence of Data. Suppose that there
@@ -3758,14 +3761,24 @@ other rows in our CSV file names.csv. Then we can do following:
 \csvread {names.csv}
 \dbhash (\colname LastName)
 \sxdef{dblist:}{\trycs{dbrow:(\colname LastName)Olšák}{}}
-
 \dbloop (\fn=FirstName) {\fn,} % expands to comma separated list Petr, Miroslav, Radek,
 </pre>
 
 <p>The trick is based on the fact, that we create the \dblist: macro with
-the comma separated list of row numbers. This list is normally used
-by \dbloop when \dbsort is preceded. This is the rason why \dbloop accepts
-this list.
+the comma separated list of row numbers. If there exists the
+macro \dblist:basename with comma separated list of row numbers, then
+\dbloop works only with them.
+Moreower, you can sort this result. If there exists the macro
+\db:sortlist of comma separated list of row numbers, then \dbsort works only
+with them:
+
+<pre>
+\csvread {names.csv}
+\dbhash (\colname LastName)
+\sxdef{db:sortlist}{\trycs{dbrow:(\colname LastName)Olšák}{}}
+\dbsort (\colname FirstName)
+\dbloop (\fn=FirstName) {\fn,} % expands to comma separated list Petr, Miroslav, R
+</pre>
 
 <p CLASS=datum>(0150) -- P. O. 2024-11-22<p>
 <hr>

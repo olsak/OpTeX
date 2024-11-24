@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2024-10-31>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2024-11-24>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -25,7 +25,7 @@
    \_cod -----------------------------
 
 \_def \_sortingdatalatin {%
-  /,{ },_,-,&,@,%
+  |,/,{ },_,-,&,@,%
   aAàÀâÂäÄáÁ,%
   ąĄ,%
   bB,%
@@ -76,7 +76,7 @@
    Others not mentioned characters have undefined behavior during sorting.
    \_cod -----------------------------
 
-\_def \_ignoredcharsgeneric  {.,;?!:'"|()[]<>=+-}
+\_def \_ignoredcharsgeneric  {.,;?!:'"()[]<>=+-}
 
    \_doc -----------------------------
    Sorting is always processed by rules of a given language. The macros
@@ -331,7 +331,7 @@
    \_begingroup
       \_ifasciisorting \_def\_sortinglang{ASCII}\_fi
       \_ifx\_sortinglang\_undefined \_edef\_sortinglang{\_cs{_lan:\_the\_language}}\_fi
-      \_message{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
+      \_sortmessage{OpTeX: Sorting \_string#1 (\_sortinglang) ...^^J}%
       \_ismacro\_sortinglang{ASCII}\_iftrue
           \_def \_preparesorting##1{\_edef\_tmpb{\_ea\_ignoreit\_csstring##1}}%
           \_let \_setsecondarysorting=\_relax
@@ -351,6 +351,7 @@
    \_ea\_endgroup
    \_ea\_def\_ea#1\_ea{\_the\_tmptoks}%
 }
+\_let\_sortmessage=\_message % User can do \let\_sortmessage=\_ignoreit, for example
 
    \_doc -----------------------------
    French rules needs reverse reading the words in the second pass.
@@ -572,6 +573,7 @@
 
 \_endcode % -------------------------------------
 
+2024-11-24 | set as first in sortingdata: it can be used as item separator
 2024-10-31 \mergesort time-optimized using \toksapp instead \addto
 2023-06-02 \_stripfromcaret introduced
 2023-03-12 \_definefirstii introduced

@@ -825,14 +825,17 @@ end,'global') % we want to keep the meanig after group
 \_def\.dbdef#1#2{\_edef#1{\.dbitem\.dbname(\_the\.dbrow,\.colname#2)}}
 \:\_def\dbsort #1(#2){\.onlyifdb #1(#2)\dbsort {% basename column exists:
    \_def\.dblist{}%
-   \_fornum 1..\cs{dbmaxrow#1} \_do {%
+   \_ifcsname db:sortlist\_endcsname \_afterfi {\_ea\_ea\_ea\_foreach \_lastnamedcs \_do ##1,}%
+   \_else \_afterfi{\_fornum 1..\cs{dbmaxrow#1}\_do}\_fi {%
       \_edef\.tmp{\.dbitem #1(##1,#2)}\_edef\.tmp{\_detokenize\_ea{\.tmp}{##1}}%
       \_ea\_addto \_ea\.dblist \_csname +\.tmp\_endcsname
       \_sdef{+\.tmp}{##1,}}%
-   \_dosorting\.dblist
-   \_sxdef{dblist:#1}{\.dblist}%
+   \_ifx\.dblist \_empty \_else \_dosorting\.dblist \_fi
+   \_sxdef{dblist:#1}{\.dblist}\_global\_slet{db:sortlist}{_undefined}%
 }}
-\:\_def\.dbsortfmt#1#2{\_detokenize{#1}@#2}
+\:\_def\dbsortfmt#1#2{\_detokenize{#1}|\.fmtnum#2;}
+\:\_def\fmtnum #1;{\_ea\_ignoreit\_the\_numexpr#1+100000\_relax}
+\_let\.fmtnum=\fmtnum
 
 \:\def\dbcreate #1({\_ifcsname dbmaxrow#1\_endcsname
    \_opwarning{\_noexpand\dbcreate ignored: database "#1" created already}%
