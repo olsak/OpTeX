@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-12>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2024-11-24>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -118,13 +118,17 @@
    Recommendation: it is better to use private variants of \`\_foreach`.
    When the user writes `\load[tikz]` then `\foreach` macro is redefined in
    each TikZ environment.
-   The private variants use \`\_do` separator instead `\do` separator.}
+   The private variants use \`\_do` separator instead `\do` separator
+   and it isn't redefined.}
    \_cod -----------------------------
 
 \_newcount\_frnum        % the numeric variable used in \fornum
 \_def\_do{\_doundefined} % we need to ask \_ifx#1\_do ...
 
-\_long\_def\_foreach #1\_do #2#{\_isempty{#2}\_iftrue
+\_def\_foreach{\_foreachAx\_empty}  \_def\foreach{\_foreachAy\_empty}
+\_long\_def\_foreachAx #1\_do #2#{\_ea\_foreachAz\_ea{#1}{#2}}
+\_long\_def\_foreachAy #1\do #2#{\_ea\_foreachAz\_ea{#1}{#2}}
+\_long\_def\_foreachAz #1#2{\_isempty{#2}\_iftrue
    \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
 \_long\_def\_foreachA #1#2#3{\_putforstack
    \_immediateassignment \_long\_gdef\_fbody#2{\_testparam##1..\_iftrue #3\_ea\_fbody\_fi}%
@@ -132,9 +136,6 @@
 }
 \_long\_def\_testparam#1#2#3\_iftrue{\_ifx###1\_empty\_ea\_finbody\_else}
 \_long\_def\_finbody#1\_finbody{}
-
-\_long\_def\foreach #1\do#2#{\_isempty{#2}\_iftrue
-   \_afterfi{\_foreachA{#1}{##1}}\_else\_afterfi{\_foreachA{#1}{#2}}\_fi}
 
    \_doc -----------------------------
    {\_let\_moremainpoints=\_relax
@@ -419,6 +420,7 @@
 
 \_endcode
 
+2024-11-24 \foreach bug fixed: \foreach {xx}\do {...}
 2024-11-12 \isinlist, \isfile allow space before \iftrue/\iffalse
 2024-11-10 \xloop implemented.
 2024-09-10 \afterxfi implemented.
