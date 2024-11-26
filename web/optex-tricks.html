@@ -186,6 +186,9 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#dbprint">Tips for working with databases</a>
     <li><a href="#dbcreate">Modifying databases in TeX memory</a>
     <li><a href="#dbshow">Extracting and writing data from databases</a>
+    <li><a href="#exectree">Working with tree data structure</a>
+    <li><a href="#jsonread">Reading JSON files</a>
+    <li><a href="#usetree">Example of using the tree data structure</a>
 </ul>
 
 <li>Text blocks
@@ -3938,6 +3941,247 @@ delimiters by \dbpsA. The last delimiter (if current column is equal
 maxcolumn) is not printed.
 
 <p CLASS=datum>(0152) -- P. O. 2024-11-23<p>
+<hr>
+
+<h2><a name="exectree"></a>Working with tree data structure</h2>
+
+<p CLASS="rmarg">
+atoloaded:<br>\exectree<br>\showtree
+</p>
+
+<p>I suggest to use in OpTeX the following format for saving trees:
+<pre>
+\def\mymacro {\inode[2]
+                {\inode[7]
+                   {\enode{2}}
+                   {\enode{10}}
+                   {\inode[6]
+                      {\enode{5}}
+                      {\enode{11}}}}
+                {\inode[5]
+                   {\inode[9]
+                      {\enode{4}}}}}
+</pre>
+<p>This implements exactly the example at the
+<a href="https://en.wikipedia.org/wiki/Tree_(abstract_data_type)">wiki page</a>.
+
+<p>Each internal node is represented by \inode[opt]{edge}{edge}{edge}...
+Each edge includes a new \inode with the same syntax
+or \enode[opt]{data} which represents the external node (leaf).
+The optional parameters [opt] of \inode and \enode can be missed or they
+can include key=value options or something else.
+
+<p>Macro programmer can define three macros \startinode, \stopinode and
+\execenode#1. The last mentioned macro is processed at each \enode and it
+must be defined with single unseparated parameter which is its data. The
+\startinode is executed at the begining of inode (before processing edges)
+and \stopinode at the end of the inode. They are without parameters. The
+\startinode and \execeenode macros can use \the\opt where the value of
+optional parameter is saved. A \macro with this data structure can be
+processed by \exectree\macro. By default, it does DFS and prints only data
+of enodes.
+
+<p>The following example allows printing data structure with indentation like in
+the example above. Run \wterm{\showtree\mymacro} if you want to try this.
+
+<pre>
+\newcount\treelevel
+\let\ima=\immediateassignment
+\def\spaces{\fornum 1..\treelevel \do{\space\space\space}}
+\def\istring#1{\ifnum\treelevel>0 \csstring#1\fi}
+\def\startinode{\istring^^J\spaces\istring\{\string\inode[\the\opt]\ima\incr\treelevel}
+\def\stopinode{\ima\decr\treelevel \istring\}}
+\def\execenode#1{^^J\spaces{\string\enode[\the\opt] \unexpanded{{#1}}}}
+\def\showtree#1{\ima\treelevel=0 #1\stopinode}
+</pre>
+
+<p>The \startinode macro can scan all its edges at once because
+when it is executed then the following input queue is in the format
+
+<pre>
+\startedges{edge}{edge}{edge}\stopinode
+</pre>
+
+<p>Thus, you can do for example:
+
+<pre>
+\def\startinode #1\stopinode{\ignoresecond \foreach#1\do{do something with a subtree ##1}}
+</pre>
+
+<p>The \ignoresecond macro used here ignores the \startedges token which precedes
+the list of edges in the input queue. A more extensive example can be found in
+<a href="#usetree">OpTeX trick 0156</a>.
+
+<p>Implementation:
+
+<pre>
+\optdef\inode[]{\startinode \startedges}
+\optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
+\def\startedges #1{\edgetest #1\_fin {#1\stopinode\startedges}\stopinode}
+\def\edgetest #1#2\_fin{\ifx\stopinode#1\ea\usesecond\else\ea\ignoresecond\fi}
+\def\exectree#1{#1\stopinode}
+
+\def\startinode{} \def\stopinode{} \def\execenode#1{(#1)} % default user macros
+</pre>
+
+<p CLASS=datum>(0153) -- P. O. 2024-11-24<p>
+<hr>
+
+<h2><a name="jsonread"></a>Reading JSON files</h2>
+
+<p CLASS="rmarg">
+atoloaded:<br>\jsonread<br>\jsoncnv<br>
+together with<br>\exectree<br>\showtree
+</p>
+
+<p>We create the macro \jsonread\macro{file.json} which reads the file with
+JSON format, converts it to the tree data structure described in the previous
+<a href="#exectree">OpTeX trick 0153</a> and saves it to the \macro.
+Suppose that you have the file person.json with the data from this
+<a href="https://en.wikipedia.org/wiki/JSON">wiki page</a>. Then you can
+try:
+
+<pre>
+\jsonread\mymacro{person.json}
+\wterm{\showtree\mymacro}
+</pre>
+
+<p>This example prints the loaded tree data structure. The root node has
+JSON identifier but you can use optional parameter to set different value of
+it. For example:
+
+<pre>
+\jsonread [root] \mymacro {person.json}
+</pre>
+
+<p>Special characters \, [, ], {. }, %, ", # in values should be preceded by
+\csstring\. For example \csstring\%, \csstring\[.
+
+<p>Implementation:
+
+<pre>
+\def\isnschar#1#2#3{\immediateassignment\def\_isnextcharA{\_isnextcharB{#1}{#2}{#3}}%
+   \nospacefuturelet\_next\_isnextcharA} % behaves like \isnextchar but skip spaces
+\let\nonstring=\useit % the presence of it in the value of \enode means that the value isn't string
+
+\def\arrayread#1[#2]#3,{{\noexpand\inode \eid \aread#2,\_fin}\isnschar\_fin{\ignoreit}{#1}}
+\def\aread{\isnschar\bgroup{\objread\aread}
+     {\isnschar[{\arrayread\aread}{\isnschar"{\readstr\aread}{\readnostr\aread}}}}
+\def\objread#1#2#3,{{\noexpand\inode \eid \oread#2,\_fin}\isnschar\_fin{\ignoreit}{#1}}
+\def\oread #1"#2"#3:{\immediateassignment\def\idj{#2}%
+   \isnschar\bgroup{\objread\oread}
+      {\isnschar[{\arrayread\oread}{\isnschar"{\readstr\oread}{\readnostr\oread}}}}
+\def\readstr#1"#2"#3,{{\noexpand\enode\eid{\unexpanded{#2}}}\isnschar\_fin{\ignoreit}{#1}}
+\def\readnostr#1#2,{{\noexpand\enode\eid{\noexpand\nonstring{\nospaces#2 }}}\isnschar\_fin{\ignoreit}{#1}}
+\def\nospaces#1 {#1\nospaceafter\empty}
+\def\eid{\ifx\idj\undefined\else [\idj]\immediateassignment\let\idj=\undefined\fi}
+
+\optdef\jsonread[JSON]#1#2{{\suppressoutererror=1 \endlinechar=-1 \edef\idj{\the\opt}%
+   \xdef#1{\ea\jsoncnv\input{#2},\_fin}}}
+\def\jsoncnv{\isnschar\bgroup{\ea\useit\objread\empty}{\ea\useit\arrayread\empty}}
+</pre>
+
+<p>The \jsonread does simply \xdef\macro{\jsoncnv json-data,\_fin}. This does the
+conversion. The macros \arrayread and \aread scan the array items from JSON, the
+macros \objread, \oread scan the object items. The macro \readstr reads
+JSON string values and \readnostr reads non-string values like true, null,
+numbers. The second type of values are preceded by \nonstring to be
+distinguishable.
+
+<p CLASS=datum>(0154) -- P. O. 2024-11-25<p>
+<hr>
+
+<h2><a name="usetree"></a>Example of using the tree data structure</h2>
+
+<p>The task from the
+<a href="https://tex.stackexchange.com/questions/729379">stack.exchange</a>
+is solved here in order to show how to work with tree data structure described in the
+<a href="#exectree">OpTeX trick 0153</a>. The example data for
+printing invoices is shown at
+<a href="https://tex.stackexchange.com/questions/729379">stack.exchange</a>.
+Suppose that you have copied the JSON file from this page and its name is
+invoice.json. The \jsonread macro from previous
+<a href="#jsonread">OpTeX trick 0154</a> is also used. To print the invoice,
+you can try
+
+<pre>
+\fontfam[lm]
+
+\def\execenode#1{\immediateassignment\global\sdef{\the\opt}{#1}}
+\def\startinode{\trycs{i.\the\opt}{}}
+
+\sdef{i.items_sold}#1\stopinode{\def\items_sold{#1}}
+\def\repeatit #1#2{\ea\ignoresecond\ea\foreach#1\do{\exectree{##1}#2}}
+
+\jsonread \invoice {invoice.json}
+\wterm{\showtree\invoice}  % only for logging purpose
+\exectree\invoice           % processes data
+
+\newcount\invoicenum
+\def\price{\edef\tmp{\expr[2]{\item_quantity*\item_unit_price}}%
+   \xdef\total{\expr[2]{\total+\tmp}}\tmp}
+\def\fmtnum#1{\ea\ignoreit\the\numexpr #1+1000\relax}
+
+\incr\invoicenum \def\total{0}
+\title\ \name\ \surname \par
+\address
+\vskip 1cm
+\centerline{Invoice No. \fmtnum\invoicenum \hfill \date}
+\medskip
+\table pxto\hsize{lp{\tsize}rrr}{\cr
+   itemID             &amp; item description  &amp; unit price       &amp; units          &amp; price \crl
+   \repeatit \items_sold
+      {\item_ref_code &amp; \item_description &amp; \item_unit_price &amp; \item_quantity &amp; \price \cr}
+   \crl
+   \bf total &&&& \bf\total \crl
+}
+\bigskip
+\noindent Please pay the full amount until \cs{Due by}
+to the following bank account \my_bank_IBAN\ at \my_bank_name.
+
+\bye
+</pre>
+
+<p>The \execenode is defined to save the data globally to the macro with
+equal name as the identifier in the JSON file. So, we can work with
+\name, \my_bamk_name, \date, etc. control sequences after
+\exectree\invoice.
+
+<p>The \startitem macro runs the control sequence given by the identifier of the
+inode. It does nothing in general because these sequences are not defined.
+But there is one exception: the \i.items_sold control sequence saves all data
+of its subtree to \items_sold in the format \startedges{..}{..}{..}
+This data will be read and processed later when \repeatit \items_sold {what to do}
+is run. It is done inside the table, so the assignment must be done globally
+and at expand processor level. The \repeatit processes edges of given
+subtree one by one and runs "what to do" after each step.
+
+<p>The next macros (starting from \newcount\invoicenum) are designed
+specially for printing this type of invoices.
+
+<p>You can try to modify invoice.json file to have more than single invoice.
+It means that its outermost level looks like:
+
+<pre>
+[{ data 1-st invoice },{ data 2-nd invoice },...,{ data n-th invoice }]
+</pre>
+
+<p>Then you can save all macros for printing a single invoice (from
+\incr\invoicenum) to a single macro (say \singleinvoice). Then add a line
+
+<pre>
+\sdef{i.JSON}#1\stopinode{\def\JSONlist{#1}}
+</pre>
+
+<p>before \exectree\invoice. After \exectree\invoice, you can do
+
+<pre>
+\repeatit\JSONlist {\singleinvoice \vfil\break}
+</pre>
+
+<p>It prints all invoices from your JSON file.
+
+<p CLASS=datum>(0155) -- P. O. 2024-11-26<p>
 <hr>
 
 <p CLASS="lmarg">Text blocks</p>

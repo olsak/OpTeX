@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-23>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-26>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -888,6 +888,55 @@ end,'global') % we want to keep the meanig after group
 \_let\.dbshow=\dbshow
 
 
+\_trick 0153 0154 \exectree \showtree \jsonread \jsoncnv ;
+%%%%%%%%%%%%%%%%%
+
+\:\_optdef\inode[]{\startinode \startedges}
+\:\_optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
+\:\_def\startedges #1{\.edgetest #1\_fin {#1\stopinode\startedges}\stopinode}
+\_def\.edgetest #1#2\_fin{\_ifx\stopinode#1\_ea\_usesecond\_else\_ea\_ignoresecond\_fi}
+\:\_def\exectree#1{#1\stopinode}
+
+\_ifx \startinode\_undefined \_def\startinode{} \_fi
+\_ifx \stopinode \_undefined \_def\stopinode{}  \_fi
+\_ifx \execenode \_undefined \_def\execenode#1{(#1)} \_fi
+
+\_newcount\.treelevel
+\_let\.ima=\_immediateassignment
+\_def\.spaces{\_fornum 1..\.treelevel \_do{\_space\_space\_space}}
+\_def\.istring#1{\_ifnum\.treelevel>0 \_csstring#1\_fi}
+\_def\.showinodes{%
+   \_def\startinode{\.istring^^J\.spaces\.istring\{\_string\inode[\_the\_opt]\.ima\_incr\.treelevel}
+   \_def\stopinode{\.ima\_decr\.treelevel \.istring\}}
+   \_def\execenode##1{^^J\.spaces{\_string\enode[\_the\_opt] \_unexpanded{{##1}}}}}
+\:\_def\showtree#1{\_immediateassigned{\.treelevel=0
+   \_let\.startinodeB=\startinode \_let\.stopinodeB=\stopinode \_let\.execenodeB=\execenode \.showinodes}%
+   #1\stopinode \_immediateassigned{%
+   \_let\startinode=\.startinodeB \_let\stopinode=\.stopinodeB \_let\execenode=\.execenodeB}%
+}
+
+\_def\.isnschar#1#2#3{\_immediateassignment\_def\_isnextcharA{\_isnextcharB{#1}{#2}{#3}}%
+   \_nospacefuturelet\_next\_isnextcharA} % behaves like \isnextchar but skip spaces
+\:\_let\nonstring=\_useit % the presence of it in the value of \enode means that the value isn't string
+
+\_def\.arrayread#1[#2]#3,{{\_noexpand\inode \.eid \.aread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.aread{\.isnschar\_bgroup{\.objread\.aread}
+     {\_isnextchar[{\.arrayread\.aread}{\_isnextchar"{\.readstr\.aread}{\.readnostr\.aread}}}}
+\_def\.objread#1#2#3,{{\_noexpand\inode \.eid \.oread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.oread #1"#2"#3:{\_immediateassignment\_def\.idj{#2}%
+   \.isnschar\_bgroup{\.objread\.oread}
+      {\_isnextchar[{\.arrayread\.oread}{\_isnextchar"{\.readstr\.oread}{\.readnostr\.oread}}}}
+\_def\.readstr#1"#2"#3,{{\_noexpand\enode\.eid{\_unexpanded{#2}}}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.readnostr#1#2,{{\_noexpand\enode\.eid{\_noexpand\nonstring{\.nospaces#2 }}}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.nospaces#1 {#1\_nospaceafter\_empty}
+\_def\.eid{\_ifx\.idj\_undefined\_else [\.idj]\_immediateassignment\_let\.idj=\_undefined\_fi}
+
+\:\_optdef\jsonread[JSON]#1#2{{\_suppressoutererror=1 \_endlinechar=-1 \_edef\.idj{\_the\_opt}%
+   \_xdef#1{\_ea\.jsoncnv\_input{#2},\_fin}}}
+\:\def\jsoncnv{\.isnschar\_bgroup{\_ea\_useit\.objread\_empty}{\_ea\_useit\.arrayread\_empty}}
+\_let\.jsoncnv=\jsoncnv
+
+
 \_trick 0031 \framedblocks ;
 %%%%%%%%%%%%
 
@@ -1192,6 +1241,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-11-26 \exectree, \jsonread etc. implemented
 2024-11-23 \dbcreate etc. implemented
 2024-11-22 \dbloop etc. implemented
 2024-11-21 \: introduced for warning if a macro is re-defined
