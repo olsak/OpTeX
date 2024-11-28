@@ -893,13 +893,14 @@ end,'global') % we want to keep the meanig after group
 
 \:\_optdef\inode[]{\startinode \startedges}
 \:\_optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
-\:\_def\startedges #1{\.edgetest #1\_fin {#1\stopinode\startedges}\stopinode}
-\_def\.edgetest #1#2\_fin{\_ifx\stopinode#1\_ea\_usesecond\_else\_ea\_ignoresecond\_fi}
+\:\_def\startedges #1{\.edgetest #1\stopinode\startedges}
+\_def\.edgetest#1{\_ifx\stopinode#1\.edgefinal\_else\_ea#1\fi}
+\_def\.edgefinal#1\startedges{\fi\stopinode}
 \:\_def\exectree#1{#1\stopinode}
 
 \_ifx \startinode\_undefined \_def\startinode{} \_fi
 \_ifx \stopinode \_undefined \_def\stopinode{}  \_fi
-\_ifx \execenode \_undefined \_def\execenode#1{(#1)} \_fi
+\_ifx \startedge \_undefined \_def\startedge{}  \_fi
 
 \_newcount\.treelevel
 \_let\.ima=\_immediateassignment

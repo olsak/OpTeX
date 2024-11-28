@@ -3962,12 +3962,17 @@ atoloaded:<br>\exectree<br>\showtree
                    {\inode[9]
                       {\enode{4}}}}}
 </pre>
-<p>This implements exactly the example at the
-<a href="https://en.wikipedia.org/wiki/Tree_(abstract_data_type)">wiki page</a>.
+
+<p CLASS="rmarg">
+<IMG SRC="../img/treex.png" ALT="tree" border=0>
+</p>
+
+<p>This implements exactly the example shown here (from
+<a href="https://en.wikipedia.org/wiki/Tree_(abstract_data_type)">wiki page</a>).
 
 <p>Each internal node is represented by \inode[opt]{edge}{edge}{edge}...
 Each edge includes a new \inode with the same syntax
-or \enode[opt]{data} which represents the external node (leaf).
+or an external node (leaf) represented by \enode[opt]{data}.
 The optional parameters [opt] of \inode and \enode can be missed or they
 can include key=value options or something else.
 
@@ -4005,7 +4010,7 @@ when it is executed then the following input queue is in the format
 <p>Thus, you can do for example:
 
 <pre>
-\def\startinode #1\stopinode{\ignoresecond \foreach#1\do{do something with a subtree ##1}}
+\def\startinode #1\stopinode{\ignoresecond \foreach#1\do{do something with a subtree \showtree{##1}}}
 </pre>
 
 <p>The \ignoresecond macro used here ignores the \startedges token which precedes
@@ -4017,8 +4022,9 @@ the list of edges in the input queue. A more extensive example can be found in
 <pre>
 \optdef\inode[]{\startinode \startedges}
 \optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
-\def\startedges #1{\edgetest #1\_fin {#1\stopinode\startedges}\stopinode}
-\def\edgetest #1#2\_fin{\ifx\stopinode#1\ea\usesecond\else\ea\ignoresecond\fi}
+\def\startedges #1{\edgetest #1\stopinode\startedges}
+\def\edgetest#1{\ifx\stopinode#1\edgefinal\else\ea#1\fi}
+\def\edgefinal#1\startedges{\fi\stopinode}
 \def\exectree#1{#1\stopinode}
 
 \def\startinode{} \def\stopinode{} \def\execenode#1{(#1)} % default user macros
@@ -4061,7 +4067,7 @@ it. For example:
 
 <pre>
 \def\isnschar#1#2#3{\immediateassignment\def\_isnextcharA{\_isnextcharB{#1}{#2}{#3}}%
-   \nospacefuturelet\_next\_isnextcharA} % behaves like \isnextchar but skip spaces
+   \nospacefuturelet\_next\_isnextcharA} % behaves like \isnextchar but skips spaces
 \let\nonstring=\useit % the presence of it in the value of \enode means that the value isn't string
 
 \def\arrayread#1[#2]#3,{{\noexpand\inode \eid \aread#2,\_fin}\isnschar\_fin{\ignoreit}{#1}}
@@ -4107,15 +4113,15 @@ you can try
 <pre>
 \fontfam[lm]
 
-\def\execenode#1{\immediateassignment\global\sdef{\the\opt}{#1}}
+\def\execenode#1{\global\sdef{\the\opt}{#1}}
 \def\startinode{\trycs{i.\the\opt}{}}
 
 \sdef{i.items_sold}#1\stopinode{\def\items_sold{#1}}
-\def\repeatit #1#2{\ea\ignoresecond\ea\foreach#1\do{\exectree{##1}#2}}
+\def\execedges #1#2{\ea\ignoresecond\ea\foreach#1\do{\exectree{##1}#2}}
 
 \jsonread \invoice {invoice.json}
 \wterm{\showtree\invoice}  % only for logging purpose
-\exectree\invoice           % processes data
+\exectree\invoice          % processes data
 
 \newcount\invoicenum
 \def\price{\edef\tmp{\expr[2]{\item_quantity*\item_unit_price}}%
@@ -4130,7 +4136,7 @@ you can try
 \medskip
 \table pxto\hsize{lp{\tsize}rrr}{\cr
    itemID             &amp; item description  &amp; unit price       &amp; units          &amp; price \crl
-   \repeatit \items_sold
+   \execedges \items_sold
       {\item_ref_code &amp; \item_description &amp; \item_unit_price &amp; \item_quantity &amp; \price \cr}
    \crl
    \bf total &&&& \bf\total \crl
@@ -4147,14 +4153,15 @@ equal name as the identifier in the JSON file. So, we can work with
 \name, \my_bamk_name, \date, etc. control sequences after
 \exectree\invoice.
 
-<p>The \startitem macro runs the control sequence given by the identifier of the
-inode. It does nothing in general because these sequences are not defined.
-But there is one exception: the \i.items_sold control sequence saves all data
-of its subtree to \items_sold in the format \startedges{..}{..}{..}
-This data will be read and processed later when \repeatit \items_sold {what to do}
-is run. It is done inside the table, so the assignment must be done globally
-and at expand processor level. The \repeatit processes edges of given
-subtree one by one and runs "what to do" after each step.
+<p>The \startinode macro runs the control sequence given by the identifier of
+the inode. It does nothing in general because these sequences are not
+defined. But there is one exception: the \i.items_sold control sequence
+saves all data of its subtree to \items_sold in the format
+\startedges{..}{..}{..} and doesn't execute them. This data will be read and
+processed later when \execedges \items_sold {what to do} is run. It is done
+inside the table, so the assignment must be done globally. The \execedges
+processes edges of given set of edges one by one and runs "what to do" after each
+edge.
 
 <p>The next macros (starting from \newcount\invoicenum) are designed
 specially for printing this type of invoices.
@@ -4163,7 +4170,7 @@ specially for printing this type of invoices.
 It means that its outermost level looks like:
 
 <pre>
-[{ data 1-st invoice },{ data 2-nd invoice },...,{ data n-th invoice }]
+[{ data of 1-st invoice },{ data of 2-nd invoice },...,{ data of n-th invoice }]
 </pre>
 
 <p>Then you can save all macros for printing a single invoice (from
@@ -4176,7 +4183,7 @@ It means that its outermost level looks like:
 <p>before \exectree\invoice. After \exectree\invoice, you can do
 
 <pre>
-\repeatit\JSONlist {\singleinvoice \vfil\break}
+\execedges\JSONlist {\singleinvoice \vfil\break}
 </pre>
 
 <p>It prints all invoices from your JSON file.
