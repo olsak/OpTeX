@@ -189,6 +189,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#exectree">Working with tree data structure</a>
     <li><a href="#jsonread">Reading JSON files</a>
     <li><a href="#usetree">Example of using the tree data structure</a>
+    <li><a href="#treetips">More tips for working with trees</a>
 </ul>
 
 <li>Text blocks
@@ -4189,6 +4190,90 @@ It means that its outermost level looks like:
 <p>It prints all invoices from your JSON file.
 
 <p CLASS=datum>(0155) -- P. O. 2024-11-26<p>
+<hr>
+
+<h2><a name="treetips"></a>More tips for working with trees</h2>
+
+<p>The tips presented here suppose using the tree data structure described in the
+<a href="#exectree">OpTeX trick 0153</a>. For trying following examples you can
+define \mymacro like in the mentioned OpTeX trick.
+
+<p><b>Tip 1.</b> The previous <a href="#usetree">OpTeX trick 0155</a> defines control
+sequences directly as the identifiers used in the JSON file. But these
+identifiers doesn't heave to be unique. So we implement \prefix which
+includes the whole path from the root node to the given
+\enode when \execenode is processed. Try this:
+<pre>
+\def\prefix{}
+\def\startinode{\bgroup \tmpnum=0 \edef\prefix{\prefix/\the\opt}}
+\def\stopinode{\egroup}
+\def\execenode#1{\advance\tmpnum by1 \prefix/\the\tmpnum:(#1)}
+\exectree\mymacro
+</pre>
+
+<p><b>Tip 2.</b> If you want to save a tree to a file, you can use
+<pre>
+\immediate\write\fileid{\def\noexpand\mymacro{\showtree\mymacro}}
+</pre>
+If you want to read this tree from the file, do simply \input filename.
+
+<p><b>Tip 3.</b> The trees are executed using DFS (depth first searching) by
+default. We try to implement BFS (breadth first searching) here. Maybe, this
+is only for academical purpose, but...
+<pre>
+\def\BFSexec#1{\bgroup  \def\FIFO{}%
+   \let\userstartinode=\startinode
+   \def\startinode##1\stopinode{\userstartinode \addto\FIFO{##1\stopinode}}
+   \def\nextlevel{\ifx\FIFO\empty \else \afterfi{\edef\FIFO{\ea}\FIFO\nextlevel}\fi}
+   \exectree{#1}\nextlevel\egroup}
+
+\def\startinode{[\the\opt]}
+\BFSexec\mymacro
+</pre>
+
+<p><b>Tip 4.</b> If you want to do more manipulation with trees (removing/adding
+subtrees, doing tree algorithms...) then you can convert the tree to a
+"direct data structure" where each node is represented by a single control
+sequence with name \T:name/1/2/3 . The 1/2/3 means the path from root node to
+the given node, edge numbers are here. Each node has its child paths
+numbered from one. For example \T:name/1/3/2 is the node with data 11 (see our
+example tree above). The body of each such macros is in the format
+<pre>
+\nodedata {parent's path}{number of childrens}{optional data}{data}
+</pre>
+The macro \directtree{name}\mymacro does conversion from data structure
+described in <a href="#exectree">OpTeX trick 0153</a> to the direct data
+structure. And \edef\newtree{\expandtree{name}} does backward conversion.
+
+<pre>
+\newcount\childnum     %%% creating \T:name/1/2/3 control sequences from \mymacro
+\def\nodepath{} \def\parent{-}
+\def\savenodedata#1{\sxdef{T:\name\nodepath}%
+   {\noexpand\nodedata{\parent}{\the\childnum}{\the\opt}\unexpanded{{#1}}}}
+\def\directtree#1#2{{%
+   \def\startinode ##1\stopinode{\def\edges{}\childnum=0
+      \ignoresecond \foreach ##1\do{%
+         \incr\childnum \ea\addto\ea\edges\ea{\ea\doedge\ea{\the\childnum}{####1}}}%
+      \savenodedata{}\let\parent=\nodepath
+      \edges % it is list of \edge{1}{path}\edge{2}{path} ...
+   }%
+   \def\doedge##1##2{{\edef\nodepath{\nodepath/##1}##2\stopinode}} % does DFS
+   \def\execenode##1{{\childnum=0 \savenodedata{##1}}}
+   \def\name{#1}\exectree{#2}%
+}}
+\def\nodedata#1#2#3#4{#2}% #1=parent-path, #2=number of childs, #3=opt-parameter, #4=data
+\def\expandtree#1{\ifcsname T:#1\endcsname \ea\ea\ea\expandnode \csname T:#1\endcsname
+   \fornum 1..\cs{T:#1}\do{{\expandtree{#1/##1}}}\fi}
+\def\expandnode \nodedata #1#2#3#4{%
+   \ifnum#2=0 \noexpand\enode \expnodeid{#3}{#4}\else \noexpand\inode \expnodeid{#3}\fi}
+\def\expnodeid#1{\if^#1^\else [#1]\fi}
+
+\directtree{name}\mymacro        % creates a set of \T:name/1/2/3 control sequences
+\edef\newtree{\expandtree{name}} % does bacward conversion
+\wterm{\showtree\newtree}        % check the result
+</pre>
+
+<p CLASS=datum>(0156) -- P. O. 2024-11-29<p>
 <hr>
 
 <p CLASS="lmarg">Text blocks</p>
