@@ -1193,7 +1193,7 @@ code:
 \endtt
 
 Only \"pure words" can be propagated to the index by the \~`\ii` command. It
-means that there cannot be any macro, \TeX/ primitive, math selector, etc.
+means that there cannot be any macro, \TeX/ primitive, etc.
 But there is another possibility to create such a complex index entry. Use
 \"pure equivalent" in the \~`\ii` parameter and map this equivalent to a
 real word that is printed in the index. Such mapping is done by
@@ -1212,7 +1212,10 @@ of the exceptions". The sorting is done by the <equivalent> but the
 <text> is printed in the index entry list.
 
 The sorting rules when \^`\makeindex` runs depends on the current language.
-See section~\ref[lang] about languages selection.
+See section~\ref[lang] about languages selection. The \string< character is sorted
+before A and > after Z and these characters aren't printed if they are
+first in the index item.
+
 
 \secc Bib\TeX/ing
 %%%%%%%%%%%%%%%%

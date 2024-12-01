@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \makeindex {Makeindex and sorting <2024-11-24>} % preloaded in format
+\_codedecl \makeindex {Makeindex and sorting <2024-12-01>} % preloaded in format
 
    \_doc -----------------------------
    \^`\makeindex` implements sorting algorithm at \TeX/ macro-language level.
@@ -25,7 +25,7 @@
    \_cod -----------------------------
 
 \_def \_sortingdatalatin {%
-  |,/,{ },_,-,&,@,%
+  |,<,/,{ },_,-,&,@,%
   aAàÀâÂäÄáÁ,%
   ąĄ,%
   bB,%
@@ -64,7 +64,7 @@
   źŹ,%
   żŻ,%
   ^^Z,% Hungarian: cz:c^^Z, etc., see \_compoundcharshu in lang-data.opm
-  0,1,2,3,4,5,6,7,8,9,'%
+  0,1,2,3,4,5,6,7,8,9,',>%
 }
 
    \_doc -----------------------------
@@ -76,7 +76,7 @@
    Others not mentioned characters have undefined behavior during sorting.
    \_cod -----------------------------
 
-\_def \_ignoredcharsgeneric  {.,;?!:'"()[]<>=+-}
+\_def \_ignoredcharsgeneric  {.,;?!:'"()[]=+-}
 
    \_doc -----------------------------
    Sorting is always processed by rules of a given language. The macros
@@ -439,13 +439,17 @@
    }
    \setiicodes AÀÂÄÁ,ĆČ,DĎ,EÈÉËÊĚ,IÍÏÎ,LĹĽ,OÖÓÔ,RŔ,ŚŠ,TŤ,UÙÛÜÚŮŰ,YÝŸ,{},
    \endtt
+   If the first character of the <word> is \string< or > then it isn't printed.
+   It can be used as first character of the index entry in order to put the entry
+   to a group entries sorted \string<before or >after whole normal entries.
    \_cod -----------------------------
 
 \_def\_printii #1&{\_definefirstii #1&%
    \_ifx\_firstii\_lastii\_else
       \_ea\_newiiletter\_ea{\_firstii}{#1}\_let\_lastii=\_firstii\_fi
    \_gdef\_currii{#1}\_the\_everyii\_noindent
-   \_hskip-\_iindent \_ignorespaces\_printiiA#1//}
+   \_hskip-\_iindent \_ignorespaces \_isnextchar<{\_ea\_printiiA\_ignoreit}%
+      {\_isnextchar>{\_ea\_printiiA\_ignoreit}{\_printiiA}}#1//}
 \_def\_printiiA #1/{\_if^#1^\_let\_previi=\_currii \_else
    \_ea\_scanprevii\_previi/&\_edef\_tmpb{\_detokenize{#1}}%
    \_ifx\_tmpa\_tmpb \_iiemdash \_else#1 \_gdef\_previi{}\_fi
@@ -561,7 +565,8 @@
 \_def\_iiB #1,{\_if$#1$\_else \_iiC#1/\_relax \_ea\_iiB\_fi}
 \_def\_iiC #1/#2\_relax{\_if$#2$\_else\_iindex{#2#1}\_fi}
 
-\_def\_iid #1 {\_leavevmode\_iindex{#1}\_def\_iitypesaved{}#1\_futurelet\_tmp\_iiD}
+\_def\_iid #1 {\_leavevmode\_iindex{#1}\_def\_iitypesaved{}%
+   \_isnextchar<{\_ignoreit}{\_isnextchar>{\_ignoreit}{}}#1\_futurelet\_tmp\_iiD}
 \_def\_iiD{\_ifx\_tmp,\_else\_ifx\_tmp.\_else\_space\_fi\_fi}
 
 \_def\_iis #1 #2{{\_def~{ }\_global\_sdef{_,#1}{#2}}\_ignorespaces}
@@ -573,6 +578,7 @@
 
 \_endcode % -------------------------------------
 
+2024-12-01 < first, > last character for sorting, unprinted by \makindex
 2024-11-24 | set as first in sortingdata: it can be used as item separator
 2024-10-31 \mergesort time-optimized using \toksapp instead \addto
 2023-06-02 \_stripfromcaret introduced
