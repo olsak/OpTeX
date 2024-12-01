@@ -287,7 +287,8 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Creating index
 <ul>
-    <li><a href="#ihead">Subheaders in the index and the &lt; &gt characters</a>
+    <li><a href="#iheads">Subheaders in the index and the &lt; &gt characters</a>
+    <li><a href="#iheadline">Running heads with index entries</a>
 </ul>
 
 <li>Bibliography
@@ -7774,7 +7775,9 @@ specification.
 <p CLASS=datum>(0100) -- P. O. 2023-01-02<p>
 <hr>
 
-<h2><a name="ihead"></a>Subheaders in the index and the &lt; &gt; characters</h2>
+<p CLASS="lmarg">Creating index</p>
+
+<h2><a name="iheads"></a>Subheaders in the index and the &lt; &gt; characters</h2>
 
 <p>The OpTeX manual says for the \_newwiiletter macro that this macro can be
 used for printing subheaders: each group of words with the same first letter
@@ -7826,6 +7829,68 @@ first 1<br>
 next 1<br>nextnext 1
 
 <p CLASS=datum>(0157) -- P. O. 2024-12-01<p>
+<hr>
+
+<h2><a name="iheadline"></a>Running heads with index entries</h2>
+
+<p>We want to show first and last index entry in the running heads of the
+pages (\headline). First of all, we have to put \mark for each index entry:
+
+<pre>
+\everyii={\saveindexmark}
+\def\saveindexmark #1\_ignorespaces #2//{\noindent
+   {\let\_printiiA=\empty \mark{#2}}#1\_ignorespaces #2//}
+</pre>
+
+Now, the following code works:
+
+<pre>
+\iid first \iid second \iid third \iid next \iid nextnext
+
+\headline{\firstmark \hfil \botmark}
+\makeindex
+\vfil\break \headline{}
+</pre>
+
+<p>But there is a little problem. If we encapsulate the \makeindex into
+\begmulti...\endmuti, then the marks are lost. We have to use the
+solution from
+<a href="https://tex.stackexchange.com/questions/696841">stack.exchange</a>.
+The activating of migrate_inserts Lua function can be done only when
+\begmulti...\endmulti is used: copy the \directlua code from the
+<a href="https://tex.stackexchange.com/questions/696841">stack.exchange</a>
+page but without the last line callback.add_to_callback. Then remove the
+locate prefix before function migrate_inserts(where) and apply this
+\directlua in your document. It defines migrate_inserts and locate functions.
+Then define:
+
+<pre>
+\def\migratemarks{\directlua{
+   callback.add_to_callback('buildpage_filter',migrate_inserts,'migrate_inserts')
+}}
+\def\stopmigratemarks{\directlua{
+   callback.remove_from_callback('buildpage_filter','migrate_inserts')
+}}
+\def\endmulti{\migratemarks\_endmulti\stopmigratemarks}
+</pre>
+
+Now, the following code works and the page headers include index items:
+
+<pre>
+\everyii={\saveindexmark}
+\def\saveindexmark #1\_ignorespaces #2//{\noindent
+   {\let\_printiiA=\empty \mark{#2}}#1\_ignorespaces #2//}
+
+\iid first \iid second \iid third \iid next \iid nextnext
+
+\headline{\firstmark \hfil \botmark}
+\begmulti 3
+   \makeindex
+\endmulti
+\vfil\break \headline{}
+</pre>
+
+<p CLASS=datum>(0158) -- P. O. 2024-12-01<p>
 <hr>
 
 <p CLASS="lmarg">Bibliography</p>
