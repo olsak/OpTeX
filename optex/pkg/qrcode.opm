@@ -2473,7 +2473,7 @@
 \_def\.kvunknown{???}
 \_def\.kvscan #1#2=#3,{\_ifx#1,\_else \_sdef{_qr_kv:#1#2}{#3}\_ea\.kvscan\_fi}
 
-\_def\.qrset#1{\_def\.tmpb{#1,}%
+\_def\.qrsetup#1{\_def\.tmpb{#1,}%
    \_replstring\.tmpb{ =}{=}\_replstring\.tmpb{= }{=}%
    \_replstring\.tmpb{tight,}{qr-border=0,}%
    \_replstring\.tmpb{padding,}{qr-border=1,}%
@@ -2488,7 +2488,7 @@
    \.setlevel{\.kv{level}}%
    \_edef\.desiredversion{\.kv{version}}%
 }
-\.qrset{height=2cm, version=0, level=M, tight, silent, final, nolink}
+\.qrsetup{height=2cm, version=0, level=M, tight, silent, final, nolink}
 
 \_def\.setcounter #1#2{\_global#1=#2\_relax}
 \_def\.stepcounter  #1{\_global\_advance#1 by1\_relax}
@@ -2497,7 +2497,7 @@
 \_def\.qrcode{\_begingroup
    \_isnextchar[{\.qrcodeA}{\.qrcodeB}%
 }
-\_def\.qrcodeA[#1]{\.qrset{#1}\_ea\.qrcodeB\_romannumeral-`\.}
+\_def\.qrcodeA[#1]{\.qrsetup{#1}\_ea\.qrcodeB\_romannumeral-`\.}
 \_def\.qrcodeB#1{%
    \_if1\.kv{qr-message}\_let\.message=\_message \_else \_def\.message##1{}\_fi
    \_if1\.kv{qr-border}\_def\.padd{\_kern4\.modulesize}\_else\_def\.padd{}\_fi
@@ -2527,7 +2527,8 @@
   \_fi
 }%
 
-\_nspublic \qrcode \qrset ;
+\_nspublic \qrcode \qrsetup ;
+\_newpublic \_let\qrset=\.qrsetup  % for backward compatibility
 
 \_def\.qrcode_int_new{%
   \.qrbeginhook
@@ -2630,16 +2631,16 @@ The characters from all Unicode table are allowed in <encoded text>.
 
 \secc Options
 
-You can use `\qrset{<options>}` for global-like options and
+You can use `\qrsetup{<options>}` for global-like options and
 `\qrcode[<options>]{<encoded text>}` for local options for one QR code.
-The `\qrset{<options>}` is valid within a group (if exists) or in whole
+The `\qrsetup{<options>}` is valid within a group (if exists) or in whole
 document. 
 
 Options are separated by comma and they are in two types: single
 word or key=value format. Default options are: 
 
 \begtt
-\qrset{height=2cm, version=0, level=M, tight, silent, final, nolink}
+\qrsetup{height=2cm, version=0, level=M, tight, silent, final, nolink}
 \endtt
 
 The options are the same as described in `qrcode.pdf` at 
@@ -2677,7 +2678,7 @@ In short:
 Example:
 
 \begtt
-\qrset{silent}     % ... all codes will be silent in the log and terminal.
+\qrsetup{silent}   % ... all codes will be silent in the log and terminal.
 \qrcode [height=3cm, link, padding, qrborder={1 0 0}] {http://petr.olsak.net}  
                    % ... 3cm QRcode as hyperlink
 \endtt

@@ -9,13 +9,13 @@
 
    \_doc
    The `math` package provides options, they can be declared using
-   the \`\mathset``{<options>}` macro. For example `\mathset {vert, dots}`.
+   the \`\mathsetup``{<options>}` macro. For example `\mathsetup {vert, dots}`.
    If you create your own package with options, provide a similar
    `\<pkg>set` macro. The \`\.kv` macro is similar to \OpTeX's `\kv`, but
    with specific `pkg:math` dictionary.
    \_cod
 
-\_def\.mathset #1{%
+\_def\.mathsetup #1{%
    \_edef\.restorekvdict{\_kvdict{\_the\_kvdict}}%
    \_kvdict{pkg:math}%
       \_nokvx {\_opwarning{\_the\_kvdict: unknown option "##1", ignored}}%
@@ -34,9 +34,10 @@
       \_readkv{#1}%
    \.restorekvdict
 }
-\_def\.kv #1{\_trycs{_kv:pkg:math:#1}{\_kvunknown}}% for accessing values given by \mathset
+\_def\.kv #1{\_trycs{_kv:pkg:math:#1}{\_kvunknown}}% for accessing values given by \mathsetup
 
-\_nspublic \mathset ;
+\_nspublic \mathsetup ;
+\_newpublic \_let\mathset = \.mathsetup  % for backward compatibility
 
    \_doc
    \`\bigp`, \`\bbigp`, \`\Bigp`, \`\biggp`, \`\Biggp`, \`\autop`, \`\normalp` are inspired from
@@ -276,10 +277,10 @@
    \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.
    \_cod
 
-\_def\.bfserif{%
+\_def\.bfserif{\.unionly\bfserif{%
    \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
    \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}%
-}
+}}
 
 \_nspublic \bfserif ;
 
@@ -316,7 +317,7 @@
       \_mit
    \_fi
 }
-\_def\.flexipa{\.partialsymbolvars {it}{rm}{bfsans}{it}{bfitsans}}
+\_def\.flexipa{\.unionly\flexipa{\.partialsymbolvars {it}{rm}{bfsans}{it}{bfitsans}}}
 \_newpublic \_let \flexiblepartial=\.flexipa
 \_nspublic \flexipa \partialsymbolvars \mrmpartial ;
 
@@ -324,12 +325,12 @@
    The options `mstyle`, resp. `bstyle` run \`\.mstyle`, resp. \`\.bstyle`
    and these macros set required shapes of math variables. This can be done
    only when Unicode-math is loaded already. This is a reason why
-   \`\.unionly``{<code>}{<text>}` is used: it runs <code> only when
+   \`\.unionly``{<text>}{<code>}` is used: it runs <code> only when
    Unicode-math is loaded, otherwise it prints a warning.
    \_cod
 
-\_def\.mstyle #1{\.unionly{\_lowercase{\_cs{_math_mstyle_#1}}}{mstyle}}
-\_def\.bstyle #1{\.unionly{\_lowercase{\_cs{_math_bstyle_#1}}}{bstyle}}
+\_def\.mstyle #1{\.unionly{mstyle}{\_lowercase{\_cs{_math_mstyle_#1}}}}
+\_def\.bstyle #1{\.unionly{bstyle}{\_lowercase{\_cs{_math_bstyle_#1}}}}
 
 \_def\.mstyle_tex {%
    \_protected\_def\_mit {\_itvariables \_rmdigits \_itgreek \_rmGreek}\_mit
@@ -361,9 +362,9 @@
    \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
    \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_biGreek\_bidigits}}%
 }
-\_def\.unionly #1#2{\_ifx\_rmvariables\_undefined
-   \_opwarning{pkg:math: Unicode-math must be loaded first, \_string#2 ignored}%
-   \_else \_afterfi{#1}\_fi
+\_def\.unionly #1{\_ifx\_rmvariables\_undefined
+   \_opwarning{pkg:math: \_string#1 ignored: Unicode-math must be loaded}%
+   \_ea\_ignoreit \_else \_ea\_useit \_fi
 }
 
    \_doc
@@ -375,7 +376,7 @@
    `\alpha` unchanged.
    \_cod
 
-\_def\.rmchars#1{\_ea\_foreach \_expanded{#1}\_do{\_ifx,##1\_else\.rmchar##1\_fi}}
+\_def\.rmchars#1{\.unionly\rmchars{\_ea\_foreach\_expanded{#1}\_do{\_ifx,##1\_else\.rmchar##1\_fi}}}
 \_def\.rmchar#1{\_Umathcode`#1=0 1 `#1 }
 
 \_def\.vargreek#1{\_foreach#1\_do{\_ifx,##1\_else \.vargreekchar##1\_fi}}
@@ -411,19 +412,21 @@
    \_normalmath
    \_let\.textmathini=\_relax
 }
-\_def\.textvariables {\.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
+\_def\.textvariables {\.unionly\textvariables {%
+   \.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
    \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
    \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
    \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
    \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA}
    \_protected\_def\_rmGreek    {\_umathrangeGREEK01\_greekrmA}
    \_itgreek \_rmGreek
-}
-\_def\.textdigits    {\.textmathini \_mathcodes 5 {7{\_Urange 0-9}}}
-\_def\.textmoremath  {\.textmathini
+}}
+\_def\.textdigits    {\.unionly\textdigits{\.textmathini \_mathcodes 5 {7{\_Urange 0-9}}}}
+\_def\.textmoremath  {\.unionly\textmoremath{%
+   \.textmathini
    \_mathcodes 5 {5{!?} 2{*+-} 3{=<>} 6{,:;} 0{./|} 4{([\{} 5{\})]}}%
    \_Umathcode `- = 2 5 "2212  % hyphen behaves like minus in math mode
-}
+}}
 \_def\.dotext#1{\_foreach #1 \_do
    ##1 {\_trycs{_math_text##1}{\_opwarning{text option: "##1" unknown}}}}
 
@@ -441,7 +444,7 @@
    \_cod
 
 \_def\.rlist{\sqrt\cuberoot\fourthroot} % they cannot be replaced by \mathchars
-\_def\.replacemissingchars#1{%
+\_def\.replacemissingchars#1{\.unionly\replacemissingchars{%
    \_def\.alist{}\_def\.clist{}
    \_def\UnicodeMathSymbol##1##2##3##4{%
       \_iffontchar\_textfont1##1 \_else     % not in main math font
@@ -460,7 +463,7 @@
    \_def\.tmp{\_mathchars #1}\_ea\.tmp\_ea{\.clist}%
    \_ea\_addto \_ea\.rlist \_ea{\.clist}\_ea\_addto \_ea\.rlist \_ea{\.alist}%
    \_def\.alist{}\_def\.clist{}\_let\UnicodeMathSymbol=\_undefined
-}
+}}
 \_nspublic \replacemissingchars ;
 
    \_doc
@@ -579,8 +582,8 @@ The following macros are defined in this package:
 \enditems
 
 Following options are provided by the `math` package. You can set them by
-\^`\mathset``{<options>}` after `\load[math]`, for example
-`\mathset{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
+\^`\mathsetup``{<options>}` after `\load[math]`, for example
+`\mathsetup{dots, vert, vargreek={\epsilon,\rho}}`. The options are:
 \begitems
 * `dots` sets more intelligent `\dots`, the same as \~`\smartdots`.
 * `interval` sets `\_` as prefix of intervals, see section~\ref[interval].
@@ -899,7 +902,7 @@ use `\rmchars` first.
 
 The package provides two options `rmchars` and `vargreek`. The equation
 sign must follow and then the `{<list>}` with syntax mentioned above. For example
-`\mathset{vargreek={\epsilon,\rho}}`.
+`\mathsetup{vargreek={\epsilon,\rho}}`.
 
 
 \sec[flexipa] Flexible partial symbol $\partial$
@@ -955,7 +958,7 @@ them.
 
 The package provides the option `text={<list of words>}`, each <word> from the
 <list> can be `digits` or `variables` or `moremath`. It runs corresponding macro(s)
-described above. For example `\mathset{text=digits variables}` is equal to the
+described above. For example `\mathsetup{text=digits variables}` is equal to the
 declaration of `\textdigits` `\textvariables`.
 
 
@@ -1129,6 +1132,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.17  2024-12-04  \mathsetup instead \mathset, \.unionly modified
 0.16  2024-10-17  \mathclap, etc.  corrected.
 0.15  2024-04-28  \_ as interval prefix added.
 0.14  2024-03-18  \flexipa introduced.
