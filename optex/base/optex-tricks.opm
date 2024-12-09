@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-11-26>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-12-09>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -900,7 +900,7 @@ end,'global') % we want to keep the meanig after group
 
 \_ifx \startinode\_undefined \_def\startinode{} \_fi
 \_ifx \stopinode \_undefined \_def\stopinode{}  \_fi
-\_ifx \startedge \_undefined \_def\startedge{}  \_fi
+\_ifx \execenode \_undefined \_def\execenode#1{(#1)} \_fi
 
 \_newcount\.treelevel
 \_let\.ima=\_immediateassignment
@@ -1242,6 +1242,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-12-09 \exectree: bug in default macros fixed
 2024-11-26 \exectree, \jsonread etc. implemented
 2024-11-23 \dbcreate etc. implemented
 2024-11-22 \dbloop etc. implemented
