@@ -22,6 +22,15 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.16> Dec 2024:
+       JSON files and tree structure support as a set of OpTeX tricks
+       CSV databases support as a set of OpTeX tricks
+       \xloop implemented
+       Processing speed slightly improved for sort and \replstring
+       \replstring, \foreach: fixed the braces-loss problem
+       Font family files added
+       Multicolumn: measurement of big boxes improved
+       Minor corrections, small improvements
 <1.15> Jun 2024:
        \qcasesof improved: more alternative patterns can be declared using |.
        \loadtrick is expandable now.
