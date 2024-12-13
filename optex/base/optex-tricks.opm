@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-12-09>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-12-13>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -283,7 +283,7 @@ define_lua_command('xreplstring', function()
 end,'global') % we want to keep the meanig after group
 }
 
-\_trick 0078 0145 0146 \algol \algolkw \algolcap \makeLOA \algolnum ;
+\_trick 0078 0145 0146 \algol \algolkw \algolcap \makeLOA \algolnum \setaca ;
 %%%%%%%%%%%%%%%%%%%%%%
 
 \_newtoks \_hisyntaxalg
@@ -305,12 +305,12 @@ end,'global') % we want to keep the meanig after group
    \_def\_ttfont{\_rm}%
    \_def\var##1{{\_it\_adef _{\_vrule height.4pt width4pt depth0pt\_relax}##1}}
    \_catcode`\!=13
-   \_bgroup \_lccode`\~=`\!
-            \_lowercase{\_egroup \_protected\_def~##1~{\_ifx^##1^!\_else{\_bf##1}\_fi}}%
+   \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_protected\_def~##1~}{\algolem{##1}}%
    \_hisyntax{ALG}%
 }
 \:\_def\algolkw#1{\_toksapp\_hisyntaxalg{\_replthis{\n#1\n}{\z K{#1}}}}
-\_ifx\algolcomment\_undefined \_def\algolcomment#1{/\kern-.2em/{\it #1}} \_fi
+\_ifx\algolcomment\_undefined \_protected\_def\algolcomment#1{/\_kern-.2em/{\_it #1}} \_fi
+\_ifx\algolem\_undefined      \_def\algolem#1{\_ifx^#1^!\_else{\_bf #1}\_fi}\_fi
 
 \_newcount\.anum
 \_def \.theanum  {\_othe\_chapnum.\_othe\_secnum.\_the\.anum}
@@ -346,6 +346,22 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\.testindent#1#2\_iftrue {\_ea\_ifx#1\_dsp}
 
+\_newcount\.algollistnum
+\:\_def\setaca {\_aheadto\algol{\.algolsetcomments}}
+\_def\.algolsetcomments{\_incr\.algollistnum
+   \_tmpnum=0 \_tmpdim=-\_maxdimen
+   \_loop \_incr\_tmpnum
+      \_ifcsname _pos:\.alcomlabel \_endcsname
+         \_ifdim\_tmpdim<\_posx[\.alcomlabel] \_tmpdim=\_posx[\.alcomlabel] \_fi \_repeat
+   \_tmpnum=0
+   \_let\aca=\.algolcommentsalignment
+}
+\_def\.alcomlabel{comment:\_the\.algollistnum/\_the\_tmpnum}
+\_protected\_def \.algolcommentsalignment {\_incr\_tmpnum \_setpos[\.alcomlabel]%
+   \_ifdim\_tmpdim=-\_maxdimen \_else
+       \_ifdim\_posx[\.alcomlabel]=0pt \_else \_kern\_dimexpr\_tmpdim-\_posx[\.alcomlabel]\_relax
+   \_fi\_fi
+}
 \_globaldefs=0 % \refdecl needs to be processed when \localdefs=0
 \_refdecl{%
    \_def\.alglist{}^^J
@@ -1242,6 +1258,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2024-12-13 \algol: \algolem, \aca introduced
 2024-12-09 \exectree: bug in default macros fixed
 2024-11-26 \exectree, \jsonread etc. implemented
 2024-11-23 \dbcreate etc. implemented

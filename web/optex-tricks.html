@@ -126,6 +126,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#algol">Algorithms printed as pseudo-codes</a>
     <li><a href="#algolcap">Captions of algorithms and the list of them</a>
     <li><a href="#algolnum">Line numbering in algorithm listings</a>
+    <li><a href="#algolalign">Algorithms with aligned comments</a>
     <li><a href="#ttlineref">Verbatim lines referenced in text</a>
 </ul>
 
@@ -1135,7 +1136,7 @@ solution.
 <h2><a name="algol"></a>Algorithms printed as pseudo-codes</h2>
 
 <p CLASS="rmarg">
-autoload:<br>\algol<br>\algolkw<br>defined also:<br>\algolcomment
+autoload:<br>\algol<br>\algolkw<br>defined also:<br>\algolcomment<br>\algolem
 </p>
 
 <p>The LaTeX package bundle <b>algorithms</b> enables to create algorithms formatted by
@@ -1146,8 +1147,11 @@ Our pseudo-code is written between \begtt\algol and \endtt as usual verbatim tex
 The key-words mentioned at pages 1--8 in the algorithms LaTeX documentation are
 written directly in our source code and they are printed in bold font automatically.
 Other key-words with this feature can be declared by \algolkw{word}.
-Another method for printing in bold is using a pair of !...!, i.e. write !word!
-in the source. Texts between dollars $...$ are interpreted in math mode. All input characters
+Another method for printing emphasised words is using a pair of !...!, i.e. write !word!
+in the source. Default of !word! is bold word and default !! prints single !.
+But you can change the macro \algolem to do something others.
+
+<p>Texts between dollars $...$ are interpreted in math mode. All input characters
 between $...$ are non-verbatim, i.e. the math mode is interpreted as usual.
 Other text (outside math mode) is printed verbatim but in Roman font.
 
@@ -1206,12 +1210,13 @@ readable. Or you can use common math control sequences in math mode,
    \everymath={\algolmath}%
    \def\_ttfont{\rm}%
    \def\var##1{{\it\adef_{\vrule height.4pt width4pt depth0pt\relax}##1}}
-   \catcode`\!=13 \bgroup \lccode`\~=`\!
-       \lowercase{\egroup \protected\def~##1~{\ifx^##1^!\else{\_bf##1}\fi}}%
+   \catcode`\!=13
+   \bgroup \lccode`\~=`\! \lowercase{\egroup \protected\def~##1~}{\algolem{##1}}%
    \hisyntax{ALG}%
 }
 \def\algolkw#1{\toksapp\_hisyntaxalg{\replthis{\n#1\n}{\z K{#1}}}}
 \def\algolcomment#1{/\kern-.2em/{\it #1}}
+\def\algolem#1{\ifx^#1^!\else{\bf ##1}\fi}
 </pre>
 
 <p>You can use \var{variable_name} inside the math mode. The variable_name
@@ -1386,6 +1391,60 @@ your listings can be briefly introduced by
 </pre>
 
 <p CLASS=datum>(0146) -- P. O. 2024-11-05<p>
+<hr>
+
+<h2><a name="algolalign"></a>Algorithms with aligned comments</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\setaca
+</p>
+
+<p>We cannot simply arrange for the comments (beginning with //) to be aligned
+(one above second) when printing algorithms (pseudocodes, see OpTeX ticks
+<a href="algol">0078</a>). The reason is that we don't exactly know the width of the
+code before the comments, so putting appropriate number of spaces before the
+comments cannot help.
+
+<p>Use \setca in your preamble. It enables to use
+\aca macro (Algol Comments Alignment) inside your definition of
+\algolcomment:
+
+<pre>
+\setaca
+\protected\def\algolcomment#1{\aca /\kern-.2em/{\it #1}}
+</pre>
+
+<p>Then all comments will be aligned by the comment which is far right.
+The implementation is based on \setpos macro, so the comments will be aligned
+after second TeX run.
+
+<pre>
+\newcount\algollistnum
+\def\setaca{\aheadto\algol{\algolsetcomments}}
+\def\algolsetcomments{\incr\algollistnum
+   \tmpnum=0 \tmpdim=-\maxdimen
+   \loop \incr\tmpnum
+      \ifcsname _pos:\alcomlabel \endcsname
+         \ifdim\tmpdim&lt;\posx[\alcomlabel] \tmpdim=\posx[\alcomlabel] \fi \repeat
+   \tmpnum=0
+   \let\aca=\algolcommentsalignment
+}
+\def\alcomlabel{comment:\the\algollistnum/\the\tmpnum}
+\protected\def \algolcommentsalignment {\incr\tmpnum \setpos[\alcomlabel]%
+   \ifdim\tmpdim=-\maxdimen \else
+       \ifdim\posx[\alcomlabel]=0pt \else \kern \dimexpr \tmpdim-\posx[\alcomlabel]\relax
+   \fi \fi
+}
+</pre>
+
+<p>Each \aca puts \setpos[comment:algollistnum/commentnum].
+The code \algolsetcomments (executed at beginning of each \begtt\algol)
+calculates the far right position from
+all comments in the given algol listing (the listings are numbered by \algollistnum).
+The result is saved to the \tmpdim. Then the comments with \aca are preceded by
+\kern\tmpdim-\posx.
+
+<p CLASS=datum>(0159) -- P. O. 2024-12-13<p>
 <hr>
 
 <h2><a name="ttlineref"></a>Verbatim lines referenced in text</h2>

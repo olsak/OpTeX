@@ -163,10 +163,10 @@
 
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \showpglists \shownodes \runsystem
-   \directoutput \algol \algolkw \algolcap \algolnum \makeLOA \scaleto \scaletof \ttlineref \lref
-   \easylist \keepstyle \fcread \shadedframe \roundframe \cancel \ignoreinspic \keystroke
-   \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote \tabnodes \tablebefore
-   \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
+   \directoutput \algol \algolkw \algolcap \algolnum \makeLOA \setaca \scaleto \scaletof
+   \ttlineref \lref \easylist \keepstyle \fcread \shadedframe \roundframe \cancel \ignoreinspic
+   \keystroke \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote
+   \tabnodes \tablebefore \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
    \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground
    \onlyifnew \thedimen \rebox \leftfill \rightfill \lrfill \directchar
    \xreplstring \replmacro \tdnum \clipbox \ismatch \isinmacro \mathinexpr \xparshape
