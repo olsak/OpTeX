@@ -1,12 +1,62 @@
 -- This is part of the OpTeX project, see http://petr.olsak.net/optex
 
--- The basic lua functions and declarations used in \OpTeX/ are here
+-- Basic Lua functions and declarations used in \OpTeX/ are defined here
+--
+-- Local imports of standard Lua or \LuaTeX/ functions and constants are the first thing we do.
+-- They mostly serve one of several purposes:
+--
+-- \begitems
+-- * shorthands for commonly used functions,
+-- * speed of access for commonly executed functions,
+-- * common constants to be used consistently,
+-- * use of local definition that can't be externally overwritten.
+-- \enditems
 
 local fmt = string.format
 
+local node_id = node.id
+local node_subtype = node.subtype
+local glyph_id = node_id("glyph")
+local rule_id = node_id("rule")
+local glue_id = node_id("glue")
+local hlist_id = node_id("hlist")
+local vlist_id = node_id("vlist")
+local disc_id = node_id("disc")
+local kern_id = node_id("kern")
+local whatsit_id = node_id("whatsit")
+local pdfliteral_id = node_subtype("pdf_literal")
+local pdfsave_id = node_subtype("pdf_save")
+local pdfrestore_id = node_subtype("pdf_restore")
+local token_getmacro = token.get_macro
+
+local direct = node.direct
+local todirect = direct.todirect
+local tonode = direct.tonode
+local getfield = direct.getfield
+local setfield = direct.setfield
+local getwhd = direct.getwhd
+local getid = direct.getid
+local getlist = direct.getlist
+local setlist = direct.setlist
+local getleader = direct.getleader
+local getattribute = direct.get_attribute
+local setattribute = direct.set_attribute
+local insertbefore = direct.insert_before
+local copy = direct.copy
+local traverse = direct.traverse
+local one_bp = tex.sp("1bp")
+
+local tex_print = tex.print
+local tex_setbox = tex.setbox
+local tex_getcount = tex.getcount
+local tex_setcount = tex.setcount
+local token_scanint = token.scan_int
+local token_scanlist = token.scan_list
+local token_setmacro = token.set_macro
+
 -- \medskip\secc General^^M
 --
--- Define namespace where some \OpTeX/ functions will be added.
+-- Define namespace where \"public" \OpTeX/ functions will be added.
 
 local optex = _ENV.optex or {}
 _ENV.optex = optex
@@ -31,31 +81,28 @@ function optex.mdfive(file)
     if fh then
         local data = fh:read("*a")
         fh:close()
-        tex.print(md5.sumhexa(data))
+        tex_print(md5.sumhexa(data))
    end
 end
 
 -- The `optex.raw_ht ()` function measures the height plus depth of given
--- `\vbox` saved by `\setbox`. It solves \"dimension too large" problem with big boxes.
+-- `\vbox` saved by `\setbox`. It solves the \"dimension too large" problem with big boxes.
 -- It is used in the \^`\_rawht` macro.
 
 function optex.raw_ht()
-   local nod = tex.box[token.scan_int()]       -- read head node of the given box
-   local ht = 0
-   if not(nod==nil) and nod.id==1 then         -- given box must be \vbox
-      for n in node.traverse(nod.head) do
-         if n.id==0 or n.id==1 or n.id==2 then -- hbox or vbox or rule
+    local nod = tex.box[token.scan_int()]       -- read head node of the given box
+    local ht = 0
+    assert(nod ~= nil and nod.id == vlist_id, "given box must be a \\vbox")
+    for n in node.traverse(nod.head) do
+        if n.id == hlist_id or n.id == vlist_id or n.id == rule_id then
             ht = ht + n.height + n.depth
-         end
-         if n.id==12 then                      -- glue
+        elseif n.id == glue_id then
             ht = ht + n.width
-         end
-         if n.id==13 then                      -- kern
+        elseif n.id == kern_id then
             ht = ht + n.kern
-         end
-      end
-   end
-   tex.print(string.format('%.0f',ht/65536))
+        end
+    end
+    tex_print(fmt('%.0f', ht/65536))
 end
 
 --
@@ -423,9 +470,6 @@ end)
 -- achieve colors and possibly more).
 callback.create_callback("pre_shipout_filter", "list")
 
-local tex_setbox = tex.setbox
-local token_scanint = token.scan_int
-local token_scanlist = token.scan_list
 define_lua_command("_preshipout", function()
     local boxnum = token_scanint()
     local head = token_scanlist()
@@ -460,6 +504,86 @@ callback.add_to_callback("input_level_string", function(n)
         return ""
     end
 end, "_tracingmacros")
+--
+-- \medskip\secc[lua-pdf-utils] PDF object utilities^^M
+--
+-- The PDF format defines various kinds of "objects": numbers, names, arrays,
+-- dictionaries. A PDF document is mostly a tree of these objects (i.e. objects
+-- contain other objects), with either direct ("in-place") or indirect
+-- references.
+--
+-- These objects are saved in the PDF file in a serialized form, often
+-- compressed. While \LuaTeX/ takes care of the compression, and most of the
+-- structure of the PDF format, sometimes we want to insert our own PDF objects
+-- - and there are places where \LuaTeX/ allows us to use our own objects to
+-- insert anything, but it already expects a serialized form of the objects. The
+-- serialized form for some kinds of objects has various formatting and escaping
+-- rules, and is inconvenient to produce in \TeX/ especially when some of the
+-- e.g. names and strings are {\it user input}.
+--
+-- Here we define a couple of utilities for both Lua and \TeX/ that aid with
+-- representation and serialization of objects. The functions are exported, but
+-- may still evolve in incompatible ways.
+--
+-- A reference for the serialization is the \"Syntax" section of the PDF
+-- specification\fnote{\url{https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf}}.
+--
+-- \`\_pdfname``{<name>}` serializes a \"PDF name" to bytes.
+local function name_escape(char)
+    return fmt("#%02X", char:byte())
+end
+--
+local function pdf_name(name)
+    -- Delimiters (i.e. "()<>[]{}/%") and control characters (0x00-0x1f, and 0x7f),
+    -- space (" ", 0x20) as well as number sign ("#", 0x23) characters have to be escaped
+    return "/" .. name:gsub("[%(%)<>%[%]{}/%%%c #]", name_escape)
+end
+optex.pdf_name = pdf_name
+define_lua_command("_pdfname", function()
+    tex_print(-2, pdf_name(token.scan_string()))
+end)
+--
+-- \`\_pdfstring``{<string>}` serializes a PDF string to bytes.
+local function pdf_string(str)
+    local out = {"<FEFF"}
+    for _, c in utf8.codes(str) do
+        if c < 0x10000 then
+            out[#out+1] = fmt("%04X", num)
+        else
+            c = c - 0x10000
+            local high = bit32.rshift(c, 10) + 0xD800
+            local low = bit32.band(c, 0x3FF) + 0xDC00
+            out[#out+1] = fmt("%04X%04X", high, low)
+        end
+    end
+    out[#out+1] = ">"
+    return table.concat(out)
+end
+optex.pdf_string = pdf_string
+define_lua_command("_pdfstring", function()
+    tex_print(-2, pdf_string(token.scan_string()))
+end)
+--
+local function pdf_ref(id)
+    return fmt("%d 0 R", id)
+end
+optex.pdf_ref = pdf_ref
+--
+local pdfdict_mt = {
+    __tostring = function(dict)
+        local out = {"<<"}
+        for k, v in pairs(dict) do
+            out[#out+1] = fmt("%s %s", pdf_name(k), tostring(v))
+        end
+        out[#out+1] = ">>"
+        return table.concat(out, "\n")
+    end,
+}
+local function pdf_dict(t)
+    return setmetatable(t or {}, pdfdict_mt)
+end
+optex.pdf_dict = pdf_dict
+--
 -- \medskip\secc[lua-pdf-resources] Management of PDF page resources^^M
 --
 -- Traditionally, pdf\TeX/ allowed managing PDF page resources (graphics
@@ -476,20 +600,6 @@ end, "_tracingmacros")
 -- insert page resources managed by us, if they need them. For that, use
 -- `pdf.get_page_resources()`, or the below \TeX/ alternative for that.
 --
-local pdfdict_mt = {
-    __tostring = function(dict)
-        local out = {"<<"}
-        for k, v in pairs(dict) do
-            out[#out+1] = fmt("/%s %s", tostring(k), tostring(v))
-        end
-        out[#out+1] = ">>"
-        return table.concat(out, "\n")
-    end,
-}
-local function pdf_dict(t)
-    return setmetatable(t or {}, pdfdict_mt)
-end
-optex.pdf_dict = pdf_dict
 --
 local resource_dict_objects = {}
 local page_resources = {}
@@ -497,7 +607,7 @@ function pdf.add_page_resource(type, name, value)
     local resources = page_resources[type]
     if not resources then
         local obj = pdf.reserveobj()
-        pdf.setpageresources(fmt("%s /%s %d 0 R", pdf.get_page_resources(), type, obj))
+        pdf.setpageresources(fmt("%s %s %s", pdf.get_page_resources(), pdf_name(type), pdf_ref(obj)))
         resource_dict_objects[type] = obj
         resources = pdf_dict()
         page_resources[type] = resources
@@ -509,14 +619,14 @@ function pdf.get_page_resources()
 end
 --
 -- New \"pseudo" primitives are introduced.
--- \`\_addpageresource``{<type>}{<PDF name>}{<PDF dict>}` adds more reources
+-- \`\_addpageresource``{<type>}{<PDF name>}{<PDF dict>}` adds more resources
 -- of given resource <type> to our data structure.
 -- \`\_pageresources` expands to the saved <type>s and object numbers.
 define_lua_command("_addpageresource", function()
     pdf.add_page_resource(token.scan_string(), token.scan_string(), token.scan_string())
 end)
 define_lua_command("_pageresources", function()
-    tex.print(pdf.get_page_resources())
+    tex_print(pdf.get_page_resources())
 end)
 --
 -- We write the objects with resources to the PDF file in the `finish_pdffile`
@@ -533,36 +643,6 @@ end, "_pageresources")
 -- Because \LuaTeX/ doesn't do anything with attributes, we have to add meaning
 -- to them. We do this by intercepting \TeX/ just before it ships out a page and
 -- inject PDF literals according to attributes.
---
-local node_id = node.id
-local node_subtype = node.subtype
-local glyph_id = node_id("glyph")
-local rule_id = node_id("rule")
-local glue_id = node_id("glue")
-local hlist_id = node_id("hlist")
-local vlist_id = node_id("vlist")
-local disc_id = node_id("disc")
-local whatsit_id = node_id("whatsit")
-local pdfliteral_id = node_subtype("pdf_literal")
-local pdfsave_id = node_subtype("pdf_save")
-local pdfrestore_id = node_subtype("pdf_restore")
-local token_getmacro = token.get_macro
-
-local direct = node.direct
-local todirect = direct.todirect
-local tonode = direct.tonode
-local getfield = direct.getfield
-local setfield = direct.setfield
-local getwhd = direct.getwhd
-local getid = direct.getid
-local getlist = direct.getlist
-local setlist = direct.setlist
-local getleader = direct.getleader
-local getattribute = direct.get_attribute
-local insertbefore = direct.insert_before
-local copy = direct.copy
-local traverse = direct.traverse
-local one_bp = tex.sp("1bp")
 --
 -- The attribute for coloring is allocated in `colors.opm`
 local color_attribute = registernumber("_colorattr")
@@ -707,11 +787,7 @@ end, "_colors")
 -- attribute. On top of that, we take care of transparency resources ourselves.
 --
 -- The hook has to be registered {\em after} `luaotfload` is loaded.
-local setattribute = direct.set_attribute
-local token_setmacro = token.set_macro
 local color_count = registernumber("_colorcnt")
-local tex_getcount, tex_setcount = tex.getcount, tex.setcount
---
 local function set_node_color(n, color) -- "1 0 0 rg" or "0 g", etc.
     local attr = tonumber(token_getmacro("_color::"..color))
     if not attr then

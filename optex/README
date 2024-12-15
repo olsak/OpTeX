@@ -82,7 +82,7 @@ History:
        Minor improvements and bug fixing.
 <1.07> May 2022:
        Tikz's \foreach works only in its environment.
-       \lipsum syntax enlarged by dot after paragraph num, example: \lipusm[3.].
+       \lipsum syntax enlarged by dot after paragraph num, example: \lipsum[3.].
        f-baskervald.opm added.
        expandable \isinlist implemented.
        bibstyles \. replaced by \: }due to collision with \oldaccents).
