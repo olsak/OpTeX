@@ -507,9 +507,9 @@ end, "_tracingmacros")
 --
 -- \medskip\secc[lua-pdf-utils] PDF object utilities^^M
 --
--- The PDF format defines various kinds of "objects": numbers, names, arrays,
+-- The PDF format defines various kinds of \"objects": numbers, names, arrays,
 -- dictionaries. A PDF document is mostly a tree of these objects (i.e. objects
--- contain other objects), with either direct ("in-place") or indirect
+-- contain other objects), with either direct (\"in-place") or indirect
 -- references.
 --
 -- These objects are saved in the PDF file in a serialized form, often
