@@ -548,7 +548,7 @@ local function pdf_string(str)
     local out = {"<FEFF"}
     for _, c in utf8.codes(str) do
         if c < 0x10000 then
-            out[#out+1] = fmt("%04X", num)
+            out[#out+1] = fmt("%04X", c)
         else
             c = c - 0x10000
             local high = bit32.rshift(c, 10) + 0xD800
