@@ -1,26 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2021-02-08>} % preloaded in format
-
-   \_doc -----------------------------
-   \`\_hexprint` is a command defined in Lua, that scans a number and expands
-   to its UTF-16 Big Endian encoded form for use in PDF hexadecimal strings.
-   \_cod -----------------------------
-
-\bgroup
-\_catcode`\%=12
-\_gdef\_hexprint{\_directlua{
-   local num = token.scan_int()
-   if num < 0x10000 then
-      tex.print(string.format("%04X", num))
-   else
-      num = num - 0x10000
-      local high = bit32.rshift(num, 10) + 0xD800
-      local low = bit32.band(num, 0x3FF) + 0xDC00
-      tex.print(string.format("%04X%04X", high, low))
-   end
-}}
-\egroup
+\_codedecl \pdfunidef {PDFunicode strings for outlines <2024-12-18>} % preloaded in format
 
    \_doc -----------------------------
    \`\pdfunidef``\macro{<text>}` defines `\macro` as <text> converted to
@@ -33,9 +13,7 @@
    according to current values on selected macros from `\_regoul`. Then
    \`\_removeoutmath` converts `..$x^2$..` to `..x^2..`, i.e removes dollars.
    Then \`\_removeoutbraces` converts `..{x}..` to `..x..`.
-   Finally, the <text> is detokenized, spaces are preprocessed using \^`\replstring`
-   and then the \`\_pdfunidefB` is repeated on each character. It calls the
-   `\directlua` chunk to print hexadecimal numbers in the macro \^`\_hexprint`.\nl
+   Finally, the <text> is detokenized, and \^`\pdfstring` is applied.\nl
    Characters for quotes (and separators for quotes) are activated by first
    `\_scatextokens` and they are defined as the same non-active characters.
    But `\_regoul` can change this definition.
@@ -54,20 +32,10 @@
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutmath   #1$\_fin$}%  $x$ -> x
       \_ea\_edef \_ea#1\_ea{\_ea\_removeoutbraces #1{\_fin}}%  {x} -> x
       \_edef#1{\_detokenize\_ea{#1}}%
-      \_replstring#1{ }{{ }}%  text text -> text{ }text
-      \_catcode`\\=12 \_let\\=\_bslash
-      \_edef\_out{<FEFF}
-      \_ea\_pdfunidefB#1^%  text -> \_out in octal
       \_ea
    \_endgroup
-   \_ea\_def\_ea#1\_ea{\_out>}
+   \_ea\_edef\_ea#1\_ea{\_pdfstring\_ea{#1}}
 }
-\_def\_pdfunidefB#1{%
-   \_ifx^#1\_else
-      \_edef\_out{\_out \_hexprint `#1}
-   \_ea\_pdfunidefB \_fi
-}
-
 \_def\_removeoutbraces #1#{#1\_removeoutbracesA}
 \_def\_removeoutbracesA #1{\_ifx\_fin#1\_else #1\_ea\_removeoutbraces\_fi}
 \_def\_removeoutmath #1$#2${#1\_ifx\_fin#2\_else #2\_ea\_removeoutmath\_fi}
@@ -123,8 +91,10 @@ unicode character is then encoded in one or two byte pairs. The example string
 corresponds to the text \"Cvičení je zátěž a ${\rm x} ∈ 𝕄$". Notice the 4 bytes
 for the last character, $𝕄$. (Even the whitespace would be OK in a PDF file,
 because it should be ignored by PDF viewers, but \LuaTeX\ doesn't allow it.)
+This conversion is done by the expandable \"pseudoprimitive " \^`\pdfstring`.
 
 \_endinput
 
+2024-12-18 \_pdfhexstring removed, used \_pdfstring.
 2021-02-08 \_octalprint -> \_hexprint
 2020-03-12 Released

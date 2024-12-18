@@ -528,7 +528,7 @@ end, "_tracingmacros")
 -- A reference for the serialization is the \"Syntax" section of the PDF
 -- specification\fnote{\url{https://opensource.adobe.com/dc-acrobat-sdk-docs/pdfstandards/PDF32000_2008.pdf}}.
 --
--- \`\_pdfname``{<name>}` serializes a \"PDF name" to bytes.
+-- \`\pdfname``{<name>}` serializes a \"PDF name" to bytes.
 local function name_escape(char)
     return fmt("#%02X", char:byte())
 end
@@ -543,7 +543,7 @@ define_lua_command("_pdfname", function()
     tex_print(-2, pdf_name(token.scan_string()))
 end)
 --
--- \`\_pdfstring``{<string>}` serializes a PDF string to bytes.
+-- \`\pdfstring``{<string>}` serializes a PDF string to bytes.
 local function pdf_string(str)
     local out = {"<FEFF"}
     for _, c in utf8.codes(str) do
@@ -583,6 +583,8 @@ local function pdf_dict(t)
     return setmetatable(t or {}, pdfdict_mt)
 end
 optex.pdf_dict = pdf_dict
+--
+tex.print ("\\_public \\pdfname \\pdfstring ;")
 --
 -- \medskip\secc[lua-pdf-resources] Management of PDF page resources^^M
 --
@@ -843,6 +845,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2024-12-18 \pdfstring etc. introduced
    -- 2024-09-06 raw_ht() implemented
    -- 2024-06-02 more checking in add_to_callback and remove_from_callback
    -- 2024-02-18 \_beglocalcontrol added
