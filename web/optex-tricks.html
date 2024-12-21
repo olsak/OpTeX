@@ -7497,7 +7497,7 @@ The implementation:
 }
 </pre>
 
-<p>The \mathinexpr declarator runs \directlua{abs=mat.abs acos=math.acos ...
+<p>The \mathinexpr declarator runs \directlua{abs=math.abs acos=math.acos ...
 ult=math.ult}.
 It means that it introduces abs, acos, etc. names in global name space. Then
 they can be used without the "math." prefix in all Lua expressions. I.e. in setting

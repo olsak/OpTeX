@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2024-11-19>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2024-12-21>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -502,7 +502,7 @@
    \_cod -----------------------------
 
 \_def\_math{\_mathsurround\_zo}
-\_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0=by2 \_mkern\_muskip0
+\_protected\_def\_skew #1#2#3{{\_muskip0=#1mu\_divide\_muskip0by2 \_mkern\_muskip0
     #2{\_mkern-\_muskip0{#3}\_mkern\_muskip0}\_mkern-\_muskip0}{}}
 \_protected\_def\_overrightarrow #1{\_vbox{\_math\_ialign{##\_crcr
       \_rightarrowfill\_crcr\_noalign{\_kern-.1em \_nointerlineskip}
@@ -1112,6 +1112,7 @@
 
 \_endcode %---------------------------------------------------
 
+2024-12-21 \skew macro: bug fixed
 2024-11-19 \typosize used fo Uni-fonts in \mathbox in order to respect their sizes
 2024-06-02 don't apply \mathsbon twice
 2023-05-24 \matsbon: "local num" added
