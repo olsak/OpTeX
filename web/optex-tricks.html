@@ -163,6 +163,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#avert">Vertical bars and more math shortcuts</a>
     <li><a href="#bigp">Controlled sizes of parentheses</a>
     <li><a href="#scriptspacing">More spaces in script style around rel, bin</a>
+    <li><a href="#logix">More characters from logix package</a>
 </ul>
 
 <li>Tables
@@ -2875,6 +2876,67 @@ use \load[math].
 
 
 <p CLASS=datum>(0095) -- P. O. 2022-11-12<p>
+<hr>
+
+<h2><a name="logix"></a>More characters from logix package</h2>
+
+<p>The LaTeX logix package provides logix.otf font with thousands new
+supplemental symbols; their TeX names are listed in the logix.pdf documentation.
+We can load the LaTeX logix.sty macro file in order to enable these
+characters in OpTeX. Because logix.sty is supposed for LaTeX only, we
+need to do a little trick:
+
+<pre>
+\fontfam[lm] % or \fontfam[xits] or something similar, Unicode-math must be loaded
+\addUmathfont \symLogix {[logix]}{} {}{} {}  % logix.otf is loaded here
+\begingroup
+   \def\newcommand #1{\isnextchar[{\newcommandA#1}{\newcommandA#1[0] }}
+   \def\newcommandA #1[#2] {\long\protected\ea\gdef\ea#1\expanded{%
+      \ifcase#2 \or##1\or##1##2\or##1##2##3\fi}}
+   \let\NewNegationCommand=\_negationof
+   \long\def\skipfirstlogix #1\newcommand\lgx{\newcommand\lgx}
+   \let\def=\gdef
+   \ea \skipfirstlogix \input logix.sty   % loading logix.sty from LaTeX
+\endgroup
+\let\ensuremath=\useit % LuaTeX prints \Umathchar in text mode too
+\def\lgbox#1#2{\setbox0=\hbox{\lgx{#2}}\ht0=#1em \dp0=.238em \box0 }
+\def\lgk{\lgbox{.762}} \def\lge{\lgbox{.512}} \def\lgf{\lgbox{.262}} \def\lgq{\lgbox{.012}}
+\def\lgv#1{\setbox0=\hbox{\raise.433em\hbox{\lgx{#1}}}\ht0=.762em \dp0=.238em \box0 }
+\def\KntVs#1{\leavevmode\lower.238\vbox to#1em{}} % vertical struts
+\def\KntNZ{\KntVs{1}} \def\KntEZ{\KntVs{.75}} \def\KntNZ{\KntVs{.5}} \def\KntNZ{\KntVs{.25}}
+\def\KntHs#1{\leavevmode\hbox to#1em{}} % horizontal struts
+\def\KntZN{\KntHs{1}} \def\KntZE{\KntHs{.75}} \def\KntZF{\KntHs{.5}} \def\KntZQ{\KntHs{.25}}
+\def\KntZZ{\leavevmode\null}
+</pre>
+
+<p>The logix.sty file is read from the line 327 and the \newcommand macro is
+defined temporarily when the logic.sty file is read. The beginning of this
+file (where the LaTeX environments are defined) is skipped, only character
+names are loaded (from line 327 to the end of the file, line 3018).
+
+<p>Ater the logix.sty file is read by the code above, you can use the
+characters from the logix.otf font:
+
+<pre>
+$\FacNec\FacPos\FacNext\FacFutr\FacPast\FacCont$ % several symbols
+\FruP % bold fraktur P
+$\symCli{abAB012}$ % bold calligrahic abAB012
+$$ \OpnDblParnS 1\over 2 +{3\over4} \ClsDblParnS $$ % special delimiters
+$$ \OpnDblParnL $$ % big delimiter
+</pre>
+
+<p>The knot symbols from the example of the logix documentation
+(page 3) can be printed by
+
+<pre>
+\vbox{\offinterlineskip\halign{#\cr
+  \KntLFC  \KntTSN     \KntHXSOSU  \KntTSFN        \KntTRSC \cr
+  \KntNF   \KntHXSUSO  \KntNN      \KntRQC \KntNQ  \KntRSN  \cr
+  \KntLFC  \KntBSN     \KntHXSOSU  \KntBSFN        \KntRBSC \cr
+}}
+</pre>
+
+<p CLASS=datum>(0160) -- P. O. 2025-01-09<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
