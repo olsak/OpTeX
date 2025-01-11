@@ -415,17 +415,15 @@ function callback.call_callback(name, ...)
 
     local head = (...)
     local new_head
-    local changed = false
     for _, fn in iter(functions) do
         new_head = fn(head, select(2, ...))
         if new_head == false then
             return false
         elseif new_head ~= true then
             head = new_head
-            changed = true
         end
     end
-    return not changed or head
+    return head
 end
 call_callback = callback.call_callback
 --
