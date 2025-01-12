@@ -446,7 +446,7 @@ callback_register("mlist_to_hlist", function(head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
-    elseif new_head ~= true then
+    else
         head = new_head
     end
     -- mlist_to_hlist means either added functions or standard luatex behavior
@@ -457,10 +457,8 @@ callback_register("mlist_to_hlist", function(head, ...)
     if new_head == false then
         node.flush_list(head)
         return nil
-    elseif new_head ~= true then
-        head = new_head
     end
-    return head
+    return new_head
 end)
 --
 -- For preprocessing boxes just before shipout we define custom callback. This
