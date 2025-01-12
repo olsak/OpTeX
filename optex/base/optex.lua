@@ -267,7 +267,7 @@ function callback.create_callback(name, cbtype, default)
         err("cannot create callback '%s' - it already exists", name)
     elseif not valid_callback_types[cbtype] then
         err("cannot create callback '%s' with invalid callback type '%s'", name, cbtype)
-    elseif ctype == "exclusive" and not default then
+    elseif cbtype == "exclusive" and not default then
         err("unable to create exclusive callback '%s', default function is required", name)
     end
 
@@ -306,10 +306,15 @@ function callback.add_to_callback(name, fn, description)
         err("missing description when adding a callback to '%s'", name)
     end
 
-    for _, desc in ipairs(callback_description[name] or {}) do
+    local prev_descriptions = callback_description[name] or {}
+    for _, desc in ipairs(prev_descriptions) do
         if desc == description then
             err("for callback '%s' there already is '%s' added", name, description)
         end
+    end
+
+    if callback_types[name] == "exclusive" and #prev_descriptions == 1 then
+        err("can't register '%s' as callback '%s' - exclusive callback occupied by '%s'", description, name, prev_descriptions[1])
     end
 
     if type(fn) ~= "function" then
