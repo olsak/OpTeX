@@ -520,31 +520,24 @@
 
 \_newcount \.finalitalcorr
 \_directlua{
-   function math.final_ital_corr(head, style)
-        if style=="text" and tex.count.\_pkglabel _finalitalcorr>0 then
-            for n in node.traverse(head) do
-                if n.next == nil and n.id == 29 then % last is glyph
-                    local k = font.fonts[n.font].characters[n.char].italic
-                    if not(k==nil) and (k>0) then
-                        local kn = node.new("kern")
-                        kn.kern = k kn.subtype = 3
-                        node.insert_after(head, n, kn) % kern node is inserted
-                    end
-                end
-            end
+define_lua_command("\_pkglabel _enablefic", function()
+    lua.get_functions_table()[optex.registernumber("\_pkglabel _enablefic")] = function() % add the function to the callback only once
+        return tex.setcount("\_pkglabel _finalitalcorr", 1)
+    end
+    tex.setcount("\_pkglabel _finalitalcorr", 1)
+    luatexbase.add_to_callback("post_mlist_to_hlist_filter", function(head, style)
+        if style~="text" or tex.count.\_pkglabel _finalitalcorr<=0 then
+            return true
         end
+        local last = node.tail(head)
+        if last.id ~= node.id("glyph") then return true end % last is glyph
+        local k = font.fonts[last.font].characters[last.char].italic
+        if not k or k<=0 then return true end
+        local kn = node.new("kern", 3)
+        kn.kern = k
+        head = node.insert_after(head, n, kn) % kern node is inserted
         return head
-   end
-}
-\_def\.enablefic {\_directlua{ % math.final_ital_corr is registered to mlist_to_hlist
-   luatexbase.add_to_callback("mlist_to_hlist",
-       function(head, style, penalties)
-           head = node.mlist_to_hlist(head, style, penalties)
-           return math.final_ital_corr(head, style)
-       end, "italcorr after math")
-   }
-   \.finalitalcorr=1
-}
+    end, "italcorr after math") end)}
 \_nspublic \enablefic \finalitalcorr ;
 
 \_endnamespace
