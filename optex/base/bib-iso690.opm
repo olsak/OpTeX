@@ -611,7 +611,7 @@ Example:
 
 \begtt
 year   = 2000,
-option = "yearpint:{© 2000}",
+option = "yearprint:{© 2000}",
 \endtt
 Output:  © 2000,  sorted by:  2000.
 
@@ -647,20 +647,20 @@ Dostupné z: \url{http://petr.olsak.net/opmac.html}.
 
 If the `urlalso` option is used, then the added text has the form
 \"Available also from" or \"Dostupné také z:" (if `cs` language is
-current).
+in use).
 
 
 \seccc The citedate field
 
 This is the citation date. The field must be in the form year/month/day. It
 means, that the two slashes must be written here. The output depends on the
-current language. Example:
+selected language. Example:
 
 \begtt
 citedate = "2004/05/21",
 \endtt
-Output when `en` is current:    [cit. 2004-05-21].\nl
-Output when `cs` is current:    [vid. 21.~5.~2004].
+Output when `en` is used:    [cit. 2004-05-21].\nl
+Output when `cs` is used:    [vid. 21.~5.~2004].
 
 
 \seccc The howpublished field
