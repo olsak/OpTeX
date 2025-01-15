@@ -314,7 +314,8 @@ function callback.add_to_callback(name, fn, description)
     end
 
     if callback_types[name] == "exclusive" and #prev_descriptions == 1 then
-        err("can't register '%s' as callback '%s' - exclusive callback occupied by '%s'", description, name, prev_descriptions[1])
+        err("can't register '%s' as callback '%s' - exclusive callback occupied by '%s'",
+            description, name, prev_descriptions[1])
     end
 
     if type(fn) ~= "function" then

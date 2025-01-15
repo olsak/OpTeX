@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.16, 2024-10-17}
+\_def\_math_version {0.18, 2025-01-15}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -521,7 +521,8 @@
 \_newcount \.finalitalcorr
 \_directlua{
 define_lua_command("\_pkglabel _enablefic", function()
-    lua.get_functions_table()[optex.registernumber("\_pkglabel _enablefic")] = function() % add the function to the callback only once
+    lua.get_functions_table()[optex.registernumber("\_pkglabel _enablefic")] = function() 
+        % add the function to the callback only once
         return tex.setcount("\_pkglabel _finalitalcorr", 1)
     end
     tex.setcount("\_pkglabel _finalitalcorr", 1)
@@ -1125,6 +1126,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.18  2025-01-15  \enablefic modifired
 0.17  2024-12-04  \mathsetup instead \mathset, \.unionly modified
 0.16  2024-10-17  \mathclap, etc.  corrected.
 0.15  2024-04-28  \_ as interval prefix added.
