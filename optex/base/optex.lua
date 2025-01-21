@@ -843,7 +843,7 @@ end
 -- expand processor level despite the fact that `<tokens>` processes unexpandable commands.
 
 define_lua_command("_beglocalcontrol", function()
-	return tex.runtoks(token.get_next, true)
+	return tex.runtoks(token.get_next)
 end)
 
    -- History:
