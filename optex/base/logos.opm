@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \TeX {Logos TeX, LuaTeX, etc. <2024-02-12>} % preloaded in format
+\_codedecl \TeX {Logos TeX, LuaTeX, etc. <2025-01-22>} % preloaded in format
 
    \_doc ----------------------------
    Despite plain \TeX/ each macro for logos ends by \`\ignoreslash`.
@@ -13,12 +13,13 @@
 \_protected\_def \_TeX {T\_kern-.1667em\_lower.5ex\_hbox{E}\_kern-.125emX\_ignoreslash}
 \_protected\_def \_OpTeX {Op\_kern-.1em\_TeX}
 \_protected\_def \_LuaTeX {Lua\_TeX}
+\_protected\_def \_LuaHBTeX {Lua{\_setfontsize{mag.9}\_resizethefont HB}\_TeX}
 \_protected\_def \_XeTeX {X\_kern-.125em\_phantom E%
    \_pdfsave\_rlap{\_pdfscale{-1}{1}\_lower.5ex\_hbox{E}}\_pdfrestore \_kern-.1667em \_TeX}
 
 \_def\_ignoreslash {\_isnextchar/\_ignoreit{}}
 
-\_public \TeX \OpTeX \LuaTeX \XeTeX \ignoreslash ;
+\_public \TeX \OpTeX \LuaTeX \LuaHBTeX \XeTeX \ignoreslash ;
 
    \_doc ----------------------------
    The  \`\ConTeXt` logo is implemented as in the \ConTeXt/ format itself.
@@ -72,5 +73,6 @@
 
 \_endcode
 
+2025-01-22  LuaHBTeX logo added.
 2024-02-12  ConTeXt logo added.
 2020-02-28  Released.
