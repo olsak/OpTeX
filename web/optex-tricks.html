@@ -165,6 +165,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#bigp">Controlled sizes of parentheses</a>
     <li><a href="#scriptspacing">More spaces in script style around rel, bin</a>
     <li><a href="#logix">More characters from logix package</a>
+    <li><a href="#slantedhat">Slanted \hat accent</a>
 </ul>
 
 <li>Tables
@@ -2974,6 +2975,42 @@ $$ \OpnDblParnL $$ % big delimiter
 </pre>
 
 <p CLASS=datum>(0160) -- P. O. 2025-01-09<p>
+<hr>
+
+<h2><a name="slantedhat"></a>Slanted \hat accent</h2>
+
+<p>Math fonts provide only upright \hat accent unless the base character is
+slanted. Maybe, we want to use slanted hat accent for some aesthetic
+reason (see also <a href="https://tex.stackexchange.com/questions/735821/">this page</a>).
+So, we want to write $\hat a$ and print "a" with slanted hat.
+
+<p>We have to load a second Unicode font with slanted hat and re-define the \hat
+macro in order to use hat character from this font. The example below uses
+termes math font and termes-italic text font for slanted hat. The problem
+is, that this font doesn't provide math tables, so the scriptsize and
+scriptscrptsize doesn't work correctly. If you want to use a character
+with slanted hat in these sizes, you have to write for example
+$x_\mathbox{$\hat&nbsp;a$}$.
+
+<p>The second problem is that the horizontal position is bad because the basic
+math font and the additional font with hat character don't communicate with each
+other about correct horizontal position. We can use \skew macro with a
+default value of horizontal shift. If there are characters for which this
+shift is unsatisfactory then we can define exceptions in macros
+\hat/character. Examples follow. Define these exceptions for all needed
+characters used in your document.
+
+<pre>
+\fontfam[termes]
+\addUmathfont \hatfam {[texgyretermes-italic]}{} {}{} {}
+
+\protected\def\hat#1{\trycs{hat/#1}{\skew6}{\Umathaccent fixed 7 \hatfam "0302 }{#1}}
+\sdef{hat/O}{\skew9}
+\sdef{hat/l}{\skew7}
+\sdef{hat/i}{\skew{7.5}} % etc...
+</pre>
+
+<p CLASS=datum>(0162) -- P. O. 2025-02-02<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
