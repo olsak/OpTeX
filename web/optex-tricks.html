@@ -128,6 +128,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#algolnum">Line numbering in algorithm listings</a>
     <li><a href="#algolalign">Algorithms with aligned comments</a>
     <li><a href="#ttlineref">Verbatim lines referenced in text</a>
+    <li><a href="#verb">In-line verbatim as balanced text</a>
 </ul>
 
 <li>Graphics
@@ -1489,6 +1490,42 @@ forward references too.
 <a href="#algol">OpTeX trick 0078</a>
 
 <p CLASS=datum>(0079) -- P. O. 2022-04-25<p>
+<hr>
+
+<h2><a name="verb"></a>In-line verbatim as balanced text</h2>
+
+<p>OpTeX provides \code{text} in order to print text including special TeX
+characters, but these characters have to be escaped by backslash (see
+section 1.4.7 of OpTeX documentation).
+
+<p>We create \verb{text} macro which prints text in real verbatim mode, so you
+can write for example \verb{\x{a%b}} and \x{a%b} is printed.
+But there are limitations: the text must be balanced, i.e. there must not be
+unpaired { or } in the text. And second limitation: the \verb macro cannot
+be used in a parameter of another (outer) macro.
+
+<p>Note, that \verb cannot be simply implemented by \detokenize primitive, because
+\detokenize{\x{ab}} prints \x&nbsp;{ab} and not \x{ab}
+(\detokenize inserts spaces after control sequences). And
+\detokenize{\x{a%b}} doesn't work at all.
+
+<pre>
+\def\verb{\bgroup \_setverb \catcode`\{=1 \catcode`\}=2 \verbA}
+\def\verbA#1{\tt \replbraces{#1}\egroup}
+
+\def\replbraces#1{\replbr#1{\end}}
+\def\replbr#1#{\unexpanded{#1}\replbrA}
+\def\replbrA#1{\ifx\end#1\empty\else \string{\replbr#1{\end}\string}\ea\replbr\fi}
+</pre>
+
+<p>First, the \_setverb macro sets all special characters as other characters,
+but { and } must keep their special catcodes because we want to scan
+the balanced text to the parameter. When the parameter is printed then
+\replbraces replaces all internal braces { and } to \string{ and \string} in
+order they are normally printed. The \replbraces macro is expandable and it
+can be used in another cases too.
+
+<p CLASS=datum>(0161) -- P. O. 2025-02-02<p>
 <hr>
 
 <p CLASS="lmarg">Graphics</p>

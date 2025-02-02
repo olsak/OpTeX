@@ -324,10 +324,10 @@ not possible simply due to the syntax of fractions (section~\ref[frac]).
 This syntax requires to process all math lists in two steps: the first step
 expands all macros and creates structured data of processed math list. The
 second step reads the output of the first step, switches between math
-styles and creates definitive output. So, macros (working in the first step)
-cannot know the current math
-style because it is set only in the second step. \TeX/ supports the primitive
-\x`\matchchioce``{<D>}{<T>}{<S>}{<SS>}` which prepares four math lists in the
+styles and creates definitive output. Macros are working only in the first step
+and they cannot know the current math
+style because it is set in the second step. \TeX/ supports the primitive
+\x`\mathchoice``{<D>}{<T>}{<S>}{<SS>}` which prepares four math lists in the
 first step and only one of these four lists are used in the second step. We
 can put different macros into each of the four parameters of `\mathchoice`.
 Plain \TeX/ supports the macro \x`\mathpalette` which gives a more comfortable
