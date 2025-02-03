@@ -224,6 +224,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#anodes">Drawing to given nodes</a>
     <li><a href="#tabs">Tabbing macros</a>
     <li><a href="#vardef">Macro with variable number of arguments in braces</a>
+    <li><a href="#stripLR">Removing optional spaces around parameter</a>
     <li><a href="#import">The import package</a>
     <li><a href="#tdnum">Numbers printed in three-digits groups</a>
     <li><a href="#scantok">Expandable token-per-token scanner</a>
@@ -5517,6 +5518,31 @@ is processed.
 </pre>
 
 <p CLASS=datum>(0025) -- Matteo Caoduro. 2020-06-05<p>
+<hr>
+
+<h2><a name="stripLR"></a>Removing optional spaces around parameter</h2>
+
+<p>Sometimes we get a parameter with optional leading and trailing spaces and we
+want to remove them before processing the parameter using an expandable
+macro. Following macros \stripL, \stripR and \stripLR does this work.
+
+<p>\stripL{#1} expands to #1 without leading spaces, \stripR{#1}
+expands to #1 without a trailing space and \stripLR{#1} removes both leading and
+trailing spaces. For example \edef\p{\stripLR{#1}} behaves like \def\p{#1}
+but \p doesn't include leading and trailing spaces. If the #1 includes
+expandable control sequences, they are not expanded. More specific example:
+\edef\p{\stripLR{ this is test~\the\pageno; }} does the same like
+\def\p{this is test~\the\pageno;}.
+
+<pre>
+\def\stripL#1{\unexpanded\ea{\romannumeral-`\.\noexpand #1}}
+\def\stripR#1{\stripRA #1\_fin/ \_fin.}
+\def\stripRA#1 \_fin{\stripRB #1\_fin}
+\def\stripRB#1\_fin#2.{\unexpanded{#1}}
+\def\stripLR#1{\ea\stripR\ea{\romannumeral-`\.\noexpand #1}}
+</pre>
+
+<p CLASS=datum>(0163) -- P. O. 2025-02-03<p>
 <hr>
 
 <h2><a name="import"></a>The import package</h2>
