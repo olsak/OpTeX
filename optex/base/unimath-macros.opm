@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \loadmath {Unicode Math fonts <2023-09-03>} % preloaded in format
+\_codedecl \loadmath {Unicode Math fonts <2025-02-06>} % preloaded in format
 
    \_doc -----------------------------
    \`\loadmath` `<optional-factor> {<Unicode-math font>}` loads the given font. It does:
@@ -61,8 +61,13 @@
    \_doc -----------------------------
    The Unicode version of the \^`\normalmath` and \^`\boldmath` macros
    are defined here as \`\_normalunimath` and \`\_boldunimath` macros.
-   They are using \`\_setunimathdimens` in a similar sense as
-   \^`\_setmathdimens`.
+   The base font \^`\_unimathfont` is loaded to family 1 with `script=math`
+   feature. It is generally used for all variables, digits and math symbols.
+   The same font is loaded to family 2 with `script=DFLT`. It can be used for
+   sequences of letters where we don't want to insert italic correction
+   between them. The default \^`\rm` and \^`\it` macros run \^`\_rmletters` and
+   \^`\_itletters` and they use family 2, so these selectors prohibit italic
+   corrections between letters.
    \nl
    You can combine more fonts if you register them to another
    math families (5, 6, 7, etc.) in the \^`\normalmath` macro.
@@ -70,20 +75,24 @@
    The default value of \^`\_normalunimath` shows a combination of base Unicode-math
    font at family 1 with 8bit Math font at family 4. See definition of `\script` macro where
    `\fam4` is used.
+   The final macro \`\_setunimathdimens` does similar work as \^`\_setmathdimens`.
    \_cod -----------------------------
 
 \_def\_normalunimath{%
     \_setmathfamily 0 \_tenrm             % font for non-math objects in math mode
-    \_loadumathfamily 1 {\_unimathfont}{} % Base font
+    \_loadumathfamily 1 {\_unimathfont}{script=math;} % Base math font
+    \_loadumathfamily 2 {\_unimathfont}{script=DFLT;} % Base font, no italic corr. between letters
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens
 }%
 \_def\_boldunimath{%
     \_setmathfamily 0 \_tenbf             % font for non-math objects in math mode
     \_ifx\_unimathboldfont \_undefined
-       \_loadumathfamily 1 {\_unimathfont}{embolden=1.7;} % Base faked bold
+       \_loadumathfamily 1 {\_unimathfont}{script=math;embolden=1.7;} % Base faked bold
+       \_loadumathfamily 2 {\_unimathfont}{script=DFLT;embolden=1.7;} % Base faked, no italcor.
     \_else
-       \_loadumathfamily 1 {\_unimathboldfont}{} % Base real bold font
+       \_loadumathfamily 1 {\_unimathboldfont}{script=math;} % Base real bold font
+       \_loadumathfamily 2 {\_unimathboldfont}{script=DFLT;} % Base real bold, no italcorr.
     \_fi
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens
@@ -131,7 +140,7 @@
    \_cod -----------------------------
 
 \_def\_umathname#1#2{"#1:\_mfontfeatures#2"}
-\_def\_mfontfeatures{mode=base;script=math;}
+\_def\_mfontfeatures{mode=base;}
 
 \_def\_loadumathfamily{\_afterassignment\_loadumathfamilyA \_chardef\_mfam}
 \_def\_loadumathfamilyA #1#2 {\_mfactor
@@ -160,16 +169,17 @@
    \_else
       \_newfam#1\_relax
       \_sdef{_mfactor:\_the\_numexpr#1\_relax}{#6}%
-      \_global\_aheadto\_normalmath{\_loadumathfamily #1{#2}{#3} }%
+      \_global\_aheadto\_normalmath{\_loadumathfamily #1{#2}{\_addUmathdefault #3} }%
       \_ifx\_relax#4\_relax
-         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#2}{embolden=1.7;} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#2}{\_addUmathdefault embolden=1.7;#3} }%
       \_else
-         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#4}{#5} }%
+         \_global\_aheadto\_boldmath{\_loadumathfamily #1{#4}{\_addUmathdefault #5} }%
       \_fi
       \_normalmath
       \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
    \_fi \_fi
 }
+\_def\_addUmathdefault {script=math;} % default font features when \_addUmathfont is used
 
    \_doc -----------------------------
    The math characters can be given directly (by their Unicode) or by a macro
@@ -345,6 +355,7 @@ the section~\ref[math-macros].
 
 \_endinput
 
+2025-02-06 fam2 introduced: no italic corrections are inserted using fam2
 2023-09-03 mathsize does work (luaotfload v. 3.36 corrected the bug
 2023-08-28 mathsize doesn't work now
 2023-07-03 \loadmath: optional scaling factor introduced

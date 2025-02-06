@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2023-01-17>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2025-02-06>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -67,8 +67,8 @@
 
    \_doc -----------------------------
    The math alphabets are set by
-   \`\_rmvariables`, \`\_bfvariables`, \`\_itvariables`, \`\_bivariables`,
-   \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
+   \`\_rmvariables`, \`\_rmletters`, \`\_bfvariables`, \`\_itvariables`, \`\_itletters`,
+   \`\_bivariables`, \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
    \`\_bfrakvariables`, \`\_bbvariables`,\nl \`\_sansvariables`,
    \`\_bsansvariables`, \`\_isansvariables`, \`\_bisansvariables`,
    \`\_ttvariables`,\nl \`\_itgreek`, \`\_rmgreek,` \`\_bfgreek`, \`\_bigreek`,
@@ -96,8 +96,10 @@
 \_chardef\_ncharttA="1D670   \_chardef\_nchartta="1D68A
 
 \_protected\_def\_rmvariables     {\_umathrange{A-Z}71\_ncharrmA \_umathrange{a-z}71\_ncharrma}
+\_protected\_def\_rmletters       {\_umathrange{A-Z}72\_ncharrmA \_umathrange{a-z}72\_ncharrma}
 \_protected\_def\_bfvariables     {\_umathrange{A-Z}71\_ncharbfA \_umathrange{a-z}71\_ncharbfa}
 \_protected\_def\_itvariables     {\_umathrange{A-Z}71\_ncharitA \_umathrange{a-z}71\_ncharita}
+\_protected\_def\_itletters       {\_umathrange{A-Z}72\_ncharitA \_umathrange{a-z}72\_ncharita}
 \_protected\_def\_bivariables     {\_umathrange{A-Z}71\_ncharbiA \_umathrange{a-z}71\_ncharbia}
 \_protected\_def\_calvariables    {\_umathrange{A-Z}71\_ncharclA \_umathrange{a-z}71\_ncharcla}
 \_protected\_def\_bcalvariables   {\_umathrange{A-Z}71\_ncharbcA \_umathrange{a-z}71\_ncharbca}
@@ -217,8 +219,8 @@
 % For example, you need upright lowercase greek letters, you don't need
 % \bf and \bi behave as sans serif in math, ...
 
-\_protected\_def\_marm {\_inmath{\_rmvariables \_rmdigits}}
-\_protected\_def\_mait {\_inmath{\_itvariables \_itGreek}}
+\_protected\_def\_marm {\_inmath{\_rmletters \_rmdigits}}
+\_protected\_def\_mait {\_inmath{\_itletters \_itGreek}}
 \_protected\_def\_mabf {\_inmath{\_bsansvariables \_bsansgreek \_bsansGreek \_bsansdigits}}
 \_protected\_def\_mabi {\_inmath{\_bisansvariables \_bisansgreek \_bsansGreek \_bsansdigits}}
 \_protected\_def\_matt {\_inmath{\_ttvariables \_ttdigits}}
@@ -560,6 +562,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2025-02-06  \_rmletters, \_itletters introduced
 2023-01-17  \int operators re-implemented
 2023-01-15  \mupalpha, \mupbeta etc. have codes from PUA
 2023-01-15  math control sequences are macros, they expand to math characters
