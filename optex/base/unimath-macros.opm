@@ -63,7 +63,7 @@
    are defined here as \`\_normalunimath` and \`\_boldunimath` macros.
    The base font \^`\_unimathfont` is loaded to family 1 with `script=math`
    feature. It is generally used for all variables, digits and math symbols.
-   The same font is loaded to family 2 with `script=DFLT`. It can be used for
+   The same font is loaded to family 2 with `script=dflt`. It can be used for
    sequences of letters where we don't want to insert italic correction
    between them. The default \^`\rm` and \^`\it` macros run \^`\_rmletters` and
    \^`\_itletters` and they use family 2, so these selectors prohibit italic
@@ -81,7 +81,7 @@
 \_def\_normalunimath{%
     \_setmathfamily 0 \_tenrm             % font for non-math objects in math mode
     \_loadumathfamily 1 {\_unimathfont}{script=math;} % Base math font
-    \_loadumathfamily 2 {\_unimathfont}{script=DFLT;} % Base font, no italic corr. between letters
+    \_loadumathfamily 2 {\_unimathfont}{script=dflt;} % Base font, no italic corr. between letters
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens
 }%
@@ -89,10 +89,10 @@
     \_setmathfamily 0 \_tenbf             % font for non-math objects in math mode
     \_ifx\_unimathboldfont \_undefined
        \_loadumathfamily 1 {\_unimathfont}{script=math;embolden=1.7;} % Base faked bold
-       \_loadumathfamily 2 {\_unimathfont}{script=DFLT;embolden=1.7;} % Base faked, no italcor.
+       \_loadumathfamily 2 {\_unimathfont}{script=dflt;embolden=1.7;} % Base faked, no italcor.
     \_else
        \_loadumathfamily 1 {\_unimathboldfont}{script=math;} % Base real bold font
-       \_loadumathfamily 2 {\_unimathboldfont}{script=DFLT;} % Base real bold, no italcorr.
+       \_loadumathfamily 2 {\_unimathboldfont}{script=dflt;} % Base real bold, no italcorr.
     \_fi
     \_loadmathfamily  4 rsfs              % script
     \_setunimathdimens

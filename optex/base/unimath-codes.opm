@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2025-02-06>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2025-02-07>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -24,23 +24,20 @@
 
 \_newcount\_umathnumA  \_newcount\_umathnumB
 
-\_def\_umathcorr#1#2{\_ea#1\_ea{\_the#2}}
-\_def\_umathprepare#1{\_def\_umathscanholes##1[#1]##2##3\_relax{##2}}
-\_def\_umathvalue#1{\_ea\_umathscanholes\_umathcharholes[#1]{#1}\_relax}
-
-\_def\_umathcharholes{% holes in math alphabets:
+\_def\_umathholes[#1]#2{\_ifx^#1^\_else \_sdef{_mh:#1}{#2}\_ea \_umathholes\_fi}
+\_umathholes % holes in math alphabets:
    [119893]{"210E}[119965]{"212C}[119968]{"2130}[119969]{"2131}%
    [119971]{"210B}[119972]{"2110}[119975]{"2112}[119976]{"2133}[119981]{"211B}%
    [119994]{"212F}[119996]{"210A}[120004]{"2134}%
    [120070]{"212D}[120075]{"210C}[120076]{"2111}[120085]{"211C}[120093]{"2128}%
-   [120122]{"2102}[120127]{"210D}[120133]{"2115}[120135]{"2119}
-   [120136]{"211A}[120137]{"211D}[120145]{"2124}%
-}
+   [120122]{"2102}[120127]{"210D}[120133]{"2115}[120135]{"2119}%
+   [120136]{"211A}[120137]{"211D}[120145]{"2124}[]{}%
+\_let\_umathholes=\_undefined
+
 \_def\_umathrange#1#2#3#4{\_umathnumB=#4\_def\_classfam{#2 #3 }\_umathrangeA#1}
 \_def\_umathrangeA#1-#2{\_umathnumA=`#1\_relax
    \_loop
-      \_umathcorr\_umathprepare\_umathnumB
-      \_Umathcode \_umathnumA = \_classfam \_umathcorr\_umathvalue{\_umathnumB}
+      \_Umathcode \_umathnumA = \_classfam \_trycs{_mh:\_the\_umathnumB}\_umathnumB\_relax
       \_ifnum\_umathnumA<`#2\_relax
          \_advance\_umathnumA by1 \_advance\_umathnumB by1
    \_repeat
@@ -67,8 +64,9 @@
 
    \_doc -----------------------------
    The math alphabets are set by
-   \`\_rmvariables`, \`\_rmletters`, \`\_bfvariables`, \`\_itvariables`, \`\_itletters`,
-   \`\_bivariables`, \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
+   \`\_rmvariables`, \`\_rmletters`, \`\_bfvariables`, \`\_bfletters`,
+   \`\_itvariables`, \`\_itletters`, \`\_bivariables`, \`\_biletters`,
+   \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
    \`\_bfrakvariables`, \`\_bbvariables`,\nl \`\_sansvariables`,
    \`\_bsansvariables`, \`\_isansvariables`, \`\_bisansvariables`,
    \`\_ttvariables`,\nl \`\_itgreek`, \`\_rmgreek,` \`\_bfgreek`, \`\_bigreek`,
@@ -98,9 +96,11 @@
 \_protected\_def\_rmvariables     {\_umathrange{A-Z}71\_ncharrmA \_umathrange{a-z}71\_ncharrma}
 \_protected\_def\_rmletters       {\_umathrange{A-Z}72\_ncharrmA \_umathrange{a-z}72\_ncharrma}
 \_protected\_def\_bfvariables     {\_umathrange{A-Z}71\_ncharbfA \_umathrange{a-z}71\_ncharbfa}
+\_protected\_def\_bfletters       {\_umathrange{A-Z}72\_ncharbfA \_umathrange{a-z}72\_ncharbfa}
 \_protected\_def\_itvariables     {\_umathrange{A-Z}71\_ncharitA \_umathrange{a-z}71\_ncharita}
 \_protected\_def\_itletters       {\_umathrange{A-Z}72\_ncharitA \_umathrange{a-z}72\_ncharita}
 \_protected\_def\_bivariables     {\_umathrange{A-Z}71\_ncharbiA \_umathrange{a-z}71\_ncharbia}
+\_protected\_def\_biletters       {\_umathrange{A-Z}72\_ncharbiA \_umathrange{a-z}72\_ncharbia}
 \_protected\_def\_calvariables    {\_umathrange{A-Z}71\_ncharclA \_umathrange{a-z}71\_ncharcla}
 \_protected\_def\_bcalvariables   {\_umathrange{A-Z}71\_ncharbcA \_umathrange{a-z}71\_ncharbca}
 \_protected\_def\_frakvariables   {\_umathrange{A-Z}71\_ncharfrA \_umathrange{a-z}71\_ncharfra}
@@ -562,6 +562,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2026-02-07  \_umathholes reimplemented
 2025-02-06  \_rmletters, \_itletters introduced
 2023-01-17  \int operators re-implemented
 2023-01-15  \mupalpha, \mupbeta etc. have codes from PUA
