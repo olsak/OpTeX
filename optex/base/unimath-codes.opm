@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2025-02-07>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2025-02-09>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -24,7 +24,8 @@
 
 \_newcount\_umathnumA  \_newcount\_umathnumB
 
-\_def\_umathholes[#1]#2{\_ifx^#1^\_else \_sdef{_mh:#1}{#2}\_ea \_umathholes\_fi}
+\_def\_umathholes[#1]#2{\_ifx^#1^\_else
+   \_ea\_chardef \_csname _mh:#1\_endcsname=#2 \_ea\_umathholes\_fi}
 \_umathholes % holes in math alphabets:
    [119893]{"210E}[119965]{"212C}[119968]{"2130}[119969]{"2131}%
    [119971]{"210B}[119972]{"2110}[119975]{"2112}[119976]{"2133}[119981]{"211B}%
@@ -37,7 +38,7 @@
 \_def\_umathrange#1#2#3#4{\_umathnumB=#4\_def\_classfam{#2 #3 }\_umathrangeA#1}
 \_def\_umathrangeA#1-#2{\_umathnumA=`#1\_relax
    \_loop
-      \_Umathcode \_umathnumA = \_classfam \_trycs{_mh:\_the\_umathnumB}\_umathnumB\_relax
+      \_Umathcode \_umathnumA = \_classfam \_trycs{_mh:\_the\_umathnumB}\_umathnumB
       \_ifnum\_umathnumA<`#2\_relax
          \_advance\_umathnumA by1 \_advance\_umathnumB by1
    \_repeat
@@ -562,6 +563,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2026-02-09  \_umathholes use \_chardef
 2026-02-07  \_umathholes reimplemented
 2025-02-06  \_rmletters, \_itletters introduced
 2023-01-17  \int operators re-implemented
