@@ -65,8 +65,8 @@
 
    \_doc -----------------------------
    The math alphabets are set by
-   \`\_rmvariables`, \`\_rmletters`, \`\_bfvariables`, \`\_bfletters`,
-   \`\_itvariables`, \`\_itletters`, \`\_bivariables`, \`\_biletters`,
+   \`\_rmvariables`, \`\_rmletters`, \`\_bfvariables`, \`\_bfletters`,\nl
+   \`\_itvariables`, \`\_itletters`, \`\_bivariables`, \`\_biletters`,\nl
    \`\_calvariables`, \`\_bcalvariables`, \`\_frakvariables`,
    \`\_bfrakvariables`, \`\_bbvariables`,\nl \`\_sansvariables`,
    \`\_bsansvariables`, \`\_isansvariables`, \`\_bisansvariables`,
