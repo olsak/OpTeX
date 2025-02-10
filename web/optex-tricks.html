@@ -166,6 +166,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#scriptspacing">More spaces in script style around rel, bin</a>
     <li><a href="#logix">More characters from logix package</a>
     <li><a href="#slantedhat">Slanted \hat accent</a>
+    <li><a href="#scalemop">Scaled math operator</a>
 </ul>
 
 <li>Tables
@@ -3012,6 +3013,46 @@ characters used in your document.
 </pre>
 
 <p CLASS=datum>(0162) -- P. O. 2025-02-02<p>
+<hr>
+
+<h2><a name="scalemop"></a>Scaled math operator</h2>
+
+<p>OpTeX provides \transformbox{\pdfscale{factor-x}{factor-y}}{text}
+to create a scaled text. But the scaled text keeps its baseline.
+Now, we create analogical macro \scalemop{factor}{math-text} which scales
+math-text and its math axis is not shifted.
+You can use this macro for scaling math-text (for example a math operator)
+by given factor and its center is not vertically shifted.
+For example \scalemop{1.5}+ prints the plus sign scaled 1.5 times and its
+horizontal rule is at the same height as the unscaled plus sign.
+
+<p>Another example:
+<pre>
+\scalemop{.5}\bullet \scalemop{.8}\bullet \scalemop{1.1}\bullet \scalemop{1.5}\bullet
+</pre>
+<p>This creates a queue of bullets, next one is larger than the previous, all of them
+keeps the math axis.
+
+<p>You can define \def\scalebullet#1{\scalemop{#1}\bullet} and use it in items of
+lists.
+
+<p>The \scalemop macro can be used in text mode or in math mode. In math mode,
+it generates an Ord atom, but you can write (for example)
+\mathbin\scalemop{1.5}+ in order to generate \mathbin atom. You cannot use it
+directly in script and scriptscript sizes; the workaround is \mathbox{\scalemop{1.5}+}.
+
+<p>The implementation:
+
+<pre>
+\def\scalemop#1#2{{\quitvmode\lower\axiscorr{#1}\transformbox{\pdfscale{#1}{#1}}{$#2$}}}
+\def\axiscorr#1{\dimexpr #1\Umathaxis\textstyle-\Umathaxis\textstyle}
+</pre>
+
+<p>The scaled box is lowered by \axiscorr which is f*A - A, where f is scaling
+factor and A is math axis height. This calculation keeps the math axis
+position at the same height.
+
+<p CLASS=datum>(0164) -- P. O. 2025-02-10<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
