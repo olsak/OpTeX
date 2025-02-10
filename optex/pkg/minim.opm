@@ -179,7 +179,7 @@
 
 \_let\shipout\_shipout
 
-\input minim-hooks
+\_isfile{minim-hooks}\_iftrue \_input minim-hooks \_fi
 
 \_catcode`\:=11
 \_let\_shipout\minim:shipout:new
