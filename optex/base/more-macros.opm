@@ -237,17 +237,11 @@
      after scanning by \^`\ea`: without this \TeX/
      removes braces from `<textA>{xxx}<textA>`.
    \enditems
-   The \^`\replstring` macro isn't expandable. But you can define
-   \begtt \hfuzz=4pt
-   \def\ereplstring#1#2#3{\immediateassigned{\def\tmp{#1}\replstring\tmp{#2}{#3}}\tmp}
-   \endtt
-   and then the `\ereplstring{<string>}{<text-A>}{<text-B>}` expands to
-   the modified <string> where all occurrences of <text-A> is replaced by <text-B>.
-   This is possible with \LuaTeX/ 1.20 or newer (from \TeX/live 2025).
-   You can also see
+   The \^`\replstring` macro isn't expandable. But you can see
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#xreplstring]{\OpTeX/ trick 0136}
    and \ulink[http://petr.olsak.net/optex/optex-tricks.html\#replmacro]{\OpTeX/ trick 0137}.
-   It enables more general modifications of macros by regular expressions.
+   These triks implement expandable alternatives and enable more general modifications
+   of macros by regular expressions.
    \_cod -----------------------------
 
    \_doc -----------------------------

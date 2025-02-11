@@ -353,8 +353,8 @@ If \^`\initunifonts` isn't declared then \OpTeX/ uses classical font
 renderer (like in `pdftex`). The extended font renderer implemented in the
 Luaotfload package is started after \^`\initunifonts`.
 
-The \OpTeX/ format uses `luatex` engine by default but
-you can initialize it by `luahbtex` engine too. Then the harfbuzz library is
+The \OpTeX/ format uses `luahbtex` engine by default (from 2025).
+It means that the harfbuzz library is
 ready to use for font rendering as an alternative to built-in font renderer
 from Luaotfload. The harfbuzz library gives more features for rendering
 Indic and Arabic scripts. But it is not used as default, you need to specify
