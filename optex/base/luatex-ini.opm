@@ -96,6 +96,7 @@
 \_protected\_edef\_pdfinclusionerrorlevel {\_pdfvariable inclusionerrorlevel}
 \_protected\_edef\_pdfgentounicode        {\_pdfvariable gentounicode}
 \_protected\_edef\_pdfpagebox             {\_pdfvariable pagebox}
+\_protected\_edef\_pdfmajorversion        {\_pdfvariable majorversion}
 \_protected\_edef\_pdfminorversion        {\_pdfvariable minorversion}
 \_protected\_edef\_pdfuniqueresname       {\_pdfvariable uniqueresname}
 \_protected\_edef\_pdfhorigin             {\_pdfvariable horigin}
@@ -122,11 +123,12 @@
    \pdfobjcompresslevel \pdfdecimaldigits \pdfgamma \pdfimageresolution
    \pdfimageapplygamma \pdfimagegamma \pdfimagehicolor \pdfimageaddfilename
    \pdfpkresolution \pdfinclusioncopyfonts \pdfinclusionerrorlevel
-   \pdfgentounicode \pdfpagebox \pdfminorversion \pdfuniqueresname \pdfhorigin
-   \pdfvorigin \pdflinkmargin \pdfdestmargin \pdfthreadmargin \pdfpagesattr
+   \pdfgentounicode \pdfpagebox \pdfmajorversion \pdfminorversion \pdfuniqueresname
+   \pdfhorigin \pdfvorigin \pdflinkmargin \pdfdestmargin \pdfthreadmargin \pdfpagesattr
    \pdfpageattr \pdfpageresources \pdfxformattr \pdfxformresources \pdfpkmode ;
 
-\_pdfminorversion     = 5
+\_pdfmajorversion     = 1
+\_pdfminorversion     = 7 % was 5, see https://tug.org/pipermail/tex-live/2025-February/
 \_pdfobjcompresslevel = 2
 \_pdfcompresslevel    = 9
 \_pdfdecimaldigits    = 3
@@ -138,5 +140,6 @@ Common pdf\TeX/ primitives equivalents are declared here. Initial values are set
 
 \_endinput
 
+2025-02-11 default \pdfminorversion changed from 5 to 7
 2024-02-29 \pdfrunninglinkoff \pdfrunninglinkon added
 2020-02-21 released
