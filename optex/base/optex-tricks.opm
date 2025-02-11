@@ -283,6 +283,10 @@ define_lua_command('xreplstring', function()
 end,'global') % we want to keep the meanig after group
 }
 
+\_trick 0136 \ereplstring ;
+
+\_def\ereplstring#1#2#3{\_immediateassigned{\_def\.repl{#1}\_replstring\.repl{#2}{#3}}\.repl}
+
 \_trick 0078 0145 0146 \algol \algolkw \algolcap \makeLOA \algolnum \setaca ;
 %%%%%%%%%%%%%%%%%%%%%%
 
@@ -303,7 +307,9 @@ end,'global') % we want to keep the meanig after group
 \:\_def\algol{\_catcode`$=3 %
    \_everymath={\.algolmath}%
    \_def\_ttfont{\_rm}%
-   \_def\var##1{{\_it\_adef _{\_vrule height.4pt width4pt depth0pt\_relax}##1}}
+   \_def\var##1{\_mathbox{\_it\_def\.tmp{##1}\_replstring\.tmp{_}{\.lowline}\.tmp}}
+   \_def\.lowline{\_vrule height.4pt width4pt depth0pt\_relax}
+   \_ifx\_rmvariables\_undefined \_else \_Umathcode`:=3 1 `: \_fi
    \_catcode`\!=13
    \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_protected\_def~##1~}{\algolem{##1}}%
    \_hisyntax{ALG}%

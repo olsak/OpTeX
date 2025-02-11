@@ -1214,7 +1214,9 @@ readable. Or you can use common math control sequences in math mode,
 \def\algol{\catcode`$=3
    \everymath={\algolmath}%
    \def\_ttfont{\rm}%
-   \def\var##1{{\it\adef_{\vrule height.4pt width4pt depth0pt\relax}##1}}
+   \def\var##1{\mathbox{\it\def\tmp{##1}\replstring\tmp{_}{\lowline}\tmp}}
+   \def\lowline{\vrule height.4pt width4pt depth0pt\relax}
+   \ifx\_rmvariables\undefined \else \Umathcode`:=3 1 `: \fi
    \catcode`\!=13
    \bgroup \lccode`\~=`\! \lowercase{\egroup \protected\def~##1~}{\algolem{##1}}%
    \hisyntax{ALG}%
@@ -3031,7 +3033,7 @@ horizontal rule is at the same height as the unscaled plus sign.
 \scalemop{.5}\bullet \scalemop{.8}\bullet \scalemop{1.1}\bullet \scalemop{1.5}\bullet
 </pre>
 <p>This creates a queue of bullets, next one is larger than the previous, all of them
-keeps the math axis.
+keep the math axis.
 
 <p>You can define \def\scalebullet#1{\scalemop{#1}\bullet} and use it in items of
 lists.
@@ -7438,15 +7440,19 @@ by \timerprint because LuaLaTeX initializes many Lua routines (like luaotfload) 
 <h2><a name="xreplstring"></a>Expandable \replstring with more features</h2>
 
 <p CLASS="rmarg">
-autoload:<br>\xreplstring
+autoload:<br>\ereplstring<br>\xreplstring
 </p>
 
-<p>The classical \replstring macro isn't expandable.
-If it is an obstacle for you, then you can use following implementation \xreplstring.
-It behaves like
-\replstring, removes mentioned bug and is based on Lua code.
+<p>The classical \replstring macro isn't expandable. However, we can define
+<pre>
+\def\ereplstring#1#2#3{\immediateassigned{\def\tmp{#1}\replstring\tmp{#2}{#3}}\tmp}
+</pre>
+and then \ereplstring{text}{textA}{textB} expands to modified "text" like
+\replstring\m{textA}{textB} modifies \m. Moreover, \ereplstring is expandable. It works
+from LuaTeX version 1.20 (from TeXlive 2025).
 
-<p>Moreover, \xreplstring adds new features:
+<p>Another alternative is the expandable \xreplstring macro which is based on Lua
+code and gives more features.
 
 <ul>
 <li>The full syntax is
