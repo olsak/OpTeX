@@ -303,13 +303,15 @@ end,'global') % we want to keep the meanig after group
       \_do {\_replthis{\n#1\n}{\z K{#1}}}
 }
 \_def\.algolmath#1${\_catcodetable\_optexcatcodes \_scantextokens{#1}$}
-
+\_def\.addcoloneq{\_ifx\coloneq\_undefined \_else
+   \_mathcode`:="8000 \_adef:{\_isnextchar={\coloneq\_ignoreit}{\_Umathchar 6 1 `: }}\_fi
+}
 \:\_def\algol{\_catcode`$=3 %
    \_everymath={\.algolmath}%
    \_def\_ttfont{\_rm}%
    \_def\var##1{\_mathbox{\_it\_def\.tmp{##1}\_replstring\.tmp{_}{\.lowline}\.tmp}}
-   \_def\.lowline{\_vrule height.4pt width4pt depth0pt\_relax}
-   \_ifx\_rmvariables\_undefined \_else \_Umathcode`:=3 1 `: \_fi
+   \_def\.lowline{\_vrule height.4pt width4pt depth0pt\_relax}%
+   \.addcoloneq
    \_catcode`\!=13
    \_bgroup \_lccode`\~=`\! \_lowercase{\_egroup \_protected\_def~##1~}{\algolem{##1}}%
    \_hisyntax{ALG}%

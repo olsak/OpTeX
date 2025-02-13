@@ -1211,12 +1211,15 @@ readable. Or you can use common math control sequences in math mode,
       \do {\replthis{\n#1\n}{\z K{#1}}}
 }
 \def\algolmath#1${\catcodetable\_optexcatcodes \scantextokens{#1}$}
+\def\addcoloneq{\ifx\coloneq\undefined \else
+   \mathcode`:="8000 \adef:{\isnextchar={\coloneq\ignoreit}{\Umathchar 6 1 `: }}\fi
+}
 \def\algol{\catcode`$=3
    \everymath={\algolmath}%
    \def\_ttfont{\rm}%
-   \def\var##1{\mathbox{\it\def\tmp{##1}\replstring\tmp{_}{\lowline}\tmp}}
-   \def\lowline{\vrule height.4pt width4pt depth0pt\relax}
-   \ifx\_rmvariables\undefined \else \Umathcode`:=3 1 `: \fi
+   \def\var##1{\mathbox{\it\def\tmp{##1}\replstring\tmp{_}{\lowline}\tmp}}%
+   \def\lowline{\vrule height.4pt width4pt depth0pt\relax}%
+   \addcoloneq      %  := is transformed to \coloneq
    \catcode`\!=13
    \bgroup \lccode`\~=`\! \lowercase{\egroup \protected\def~##1~}{\algolem{##1}}%
    \hisyntax{ALG}%
