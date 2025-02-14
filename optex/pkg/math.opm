@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.18, 2025-01-15}
+\_def\_math_version {0.19, 2025-02-14}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -414,7 +414,7 @@
 }
 \_def\.textvariables {\.unionly\textvariables {%
    \.textmathini \_mathcodes 6 {7{\_Urange a-z \_Urange A-Z}}%
-   \_addto\_marm {\_fam5 }\_addto\_mait{\_fam6 }%
+   \_def\_marm {\_fam5 }\_def\_mait{\_itGreek \_fam6 }%
    \_protected\_def\_itgreek    {\_umathrangegreek01\_greekita}%
    \_protected\_def\_rmgreek    {\_umathrangegreek01\_greekrma}%
    \_protected\_def\_itGreek    {\_umathrangeGREEK01\_greekitA}
@@ -431,6 +431,44 @@
    ##1 {\_trycs{_math_text##1}{\_opwarning{text option: "##1" unknown}}}}
 
 \_nspublic \textvariables \textdigits \textmoremath ;
+
+   \_doc
+   \`\mathselector` `\sequence {<fontspec-A>} {<fontspec-B>} {<factor>} {<ffeatures>}`
+   declares `\sequence` as a new math selector of the math family `\sequence_fam`.
+   If such family is declared already then new setting is ignored.
+   The font is set by \o`\fontdef` and then its name without size clause and without font features
+   is saved to `\.mselF` using `\.mselA`. The line
+   `\_loadmathfamily <fam> {{<fontname>:<ffeatures>}}` is saved to \o`\_normalmath`
+   and analogical line is saved to \o`\_boldmath`.
+   Finally, if `\_maselector` exists (this is cause of `\_marm`, `\_mait`, etc.),\ then this
+   macro is re-defined else `\selector` is defined. It guarantees that the re-declaration of
+   `\rm`, `\it`, etc.\ affects their behavior only in math mode.
+   \_cod
+
+\_def\.mathselector #1#2#3#4#5{\.unionly\mathselector{%
+   \_ifcsname \_csstring#1_fam\_endcsname
+      \_opwarning{\_string#1 already defined as \_string\mathselector, ignored}%
+   \_else
+      \_ea\_newfam \_csname \_csstring#1_fam\_endcsname
+      \_ifx^#4^\_else \_sxdef{_mfactor:\_the\_numexpr\_cs{\_csstring#1_fam}}{#4}\_fi
+      \_ifx^#5^\_def\.mselFF{mode=base;script=latn}\_else \_def\.mselFF{#5}\_fi
+      \_fontdef\.mselF{#2}\_ea\.mselA \_fontname\.mselF :\_relax
+      \_edef\.tmp{\_noexpand \_loadmathfamily \_cs{\_csstring#1_fam}{{\.mselF:\.mselFF;}} }%
+      \_global \_ea\_aheadto \_ea\_normalmath \_ea{\.tmp}%
+      \_normalmath
+      \_ifx^#3^\_addto\.mselFF{;embolden=1.7}%
+      \_else \_fontdef\.mselF{#3}\_ea\.mselA \_fontname\.mselF :\_relax \_fi
+      \_edef\.tmp{\_noexpand \_loadmathfamily \_cs{\_csstring#1_fam}{{\.mselF:\.mselFF;}} }%
+      \_global \_ea\_aheadto \_ea\_boldmath \_ea{\.tmp}%
+      \_ifcsname _ma\_csstring#1\_endcsname
+         \_ea\.mselB \_csname _ma\_csstring#1\_ea\_endcsname \_csname \_csstring#1_fam\_endcsname
+      \_else \_ea\.mselB \_ea#1\_csname \_csstring#1_fam\_endcsname
+   \_fi\_fi
+}}
+\_def\.mselA #1:#2\_relax{\_def\.mselF{#1}}
+\_def\.mselB #1#2{\_gdef#1{\_inmath{\_rmvariables \_rmdigits \_rmgreek \_rmGreek \_fam#2}}}
+
+\_nspublic \mathselector ;
 
    \_doc
    \`\replacemissingchars``<family>` defines `\UnicodeMathSymbol` and reads
@@ -570,6 +608,7 @@ The following macros are defined in this package:
 * \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
   enables characters from used text font in math mode
   (variables, digits, more characters).
+* \~`\mathselector` declares a new math alphabet using text fonts.
 * \~`\replacemissingchars` allows to re-declare all characters missing in math font
   for printing them from additional math font.
 * \~`\enablefic` enables final italic correction of inline-math lists.
@@ -955,6 +994,81 @@ The package provides the option `text={<list of words>}`, each <word> from the
 described above. For example `\mathsetup{text=digits variables}` is equal to the
 declaration of `\textdigits` `\textvariables`.
 
+\sec Adding a new math alphabet from a text font
+
+Each individual Unicode math font includes several math alphabets together: default
+italic shape and others, which can be selected by `\rm`, `\it`, `\bf`,
+`\bi`, `\tt`, `\cal`, `\frak`, `\bbchar` in math mode. For example, if you
+use `\frak` in math mode, the fracture shapes from loaded Unicode math font are
+used.
+
+If you have a text font with a special alphabet, you can use it in your math formulas
+by a new math selector declared by the \~`\mathselector` macro. For example:
+
+\begtt
+\fontfam[lm]
+\load[math]
+\font\missaali=[Missaali-Regular] % Bold fraktur
+\mathselector \bfrak {\missaali} {\missaali} {} {}
+
+Test: $a = {\frak A}, b = {\bfrak A}_{\bfrak C}$.
+\endtt
+This example declares a new math selector `\bfrak`. When `\bfrak` is used in math mode,
+then the letters are rendered from `Missali-Regular.otf` font.
+
+\^`\mathselector` `\sequence {<fontspec-A>} {<fontspec-B>} {<factor>} {<ffeatures>}`
+declares a new font selector `\sequence` which can be used in math mode.
+This selector selects a text font given by <fontspec-A> in normal math mode
+and by <fontspec-B> in `\boldmath`.
+If <fontspec-B> is empty then faked bold font declared by <fontspec-A>
+is used for `\boldmath`. <fontspec-A> cannot be empty.
+
+The <fontspec-A> and <fontspec-B> declare text fonts. They can be:
+\begitems
+* a font switch deflared by the `\font` primitive,
+* an optional family selector followed by optional font modifiers
+  followed by a variant selector.
+  The actual font selected by this rule is configured as math selector.
+\enditems
+
+The <factor> parameter gives correction scaling factor according to the size
+of the main Unicode math font. If it is empty then factor 1 is assumed.
+
+The <ffeatures> parameter enables you to give font features used for loading
+given fonts. If it is empty, then default font features
+`mode=base;script=latn;` are used.
+
+\^`\mathselector` `\sequence` declares internally a new math family with
+the name `\sequence_fam`. The `\sequence` selector switches to this
+family. So, the declared text fonts work in all math sizes but only for math
+alphabets, Greek letters and digits, because other math symbols (+, =, etc.) are
+bounded (by default) to the fixed math family 1 where Unicode math font is loaded.
+
+Other example:
+\begtt
+\fontfam[lm]
+\mathselector \textit {\it} {\bi} {} {}
+   $AVA$         -- default italic variables from math font.\par
+   $\it AVA$     -- default italic letters from math font.\par
+   $\textit AVA$ -- italic letters from text font.
+\endtt
+You will probably see no difference between these three examples. Where is
+the difference? `$AVA$` uses italic shapes from the
+Unicode math font, `script=math` is specified. Italic corrections between
+characters are inserted. `$\it AVA$` uses the same shapes from the same math font,
+but `script=latn`. This disables italic corrections between
+characters and enables kerning and ligatures. But typical Unicode math font
+doesn't include tables for kerning and ligatures. So, these features
+typically don't work. Finally `$\textit AVA$` uses shapes from text font like
+`{\it ABC}` in text mode. If the font has data for kerning and ligatures
+(which is probably true) then you get this feature in math formulas.
+
+When you re-declare `\rm`, `\it`, `bf`, `\bi` or `\tt` by the `\mathselector` macro,
+then these selectors keep their meaning used in text mode but re-define
+their behavior in math mode according to the declaration. For example
+`\mathselector \it {\it} {\bi} {} {}` declares new behavior of `\it` in math mode
+but `\it` is unchanged in text mode.
+
 
 \sec Replacing all missing math characters from another font
 
@@ -1126,7 +1240,8 @@ The user can read this warning and declare the macro after
 
 \endinput
 
-0.18  2025-01-15  \enablefic modifired
+0.19  2025-02-14  \mathselector introduced.
+0.18  2025-01-15  \enablefic modifired.
 0.17  2024-12-04  \mathsetup instead \mathset, \.unionly modified
 0.16  2024-10-17  \mathclap, etc.  corrected.
 0.15  2024-04-28  \_ as interval prefix added.
