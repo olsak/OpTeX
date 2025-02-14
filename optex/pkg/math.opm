@@ -440,9 +440,10 @@
    is saved to `\.mselF` using `\.mselA`. The line
    `\_loadmathfamily <fam> {{<fontname>:<ffeatures>}}` is saved to \o`\_normalmath`
    and analogical line is saved to \o`\_boldmath`.
-   Finally, if `\_maselector` exists (this is cause of `\_marm`, `\_mait`, etc.),\ then this
-   macro is re-defined else `\selector` is defined. It guarantees that the re-declaration of
-   `\rm`, `\it`, etc.\ affects their behavior only in math mode.
+   Finally, if the declared `\sequence` is in `\rm`,`\it`,`\bf`,`\bi`,`\tt` then
+   `\_marm`, `\_mait`, etc.\ is defined else `\sequence` is defined.
+   It guarantees that the re-declaration of `\rm`, `\it`, etc.\ affects their
+   behavior only in math mode.
    \_cod
 
 \_def\.mathselector #1#2#3#4#5{\.unionly\mathselector{%
@@ -460,7 +461,7 @@
       \_else \_fontdef\.mselF{#3}\_ea\.mselA \_fontname\.mselF :\_relax \_fi
       \_edef\.tmp{\_noexpand \_loadmathfamily \_cs{\_csstring#1_fam}{{\.mselF:\.mselFF;}} }%
       \_global \_ea\_aheadto \_ea\_boldmath \_ea{\.tmp}%
-      \_ifcsname _ma\_csstring#1\_endcsname
+      \_isinlist{\rm\it\bf\bi\tt}#1\_iftrue
          \_ea\.mselB \_csname _ma\_csstring#1\_ea\_endcsname \_csname \_csstring#1_fam\_endcsname
       \_else \_ea\.mselB \_ea#1\_csname \_csstring#1_fam\_endcsname
    \_fi\_fi
