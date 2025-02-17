@@ -1,0 +1,33 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Alegreya] \Alegreya {Humanist serif and sans serif family}
+        {\medium \bolder \caps} {\rm \bf \it \bi} {}
+        {[Alegreya-Regular]}
+        {\_def\_fontnamegen {[Alegreya\_sansV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps^^J
+ \sans ...... sans serif^^J
+ \normal .... \rm Regular, \bf Bold, \it Italic, \bi BoldItalic^^J
+ \medium .... \rm Medium, \bf ExtraBold, \it MediumItalic, \bi ExtraBoldItalic^^J
+ \bolder .... \rm Bold, \bf Black, \it BoldItalic, \bi BlackItalic^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},sans={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \medium   {\_fvars Medium ExtraBold MediumItalic ExtraBoldItalic }
+\_moddef \bolder   {\_fvars Bold Black BoldItalic BlackItalic }
+\_moddef \sans     {\_fsetV sans=Sans }
+\_moddef \normal   {\_fvars Regular Bold Italic BoldItalic }
+
+
+\_initfontfamily % new font family must be initialized
+
+%\_loadmath {[texgyretermes-math]}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

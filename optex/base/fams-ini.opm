@@ -134,6 +134,14 @@
      \caps: {\rm\bf\it\bi} }
 \_famalias [Antykwa Poltawskiego] \_famalias [Poltawskiego] \_famalias [APoltawskiego]
 
+\_famfrom {Juan Pablo del Peral, www.huertatipografica.com}
+
+\_faminfo [Alegreya] {Humanist serif and sans serif family} {f-alegreya}
+   { -: {\rm\bf\it\bi} \medium: {\rm\bf\it\bi} \bolder: {\bf\bi}
+    \caps: {\rm\bf\it\bi} \caps\medium: {\rm\bf\it\bi} \caps\bolder: {\bf\bi}
+    \sans: {\rm\bf\it\bi} \sans\medium: {\rm\bf\it\bi} \sans\bolder: {\bf\bi}
+    \caps\sans: {\rm\bf\it\bi} \caps\sans\medium: {\rm\bf\it\bi} \caps\sans\bolder: {\bf\bi} }
+
 \_famfrom {Michael Sharpe}
 \_faminfo [Baskerville] {Free variants of classical Baskerville} {f-baskerville}
    { -,\caps: {\rm\bf\it\bi} }
