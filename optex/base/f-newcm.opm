@@ -29,6 +29,7 @@ Note: use \book\normalmath if you want Math in book-style too.
 \_initfontfamily % new font family must be initialized
 
 \_loadmath {[NewCMMath-Regular]}
+\_loadboldmath{[NewCMMath-Bold]} \to {[NewCMMath-Regular]}
 
 \_endcode
 
@@ -36,10 +37,16 @@ If you want to use \book variant in the whole document, you can load
 NewCMMath-Book Unicode math font too. Use the following declaration in this
 case:
 
-\loadmath{NewCMMath-Book}
+\loadmath{[NewCMMath-Book]}
+\loadboldmath{NewCMMath-Bold} \to {[NewCMMath-Book]}
 \fontfam[newcm]
 \book\rm
 
+or for sans serif math you can use:
+
+\loadmath{[NewCMSansMath-Regular]}
+\fontfam[newcm]
+\sans\rm
 
 See the file `f-heros.opm` for information about principles of such
 font-macro-files.

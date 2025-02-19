@@ -150,7 +150,7 @@
    The `<bib-marks>` (in numeric or text form) are saved in \^`\_savedcites`
    macro separated by commas.
    The \`\_printsavedcites` prints them by normal order or sorted if
-   \`\sortcitations` is specified or condensed if \`\shordcitations` is
+   \`\sortcitations` is specified or condensed if \`\shortcitations` is
    specified.\nl
    The `\sortcitations` appends the dummy number 300000 and we suppose that normal
    numbers of bib-entries are less than this constant.

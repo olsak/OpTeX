@@ -180,7 +180,7 @@
    It means that user can write \code{\\sec text `&` text} for example.
    Inline verbatim works in title sections.
 
-   The verbatim scanner of `\scatoeol` keeps category 7 for `^` in
+   The verbatim scanner of `\scantoeol` keeps category 7 for `^` in
    order to be able to use `^^J` as comment character which means that
    the next line continues.
    \_cod -----------------------------
