@@ -30,8 +30,7 @@
 </HEAD>
 <BODY bgcolor="#FFFFFF">
 
-<table width="600" border="0" cellspacing="0" cellpadding="0"
-align="center">
+<table width="600" border="0" cellspacing="0" cellpadding="0" align="center">
 <tr><td>
   <div STYLE="text-align: center">
   <a href="http://petr.olsak.net/optex"><IMG SRC="../img/optex-logo.jpg" ALT="OpTeX" border=0></a>
@@ -5002,8 +5001,8 @@ can try the following code:
 \fontfam[lm]
 \newcount\numcolumn
 \newdimen\xvsize
-\def\vsizecorr{} \def\trytopins#1{}  % they are re-defined in OpTeX trick 0112
-
+\def\vsizecorr{} \def\trytopins#1{}
+\def\savemarks{} \def\reinsertmarks{} % they are re-defined in OpTeX trick 0112
 \def\twocol{\par\penalty0 \setbox0=\vbox\bgroup \hsize=.48\hsize \hbadness=5000 }
 \def\endtwocol{\egroup
    \_setxhsize \global\xvsize=\vsize % save the global values of \hsize, \vsize
@@ -5011,7 +5010,7 @@ can try the following code:
       \maxdeadcycles=1000 \vbadness=5000
       \numcolumn=0
       \headline={} \footline={}   % internal \output routine without\head/foot lines
-      \output={\incr\numcolumn
+      \output={\incr\numcolumn  \savemarks{}
          \global\setbox\numexpr10000+\numcolumn=\_completepage      % no \shipout, only save box
          \ifodd\numcolumn\else \global\vsize=\xvsize \vsizecorr \fi % correct \vsize for next page
          \ifnum\outputpenalty>-20000 \else\dosupereject\fi
@@ -5028,7 +5027,7 @@ can try the following code:
    \endgroup
    \vsize=\xvsize
    \ifvoid10000 \else \unvbox10000 \bigskip \fi  % print the original current page content
-   \fornumstep 2: 1..\numcolumn \do {     % print columns
+   \fornumstep 2: 1..\numcolumn \do {\reinsertmarks{##1}  % print columns
       \line{\box\numexpr10000+##1\hfil \box\numexpr10001+##1}\trytopins{##1}\vfil\break
    }
 }
@@ -5053,7 +5052,8 @@ If there is a full page width material in the current page before
 \output routine and then it is re-used before printing columns. The \vsize
 is modified for first two columns in such case.
 
-<p>If you want to insert a typesetting material above columns, see the OpTeX trick
+<p>If you want to insert a typesetting material above columns or use marks,
+see the OpTeX trick
 <a href="http://petr.olsak.net/optex/optex-tricks.html#toppage">0112</a>.
 
 <p CLASS=datum>(0111) -- P. O. 2023-05-14<p>
@@ -5099,6 +5099,15 @@ Use its code and define macros \toppage, \vsizecorr and \trytopins:
 \def\trytopins#1{\ifvoid\numexpr11000+#1/2\relax \else
    \topinsert \unvbox\numexpr11000+#1/2\relax \endinsert \fi
 }
+</pre>
+
+<p>If you want to use marks, define also \savemarks, \reinsertmarks, \putmark:
+<pre>
+\def\savemarks{\sxdef{fmark:\the\numcolumn}{\firstmark}%
+               \sxdef{bmark:\the\numcolumn}{\botmark}}
+\def\reinsertmarks#1{\putmark{fmark}{#1}\putmark{bmark}{#1}%
+                     \putmark{fmark}{#1+1}\putmark{bmark}{#1+1}}
+\def\putmark#1#2{\ifcsname #1:\the\numexpr#2\relax\endcsname\mark{\lastnamedcs}\fi}
 </pre>
 
 <p>The macro \toppage just saves the vertical material to the box
