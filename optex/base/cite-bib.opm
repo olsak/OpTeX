@@ -152,10 +152,10 @@
    The \`\_printsavedcites` prints them by normal order or sorted if
    \`\sortcitations` is specified or condensed if \`\shortcitations` is
    specified.\nl
-   The `\sortcitations` appends the dummy number 300000 and we suppose that normal
+   The \^`\sortcitations` appends the dummy number 300000 and we suppose that normal
    numbers of bib-entries are less than this constant.
    This constant is removed after the sorting algorithm.
-   The \`\shortcitations` sets simply `\_lastcitenum=1`.
+   The \^`\shortcitations` sets simply `\_lastcitenum=1`.
    The macros for <bib-marks> printing follows (sorry, without detail
    documentation). They are documented in `opmac-d.pdf` (but only in Czech).
    \_cod -----------------------------

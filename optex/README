@@ -22,6 +22,16 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.17> Feb 2025:
+       OpTeX uses luahbtex instead luatex as default engine (from TeXlive 2025)
+       Default PDF version changed from 1.5 to 1.7
+       f-alegreya added
+       math.opm: \mathselector (for using text fonts in math mode) introduced
+       \it, \rm in math mode use script=latn, no italic corrections between letters
+       \pdfstring implemented using Lua, newly used for PDF outlines
+       optex.lua modified
+       several OpTeX tricks added
+       minor bugs fixed
 <1.16> Dec 2024:
        JSON files and tree structure support as a set of OpTeX tricks
        CSV databases support as a set of OpTeX tricks
