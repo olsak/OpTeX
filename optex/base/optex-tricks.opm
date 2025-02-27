@@ -912,8 +912,8 @@ end,'global') % we want to keep the meanig after group
 \_let\.dbshow=\dbshow
 
 
-\_trick 0153 0154 \exectree \showtree \jsonread \jsoncnv ;
-%%%%%%%%%%%%%%%%%
+\_trick 0153 0154 0165 \exectree \showtree \jsonread \jsoncnv \gettreedata \tracingtreedata ;
+%%%%%%%%%%%%%%%%%%%%%%
 
 \:\_optdef\inode[]{\startinode \startedges}
 \:\_optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
@@ -956,10 +956,37 @@ end,'global') % we want to keep the meanig after group
 \_def\.nospaces#1 {#1\_nospaceafter\_empty}
 \_def\.eid{\_ifx\.idj\_undefined\_else [\.idj]\_immediateassignment\_let\.idj=\_undefined\_fi}
 
-\:\_optdef\jsonread[JSON]#1#2{{\_suppressoutererror=1 \_endlinechar=-1 \_edef\.idj{\_the\_opt}%
+\:\_optdef\jsonread[JSON]#1#2{{\_suppressoutererror=1 \_edef\.idj{\_the\_opt}%
    \_xdef#1{\_ea\.jsoncnv\_input{#2},\_fin}}}
 \:\def\jsoncnv{\.isnschar\_bgroup{\_ea\_useit\.objread\_empty}{\_ea\_useit\.arrayread\_empty}}
 \_let\.jsoncnv=\jsoncnv
+
+\:\_optdef\gettreedata[]#1{%
+   \_bgroup
+      \_if\_relax\_the\_opt\_relax \_def\.csprefix{\_ignoreit}\_else \_edef\.tmp{\_the\_opt}\_fi
+      \_def\startinode{\_bgroup \.addprefix}%
+      \_def\stopinode{\_egroup}%
+      \_def\execenode##1{{\.addprefix \.savetreedata{##1}}}%
+      #1\stopinode
+   \_egroup
+}
+\_def\.addprefix{%
+   \_ifx\.csprefix\_undefined \_edef\.csprefix{\.tmp}\_else
+   \_if\_relax\_the\_opt\_relax \_else\_edef\.csprefix{\.csprefix/\_the\_opt}\_fi\_fi
+   \_ea\_isinlist\_expanded{{,\reptreenames,,}{,\_the\_opt,}}\_iftrue
+      \_ifcsname \.csprefix[]\_endcsname
+         \_sxdef{\.csprefix[]}{\_the\_numexpr\_lastnamedcs+1\_relax}%
+      \_else \_sxdef{\.csprefix[]}{1}\_fi
+      \_edef\.csprefix{\.csprefix[\_lastnamedcs]}%
+   \_fi}
+\_ifx \reptreenames\_undefined \def\reptreenames{} \_fi % default
+\_def\.savetreedata{\_global\_sdef\.csprefix}  % default: no messages on terminal
+\:\_def\tracingtreedata{\_def\.savetreedata##1{%
+   \_wterm{\_string\gettreedata: \_ifcsname\.csprefix\_endcsname !redef. \_else \_space\_fi
+          \_noexpand\sdef{\.csprefix}{\_unexpanded{##1}}}%
+   \_global\_sdef\.csprefix{##1}%
+}}
+
 
 
 \_trick 0031 \framedblocks ;
@@ -1266,6 +1293,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2025-02-27 \gettreedata, \tracingtreedata introduced
 2024-12-13 \algol: \algolem, \aca introduced
 2024-12-09 \exectree: bug in default macros fixed
 2024-11-26 \exectree, \jsonread etc. implemented

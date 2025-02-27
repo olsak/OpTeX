@@ -193,6 +193,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#exectree">Working with tree data structure</a>
     <li><a href="#jsonread">Reading JSON files</a>
     <li><a href="#usetree">Example of using the tree data structure</a>
+    <li><a href="#gettreedata">Converting tree data to a set of macros</a>
     <li><a href="#treetips">More tips for working with trees</a>
 </ul>
 
@@ -4037,7 +4038,7 @@ with them:
 <h2><a name="dbcreate"></a>Modifying databases in TeX memory</h2>
 
 <p CLASS="rmarg">
-atoloaded:<br>\dbcreate<br>
+autoloaded:<br>\dbcreate<br>
 declared also:<br>\dbinsert<br>\dbitemset<br>
 and all macros<br>from tricks 0147-0149
 </p>
@@ -4194,7 +4195,7 @@ maxcolumn) is not printed.
 <h2><a name="exectree"></a>Working with tree data structure</h2>
 
 <p CLASS="rmarg">
-atoloaded:<br>\exectree<br>\showtree
+autoloaded:<br>\exectree<br>\showtree
 </p>
 
 <p>I suggest to use the following format for saving trees in OpTeX:
@@ -4284,7 +4285,7 @@ the list of edges in the input queue. A more extensive example can be found in
 <h2><a name="jsonread"></a>Reading JSON files</h2>
 
 <p CLASS="rmarg">
-atoloaded:<br>\jsonread<br>\jsoncnv<br>
+autoloaded:<br>\jsonread<br>\jsoncnv<br>
 together with<br>\exectree<br>\showtree
 </p>
 
@@ -4437,6 +4438,122 @@ It means that its outermost level looks like:
 <p>It prints all invoices from your JSON file.
 
 <p CLASS=datum>(0155) -- P. O. 2024-11-26<p>
+<hr>
+
+<h2><a name="gettreedata"></a>Converting tree data to a set of macros</h2>
+
+<p CLASS="rmarg">
+autoloaded:<br>\gettreedata<br>\tracingtreedata<br>
+</p>
+
+<p><code>\gettreedata[root]\treemacro</code> reads the data from
+<code>\treemacro</code>
+(in the format given by OpTeX trick <a href="#exectree">0153</a>)
+and defines a set o macros for direct access to e-nodes data.
+If you declare <code>\tracingtreedata</code> before <code>\gettreedata</code>
+then the defined macros are shown on the terminal and in the log file too.
+
+<p>Suppose following bib.json file:
+<pre>
+{
+  "title": "Book Title",
+  "isbn":  "123456789",
+  "authors": [
+  {
+     "firstname": "John",
+     "lastname": "Doe"
+  },
+  {
+     "firstname": "Patrik",
+     "lastname": "Black"
+  }
+  ]
+}
+</pre>
+<p>and try
+<code>\jsonread\macro{bib.json} \tracingtreedata \gettreedata[bib]\macro</code>.
+The following text is shown on the terminal. It says, what actually is done.
+<pre>
+\gettreedata:  \sdef {bib/title}{The Big Book}
+\gettreedata:  \sdef {bib/isbn}{123456789}
+\gettreedata:  \sdef {bib/authors[1]/firstname}{John}
+\gettreedata:  \sdef {bib/authors[1]/lastname}{Doe}
+\gettreedata:  \sdef {bib/authors[2]/firstname}{Patrik}
+\gettreedata:  \sdef {bib/authors[2]/lastname}{Wilson}
+</pre>
+<p>The defined control sequences names are in the format
+<code>root/path/to/enode</code>. The real root name of the scanned tree is
+replaced by the optional <code>[root]</code>
+parameter of the <code>\gettreedata</code> macro.
+If this parameter is missing, the real root name is used.
+Each node with empty name is represented by its position <code>[number]</code>
+and its slash in the path is unused.
+
+<p>Second example: you have more bib-entries like above in your
+.json file in the format
+<code>[{entry},{entry},...,{entry}]</code>. Then you get the following:
+<pre>
+\gettreedata:  \sdef {bib[1]/title}{The Big Book}
+\gettreedata:  \sdef {bib[1]/isbn}{123456789}
+\gettreedata:  \sdef {bib[1]/authors[1]/firstname}{John}
+\gettreedata:  \sdef {bib[1]/authors[1]/lastname}{Doe}
+\gettreedata:  \sdef {bib[1]/authors[2]/firstname}{Patrik}
+\gettreedata:  \sdef {bib[1]/authors[2]/lastname}{Wilson}
+\gettreedata:  \sdef {bib[2]/title}{A Nice Article}
+\gettreedata:  \sdef {bib[2]/authors[1]/firstname}{Helen}
+\gettreedata:  \sdef {bib[2]/authors[1]/lastname}{Lee}
+...
+</pre>
+<p>The number of numbered entries is saved in macros <code>relevant/path[]</code>.
+For example <code>\cs{bib[1]/authors[]}</code> expands to <code>2</code> (two authors) and
+<code>\cs{bib[]}</code> expands to the number of bib-entries in this second example.
+You can use <code>\fornum 1..\cs{\bib[]} \do{...}</code>.
+
+<p>The nodes with non-empty names are not numbered by default.
+Their names are just inserted to the path. If you want
+to number them too (because a name is repeated many times at the same
+tree level, for example there is more <code>firstname</code> of a single
+author) then you can specify these names by <code>\def\reptreenames{list}</code>,
+where <code>list</code> is comma separated list of these names (without spaces).
+On the other hand, if you define <code>\def\reptreenames{-\ignoreit}</code> then even
+empty node names will not be numbered.
+
+<p>Implementation
+
+<pre>
+\optdef\gettreedata[]#1{%
+   \bgroup
+      \if\relax\the\opt\relax \def\csprefix{\ignoreit}\else \edef\tmp{\the\opt}\fi
+      \def\startinode{\bgroup \addprefix}%
+      \def\stopinode{\egroup}%
+      \def\execenode##1{{\addprefix \savetreedata{##1}}}%
+      \exectree#1%
+   \egroup
+}
+\def\addprefix{%
+   \ifx\csprefix\undefined \edef\csprefix{\tmp}\else
+   \if\relax\the\opt\relax \else\edef\csprefix{\csprefix/\the\opt}\fi\fi
+   \ea\isinlist\expanded{{,\reptreenames,,}{,\the\opt,}}\iftrue
+      \ifcsname \csprefix[]\endcsname
+         \sxdef{\csprefix[]}{\the\numexpr\lastnamedcs+1\relax}%
+      \else \sxdef{\csprefix[]}{1}\fi
+      \edef\csprefix{\csprefix[\lastnamedcs]}%
+   \fi}
+\def\reptreenames{} % default: only empty-named inodes are numbered
+\def\savetreedata{\global\sdef\csprefix}  % default: no messages on terminal
+\def\tracingtreedata{\def\savetreedata##1{%
+   \wterm{\string\gettreedata: \ifcsname\csprefix\endcsname !redef. \else \space\fi
+          \noexpand\sdef{\csprefix}{\unexpanded{##1}}}%
+   \global\sdef\csprefix{##1}%
+}}
+</pre>
+
+<p>The tree is processed by DFS, each node opens new group and the path
+<code>\csperefix</code> used in the names of defined control sequences is
+localy added by the <code>\addprefix</code> macro. The macros are defined by
+<code>\savetreedata</code> in enodes.
+
+<p CLASS=datum>(0165) -- P. O. 2025-02-26<p>
 <hr>
 
 <h2><a name="treetips"></a>More tips for working with trees</h2>

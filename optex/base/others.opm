@@ -170,7 +170,8 @@
    \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground
    \onlyifnew \thedimen \rebox \leftfill \rightfill \lrfill \directchar \ereplstring
    \xreplstring \replmacro \tdnum \clipbox \ismatch \isinmacro \mathinexpr \xparshape
-   \csvread \csvdecl \dbcreate \exectree \showtree \jsonread \jsoncnv ;
+   \csvread \csvdecl \dbcreate \exectree \showtree \jsonread \jsoncnv
+   \gettreedata \tracingtreedata ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc
