@@ -4223,7 +4223,7 @@ autoloaded:<br>\exectree<br>\showtree
 Each edge includes a new \inode with the same syntax
 or an external node (leaf) represented by \enode[opt]{data}.
 The optional parameters [opt] of \inode and \enode can be missed or they
-can include key=value options or something else.
+can include a name of the node or key=value options or something else.
 
 <p>Macro programmer can define three macros \startinode, \stopinode and
 \execenode#1. The last mentioned macro is processed at each \enode and it
@@ -4249,8 +4249,8 @@ the example above. Run \wterm{\showtree\mymacro} if you want to try this.
 \def\showtree#1{\ima\treelevel=0 #1\stopinode}
 </pre>
 
-<p>The \startinode macro can scan all its edges at once because
-when it is executed then the following input queue is in the format
+<p>The \startinode macro can scan all its edges at once without processing
+them because when it is executed then the following input queue is in the format
 
 <pre>
 \startedges{edge}{edge}{edge}\stopinode
@@ -4638,6 +4638,22 @@ structure. And \edef\newtree{\expandtree{name}} does backward conversion.
 \edef\newtree{\expandtree{name}} % does bacward conversion
 \wterm{\showtree\newtree}        % checks the result
 </pre>
+
+<p><b>Tip 5.</b> We have more macros with the tree structure, say \macroA and \macroB.
+We want to merge them to a single tree in \macro.
+<pre>
+\def\norootnode#1{\unexpanded\ea\ea\ea{\ea\norootnodeA#1}}
+\def\norootnodeA#1#{}
+\edef\macro{\noexpand\inode[root] \norootnode\macroA \norootnode\macroB}
+</pre>
+<p>The resulting tree in \macro has root-edges as a
+sum of root-edges of original trees from \macroA and \macroB. Their root
+nodes are ignored. Second variant:
+<pre>
+\def\expandonce#1{\unexpanded\ea{#1}}
+\edef\macro{\noexpand\inode[root] {\expandonce\macroA}{\expandonce\macroB}}
+</pre>
+<p>Now, the root node of the new tree has two edges with root nodes of the original trees.
 
 <p CLASS=datum>(0156) -- P. O. 2024-11-29<p>
 <hr>
