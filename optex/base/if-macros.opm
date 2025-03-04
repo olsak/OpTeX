@@ -121,8 +121,8 @@
    The private variants use \`\_do` separator instead `\do` separator
    and it isn't redefined.}
    \nl
-   \`\foreachx` `\list` behaves like `\ea \foreach \list` but it is more
-   effective, because the `\list` is expanded later, when its data are
+   \`\foreachx` `\list` behaves like `\ea \foreach \list` but
+   the `\list` is expanded later, when its data are
    actually needed. This is more effective becuase the macro needn't skip
    a potentially huge amount of data in order to scan `\do{<what>}`.
    \_cod -----------------------------

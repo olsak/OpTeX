@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2024-12-13>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2025-03-03>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -912,15 +912,12 @@ end,'global') % we want to keep the meanig after group
 \_let\.dbshow=\dbshow
 
 
-\_trick 0153 0154 0165 \exectree \showtree \jsonread \jsoncnv \gettreedata \tracingtreedata ;
+\_trick 0153 0154 0165 \inode \enode \execedges \showtree \jsonread \jsoncnv \treedata \tracingtreedata \treenodes ;
 %%%%%%%%%%%%%%%%%%%%%%
 
-\:\_optdef\inode[]{\startinode \startedges}
-\:\_optdef\enode[]#1#2{\execenode{#1}}  % #2=\stopinode, should be ignored
-\:\_def\startedges #1{\.edgetest #1\stopinode\startedges}
-\_def\.edgetest#1{\_ifx\stopinode#1\.edgefinal\_else\_ea#1\fi}
-\_def\.edgefinal#1\startedges{\fi\stopinode}
-\:\_def\exectree#1{#1\stopinode}
+\:\_def\inode [#1]#2{\_immediateassignment\_opt={#1}\startinode#2\stopinode}
+\:\_def\enode [#1]{\_immediateassignment\_opt={#1}\execenode}
+\:\_def\execedges#1#2{\_foreachx#1\_do##1[##2]##3{##1[##2]{##3}#2}}
 
 \_ifx \startinode\_undefined \_def\startinode{} \_fi
 \_ifx \stopinode \_undefined \_def\stopinode{}  \_fi
@@ -929,14 +926,15 @@ end,'global') % we want to keep the meanig after group
 \_newcount\.treelevel
 \_let\.ima=\_immediateassignment
 \_def\.spaces{\_fornum 1..\.treelevel \_do{\_space\_space\_space}}
-\_def\.istring#1{\_ifnum\.treelevel>0 \_csstring#1\_fi}
-\_def\.showinodes{%
-   \_def\startinode{\.istring^^J\.spaces\.istring\{\_string\inode[\_the\_opt]\.ima\_incr\.treelevel}
-   \_def\stopinode{\.ima\_decr\.treelevel \.istring\}}
-   \_def\execenode##1{^^J\.spaces{\_string\enode[\_the\_opt] \_unexpanded{{##1}}}}}
+\_def\.nline{\_ifnum\.treelevel>0 \_pcent^^J\.spaces\_fi}
+\_def\.showdefs{%
+   \_def\startinode{\.nline \_string\inode[\_the\_opt] \.ima\_incr\.treelevel\_csstring\{}%
+   \_def\stopinode{\_csstring\}\.ima\_decr\.treelevel}%
+   \_def\execenode##1{\.nline \_string\enode[\_the\_opt] \_unexpanded{{##1}}}%
+}
 \:\_def\showtree#1{\_immediateassigned{\.treelevel=0
-   \_let\.startinodeB=\startinode \_let\.stopinodeB=\stopinode \_let\.execenodeB=\execenode \.showinodes}%
-   #1\stopinode \_immediateassigned{%
+   \_let\.startinodeB=\startinode \_let\.stopinodeB=\stopinode \_let\.execenodeB=\execenode \.showdefs}%
+   #1\_immediateassigned{%
    \_let\startinode=\.startinodeB \_let\stopinode=\.stopinodeB \_let\execenode=\.execenodeB}%
 }
 
@@ -944,30 +942,30 @@ end,'global') % we want to keep the meanig after group
    \_nospacefuturelet\_next\_isnextcharA} % behaves like \isnextchar but skip spaces
 \:\_let\nonstring=\_useit % the presence of it in the value of \enode means that the value isn't string
 
-\_def\.arrayread#1[#2]#3,{{\_noexpand\inode \.eid \.aread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.arrayread#1[#2]#3,{\_noexpand\inode \.eid {\.aread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
 \_def\.aread{\.isnschar\_bgroup{\.objread\.aread}
      {\_isnextchar[{\.arrayread\.aread}{\_isnextchar"{\.readstr\.aread}{\.readnostr\.aread}}}}
-\_def\.objread#1#2#3,{{\_noexpand\inode \.eid \.oread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.objread#1#2#3,{\_noexpand\inode \.eid {\.oread#2,\_fin}\.isnschar\_fin{\_ignoreit}{#1}}
 \_def\.oread #1"#2"#3:{\_immediateassignment\_def\.idj{#2}%
    \.isnschar\_bgroup{\.objread\.oread}
       {\_isnextchar[{\.arrayread\.oread}{\_isnextchar"{\.readstr\.oread}{\.readnostr\.oread}}}}
-\_def\.readstr#1"#2"#3,{{\_noexpand\enode\.eid{\_unexpanded{#2}}}\.isnschar\_fin{\_ignoreit}{#1}}
-\_def\.readnostr#1#2,{{\_noexpand\enode\.eid{\_noexpand\nonstring{\.nospaces#2 }}}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.readstr#1"#2"#3,{\_noexpand\enode\.eid{\_unexpanded{#2}}\.isnschar\_fin{\_ignoreit}{#1}}
+\_def\.readnostr#1#2,{\_noexpand\enode\.eid{\_noexpand\nonstring{\.nospaces#2 }}\.isnschar\_fin{\_ignoreit}{#1}}
 \_def\.nospaces#1 {#1\_nospaceafter\_empty}
-\_def\.eid{\_ifx\.idj\_undefined\_else [\.idj]\_immediateassignment\_let\.idj=\_undefined\_fi}
+\_def\.eid{\_ifx\.idj\_undefined[]\_else [\.idj]\_immediateassignment\_let\.idj=\_undefined\_fi}
 
 \:\_optdef\jsonread[JSON]#1#2{{\_suppressoutererror=1 \_edef\.idj{\_the\_opt}%
    \_xdef#1{\_ea\.jsoncnv\_input{#2},\_fin}}}
 \:\def\jsoncnv{\.isnschar\_bgroup{\_ea\_useit\.objread\_empty}{\_ea\_useit\.arrayread\_empty}}
 \_let\.jsoncnv=\jsoncnv
 
-\:\_optdef\gettreedata[]#1{%
+\:\_optdef\treedata[]#1{%
    \_bgroup
       \_if\_relax\_the\_opt\_relax \_def\.csprefix{\_ignoreit}\_else \_edef\.tmp{\_the\_opt}\_fi
       \_def\startinode{\_bgroup \.addprefix}%
       \_def\stopinode{\_egroup}%
       \_def\execenode##1{{\.addprefix \.savetreedata{##1}}}%
-      #1\stopinode
+      #1%
    \_egroup
 }
 \_def\.addprefix{%
@@ -982,11 +980,46 @@ end,'global') % we want to keep the meanig after group
 \_ifx \reptreenames\_undefined \def\reptreenames{} \_fi % default
 \_def\.savetreedata{\_global\_sdef\.csprefix}  % default: no messages on terminal
 \:\_def\tracingtreedata{\_def\.savetreedata##1{%
-   \_wterm{\_string\gettreedata: \_ifcsname\.csprefix\_endcsname !redef. \_else \_space\_fi
+   \_wterm{\_string\treedata: \_ifcsname\.csprefix\_endcsname !redef. \_else \_space\_fi
           \_noexpand\sdef{\.csprefix}{\_unexpanded{##1}}}%
    \_global\_sdef\.csprefix{##1}%
 }}
 
+\:\_def\treenodes[#1]#2{\_bgroup
+   \_def\.tname{#1(\_the\_tmpnum)}\_tmpnum=0 \_def\.parent{\_relax}%
+   \_def\startinode{\_incr\_tmpnum \.addparent
+      \_bgroup \_protected\_sxdef\.tname{[\_the\_opt]}\_edef\.parent{\_cs\.tname}}%
+   \_def\stopinode{\_egroup}%
+   \_def\execenode##1{\_incr\_tmpnum\.addparent \_protected\_sxdef\.tname{[\_the\_opt]{\_unexpanded{##1}}}}%
+   #2\_egroup \_sxdef{#1()}{\_the\_tmpnum}%
+}
+\_def\.addparent{\_sxdef{^\.tname}{\.parent}%
+   \_ea\_ifx\.parent\_relax\_else \_protected\_ea\_xdef\.parent{\_ea\_ea\_ea\_empty\.parent\_cs\.tname}\_fi}
+
+\:\_def\showtreenodes#1{\.ima\.treelevel=0 \_ea\.showthisnode\_csname#1\_endcsname}
+\_def\.showthisnode#1{\.nline \_string#1 \_ifx#1\_relax -> ?? \_else \_ea\.shownodedata#1;\_fi}
+\_def\.shownodedata [#1]{-> [#1]\_isnextchar\_bgroup{\.showenode}{\.showinodes}}
+\_def\.showenode#1#2{{\_unexpanded{#1}}}
+\_def\.showinodes#1;{#1\.ima\_incr\.treelevel\.showinode#1;}
+\_def\.showinode#1{\_ifx#1;\.ima\_decr\.treelevel \_else\.showthisnode#1\_ea\.showinode\_fi}
+
+\:\_def\putnodes#1{\_ea\.putthisnode\_csname#1\_endcsname}
+\_def\.putthisnode#1{\_ifx#1\_relax \_else \_ea\.putnodedata#1;\_fi}
+\_def\.putnodedata[#1]{\_isnextchar\_bgroup
+   {\_noexpand\enode[#1]\.showenode}{\_noexpand\inode[#1]{\_iffalse}\_fi\.putinode}}
+\_def\.putinode#1{\_ifx#1;\_iffalse{\_fi}\_else \.putthisnode#1\_ea\.putinode\_fi}
+
+\:\_def\nodedef#1{\_ea\.nodedefA\_csname#1\_endcsname}
+\_def\.nodedefA#1#2{\_bgroup \_def\id{}\_def\nodes{}\_def\data{}%
+   \_ifx#1\_relax \_else \_ea\.nodedefB#1;\_fi
+   \_def\n##1{\_cs{##1}\.ima\_sxdef{^##1}{#1}}\_def\u##1{{\_unexpanded{##1}}}%
+   \_protected\_xdef#1{#2}\_egroup
+}
+\_def\.nodedefB[#1]{\_def\id{#1}\_isnextchar\_bgroup{\.defdata}{\.defnodes}}
+\_def\.defdata#1#2{\_def\data{#1}}\_def\.defnodes#1;{\_def\nodes{#1}}
+
+\:\_def\nodedel#1{\_ea\.nodedelA\_csname#1\_ea\_ea\_ea\_endcsname\_csname^#1\_endcsname}
+\_def\.nodedelA#1#2{\_ifx#2\_relax\_else{\_def#1{}\_xdef#2{\_ea\_empty#2}}\_fi}
 
 
 \_trick 0031 \framedblocks ;
@@ -1293,7 +1326,8 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
-2025-02-27 \gettreedata, \tracingtreedata introduced
+2025-03-03 \getnodes introduced, tree structure re-implemented
+2025-02-27 \treedata, \tracingtreedata introduced
 2024-12-13 \algol: \algolem, \aca introduced
 2024-12-09 \exectree: bug in default macros fixed
 2024-11-26 \exectree, \jsonread etc. implemented
