@@ -1003,7 +1003,7 @@ end,'global') % we want to keep the meanig after group
 \_def\.showinodes#1;{#1\.ima\_incr\.treelevel\.showinode#1;}
 \_def\.showinode#1{\_ifx#1;\.ima\_decr\.treelevel \_else\.showthisnode#1\_ea\.showinode\_fi}
 
-\:\_def\putnodes#1{\_ea\.putthisnode\_csname#1\_endcsname}
+\:\_def\treefromnodes#1{\_ea\.putthisnode\_csname#1\_endcsname}
 \_def\.putthisnode#1{\_ifx#1\_relax \_else \_ea\.putnodedata#1;\_fi}
 \_def\.putnodedata[#1]{\_isnextchar\_bgroup
    {\_noexpand\enode[#1]\.showenode}{\_noexpand\inode[#1]{\_iffalse}\_fi\.putinode}}

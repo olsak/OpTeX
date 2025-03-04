@@ -4558,7 +4558,7 @@ localy added by the <code>\addprefix</code> macro. The macros are defined by
 
 <p CLASS="rmarg">
 autoloaded:<br>\treenodes<br>
-loaded also:<br>\showtreenodes<br>\putnodes<br>\nodedef<br>\nodedel<br>
+loaded also:<br>\showtreenodes<br>\treefromnodes<br>\nodedef<br>\nodedel<br>
 together with<br>\inode<br>\enode<br>\execnodes<br>\showtree
 </p>
 
@@ -4612,17 +4612,17 @@ includes \A(2) in our example and \^A(1) includes \relax because \A(1) is root n
 
 <p>You can create a \macro back in the tree format
 (OpTeX trick <a href="#showtree">0153</a>)
-from the set of nodes by \edef\macro{\putnodes{root}}.
+from the set of nodes by \edef\macro{\treefromnodes{root}}.
 The root is the root node name. Example:
 
 <pre>
 \treenodes[A]\mymacro
 \treenodes[B]\mymacro % we have two equal trees A and B in nodes format
 \nodedel{A(5)}        % removes node A(5) and its entire sub-tree from the tree
-\nodedef{A(8)}{[new]\n{B(1)}\nodes} % connects the tree B to the node A(8)
-                                    % before its original nodes
-\edef\newmacro{\putnodes{A(1)}}     % returns back to the format of OpTEX trick 0153
-\wterm{\showtree\newmacro}          % shows the modified tree on the terminal
+\nodedef{A(8)}{[new]\n{B(1)}\nodes}  % connects the tree B to the node A(8)
+                                     % before its original nodes
+\edef\newmacro{\treefromnodes{A(1)}} % returns back to the format of OpTeX trick 0153
+\wterm{\showtree\newmacro}           % shows the modified tree on the terminal
 </pre>
 
 <p>Implementation:
@@ -4646,7 +4646,7 @@ The root is the root node name. Example:
 \def\showinodes#1;{#1\ima\incr\treelevel\showinode#1;}
 \def\showinode#1{\ifx#1;\ima\decr\treelevel \else\showthisnode#1\ea\showinode\fi}
 
-\def\putnodes#1{\ea\putthisnode\csname#1\endcsname}
+\def\treefromnodes#1{\ea\putthisnode\csname#1\endcsname}
 \def\putthisnode#1{\ifx#1\relax \else \ea\putnodedata#1;\fi}
 \def\putnodedata[#1]{\isnextchar\bgroup
    {\noexpand\enode[#1]\showenode}{\noexpand\inode[#1]{\iffalse}\fi\putinode}}
