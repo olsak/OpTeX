@@ -35,7 +35,7 @@
     be never used in another meaning in \OpTeX/.
     \_cod
 
-\_def\_mte #1{[\_immediateassignment\_tmpnum=`#1 \_the\_tmpnum]}
+\_def\_mte #1{[\_the\_numexpr`#1]}
 
    \_doc --------------------
    The protrusion data follow.
