@@ -4721,6 +4721,22 @@ You can remove all nodes created by \treenodes[A]\macro by
 \fornum 1..\cs{A()} \do {\global\slet{A(#1)}{undefined}}
 </pre>
 
+<p><b>Tip 5.</b> We want to keep a list of control sequences defined by
+\treedata in (say) \cslist in the format {sequence/one}{sequence/two}...
+Then we can process over all such defined sequences by
+<pre>
+\foreachx \cslist \do {do something with csname #1 and its value \cs{#1}}
+</pre>
+<p>If you have your own copy of \treedata macros, you can modify it simply.
+But if you want to use autoloaded \treedata macro, then you can patch it by
+the following way:
+<pre>
+\loadtrick\treedata
+\ea\replmacro \csname _oB:treedata\endcsname {}{}{"addprefix \\","addprefix \\saveprefix \\"}{}
+\def\cslist{} \def\saveprefix{\xdef\cslist{\cslist{\_optextrick_csprefix}}}
+</pre>
+
+
 <p CLASS=datum>(0156) -- P. O. 2024-11-29, 2025-03-03<p>
 <hr>
 
