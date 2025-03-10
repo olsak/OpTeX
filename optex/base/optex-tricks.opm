@@ -799,7 +799,7 @@ end,'global') % we want to keep the meanig after group
    \_opwarning{\_noexpand\csvread ignored: database "#1" created already}%
    \_ea \_ignoreit
    \_else \_afterfi{\_par \_bgroup \_def\.dbn{#1}\.dbrow=0 \.csvreadA}\_fi}
-\_def\.csvreadA#1{\_everypar={\.readline}\_input{#1}%
+\_def\.csvreadA#1{\_everypar={\.readline}\_cs{csvreadsetup}\_catcode`\ =10 \_input{#1}%
    \_decr\.dbrow \_sxdef{dbmaxrow\.dbn}{\_the\.dbrow}
    \_decr\.dbcol \_sxdef{dbmaxcol\.dbn}{\_the\.dbcol}\_egroup}
 \:\_def\csvdecl #1#2#3{%
@@ -813,8 +813,8 @@ end,'global') % we want to keep the meanig after group
 } \csvdecl "", % " " , are default data separators
 \_def\.csvsethead#1{\_sxdef{dbcol:\.dbn(#1)}{\_the\.dbcol}\_sxdef{dbhead:\.dbn(\_the\.dbcol)}{#1}}
 \_def\.csvsetdata#1{\_global\_sdef{dbitem:\.dbn(\_the\.dbrow,\_the\.dbcol)}{#1}}
-\:\_def\dbitem#1(#2,#3){\.dbset{#1}%
-   \_ifcsname dbitem:#1(#2,#3)\_endcsname \_unexpanded\_ea\_ea\_ea{\_lastnamedcs}\_else \dbunknown\_fi}
+\:\_def\dbitem#1(#2,#3#4){\.dbset{#1}%
+   \_ifcsname dbitem:#1(#2,#3#4)\_endcsname \_unexpanded\_ea\_ea\_ea{\_lastnamedcs}\_else \dbunknown\_fi}
 \_def\.dbset#1{\_immediateassignment\_edef\.dbname{#1}}
 \:\_def\colname#1){\_ifcsname dbcol:\.dbname(#1)\_endcsname \_lastnamedcs \_else 0\_fi)}
 \:\_def\dbhead#1(#2){\_ifcsname dbhead:#1(#2)\_endcsname \_lastnamedcs \_else \dbunknown \_fi}
@@ -841,7 +841,7 @@ end,'global') % we want to keep the meanig after group
 \:\_def\dbloop #1(#2)#3{\.onlyifdb #1(1)\dbloop {%
    \_immediateassigned{\_def\.settinglist{}\.dbsetting #2,\_fin=\_fin,}%
    \_ifcsname dblist:#1\_endcsname
-      \_afterfi{\_ea\_ea\_ea\_foreach\_csname dblist:#1\_endcsname \_do ##1,}%
+      \_afterfi{\_ea\_foreachx\_csname dblist:#1\_endcsname \_do ##1,}%
    \_else \_afterfi{\_fornum 1..\cs{dbmaxrow#1}\_do}\_fi
       {\_immediateassigned{\.dbrow=##1 \.settinglist}#3}%
 }}
@@ -849,15 +849,15 @@ end,'global') % we want to keep the meanig after group
 \_def\.dbdef#1#2{\_edef#1{\.dbitem\.dbname(\_the\.dbrow,\.colname#2)}}
 \:\_def\dbsort #1(#2){\.onlyifdb #1(#2)\dbsort {% basename column exists:
    \_def\.dblist{}%
-   \_ifcsname db:sortlist\_endcsname \_afterfi {\_ea\_ea\_ea\_foreach \_lastnamedcs \_do ##1,}%
+   \_ifcsname db:sortlist\_endcsname \_afterfi {\_ea\_foreachx \_lastnamedcs \_do ##1,}%
    \_else \_afterfi{\_fornum 1..\cs{dbmaxrow#1}\_do}\_fi {%
-      \_edef\.tmp{\.dbitem #1(##1,#2)}\_edef\.tmp{\_detokenize\_ea{\.tmp}{##1}}%
+      \_edef\.tmp{\.dbitem #1(##1,#2)}\_edef\.tmp{\_ea\dbsortfmt\_ea{\.tmp}{##1}}%
       \_ea\_addto \_ea\.dblist \_csname +\.tmp\_endcsname
       \_sdef{+\.tmp}{##1,}}%
    \_ifx\.dblist \_empty \_else \_dosorting\.dblist \_fi
    \_sxdef{dblist:#1}{\.dblist}\_global\_slet{db:sortlist}{_undefined}%
 }}
-\:\_def\dbsortfmt#1#2{\_detokenize{#1}|\.fmtnum#2;}
+\_ifx\dbsortfmt\_undefined \_def\dbsortfmt#1#2{\_detokenize{#1}|\.fmtnum#2;} \_fi
 \:\_def\fmtnum #1;{\_ea\_ignoreit\_the\_numexpr#1+100000\_relax}
 \_let\.fmtnum=\fmtnum
 
@@ -881,7 +881,7 @@ end,'global') % we want to keep the meanig after group
       \_opwarning{\_string\dbinsert: data row larger than max column (\_the\.tmpnum) in "#1"}\_fi
    \_sxdef{dbmaxrow#1}{\_the\.dbrow}%
 }}
-\:\_def\dbitemset #1(#2,#3)#4{\.onlyifdb #1(#3)\dbitemset {\_sxdef{dbitem:#1(#2,#3)}{#4}}}
+\:\_def\dbitemset #1(#2,#3#4)#5{\.onlyifdb #1(#3)\dbitemset {\_sxdef{dbitem:#1(#2,#3#4)}{#5}}}
 \:\_def\dbheadset #1(#2)#3{\.onlyifdb #1(1)\dbheadset{\.dbcol=\_ea\.getrownum \_expanded{#2)}\_relax
    \_ifnum\.dbcol=0 \_opwarning{\_noexpand\dbheadset ignored: bad column \.missingcol(#2)}%
    \_else \_sxdef{dbcol:#1(#3)}{\_the\.dbcol}\_sxdef{dbhead:#1(\_the\.dbcol)}{#3}\_fi
@@ -894,12 +894,13 @@ end,'global') % we want to keep the meanig after group
       \.dbps{dbitem:#1(##1,####1)}{#2}{####1}%
    }\dbrowchar}
 }}
-\_def\.dbps #1#2#3{\_if\_relax\_detokenize{#2}\_relax {\_trycs{#1}{\dbunknown}}\_else \.dbpsA {#1}#2{#3}\fi}
-\_def\.dbpsA #1#2#3#4#5{#2\_trycs{#1}{\dbunknown}#3\_ifnum #5<\.dbcol #4\_fi} % cs, open, close, between, colnum
+\_def\.dbps #1#2#3{\_if\_relax\_detokenize{#2}\_relax {\.utrycs{#1}{\dbunknown}}\_else \.dbpsA {#1}#2{#3}\fi}
+\_def\.dbpsA #1#2#3#4#5{#2\.utrycs{#1}{\dbunknown}#3\_ifnum #5<\.dbcol #4\_fi} % cs, open, close, between, colnum
 \:\_def\dbrowchar{^^J}  \:\_def\dbheadchar{}
 \:\_def\dbshowrow #1(#2)(#3){\.onlyifdb #1(1)\dbshowrow {\_immediateassignment\.dbcol=\cs{dbmaxcol#1}
    \_fornum 1..\.dbcol \_do {\.dbps{dbitem:#1(#2,##1)}{#3}{##1}}%
 }}
+\_def\.utrycs#1#2{\_ifcsname#1\_endcsname \_unexpanded\_ea\_ea\_ea{\_lastnamedcs}\_else #2\_fi}
 \:\_def\dbshowhead #1(#2){\.onlyifdb #1(1)\dbshowhead {\_immediateassignment\.dbcol=\_cs{dbmaxcol#1}
    \_fornum 1..\.dbcol \_do {\.dbps{dbhead:#1(##1)}{#2}{##1}}%
 }}

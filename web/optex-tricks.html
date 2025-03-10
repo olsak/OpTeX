@@ -3756,7 +3756,7 @@ group where \csvread is used:
    \opwarning{\noexpand\csvread ignored: database "#1" created already}%
    \ea \ignoreit
    \else \afterfi{\par \bgroup \def\dbn{#1}\dbrow=0 \csvreadA}\fi}
-\def\csvreadA#1{\everypar={\readline}\input{#1}%
+\def\csvreadA#1{\everypar={\readline}\cs{csvreadsetup}\catcode`\ =10 \input{#1}%
    \decr\dbrow \sxdef{dbmaxrow\dbn}{\the\dbrow}
    \decr\dbcol \sxdef{dbmaxcol\dbn}{\the\dbcol}\egroup}
 \def\csvdecl #1#2#3{%
@@ -3770,8 +3770,8 @@ group where \csvread is used:
 } \csvdecl "", % " " , are default data separators
 \def\csvsethead#1{\sxdef{dbcol:\dbn(#1)}{\the\dbcol}\sxdef{dbhead:\dbn(\the\dbcol)}{#1}}
 \def\csvsetdata#1{\global\sdef{dbitem:\dbn(\the\dbrow,\the\dbcol)}{#1}}
-\def\dbitem#1(#2,#3){\dbset{#1}%
-   \ifcsname dbitem:#1(#2,#3)\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else \dbunknown\fi}
+\def\dbitem#1(#2,#3#4){\dbset{#1}%
+   \ifcsname dbitem:#1(#2,#3#4)\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else \dbunknown\fi}
 \def\dbset#1{\immediateassignment\edef\dbname{#1}}
 \def\colname#1){\ifcsname dbcol:\dbname(#1)\endcsname \lastnamedcs \else 0\fi)}
 \def\dbhead#1(#2){\ifcsname dbhead:#1(#2)\endcsname \lastnamedcs \else \dbunknown \fi}
@@ -3921,7 +3921,7 @@ macro defined above. The following example prints data with only selected ids:
 But, if you run \dbsort (column) before \dbloop, then the lines are sorted
 by the given column.
 <pre>
-\dbsort (\colname Lastname) % data sorted alhabetically by LastName
+\dbsort (\colname LastName) % data sorted alhabetically by LastName
 \dbloop (\fname=FirstName, \lname=LastName, \address=Address) {%
    \lname\ \fname\ lives at the address: \address \par
 }
@@ -3933,7 +3933,7 @@ by the given column.
 \def\dbloop #1(#2)#3{\onlyifdb #1(1)\dbloop {%
    \immediateassigned{\def\settinglist{}\dbsetting #2,\_fin=\_fin,}%
    \ifcsname dblist:#1\endcsname
-      \afterfi{\ea\ea\ea\foreach\csname dblist:#1\endcsname \do ##1,}%
+      \afterfi{\ea\foreachx\csname dblist:#1\endcsname \do ##1,}%
    \else \afterfi{\fornum 1..\cs{dbmaxrow#1}\do}\fi
       {\immediateassigned{\dbrow=##1 \settinglist}#3}%
 }}
@@ -3958,6 +3958,20 @@ by the given column.
 numbers of rows after sorting in the comma separated list to the
 \dblist:basename macro. If such macro exists, the \dbloop uses \foreach over
 the dblist contents else it runs \fornum 1..\dbmaxcolbasename.
+
+<p>The phrases are formated by \dbsortfmt{item-dada}{row-number} before they
+are sorted. The item-data is data from the specified column. Default macro
+\dbsortfmt expands to item-data|row-num, so secondary sorting (if item-data
+is equal) is done by row-number. You can redefine this macro in order to
+implement another secondary sorting rule. For example
+
+<pre>
+\def\dbsortfmt#1#2{#1|\dbitem(#2,\colname FirsName)}
+\dbsort(\colname LastName)
+</pre>
+
+<p>sorts by LastName. If LastName is equal, then FirstName is taken into
+account.
 
 <p CLASS=datum>(0149) -- P. O. 2024-11-21<p>
 <hr>
@@ -4030,7 +4044,7 @@ with them:
 \dbhash (\colname LastName)
 \sxdef{db:sortlist}{\trycs{dbrow:(\colname LastName)Olšák}{}}
 \dbsort (\colname FirstName)
-\dbloop (\fn=FirstName) {\fn,} % expands to comma separated list Petr, Miroslav, R
+\dbloop (\fn=FirstName) {\fn,} % expands to comma separated list Petr, Miroslav, Radek,
 </pre>
 
 <p CLASS=datum>(0150) -- P. O. 2024-11-22<p>
@@ -4101,7 +4115,7 @@ with a database created by \csvread macro from OpTeX trick <a href="#csvread">01
       \opwarning{\string\dbinsert: data row larger than max column (\the\tmpnum) in "#1"}\fi
    \sxdef{dbmaxrow#1}{\the\dbrow}%
 }}
-\def\dbitemset #1(#2,#3)#4{\onlyifdb #1(#3)\dbitemset {\sxdef{dbitem:#1(#2,#3)}{#4}}}
+\def\dbitemset #1(#2,#3#4)#5{\onlyifdb #1(#3#4)\dbitemset {\sxdef{dbitem:#1(#2,#3#4)}{#5}}}
 \def\dbheadset #1(#2)#3{\onlyifdb #1(1)\dbheadset{\colnum=\ea\getrownum \expanded{#2)}\relax
    \ifnum\colnum=0 \opwarning{\noexpand\dbheadset ignored: bad column \missingcol(#2)}%
    \else \sxdef{dbcol:#1(#3)}{\the\colnum}\sxdef{dbhead:#1(\the\colnum)}{#3}\fi
@@ -4168,8 +4182,9 @@ rows are set in \dhheadchar macro. None is default.
       \dbps{dbitem:#1(##1,####1)}{#2}{####1}%
    }\dbrowchar}
 }}
-\def\dbps #1#2#3{\if\relax\detokenize{#2}\relax {\trycs{#1}{\dbunknown}}\else \dbpsA {#1}#2{#3}\fi}
-\def\dbpsA #1#2#3#4#5{#2\trycs{#1}{\dbunknown}#3\ifnum #5&lt;\dbcol #4\fi} % cs, open, close, between, colnum
+\def\dbps #1#2#3{\if\relax\detokenize{#2}\relax {\utrycs{#1}{\dbunknown}}\else \dbpsA {#1}#2{#3}\fi}
+\def\dbpsA #1#2#3#4#5{#2\utrycs{#1}{\dbunknown}#3\ifnum #5&lt;\dbcol #4\fi} % cs, open, close, between, colnum
+\def\utrycs#1#2{\ifcsname#1\endcsname \unexpanded\ea\ea\ea{\lastnamedcs}\else #2\fi}
 \def\dbrowchar{^^J}  \def\dbheadchar{}
 \def\dbshowrow #1(#2)(#3){\onlyifdb #1(1)\dbshowrow {\immediateassignment\dbcol=\cs{dbmaxcol#1}
    \fornum 1..\dbcol \do {\dbps{dbitem:#1(#2,##1)}{#3}{##1}}%
@@ -4505,7 +4520,7 @@ and its slash in the path is unused.
 <p>The number of numbered entries is saved in macros <code>relevant/path[]</code>.
 For example <code>\cs{bib[1]/authors[]}</code> expands to <code>2</code> (two authors) and
 <code>\cs{bib[]}</code> expands to the number of bib-entries in this second example.
-You can use <code>\fornum 1..\cs{\bib[]} \do{...}</code>.
+You can use <code>\fornum 1..\cs{bib[]} \do{...}</code>.
 
 <p>The nodes with non-empty names are not numbered by default.
 Their names are just inserted to the path. If you want
