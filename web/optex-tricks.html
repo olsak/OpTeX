@@ -166,6 +166,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#logix">More characters from logix package</a>
     <li><a href="#slantedhat">Slanted \hat accent</a>
     <li><a href="#scalemop">Scaled math operator</a>
+    <li><a href="#differential">Differential operators in math</a>
 </ul>
 
 <li>Tables
@@ -3059,6 +3060,38 @@ factor and A is math axis height. This calculation keeps the math axis
 position at the same height.
 
 <p CLASS=datum>(0164) -- P. O. 2025-02-10<p>
+<hr>
+
+<h2><a name="differential"></a>Differential operators in math</h2>
+
+If we define \def\d{{\rm d}}, then we need to add explicit small space
+between the function and the differential operator: f(x)\,\d x.
+The question is, if this space can be added automatically by TeX, but only
+before \d, not after \d and if the \d is a first object in fractions then
+there should be no space before it. I.e. if we write
+<pre>
+$$
+  {\d\over \d x}(f(x))={\d f\over \d x}\int f(x) \d x
+$$
+</pre>
+<p>then the small space is added only before the last \d in this example.
+See also features of fixdiff LaTeX package.
+
+<p>Desired feature can be reached by the following definition:
+<pre>
+\def\d{\mathinner{\rm d}\mathclose{}}
+</pre>
+<p>and other differential operators can be defined analogically.
+
+<p>If we want to use $\d x/\d y$ in our document and we don't want
+the space between / and
+\d, then we can re-declare the / as math-open atom, i.e. declare
+<pre>
+\Umathcode`\/ = 4 1 `\/
+</pre>
+<p>after Unicode math is loaded.
+
+<p CLASS=datum>(0167) -- P. O. 2025-03-24<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
