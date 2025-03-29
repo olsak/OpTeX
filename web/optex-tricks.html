@@ -3075,7 +3075,7 @@ $$
 $$
 </pre>
 <p>then the small space is added only before the last \d in this example.
-See also features of fixdiff LaTeX package.
+See also features of fixdif LaTeX package.
 
 <p>Desired feature can be reached by the following definition:
 <pre>
@@ -4227,10 +4227,11 @@ rows are set in \dhheadchar macro. None is default.
 }}
 \def\dbwrite #1(#2)#3{\onlyifdb #1(1)\dbwrite {%
    \immediate\openout\dbout={#3}%
-   \immediate\write\dbout{\dbshow #1(#2)}%
+   \immediate\write\dbout{\dbBOM \dbshow #1(#2)}%
    \immediate\closeout\dbout
 }}
 \newwrite\dbout
+\def\dbBOM{^^^^^^1100ef^^^^^^1100bb^^^^^^1100bf} % Byte order mark used in \dbwrite
 </pre>
 
 <p>\dbshow does loop over header and then over data. The

@@ -906,11 +906,12 @@ end,'global') % we want to keep the meanig after group
 }}
 \:\_def\dbwrite #1(#2)#3{\.onlyifdb #1(1)\dbwrite {%
    \_immediate\_openout\.dbout={#3}%
-   \_immediate\_write\.dbout{\.dbshow #1(#2)}%
+   \_immediate\_write\.dbout{\dbBOM\.dbshow #1(#2)}%
    \_immediate\_closeout\.dbout
 }}
 \_newwrite\.dbout
 \_let\.dbshow=\dbshow
+\_ifx\dbBOM\_undefined \_def\dbBOM{^^^^^^1100ef^^^^^^1100bb^^^^^^1100bf} \_fi
 
 
 \_trick 0153 0154 0165 \inode \enode \execedges \showtree \jsonread \jsoncnv \treedata \tracingtreedata \treenodes ;
