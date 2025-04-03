@@ -1,7 +1,7 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [New Computer Modern] \NewCM {CM with Book variants, Cyrillic, Greek}
-        {\book \ttset \sans \caps} {\rm \bf \it \bi} {NewCM-Regular}
+        {\book \ttset \sans \caps \bookMath \sansMath} {\rm \bf \it \bi} {NewCM-Regular}
         {[NewCM10-Regular]}
         {\_def\_fontnamegen {[NewCM\_typfV-\_currV]:\_capsV\_fontfeatures}}
 
@@ -10,16 +10,20 @@ Modifiers:^^J
  \book ...... slightly bolder \rm, \it^^J
  \ttset ..... Typewriter variants^^J
  \sans ...... Sans serif variants^^J
- \caps ...... caps & small caps (not in Italic variants)^^J%
-Note: use \book\normalmath if you want Math in book-style too.
+ \caps ...... caps & small caps (not in Italic variants)^^J
+ \bookMath .. Book variant for math fonts^^J
+ \sansMath .. Sans serif variants for math fonts
 }}
 
 \_moddef \resetmod {\_fsetV caps={},typf=10,book={} \_fvars Regular Bold {\_ncmI} {\_ncmBI} }
-\_moddef \book     {\_fsetV book=Book \_fvars Book Bold {\_ncmI} {\_ncmBI}
-                    \_def\_unimathfont{NewCMMath-Book}}
+\_moddef \book     {\_fsetV book=Book \_fvars Book Bold {\_ncmI} {\_ncmBI} }
 \_moddef \ttset    {\_fsetV typf=Mono10 }
 \_moddef \sans     {\_fsetV typf=Sans10 }
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_moddef \bookMath {\_doloadmath
+   \_loadmath {[NewCMMath-Book]}\_loadboldmath{NewCMMath-Bold} \to {[NewCMMath-Book]}}
+\_moddef \sansMath {\_doloadmath \_loadmath {[NewCMSansMath-Regular]}}
 
 \_def\_ncmtyprm{10}
 \_def\_ncmtypsans{Sans10}
