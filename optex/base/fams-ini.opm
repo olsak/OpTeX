@@ -316,6 +316,10 @@
    }
 \_famalias[IBM Plex]
 
+\_famfrom {D. Knuth}
+\_faminfo [Concrete] {Concrete fonts with math} {f-concrete}
+  { -: {\rm\bf\it\bi}}
+
 \_endcode
 
 Once you have prepared a font family file with the name `f-<famname>.opm` and
