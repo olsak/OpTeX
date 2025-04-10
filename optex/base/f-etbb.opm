@@ -1,0 +1,22 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [ETbb] \ETbb {ET Bembo old style serif fonts}
+        {\caps} {\rm \bf \it \bi} {}
+        {[ETbb-Regular]}
+        {\_def\_fontnamegen {[ETbb-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps ...... caps & small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

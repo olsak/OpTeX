@@ -1,10 +1,10 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Raleway] \Raleway {Elegant grotesk, nine weights in two variants}
-        {\thin \elight \light \normal \medium \semibold \bolder} 
+        {\thin \elight \light \normal \medium \semibold \bolder \caps}
         {\rm \bf \it \bi} {}
         {[Raleway-Regular]}
-        {\_def\_fontnamegen {[Raleway-\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[Raleway-\_currV]:script=latn;\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers (face weight):^^J
@@ -15,6 +15,9 @@ Modifiers (face weight):^^J
  \medium .... \rm, \it = Medium, \bf, \bi = Bold^^J
  \semibold .. \rm, \it = SemiBold, \bf, \bi = ExtraBold^^J
  \bolder .... \rm, \it = Bold, \bf, \bi = Black^^J%
+Capitals, old digits:^^J
+ \caps ...... Caps and small caps^^J
+ \nocaps .... no Caps and small caps^^J
 }}
 
 \_moddef \resetmod {\_fsetV caps={} \_fvars Regular SemiBold Regular-Italic SemiBold-Italic }
@@ -25,6 +28,9 @@ Modifiers (face weight):^^J
 \_moddef \medium   {\_fvars Medium Bold Medium-Italic Bold-Italic }
 \_moddef \semibold {\_fvars SemiBold ExtraBold SemiBold-Italic ExtraBold-Italic }
 \_moddef \bolder   {\_fvars Bold Black Bold-Italic Black-Italic }
+
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
 
 \_initfontfamily % new font family must be initialized
 

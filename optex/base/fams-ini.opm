@@ -273,6 +273,15 @@
    { -,\caps: {\rm\bf\it\bi} \swash: {\rm} }
 \_famalias [Bembo] \_famalias [FBembo]
 
+\_famfrom {Dmitry Krasny, Bonnie Scranton, Edward Tufte, etc., Michael Sharpe}
+\_faminfo [ETbb] {ET Bembo old style serif fonts} {f-etbb}
+   { -,\caps: {\rm\bf\it\bi} }
+\_famalias [ETBembo]
+
+\_famfrom {Vaibhav Singh, Eczar Project Authors}
+\_faminfo [Eczar] {Serif, specific for Latin and Devanagari} {f-eczar}
+   { -,\medium,\semibold: {\rm} -: {\bf} \semibold: {\bf} }
+
 \_famfrom {bBox Type GmbH, Carrois Corporate GbR, Edenspiekermann AG}
 \_faminfo [Fira] {Humanist sans-serif, originally designed for Firefox OS} {f-fira}
    { \thin,\light,\book,-,\medium,\mono,\mono\medium,%

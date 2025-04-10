@@ -1,0 +1,27 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Eczar] \Eczar {Serif, specific for Latin and Devanagari}
+        {\medium \semibold} {\rm \bf} {}
+        {[Eczar-Regular.otf]}
+        {\_def\_fontnamegen {[Eczar-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers:^^J
+ No italic versions available^^J
+ \medium .... \rm = Medium, \bf = ExtraBold^^J
+ \semibold .. \rm = Semibold, \bf = ExtraBold^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold . . }
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+
+\_moddef \medium   {\_fvars Medium ExtraBold . . }
+\_moddef \semibold {\_fvars Semibold ExtraBold . . }
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+
