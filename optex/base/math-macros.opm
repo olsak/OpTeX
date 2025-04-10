@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2024-12-21>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2025-04-10>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -395,8 +395,8 @@
     \_raise\_Umathaxis\_textstyle\_vbox to\_scalebigcoef{#2}\_fontdimen6\_textfont1{}%
     \_kern-\_nulldelimiterspace\_right.}}
 \_def\_scalebigcoef#1{\_ifcase #1 0\_or
-% \big (1.2)    \bbig (1.44)    \Big (1.8)    \bigg (2.4)    \Bigg (3.0)
-         .6\_or         .72\_or        .9\_or        1.2\_or        1.5\_else 0\_fi
+% \big (1.22)    \bbig (1.44)    \Big (1.8)    \bigg (2.4)    \Bigg (3.0)
+         .61\_or         .72\_or        .9\_or        1.2\_or        1.5\_else 0\_fi
 }
 \_protected\_def\_big #1{\_scalebig{#1}1}
 \_protected\_def\_bbig#1{\_scalebig{#1}2}
@@ -1112,6 +1112,7 @@
 
 \_endcode %---------------------------------------------------
 
+2025-04-10 \big strut size correction 0.6 -> 0.61 (due to LM Math)
 2024-12-21 \skew macro: bug fixed
 2024-11-19 \typosize used fo Uni-fonts in \mathbox in order to respect their sizes
 2024-06-02 don't apply \mathsbon twice
