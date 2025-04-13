@@ -1,0 +1,49 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [Noto] \Noto {Sans, serif, mono with multiple language support}
+        {\serif \sans \ttset \thin \elight \light \normal \medium \semibold \bolder \caps}
+        {\rm \bf \it \bi} {}
+        {[NotoSerif-Regular]}
+        {\_def\_fontnamegen {[Noto\_famV-\_currV]:\_capsV\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifiers (subfamily selectors):^^J
+ \serif ...... Serif (defaut)^^J
+ \sans ....... SansSerif^^J
+ \mono ....... Mono (this subfamiy doesn't include Italic variants)^^J%
+Modifiers (face weight):^^J
+ \thin ...... \rm, \it = Thin, \bf, \bi = Regular^^J
+ \elight .... \rm, \it = ExtraLight, \bf, \bi = Medium^^J
+ \light ..... \rm, \it = Light, \bf, \bi = Semibold^^J
+ \normal .... \rm, \it = Regular, \bf, \bi = Bold^^J
+ \medium .... \rm, \it = Medium, \bf, \bi = ExtraBold^^J
+ \semibold .. \rm, \it = SemiBold, \bf, \bi = Black^^J
+Capitals, old digits:^^J
+ \caps ...... Caps and small caps^^J
+ \nocaps .... no Caps and small caps^^J
+}}
+
+\_moddef \resetmod {\_fsetV caps={},fam={Serif} \_f_doital 
+                    \_fvars Regular Bold Italic BoldItalic }
+\_moddef \serif    {\_fsetV fam={Serif} \_f_doital}
+\_moddef \sans     {\_fsetV fam={Sans} \_f_doital}
+\_moddef \mono     {\_fsetV fam={SansMono} \_f_noital}
+
+\_moddef \thin     {\_fvars Thin Regular ThinItalic Italic }
+\_moddef \elight   {\_fvars ExtraLight Medium ExtraLightItalic MediumItalic }
+\_moddef \light    {\_fvars Light SemiBold LightItalic SemiBoldItalic }
+\_moddef \normal   {\_fvars Regular Bold Italic BoldItalic }
+\_moddef \medium   {\_fvars Medium ExtraBold MediumItalic ExtraBoldItalic }
+\_moddef \semibold {\_fvars SemiBold Black SemiBoldItalic BlackItalic }
+
+\_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
+\_moddef \nocaps   {\_fsetV caps={} }
+
+\_let\_f_fmodit = \_fmodit \_let\_f_fmodbi = \_fmodbi % backup
+\_def\_f_doital {\_let\_fmodit = \_f_fmodit \_let\_fmodbi = \_f_fmodbi}
+\_def\_f_noital {\_let\_fmodit = \_fmodrm \_let\_fmodbi = \_fmodbf}
+
+\_initfontfamily % new font family must be initialized
+
+\_endcode
+

@@ -231,6 +231,18 @@
      \semibold,\bolder: {\bf\bi}
    }
 
+\_famfrom {Monotype Design Team}
+\_faminfo [Noto] {Sans, serif, mono with multiple language support} {f-noto}
+   { \thin,\elight,\light,-,\medium,\semibold: {\rm\it}
+     -,\medium,\semibold: {\bf\bi}
+     \caps\thin,\caps\elight,\caps\light,\caps,\caps\medium,\caps\semibold: {\rm\it}
+     \caps,\caps\medium,\caps\semibold: {\bf\bi}
+     \sans\thin,\sans\elight,\sans\light,\sans,\sans\medium,\sans\semibold: {\rm\it}
+     \sans,\sans\medium,\sans\semibold: {\bf\bi}
+     \mono\thin,\mono\elight,\mono\light,\mono,\mono\medium,\mono\semibold: {\rm}
+     \mono,\mono\medium,\mono\semibold: {\bf}
+   }
+
 \_famfrom {Malgorzata Budyta, Janusz Marian Nowacki}
 \_faminfo [Kurier] {Two element sans serif typeface} {f-kurier}
    { -,\cond,\caps,\caps\cond: {\rm\it\bf\bi}
