@@ -532,10 +532,10 @@ atom at its right side.
 The sequence of increasing delimiters can be printed by the following
 macros:
 $$
-  `(` \to (,\quad \x`\big``(` \to \big(,\quad
-  \x`\bbig``(` \to \bbig(\fnote{Provided only in \OpTeX/.}, \quad
-  \x`\Big``(` \to \Big(,\quad
-  \x`\bigg``(` \to \bigg(, \quad \x`\Bigg``(` \to \Bigg(.
+  (\quad \x`\big``(`\quad \x`\bbig``(`\fnotemark1\quad \x`\Big``(`\quad
+     \x`\bBig``(`\fnotemark1\quad \x`\bigg``(`\quad \x`\Bigg``(`  \quad \to \quad
+  ( \big( \bbig( \Big( \bBig( \bigg( \Bigg(
+  \fnotetext{Provided only in \OpTeX/.}
 $$
 The `\Bigg<delim>` is not the maximal size of the bracket. Try
 `\left(\vbox to5cm{}\right.`, for example. You can see that the font
@@ -548,11 +548,13 @@ Then we can use macros
 \x`\bigl``<delim>`,
 \x`\bbigl``<delim>`,
 \x`\Bigl``<delim>`,
+\x`\bBigl``<delim>`,
 \x`\biggl``<delim>`,
-\x`\Biggl``<delim>` for creating Open atoms and
+\x`\Biggl``<delim>` \ for creating Open atoms and
 \x`\bigr``<delim>`,
 \x`\bbigr``<delim>`,
 \x`\Bigr``<delim>`,
+\x`\bBigr``<delim>`,
 \x`\biggr``<delim>`,
 \x`\Biggr``<delim>` for creating Close atoms. Unfortunately, the source is not
 too attractive when more sizes of brackets are used, but typographic
