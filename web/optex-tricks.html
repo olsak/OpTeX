@@ -167,6 +167,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#slantedhat">Slanted \hat accent</a>
     <li><a href="#scalemop">Scaled math operator</a>
     <li><a href="#differential">Differential operators in math</a>
+    <li><a href="#testdelimiter">Testing various brackets sizes</a>
 </ul>
 
 <li>Tables
@@ -3092,6 +3093,84 @@ the space between / and
 <p>after Unicode math is loaded.
 
 <p CLASS=datum>(0167) -- P. O. 2025-03-24<p>
+<hr>
+
+<h2><a name="testdelimiter"></a>Testing various brackets sizes</h2>
+
+<p>Plain TeX provides four different strut sizes for getting four
+brackets sizes by macros \big, \Big, \bigg, \Bigg. Of course, the
+relevant four sizes of brackets are prepared in classical Computer Modern
+font. But Unicode math fonts implement typically more different sizes of
+these brackets. So, OpTeX provides six prepared strut sizes for getting
+various brackets by macros in this order of size: \big, \bbig, \Big, \bBig, \bigg,
+\Bigg. The corresponding strut sizes are defined in the macro \_scalebigcoef
+in the math-macros.opm file, they are .62, .72, .9, 1.05, 1.2, 1.5.
+They are internally accessed by \_scalebig delim1; to
+\_scalebig delim6;. You can use \_scalebig delim7{exact size} if you want to use
+different size. Or you can re-define the \_scalebigcoef macro.
+
+<p>The problem is that we don't know exactly how many different sizes
+are supported by the used Unicode math font and if the given sizes of struts
+are optimal for usage of this font. Of course, we want to keep the main concept
+for sizes of \big, \bbig, \Big, \bBig, \bigg, \Bigg but slightly
+modification of given constants for struts
+should be done with regard to the Unicode font used. That means that we need
+to know all brackets of given font, their strut sizes and then we can
+select optimal constants for struts.
+
+<p>We prepare macro \testdelimiter delimiter which prints all sizes of given
+delimiter provided by actually loaded math font including their minimal strut
+sizes which can be used as parameter of \_scalebig delim 7{strut size} or when
+\_scalebigcoef macro is re-defined. For example, we can do:
+
+<pre>
+\doloadmath \fontfam[lm]      \testdelimiter( \testdelimiter[ \testdelimiter\{
+\doloadmath \fontfam[dejavu]  \testdelimiter( \testdelimiter[ \testdelimiter\{
+\doloadmath \fontfam[stixtwo] \testdelimiter( \testdelimiter[ \testdelimiter\{
+\doloadmath \fontfam[termes]  \testdelimiter( \testdelimiter[ \testdelimiter\{
+</pre>
+
+<p>and we get the document where all sizes of given brackets are listed in
+all sizes. For example the \testdelimiter\{ gives following result when stixtwo math
+font is loaded:
+
+<p><IMG width=600 SRC="../img/braces.png" ALT="testdelimiter output" border=0>
+
+<p>Implementation uses Lua in order to get the code of printed delimiter:
+
+<pre>
+\def\delimchar{\directlua{
+   local nod = tex.box[0]
+   nod = nod.head.next.head.head.head
+   if nod.id==29 then tex.print(nod.char)
+   else tex.print(-1)
+   end
+}}
+\def\testdelimiter#1{\medskip
+   \csname _unimathfont\endcsname,
+   \char`\\delimitershortfall=\the\delimitershortfall,
+   \char`\\delimiterfactor=\the\delimiterfactor,
+   \par
+   \setbox0=\hbox{$\_scalebig{#1}7{0}$}
+   \tmpnum=\delimchar\relax
+   \noindent 0:~\copy0 \setbox1=\hbox{\box0}%
+   \fornum 3..300 \do {%
+      \edef\tmp{\expr[2]{##1/100}}%
+      \setbox0=\hbox{$\_scalebig{#1}7{\tmp}$}%
+      \unless\ifnum\delimchar=\tmpnum
+         \tmpnum=\delimchar\relax
+         \space\tmp:~\ifnum\tmpnum=-1 extensible.%
+         \else \copy0 \setbox1=\hbox{\unhbox1 \box0}\fi
+      \fi
+   }\par
+   \noindent All: \box1,
+   1+\s\big\s\bbig\s\Big\s\bBig\s\bigg\s\Bigg: $#1\big#1\bbig#1\Big#1\bBig#1\bigg#1\Bigg#1$,
+   classic $1{+}4\times$\string\big: $#1\big#1\Big#1\bigg#1\Bigg#1$\par
+}
+\def\s{\,\string}
+</pre>
+
+<p CLASS=datum>(0168) -- P. O. 2025-04-13<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
