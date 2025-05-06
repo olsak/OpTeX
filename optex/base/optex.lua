@@ -39,7 +39,6 @@ local getid = direct.getid
 local getlist = direct.getlist
 local setlist = direct.setlist
 local getleader = direct.getleader
-local getfont = direct.getfont
 local getattribute = direct.get_attribute
 local setattribute = direct.set_attribute
 local insertbefore = direct.insert_before
@@ -54,7 +53,6 @@ local tex_setcount = tex.setcount
 local token_scanint = token.scan_int
 local token_scanlist = token.scan_list
 local token_setmacro = token.set_macro
-local font_getfont = font.getfont
 --
 -- \medskip\secc General^^M
 --
@@ -689,7 +687,8 @@ optex.directpdfliteral = pdfliteral
 -- not be below the one big point limit. Also the text direction is involved.
 -- Because of the negative value for running dimensions the simplistic check,
 -- while not fully correct, should produce the right results. We currently
--- don't check for the font mode at all.
+-- don't check for the font mode at all, and instead conservatively consider
+-- glyphs to always need stroke color.
 --
 -- Leaders (represented by glue nodes with leader field) are not handled fully.
 -- They are problematic, because their content is repeated more times and it
@@ -704,9 +703,7 @@ optex.directpdfliteral = pdfliteral
 -- \TeX/ works with nodes.
 local function is_color_needed(head, n, id, subtype) -- returns fill, stroke color needed
     if id == glyph_id then
-        local font_id = getfont(n)
-        local mode = font_getfont(font_id).mode
-        return true, mode == 1 or mode == 2
+        return true, true
     elseif id == glue_id then
         n = getleader(n)
         if n then
