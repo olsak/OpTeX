@@ -92,14 +92,15 @@ end
 function optex.raw_ht()
     local nod = tex.box[token.scan_int()]       -- read head node of the given box
     local ht = 0
-    assert(nod ~= nil and nod.id == vlist_id, "given box must be a \\vbox")
-    for n in node.traverse(nod.head) do
-        if n.id == hlist_id or n.id == vlist_id or n.id == rule_id then
-            ht = ht + n.height + n.depth
-        elseif n.id == glue_id then
-            ht = ht + n.width
-        elseif n.id == kern_id then
-            ht = ht + n.kern
+    if nod ~= nil and nod.id == vlist_id then
+        for n in node.traverse(nod.head) do
+            if n.id == hlist_id or n.id == vlist_id or n.id == rule_id then
+                ht = ht + n.height + n.depth
+            elseif n.id == glue_id then
+                ht = ht + n.width
+            elseif n.id == kern_id then
+                ht = ht + n.kern
+            end
         end
     end
     tex_print(fmt('%.0f', ht/65536))
@@ -848,6 +849,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2025-05-11 if not \vbox then raw_ht retunts zero instead error
    -- 2024-12-18 \pdfstring etc. introduced
    -- 2024-09-06 raw_ht() implemented
    -- 2024-06-02 more checking in add_to_callback and remove_from_callback

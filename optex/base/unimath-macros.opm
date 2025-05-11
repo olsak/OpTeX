@@ -174,7 +174,7 @@
          \_global\_aheadto\_boldmath{\_loadumathfamily #1{#4}{\_addUmathdefault #5} }%
       \_fi
       \_normalmath
-      \_wterm{add-MATH-FONT: #1=\the#1, "#2", \ifx"#4"\else bold: "#4"\fi}%
+      \_wterm{add-MATH-FONT: #1=\_the#1, "#2", \_ifx"#4"\_else bold: "#4"\_fi}%
    \_fi \_fi
 }
 \_def\_addUmathdefault {script=math;} % default font features when \_addUmathfont is used

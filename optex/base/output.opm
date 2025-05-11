@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2024-02-29>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2025-05-04>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another
@@ -78,7 +78,7 @@
      \_resetattrs
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
-     \_pdfrunninglinkoff \_makeheadline \_pdfrunninglinkon
+     \_makeheadline
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}% \pagebody in plainTeX
      \_makefootline}%
 }
@@ -90,9 +90,10 @@
    \_cod -----------------------------
 
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse
-   \_vbox to\_zo{\_vss
+   \_vbox to\_zo{\_vss \_pdfrunninglinkoff
                  \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
-                 \_hbox to\_xhsize{\_normalbaselines\_the\_headline}\_hbox{}}\_nointerlineskip
+                 \_hbox to\_xhsize{\_normalbaselines\_the\_headline}\_hbox{}%
+                 \_pdfrunninglinkon}\_nointerlineskip
    \_fi
 }
 
@@ -264,6 +265,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2025-05-04 \_pdfrunninglinkoff, \_pdfrunninglinkon moved, used only if non-empty \headline
 2024-02-29 \_pdfrunninglinkoff, \_pdfrunninglinkon used
 2022-04-28 \_optexshipout introduced
 2022-10-22 \_normalbaselines added to \makehead/foot/line
