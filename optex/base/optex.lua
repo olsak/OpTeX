@@ -689,7 +689,10 @@ optex.directpdfliteral = pdfliteral
 -- Because of the negative value for running dimensions the simplistic check,
 -- while not fully correct, should produce the right results. We currently
 -- don't check for the font mode at all, and instead conservatively consider
--- glyphs to always need stroke color.
+-- glyphs to always need stroke color. But users can set
+-- `\directlua{`{\Red`optex.glyphstroked`}`=false}` if they are sure that their document
+-- doesn't include colorized fonts in mode 1 or 2. Then the PDF output can be smaller
+-- in its size (when there is huge amount of color switching, like in this document).
 --
 -- Leaders (represented by glue nodes with leader field) are not handled fully.
 -- They are problematic, because their content is repeated more times and it
@@ -702,9 +705,12 @@ optex.directpdfliteral = pdfliteral
 -- We use the `node.direct` way of working with nodes. This is less safe, and
 -- certainly not idiomatic Lua, but faster and codewise more close to the way
 -- \TeX/ works with nodes.
+--
+optex.glyphstroked = true  -- default: insert stroke color for glyphs too.
+
 local function is_color_needed(head, n, id, subtype) -- returns fill, stroke color needed
     if id == glyph_id then
-        return true, true
+        return true, optex.glyphstroked
     elseif id == glue_id then
         n = getleader(n)
         if n then
@@ -849,6 +855,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2025-05-12 optex.glyphstoked introduced
    -- 2025-05-11 if not \vbox then raw_ht retunts zero instead error
    -- 2024-12-18 \pdfstring etc. introduced
    -- 2024-09-06 raw_ht() implemented
