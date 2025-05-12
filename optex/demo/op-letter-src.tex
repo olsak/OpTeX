@@ -1,0 +1,62 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+%% This file was prepared by Vuk Djukanović <djukavuk@fit.cvut.cz>
+
+\letter         % \letter OpTeX style activated
+\fontfam[DejaVu]
+\srclang
+
+\address
+  Поштовани господине
+  Бора Бирократа
+  директор Завода за даље могућности
+  Службена 789
+  Београд 12345
+
+\hfill У Београду, дана \today
+
+\subject Захтев за могућност даљих могућности
+
+Поштовани господине директоре,
+
+на основу Вашег дописа бр.~123456/78-дата и електронског позива, дозволите ми 
+да Вас замолим да размотрите моју могућност даљих могућности.
+Лорем ипсум долор сит амет, консектетур адиписициң елит, сед до
+еиусмод темпор инцидидунт ут лаборе ет долоре магна аликуа. Ут еним ад миним
+вениам,quis ноструд ексерцитатион улламцо лаборис ниси ут аликип екс еа
+цоммодо консекуат.
+
+Лорем ипсум долор сит амет, консектетур адиписициң елит, сед до
+еиусмод темпор инцидидунт ут лаборе ет долоре магна аликуа. Ут еним ад миним
+вениам,quis ноструд ексерцитатион улламцо лаборис ниси ут аликип екс еа
+цоммодо консекуат. Дуис ауте ируре долор ин репрехендерит ин волуптате велит
+ессе циллум долоре еу фугиат нулла париатур.
+
+С поштовањем
+
+\hfill \address
+  {\it Вук Ђукановић}
+  студент \TeX а
+  Хумска 1
+  Београд 11000
+
+\bye
+
+-------------------------------------------------
+
+Note: we need Cyrillic support in fonts with characters љ, њ, ћ, ђ, џ.
+This assumption is met in case of font families:
+
+   New Computer Modern
+   Linux Libertine
+   DejaVu
+   Montserrat
+   Roboto
+
+You can run the following test file:
+
+\catalogsample={АБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ}
+\catalogonly={New Computer Modern, STIX, XITS, STIXTwo, Linux Libertine, Libertinus, Gentium, DejaVu,%
+    Antykwa Torunska, Alegreya, Heuristica, Erewhon, EB Garamond, Garamond Libre, Source Pro,%
+    Merriweather, Roboto, Raleway, Kurier, Iwona, Lato, Montserrat, XCharter, Fira, OldStandard, Clara, Plex%
+}
+\fontfam [Catalogue]

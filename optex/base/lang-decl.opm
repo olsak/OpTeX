@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \langlist {Languages declaration <2022-10-11>} % preloaded in format
+\_codedecl \langlist {Languages declaration <2025-05-12>} % preloaded in format
 
    \_doc -----------------------------
    \`\_preplang` `<lang-id> <LongName> <lang-tag> <hyph-tag> <lr-hyph>`
@@ -100,8 +100,8 @@
 \_preplang ro       Romanian        ro        ro                22
 \_preplang rm       Romansh         rm        rm                22
 \_preplang ru       Russian         ru        ru                22
-\_preplang srl      Serbian         sr-latn   sh-latn           22
-\_preplang src      SerbianCyrl     sr-cyrl   sh-cyrl           22
+\_preplang srl      Serbian         srlatn    sh-latn           22
+\_preplang src      SerbianCyrl     srcyrl    sh-cyrl           22
 \_preplang sk       Slovak          sk        sk                23
 \_preplang sl       Slovenian       sl        sl                22
 \_preplang es       Spanish         es        es                22
@@ -321,6 +321,7 @@
 
 \_endcode
 
+2025-05-12 sr-latn -> sllatn, sr-cyrl -> srcyrl
 2022-10-11 \_langreset introduced
 2022-02-19 \_langinput moved here
 2022-02-17 released, original file was hyphen-lan.opm

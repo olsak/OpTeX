@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2022-10-11>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2025-05-12>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -164,6 +164,51 @@
 \_sdef{_mt:today:et}{\_the\day.~\_mtext{m\_the\_month} \_the\_year}
 \_quotationmarks et {„“„“}
 
+\_langdata srlatn {Serbian}   % ------------------------------------------------
+\_langw srlatn  Poglavlje     Tabela     Slika      Predmet
+\_langb srlatn  { i } { i~drugi } {\,ur.} {vidi~} {tom~} {br.~} {str.~} {~str.} {,~urednik} {,~urednici}
+            {Dostupno na } {Dostupno i na }
+            {Bakalorski rad} {Diplomski rad} {Doktorska disertacija}
+\_monthw srlatn januara februara marta aprila maja juna
+            jula avgusta septembra oktobra novembra decembra
+\_sdef{_mt:today:srlatn}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
+\_quotationmarks srlatn {„“‚‘}
+\_preplangmore   srlatn {\_frenchspacing \_postexhyphenchar=`\-
+                     \_def\_langreset{\_postexhyphenchar=0 }}
+
+\_def \_sortingdatasrlatn {% it is not a subset of \_sortingdatalatin, there is different order
+  /,{ },-,&,@,%
+  aA,bB,cC,čČ,ćĆ,dD,đĐ,%
+  ^^T^^U,% dj Dj
+  eE,fF,gG,hH,iI,jJ,kK,lL,%
+  ^^V^^W,% lj Lj
+  mM,nN,oO,pP,rR,sS,šŠ,tT,uU,vV,zZ,žŽ,%
+  0,1,2,3,4,5,6,7,8,9,'%
+}
+\_let \_ignoredcharssrlatn = \_ignoredcharsgeneric
+\_def \_compoundcharssrlatn {dj:^^T Dj:^^U lj:^^V Lj:^^W}
+
+\_langdata srcyrl {SerbianCyrl}   % ------------------------------------------------
+\_langw srcyrl  Поглавље     Табела     Слика      Предмет
+\_langb srcyrl  { и } { и~други } {\,ур.} {види~} {том~} {бр.~} {стр.~} {~стр.} {,~уредник} {,~уредници}
+            {Доступно на } {Доступно и на }
+            {Бакалорски рад} {Дипломски рад} {Докторска дисертација}
+\_monthw srcyrl јануара фебруара марта априла маја јуна
+            јула августа септембра октобра новембра децембра
+\_sdef{_mt:today:srcyrl}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
+\_quotationmarks srcyrl {„“‚‘}
+\_preplangmore   srcyrl {\_frenchspacing \_postexhyphenchar=`\-
+                     \_def\_langreset{\_postexhyphenchar=0 }}
+
+\_def \_sortingdatasrcyrl {% it is not a subset of \_sortingdatalatin, there is different order
+  /,{ },-,&,@,%
+  аА,бБ,вВ,гГ,дД,ђЂ,еЕ,жЖ,зЗ,иИ,јЈ,кК,лЛ,љЉ,мМ,%
+  нН,њЊ,оО,пП,рР,сС,тТ,ћЋ,уУ,фФ,хХ,цЦ,чЧ,џЏ,шШ,%
+  0,1,2,3,4,5,6,7,8,9,'%
+}
+\_let \_ignoredcharssrcyrl = \_ignoredcharsgeneric
+\_def \_compoundcharssrcyrl {}
+
 \_langdata he {Hebrew} % -----------------------------------------------
 \_langw he  פרק      טבלה       איור       נושא
 \_langb he  {, ו- }  { ועמיתים.} {\,מהדורה} {מצוטט מ-~} {כרך~} {מס׳~} {עמודים~} {עמ׳~} {:מחבר~} {:מחברים~}
@@ -195,6 +240,7 @@
 
 \_endcode
 
+2025-05-12: Serbian data added (by Vuk Djukanović)
 2023-08-30: Hebrew data added
 2022-10-11: \postexhyphenchar setting added to cs and sk languages
 2022-10-10: { ed.} changed to {\,ed.}
