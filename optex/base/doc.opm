@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2023-12-10>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2025-05-15>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General declarations.
@@ -81,7 +81,7 @@
    accumulates them to `\_tmpa` as long as they have category 11. It
    means that `\_tmpa` includes the name of the following control sequence
    when \fw\`\_makecsF` is run. The printing form of the control
-   sequence is set to `\_tmpb` and the test of existence `\,<csname>`is
+   sequence is set to `\_tmpb` and the test of existence `\,;<csname>`is
    performed. If it is true then active hyperlink is created. If not, then
    the first `_` or `.` is removed from `\_tmpa` and the test is repeated.
    \_cod -----------------------------
@@ -91,12 +91,12 @@
 \_def\_makecsA{\_ifcat a\_noexpand\_next \_ea\_makecsB \_else \_ea\_makecsF \_fi}
 \_def\_makecsB#1{\_addto\_tmpa{#1}\_futurelet\_next\_makecsA}
 \_def\_makecsF{\_let\_tmpb=\_tmpa
-       \_ifx\_tmpa\_empty \_csstring\\%
-       \_else \_ifcsname ,\_tmpa\_endcsname \_trycs{el:\_tmpa}{\_intlink}%
-       \_else \_remfirstunderscoreordot\_tmpa
-              \_ifx\_tmpa\_empty \_let\_tmpa=\_tmpb \_fi
-              \_ifcsname ,\_tmpa\_endcsname \_trycs{el:\_tmpa}{\_intlink}%
-       \_else \_csstring\\\_tmpb \_fi\_fi\_fi
+   \_ifcsname el:\_tmpa\_endcsname \_csname el:\_tmpa\_endcsname \_returnfi \_fi
+   \_ifcsname ,;\_tmpa\_endcsname \_intlink \_returnfi \_fi
+   \_remfirstunderscoreordot\_tmpa
+   \_ifcsname el:\_tmpa\_endcsname \_csname el:\_tmpa\_endcsname \_returnfi \_fi
+   \_ifcsname ,;\_tmpa\_endcsname \_intlink \_returnfi \_fi
+   \_csstring\\\_tmpb \_relax
 }
 \_def\_processinput{%
    \_let\_start=\_relax
@@ -177,23 +177,38 @@
 \_public \vitt ;
 
    \_doc -----------------------------
-   The Index entries are without the trailing backslash in `.ref` file.
-   When printing Index, we distinguish the Index entries with their main
-   documentation point (they are created as links and backslash is added),
-   Index entries with only user documentation points have backslash added
-   but no link is created. Other index entries are printed as usual
-   without backslash.
+   The Index entries of control sequences are with semicolumn instead backslash in `.ref` file.
+   It is ignored when sorting but doesn't cause problems in the `.ref` file.
+   The Index entries of normal sequences are finished by `|` because these
+   entries should be sorted just after control sequences with the same name.
+   When printing Index, we firts try to refer to the main documentation
+   point (the `\cs:name` or `\ns:name` exists).
+   Index entries with only user documentation points refers to this point.
+   Other index entries are printed as usual without backslash.
    \_cod -----------------------------
 
 \_addto \_ignoredcharsen {_}  % \foo, \_foo is the same in the fist pass of sorting
-\_let\_optexprintii=\_printii % original \_printii used for other Index entries
-\_def\_printii #1&{%
-   \_ifcsname cs:#1\_endcsname
-      \_noindent \_hskip-\_iindent {\_tt \_link[cs:#1]\ulinkcolor{\_bslash#1} }\_else
-      \_ifcsname cs:^#1\_endcsname \_noindent \_hskip-\_iindent {\_tt\_bslash#1 }\_else
-         \_afterfi{\_afterfi{\_optexprintii #1&}}\_fi\_fi
+\_let\_optexprintii=\_printii
+\_def\_printii #1#2&{%
+   \_if ;#1\_def\_tmp{#2}\_else \_printiiB #1#2\_end|\_end\_relax{#1#2}\_fi % does \def\_tmp{#1#2}
+   \_ea\_definefirstii \_tmp&%
+   \_ifx\_firstii\_lastii\_else
+      \_ea\_newiiletter\_ea{\_firstii}{\_tmp}\_let\_lastii=\_firstii\_fi
+   \_let\_currii=\_tmp \_the\_everyii \_noindent
+   \_hskip-\_iindent \_ignorespaces
+   \_if ;#1\_printiiC c\_bslash{#1#2}\_else \_printiiC n\_empty{#1#2}\_fi
 }
-\_def\_pgprintA #1{#1} % no hyperlinks from page numbers
+\_def\_printiiB#1|\_end#2\_relax#3{\_ifx^#2^\_def\_tmp{#3}\_else\_def\_tmp{#1}\_fi}
+\_def\_printiiC #1#2#3{% #1: c or n, #2: \_bslash or \_empty, \_tmp: name, #3: (raw name)
+   \_printiiD #1#2{#3}% maybe other index types
+   \_ifcsname #1s:\_tmp\_endcsname {\_tt\_link[#1s:\_tmp]\ulinkcolor{#2\_tmp}}\_returnfi\_fi
+   \_ifcsname #1s:^\_tmp\_endcsname {\_tt\_link[#1s:^\_tmp]\ulinkcolor{#2\_tmp}}\_returnfi\_fi
+   \_isnextchar<{\_ea\_printiiA\_ignoreit}%
+      {\_isnextchar>{\_ea\_printiiA\_ignoreit}{\_printiiA}}#3//% other index types
+   \_relax \_space
+}
+\_def\_printiiD #1#2#3{} % macro programmer can redefine it and declare another index types
+\_def\_pgprintA #1{#1}   % no hyperlinks from page numbers
 
 \_def\_printiipages#1&{\_let\_pgtype=\_undefined \_tmpnum=0
    {\_rm\_printpages #1,:,\_par}}
@@ -221,11 +236,19 @@
 \_everyintt{\_catcode`\<=13 \_catcode`\.=11 }
 
    \_doc -----------------------------
-   Main documentation points and hyperlinks to/from it.
-   Main documentation point: \code{\\`\\foo`}.
-   User documentation point: \code{\\^`\\foo}, first occurrence only.
-   The next occurrences are only links to the main documentation point.
-   Link to user documentation point: \code{\\~`\\foo}.
+   Main documentation point to a control sequence is created by
+   \code{\\`\\foo`} and its link name is `cs:foo`.
+   Main documentation point to another sequence (without backslash)
+   is created by \code{\\`foo`} and its link name is `ns:foo`.
+   User documentation point to a control sequence is created by
+   \code{\\^`\\foo`} and its link name is `cs:^foo`.
+   User documentation point to another sequence (without backslash)
+   is created by \code{\\^`foo`} and its link name is `ns:^foo`.
+   Only the first occurrence of the user documentation point has its
+   link destination. User documentation point are linked to relevant main
+   decumentation points. When the link destination is created then
+   the control sequence with the same name is defined as an empty macro.
+   Users can create a link to the user documentation point by \code{\\~`\\foo}.
    \_cod -----------------------------
 
 \_def\_docrefcodes{\_catcode`\.=11\_relax}
@@ -233,34 +256,50 @@
 \_verbchar`
 
 \_def\`{\_bgroup \_docrefcodes \_mainpoint}
-\_def\_mainpoint #1`{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
-   \_ifcsname cs:\_tmp\_endcsname \_moremainpoints \_else \_dest[cs:\_tmp]\_fi
-   \_sxdef{cs:\_tmp}{}%
-   \_hbox{\_ifcsname cs:^\_tmp\_endcsname
-            \_link[cs:^\_tmp]{\mlinkcolor}{\_tt\_csstring\\\_tmp}\_else
-            {\_tt\mlinkcolor\_csstring\\\_tmp}\_fi}%
+\_def\_mainpoint #1`{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}%
+   \_ea \_mainpointA \_string#1\_relax % \defines \_cn as c or n
+   \_iindex{\_if\_cn c;\_tmp\_else\_tmp|\_fi}%
+   \_ifcsname \_cn s:\_tmp\_endcsname \_moremainpoints \_else \_dest[\_cn s:\_tmp]\_fi
+   \_sxdef{\_cn s:\_tmp}{}%
+   \_hbox{\_ifcsname \_cn s:^\_tmp\_endcsname
+            \_link[\_cn s:^\_tmp]{\mlinkcolor}{\_tt\_if\_cn c\_bslash\_fi \_tmp}\_else
+            {\_tt \mlinkcolor \_if\_cn c\_bslash\_fi \_tmp}\_fi}%
 }
+\_def\_mainpointA #1#2\_relax {\_edef\_cn{\_if\_csstring\\#1c\_else n\_fi}}
+\_def\_moremainpoints{\_opwarning{Second main documentation point \_if\_cn c\_bslash\_fi\_tmp}}
+
 \_def\^`{\_bgroup \_docrefcodes \_docpoint}
-\_def\_docpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
-   \_hbox{\_ifcsname cs:^\_tmp\_endcsname \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
-         \_link[cs:\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
-   \_futurelet\_next\_cslinkA
+\_def\_docpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}%
+   \_ea \_mainpointA \_string#1\_relax % \defines \_cn as c or n
+   \_if\_cn c\_iindex{;\_tmp}%
+      \_hbox{\_ifcsname cs:^\_tmp\_endcsname
+             \_else \_dest[cs:^\_tmp]\_sxdef{cs:^\_tmp}{}\_fi
+             \_link[cs:\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
+      \_afterfi{\_futurelet\_next\_cslinkA}%
+   \_else \_afterfi {\_docpointN #1}\_fi
 }
 \_def\_cslinkA{\_ifx\_next`\_ea\_ignoreit \_else \_ea\_ea\_ea`\_ea\_string\_fi}
-
-\_def\~`{\_bgroup \_docrefcodes \_doctpoint}
-\_def\_doctpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}\_iindex{\_tmp}%
-   \_hbox{\_link[cs:^\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
-   \_futurelet\_next\_cslinkA
+\_def\_docpointN #1`{\_iindex{#1|}%
+      \_hbox{\_ifcsname ns:^#1\_endcsname \_else \_dest[ns:^#1]\_sxdef{ns:^#1}{}\_fi
+             \_link[ns:#1]{\ulinkcolor}{\_tt#1}}%
 }
-\_def\_moremainpoints{\_opwarning{Second main documentation point \_bslash\_tmp}}
+\_def\~`{\_bgroup \_docrefcodes \_doctpoint}
+\_def\_doctpoint #1{\_egroup\_leavevmode\_edef\_tmp{\_csstring#1}%\_iindex{\_tmp}%
+   \_ea \_mainpointA \_string#1\_relax % \defines \_cn as c or n
+   \_if\_cn c\_iindex{;\_tmp}%
+       \_hbox{\_link[cs:^\_tmp]{\ulinkcolor}{\_tt\_string#1}}%
+       \_afterfi{\_futurelet\_next\_cslinkA}%
+   \_else \_aferfi{\_docpointNA #1}\_fi
+}
+\_def\_docpointNA #1`{\_iindex{#1|}\_hbox{\_link[ns:^#1]{\ulinkcolor}{\_tt#1}}}
+
 
    \_doc -----------------------------
    The \`\fw` macro for forward links to user documentation point (given later)
    is defined here.
    \_cod -----------------------------
 
-\_def\_fw\`#1`{{\_slet{cs:^\_csstring#1}{}\`#1`}}
+\_def\_fw\`#1`{{\_slet{cs:^\_csstring#1}{_fw}\_slet{ns:^\_csstring#1}{_fw}\`#1`}}
 \_public \fw ;
 
 \_endcode %-------------------------------------------
@@ -303,13 +342,16 @@ applied, the reading of the file opened by `\printdoc` is finished.
 You cannot reach the end of the file (without `\_endcode`) in the listing
 mode.
 
-The main documentation point is denoted by \code{\\`\\}`<sequence>`\code{`}
-in red, for example \code{\\`\\foo`}.
+The main documentation point can document
+a control sequence (use \code{\\`\\}`<sequence>`\code{`})
+or a normal sequence without backslash (use \code{\\`}`<text>`\code{`}).
+It is printed in red. Examples: \code{\\`\\foo`} (control sequence),
+\code{\\`foo`} (normal sequence).
 The user documentation point is the first occurrence of
-\code{\\^`\\}`<sequence>`\code{`}, for example \code{\\^`\\foo`}.
-There can be more such markups, all of them are hyperlinks to the main
+\code{\\^`\\}`<sequence>`\code{`} or \code{\\^`}`<text>`\code{`}
+There can be more such markups, all of them are hyperlinks to the relevant main
 documentation point.
-And main documentation point is a hyperlink to the user documentation point
+And main documentation point is a hyperlink to the relevant user documentation point
 if this point precedes. Finally, the
 \code{\\~`\\}`<sequence>`\code{`} (for example \code{\\~`\\foo`}) are
 hyperlinks to the user documentation point.
@@ -324,7 +366,7 @@ follow then use prefix \^`\fw` before~\code{\\`}, for example
 \code{\\fw\\`\\foo`} is main documentation point where the user
 documentation point is given later and forward hyperlink is created here.
 
-Control sequences and their page positions of main documentation points and user
+Documented sequences and their page positions of main documentation points and user
 documentation points are saved to the index.
 
 The listing mode creates all control sequences which are listed in the
@@ -334,23 +376,23 @@ type `\_foo` or `\.foo` although the documentation mentions only `\foo`.
 Another text is printed in black.
 
 The listing mode is able to generate external links to another \OpTeX/-like
-documentation, if the macros `\,<csname>` and `\el:<csname>` are defined.
-The second macro should create a hyperlink using `\_tmpa`
+documentation, if the macro `\el:<csname>` is defined.
+The macro should create a hyperlink using `\_tmpa`
 where the link name of the <csname> is saved and `\_tmpb` where the name of
-the <csname> to be printed is saved (`\tmpb` can include preceding `_` or
-`.` unlike `\_tmpa`). For example, suppose, that we have created
-`optex-doc.eref` file by:
+the <csname> to be printed is saved (`\tmpb` is without backlash but
+it can include preceding `_` or `.` unlike `\_tmpa`). For example,
+suppose, that we have created `optex-doc.eref` file by:
 \begtt
 TEXINPUTS='.;$TEXMF/{doc,tex}//' optex optex-doc
 grep Xindex optex-doc.ref > optex-doc.eref
 \endtt
-The `.eref` file includes only `\_Xindex{<csname>}{}` lines from
+The `.eref` file includes only `\_Xindex{;<csname>}{}` lines from %$
 `optex-doc.ref` file. Then we can use following macros:
 \begtt
-\def\_Xindex#1#2{\sdef{,#1}{}\slet{el:#1}{optexdoclink}}
+\def\_Xindex#1#2{\slet{el:\ignoreit#1}{optexdoclink}}
 \def\optexdoclink{%
-   \edef\extlink{url:\optexdocurl\csstring\#cs:\_tmpa}%
-   \_ea\_urlactive\_ea[\extlink]{\Cyan}{\csstring\\\_tmpb}}
+   \edef\extlink{\optexdocurl\csstring\#cs:\_tmpa}%
+   \xlink{url}{\extlink}{\Cyan}{\csstring\\\_tmpb}}
 \def\optexdocurl{http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf}
 \isfile{optex-doc.eref}\iftrue \input{optex-doc.eref}\fi
 \endtt
@@ -362,6 +404,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2025-05-15 normal sequences (without backslash) can be documented too
 2023-12-10 \catcode`.=11 removed, issue solved by \_makecsD.
 2022-12-11 \_opwaning "Second main documentation point" introduced.
 2022-12-11 \_docrefcodes added (bug due to 2022-11-13 fixed).

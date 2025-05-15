@@ -124,17 +124,16 @@ to the place where the primitive is briefly described.
 %section \"primitives".
 
 % active links directly to the main documentation point but not to the pages:
-\def\_printii #1&{%
-   \noindent\hskip-\iindent
-   \ea\ifx \csname,#1\endcsname \empty % primitive
-      \_dest[cs:#1]% main documentation point for primitives is in the Index
-      \ulink[http://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf\#cs:#1]{\bslash#1}
-      \ea\ea\ea\nopages
-   \else \link[cs:#1]\Blue{\bslash #1} % OpTeX macro
-   \fi
+\def\_printiiD #1#2#3{%
+   \ea\ifx \csname,#3\endcsname \empty % primitive
+      \_dest[cs:\_tmp]% main documentation point for primitives is in the Index
+      {\tt\link[url:\exurl\#cs:\_tmp]\_elinkcolor{\bslash\_tmp}}
+   \nopages \fi
 }
+\def\exurl{https://petr.olsak.net/ftp/olsak/optex/tex-nutshell.pdf}
+
 \def\_pgprintA #1{#1}
-\def\nopages#1&{*\_par}
-\begmulti 3 \tt \makeindex \endmulti
+\def\nopages#1&{\fi\fi\fi{\tt*}\_par}
+\begmulti 3 \makeindex \endmulti
 
 \bye

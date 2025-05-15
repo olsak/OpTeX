@@ -1835,8 +1835,8 @@ information about them are accessible via the external links.
 {\typosize[9/11]
 \def\oturl{https://petr.olsak.net/optex/optex-tricks.html}
 \def\tpg[#1]{\edef\tpgurl{\oturl\##1}}
-\def\t#1{\ea\tA\ea{\string#1}\edef\tmp{\csstring#1}\iindex{\tmp}\dest[cs:\tmp]}
-\def\tA#1{\ea\ulink\ea[\tpgurl]{#1}}
+\def\t#1{\ea\tA\ea{\string#1}\edef\tmp{\csstring#1}\iindex{;\tmp}\dest[cs:\tmp]\sxdef{cs:\tmp}{}}
+\def\tA#1{\ea\ulink\ea[\tpgurl]{\tt#1}}
 
 \medskip
 \tpg[algol]\t\algol, \t\algolkw, \tpg[algolcap]\t\algolcap, \t\makeLOA, \tpg[algolnum]\t\algolnum\
