@@ -22,6 +22,12 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.18> May 2025:
+       Bug causing slow processing fixed (the bug occurred in version 1.17)
+       \foreachx introduced
+       several font files added
+       doc.opm enables to set strings without backslash as main-point too
+
 <1.17> Feb 2025:
        OpTeX uses luahbtex instead luatex as default engine (from TeXlive 2025)
        Default PDF version changed from 1.5 to 1.7
