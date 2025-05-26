@@ -85,7 +85,7 @@ function optex.mdfive(file)
    end
 end
 
--- The `optex.raw_ht ()` function measures the height plus depth of given
+-- The \`optex.raw_ht``()` function measures the height plus depth of given
 -- `\vbox` saved by `\setbox`. It solves the \"dimension too large" problem with big boxes.
 -- It is used in the \^`\_rawht` macro.
 
@@ -140,7 +140,7 @@ optex.define_lua_command = define_lua_command
 local callback = _ENV.callback or {}
 _ENV.callback = callback
 --
--- Save `callback.register` function for internal use.
+-- Save \`callback.register` function for internal use.
 local callback_register = callback.register
 function callback.register(name, fn)
     err("direct registering of callbacks is forbidden, use 'callback.add_to_callback'")
@@ -149,7 +149,7 @@ end
 -- Table with lists of functions for different callbacks.
 local callback_functions = {}
 -- Table that maps callback name to a list of descriptions of its added
--- functions. The order corresponds with `callback_functions`.
+-- functions. The order corresponds with \`callback_functions`.
 local callback_description = {}
 --
 -- Table used to differentiate user callbacks from standard callbacks. Contains
@@ -262,7 +262,7 @@ local valid_callback_types = {
 }
 --
 -- Create a user callback that can only be called manually using
--- `call_callback`. A default function is only needed by "exclusive" callbacks.
+-- \`call_callback`. A default function is only needed by "exclusive" callbacks.
 function callback.create_callback(name, cbtype, default)
     if callback_types[name] then
         err("cannot create callback '%s' - it already exists", name)
@@ -665,7 +665,7 @@ local function pdfliteral(str)
 end
 optex.directpdfliteral = pdfliteral
 --
--- The function {\Red`colorize`}`(head, current, current_stroke, current_tr)`
+-- The function \`colorize``(head, current, current_stroke, current_tr)`
 -- goes through a node list and injects PDF literals according to attributes.
 -- Its arguments are the head of the list to be colored and the current color
 -- for fills and strokes and the current transparency attribute.
@@ -690,7 +690,7 @@ optex.directpdfliteral = pdfliteral
 -- while not fully correct, should produce the right results. We currently
 -- don't check for the font mode at all, and instead conservatively consider
 -- glyphs to always need stroke color. But users can set
--- `\directlua{`{\Red`optex.glyphstroked`}`=false}` if they are sure that their document
+-- `\directlua{`\`optex.glyphstroked``=false}` if they are sure that their document
 -- doesn't include colorized fonts in mode 1 or 2. Then the PDF output can be smaller
 -- in its size (when there is huge amount of color switching, like in this document).
 --
