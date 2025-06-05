@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2023-03-16>} % preloaded in format
+\_codedecl \inspic {Graphics <2025-06-05>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -251,7 +251,7 @@
 
 \_def\_setflcolors#1{% use only in a group
    \_def\_setcolor##1##2##3{##1 ##2}%
-   \_edef#1{\_fcolorvalue}%
+   \_edef#1{\_unless\_ifx\_fcolorvalue\_relax \_fcolorvalue \_fi}%
    \_def\_setcolor##1##2##3{##1 ##3}%
    \_edef#1{#1\_space\_lcolorvalue\_space}%
 }
@@ -448,6 +448,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed
 2022-10-18  \_puttextA defined \long, bug fixed
