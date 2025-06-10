@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.19, 2025-02-14}
+\_def\_math_version {0.20, 2025-06-10}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -23,10 +23,11 @@
       \_kvx {dots}     {\.smartdots}%     \dots behaves like \ldots or \cdots
       \_kvx {interval} {\_let\_=\.interval}% enables \_<0,1)
       \_kvx {rmsbsp}   {\.rmsbsp}%        activates x_[text] and x^[text]
-      \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
+      \_kvx {ibrackets}{\.ibrackets}%     intelligent brackets
       \_kvx {flexipa}  {\.flexipa}%       flexible partial symbol
       \_kvx {mstyle}   {\.mstyle{##1}}%   sets mstyle=TeX or ISO or french or upright
       \_kvx {bstyle}   {\.bstyle{##1}}%   sets bstyle=TeX or ISO or upright or OpTeX
+      \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
       \_kvx {rmchars}  {\.rmchars{##1}}%  does \.rmchars{<list>}
       \_kvx {vargreek} {\.vargreek{##1}}% does \.vargreek{<list>}
       \_kvx {text}     {\.dotext{##1}}%   does \.dotext{<list>}
@@ -274,15 +275,23 @@
 \_nspublic \subeqmark ;
 
    \_doc
-   \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.
+   \`\ibrackets` is implemented analogically as in the \LaTeX/ package `ibrackets`.
+   I.e.\ the `[` and `]` are math active and they are set as `\mathord` by defualt,
+   but they are `\mathopen` if the `+` or `-` follows.
    \_cod
 
-\_def\.bfserif{\.unionly\bfserif{%
-   \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
-   \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}%
+\_def\.ibrackets{\.unionly\ibrackets{%
+   \_mathchardef\.openbracket\_mathcode`[
+   \_mathchardef\.closebracket\_mathcode`]
+   \_mathcode`[="8000 \_mathcode`]="8000
+   {\_global\_adef[{\_futurelet\.next\.openbr}%
+    \_global\_adef]{\_futurelet\.next\.closebr}}%
 }}
+\_def\.openbr{\.setbracket \.openbracket}
+\_def\.closebr{\.setbracket \.closebracket}
+\_def\.setbracket{\_ifx\.next+\_mathopen\_else \_ifx\.next-\_mathopen\_else \_mathord\_fi\_fi}
 
-\_nspublic \bfserif ;
+\_nspublic \ibrackets ;
 
    \_doc
    \`\flexipa` (or \`\flexiblepartial`) runs
@@ -366,6 +375,17 @@
    \_opwarning{pkg:math: \_string#1 ignored: Unicode-math must be loaded}%
    \_ea\_ignoreit \_else \_ea\_useit \_fi
 }
+
+   \_doc
+   \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.
+   \_cod
+
+\_def\.bfserif{\.unionly\bfserif{%
+   \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
+   \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}%
+}}
+
+\_nspublic \bfserif ;
 
    \_doc
    \`\rmchars``{<list>}` is implemented using \O`\foreach`. The list is
@@ -602,8 +622,9 @@ The following macros are defined in this package:
 * \~`\toright`, \~`\toleft` puts the \o`\eqmark` to desired position,
   \~`\subeqmark` prints the given suffix as a part of the equation mark.
 * \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
-* \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
+* \~`\ibrackets` sets `[` and `]` as intelligent brackets.
 * \~`\flexipa` enables flexible partial symbol.
+* \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
 * \~`\rmchars` sets selected characters printed as `\rm`,
   \~`\vargreek` sets Greek leters to their variants.
 * \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
@@ -623,9 +644,10 @@ Following options are provided by the `math` package. You can set them by
 * `interval` sets `\_` as prefix of intervals, see section~\ref[interval].
 * `vert` sets more intelligent `|`, the same as \~`\smartvert`.
 * `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
-* `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
+* `ibrackets` sets intelligent brackets, the same as \~`\ibrackets`.
 * `flexipa` enables flexible partial symbol, the same as \~`\flexipa`.
 * `mstyle=<style>`, `bstyle=<style>` are math styles explained in section~\ref[mstyle].
+* `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
 * `rmchars={<list>}` sets `\rm` for selected characters, the same as \~`\rmchars`,
    see section~\ref[rmchars].
 * `vargreek={<list>}` sets variants for Greek letetters, the same as \~`\vargreek`,
@@ -938,6 +960,14 @@ The package provides two options `rmchars` and `vargreek`. The equation
 sign must follow and then the `{<list>}` with syntax mentioned above. For example
 `\mathsetup{vargreek={\epsilon,\rho}}`.
 
+\sec[ibrackets] Intelligent brackets
+
+Some mathematicians write open intervals like this: $\left]0,1\right[$. But
+\TeX/ is not ready (by default) to set proper spaces around these symbols,
+because `[` is set as `\mathopen` and `]` is set as `\mathclose` atom. When
+\^`\ibrackets` is declared, then the characters `[` and `]` are more intelligent:
+the spaces around then are correct in both cases: `$x\in [0,1]$` and
+`$x\in ]0,1[$`. See `ibrackets` \LaTeX/ package for more detail.
 
 \sec[flexipa] Flexible partial symbol $\partial$
 
@@ -1224,7 +1254,7 @@ The user can read this warning and declare the macro after
 
    \tit Macros for doing math more comfortably
    \hfill Version: \_math_version \par
-   \centerline{\it Petr Olšák\/\fnotemark1, 2022, 2023}
+   \centerline{\it Petr Olšák\/\fnotemark1, 2022, 2023, 2024, 2025}
    \fnotetext{\url{https://petr.olsak.net}}
 
    \notoc\nonum\sec Table of contents
@@ -1241,6 +1271,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.20  2025-06-10  \ibrackets introduced
 0.19  2025-02-14  \mathselector introduced.
 0.18  2025-01-15  \enablefic modifired.
 0.17  2024-12-04  \mathsetup instead \mathset, \.unionly modified
