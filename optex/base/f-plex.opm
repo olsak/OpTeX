@@ -6,7 +6,7 @@
     \thin \elight \light \regular \text \medium \semibold
     \cond \nocond}
    {\rm \bf \it \bi}
-   {}%% No math!
+   {Plex}
    {IBMPlexSerif-Regular}
    {\_def\_fontnamegen {[IBMPlex\_subV-\_currV]:\_fontfeatures}}
 
@@ -49,6 +49,8 @@ Modifiers:^^J
 \_moddef \nocond {\__Plex_nocond}
 
 \_initfontfamily
+
+\_loadmath {[IBMPlexMath-Regular]}
 
 \_endcode
 

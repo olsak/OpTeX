@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2023-06-16>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2025-06-29>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -160,7 +160,7 @@
    `\def\_<key>V{<value>}` in the loop.
    \nl
    \`\_onlyif` `<key>=<value-a>,<value-b>...,<value-z>: {<what>}`
-   runs <what> only if the `\_<key>V` is defined as `<value-a>` or
+   expands <what> only if the `\_<key>V` is defined as `<value-a>` or
    `<value-b>` or ... or `<value-z>`.
    \nl
    \`\_prepcommalist` `ab,{},cd,\_fin,` expands to `ab,,cd,` (auxiliary macro
@@ -186,7 +186,7 @@
    \_ifx,#1\_else\_sdef{_#1V}{#2}\_ea\_ea\_ea\_fsetVa\_fi\_fi
 }
 \_def \_onlyif #1=#2:#3{%
-    \_edef\_act{\_noexpand\_isinlist{,\_prepcommalist #2,\_fin,}{,\_cs{_#1V},}}\_act
+    \_expanded{\_noexpand\_isinlist{,\_prepcommalist #2,\_fin,}{,\_cs{_#1V},}}%
     \_iftrue #3\_fi
 }
 \_def\_prepcommalist#1,{\_ifx\_fin#1\_empty\_else #1,\_ea\_prepcommalist\_fi}
@@ -972,6 +972,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2025-06-29  \_onlyif is expandable.
 2023-06-16  \fontfamsub improved.
 2023-05-30  \catalognextfam introduced.
 2023-04-22  \setwordspace: \fontdimens reset, bug fixed.

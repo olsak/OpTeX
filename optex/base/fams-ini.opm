@@ -322,8 +322,9 @@
    {\roman,\sans,\mono: {\rm\bf\it\bi}}
 
 \_famfrom {IBM, Mike Abbink, Paul van der Laan, Pieter van Rosmalen}
+\_famsrc  {https://www.ibm.com/plex/}
 \_faminfo [Plex]
-   {IBM Plex font family}
+   {Versatile IBM font family}
    {f-plex}
    { \thin,\elight,\light,-,\text: {\rm\it}
      \semibold,-: {\bf\bi}
