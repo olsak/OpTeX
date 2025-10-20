@@ -2,18 +2,20 @@
 
 \_famdecl [Gentium] \Gentium {Serif free fonts, support Greek, Cyrillic, IPA}
         {\caps} {\rm \bf \it \bi} {Termes}
-        {[GentiumPlus-Regular]}
-        {\_def\_fontnamegen {[Gentium\_bkV Plus-\_currV]:\_capsV\_fontfeatures}}
+        {[Gentium-Regular]}
+        {\_def\_fontnamegen {[Gentium-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
  \caps ...... caps & small caps^^J
- \book ...... Book variants (a little bolder)^^J
+ \medium .... \rm\it Medium, \bf\bi Bold^^J
+ \bolder .... \rm\it SemiBold, \bf\bi ExtraBold.^^J
 }}
 
-\_moddef \resetmod {\_fsetV caps={} \_fsetV bk={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
-\_moddef \book     {\_fsetV bk=Book }
+\_moddef \medium   {\_fvars Medium Bold MediumItalic BoldItalic }
+\_moddef \bolder   {\_fvars SemiBold ExtraBold SemiBoldItalic ExtraBoldItalic }
 
 \_initfontfamily % new font family must be initialized
 
@@ -23,4 +25,3 @@ Modifiers:^^J
 
 See the file `f-heros.opm` for information about principles of such
 font-macro-files.
-
