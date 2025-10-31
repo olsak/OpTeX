@@ -252,6 +252,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#randomitems">Random items from a given set of items</a>
     <li><a href="#onlyifnew">Only define a macro if it is not already defined</a>
     <li><a href="#thedimen">Show dimension values in  given unit</a>
+    <li><a href="#qinput">Input only if the filename is in a declared list</a>
 </ul>
 
 <li>Simple templates
@@ -7091,6 +7092,40 @@ do \sdef{thedimen:pt}{1} \sdef{thedimen:cm}{28.4527559} etc. and use
 \trycs uses internal TeX's hash table.
 
 <p CLASS=datum>(0132) -- P O 2024-03-09<p>
+
+<h2><a name="qinput"></a>Input only if the filename is in a declared list</h2>
+
+<p>We create something similar like LaTeX's \inludeonly command.
+The \qinput can be used instead \input if you have a document
+with more parts:
+
+<pre>
+\def\qinput #1 {\def\next{\input{#1}}%
+   \ifx\qinputonly\undefined \ea\next \else
+   \isinlist{\ea,\qinputonly,}{,#1,}\iftrue \ea\ea\ea \next \fi\fi
+}
+% ... more declarations for your document
+
+\def\qinputonly{part-b,part-c}
+
+\qinput part-a
+\qinput part-b
+\qinput part-c
+
+\bye
+</pre>
+
+<p>If the macro \qinputonly is not defined then \qinput reads the given file
+like \input. It means that all \qinput commands are performed and whole
+document is created. If the macro \qinputonly includes a comma separated
+list of filenames (no space before/after comma), then only mentioned files are
+inputted. In the example above, the files part-b.tex and part-c.tex are
+read, the file part-a.tex is ignored.
+
+<p>Note that \qinput is not an expandable primitive. It means that it doesn't
+behave exactly like \input although the macro \qinputonly is not defined.
+
+<p CLASS=datum>(0169) -- P O 2025-10-30<p>
 
 <p CLASS="lmarg">Simple templates</p>
 
