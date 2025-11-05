@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2025-06-17>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2025-11-05>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General declarations.
@@ -168,12 +168,16 @@
 \_public \printdoc \printdoctail ;
 
    \_doc -----------------------------
-   You can do `\verbinuput \vitt{<filename>} (<from>-<to>) <filename>`
+   You can do \^`\verbinput` \`\vitt``{<filename>} (<from>-<to>) <filename>`
    if you need analogical design like in listing mode.
    \_cod -----------------------------
 
-\_def\_vitt#1{\_def\docfile{#1}\_ttline=-1
-   \_everytt={\_typosize[8/10]\_let\_printverbline=\_printcodeline \_medskip}}
+\_def\_vitt#1{\_def\docfile{#1}\_ttline=-1 \_everytt={}%
+   \_ifnum\_ttline<0 \_let\_printverblinenum=\_relax \_else \_initverblinenum \_fi
+   \_let\_printverblinenum=\_normalprintverblinenum
+   \_typosize[8/10]\_let\_printverbline=\_printcodeline \_medskip
+}
+\_let\_normalprintverblinenum=\_printverblinenum
 
 \_public \vitt ;
 
@@ -405,6 +409,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2025-11-05 \vitt corrected
 2025-06-17 \? etc. in listing mode printed, bug from previous patch fixed
 2025-05-15 normal sequences (without backslash) can be documented too
 2023-12-10 \catcode`.=11 removed, issue solved by \_makecsD.
