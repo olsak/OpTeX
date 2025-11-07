@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \printdoc {Macros for documentation printing <2025-11-05>} % loaded on demand by \load[doc]
+\_codedecl \printdoc {Macros for documentation printing <2025-11-07>} % loaded on demand by \load[doc]
 
    \_doc -----------------------------
    General declarations.
@@ -144,6 +144,8 @@
    \_hskip\_hsize\_vbox to0pt{\_vss\_llap{\fnamecolor\docfile}\_kern7.5pt}\_hss}%
    \_let\_printfilename=\_relax
 }
+\_let\_normalprintfilename=\_printfilename
+\_addto\_printcomments{\_let\_printfilename=\_normalprintfilename}
 \_everytt={\_let\_printverblinenum=\_relax}
 
 \_long\_def\_endverbprinting#1\_fin#2\_fin{\_fi\_fi \_global\_maxlines=100000
@@ -409,6 +411,7 @@ have the same meaning: `\optexdoclink` in this example. And
 
 \endinput
 
+2025-11-07 \_printfilename repeated after \commentschars interruption
 2025-11-05 \vitt corrected
 2025-06-17 \? etc. in listing mode printed, bug from previous patch fixed
 2025-05-15 normal sequences (without backslash) can be documented too
