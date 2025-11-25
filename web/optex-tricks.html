@@ -938,7 +938,6 @@ you can do the following:
 \directlua{
 local funcs = lua.get_functions_table()
 local luafunction_count = \csstring#funcs
-
 luatexbase.new_luafunction = function(name)
    luafunction_count = math.max(\csstring#funcs,luafunction_count) + 1
    return luafunction_count
@@ -946,9 +945,7 @@ end
 luatexbase.callbacktypes.pre_append_to_vlist_filter = "list"
 require'lua-ul'
 }
-\catcode`\@=11
-\let\_additcorr\sw@slant
-\catcode`\@=12
+\slet{_additcorr}{sw@slant}
 </pre>
 
 <p>The lines before require'lua-ul' are to make the package comaptiable with OpTeX,
