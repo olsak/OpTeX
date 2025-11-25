@@ -878,6 +878,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2025-11-25 pre_append_to_vlist_filter callback added
    -- 2025-05-12 optex.glyphstoked introduced
    -- 2025-05-11 if not \vbox then raw_ht retunts zero instead error
    -- 2024-12-18 \pdfstring etc. introduced
