@@ -16,6 +16,7 @@ local fmt = string.format
 
 local node_id = node.id
 local node_subtype = node.subtype
+local flush_node = node.flush_node
 local glyph_id = node_id("glyph")
 local rule_id = node_id("rule")
 local glue_id = node_id("glue")
@@ -461,6 +462,22 @@ callback_register("mlist_to_hlist", function(head, ...)
     end
     return new_head
 end)
+
+default_functions["append_to_vlist_filter"] = function(n, _, prevdepth)
+    return node.prepend_prevdepth(n, prevdepth)
+end
+callback.create_callback("pre_append_to_vlist_filter","list")
+callback_register("append_to_vlist_filter", function(box,locationcode,prevdepth,mirrored)
+    local current = call_callback("pre_append_to_vlist_filter",
+                                  box, locationcode, prevdepth,mirrored)
+    if not current then
+      flush_node(box)
+      return
+    end
+    return call_callback("append_to_vlist_filter",
+                       current, locationcode, prevdepth, mirrored)
+  end
+)
 --
 -- For preprocessing boxes just before shipout we define custom callback. This
 -- is used for coloring based on attributes.
