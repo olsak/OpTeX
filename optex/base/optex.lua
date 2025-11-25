@@ -462,7 +462,11 @@ callback_register("mlist_to_hlist", function(head, ...)
     end
     return new_head
 end)
-
+--
+-- Create \"virtual" callback `pre_append_to_vlist_filter` by setting
+-- `append_to_vlist_filter` callback. The default behaviour of `append_to_vlist_filter` is kept by
+-- using a default function, but it can still be overridden by using
+-- `add_to_callback`.
 default_functions["append_to_vlist_filter"] = function(n, _, prevdepth)
     return node.prepend_prevdepth(n, prevdepth)
 end
@@ -474,6 +478,8 @@ callback_register("append_to_vlist_filter", function(box,locationcode,prevdepth,
       flush_node(box)
       return
     end
+    -- append_to_vlist_filter means either added functions or standard luatex behavior
+    -- of node.prepend_prevdepth (handled by default function)
     return call_callback("append_to_vlist_filter",
                        current, locationcode, prevdepth, mirrored)
   end
