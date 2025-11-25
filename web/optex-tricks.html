@@ -109,6 +109,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#fakecaps">Small caps if font doesn't provide it</a>
     <li><a href="#autokern">Modification kerning data in fonts</a>
     <li><a href="#glyphmove">Move glyphs by any offset</a>
+	<li><a href="#luaul">Using the lua-ul package</a>
 </ul>
 
 <li>Lists
@@ -924,6 +925,69 @@ the depth at all.
 can sometimes cause surprising side effects.
 
 <p CLASS="datum">(0140) -- Petr Krajník 2024-10-10<p>
+<hr>
+
+<h2><a name="luaul"></a>Using the lua-ul package</h2>
+
+<p>The <a href="https://ctan.org/pkg/lua-ul">lua-ul package</a>
+allows to underline, strikethough, and highlight text without affecting
+line breaks, kerning, hypheneation etc. To load it in an OpTeX document
+you can do the following:
+
+<pre>
+\directlua{
+local funcs = lua.get_functions_table()
+local luafunction_count = \csstring#funcs
+
+luatexbase.new_luafunction = function(name)
+   luafunction_count = math.max(\csstring#funcs,luafunction_count) + 1
+   return luafunction_count
+end
+luatexbase.callbacktypes.pre_append_to_vlist_filter = "list"
+require'lua-ul'
+}
+\catcode`\@=11
+\let\_additcorr\sw@slant
+\catcode`\@=12
+</pre>
+
+<p>The lines before require'lua-ul' are to make the package comaptiable with OpTeX,
+and a fix for \_additcorr is required because it may remove a glue or penalty node
+and restore it, but without its attributes, which may affect underlining in some cases.
+
+<p>After loading the lua modue, there are three new macros defined,
+\LuaULSetUnderline, \LuaULNewUnderlineType and \LuaULResetUnderline.
+\LuaULNewUnderlineType accept a \leader inside curly craces, and expands
+to a number that correspond to this leader and an attribute value.
+\LuaULSetUnderline accept this mentioned value and sets and attribute.
+You can use these together like so:
+
+<pre>
+\protected\edef\ul{\LuaULSetUnderline
+		\LuaULNewUnderlineType{\leaders\vrule height-1ptdepth1.5pt\hskip0pt}}
+
+</pre>
+
+<p> Now \ul acts like a font switch command, and you can do {\ul underlined}.
+Note that this leader is frozen at creation time, so e.g. {\Red\ul underlined}
+will not produce red line. If you want the undeline to respect colors you can
+create new underline types dynamically. For example:
+
+<pre>
+\protected\def\ul{\ifcsname ul:\the\_colorattr\endcsname
+    \lastnamedcs
+  \else
+    \sxdef{ul:\the\_colorattr}{\LuaULSetUnderline
+      \LuaULNewUnderlineType{\leaders\vrule height-1ptdepth1.5pt\hskip0pt}}%
+      \lastnamedcs
+  \fi
+}
+</pre>
+
+<p>You can also use \directlua{tex.print(tex.sp("1ex"))} to respect font size etc.
+
+<p>\LuaULResetUnderline disables all lua-ul's attributes, you can use it in \_resetattrs.
+<p CLASS=datum>(0170) -- Udi Fogiel, 2025-11-25<p>
 <hr>
 
 <p CLASS="lmarg">Lists</p>
@@ -7937,7 +8001,7 @@ end)
 
 See also <a href="https://github.com/olsak/OpTeX/issues/173">this discussion</a>.
 
-<p CLASS=datum>(0136) -- Udi-Fogiel, 2024-05-02<p>
+<p CLASS=datum>(0136) -- Udi Fogiel, 2024-05-02<p>
 <hr>
 
 <h2><a name="replmacro"></a>Patching macros using regular expressions</h2>
