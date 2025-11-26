@@ -17,6 +17,8 @@ local fmt = string.format
 local node_id = node.id
 local node_subtype = node.subtype
 local flush_node = node.flush_node
+local flush_list = node.flush_list
+local node_traverse = node.traverse
 local glyph_id = node_id("glyph")
 local rule_id = node_id("rule")
 local glue_id = node_id("glue")
@@ -91,10 +93,10 @@ end
 -- It is used in the \^`\_rawht` macro.
 
 function optex.raw_ht()
-    local nod = tex.box[token.scan_int()]       -- read head node of the given box
+    local nod = tex.box[token_scanint()]       -- read head node of the given box
     local ht = 0
-    if nod ~= nil and nod.id == vlist_id then
-        for n in node.traverse(nod.head) do
+    if nod and nod.id == vlist_id then
+        for n in node_traverse(nod.head) do
             if n.id == hlist_id or n.id == vlist_id or n.id == rule_id then
                 ht = ht + n.height + n.depth
             elseif n.id == glue_id then
@@ -446,7 +448,7 @@ callback_register("mlist_to_hlist", function(head, ...)
     -- pre_mlist_to_hlist_filter
     local new_head = call_callback("pre_mlist_to_hlist_filter", head, ...)
     if new_head == false then
-        node.flush_list(head)
+        flush_list(head)
         return nil
     else
         head = new_head
@@ -457,7 +459,7 @@ callback_register("mlist_to_hlist", function(head, ...)
     -- post_mlist_to_hlist_filter
     new_head = call_callback("post_mlist_to_hlist_filter", head, ...)
     if new_head == false then
-        node.flush_list(head)
+        flush_list(head)
         return nil
     end
     return new_head
