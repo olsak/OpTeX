@@ -16,6 +16,7 @@ local fmt = string.format
 
 local node_id = node.id
 local node_subtype = node.subtype
+local flush_node = node.flush_node
 local flush_list = node.flush_list
 local node_traverse = node.traverse
 local glyph_id = node_id("glyph")
@@ -464,6 +465,28 @@ callback_register("mlist_to_hlist", function(head, ...)
     return new_head
 end)
 --
+-- Create \"virtual" callback `pre_append_to_vlist_filter` by setting
+-- `append_to_vlist_filter` callback. The default behaviour of `append_to_vlist_filter` is kept by
+-- using a default function, but it can still be overridden by using
+-- `add_to_callback`.
+default_functions["append_to_vlist_filter"] = function(n, _, prevdepth)
+    return node.prepend_prevdepth(n, prevdepth)
+end
+callback.create_callback("pre_append_to_vlist_filter","list")
+callback_register("append_to_vlist_filter", function(box,locationcode,prevdepth,mirrored)
+    local current = call_callback("pre_append_to_vlist_filter",
+                                  box, locationcode, prevdepth,mirrored)
+    if not current then
+      flush_node(box)
+      return
+    end
+    -- append_to_vlist_filter means either added functions or standard luatex behavior
+    -- of node.prepend_prevdepth (handled by default function)
+    return call_callback("append_to_vlist_filter",
+                       current, locationcode, prevdepth, mirrored)
+  end
+)
+--
 -- For preprocessing boxes just before shipout we define custom callback. This
 -- is used for coloring based on attributes.
 -- There is however a challenge - how to call this callback? We could redefine
@@ -857,6 +880,7 @@ define_lua_command("_beglocalcontrol", function()
 end)
 
    -- History:
+   -- 2025-11-25 pre_append_to_vlist_filter callback added
    -- 2025-05-12 optex.glyphstoked introduced
    -- 2025-05-11 if not \vbox then raw_ht retunts zero instead error
    -- 2024-12-18 \pdfstring etc. introduced
