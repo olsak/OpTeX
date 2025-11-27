@@ -109,7 +109,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#fakecaps">Small caps if font doesn't provide it</a>
     <li><a href="#autokern">Modification kerning data in fonts</a>
     <li><a href="#glyphmove">Move glyphs by any offset</a>
-	<li><a href="#luaul">Using the lua-ul package</a>
+    <li><a href="#luaul">Using the lua-ul package</a>
 </ul>
 
 <li>Lists
@@ -280,6 +280,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#replmacro">Patching macros using regular expressions</a>
     <li><a href="#luaif">Conditionals evaluated by Lua</a>
     <li><a href="#mathinexpr">More simple \expr parameters</a>
+    <li><a href="#intbybase">Conversion numbers to a given base system</a>
 </ul>
 
 <li>Sections
@@ -8162,6 +8163,55 @@ they can be used without the "math." prefix in all Lua expressions. I.e. in sett
 variables by \directlua or in \expr expressions.
 
 <p CLASS=datum>(0143) -- P. O. 2024-10-27<p>
+<hr>
+
+<h2><a name="intbybase"></a>Conversion numbers to a given base system</h2>
+
+<p>We have an integer and we want to express it in binary, hexadecimal or
+other base system. We create the macro \intbybase{number}{base} which
+expands to {digit}{digit}...{digit} of given number in given base system.
+Each digit is a decimal number and it is surrounded by braces. For example
+\intbybase{30}{16} expands to {1}{14}. The first parameter of \intbybase
+should be a number or a Lua expression. For example \intbybase{12^4-3}{12}
+expands to {11}{11}{11}{9}.
+
+<p>We can directly print the output of \intbybase if the base is less or equal
+10, because the braces are not printed. On the other hand, if the base is
+greater than 10 or if we want to remove the braces at expand processor
+level, then we can use \foreach loop and we can decide how to represent each
+digit.
+
+<p>The following example implements the expandable macro \basetwelwe{number}
+which expands to a duodecimal representation of the number, where X=10,
+Y=11.
+
+<pre>
+\def\intbybase#1#2{\directlua{
+   local s = ""
+   local n = math.floor(#1)
+   repeat
+     s = "{"..tostring(n\%#2).."}"..s
+     n = n//#2
+   until (n==0)
+   tex.print(s)
+}}
+\def\basetwelwe#1{\ea\ea\ea \foreach\intbybase{#1}{12} \do{%
+      \ifnum##1&lt;10 ##1%
+      \else \ifcase \numexpr ##1-10\relax X\or Y\fi
+      \fi
+}}
+</pre>
+
+<p>If we have a base less or equal 10 and we want to remove braces, we can
+do something like in the following example, where \basebinary{number}
+expands to binary representation of the number.
+
+<pre>
+\def\basebinary #1{\ea\ea\ea \foreach\intbybase{#1}{2} \do {##1}}
+</pre>
+
+
+<p CLASS=datum>(0171) -- P. O. 2025-11-27<p>
 <hr>
 
 <p CLASS="lmarg">Sections</p>
