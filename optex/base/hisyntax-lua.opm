@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_hisyntaxlua {Syntax highlighting for Lua sources <2021-06-29>}
+\_codedecl \_hisyntaxlua {Syntax highlighting for Lua sources <2025-11-28>}
 
 \_newtoks \_hisyntaxlua  \_newtoks \_hicolorslua
 
@@ -15,7 +15,7 @@
 \_global\_hisyntaxlua={%
    \_the\_hicolorslua
    \_let\c=\_relax \_let\e=\_relax \_let\o=\_relax
-   \_replfromto {--[}{--]}   {\x C{--[#1--]}}%  multi line comment --[...--]
+   \_replfromto {--[[}{]]--}   {\x C{--[[#1]]--}}%  multi line comment --[[...]]--
    \_replfromto {--}{^^J}    {\z C{--#1}^^J}%   single line comment --...
    \_replthis   {\_string\"} {{\_string\"}}%   \" protected inside strings
    \_replthis   {\_string\'} {{\_string\'}}%   \' protected inside strings
@@ -84,3 +84,8 @@ comment
 --]
 print(1+1)
 \endtt
+
+
+
+2025-11-28 multi line comment fixed
+2021-06-29 released
