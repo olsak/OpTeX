@@ -79,9 +79,9 @@ alo
 1+1 2+a
 
 
---[ multi line
+--[[ multi line
 comment
---]
+]]
 print(1+1)
 \endtt
 
