@@ -15,7 +15,7 @@
 \_global\_hisyntaxlua={%
    \_the\_hicolorslua
    \_let\c=\_relax \_let\e=\_relax \_let\o=\_relax
-   \_replfromto {--[[}{]]--}   {\x C{--[[#1]]--}}%  multi line comment --[[...]]--
+   \_replfromto {--[[}{]]}   {\x C{--[[#1]]}}%  multi line comment --[[...]]
    \_replfromto {--}{^^J}    {\z C{--#1}^^J}%   single line comment --...
    \_replthis   {\_string\"} {{\_string\"}}%   \" protected inside strings
    \_replthis   {\_string\'} {{\_string\'}}%   \' protected inside strings
