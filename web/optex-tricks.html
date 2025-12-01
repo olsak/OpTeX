@@ -129,6 +129,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#algolalign">Algorithms with aligned comments</a>
     <li><a href="#ttlineref">Verbatim lines referenced in text</a>
     <li><a href="#verb">In-line verbatim as balanced text</a>
+    <li><a href="#copycode">Copy code without line numbers</a>
 </ul>
 
 <li>Graphics
@@ -1599,6 +1600,31 @@ can be used in another cases too.
 
 <p CLASS=datum>(0161) -- P. O. 2025-02-02<p>
 <hr>
+
+<h2><a name="copycode"></a>Copy code without line numbers</h2>
+
+<p>When you print numbered code listing, and try to select the
+text from the PDF file, the line numbers are selected as well,
+which may be undesired if you only want to copy the code.
+
+<p>To make the PDF viewer ignore the numbers when selecting the code,
+we can add /ActualText spans around the line numbers with an empty
+string. For example:
+
+<pre>
+\def\_printverblinenum{\_llap{\_sevenrm \_pdfliteral page{/Span<</ActualText<>>>BDC}%
+               \_the\_ttline\_pdfliteral page{EMC}\_kern.9em}}
+\begtt \ttline=0
+some
+code
+\endtt
+</pre>
+
+<p>Note that not all PDF viewers support /ActualText.
+
+<p CLASS=datum>(0172) -- Udi Fogiel, 2025-12-01<p>
+<hr>
+
 
 <p CLASS="lmarg">Graphics</p>
 
