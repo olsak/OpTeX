@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.20, 2025-06-10}
+\_def\_math_version {0.21, 2025-11-30}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -177,6 +177,8 @@
    \_def\.rmsb[##1]{\_sb{\_mathbox{##1}}}
    \_catcode `\^=12   \_catcode`\_=11
    \_mathcode`_="8000 \_mathcode`^="8000
+   % because ^ has different catcode, we need to re-define \_primes in order to work f'^2:
+   \_def\_primes{\_prime\_isnextchar'{\_primesA}{\_ea\_isnextchar\_string^{\_primesB}{\_egroup}}}
 }
 \_nspublic \rmsbsp ;
 
@@ -1271,6 +1273,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.21  2025-11-30  \rmsbsp: \_primes correction
 0.20  2025-06-10  \ibrackets introduced
 0.19  2025-02-14  \mathselector introduced.
 0.18  2025-01-15  \enablefic modifired.
