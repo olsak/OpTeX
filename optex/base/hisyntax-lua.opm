@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_hisyntaxlua {Syntax highlighting for Lua sources <2025-11-28>}
+\_codedecl \_hisyntaxlua {Syntax highlighting for Lua sources <2025-12-02>}
 
 \_newtoks \_hisyntaxlua  \_newtoks \_hicolorslua
 
@@ -15,13 +15,20 @@
 \_global\_hisyntaxlua={%
    \_the\_hicolorslua
    \_let\c=\_relax \_let\e=\_relax \_let\o=\_relax
+   % multiline comments and strings are supported only for levels 0,1,2,3.
    \_replfromto {--[[}{]]}   {\x C{--[[#1]]}}%  multi line comment --[[...]]
-   \_replfromto {--}{^^J}    {\z C{--#1}^^J}%   single line comment --...
+   \_replfromto {--[=[}{]=]} {\x C{--[=[#1]=]}}%  multi line comment --[=[...]=]
+   \_replfromto {--[==[}{]==]}   {\x C{--[==[#1]==]}}%  multi line comment --[==[...]==]
+   \_replfromto {--[===[}{]===]} {\x C{--[===[#1]===]}}%  multi line comment --[===[...]===]
    \_replthis   {\_string\"} {{\_string\"}}%   \" protected inside strings
    \_replthis   {\_string\'} {{\_string\'}}%   \' protected inside strings
+   \_replfromto {[[}{]]}     {\x S{[[#1]]}}%       strings [[...]]
+   \_replfromto {[=[}{]=]}   {\x S{[=[#1]=]}}%     strings [=[...]=]
+   \_replfromto {[==[}{]==]}   {\x S{[==[#1]==]}}%    strings [==[...]==]
+   \_replfromto {[===[}{]===]} {\x S{[===[#1]===]}}%  strings [===[...]===]
    \_replfromto {"}{"}       {\x S{"#1"}}%     "..."
    \_replfromto {'}{'}       {\x S{'#1'}}%     "..."
-   % missing: [[, [=[, [==[ strings, " ' in string of other kind
+   \_replfromto {--}{^^J}    {\z C{--#1}^^J}%   single line comment --...
    \_edef\_tmpa {{<<}{>>}{//}{==}{\_string~=}{<=}{>=}{::}{...}{..}%
       +-*/\_pcent^\_csstring\#\_string&\_string~|%
       <>=()]\_string{\_string}[];:,.}% other tokens
@@ -86,6 +93,6 @@ print(1+1)
 \endtt
 
 
-
+2025-12-02 comments and strings with [=[, [==[, [===[ supported
 2025-11-28 multi line comment fixed
 2021-06-29 released
