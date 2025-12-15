@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2023-04-15>} % preloaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2025-12-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\_gfnotenum` is a counter which counts footnotes globally in the whole document.\nl
@@ -72,8 +72,8 @@
    does the real work.
    \_cod ----------------------------
 
-\_def\_fnote{\_fnotemark1\_fnotetext}
-\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\_relax \_printfnotemarkA}}
+\_protected\_def\_fnote{\_fnotemark1\_fnotetext}
+\_protected\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\_relax \_printfnotemarkA}}
 
    \_doc ----------------------------
    The \`\fnotetext` calls \^`\_opfootnote` which is equivalent to plain \TeX/
@@ -188,6 +188,7 @@
 
 \_endcode % -------------------------------------
 
+2025-12-15 \fnote, \fnotenum defined as \protected.
 2023-04-15 \fnote in math mode allowed
 2020-05-26 \mnote up<dimen> implemented
 2020-03-20 released
