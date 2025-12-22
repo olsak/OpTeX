@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.21, 2025-11-30}
+\_def\_math_version {0.22, 2025-12-22}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -24,6 +24,7 @@
       \_kvx {interval} {\_let\_=\.interval}% enables \_<0,1)
       \_kvx {rmsbsp}   {\.rmsbsp}%        activates x_[text] and x^[text]
       \_kvx {ibrackets}{\.ibrackets}%     intelligent brackets
+      \_kvx {multiprimes} {\.multiprimes}% enables multi-prime symbols in script, scriptsizes
       \_kvx {flexipa}  {\.flexipa}%       flexible partial symbol
       \_kvx {mstyle}   {\.mstyle{##1}}%   sets mstyle=TeX or ISO or french or upright
       \_kvx {bstyle}   {\.bstyle{##1}}%   sets bstyle=TeX or ISO or upright or OpTeX
@@ -221,6 +222,19 @@
 \_newpublic\.pdef \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
 
 \_newpublic\.pdef \.#1{{\_bf#1}}
+
+   \_doc
+   \`\multiprimes` sets {\def\\{\kern-3.8pt}{\tt '},
+   {\tt '\\'}, {\tt '\\'\\'}, {\tt '\\'\\'\\'}}
+   as active characters. It enables to use them naturally
+   in script and script-script sizes.
+   These special characters defined here are probably invisible
+   in the following code in `math-doc.pdf`.
+   \_cod
+
+\_def\.multiprimes{\.unionly\multiprimes{%
+   \_adef ′{^′}\_adef ″{^″} \_adef ‴{^‴} \_adef ⁗{^⁗}}}
+\_nspublic \multiprimes ;
 
    \_doc
    \`\eqsystem``{<equations>}` saves its parameter to `\.tmpb`
@@ -625,6 +639,7 @@ The following macros are defined in this package:
   \~`\subeqmark` prints the given suffix as a part of the equation mark.
 * \~`\scriptspaces` sets more spaces around rel, bin in script and scripscript styles.
 * \~`\ibrackets` sets `[` and `]` as intelligent brackets.
+* \~`\multiprimes` sets double, triple, quadruple primes as active.
 * \~`\flexipa` enables flexible partial symbol.
 * \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
 * \~`\rmchars` sets selected characters printed as `\rm`,
@@ -647,6 +662,7 @@ Following options are provided by the `math` package. You can set them by
 * `vert` sets more intelligent `|`, the same as \~`\smartvert`.
 * `rmsbsp` sets roman sub/supscripts in `[...]`, the same as \~`\rmsbsp`.
 * `ibrackets` sets intelligent brackets, the same as \~`\ibrackets`.
+* `multiprimes` sets double, triple, quadruple primes as active.
 * `flexipa` enables flexible partial symbol, the same as \~`\flexipa`.
 * `mstyle=<style>`, `bstyle=<style>` are math styles explained in section~\ref[mstyle].
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
@@ -971,6 +987,34 @@ because `[` is set as `\mathopen` and `]` is set as `\mathclose` atom. When
 the spaces around then are correct in both cases: `$x\in [0,1]$` and
 `$x\in ]0,1[$`. See `ibrackets` \LaTeX/ package for more detail.
 
+\sec[multiprime] Double, triple, quadruple primes
+
+\def\tprime{\hbox to.5em{\tt\hss'\kern-3.7pt'\kern-3.7pt'\hss}}
+
+The single quotation character is used as derivation symbol, for example
+`$f'$`. It is defined (in plain \TeX/ and in \OpTeX/ too) as a math-active
+character which internally does `^\prime`. Moreover it checks if another
+prime symbol follows like in this example: `$f'''$`. Then the macro does a
+bit more work (we don't dive to details here). On the other hand, the double
+prime (or triple or quadruple) symbols are provided in OpenType math fonts
+and they are not defined as active macros. The reason is that these symbols
+are shifted to the right position by default in their text-style sizes. So,
+we can write `$f`\tprime`$` and we get~$f‴$. But the concept introduced by
+D. Knuth works too: `$f^`\tprime`$` gives $f^‴$. The reason it works is that
+the script and scriptscript style sizes of these symbols are implemented in
+the OpenType font similarly like the original `\prime` symbol drawn by D.
+Knuth in Computer Modern fonts (i.e. they are bigger and at the baseline).
+
+This mixed concept provided by fonts brings into a problem: if the `f`{\tprime}
+is used in script style, then we get unaccepted result. For example
+`$f`\tprime`\over2$` gives $f‴\over2$. Of course, we can use `$f^`\tprime`\over2$`
+but previous notation is more natural. If you are using `$f`\tprime`$` etc.
+in your \TeX/ source in various sizes, you can use the option `multiprimes`
+or use the \^`\multiprimes` macro. It sets the symbols for double, triple and
+quadruple primes as active characters and they are defined as `^` followed
+by the character. Now, the notation `$f`\tprime`$` works in all sizes, but
+notation `$f^`\tprime`$` doesn't work.
+
 \sec[flexipa] Flexible partial symbol $\partial$
 
 Classical \TeX/ with Computer Modern fonts uses slanted `\partial` symbol
@@ -1253,6 +1297,7 @@ The user can read this warning and declare the macro after
    \def\O`#1`{\exlink#1{\opurl\#cs:}}
    \def\n`#1`{\exlink#1{\tnurl\#cs:}}
    \outlines 0
+   \tracinglostchars=0
 
    \tit Macros for doing math more comfortably
    \hfill Version: \_math_version \par
@@ -1273,6 +1318,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.22  2025-12-22  \multiprimes introduced
 0.21  2025-11-30  \rmsbsp: \_primes correction
 0.20  2025-06-10  \ibrackets introduced
 0.19  2025-02-14  \mathselector introduced.
