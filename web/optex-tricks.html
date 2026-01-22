@@ -4955,7 +4955,7 @@ the implementation is this splitting problem:
 }
 \def\endblock{\par\nobreak\medskip
    \pdfsavepos \ea\_wref\ea\Xblock\ea{\ea{\the\blocklevel}E{\the\pdflastypos}}
-   \medskip \egroup
+   \nobreak \medskip \egroup
 }
 \refdecl{%
    \def\Xblock#1#2#3{\ifnum#1=1 \edef\tmp{frm:\ea\ignoresecond\_currpage}^^J
