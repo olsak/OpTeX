@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-01-22>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2025-12-11>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -1036,7 +1036,7 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\endblock{\_par\_nobreak\_medskip
    \_pdfsavepos \_ea\_wref\_ea\.Xblock\_ea{\_ea{\_the\.blocklevel}E{\_the\_pdflastypos}}
-   \_nobreak\_medskip \_egroup
+   \_medskip \_egroup
 }
 \_newdimen\.frtop \_newdimen\.frbottom % positions of top and bottom text on the pages
 \_pgbackground={%
@@ -1328,7 +1328,6 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
-2026-01-22 \endblock: \nobreak added
 2025-12-11 \.replmacroC made long
 2025-03-03 \getnodes introduced, tree structure re-implemented
 2025-02-27 \treedata, \tracingtreedata introduced
