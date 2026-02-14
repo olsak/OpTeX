@@ -20,7 +20,7 @@ help:
 	@echo " clean     Cleanup"
 all: format pdf
 dist: $(BUILD_DIR)/optex.zip
-format: $(BUILD_DIR)/texmf/web2c/luatex/optex.fmt
+format: $(BUILD_DIR)/texmf/web2c/luahbtex/optex.fmt
 pdf: $(PDF_FILES)
 test: pdf
 
@@ -28,20 +28,20 @@ test: pdf
 clean:
 	rm -rf $(BUILD_DIR)
 
-$(BUILD_DIR)/texmf/web2c/luatex/optex.fmt: $(BASE_FILES)
-	mkdir -p $(BUILD_DIR)/doc $(BUILD_DIR)/demo $(BUILD_DIR)/pkg $(BUILD_DIR)/texmf/web2c/luatex $(BUILD_DIR)/texmf/tex/optex
+$(BUILD_DIR)/texmf/web2c/luahbtex/optex.fmt: $(BASE_FILES)
+	mkdir -p $(BUILD_DIR)/doc $(BUILD_DIR)/demo $(BUILD_DIR)/pkg $(BUILD_DIR)/texmf/web2c/luahbtex $(BUILD_DIR)/texmf/tex/optex
 	cp -r base pkg doc $(BUILD_DIR)/texmf/tex/optex/
-	cd $(BUILD_DIR)/texmf/tex/optex/base && luatex -ini optex.ini
-	cp $(BUILD_DIR)/texmf/tex/optex/base/optex.fmt $(BUILD_DIR)/texmf/web2c/luatex/optex.fmt
+	cd $(BUILD_DIR)/texmf/tex/optex/base && luahbtex -ini optex.ini
+	cp $(BUILD_DIR)/texmf/tex/optex/base/optex.fmt $(BUILD_DIR)/texmf/web2c/luahbtex/optex.fmt
 
-$(BUILD_DIR)/run-optex.sh: $(BUILD_DIR)/texmf/web2c/luatex/optex.fmt
+$(BUILD_DIR)/run-optex.sh: $(BUILD_DIR)/texmf/web2c/luahbtex/optex.fmt
 	@echo '#!/bin/sh' > $(BUILD_DIR)/run-optex.sh
 	@echo 'set -e' >> $(BUILD_DIR)/run-optex.sh
 	@echo 'set -x' >> $(BUILD_DIR)/run-optex.sh
 	@echo 'export TEXMFHOME='$(shell realpath $(BUILD_DIR) )/texmf >> $(BUILD_DIR)/run-optex.sh
 	@echo 'cd $$1' >> $(BUILD_DIR)/run-optex.sh
 	@echo 'for i in 1 2 3 4 ; do' >> $(BUILD_DIR)/run-optex.sh
-	@echo 'luatex --halt-on-error --interaction=batchmode -fmt=optex --jobname=$$2 $$3' >> $(BUILD_DIR)/run-optex.sh
+	@echo 'luahbtex --halt-on-error --interaction=batchmode -fmt=optex --jobname=$$2 $$3' >> $(BUILD_DIR)/run-optex.sh
 	@echo 'done' >> $(BUILD_DIR)/run-optex.sh
 	chmod +x $(BUILD_DIR)/run-optex.sh
 
