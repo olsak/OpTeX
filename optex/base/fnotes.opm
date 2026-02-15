@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2025-12-15>} % preloaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2026-02-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\_gfnotenum` is a counter which counts footnotes globally in the whole document.\nl
@@ -39,7 +39,7 @@
    and it supposes that there are no more than 6 footnotes at one page.
 
    If you want to distinguish between footnote marks in the text and in the front of
-   the footnote itself, then you can define `\_printfnotemarkA` and `\_printfnotemarkB`.
+   the footnote itself, then you can define \`\_printfnotemarkA` and \`\_printfnotemarkB`.
 
    The \`\fnotelinks``<colorA><colorB>` implements the hyperlinked footnotes
    (from text to footnote and backward).
@@ -73,7 +73,8 @@
    \_cod ----------------------------
 
 \_protected\_def\_fnote{\_fnotemark1\_fnotetext}
-\_protected\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\_relax \_printfnotemarkA}}
+\_protected\_def\_fnotemark#1{{\_advance\_gfnotenum by#1\_advance\_lfnotenum by#1\_relax
+                               \_printfnotemarkA}}
 
    \_doc ----------------------------
    The \`\fnotetext` calls \^`\_opfootnote` which is equivalent to plain \TeX/
@@ -167,7 +168,7 @@
           \_incr\_unresolvedrefs
           \_def\_mnotesfixed{\_right}%
    \_fi\_fi
-   \_hbox to0pt{\_wref\_Xmnote{}\_everypar={}%
+   \_hbox to0pt{\_wref\_Xmnote{}\_everypar={}\_resetattrs
       \_lrmnote{\_kern-\_mnotesize \_kern-\_mnoteindent}{\_kern\_hsize \_kern\_mnoteindent}%
       \_vbox to0pt{\_vss \_setbox0=\_vtop{\_hsize=\_mnotesize
              \_lrmnote{\_leftskip=0pt plus 1fill \_rightskip=0pt}
@@ -188,6 +189,7 @@
 
 \_endcode % -------------------------------------
 
+2026-02-15 \_resetattrs added to \mnote
 2025-12-15 \fnote, \fnotenum defined as \protected.
 2023-04-15 \fnote in math mode allowed
 2020-05-26 \mnote up<dimen> implemented
