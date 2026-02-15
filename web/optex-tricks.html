@@ -560,26 +560,24 @@ hyphenation patterns cannot work properly when such fonts are used.
 
 <p>We can use standard marking by {\it italic}, {\bf bold}, {\bi bold italic}
 or {\em emphasized text}.
-If you want to do something more special, then the following OPmac macros work
-without any change in OpTeX:
+If you want to do something more special, you can:
 
 <ul>
-<li>\ul{text} for underlining text (splittable to more lines)
-    like in the soul LaTeX package, see
+<li>Use {\ul[params] Text} to autoload <a href="#luaul">OpTeX trick 0170</a> and underline, highlight,
+    or overline the text using the <a href="https://ctan.org/pkg/lua-ul">lua-ul package</a>.
+<li>Use <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>,
+    <a href="http://petr.olsak.net/opmac-tricks-e.html#hyphprocess">OPmac trick 0065</a>
+    and <a href="http://petr.olsak.net/opmac-tricks-e.html#coltext">OPmac trick 0085</a>
+    to underline, highlight, or overline the text similarly to the soul LaTeX package.
+    Overlining can be done by the same macro in 
     <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>
-<li>Overlining can be done by the same macro when \uline macro is redefined.
-<li>Leterspacing referred in
+    when \uline macro is redefined.
+    Note that Leterspacing referred in
     <a href="http://petr.olsak.net/opmac-tricks-e.html#soul">OPmac trick 0063</a>
     need not be done by this macro
     because we have more robust letterspacing implemented as font feature,
     se <a href="http://petr.olsak.net/ftp/olsak/optex/optex-doc.pdf#ref:specff">section 2.13.10</a>
     in the OpTeX documentation.
-<li>\hyphenprocess from
-    <a href="http://petr.olsak.net/opmac-tricks-e.html#hyphprocess">OPmac trick 0065</a>
-    can be used to implement hyphenation feature to the \ul macro.
-<li>Background colored (splitabble to more lines) text by
-    <a href="http://petr.olsak.net/opmac-tricks-e.html#coltext">OPmac trick 0085</a>
-    can be printed. Use \coltext\ColorA\ColorB{text}.
 <li>See also the following trick <a href="#attreffects">(OpTeX trick 0064)</a>
     for information about achieving font effects with LuaTeX attributes.
 </ul>
@@ -1014,7 +1012,7 @@ argument to set the rule dimensions (height and depth) we can do
 
 <p> Now for example \ul underlines,
 \ul[height=1.75ex, depth=.75ex, color=\Yellow]
-heighlight the text with a yellow background,
+highlight the text with a yellow background,
 and \ul[height=.55ex, depth=-.45ex, color=\Red, flags=over]
 overline the text with a red line.
 
@@ -5270,6 +5268,11 @@ than single paragraph then you must to re-define \par (or \_par in the new
 OpTeX) in order to do this re-boxing at each paragraph-end between \pstart
 and \pend.
 
+<p>If you need more features for line numbering, such as numbering equation,
+table rows, multicolumns, and have more customizations, you can use the 
+<a href="https://ctan.org/pkg/lualineno">lualineno package</a>, which
+does not redefine the output routine, nor \_par.
+
 <p CLASS=datum>(0069) -- P. O. 2022-02-02<p>
 <hr>
 
@@ -7742,20 +7745,20 @@ Moreover, the \exitstatus counter includes the status value after
 
 <p>The <a href="https://www.ctan.org/pkg/lua-visual-debug">lua-visual-debug package</a>
 allows to show the spaces and box borders in the typesetting output. If you
-have installed it then you can try it. Don't use \input lua-visual-debug.sty.
+have installed it then you can try it. With version 1.0v and above you can do
+\load[lua-visual-debug], otherwise don't use \input lua-visual-debug.sty.
 Use the following commands instead:
 
 <pre>
-\_directlua{ lvd = require("lua-visual-debug")}
-
-\_def \_optexoutput{\_begoutput \_preshipout0\_completepage
-   \_directlua{lvd.show_page_elements(tex.box[0])}
-   \_shipout\_box0 \_endoutput}
+\_directlua{ 
+  local lvd = require("lua-visual-debug")
+  callback.add_to_callback('pre_shipout_filter', lvd.show_page_elements, 'lvd')  
+}
 </pre>
 
-<p>The first line loads the relevant Lua code. Next, we have to re-define
-the \output routine in order to run Lua function lvd.show_page_elements just
-before \shipout.
+<p>The first line loads the relevant Lua code. Next, we add the
+Lua function lvd.show_page_elements to the pre_shipout_filter
+callback.
 
 <p CLASS=datum>(0106) -- P. O. 2023-04-14<p>
 <hr>
