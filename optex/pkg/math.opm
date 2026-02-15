@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.22, 2025-12-22}
+\_def\_math_version {0.23, 2026-02-15}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -594,6 +594,11 @@
    \_cod
 
 \_newcount \.finalitalcorr
+\_ifnum\_luatexversion > 123
+   \_def\.enablefic{%
+      \_opwarning{\_noexpand\enablefic is obsolete, LuaTeX v>1.23 fixes this issue}%
+   }
+\_else
 \_directlua{
 define_lua_command("\_pkglabel _enablefic", function()
     lua.get_functions_table()[optex.registernumber("\_pkglabel _enablefic")] = function() 
@@ -614,7 +619,9 @@ define_lua_command("\_pkglabel _enablefic", function()
         head = node.insert_after(head, n, kn) % kern node is inserted
         return head
     end, "italcorr after math") end)}
+\_fi
 \_nspublic \enablefic \finalitalcorr ;
+
 
 \_endnamespace
 \_endcode
@@ -1177,6 +1184,11 @@ by previous steps are replaced.
 
 \sec Final italic correction
 
+{\bf Note:} {\em This issue was corrected in \LuaTeX/ version 1.24, so the
+\^`\enablefic` is no longer needed. It prints only warning when \LuaTeX\,$\succeq$1.24
+and does the following described feature when \LuaTeX\,$\prec$1.24. We will completely remove this
+feature from future versions of math.opm package.}
+
 Classical \TeX/ adds italic correction after each Ord atom with a single
 letter from math italic font including the last one in inline-math. \LuaTeX/
 and \OpTeX/ does the same only when classical `tfm` math fonts are used. When
@@ -1301,7 +1313,7 @@ The user can read this warning and declare the macro after
 
    \tit Macros for doing math more comfortably
    \hfill Version: \_math_version \par
-   \centerline{\it Petr Olšák\/\fnotemark1, 2022, 2023, 2024, 2025}
+   \centerline{\it Petr Olšák\/\fnotemark1, 2022, 2023, 2024, 2025, 2026}
    \fnotetext{\url{https://petr.olsak.net}}
 
    \notoc\nonum\sec Table of contents
@@ -1318,6 +1330,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.23  2026-02-15  \enablefic prints warning only when LuaTeX v>1.23
 0.22  2025-12-22  \multiprimes introduced
 0.21  2025-11-30  \rmsbsp: \_primes correction
 0.20  2025-06-10  \ibrackets introduced
