@@ -119,17 +119,18 @@
 \_newattribute\_transpattr
 \_def\_transparency {\_afterassignment\_transparencyA \_transpattr}
 \_def\_transparencyA{%
-   \_ifnum\_transpattr<1 \_transpattr=\_noattr \_fi
-   \_ifnum\_transpattr>255 \_opwarning{\_noexpand\transparency > 255 not allowed}%
-       \_transpattr=\_noattr
-   \_else
-      \_ifcsname _transp:\_the\_transpattr\_endcsname \_else
-         \_edef\_transpv{\_expr{(255-\_the\_transpattr)/255}}%
-         \_addextgstate{tr\_the\_transpattr}{<</ca \_transpv\_space /CA \_transpv>>}%
-         \_sxdef{_transp:\_the\_transpattr}{}%
-         \_ifcsname _transp:0\_endcsname \_else
-            \_addextgstate{tr0}{<</ca 1 /CA 1>>}%
-            \_sxdef{_transp:0}{}%
+   \_ifnum\_transpattr<1 \_transpattr=\_noattr \_else
+      \_ifnum\_transpattr>255 \_opwarning{\_noexpand\transparency > 255 not allowed}%
+         \_transpattr=\_noattr
+      \_else
+         \_ifcsname _transp:\_the\_transpattr\_endcsname \_else
+            \_edef\_transpv{\_expr{(255-\_the\_transpattr)/255}}%
+            \_addextgstate{tr\_the\_transpattr}{<</ca \_transpv\_space /CA \_transpv>>}%
+            \_sxdef{_transp:\_the\_transpattr}{}%
+            \_ifcsname _transp:0\_endcsname \_else
+               \_addextgstate{tr0}{<</ca 1 /CA 1>>}%
+               \_sxdef{_transp:0}{}%
+            \_fi
          \_fi
       \_fi
    \_fi
