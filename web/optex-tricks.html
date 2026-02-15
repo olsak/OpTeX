@@ -930,10 +930,26 @@ can sometimes cause surprising side effects.
 autoload:<br>\ul
 </p>
 
-<p>The <a href="https://ctan.org/pkg/lua-ul">lua-ul package</a>
-allows to underline, strikethough, and highlight text without affecting
-line breaks, kerning, hypheneation etc. To load it in an OpTeX document
-you can do the following:
+<p>The \ul macro acts like font or color selector and allows
+to underline, strikethrough, and highlight text without affecting
+line breaks, kerning, hyphenation etc. Moreover, the behavior can be
+controlled by optional parameters. Try this:
+
+<p CLASS="rmarg">
+<IMG SRC="../img/ulexample.png" ALT="ul-example" border=0>
+</p>
+
+<pre>
+{\ul Text}
+{\ul[height=1.75ex,depth=.75ex,color=\Yellow,] Text}
+{\ul[height=.55ex, depth=-.45ex,color=\Red,flags=over] Text}
+
+{\Red\ul \Black Text}
+{\ul\ul[height=-.45ex, depth=.55ex] Text}
+</pre>
+
+<p>The \ul macro uses the <a href="https://ctan.org/pkg/lua-ul">lua-ul package</a>.
+It is autoloaded, but if you want to implement it manually, do the following:
 
 <pre>
 \directlua{
@@ -949,7 +965,7 @@ require'lua-ul'
 \slet{_additcorr}{sw@slant}
 </pre>
 
-<p>The lines before require'lua-ul' are to make the package comaptiable with OpTeX,
+<p>The lines before require'lua-ul' are to make the package compatible with OpTeX,
 and a fix for \_additcorr is required because it may remove a glue or penalty node
 and restore it, but without its attributes, which may affect underlining in some cases.
 
@@ -982,8 +998,8 @@ create new underline types dynamically. For example:
 }
 </pre>
 
-<p> For a more general coammand, which also respect transparency, and accept an optional
-argument to set the rule dimensions (height and depth) we can do
+<p> The autoloaded \ul command also respects transparency and accepts an optional
+argument to set the rule dimensions (height and depth):
 
 <pre>
 \def\uldefaults {% defaults:
@@ -1010,22 +1026,17 @@ argument to set the rule dimensions (height and depth) we can do
 }
 </pre>
 
-<p> Now for example \ul underlines,
-\ul[height=1.75ex, depth=.75ex, color=\Yellow]
-highlight the text with a yellow background,
-and \ul[height=.55ex, depth=-.45ex, color=\Red, flags=over]
-overline the text with a red line.
-
 <p> Note that unlike colors, or fonts, we can have several 
 active underlines in the same time.
-To have double unserlines for example
+To have double underlines for example
 you can simply do {\ul \ul[height=-.45ex, depth=.55ex] Text}
 
-<p>The \LuaULResetUnderline dsables the last activated underline,
+<p>The \LuaULResetUnderline disables the last activated underline,
 if there is no activated one it will error, but \ul respect grouping so
 usually you won't need to use it. If there is a * 
-after it it disables all underlines (and do not error),
+after it then it disables all underlines (and do not error),
 you can do \addto \_resetattrs {\LuaULResetUnderline*}.
+
 <p CLASS=datum>(0170) -- Udi Fogiel, 2025-11-25<p>
 <hr>
 
