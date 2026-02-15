@@ -1323,11 +1323,55 @@ end,'global') % we want to keep the meanig after group
 
 \_nspublic \ismatch ;
 
+\_trick 0170 \ul \uldefaults ;
+%%%%%%%%%%%%
+
+\_directlua{
+  local funcs = lua.get_functions_table()
+  local luafunction_count = \_csstring#funcs
+  luatexbase.new_luafunction = function(name)
+     luafunction_count = math.max(\_csstring#funcs,luafunction_count) + 1
+     return luafunction_count
+  end
+  luatexbase.callbacktypes.pre_append_to_vlist_filter = "list"
+  require'lua-ul'
+}
+\_let\LuaULSetUnderline\LuaULSetUnderline
+\_let\LuaULNewUnderlineType\LuaULNewUnderlineType
+\_let\LuaULResetUnderline\LuaULResetUnderline
+\_slet{_additcorr}{sw@slant}
+
+\:\_def\uldefaults {% defaults:
+  height=-.65ex,                 % height of rule 
+  depth=.75ex,                   % depth of rule
+  color=,                        % color of the rule (inherited if not declared)
+  transparency=\thetransparency, % transparency of the rule (inherited if not declared)
+  flags=,                        % if flags=over then rule is printed over text
+}
+\_def\.ulcontext{ul:\_kv{flags}:\_kv{transparency}:\.tmpA
+  :\_the\_numexpr\_dimexpr\_kv{height}\_relax\_relax
+  :\_the\_numexpr\_dimexpr\_kv{depth}\_relax\_relax
+}
+\:\_optdef\ul[]{%
+  \_edef\.tmp{\_the\_kvdict}\_kvdict{_optextrick:ul}%
+  \_readkv\uldefaults \_readkv{\_the\_opt}%
+  {\_localcolor\_trykv{color}{}\_xdef\.tmpA{\_the\_colorattr}}%
+  \_trycs{\.ulcontext}{%
+    \_sxdef{\.ulcontext}{\LuaULSetUnderline
+      \LuaULNewUnderlineType\_kv{flags}{\_transparency\_kv{transparency}\_colorattr\.tmpA
+      \_leaders\_vrule height \_kv{height} depth \_kv{depth}\_hskip0pt}}%
+    \_cs{\.ulcontext}}%
+    \_kvdict=\_ea{\.tmp}%
+}
+
+\_addto\_resetattrs{\LuaULResetUnderline*}
+
 %%%%%%%%%%%%
 \_trick end ;
 
 \_endcode
 
+2026-02-14 \ul introduced
 2025-12-11 \.replmacroC made long
 2025-03-03 \getnodes introduced, tree structure re-implemented
 2025-02-27 \treedata, \tracingtreedata introduced
