@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2026-02-16>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2026-02-17>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -371,14 +371,14 @@
 \_protected\_def \wideoverbar  {\_Umathaccent 7 1 "00305 }
 \_protected\_def \widebreve    {\_Umathaccent 7 1 "00306 }
 \_protected\_def \widecheck    {\_Umathaccent 7 1 "0030C }
-\_protected\_def \wideutilde #1{\_Umathaccent bottom 7 1 "00330{{}#1}}
-\_protected\_def \mathunderbar #1{\_Umathaccent bottom 7 1 "00332{{}#1}}
-\_protected\_def \underleftrightarrow #1{\_Umathaccent bottom 7 1 "0034D{{}#1}}
+\_protected\_def \wideutilde #1{\_Umathaccent bottom 7 1 "00330{\_kern\_zo #1}}
+\_protected\_def \mathunderbar #1{\_Umathaccent bottom 7 1 "00332{\_kern\_zo #1}}
+\_protected\_def \underleftrightarrow #1{\_Umathaccent bottom 7 1 "0034D{\_kern\_zo #1}}
 \_protected\_def \widebridgeabove       {\_Umathaccent 7 1 "020E9 }
-\_protected\_def \underrightharpoondown #1{\_Umathaccent bottom 7 1 "020EC{{}#1}}
-\_protected\_def \underleftharpoondown  #1{\_Umathaccent bottom 7 1 "020ED{{}#1}}
-\_protected\_def \underleftarrow        #1{\_Umathaccent bottom 7 1 "020EE{{}#1}}
-\_protected\_def \underrightarrow       #1{\_Umathaccent bottom 7 1 "020EF{{}#1}}
+\_protected\_def \underrightharpoondown #1{\_Umathaccent bottom 7 1 "020EC{\_kern\_zo #1}}
+\_protected\_def \underleftharpoondown  #1{\_Umathaccent bottom 7 1 "020ED{\_kern\_zo #1}}
+\_protected\_def \underleftarrow        #1{\_Umathaccent bottom 7 1 "020EE{\_kern\_zo #1}}
+\_protected\_def \underrightarrow       #1{\_Umathaccent bottom 7 1 "020EF{\_kern\_zo #1}}
 
 \_mathchardef\ldotp="612E
 \_let\|=\Vert
@@ -563,7 +563,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
-2025-02-16  \mathunderbar s_2 bug fixed, see tex.stackexchange.com/questions/759771/
+2025-02-17  \mathunderbar s_2 bug fixed, see tex.stackexchange.com/questions/759771/
 2026-02-09  \_umathholes use \_chardef
 2026-02-07  \_umathholes reimplemented
 2025-02-06  \_rmletters, \_itletters introduced
