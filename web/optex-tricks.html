@@ -1905,7 +1905,7 @@ Test: \cancel\\{hello}, ${\cancel X{a}\over \cancel{b}} + \cancel-{\int_a^b f(x)
 }
 \def\cancelA{\ifmmode \ea\cancelM \else \ea\cancelT \fi}
 \def\cancelT#1{\setbox0=\hbox{#1}\cancelF} % text mode
-\def\cancelM#1{\mathstyles{\setbox0=\hbox{$\currstyle#1$}\cancelF}} % math mode
+\def\cancelM#1{\mathstyles{\setbox0=\hbox{$\currstyle{#1}$}\cancelF}} % math mode
 \def\cancelF{\edef\tmp{\cancline}\quitvmode\box0 \pdfliteral{q \useit{\cancelparams} \tmp S Q}}
 \def\drawFslash{\bp{-\wd0} \bp{-\dp0} m 0 \bp{\ht0} l } % forward slash
 \def\drawBslash{\bp{-\wd0} \bp{\ht0} m 0 \bp{-\dp0} l } % backward slash

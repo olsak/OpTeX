@@ -615,7 +615,7 @@ end,'global') % we want to keep the meanig after group
 }
 \_def\.cancelA{\_ifmmode \_ea\.cancelM \_else \_ea\.cancelT \_fi}
 \_def\.cancelT#1{\_setbox0=\_hbox{#1}\.cancelF} % text mode
-\_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle#1$}\_cancelF}} % math mode
+\_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle{#1}$}\.cancelF}} % math mode
 \_def\.cancelF{\_edef\.tmp{\.cancline}\_quitvmode\_box0 \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}}
 \_def\.drawFslash{\_bp{-\_wd0} \_bp{-\_dp0} m 0 \_bp{\_ht0} l } % forward slash
 \_def\.drawBslash{\_bp{-\_wd0} \_bp{\_ht0} m 0 \_bp{-\_dp0} l } % backward slash
