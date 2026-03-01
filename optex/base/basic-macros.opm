@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2023-11-11>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2026-03-01>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -64,13 +64,16 @@
    The space can be declared by `\adef{ }{<body>}`.
    You can declare a macro with parameters too, for example
    `\adef @#1{...#1...}`. You can use prefixes `\protected`, `\global`,
-   `\long` before `\adef`, they behave like prefixes before `\def`.
+   `\long` before `\adef`, they behave like prefixes before `\def`.\nl
+   \`\mathadef` `<char>{<body>}` defines active `<char>` only in math mode.
+   The catcode of the <char> is kept.
    \_cod ------------------------------
 
 \_def\_adef#1#2#{\_adefA{#1}{#2}}
 \_def\_adefA#1#2#3{\_ea\_def\_directlua{tex.cprint(13,"\_luaescapestring{\_csstring#1}")}#2{#3}%
    \_catcode`#1=13 }
-\_public \adef ;
+\_def\_mathadef#1{\_mathcode`#1="8000  \_bgroup \_lccode`~=`#1 \_lowercase{\_egroup \_def~}}
+\_public \adef \mathadef ;
 
    \_doc ------------------------------
    \`\cs` `{<text>}` is only a shortcut to `\csname <text>\endcsname`, but you need
@@ -151,6 +154,7 @@
 
 \_endcode % -------------------------------------
 
+2026-03-01: \mathadef introduced
 2023-11-11: \adef reimplemented, \protected, \long, \global allowed before \adef
 2023-01-22: \trycs: afterfi used for second parameter
 2022-11-22: \_banner definition moved here

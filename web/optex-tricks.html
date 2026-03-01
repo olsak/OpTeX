@@ -1338,6 +1338,7 @@ readable. Or you can use common math control sequences in math mode,
    \def\var##1{\mathbox{\it\def\tmp{##1}\replstring\tmp{_}{\lowline}\tmp}}%
    \def\lowline{\vrule height.4pt width4pt depth0pt\relax}%
    \addcoloneq      %  := is transformed to \coloneq
+   \let\_savemathsb=\relax % we allow $\int_a^b$
    \catcode`\!=13
    \bgroup \lccode`\~=`\! \lowercase{\egroup \protected\def~##1~}{\algolem{##1}}%
    \hisyntax{ALG}%
@@ -1502,7 +1503,8 @@ of your algorithm listing.
        \kern\_ttshift ##1\_par}%
    \def\_printverblinenum{\llap{\_sevenrm \the\ttline\kern.1em}}%
 }
-\def\testindent#1#2\iftrue {\_ea\ifx#1\_dsp}
+\def\testindent#1#2\iftrue {\ifx#1\ddsp}
+\def\ddsp{\_dsp}
 </pre>
 
 <p>The \algolnum macro sets \ttline=0 and redefines the internal
