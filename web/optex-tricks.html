@@ -170,6 +170,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#scalemop">Scaled math operator</a>
     <li><a href="#differential">Differential operators in math</a>
     <li><a href="#testdelimiter">Testing various brackets sizes</a>
+    <li><a href="#xhat">Eighteen real hats in math typesetting</a>
 </ul>
 
 <li>Tables
@@ -3304,6 +3305,61 @@ font is loaded:
 </pre>
 
 <p CLASS=datum>(0168) -- P. O. 2025-04-13<p>
+<hr>
+
+<h2><a name="xhat"></a>Eighteen real hats in math typesetting</h2>
+
+<p>We implement the feature of realhats.sty LaTeX package (see its
+documentation). The \xhat macro is introduced (the original \hat macro isn't
+re-written). The \xhat x behaves like \hat x with usage of the LaTeX
+package. It means that randomly one of eighteen images of hats is selected and
+printed. If you write \xhat[cowboy] x (for example), then you select the
+specific image. If you declare \xhatsetup{cowboy} the the specific image is
+used instead of random selection.
+
+<p>Implementation:
+
+<pre>
+\optdef\xhat[\randomhat]{\trycs{xhat:\the\opt}
+   {\opwarning{\string\xhat: shape \ea"\the\opt" undeclared}}}
+\def\defaultw{1.5}%                                   w    vshift hshift
+\sdef{xhat:beret}{\usehat                     {beret} {}    {-.3}  {.5}}
+\sdef{xhat:santa}{\usehat                     {santa} {1.7} {0}    {0}}
+\sdef{xhat:sombrero}{\usehat               {sombrero} {}    {.1}   {0}}
+\sdef{xhat:witch}{\usehat                     {witch} {1.9} {0.1}  {0}}
+\sdef{xhat:tophat}{\usehat                   {tophat} {}    {-.07} {-.2}}
+\sdef{xhat:ash}{\usehat                         {ash} {}    {0}    {0}}
+\sdef{xhat:fez}{\usehat                         {fez} {1}   {0}    {0}}
+\sdef{xhat:cowboy}{\usehat                   {cowboy} {2}   {0}    {0}}
+\sdef{xhat:crown}{\usehat                     {crown} {}    {0}    {0}}
+\sdef{xhat:dunce}{\usehat                     {dunce} {1}   {-.15} {0}}
+\sdef{xhat:policeman}{\usehat             {policeman} {1.4} {0}    {0}}
+\sdef{xhat:scottish}{\usehat               {scottish} {}    {-.3} {.5}}
+\sdef{xhat:birthday}{\usehat               {birthday} {1.4} {0}    {0}}
+\sdef{xhat:mortarboard}{\usehat         {mortarboard} {1.7} {0}    {0}}
+\sdef{xhat:tile-white}{\usehat           {tile-white} {2}   {0}    {0}}
+\sdef{xhat:tile-gray}{\usehat            {tile-gray} {2}    {0}    {0}}
+\sdef{xhat:tile-light-blue}{\usehat {tile-light-blue} {2}   {0}    {0}}
+\sdef{xhat:tile-blue}{\usehat            {tile-blue} {2}    {0}    {0}}
+\def\randomhat{\ifcase \uniformdeviate 18 beret\or santa\or sombrero\or witch\or tophat\or
+   ash\or fez\or cowboy\or crown\or dunce\or policeman\or scottish\or birthday\or
+   mortarboard\or tile-white\or tile-gray\or tile-light-blue\or tile-blue\fi}
+\def\usehat #1#2#3#4#5{\mathbox{$\mathop{#5\kern0pt}\limits^%
+   {\vbox{\hbox to0pt{\hss \kern#4ex
+       \inspicto\ifx^#2^\defaultw\else #2\fi ex{realhats-#1.pdf}\hss}
+    \kern#3ex \kern-.5ex}}$}}
+\def\hatsetup#1{\def\randomhat{#1}}
+</pre>
+
+<p>The images from realhats LaTeX package are loaded. The \inspicto macro
+from OpTeX trick <a href="#inspicto">0172</a> is used in order to the size
+of the PDF file is smaller. Each image (used multiply times) is loaded to
+the PDF file only once. The printing is done by \mathbox in order we get
+relative dimensions of "ex" unit depending on the math style (textstyle,
+scriptstyle, ...). So, the xhats in script style are smaller than in text
+style. Note, that this feature insn't implemented in the mentioned LaTeX package.
+
+<p CLASS=datum>(0173) -- P. O. 2026-03-05<p>
 <hr>
 
 <p CLASS="lmarg">Tables</p>
