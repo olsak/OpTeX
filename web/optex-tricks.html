@@ -134,6 +134,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Graphics
 <ul>
     <li><a href="#loadicon">Repeating image in the document</a>
+    <li><a href="#inspicto">Repeating image in the document in various sizes</a>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#clipbox">A box with its content clipped</a>
     <li><a href="#carrows">Curved arrows</a>
@@ -1330,7 +1331,7 @@ readable. Or you can use common math control sequences in math mode,
 }
 \def\algolmath#1${\catcodetable\_optexcatcodes \scantextokens{#1}$}
 \def\addcoloneq{\ifx\coloneq\undefined \else
-   \mathcode`:="8000 \adef:{\isnextchar={\coloneq\ignoreit}{\Umathchar 6 1 `: }}\fi
+   \mathadef:{\isnextchar={\coloneq\ignoreit}{\Umathchar 6 1 `: }}\fi
 }
 \def\algol{\catcode`$=3
    \everymath={\algolmath}%
@@ -1683,44 +1684,59 @@ as an internal PDF pointer in the PDF file. The PDF size is smaller.
 <p>This concept has one disadvance: the image have only single size in the
 document which is set when data is loaded by the \inspic macro. If you use
 em unit here then you have the size given by the current em unit when the
-data image is loaded.
-
-<p>Following macros solve this problem. You can load the data first by
-\loadicon{image} and use it repeatedly by \icon size{image}. The size gives
-the width of the printed image and it can be given by em unit (depending on
-the current font size). If you don't give the size then you get the natural
-size of the image. For example (suppose you have the file myicon.png):
-
-<pre>
-\loadicon{myicon} % data from myicon.png is loaded
-\def\myicon{\lower.4em\hbox{\icon 1.5em{myicon}}}
-
-\typosize[8/10] The small icon \myicon.
-
-\typosize[12/14] The big icon \myicon.
-</pre>
-
-<p>The implementation is based on linear transformations. The image is
-loaded once (in its natural size) by \loadicon and the \icon macro uses
-the \copy\imagebox trick mentioned above with the \pdfscale macro.
-
-<pre>
-\ifx\iconsuffix\undefined \def\iconsuffix{png}\fi % default suffix
-\def\loadicon#1{\ea\newbox\csname #1box\endcsname
-   \setbox\cs{#1box}=\hbox{\picw=0pt \picheight=0pt \inspic{#1.\iconsuffix}}%
-}
-\def\icon#1#{\iconA{#1}}
-\def\iconA#1#2{\quitvmode
-   \ifx^#1^\copy\cs{#2box}\else
-      \edef\coef{\expr[5]{\bp{#1}/\bp{\wd\cs{#2box}}}}% scale coefficient
-      \setbox0=\hbox{\pdfsave \pdfscale{\coef}{\coef}\rlap{\copy\cs{#2box}}\pdfrestore}%
-      \ht0=\coef\ht0 \dp0=\coef\dp0 \wd0=\coef\wd\cs{#2box}%
-      \box0
-   \fi
-}
-</pre>
+data image is loaded. The following
+<a href="#inspicto">OpTeX trick 0172</a> solves this problem.
 
 <p CLASS=datum>(0139) -- P. O. 2024-08-23<p>
+<hr>
+
+
+<h2><a name="inspicto"></a>Repeating image in the document in various sizes</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\inspicto
+
+<p>We create a macro \inspicto dimen{image-file} which does the same as
+\picw=dimen \inspic{image-file}, but it doesn't load the data into PDF
+file twice if the image-file is the same. It loads the data of a single
+image-file only once (when used first time) and then second and more usage
+of this file prints the image in the PDF due to a pointer to firstly loaded
+data. Unlike the solution from the previous trick <a href="#loadicon">0139</a>, 
+each print of the image can have different specification of width.
+The image is re-scaled. Example:
+
+<pre>
+\def\mylogo{\inspicto 2em{mylogo.pdf}}
+
+Usage of \mylogo. {\typosize[14/17] Greater \mylogo}.
+</pre>
+
+<p>In this example, the second usage of \mylogo prints the greater logo,
+because the em unit is greater here. But the data of the mylgo.pdf is loaded
+into PDF only once.
+
+<p>Implementation:
+
+<pre>
+\def\inspicto #1#{\bgroup \picheight=0pt \picw=#1\relax \inspictoA}
+\def\inspictoA #1{%
+   \ifcsname insp:#1\endcsname
+      \pdfrefximage width\picw \lastnamedcs
+   \else
+      \inspic{#1}%
+      \global \ea \chardef \csname insp:#1\endcsname = \pdflastximage
+   \fi \egroup
+}
+</pre>
+
+<p>The control sequence \insp:file-name is the character constant equal to
+the pointer of read data saved in the \pdflastximage
+(\lastsavedimageresourceindex) when the data is read by \inspic (i.e. by
+\pdfximage, i.e. \saveimageresource). The repeated usage of the image is
+done by the pointer and printed by \pdfrefximage (\useimageresource). LuaTeX allows
+the optional parameter "width" (for re-scaling the image) when \pdfrefximage is used.
+
+<p CLASS=datum>(0172) -- P. O. 2026-03-04<p>
 <hr>
 
 <h2><a name="gradients"></a>Color gradients</h2>
@@ -8270,7 +8286,6 @@ expands to binary representation of the number.
 <pre>
 \def\basebinary #1{\ea\ea\ea \foreach\intbybase{#1}{2} \do {##1}}
 </pre>
-
 
 <p CLASS=datum>(0171) -- P. O. 2025-11-27<p>
 <hr>

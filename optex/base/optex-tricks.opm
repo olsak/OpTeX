@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-03-01>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-03-05>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -396,6 +396,19 @@ end,'global') % we want to keep the meanig after group
 \_def\.scaletofA#1{\_setbox0=\_hbox{{#1}}%
    \_edef\.tmpa{\_expr{\_bp{\.tmp}/\_bp{\_wd0}}}%
    \.scaletoA{\_setfontsize{mag\.tmpa}\_currvar#1}}
+
+\_trick 0172 \inspicto ;
+%%%%%%%%%%%%
+
+\_def\inspicto #1#{\_bgroup \_picheight=0pt \_picwidth=#1\_relax \.inspictoA}
+\_def\.inspictoA #1{%
+   \_ifcsname insp:#1\_endcsname
+      \_pdfrefximage width\_picwidth \_lastnamedcs
+   \_else
+      \_inspic{#1}%
+      \_global \_ea \_chardef \_csname insp:#1\_endcsname = \_pdflastximage
+   \_fi \_egroup
+}
 
 \_trick 0141 \clipbox ;
 %%%%%%%%%%%%
@@ -1372,6 +1385,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2026-03-05 \inspicto added5
 2026-03-01 \algol corrected (\.testindent, \.addcoloneq, \_savemathsb)
 2026-02-14 \ul introduced
 2025-12-11 \.replmacroC made long
