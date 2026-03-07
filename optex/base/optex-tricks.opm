@@ -1385,7 +1385,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
-2026-03-05 \inspicto added5
+2026-03-05 \inspicto added
 2026-03-01 \algol corrected (\.testindent, \.addcoloneq, \_savemathsb)
 2026-02-14 \ul introduced
 2025-12-11 \.replmacroC made long

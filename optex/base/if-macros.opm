@@ -337,8 +337,11 @@
    \_doc ----------------------------
    The macro \`\isnextchar` `<char>{<codeA>}{<codeB>}`
    has a different syntax than all other is-macros.
-   It executes `<codeA>` if next character is equal to <char>.
+   It executes `<codeA>` if a next character is equal to <char>.
    Else the `<codeB>` is executed. The macro is expandable.
+   It cheks the next character <space> too. If you want to check
+   a next non-space character, use
+   \^`\nospaceafter``{\isnextchar <char>{<codeA>}{<codeB>}}`.
    \_cod ----------------------------
 
 \_long\_def\_isnextchar#1#2#3{\_immediateassignment

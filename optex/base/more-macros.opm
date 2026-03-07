@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2024-10-31>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2026-03-07>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -111,8 +111,11 @@
    Note the difference from \LaTeX/ concept where the optional parameter is
    in `#1`. \OpTeX/ uses `#1` as the first normal parameter (if declared).
 
-   The \`\nospaceafter` ignores the following optional space at expand
+   The \`\nospaceafter` <token> or `\nospaceafter{<text>}`
+   ignores the following optional space at expand
    processor level using the negative `\romannumeral` trick.
+   Then returns to process <token> or <text>.
+
    The \`\nospacefuturelet` bahaves like `\futurelet` primitive, but it
    ignores the following optional space and works at expand processor level.
    \_cod -----------------------------
@@ -124,7 +127,7 @@
       \_immediateassignment\_opt={##1}\_cs{_oB:\_csstring#1\_nospaceafter}}%
    \_sdef{_oB:\_csstring#1\_nospaceafter}%
 }
-\_def\_nospaceafter#1{\_ea#1\_romannumeral-`\.\_noexpand}
+\_def\_nospaceafter#1{\_expanded{\_unexpanded{#1}\_ea}\_romannumeral-`\.\_noexpand}
 \_def\_nospacefuturelet#1#2{\_ea\_immediateassignment
    \_ea\_futurelet\_ea#1\_ea#2\_romannumeral-`\.\_noexpand}
 
@@ -415,6 +418,7 @@
 
 \_endcode % -------------------------------------
 
+2026-03-07 \nospaceafter reimplemented in order to allow \nospaceafter{text}
 2024-10-31 \_tmptoks replaced by \_repltoks in \replstring
 2024-09-09 \replstring: uses \toksapp (better speed) and \empty (keeps braces)
 2024-02-10 \optdef reimplemented, it can create expandable macros now.
