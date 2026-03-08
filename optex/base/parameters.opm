@@ -57,16 +57,39 @@
 \_splittopskip=10pt
 
    \_doc -----------------------------
-   The following two registers were introduced to fix a couple of bugs
+   The following four registers were introduced to fix some bugs
    in the \LuaTeX/ engine. When `\matheqdirmode` is positive short
    skip detection around display equations will work with right to left 
    typesetting. When `\breakafterdirmode` is set to 1 a glue after a dir
-   node will not be ignored.
+   node will not be ignored. When `\mathemptydisplaymode` is set to 1 paragraphs
+   before display equation containing only local_par and dir nodes will be discarded
+   (other wise dir nodes are considered actual matirial in this case). When `\fixupboxesmode`
+   is set to 1 dir nodes will be balanced at the end of hboxes (like in normal groups).
+   This is important for unboxing: 
+   
+   \begtt
+   \setbox0\hbox{\textdirection=1 text}\unhbox0 more text
+   \endtt
+   
+   With `\fixupboxesmode` set to 0 you have
+   
+   \begtt 
+   \begindirTRT text more text\enddirTRT
+   \endtt
+   
+   where the `\enddirTRT` is added from \LuaTeX's par builder.
+   While with `\fixupboxesmode` set to 1 you have
+   
+   \begtt 
+   \begindirTRT text\enddirTRT more text
+   \endtt
    \_cod -----------------------------
 
-\_ifx\_matheqdirmode\_undefined \_else
+\_ifx\_mathemptydisplaymode\_undefined \_else
 \_matheqdirmode=1
 \_breakafterdirmode=1
+\_mathemptydisplaymode=1   
+\_fixupboxesmode=1
 \_fi
 
    \_doc -----------------------------
