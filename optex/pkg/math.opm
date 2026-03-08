@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.23, 2026-02-15}
+\_def\_math_version {0.23, 2026-03-08}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -222,6 +222,78 @@
 \_newpublic\.pdef \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
 
 \_newpublic\.pdef \.#1{{\_bf#1}}
+
+   \_doc
+   \`\harrowto``<dimen>{<arrow>}` creates horizontal <arrow> extended to
+   <dimen> if the <dimen> is greater than the natural width of the <arrow>.
+   Let the width of the <arrow> is $w$. The <arrow> is divided to its
+   left part (0.4$w$), central part (0.2$w$) and right part (0.4$w$).\nl
+   The `\hbox to<dimen>{left part, extended central part, right part} `
+   is printed. The parts are printed by clipping path and the extended
+   central part is printed by `\pdfscale{<coeff>}{1}`. The parts are
+   overlapped by 0.01$w$.
+   \nl
+   \`\varrowto``<dimen>{<arrow>}` does the same as \^`\harrowto` but in
+   vertical direction.
+   \nl
+   \`\exw` uses \^`\scanlimits` for scaning parameters and creates `\mathop` in
+   `\mathrel`. If optional parameter isn't specified then it measures the
+   width of the limits by `\setbox0` (the \`\exwdist` amount is added)
+   and then runs the \^`\harrowto` macro.
+   \nl
+   \`\exh` creates `\vcenter` and \^`\varrowto` is in it.
+   \_cod
+
+\_def\.harrowto#1#{\_tmpdim=#1\_relax\.harrowtoA}
+\_def\.harrowtoA#1{%
+   \_setbox0=\_hbox{$#1$}%
+   \_ifdim\_tmpdim>\_wd0
+      \_hbox to\_tmpdim{%
+         \_edef\.clip{\_bp{-\_dp0-3pt} \_bp{.4\_wd0} \_bp{\_ht0+\_dp0+6pt} re W n}%
+         \_pdfliteral{q 0 \.clip}%
+         \_rlap{\_unhcopy0}\_pdfliteral{Q}%
+         \_kern.39\_wd0
+         \_pdfsave \_pdfscale{\_expr[4]{5*\_number\_tmpdim/\_number\_wd0-3.9}}{1}%
+         \_pdfliteral{0 0 \_bp{.2\_wd0} \_bp{\_ht0} re W n}%
+         \_rlap{\_kern-.4\_wd0 \_unhcopy0}\_pdfrestore
+         \_hss
+         \_pdfliteral{q \_bp{-.4\_wd0} \.clip}%
+         \_llap{\_unhbox0}\_pdfliteral{Q}}%
+   \_else \_box0 \_fi
+}
+\_def\.varrowto#1#{\_tmpdim=#1\_relax\.varrowtoA}
+\_def\.varrowtoA#1{%
+   \_setbox0=\_hbox{$#1$}\_setbox0=\_hbox{\_raise\_dp0\_box0}%
+   \_ifdim\_tmpdim>\_ht0
+      \_vbox to\_tmpdim{\_offinterlineskip
+         \_def\.vlap##1:##2{\_vbox to0pt{\_vss##2\_kern-##1}}%
+         \_edef\.clip{\_bp{\_wd0} \_bp{.4\_ht0} re W n}%
+         \_pdfliteral{q 0 \_bp{-.4\_ht0} \.clip}%
+         \.vlap\_ht0:{\_copy0}\_pdfliteral{Q}%
+         \_kern.39\_ht0
+         \_pdfsave \_pdfscale{1}{\_expr[4]{5*\_number\_tmpdim/\_number\_ht0-3.9}}%
+         \_pdfliteral{0 \_bp{-.2\_ht0} \_bp{\_wd0} \_bp{.2\_ht0} re W n}%
+         \.vlap.6\_ht0:{\_copy0}\_pdfrestore
+         \_vss
+         \_pdfliteral{q 0 0 \.clip}%
+         \.vlap 0pt:{\_box0}\_pdfliteral{Q}%
+      }
+   \_else \_vbox{\_box0}\_fi
+}
+\_newdimen\.exwdist \.exwdist=1.5pt
+\_optdef\.exw[]#1{\.scanlimits{\.exwA{#1}}}
+\_def\.exwA#1#2#3{\_mathrel{\_mathop{%
+   \_if^\_the\_opt^%
+      \_def\.sp{\_hskip\.exwdist\_relax}%
+      \_setbox0=\_hbox{$\_mathop{#1}\_limits^{\.sp#2\.sp}_{\.sp#3\.sp}$}%
+      \_tmpdim=\_wd0
+   \_else\_tmpdim=\_the\_opt\_relax
+   \_fi
+   \.harrowto\_tmpdim{#1}}\_limits^{#2}_{#3}}%
+}
+\_optdef\.exh[0pt]#1{\_vcenter{\.varrowto\_the\_opt{#1}}}
+
+\_nspublic \exw \exh \harrowto \varrowto \exwdist ;
 
    \_doc
    \`\multiprimes` sets {\def\\{\kern-3.8pt}{\tt '},
@@ -579,14 +651,23 @@
 
    \_doc
    \`\mathclap``{<formula>}`, \`\mathrlap``{<formula>}`, and \`\mathllap``{<formula>}`
-   are based on the \OpTeX/ macros \O`\mathstyles` and \O`\currstyle`.
+   are based on the \OpTeX/ macros \O`\mathstyles` and \O`\currstyle`.\nl
+   \`\scanlimits``\macro` or `\scanlimits{<text>}` saves its first parameter
+   to `#1` and transforms following.
    \_cod
 
 \_def\.mathclap#1{\_mathstyles{\_hbox to0pt{\_hss$\_currstyle#1$\_hss}}}
 \_def\.mathrlap#1{\_mathstyles{\_rlap{$\_currstyle#1$}}}
 \_def\.mathllap#1{\_mathstyles{\_llap{$\_currstyle#1$}}}
 
-\_nspublic \mathclap \mathrlap \mathllap ;
+\_def\.scanlimits#1{%
+   \_nospaceafter{\_isnextchar _{\.limiB#1}{\_isnextchar ^{\.limiU{#1}}{#1{}{}}}}}
+\_def\.limiB#1_#2{\_nospaceafter{\_isnextchar ^{\.limiUf{#1}{#2}}{#1{}{#2}}}}
+\_def\.limiU#1^#2{\_nospaceafter{\_isnextchar _{\.limiBf{#1}{#2}}{#1{#2}{}}}}
+\_def\.limiBf#1#2_#3{#1{#2}{#3}}
+\_def\.limiUf#1#2^#3{#1{#3}{#2}}
+
+\_nspublic \mathclap \mathrlap \mathllap \scanlimits ;
 
    \_doc
    \`\enablefic` enables final italic correction. The relevant lua function is
@@ -658,6 +739,8 @@ The following macros are defined in this package:
 * \~`\replacemissingchars` allows to re-declare all characters missing in math font
   for printing them from additional math font.
 * \~`\enablefic` enables final italic correction of inline-math lists.
+* \~`\scanlimits` transforms the limits format (usage of `^` and `_`) to the parameters pair.
+* \~`\exw`, \~`\exh` extend the horizontal and vertical arrows.
 \enditems
 
 Following options are provided by the `math` package. You can set them by
@@ -812,6 +895,36 @@ The package provides a shortcut `\.<letter>` to do the same, so user can write
 `\.A\.x` for multiplication of a matrix $\.A$ by a vector $\.x$.
 We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
 `math.opm` can define `\.` differently than the classical meaning \"dotaccent".
+
+
+\sec Extensible arrows
+
+You can use \^`\exw <arrow> <limits>`, where <arrow> is arbitrary horizontal
+arrow, for example `\leftarrow`,  `\Leftrightarrow`, `\mapsto`, `\hookleftarrow`, `=`,
+`-`. The parameter <limit> is limits specification, for example `^a_b` or `_{\rm text}`.
+The given arrow is printed as mathrel atom with given limits above and
+below. The arrow is automatically extended in order to be slightly wider
+that the widest limit text. If you give an optional parameter:
+\^`\exw[<dimen>] <arrow> <limits>` then the arrow is printed with given
+<width> regardless of widths of limits. The `\exw` means extend width.
+
+You can use \^`\exh[<dimen>] <arrow>`, where <arrow> is arbitrary vertical arrow.
+The arrow extends its height to given <dimen> and the result is packed to
+`\vcenter`, i.e. the math axis is respected.
+
+Examples: `$\exw\rightarrowtail _{\rm long\ text}^x$` gives
+$\exw\rightarrowtail _{\rm long\ text}^x$,
+
+`$\exh[2em]\upwhitearrow$` gives $\exh[2em]\upwhitearrow$,\quad
+`$\exw[3em]\equiv^{\rm def}$` gives $\exw[3em]\equiv^{\rm def}$.
+\smallskip
+
+You can control the size by which the horizontal arrow is larger than its
+limits by the \^`\exwdist` register. Default is `\exwdist=1.5pt`.
+
+See also \^`\harrowto` and  \^`\varrowto` macros. They extend the given
+horizontal or vertical arrow to given <dimem> and they are used for
+implementation of \^`\exw` and \^`\exh` macros.
 
 
 \sec System of equations printed by `\eqsystem`
@@ -1222,6 +1335,19 @@ respects the math style.\nl
 \^`\mathrlap``{<formula>}` and \^`\mathllap``{<formula>}` is \O`\rlap` and
 \O`\llap` analogue of \^`\mathclap`.
 
+\^`\scanlimits``\macro`<limits> transforms the parameters given in <limits>
+(there are `^` or `_` or both in any order) to two parameters `{<sup>}{<sub>}`.
+The `\macro` may have simply two parameters `#1` and `#2` declared and the
+macro-programer is sure, that `#1` is superscript and `#2` subscript.
+Examples:
+\begtt
+\scanlimits \macro _{aa}        % expands to \macro {}{aa}
+\scanlimits \macro ^b           % expands to \macro {b}{}
+\scanlimits \macro _{aa} ^b     % expands to \macro {b}{aa}
+\scanlimits \macro ^b_{aa}      % expands to \macro {b}{aa}
+\scanlimits \macro .            % expands to \macro {}{}.
+\scanlimits {\macro XY} _a^{bb} % expands to \macro XY{bb}{a}
+\endtt
 
 \sec[pkgtemplate] General recommendation for writing \OpTeX/ packages
 
@@ -1330,6 +1456,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.24  2026-03-08  \scanlimits introduced, extended arrows \exw, \exh implemented.
 0.23  2026-02-15  \enablefic prints warning only when LuaTeX v>1.23
 0.22  2025-12-22  \multiprimes introduced
 0.21  2025-11-30  \rmsbsp: \_primes correction
