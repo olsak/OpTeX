@@ -111,9 +111,31 @@
    \_edef\_currmatrix{\_tmpb\_space
       \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}%
 }
-\_def\_transformbox#1#2{\_immediateassignment\_tmpnum=\_ifvmode\_bodydirection\fi
- \_ifhmode\_textdirection\_fi\_ifmmode\_mathdirection\fi
- \_hbox bdir0 {\_setbox0=\_hbox bdir\_tmpnum {{#2}}%
+
+   \_doc -----------------------------
+   The outer boxes of graphics should be LTR,
+   as the kern calculation and `pdfliteral` assume
+   LTR coordinates.
+   
+   In \LuaTeX/ when a `\vbox`, `\vtop` or `\hbox`
+   is created all the direction registers are set
+   to the box direction inside of it, so we need
+   to save the outer direction for the content inside.
+
+   If a direction is not specified for
+   a `\vbox`, `\vtop` or `\hbox`, then
+   the direction of that box is `\textdirection`
+   in horizontal mode, `\bodydirection` in vertical mode
+   and `\mathdirection` in math mode, so this is the direction
+   we save and then set back for the box of the actual content.
+   \_cod -----------------------------
+
+\_def\_bdir{0}
+\_def\_savebdir{\_immediateassignment\_edef\_bdir{\_ifvmode\_the\_bodydirection\_fi
+    \_ifhmode\_the\_textdirection\_fi\_ifmmode\_the\_mathdirection\_fi}}
+
+\_def\_transformbox#1#2{\_savebdir
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_bdir {{#2}}%
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
@@ -142,9 +164,8 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_immediateassignment\_tmpnum=\_ifvmode\_bodydirection\fi
- \_ifhmode\_textdirection\_fi\_ifmmode\_mathdirection\fi
- \_hbox bdir0 {\_setbox0=\_hbox bdir\_tmpnum {{#4}}#2%
+\_def\_rotboxA #1#2#3#4{\_savebdir
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_bdir {{#4}}#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
@@ -452,6 +473,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2026-09-05: \_savebdir added. \transformbox, \inoval, incircle adapted to RTL mode
 2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed

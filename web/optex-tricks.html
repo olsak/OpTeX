@@ -1807,9 +1807,10 @@ Test: \frame{\clipbox 15pt10pt2pt -3pt-3pt{\vbox{\hbox{XXX}\hrule\hbox{XXX}}}}.
 \def\clipbox{\ea\ea\ea\clipboxA\scanthreedimens}
 \def\clipboxA#1#2#3#4#{\clipboxB{#1}{#2}{#3}{#4}}
 \def\clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
+   \_savebdir
    \hbox to #1sp{%
       \pdfliteral{q 0 \bp{-#3sp} \bp{\ifcase\textdirection\else-\fi #1sp} \bp{#2sp+#3sp} re W n}%
-      \puttext #4{#5}%
+      \puttext #4{\hbox bdir\_bdir {#5}}%
       \pdfliteral{Q}%
       \vrule height#2sp depth#3sp width0pt \hss
    }%

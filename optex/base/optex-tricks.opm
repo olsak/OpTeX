@@ -421,9 +421,10 @@ end,'global') % we want to keep the meanig after group
 \_def\clipbox{\_ea\_ea\_ea\.clipboxA\.scanthreedimens}
 \_def\.clipboxA#1#2#3#4#{\.clipboxB{#1}{#2}{#3}{#4}}
 \_def\.clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
-   \_hbox to #1sp{%
-      \_pdfliteral{q 0 \_bp{-#3sp} \_bp{\_ifcase\_textdirection\_else-\_fi #1sp} \_bp{#2sp+#3sp} re W n}%
-      \_puttext #4{#5}%
+   \_savebdir
+   \_hbox bdir0 to #1sp{%
+      \_pdfliteral{q 0 \_bp{-#3sp} \_bp{#1sp} \_bp{#2sp+#3sp} re W n}%
+      \_puttext #4{\_hbox bdir\_bdir {#5}}%
       \_pdfliteral{Q}%
       \_vrule height#2sp depth#3sp width0pt \_hss
    }%
@@ -1391,6 +1392,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2026-05-09 \clipbox, \keystroke, \shadedframe and \roundframe adapted for RTL
 2026-03-05 \inspicto added
 2026-03-01 \algol corrected (\.testindent, \.addcoloneq, \_savemathsb)
 2026-02-14 \ul introduced
