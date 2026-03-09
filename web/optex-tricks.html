@@ -2100,8 +2100,8 @@ keystroke.sty LaTeX package. For example
 \setbox\keymbox=\hbox{\picheight=\keysize \inspic{keystroke_middle.pdf}}
 \setbox\keyrbox=\hbox{\picheight=\keysize \inspic{keystroke_right.pdf}}
 
-\def\keystroke#1{\setbox0=\hbox{\keystrokefont#1}%
-   \leavevmode \lower.2\keysize \hbox{\copy\keylbox
+\def\keystroke#1{\leavevmode\setbox0=\hbox{\keystrokefont#1}%
+   \lower.2\keysize \hbox bdir0 {\copy\keylbox
       \tmpdim=\wd\keymbox
       \ifdim\wd0>\tmpdim \tmpdim=\wd0 \fi
       \ifdim\tmpdim>\wd\keymbox

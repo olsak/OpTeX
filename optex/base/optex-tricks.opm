@@ -655,8 +655,8 @@ end,'global') % we want to keep the meanig after group
 \_setbox\.keyrbox=\_hbox{\_picheight=\keysize \_inspic{keystroke_right.pdf}}
 \_picheight=\.picheight
 
-\_def\keystroke#1{\_setbox0=\_hbox{\keystrokefont#1}%
-   \_leavevmode \_lower.2\keysize \_hbox{\_copy\.keylbox
+\_def\keystroke#1{\_leavevmode\_setbox0=\_hbox{\keystrokefont#1}%
+   \_lower.2\keysize \_hbox bdir0 {\_copy\.keylbox
       \_tmpdim=\_wd\.keymbox
       \_ifdim\_wd0>\_tmpdim \_tmpdim=\_wd0 \_fi
       \_ifdim\_tmpdim>\_wd\.keymbox
