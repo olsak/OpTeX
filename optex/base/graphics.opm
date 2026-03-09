@@ -424,7 +424,8 @@
    \_cod -----------------------------
 
 \_def\_clipinpath#1#2#3#4{% #1=x-pos[bp], #2=y-pos[bp], #3=curve, #4=text
-   \_hbox{\_setbox0=\_hbox{{#4}}%
+   \_savebdir
+   \_hbox bdir0 {\_setbox0=\_hbox{\_hbox bdir\_bdir {{#4}}}%
           \_tmpdim=\_wd0 \_wd0=\_zo
           \_pdfliteral{q \_mv{#1}{#2}{#3 W n}}%
           \_box0\_pdfliteral{Q}\_kern\_tmpdim
