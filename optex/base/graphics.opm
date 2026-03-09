@@ -111,14 +111,14 @@
    \_edef\_currmatrix{\_tmpb\_space
       \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}%
 }
-\_def\_transformbox#1#2{\_hbox{\_setbox0=\_hbox{{#2}}%
+\_def\_transformbox#1#2{\_begingroup\_setbox0=\_hbox{{#2}}\_hbox bdir0 {%
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
    \_preptransform{#1}%
    \_kern-\_newLt \_vrule height\_newHt depth\_newDp width\_zo
    \_setbox0=\_hbox{\_box0}\_ht0=\_zo \_dp0=\_zo
-   \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}%
+   \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}\_endgroup
 }
 \_def\_preptransform #1{\_def\_currmatrix{1 0 0 1 }%
    \_def\_pdfsetmatrix##1{\_edef\_tmpb{##1 }\_ea\_multiplyMxM \_tmpb\_unskip}%
@@ -140,11 +140,11 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_hbox{\_setbox0=\_hbox{{#4}}#2%
+\_def\_rotboxA #1#2#3#4{\_begingroup\_setbox0=\_hbox{{#4}}\_hbox bdir0 {#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
-}}
+}\_endgroup}
 \_public \transformbox \rotbox ;
 
    \_doc ---------------------------
@@ -177,7 +177,7 @@
       \_nointerlineskip
    \_fi
    \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
-   \_vbox to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
+   \_vbox to\_zo{\_kern-\_dimen2 \_hbox bdir0 to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 
 \_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
 \_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
@@ -271,7 +271,7 @@
    \_ifx\_overlapmarginsvalue N\_dimen0=\_roundness \_dimen1=\_roundness
    \_else                      \_dimen0=-\_hhkern   \_dimen1=-\_vvkern \_fi
    \_setflcolors\_tmp
-   \_hbox{\_kern\_dimen0
+   \_hbox bdir0 {\_kern\_dimen0
       \_vbox to\_zo{\_kern\_dp0
          \_ifx\_shadowvalue N\_else
             \_edef\_tmpb{{\_bp{\_wd0+\_lwidth}}{\_bp{\_ht0+\_dp0+\_lwidth}}{\_bp{\_roundness}}}%
@@ -301,7 +301,7 @@
    \_setflcolors\_tmp
    \_ifx\_overlapmarginsvalue N\_dimen0=\_zo \_dimen1=\_zo
    \_else \_dimen0=-\_hhkern \_dimen1=-\_vvkern \_fi
-   \_hbox{\_kern\_dimen0
+   \_hbox bdir0 {\_kern\_dimen0
       \_ifx\_shadowvalue N\_else
          \_edef\_tmpb{{\_bp{\_dimen2+\_lwidth}}{\_bp{\_dimen3+\_lwidth}}{}}%
          \_doshadow\_circlet
