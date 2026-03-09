@@ -111,14 +111,16 @@
    \_edef\_currmatrix{\_tmpb\_space
       \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}%
 }
-\_def\_transformbox#1#2{\_begingroup\_setbox0=\_hbox{{#2}}\_hbox bdir0 {%
+\_def\_transformbox#1#2{\_immediateassignment\_tmpnum=\_ifvmode\_bodydirection\fi
+ \_ifhmode\_textdirection\_fi\_ifmmode\_mathdirection\fi
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_tmpnum {{#2}}%
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
    \_preptransform{#1}%
    \_kern-\_newLt \_vrule height\_newHt depth\_newDp width\_zo
    \_setbox0=\_hbox{\_box0}\_ht0=\_zo \_dp0=\_zo
-   \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}\_endgroup
+   \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}%
 }
 \_def\_preptransform #1{\_def\_currmatrix{1 0 0 1 }%
    \_def\_pdfsetmatrix##1{\_edef\_tmpb{##1 }\_ea\_multiplyMxM \_tmpb\_unskip}%
@@ -140,11 +142,13 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_begingroup\_setbox0=\_hbox{{#4}}\_hbox bdir0 {#2%
+\_def\_rotboxA #1#2#3#4{\_immediateassignment\_tmpnum=\_ifvmode\_bodydirection\fi
+ \_ifhmode\_textdirection\_fi\_ifmmode\_mathdirection\fi
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_tmpnum {{#4}}#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
-}\_endgroup}
+}}
 \_public \transformbox \rotbox ;
 
    \_doc ---------------------------
