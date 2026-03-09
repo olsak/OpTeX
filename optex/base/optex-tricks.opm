@@ -559,7 +559,7 @@ end,'global') % we want to keep the meanig after group
       \_setbox0=\_hbox{\_frame{\_vbox{\_kv{text-color}\_noindent\_ignorespaces#1}}}%
       \_edef\.htzo{\_the\_ht0}\_edef\.wdzo{\_the\_wd0}%
       \_kv{shadow-color}%
-      \_hbox{\_vbox{\_hbox{\_rlap{\_kv{bg-color}\_vrule height\_ht0 width\_wd0 depth\_dp0}\_box0}%
+      \_hbox bdir0 {\_vbox{\_hbox{\_rlap{\_kv{bg-color}\_vrule height\_ht0 width\_wd0 depth\_dp0}\_box0}%
                   \_nointerlineskip \_moveright\_kv{shade-width}
                      \_hbox{\_vrule height\_kv{shade-width}width\.wdzo}\_kern-\_kv{shade-width}}%
             \_kern-\_kv{shade-width}\_vrule height\.htzo width\kv{shade-width}}%

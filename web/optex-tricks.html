@@ -2154,7 +2154,7 @@ adding boxes with given dimensions.
    \setbox0=\hbox{\frame{\vbox{\Black \noindent\ignorespaces#1}}}%
    \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
    \LightGrey % shadow color
-   \hbox{\vbox{\hbox{\rlap{\Yellow\vrule height\ht0 width\wd0 depth\dp0}\box0}%
+   \hbox bdir0 {\vbox{\hbox{\rlap{\Yellow\vrule height\ht0 width\wd0 depth\dp0}\box0}%
                \nointerlineskip \moveright\shadewidth
                   \hbox{\vrule height\shadewidth width\wdzo}\kern-\shadewidth}%
          \kern-\shadewidth \vrule height\htzo width\shadewidth}%
