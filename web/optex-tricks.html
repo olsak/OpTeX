@@ -2256,7 +2256,7 @@ with rounded corners. For example
       \bgbox{\kv{text-bgcolor}}{\kern\kv{text-above}%
          \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}
    \setbox1=\vbox to\dimexpr\ht0-2\roundness{}\wd1=\dimexpr\wd0-2\roundness\relax
-   \hbox bdir0 {\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
+   \hbox{\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
       \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
    \egroup
 }
