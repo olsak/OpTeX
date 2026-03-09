@@ -628,16 +628,10 @@ end,'global') % we want to keep the meanig after group
       \_ea\.cancelA
    \_fi
 }
-\_def\.cancelA{\_ifmmode \_ea\.cancelM \_else \_ea\.cancelT \_fi}
+\_def\.cancelA{\_quitvmode\_ifmmode \_ea\.cancelM \_else \_ea\.cancelT \_fi}
 \_def\.cancelT#1{\_setbox0=\_hbox{#1}\.cancelF} % text mode
 \_def\.cancelM#1{\_mathstyles{\_setbox0=\_hbox{$\_currstyle{#1}$}\.cancelF}} % math mode
-\_def\.cancelF{\_edef\.tmp{\.cancline}\_quitvmode
-  \_ifcase\_textdirection 
-    \_box0 \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}%
-  \_else
-    \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}\_box0 
-  \_fi
-}
+\_def\.cancelF{\_edef\.tmp{\.cancline}\_hbox bdir0 {\_box0 \_pdfliteral{q \_useit{\cancelparams} \.tmp S Q}}}
 \_def\.drawFslash{\_bp{-\_wd0} \_bp{-\_dp0} m 0 \_bp{\_ht0} l } % forward slash
 \_def\.drawBslash{\_bp{-\_wd0} \_bp{\_ht0} m 0 \_bp{-\_dp0} l } % backward slash
 \_def\.drawHline {\_bp{-\_wd0} \_bp{.5ex} m 0 \_bp{.5ex} l }    % horizontal line
@@ -1392,7 +1386,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
-2026-05-09 \clipbox, \keystroke, \shadedframe and \roundframe adapted for RTL
+2026-05-09 \cancel, \clipbox, \keystroke and \shadedframe adapted for RTL
 2026-03-05 \inspicto added
 2026-03-01 \algol corrected (\.testindent, \.addcoloneq, \_savemathsb)
 2026-02-14 \ul introduced

@@ -130,7 +130,6 @@
    we save and then set back for the box of the actual content.
    \_cod -----------------------------
 
-\_def\_bdir{0}
 \_def\_savebdir{\_immediateassignment\_edef\_bdir{\_ifvmode\_the\_bodydirection\_fi
     \_ifhmode\_the\_textdirection\_fi\_ifmmode\_the\_mathdirection\_fi}}
 
@@ -474,7 +473,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
-2026-09-05: \_savebdir added. \transformbox, \inoval, incircle adapted to RTL mode
+2026-09-05: \_savebdir added. \transformbox, \rotbox, \puttext \inoval, incircle and \_clipinpath adapted to RTL mode
 2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed
