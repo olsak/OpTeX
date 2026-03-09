@@ -600,7 +600,7 @@ end,'global') % we want to keep the meanig after group
       \.bgbox{\_kv{text-bgcolor}}{\_kern\_kv{text-above}%
          \_noindent\_strut\_kv{text-color}\_kv{text-font}#2\.parstrut\_kern\_kv{text-below}}}
    \_setbox1=\_vbox to\_dimexpr\_ht0-2\_roundness{}\_wd1=\_dimexpr\_wd0-2\_roundness\_relax
-   \_hbox{\_unless\_ifdim\_kv{shadow-width}=0pt \.roundframeshadow \_fi
+   \_hbox bdir0 {\_unless\_ifdim\_kv{shadow-width}=0pt \.roundframeshadow \_fi
       \_clipinoval .5\_wd0 .5\_ht0 \_wd0 \_ht0 {\_box0}}%
    \_egroup
 }
