@@ -2,6 +2,14 @@
 
 \_codedecl \inspic {Graphics <2025-06-05>} % preloaded in format
 
+   \_doc
+   To be documented and moved to an aprropriate place ...
+   \_cod
+
+\_def\_dirhbox{\_hbox bdir\_boxdirection} \_def\_dirvbox{\_vbox bdir\_boxdirection}
+\_newcount\_boxdirection \_boxdirection=0
+\_public \dirhbox \dirvbox \boxdirection ;
+
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
    or new syntax `\inspic{<filename>}`. So, we need to define
@@ -111,7 +119,7 @@
    \_edef\_currmatrix{\_tmpb\_space
       \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}%
 }
-\_def\_transformbox#1#2{\_hbox{\_setbox0=\_hbox{{#2}}%
+\_def\_transformbox#1#2{\_hbox bdir0{\_setbox0=\_dirhbox{{#2}}%
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
@@ -140,7 +148,7 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_hbox{\_setbox0=\_hbox{{#4}}#2%
+\_def\_rotboxA #1#2#3#4{\_hbox dir0{\_setbox0=\_dirhbox{{#4}}#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
@@ -177,7 +185,7 @@
       \_nointerlineskip
    \_fi
    \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
-   \_vbox to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
+   \_vbox bdir0 to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 
 \_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
 \_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
@@ -284,13 +292,13 @@
       \_kern\_dimen0}%
    \_egroup % of \vbox\bgroup
 }
-\_optdef\_incircle[]{\_vbox\_bgroup
+\_optdef\_incircle[]{\_vbox bdir0\_bgroup
    \_ratio=1 \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp
    \_shadow=N \_overlapmargins=N \_hhkern=3pt \_vvkern=3pt
    \_ea\_the \_ea\_circleparams \_space \_relax
    \_ea\_the \_ea\_opt \_space \_relax
    \_touppervalue\_overlapmarginsvalue \_touppervalue\_shadowvalue
-   \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
+   \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
 }
 \_def\_incircleA {\_egroup % of \setbox0=\hbox\bgroup
    \_wd0=\_dimexpr \_wd0+\_hhkern \_relax
