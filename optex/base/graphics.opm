@@ -159,9 +159,14 @@
    \`\_scantwodimens` scans two objects with the syntactic rule `<dimen>`
    and returns `{<number>}{<number>}` in `sp` unit.
    \nl
-   \`\puttext` `<right> <up>{<text>}` puts the `<text>` to desired place:
-   From current point moves <down> and <right>, puts the <text> and returns
+   \`\puttext` `<right> <up> {<text>}` puts the `<text>` to desired place:
+   From current point moves <up> and <right>, puts the <text> and returns
    back. The current point is unchanged after this macro ends.
+   The reference point of the <text> is the left edge of its baseline if
+   \^`\boxdirection`=0 else it is the right edge of the baseline of the <text>.
+   This rule is ignored when the optional parameter `[l]` (left edge) or `[r]`
+   (right edge) of the \^`\puttext` macro is given. For example
+   `\puttext[r] -5mm 0mm {text}`.
    \nl
    \`\putpic` `<right> <up> <width> <height> {<image-file>}`
    does `\puttext` with the image scaled to desired <width> and <height>.
@@ -177,13 +182,15 @@
                token.scan_dimen(),token.scan_dimen()))}%
 }
 
-\_def\_puttext{\_ea\_ea\_ea\_puttextA\_scantwodimens}
-\_long\_def\_puttextA#1#2#3{{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
+\_optdef\_puttext[]{\_ea\_ea\_ea\_puttextA\_scantwodimens}
+\_long\_def\_puttextA#1#2#3{{\_setbox0=\_dirhbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
 \_def\_puttextB{%
    \_ifvmode
       \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
       \_nointerlineskip
    \_fi
+   \_if r\_the\_opt\_relax \_setbox0=\_hbox bdir1{\_box0}\_fi
+   \_if l\_the\_opt\_relax \_setbox0=\_hbox bdir0{\_box0}\_fi
    \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
    \_vbox bdir0 to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 

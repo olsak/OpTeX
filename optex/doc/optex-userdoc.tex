@@ -1588,7 +1588,8 @@ The \^`\puttext` `<x> <y> {<text>}` puts the `<text>` shifted by `<x>` right and
 position of the current point. Assume a coordinate system with origin in the
 current point. Then \^`\puttext` `<x> <y> {<text>}` puts the text at the
 coordinates `<x>`, `<y>`. More exactly the left edge of its baseline is at that
-position.
+position. The right edge is used if the optional parameter `[r]` is given, see
+section~\ref[graphics] for more details.
 
 \new
 The \^`\putpic` `<x> <y> <width> <height> {<image-file>}` puts an image
