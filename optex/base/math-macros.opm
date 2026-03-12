@@ -1104,7 +1104,7 @@
    using different principle.
    \_cod -----------------------------
 
-\_def\_mathbox#1{{\_mathstyles{\_hbox{%
+\_def\_mathbox#1{{\_mathstyles{\_dirhbox{%
    \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
    \_else \_ifx \_normalmath\_normalunimath
       \_ifnum\_stylenum=2 \_def\_textmff{ssty=1;}\_fi
