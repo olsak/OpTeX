@@ -263,14 +263,14 @@
    \_def\_setcolor##1##2##3{##1 ##3}%
    \_edef#1{#1\_space\_lcolorvalue\_space}%
 }
-\_optdef\_inoval[]{\_vbox\_bgroup
+\_optdef\_inoval[]{\_vbox bdir0\_bgroup
    \_roundness=2pt \_fcolor=\Yellow \_lcolor=\Red \_lwidth=.5bp
    \_shadow=N \_overlapmargins=N \_hhkern=0pt \_vvkern=0pt
    \_the\_ovalparams \_relax \_the\_opt \_relax
    \_touppervalue\_overlapmarginsvalue \_touppervalue\_shadowvalue
    \_ifx\_overlapmarginsvalue N%
       \_advance\_hsize by-2\_hhkern \_advance\_hsize by-2\_roundness \_fi
-   \_setbox0=\_hbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
+   \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
 }
 \_def\_inovalA{\_egroup % of \setbox0=\hbox\bgroup
    \_ifdim\_vvkern=\_zo \_else \_ht0=\_dimexpr\_ht0+\_vvkern \_relax
@@ -407,7 +407,7 @@
    \_cod -----------------------------
 
 \_def\_clipinpath#1#2#3#4{% #1=x-pos[bp], #2=y-pos[bp], #3=curve, #4=text
-   \_hbox{\_setbox0=\_hbox{{#4}}%
+   \_hbox bdir0 {\_setbox0=\_hbox{\_dirhbox{{#4}}}%
           \_tmpdim=\_wd0 \_wd0=\_zo
           \_pdfliteral{q \_mv{#1}{#2}{#3 W n}}%
           \_box0\_pdfliteral{Q}\_kern\_tmpdim
