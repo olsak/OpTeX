@@ -1115,6 +1115,14 @@
 }
 \_public \mathbox ;
 
+   \_doc
+   \`\dirhbox` and \`\dirvbox` are equal to `\hbox` and `\vbox`, but they set
+   the printing of their parameter according to the \^`\boxdirection` register.
+   \_cod
+
+\_def\_dirhbox{\_hbox bdir\_boxdirection} \_def\_dirvbox{\_vbox bdir\_boxdirection}
+\_public \dirhbox \dirvbox ;
+
 \_endcode %---------------------------------------------------
 
 2025-04-13 \bBig strut macro introduced, \_scalebig re-implemented

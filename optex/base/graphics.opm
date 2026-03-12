@@ -2,14 +2,6 @@
 
 \_codedecl \inspic {Graphics <2025-06-05>} % preloaded in format
 
-   \_doc
-   To be documented and moved to an aprropriate place ...
-   \_cod
-
-\_def\_dirhbox{\_hbox bdir\_boxdirection} \_def\_dirvbox{\_vbox bdir\_boxdirection}
-\_newcount\_boxdirection \_boxdirection=0
-\_public \dirhbox \dirvbox \boxdirection ;
-
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
    or new syntax `\inspic{<filename>}`. So, we need to define

@@ -621,6 +621,16 @@
 
 \_let\cnvinfo=\_ignoreit
 
+   \_doc -----------------------------
+   In addition to the \LuaTeX/ primitive registers `\textdirection`, `\bodydirection`
+   etc.\ we introduce the register \`\boxdirection` with the same meaning of
+   its four values 0, 1, 2, 3. It affects the texts in internal boxes of
+   the macros \^`\mathbox`, \^`\puttext`, \^`\transformbox`, \^`\rotbox`,
+   \^`\inoval`, \^`\incircle`.
+   \_cod -----------------------------
+
+\_newcount\_boxdirection \_boxdirection=0
+\_public \boxdirection ;
 
 \_endcode %----------------------------------------------------
 
