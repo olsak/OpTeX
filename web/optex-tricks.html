@@ -2253,7 +2253,7 @@ with rounded corners. For example
          \noindent\strut\kv{title-color}\kv{title-font}#1\parstrut\kern\kv{title-below}}
       \kv{midrule-color}\hrule height\kv{midrule-width}%
       \bgbox{\kv{text-bgcolor}}{\kern\kv{text-above}%
-         \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}
+         \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}%
    \setbox1=\vbox to\dimexpr\ht0-2\roundness{}\wd1=\dimexpr\wd0-2\roundness\relax
    \hbox{\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
       \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
