@@ -177,13 +177,15 @@
                token.scan_dimen(),token.scan_dimen()))}%
 }
 
-\_def\_puttext{\_ea\_ea\_ea\_puttextA\_scantwodimens}
-\_long\_def\_puttextA#1#2#3{{\_setbox0=\_hbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
+\_optdef\_puttext[]{\_ea\_ea\_ea\_puttextA\_scantwodimens}
+\_long\_def\_puttextA#1#2#3{{\_setbox0=\_dirhbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
 \_def\_puttextB{%
    \_ifvmode
       \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
       \_nointerlineskip
    \_fi
+   \_if r\_the\_opt\_relax \_setbox0=\_hbox bdir1{\_box0}\_fi
+   \_if l\_the\_opt\_relax \_setbox0=\_hbox bdir0{\_box0}\_fi
    \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
    \_vbox bdir0 to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 
