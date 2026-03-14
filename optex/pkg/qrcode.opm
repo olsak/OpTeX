@@ -2584,7 +2584,7 @@
 \_def\.restoreA#1#2{%
    \.modulesize=\.desiredheight \_divide\.modulesize by#1
    \_if1\.kv{qr-link}\_setbox0=\_fi
-   \_vbox\_bgroup\.padd \_offinterlineskip \_baselineskip=\.modulesize 
+   \_vbox bdir0 \_bgroup\.padd \_offinterlineskip \_baselineskip=\.modulesize 
       \.i=0 \.j=0 \_let\.next=\.restoreB 
    \_hbox\_bgroup\.padd \.restoreB #2%
    \_if1\.kv{qr-link}\.link{\.etext}{\_box0}\_fi
