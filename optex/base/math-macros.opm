@@ -1117,10 +1117,10 @@
 
    \_doc
    \`\dirhbox` and \`\dirvbox` are equal to `\hbox` and `\vbox`, but they set
-   the printing of their parameter according to the \^`\boxdirection` register.
+   the printing of their parameter according to the \^`\inboxdirection` register.
    \_cod
 
-\_def\_dirhbox{\_hbox bdir\_boxdirection} \_def\_dirvbox{\_vbox bdir\_boxdirection}
+\_def\_dirhbox{\_hbox bdir\_inboxdirection} \_def\_dirvbox{\_vbox bdir\_inboxdirection}
 \_public \dirhbox \dirvbox ;
 
 \_endcode %---------------------------------------------------

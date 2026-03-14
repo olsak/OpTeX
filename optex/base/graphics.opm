@@ -155,7 +155,7 @@
    From current point moves <up> and <right>, puts the <text> and returns
    back. The current point is unchanged after this macro ends.
    The reference point of the <text> is the left edge of its baseline if
-   \^`\boxdirection`=0 else it is the right edge of the baseline of the <text>.
+   \^`\inboxdirection`=0 else it is the right edge of the baseline of the <text>.
    This rule is ignored when the optional parameter `[l]` (left edge) or `[r]`
    (right edge) of the \^`\puttext` macro is given. For example
    `\puttext[r] -5mm 0mm {text}`.

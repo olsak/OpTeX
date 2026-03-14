@@ -623,14 +623,17 @@
 
    \_doc -----------------------------
    In addition to the \LuaTeX/ primitive registers `\textdirection`, `\bodydirection`
-   etc.\ we introduce the register \`\boxdirection` with the same meaning of
+   etc.\ we introduce the register \`\inboxdirection` with the same meaning of
    its four values 0, 1, 2, 3. It affects the texts in internal boxes of
    the macros \^`\mathbox`, \^`\puttext`, \^`\transformbox`, \^`\rotbox`,
-   \^`\inoval`, \^`\incircle`.
+   \^`\inoval`, \^`\incircle`.\nl
+   {\bf Note:} Only dirmode 0 (Latin) and 1 (Hebrew) was implemented and
+   tested (see `op-letter-he.tex`). The dirmodes 2 and 3 are not functional
+   with the macros `\transformbox` etc.\ now.
    \_cod -----------------------------
 
-\_newcount\_boxdirection \_boxdirection=0
-\_public \boxdirection ;
+\_newcount\_inboxdirection \_inboxdirection=0
+\_public \inboxdirection ;
 
 \_endcode %----------------------------------------------------
 
