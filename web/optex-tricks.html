@@ -1807,9 +1807,10 @@ Test: \frame{\clipbox 15pt10pt2pt -3pt-3pt{\vbox{\hbox{XXX}\hrule\hbox{XXX}}}}.
 \def\clipbox{\ea\ea\ea\clipboxA\scanthreedimens}
 \def\clipboxA#1#2#3#4#{\clipboxB{#1}{#2}{#3}{#4}}
 \def\clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
+   \_savebdir
    \hbox to #1sp{%
-      \pdfliteral{q 0 \bp{-#3sp} \bp{#1sp} \bp{#2sp+#3sp} re W n}%
-      \puttext #4{#5}%
+      \pdfliteral{q 0 \bp{-#3sp} \bp{\ifcase\textdirection\else-\fi #1sp} \bp{#2sp+#3sp} re W n}%
+      \puttext #4{\hbox bdir\_bdir {#5}}%
       \pdfliteral{Q}%
       \vrule height#2sp depth#3sp width0pt \hss
    }%
@@ -1922,16 +1923,10 @@ Test: \cancel\\{hello}, ${\cancel X{a}\over \cancel{b}} + \cancel-{\int_a^b f(x)
       \ea\cancelA
    \fi
 }
-\def\cancelA{\ifmmode \ea\cancelM \else \ea\cancelT \fi}
+\def\cancelA{\quitvmode\ifmmode \ea\cancelM \else \ea\cancelT \fi}
 \def\cancelT#1{\setbox0=\hbox{#1}\cancelF} % text mode
 \def\cancelM#1{\mathstyles{\setbox0=\hbox{$\currstyle{#1}$}\cancelF}} % math mode
-\def\cancelF{\edef\tmp{\cancline}\quitvmode
-  \ifcase\textdirection
-    \box0 \pdfliteral{q \useit{\cancelparams} \tmp S Q}%
-  \else
-    \pdfliteral{q \useit{\cancelparams} \tmp S Q}\box0 
-  \fi
-}
+\def\cancelF{\edef\tmp{\cancline}\hbox bdir0 {\box0 \pdfliteral{q \useit{\cancelparams} \tmp S Q}}}
 \def\drawFslash{\bp{-\wd0} \bp{-\dp0} m 0 \bp{\ht0} l } % forward slash
 \def\drawBslash{\bp{-\wd0} \bp{\ht0} m 0 \bp{-\dp0} l } % backward slash
 \def\drawHline {\bp{-\wd0} \bp{.5ex} m 0 \bp{.5ex} l }  % horizontal line
@@ -2100,8 +2095,8 @@ keystroke.sty LaTeX package. For example
 \setbox\keymbox=\hbox{\picheight=\keysize \inspic{keystroke_middle.pdf}}
 \setbox\keyrbox=\hbox{\picheight=\keysize \inspic{keystroke_right.pdf}}
 
-\def\keystroke#1{\setbox0=\hbox{\keystrokefont#1}%
-   \leavevmode \lower.2\keysize \hbox{\copy\keylbox
+\def\keystroke#1{\leavevmode\setbox0=\hbox{\keystrokefont#1}%
+   \lower.2\keysize \hbox bdir0 {\copy\keylbox
       \tmpdim=\wd\keymbox
       \ifdim\wd0>\tmpdim \tmpdim=\wd0 \fi
       \ifdim\tmpdim>\wd\keymbox
@@ -2154,7 +2149,7 @@ adding boxes with given dimensions.
    \setbox0=\hbox{\frame{\vbox{\Black \noindent\ignorespaces#1}}}%
    \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
    \LightGrey % shadow color
-   \hbox{\vbox{\hbox{\rlap{\Yellow\vrule height\ht0 width\wd0 depth\dp0}\box0}%
+   \hbox bdir0 {\vbox{\hbox{\rlap{\Yellow\vrule height\ht0 width\wd0 depth\dp0}\box0}%
                \nointerlineskip \moveright\shadewidth
                   \hbox{\vrule height\shadewidth width\wdzo}\kern-\shadewidth}%
          \kern-\shadewidth \vrule height\htzo width\shadewidth}%

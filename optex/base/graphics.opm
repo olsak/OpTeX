@@ -111,7 +111,30 @@
    \_edef\_currmatrix{\_tmpb\_space
       \_ea\_ignorept\_the\_vvalX\_space \_ea\_ignorept\_the\_vvalY\_space}%
 }
-\_def\_transformbox#1#2{\_hbox{\_setbox0=\_hbox{{#2}}%
+
+   \_doc -----------------------------
+   The outer boxes of graphics should be LTR,
+   as the kern calculation and `pdfliteral` assume
+   LTR coordinates.
+   
+   In \LuaTeX/ when a `\vbox`, `\vtop` or `\hbox`
+   is created all the direction registers are set
+   to the box direction inside of it, so we need
+   to save the outer direction for the content inside.
+
+   If a direction is not specified for
+   a `\vbox`, `\vtop` or `\hbox`, then
+   the direction of that box is `\textdirection`
+   in horizontal mode, `\bodydirection` in vertical mode
+   and `\mathdirection` in math mode, so this is the direction
+   we save and then set back for the box of the actual content.
+   \_cod -----------------------------
+
+\_def\_savebdir{\_immediateassignment\_edef\_bdir{\_ifvmode\_the\_bodydirection\_fi
+    \_ifhmode\_the\_textdirection\_fi\_ifmmode\_the\_mathdirection\_fi}}
+
+\_def\_transformbox#1#2{\_savebdir
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_bdir {{#2}}%
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
@@ -140,7 +163,8 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_hbox{\_setbox0=\_hbox{{#4}}#2%
+\_def\_rotboxA #1#2#3#4{\_savebdir
+ \_hbox bdir0 {\_setbox0=\_hbox bdir\_bdir {{#4}}#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
@@ -177,7 +201,7 @@
       \_nointerlineskip
    \_fi
    \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
-   \_vbox to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
+   \_vbox to\_zo{\_kern-\_dimen2 \_hbox bdir0 to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 
 \_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
 \_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
@@ -271,7 +295,7 @@
    \_ifx\_overlapmarginsvalue N\_dimen0=\_roundness \_dimen1=\_roundness
    \_else                      \_dimen0=-\_hhkern   \_dimen1=-\_vvkern \_fi
    \_setflcolors\_tmp
-   \_hbox{\_kern\_dimen0
+   \_hbox bdir0 {\_kern\_dimen0
       \_vbox to\_zo{\_kern\_dp0
          \_ifx\_shadowvalue N\_else
             \_edef\_tmpb{{\_bp{\_wd0+\_lwidth}}{\_bp{\_ht0+\_dp0+\_lwidth}}{\_bp{\_roundness}}}%
@@ -301,7 +325,7 @@
    \_setflcolors\_tmp
    \_ifx\_overlapmarginsvalue N\_dimen0=\_zo \_dimen1=\_zo
    \_else \_dimen0=-\_hhkern \_dimen1=-\_vvkern \_fi
-   \_hbox{\_kern\_dimen0
+   \_hbox bdir0 {\_kern\_dimen0
       \_ifx\_shadowvalue N\_else
          \_edef\_tmpb{{\_bp{\_dimen2+\_lwidth}}{\_bp{\_dimen3+\_lwidth}}{}}%
          \_doshadow\_circlet
@@ -399,7 +423,8 @@
    \_cod -----------------------------
 
 \_def\_clipinpath#1#2#3#4{% #1=x-pos[bp], #2=y-pos[bp], #3=curve, #4=text
-   \_hbox{\_setbox0=\_hbox{{#4}}%
+   \_savebdir
+   \_hbox bdir0 {\_setbox0=\_hbox{\_hbox bdir\_bdir {{#4}}}%
           \_tmpdim=\_wd0 \_wd0=\_zo
           \_pdfliteral{q \_mv{#1}{#2}{#3 W n}}%
           \_box0\_pdfliteral{Q}\_kern\_tmpdim
@@ -448,6 +473,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2026-09-05: \_savebdir added. \transformbox, \rotbox, \puttext \inoval, incircle and \_clipinpath adapted to RTL mode
 2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed
