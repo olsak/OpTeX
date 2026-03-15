@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2026-03-15>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2026-03-07>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -188,7 +188,7 @@
    the next line continues.
    \_cod -----------------------------
 
-\_def\_scantoeol#1{\_begingroup \_ea\_setscancatcodes \_ea\_scantoeolA \_ea#1\_string}
+\_def\_scantoeol#1{\_begingroup \_setscancatcodes \_scantoeolA#1}
 \_def\_setscancatcodes{\_setverb \_catcode`\^^M=12\_catcode`\^=7\_catcode`\ =10\_catcode`\^^J=14 }
 \_catcode`\^^M=12 %
 \_def\_scantoeolA#1#2^^M{\_endgroup #1{#2}}%
@@ -418,7 +418,6 @@
 
 \_endcode % -------------------------------------
 
-2026-03-15 \_scantoeol: added \string; bug fix of \sec {text}
 2026-03-07 \nospaceafter reimplemented in order to allow \nospaceafter{text}
 2024-10-31 \_tmptoks replaced by \_repltoks in \replstring
 2024-09-09 \replstring: uses \toksapp (better speed) and \empty (keeps braces)

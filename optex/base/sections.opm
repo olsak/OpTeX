@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \chap {Titles, chapters, sections, subsections <2024-01-19>} % preloaded in format
+\_codedecl \chap {Titles, chapters, sections, subsections <2026-03-15>} % preloaded in format
 
    \_doc ---------------------------
    We are using scaled fonts for titles
@@ -172,12 +172,16 @@
    The `\chap`, `\sec` and `\secc` macro reads its parameter using
    \^`\scantoeol`. This causes that they cannot be used inside other macros.
    Use \^`\_inchap`, \^`\_insec`, and \^`\_insecc` macros directly in such case.
+   Because the first token of the title parameter is tokenized already (due to
+   \^`\optdef`), we have to use `\_scantoeolX` instead \^`\scantoeol`. This
+   solves the problem `\sec {text}`.
    \_cod ----------------------------
 
-\_optdef\_chap[]{\_trylabel \_scantoeol\_inchap}
-\_optdef\_sec []{\_trylabel \_scantoeol\_insec}
-\_optdef\_secc[]{\_trylabel \_scantoeol\_insecc}
+\_optdef\_chap[]{\_trylabel \_scantoeolX\_inchap}
+\_optdef\_sec []{\_trylabel \_scantoeolX\_insec}
+\_optdef\_secc[]{\_trylabel \_scantoeolX\_insecc}
 \_def\_trylabel{\_istoksempty\_opt\_iffalse \_label[\_the\_opt]\_fi}
+\_def\_scantoeolX#1{\_isnextchar\_bgroup{\_ea\_scantoeol\_ea#1\_string}{\_scantoeol#1}}
 
 \_sdef{_eol:chap}{\_inchap} % enables \bracedparam\chap{title}
 \_sdef{_eol:sec}{\_insec}   % enables \bracedparam\sec{title}
@@ -479,6 +483,7 @@
 
 \_endcode % -------------------------------------
 
+2026-03-15 \_scantoeolX introduced: bug fix of the case `\sec {text}`
 2024-01-19 \bracedparam\secl enabled
 2024-01-18 \tit, \chap, \sec, \secc: added cooperation with new \bracedparam
 2023-05-02 \_numprint used
