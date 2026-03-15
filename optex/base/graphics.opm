@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2025-06-05>} % preloaded in format
+\_codedecl \inspic {Graphics <2026-03-15>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -115,9 +115,9 @@
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
-   \_preptransform{#1}%
+   \_setbox0=\_hbox{\_box0}\_preptransform{#1}%
    \_kern-\_newLt \_vrule height\_newHt depth\_newDp width\_zo
-   \_setbox0=\_hbox{\_box0}\_ht0=\_zo \_dp0=\_zo
+   \_ht0=\_zo \_dp0=\_zo
    \_pdfsave#1\_rlap{\_box0}\_pdfrestore \_kern\_newRt}%
 }
 \_def\_preptransform #1{\_def\_currmatrix{1 0 0 1 }%
@@ -272,6 +272,7 @@
    \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
 }
 \_def\_inovalA{\_egroup % of \setbox0=\hbox\bgroup
+   \_ifnum\_inboxdirection>1 \_setbox0=\_hbox{\_box0}\_fi
    \_ifdim\_vvkern=\_zo \_else \_ht0=\_dimexpr\_ht0+\_vvkern \_relax
                                \_dp0=\_dimexpr\_dp0+\_vvkern \_relax \_fi
    \_ifdim\_hhkern=\_zo \_else \_wd0=\_dimexpr\_wd0+\_hhkern \_relax \_fi
@@ -300,6 +301,7 @@
    \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
 }
 \_def\_incircleA {\_egroup % of \setbox0=\hbox\bgroup
+   \_ifnum\_inboxdirection>1 \_setbox0=\_hbox{\_box0}\_fi
    \_wd0=\_dimexpr \_wd0+\_hhkern \_relax
    \_ht0=\_dimexpr \_ht0+\_vvkern \_relax \_dp0=\_dimexpr \_dp0+\_vvkern \_relax
    \_ifdim \_ratiovalue\_dimexpr \_ht0+\_dp0 > \_wd0
@@ -455,6 +457,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
+2026-03-15: \inoval etc: corrected for non L-R directions
 2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed

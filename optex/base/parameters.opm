@@ -626,10 +626,9 @@
    etc.\ we introduce the register \`\inboxdirection` with the same meaning of
    its four values 0, 1, 2, 3. It affects the texts in internal boxes of
    the macros \^`\mathbox`, \^`\puttext`, \^`\transformbox`, \^`\rotbox`,
-   \^`\inoval`, \^`\incircle`.\nl
-   {\bf Note:} Only dirmode 0 (Latin) and 1 (Hebrew) was implemented and
-   tested (see `op-letter-he.tex`). The dirmodes 2 and 3 are not functional
-   with the macros `\transformbox` etc.\ now.
+   \^`\inoval`, \^`\incircle`. Dirmode~0 is L$\to$R (Latin),
+   dirmode~1 (R$\to$L, Hebrew) was tested, see `op-letter-he.tex`.
+   Dirmode~3 is T$\to$B, L$\to$R, and dirmode 4 is T$\to$B, R$\to$L.
    \_cod -----------------------------
 
 \_newcount\_inboxdirection \_inboxdirection=0
