@@ -137,7 +137,7 @@
 
 \_def\_currfile{\_directlua{tex.print(status.filename)}}
 \_def\_basefilename #1{\_ea\_nofileext\_expanded{\_ea\_ea\_ea\_nofilepath#1/\_fin}.\_fin}
-\_def\_nofilepath #1/#2{\ifx#2\_fin #1\_else \_ea\_nofilepath \_ea#2\_fi}
+\_def\_nofilepath #1/#2{\_ifx#2\_fin #1\_else \_ea\_nofilepath \_ea#2\_fi}
 \_def\_nofileext #1.#2\_fin{#1}
 
 \_public \currfile \basefilename ;
