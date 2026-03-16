@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \inspic {Graphics <2026-03-15>} % preloaded in format
+\_codedecl \inspic {Graphics <2026-03-16>} % preloaded in format
 
    \_doc -----------------------------
    \`\inspic` accepts old syntax `\inspic <filename><space>`
@@ -115,6 +115,7 @@
    \_dimendef\_vvalX 11 \_dimendef\_vvalY 12 % we use these variables
    \_dimendef\_newHt 13 \_dimendef\_newDp 14 % only in this group
    \_dimendef\_newLt 15 \_dimendef\_newRt 16
+   \_ifnum\_inboxdirection>1 \_tbreset0\_fi
    \_setbox0=\_hbox{\_box0}\_preptransform{#1}%
    \_kern-\_newLt \_vrule height\_newHt depth\_newDp width\_zo
    \_ht0=\_zo \_dp0=\_zo
@@ -160,6 +161,38 @@
    (right edge) of the \^`\puttext` macro is given. For example
    `\puttext[r] -5mm 0mm {text}`.
    \nl
+   \`\_tbreset`<number> supposes that the box <number> is created in
+   dir modes 2 or 3 (top to bottom texts) and resets it to a `\hbox` in dirmode~1.
+   I.e.\ it reverts the meaning of `\wd` and `\ht+\dp`.
+   It is used in \^`\puttext` and similar macros and it decides, where the baseline of
+   verticaly printed text is. You can re-define it, but this default macro
+   puts the baseline 1em under the top of the resulting box.
+   \_cod
+
+\_def\_scantwodimens{%
+   \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}',
+               token.scan_dimen(),token.scan_dimen()))}%
+}
+\_optdef\_puttext[]{\_ea\_ea\_ea\_puttextA\_scantwodimens}
+\_long\_def\_puttextA#1#2#3{{\_setbox0=\_dirhbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
+\_def\_puttextB{%
+   \_ifvmode
+      \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
+      \_nointerlineskip
+   \_fi
+   \_ifnum\_inboxdirection>1 \_tbreset0\_fi
+   \_if r\_the\_opt\_relax \_setbox0=\_hbox bdir1{\_box0}\_fi
+   \_if l\_the\_opt\_relax \_setbox0=\_hbox bdir0{\_box0}\_fi
+   \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
+   \_vbox bdir0 to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}%
+}
+\_def\_tbreset#1{%
+   \_ifnum\_inboxdirection=3 \_ifdim\_dimexpr \_ht#1+\_dp#1>1.2em % \vbox probably inside
+      \_ht#1=\_dimexpr\_ht#1+\_dp#1-.3em \_dp#1=.3em \_fi\_fi % LuaTeX bug for dirmode 3 ??
+   \_setbox#1=\_hbox bdir1{\_lower\_dimexpr\_wd#1-1em\_box#1}%
+}
+
+   \_doc
    \`\putpic` `<right> <up> <width> <height> {<image-file>}`
    does `\puttext` with the image scaled to desired <width> and <height>.
    If <with> or <height> is zero, natural dimension is used.
@@ -168,23 +201,6 @@
    \`\backgroundpic``{<image-file>}` puts the image to
    the background of each page. It is used in the \~`\slides` style, for example.
    \_cod ---------------------------
-
-\_def\_scantwodimens{%
-   \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}',
-               token.scan_dimen(),token.scan_dimen()))}%
-}
-
-\_optdef\_puttext[]{\_ea\_ea\_ea\_puttextA\_scantwodimens}
-\_long\_def\_puttextA#1#2#3{{\_setbox0=\_dirhbox{{#3}}\_dimen1=#1sp \_dimen2=#2sp \_puttextB}}
-\_def\_puttextB{%
-   \_ifvmode
-      \_ifdim\_prevdepth>\_zo \_vskip-\_prevdepth \_relax \_fi
-      \_nointerlineskip
-   \_fi
-   \_if r\_the\_opt\_relax \_setbox0=\_hbox bdir1{\_box0}\_fi
-   \_if l\_the\_opt\_relax \_setbox0=\_hbox bdir0{\_box0}\_fi
-   \_wd0=\_zo \_ht0=\_zo \_dp0=\_zo
-   \_vbox bdir0 to\_zo{\_kern-\_dimen2 \_hbox to\_zo{\_kern\_dimen1 \_box0\_hss}\_vss}}
 
 \_def\_putpic{\_ea\_ea\_ea\_putpicA\_scantwodimens}
 \_def\_putpicA#1#2{\_dimen1=#1sp \_dimen2=#2sp \_ea\_ea\_ea\_putpicB\_scantwodimens}
@@ -272,7 +288,7 @@
    \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_inovalA \_kern\_hhkern \_let\_next=%
 }
 \_def\_inovalA{\_egroup % of \setbox0=\hbox\bgroup
-   \_ifnum\_inboxdirection>1 \_setbox0=\_hbox{\_box0}\_fi
+   \_ifnum\_inboxdirection>1 \_tbreset0\_fi
    \_ifdim\_vvkern=\_zo \_else \_ht0=\_dimexpr\_ht0+\_vvkern \_relax
                                \_dp0=\_dimexpr\_dp0+\_vvkern \_relax \_fi
    \_ifdim\_hhkern=\_zo \_else \_wd0=\_dimexpr\_wd0+\_hhkern \_relax \_fi
@@ -301,7 +317,7 @@
    \_setbox0=\_dirhbox\_bgroup\_bgroup \_aftergroup\_incircleA \_kern\_hhkern \_let\_next=%
 }
 \_def\_incircleA {\_egroup % of \setbox0=\hbox\bgroup
-   \_ifnum\_inboxdirection>1 \_setbox0=\_hbox{\_box0}\_fi
+   \_ifnum\_inboxdirection>1 \_tbreset0\_fi
    \_wd0=\_dimexpr \_wd0+\_hhkern \_relax
    \_ht0=\_dimexpr \_ht0+\_vvkern \_relax \_dp0=\_dimexpr \_dp0+\_vvkern \_relax
    \_ifdim \_ratiovalue\_dimexpr \_ht0+\_dp0 > \_wd0
@@ -457,7 +473,7 @@ the \^`\transformbox{<transformation>}{\copy\mypic}`.
 
 \_endinput
 
-2026-03-15: \inoval etc: corrected for non L-R directions
+2026-03-16: \inoval etc: corrected for non L-R directions
 2025-06-05: \inoval, \incircle: \fcolor=\relax, bug fix
 2023-16-03: more \_inkdefs macros
 2022-11-05  \_doshadow: renduntant \_expr from \_expr{\_bp{...}} removed

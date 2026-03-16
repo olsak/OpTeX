@@ -2181,9 +2181,10 @@ optional key/value parameters, see section 2.10 in OpTeX manual.
       \vvkern=\kv{v-margins}\hhkern=\kv{h-margins}%
       \rulewidth=\kv{rule-width}\hsize=\kv{text-width}\relax
       \kv{frame-color}%
-      \setbox0=\dirhbox{\frame{\vbox{\kv{text-color}\noindent\ignorespaces#1}}}%
-      \ifnum\inboxdirection>1 \setbox0=\hbox{\box0}\fi
-      \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
+      \setbox0=\dirhbox{\vbox{\kv{text-color}\noindent\ignorespaces#1}}%
+      \ifnum\inboxdirection>1 \_tbreset0\fi
+      \setbox0=\hbox{\frame{\box0}}%
+      \edef\htzo{\the\dimexpr\ht0+\dp0-\kv{shade-width}}\edef\wdzo{\the\wd0}%
       \kv{shadow-color}%
       \hbox{\vbox{\hbox{\rlap{\kv{bg-color}\vrule height\ht0 width\wd0 depth\dp0}\box0}%
                   \nointerlineskip \moveright\kv{shade-width}
@@ -2257,7 +2258,7 @@ with rounded corners. For example
          \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}
    \ifnum\inboxdirection>1 \setbox0=\vbox{\box0}\fi
    \setbox1=\vbox to\dimexpr\ht0-2\roundness{}\wd1=\dimexpr\wd0-2\roundness\relax
-   \hbox{\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
+   \hbox{\unless\ifdim\kv{shadow-width}=0pt \inboxdirection=0 \roundframeshadow \fi
       \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
    \egroup
 }

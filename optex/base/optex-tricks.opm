@@ -417,7 +417,6 @@ end,'global') % we want to keep the meanig after group
    \_directlua{tex.print(string.format('{\_pcent d}{\_pcent d}{\_pcent d}',
                token.scan_dimen(),token.scan_dimen(),token.scan_dimen()))}%
 }
-
 \_def\clipbox{\_ea\_ea\_ea\.clipboxA\.scanthreedimens}
 \_def\.clipboxA#1#2#3#4#{\.clipboxB{#1}{#2}{#3}{#4}}
 \_def\.clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
@@ -556,14 +555,15 @@ end,'global') % we want to keep the meanig after group
       \_vvkern=\_kv{v-margins}\_hhkern=\_kv{h-margins}%
       \_rulewidth=\_kv{rule-width}\_hsize=\_kv{text-width}\relax
       \_kv{frame-color}%
-      \_setbox0=\_dirhbox {\_frame{\_vbox{\_kv{text-color}\_noindent\_ignorespaces#1}}}%
-      \_ifnum\_inboxdirection>1 \_setbox0=\_hbox{\_box0}\_fi
-      \_edef\.htzo{\_the\_ht0}\_edef\.wdzo{\_the\_wd0}%
+      \_setbox0=\_dirhbox {\_vbox{\_kv{text-color}\_noindent\_ignorespaces#1}}%
+      \_ifnum\_inboxdirection>1 \_tbreset0\_fi
+      \_setbox0=\_hbox{\_frame{\_box0}}%
+      \_edef\.htzo{\_the\_dimexpr\_ht0+\_dp0-\_kv{shade-width}}\_edef\.wdzo{\_the\_wd0}%
       \_kv{shadow-color}%
       \_hbox {\_vbox{\_hbox{\_rlap{\_kv{bg-color}\_vrule height\_ht0 width\_wd0 depth\_dp0}\_box0}%
                   \_nointerlineskip \_moveright\_kv{shade-width}
                      \_hbox{\_vrule height\_kv{shade-width}width\.wdzo}\_kern-\_kv{shade-width}}%
-            \_kern-\_kv{shade-width}\_vrule height\.htzo width\kv{shade-width}}%
+            \_kern-\_kv{shade-width}\_vrule height\.htzo width\_kv{shade-width}}%
    \_egroup
 }
 
@@ -602,7 +602,7 @@ end,'global') % we want to keep the meanig after group
          \_noindent\_strut\_kv{text-color}\_kv{text-font}#2\.parstrut\_kern\_kv{text-below}}}
    \_ifnum\_inboxdirection>1 \_setbox0=\_vbox{\_box0}\_fi
    \_setbox1=\_vbox to\_dimexpr\_ht0-2\_roundness{}\_wd1=\_dimexpr\_wd0-2\_roundness\_relax
-   \_hbox{\_unless\_ifdim\_kv{shadow-width}=0pt \.roundframeshadow \_fi
+   \_hbox{\_unless\_ifdim\_kv{shadow-width}=0pt \_inboxdirection=0 \.roundframeshadow \_fi
       \_clipinoval .5\_wd0 .5\_ht0 \_wd0 \_ht0 {\_box0}}%
    \_egroup
 }
