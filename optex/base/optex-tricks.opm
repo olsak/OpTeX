@@ -606,7 +606,8 @@ end,'global') % we want to keep the meanig after group
       \_clipinoval .5\_wd0 .5\_ht0 \_wd0 \_ht0 {\_box0}}%
    \_egroup
 }
-\_def\.bgbox#1#2{\_setbox0=\_vbox{#2}\_hbox{\_rlap{#1\_vrule height\_ht0 depth\_dp0 width\_wd0}\_box0}}
+\_def\.bgbox#1#2{\_setbox0=\_vbox{#2}%
+   \_tmpdim=\_dimexpr\_ht0+\_dp0 #1\_hrule height\_tmpdim \_kern-\_tmpdim \_box0 }%
 \_def\.parstrut{\_par\_kern-\_prevdepth\_kern\_dp\_strutbox}
 \_def\.roundframeshadow{\_raise\_roundness\_rlap{\_edef\_shadowb{\_bp{\_kv{shadow-width}}}%
    \_inoval[\_fcolor=\Grey \_roundness=\_kv{round-corner} \_shadow=Y \_lwidth=0pt]{\_box1}}}

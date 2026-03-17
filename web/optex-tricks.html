@@ -2262,7 +2262,8 @@ with rounded corners. For example
       \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
    \egroup
 }
-\def\bgbox#1#2{\setbox0=\vbox{#2}\hbox{\rlap{#1\vrule height\ht0 depth\dp0 width\wd0}\box0}}
+\def\bgbox#1#2{\setbox0=\vbox{#2}%
+   \tmpdim=\dimexpr\ht0+\dp0 #1\hrule height\tmpdim \kern-\tmpdim \box0 }
 \def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
 \def\roundframeshadow{\raise\roundness\rlap{\edef\_shadowb{\bp{\kv{shadow-width}}}%
    \inoval[\fcolor=\Grey \roundness=\kv{round-corner} \shadow=Y \lwidth=0pt]{\box1}}}
