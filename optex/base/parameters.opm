@@ -628,7 +628,7 @@
    the macros \^`\mathbox`, \^`\puttext`, \^`\transformbox`, \^`\rotbox`,
    \^`\inoval`, \^`\incircle`. Dirmode~0 is L$\to$R (Latin),
    dirmode~1 (R$\to$L, Hebrew) was tested, see `op-letter-he.tex`.
-   Dirmode~3 is T$\to$B, L$\to$R, and dirmode 4 is T$\to$B, R$\to$L.
+   Dirmode~2 is T$\to$B, L$\to$R, and Dirmode~3 is T$\to$B, R$\to$L.
    \_cod -----------------------------
 
 \_newcount\_inboxdirection \_inboxdirection=0
