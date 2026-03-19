@@ -326,6 +326,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Directions
 <ul>
     <li><a href="#footnotelinedir">Location of the footnote rule on the page</a>
+    <li><a href="#mninvert">Location of marginal notes</a>
 </ul>
 
 <li>Features of PDF viewers
@@ -9233,6 +9234,44 @@ by the paragraph direction of the first footnote you can add
 
 <p CLASS=datum>(0174) -- Udi Fogiel 2026-03-17<p>
 <hr>
+
+<h2><a name="mninvert"></a>Location of marginal notes</h2>
+
+<p>If we set \pardirection=1 \textdirection=1 \pagedirection=1 \bodydirection=1
+then all marginal notes are at reversed side than we except them.
+For example, if \fixmnotes\left is declared then marginal notes are in the right
+margin. We can live with this fact, but if we want to have true \fixmnotes
+declaration then we can redefine:
+
+<pre>
+\_def \_lrmnote#1#2{\_ea\_unless\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
+</pre>
+
+<p>Moreover, if we want to have correct spefification in both cases (l2r and r2l
+directions) then we can define:
+
+<pre>
+\_def \_lrmnote#1#2{\_ea\_whatmndir\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
+\_def \_whatmndir{\_ifnum\_bodydirection=0 \_else \_ea \_unless\_fi}
+</pre>
+
+<p>Whenewer we have true positions of margin notes (thanks to macros
+mentioned above) then we may face another problem: when margin notes have
+undeclared position then they are placed to the right margin at odd pages
+and to the left margin at even pages (outer margins in opened book). But
+there exist cases when we want to put margins to the inner margins or to the
+outer margins but with non-standard page numbers (because the book is opened
+from the right side, for example). The we need to invert the rule about
+odd/even pages => right/left margins. It can be done by following macro:
+
+<pre>
+\_def\_mninvert#1#2{\_ea\_ea\_ea\_ifx\_csname #2\_endcsname\_left \_right \_else \_left \_fi
+</pre>
+
+<p>This macro inverts all \left mnote declarations (created when .ref file is read)
+to \right declaration and vice versa.
+
+<p CLASS=datum>(0175) -- P. O. 2026-03-19<p>
 
 <p CLASS="lmarg">Features of PDF viewer</p>
 
