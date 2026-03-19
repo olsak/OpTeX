@@ -9265,11 +9265,25 @@ from the right side, for example). The we need to invert the rule about
 odd/even pages => right/left margins. It can be done by following macro:
 
 <pre>
-\_def\_mninvert#1#2{\_ea\_ea\_ea\_ifx\_csname #2\_endcsname\_left \_right \_else \_left \_fi
+\_def\_mninvert#1#2{\_ea\_ea\_ea\_ifx\_csname #2\_endcsname\_left \_right \_else \_left \_fi}
 </pre>
 
 <p>This macro inverts all \left mnote declarations (created when .ref file is read)
 to \right declaration and vice versa.
+
+<p>Another possibility is to define \swapmnotes with analogical meaning like
+\swapeqno. You don't think exactly about left/right sides. Simply: if the
+positions of the marginal notes don't suit you then you can simply use
+\swapmnotes.
+
+<pre>
+\def\swapmnotes{\_ifx \_lrmnote\lrmnoteleft \_let\_lrmnote=\lrmnoteright
+                \_else \_let\_lrmnote=\lrmnoteleft \_fi }
+\def\lrmnoteleft  #1#2{\_ea\_ifx\_mnotesfixed\_left  #1\_else #2\_fi}
+\def\lrmnoteright #1#2{\_ea\_ifx\_mnotesfixed\_right #1\_else #2\_fi}
+\let\_lrmnote=\lrmnoteleft
+</pre>
+
 
 <p CLASS=datum>(0175) -- P. O. 2026-03-19<p>
 
