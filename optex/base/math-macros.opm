@@ -1126,6 +1126,10 @@
    \_doc
    \`\swapeqno` swaps the meaning of \^`\eqno` with \^`\leqno`
    and \^`\_eqnoright` with \^`\_eqnoleft`.
+   You can declare it if you want to move all equation marks from right to
+   left or from left to right in an already prepared document. Other use case
+   is with r2l languages: If `\pardirection=1` then the \^`\eqno` and \^`\leqno`
+   are swapped and if you don't want it then use \^`\swapeqno`.
    \_cod
 
 \_def\_swapeqno{\_let\_tmp=\_eqno \_let\_eqno=\_leqno \_let\_leqno=\_tmp
