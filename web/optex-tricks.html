@@ -323,6 +323,11 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ngerman">The german.sty and ngerman.sty implementation</a>
 </ul>
 
+<li>Directions
+<ul>
+    <li><a href="#footnotelinedir">Location of the footnote rule on the page</a>
+</ul>
+
 <li>Features of PDF viewers
 <ul>
     <li><a href="#pagelabels">Page labels shown in PDF viewer</a>
@@ -9182,6 +9187,51 @@ erweitert.
 quotation marks used by \"text" and preferred in OpTeX.
 
 <p CLASS=datum>(0036) -- P. O. 2021-01-22<p>
+<hr>
+
+<p CLASS="lmarg">Directions</p>
+
+<h2><a name="footnotelinedir"></a>Location of the footnote rule</h2>
+
+<p>OpTeX defines \_footnoterule as
+
+<pre>
+\_def \_footnoterule {\_kern-3pt \_hrule width 2truein \_kern 2.6pt }
+</pre>
+
+<p>and this rule is added to the page box if there are footnotes in the page.
+This means that the rule will be on the right edge if the direction of the
+page box is RTL, and on the left edge if the direction of the page box is LTR.
+If you want to have a better control on the location of the footnoterule,
+then you can do:
+
+<pre>
+\newcount\footnotelinedir
+\def\_footnoterule{\kern-3pt
+  \hbox bdir\footnotelinedir to\hsize{\vbox{\_hrule width 2truein}\hfil}%
+  \kern 2.6pt}
+</pre>
+
+<p>Now if during shipout \footnotelinedir=0 the footnote rule will be on the left,
+and if \footnotelinedir=1 it will be on the right.
+
+<p>If you want more sophisticated footnote rule, which its side will be determined
+by the paragraph direction of the first footnote you can add
+
+<pre>
+\directlua{
+  define_lua_command('setfootnoteruledir', function()
+    for n, sb in node.traverse_id(node.id('hlist'), tex.box["_footins"].list) do
+      if sb == 1 then
+        return tex.setcount('footnotelinedir', n.dir == "TLT" and 0 or 1)
+      end
+    end
+  end)
+}
+\aheadto\_footnoterule\setfootnoteruledir
+</pre>
+
+<p CLASS=datum>(0174) -- Udi Fogiel 2026-03-17<p>
 <hr>
 
 <p CLASS="lmarg">Features of PDF viewer</p>
