@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2026-03-07>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2026-03-23>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -90,7 +90,7 @@
    \_cod -----------------------------
 
 \_def \_load [#1]{\_savemathsb \_loadA #1,,,\_end \_restoremathsb}
-\_def \_loadA #1#2,{\_ifx,#1 \_ea \_loadE \_else \_loadB{#1#2}\_ea\_loadA\_fi}
+\_def \_loadA #1#2,{\_ifx,#1\_ea \_loadE \_else \_loadB{#1#2}\_ea\_loadA\_fi}
 \_def \_loadB #1{%
    \_ifcsname _load:#1\_endcsname \_else
       \_isfile {#1.opm}\_iftrue \_opinput {#1.opm}\_else \_opinput {#1}\_fi
@@ -418,6 +418,7 @@
 
 \_endcode % -------------------------------------
 
+2026-03-23 \_loadA: unwanted space removed
 2026-03-07 \nospaceafter reimplemented in order to allow \nospaceafter{text}
 2024-10-31 \_tmptoks replaced by \_repltoks in \replstring
 2024-09-09 \replstring: uses \toksapp (better speed) and \empty (keeps braces)

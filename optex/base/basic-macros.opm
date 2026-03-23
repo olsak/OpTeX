@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2026-03-01>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2026-03-23>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -139,9 +139,11 @@
 
    \_doc ------------------------------
    \`\_byehook` is used in the \^`\bye` macro.
-   Write a warning if the user did not load a Unicode Font.
-   Write a \"rerun" warning if the `.ref` file was newly created or it was
-   changed (compared to the previous TeX run).
+   It writes a warning if the user did not load a Unicode Font and
+   writes a \"rerun" warning if the `.ref` file was newly created or it was
+   changed (compared to the previous \TeX/ run).
+   The last `\message{^^J}` separates the usable log info from the following
+   unusable font-loading info, which (unfortunatly) cannot be deactivated on the terminal.
    \_cod ------------------------------
 
 \_def\_byehook{%
@@ -150,10 +152,12 @@
    \_edef\_tmp{\_mdfive{\_jobname.ref}}%
    \_ifx\_tmp\_prevrefhash\_else \_opwarning{Try to rerun,
       \_jobname.ref file was \_ifx\_prevrefhash\_empty created\_else changed\_fi}\_fi
+   \_message{^^J}%
 }
 
 \_endcode % -------------------------------------
 
+2026-03-23: \_byehook: \message{^^J} added
 2026-03-01: \mathadef introduced
 2023-11-11: \adef reimplemented, \protected, \long, \global allowed before \adef
 2023-01-22: \trycs: afterfi used for second parameter
