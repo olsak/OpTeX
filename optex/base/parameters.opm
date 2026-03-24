@@ -621,6 +621,18 @@
 
 \_let\cnvinfo=\_ignoreit
 
+   \_doc -----------------------------
+   In addition to the \LuaTeX/ primitive registers `\textdirection`, `\bodydirection`
+   etc.\ we introduce the register \`\inboxdirection` with the same meaning of
+   its four values 0, 1, 2, 3. It affects the texts in internal boxes of
+   the macros \^`\mathbox`, \^`\puttext`, \^`\transformbox`, \^`\rotbox`,
+   \^`\inoval`, \^`\incircle`. Dirmode~0 is L$\to$R (Latin),
+   dirmode~1 (R$\to$L, Hebrew) was tested, see `op-letter-he.tex`.
+   Dirmode~2 is T$\to$B, L$\to$R, and Dirmode~3 is T$\to$B, R$\to$L.
+   \_cod -----------------------------
+
+\_newcount\_inboxdirection \_inboxdirection=0
+\_public \inboxdirection ;
 
 \_endcode %----------------------------------------------------
 

@@ -323,6 +323,12 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#ngerman">The german.sty and ngerman.sty implementation</a>
 </ul>
 
+<li>Directions
+<ul>
+    <li><a href="#footnotelinedir">Location of the footnote rule on the page</a>
+    <li><a href="#mninvert">Location of marginal notes</a>
+</ul>
+
 <li>Features of PDF viewers
 <ul>
     <li><a href="#pagelabels">Page labels shown in PDF viewer</a>
@@ -1807,9 +1813,9 @@ Test: \frame{\clipbox 15pt10pt2pt -3pt-3pt{\vbox{\hbox{XXX}\hrule\hbox{XXX}}}}.
 \def\clipbox{\ea\ea\ea\clipboxA\scanthreedimens}
 \def\clipboxA#1#2#3#4#{\clipboxB{#1}{#2}{#3}{#4}}
 \def\clipboxB#1#2#3#4#5{% #1,#2,#3: width, height, depth, #4 shift, #5 contents.
-   \hbox to #1sp{%
+   \hbox bdir0 to #1sp{%
       \pdfliteral{q 0 \bp{-#3sp} \bp{#1sp} \bp{#2sp+#3sp} re W n}%
-      \puttext #4{#5}%
+      \puttext[l] #4{\dirhbox{#5}}%
       \pdfliteral{Q}%
       \vrule height#2sp depth#3sp width0pt \hss
    }%
@@ -2100,8 +2106,8 @@ keystroke.sty LaTeX package. For example
 \setbox\keymbox=\hbox{\picheight=\keysize \inspic{keystroke_middle.pdf}}
 \setbox\keyrbox=\hbox{\picheight=\keysize \inspic{keystroke_right.pdf}}
 
-\def\keystroke#1{\setbox0=\hbox{\keystrokefont#1}%
-   \leavevmode \lower.2\keysize \hbox{\copy\keylbox
+\def\keystroke#1{\setbox0=\hbox bdir0{\keystrokefont#1}%
+   \leavevmode \lower.2\keysize \hbox bdir0{\copy\keylbox
       \tmpdim=\wd\keymbox
       \ifdim\wd0>\tmpdim \tmpdim=\wd0 \fi
       \ifdim\tmpdim>\wd\keymbox
@@ -2176,13 +2182,15 @@ optional key/value parameters, see section 2.10 in OpTeX manual.
    shade-width=4pt,         % the width of the shadow
    text-width=4cm,          % width of the text inside the frame
 }
-\optdef\shadedframe [] #1{\bgroup
+\optdef\shadedframe [] #1{\hbox bdir0\bgroup
       \readkv\shadedframedefaults \readkv{\the\opt}%
       \vvkern=\kv{v-margins}\hhkern=\kv{h-margins}%
       \rulewidth=\kv{rule-width}\hsize=\kv{text-width}\relax
       \kv{frame-color}%
-      \setbox0=\hbox{\frame{\vbox{\kv{text-color}\noindent\ignorespaces#1}}}%
-      \edef\htzo{\the\ht0}\edef\wdzo{\the\wd0}%
+      \setbox0=\dirhbox{\vbox{\kv{text-color}\noindent\ignorespaces#1}}%
+      \ifnum\inboxdirection>1 \_tbreset0\fi
+      \setbox0=\hbox{\frame{\box0}}%
+      \edef\htzo{\the\dimexpr\ht0+\dp0-\kv{shade-width}}\edef\wdzo{\the\wd0}%
       \kv{shadow-color}%
       \hbox{\vbox{\hbox{\rlap{\kv{bg-color}\vrule height\ht0 width\wd0 depth\dp0}\box0}%
                   \nointerlineskip \moveright\kv{shade-width}
@@ -2242,24 +2250,26 @@ with rounded corners. For example
    text-below=1pt,          % space below the last line of text
    shadow-width=2pt,        % shadow thickness (if 0pt then no shadow printed)
 }
-\optdef \roundframe [] #1#2{\bgroup
+\optdef \roundframe [] #1#2{\hbox bdir0\bgroup
    \kvdict{roundframe}% dictionary of used key-value parameters
    \readkv\roundframedefaults \readkv{\the\opt}%
    \roundness=\kv{round-corner}\relax
    \hsize=\kv{text-width}\relax
    \leftskip=\kv{text-margins}\relax \rightskip=\leftskip
-   \setbox0=\vbox{%
+   \setbox0=\dirvbox{%
       \bgbox{\kv{title-bgcolor}}{\kern\kv{title-above}%
          \noindent\strut\kv{title-color}\kv{title-font}#1\parstrut\kern\kv{title-below}}
       \kv{midrule-color}\hrule height\kv{midrule-width}%
       \bgbox{\kv{text-bgcolor}}{\kern\kv{text-above}%
          \noindent\strut\kv{text-color}\kv{text-font}#2\parstrut\kern\kv{text-below}}}%
+   \ifnum\inboxdirection>1 \setbox0=\vbox{\box0}\fi
    \setbox1=\vbox to\dimexpr\ht0-2\roundness{}\wd1=\dimexpr\wd0-2\roundness\relax
-   \hbox{\unless\ifdim\kv{shadow-width}=0pt \roundframeshadow \fi
+   \hbox{\unless\ifdim\kv{shadow-width}=0pt \inboxdirection=0 \roundframeshadow \fi
       \clipinoval .5\wd0 .5\ht0 \wd0 \ht0 {\box0}}%
    \egroup
 }
-\def\bgbox#1#2{\setbox0=\vbox{#2}\hbox{\rlap{#1\vrule height\ht0 depth\dp0 width\wd0}\box0}}
+\def\bgbox#1#2{\setbox0=\vbox{#2}%
+   \tmpdim=\dimexpr\ht0+\dp0 #1\hrule height\tmpdim \kern-\tmpdim \box0 }
 \def\parstrut{\par\kern-\prevdepth\kern\dp\strutbox}
 \def\roundframeshadow{\raise\roundness\rlap{\edef\_shadowb{\bp{\kv{shadow-width}}}%
    \inoval[\fcolor=\Grey \roundness=\kv{round-corner} \shadow=Y \lwidth=0pt]{\box1}}}
@@ -9179,6 +9189,103 @@ quotation marks used by \"text" and preferred in OpTeX.
 
 <p CLASS=datum>(0036) -- P. O. 2021-01-22<p>
 <hr>
+
+<p CLASS="lmarg">Directions</p>
+
+<h2><a name="footnotelinedir"></a>Location of the footnote rule</h2>
+
+<p>OpTeX defines \_footnoterule as
+
+<pre>
+\_def \_footnoterule {\_kern-3pt \_hrule width 2truein \_kern 2.6pt }
+</pre>
+
+<p>and this rule is added to the page box if there are footnotes in the page.
+This means that the rule will be on the right edge if the direction of the
+page box is RTL, and on the left edge if the direction of the page box is LTR.
+If you want to have a better control on the location of the footnoterule,
+then you can do:
+
+<pre>
+\newcount\footnotelinedir
+\def\_footnoterule{\kern-3pt
+  \hbox bdir\footnotelinedir to\hsize{\vbox{\_hrule width 2truein}\hfil}%
+  \kern 2.6pt}
+</pre>
+
+<p>Now if during shipout \footnotelinedir=0 the footnote rule will be on the left,
+and if \footnotelinedir=1 it will be on the right.
+
+<p>If you want more sophisticated footnote rule, which its side will be determined
+by the paragraph direction of the first footnote you can add
+
+<pre>
+\directlua{
+  define_lua_command('setfootnoteruledir', function()
+    for n, sb in node.traverse_id(node.id('hlist'), tex.box["_footins"].list) do
+      if sb == 1 then
+        return tex.setcount('footnotelinedir', n.dir == "TLT" and 0 or 1)
+      end
+    end
+  end)
+}
+\aheadto\_footnoterule\setfootnoteruledir
+</pre>
+
+<p CLASS=datum>(0174) -- Udi Fogiel 2026-03-17<p>
+<hr>
+
+<h2><a name="mninvert"></a>Location of marginal notes</h2>
+
+<p>If we set \pardirection=1 \textdirection=1 \pagedirection=1 \bodydirection=1
+then all marginal notes are at reversed side than we except them.
+For example, if \fixmnotes\left is declared then marginal notes are in the right
+margin. We can live with this fact, but if we want to have true \fixmnotes
+declaration then we can redefine:
+
+<pre>
+\_def \_lrmnote#1#2{\_ea\_unless\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
+</pre>
+
+<p>Moreover, if we want to have correct spefification in both cases (l2r and r2l
+directions) then we can define:
+
+<pre>
+\_def \_lrmnote#1#2{\_ea\_whatmndir\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
+\_def \_whatmndir{\_ifnum\_bodydirection=0 \_else \_ea \_unless\_fi}
+</pre>
+
+<p>Whenewer we have true positions of margin notes (thanks to macros
+mentioned above) then we may face another problem: when margin notes have
+undeclared position then they are placed to the right margin at odd pages
+and to the left margin at even pages (outer margins in opened book). But
+there exist cases when we want to put margins to the inner margins or to the
+outer margins but with non-standard page numbers (because the book is opened
+from the right side, for example). The we need to invert the rule about
+odd/even pages => right/left margins. It can be done by following macro:
+
+<pre>
+\_def\_mninvert#1#2{\_ea\_ea\_ea\_ifx\_csname #2\_endcsname\_left \_right \_else \_left \_fi}
+</pre>
+
+<p>This macro inverts all \left mnote declarations (created when .ref file is read)
+to \right declaration and vice versa.
+
+<p>Another possibility is to define \swapmnotes with analogical meaning like
+\swapeqno. You don't think exactly about left/right sides. Simply: if the
+positions of the marginal notes don't suit you then you can simply use
+\swapmnotes.
+
+<pre>
+\def\swapmnotes{\_ifx \_lrmnote\lrmnoteleft \_let\_lrmnote=\lrmnoteright
+                \_else \_let\_lrmnote=\lrmnoteleft \_fi }
+\def\lrmnoteleft  #1#2{\_ea\_ifx\_mnotesfixed\_left  #1\_else #2\_fi}
+\def\lrmnoteright #1#2{\_ea\_ifx\_mnotesfixed\_right #1\_else #2\_fi}
+\let\_lrmnote=\lrmnoteleft
+</pre>
+
+
+<p CLASS=datum>(0175) -- P. O. 2026-03-19<p>
 
 <p CLASS="lmarg">Features of PDF viewer</p>
 

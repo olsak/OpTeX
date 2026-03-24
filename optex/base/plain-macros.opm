@@ -133,7 +133,7 @@
 \_def \_centerline #1{\_line{\_hss#1\_hss}}
 \_def \_rlap #1{\_hbox to\_zo{#1\_hss}}
 \_def \_llap #1{\_hbox to\_zo{\_hss#1}}
-\_def\_underbar #1{$\_setbox0=\_hbox{#1}\_dp0=\_zo \_math \_underline{\_box0}$}
+\_def\_underbar #1{$\_setbox0=\_dirhbox{#1}\_dp0=\_zo \_math \_underline{\_box0}$}
 
 \_public \line \leftline \rightline \centerline \rlap \llap \underbar ;
 

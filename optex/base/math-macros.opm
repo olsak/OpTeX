@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sin {Math macros plus mathchardefs <2025-04-13>} % preloaded in format
+\_codedecl \sin {Math macros plus mathchardefs <2026-03-18>} % preloaded in format
 
    \_doc -----------------------------
    The category code of the character `_` remains as the letter (11) and the mathcode
@@ -734,8 +734,9 @@
 \_public\displaylines ;
 
    \_doc -----------------------------
-   \`\openup`, \`\eqalignno` and \`\leqalignno` macros are copied from
-   Plain \TeX/ unchanged.
+   \`\openup`, \`\eqalignno` and \`\leqalignno` macros are inspired from
+   Plain \TeX/, but internal macros \`\_begeqanno`, \`\_eqnoright`, \`\_eqnoleft`
+   are used to make the macros more economical.
    \_cod -----------------------------
 
 \_def\_openup{\_afterassignment\_openupA\_dimen0=}
@@ -748,16 +749,15 @@
       \_vskip-\_lineskiplimit \_vskip\_normallineskiplimit \_fi
       \_else \_penalty\_interdisplaylinepenalty \_fi}}}
 \_def\_elign{\_tabskip=\_zoskip\_everycr{}} % restore inside \_display
-\_long\_def\_eqalignno#1{\_display \_tabskip=\_centering
-  \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
-    &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip\_centering
-    &\_hbox to\_zo{\_hss$\_elign##$}\_tabskip\_zoskip\_crcr
-    #1\_crcr}}
-\_long\_def\_leqalignno#1{\_display \_tabskip=\_centering
-  \_halign to\_displaywidth{\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
-    &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip=\_centering
-    &\_kern-\_displaywidth\_hbox to\_zo{$\_elign##$\_hss}\_tabskip\_displaywidth\_crcr
-    #1\_crcr}}
+\_long\_def\_eqalignno#1{\_begeqanno &\_eqnoright{##}\_tabskip=\_zoskip\_crcr #1\_crcr\_egroup}
+\_long\_def\_leqalignno#1{\_begeqanno &\_eqnoleft{##}\_tabskip=\_zoskip\_crcr #1\_crcr\_egroup}
+\_def\_begeqanno{\_unless\_ifnum\_predisplaydirection=0 \_swapeqno\_fi
+  \_display \_tabskip=\_centering
+  \_halign to\_displaywidth\_bgroup\_hfil$\_elign\_displaystyle{##}$\_tabskip=\_zoskip
+  &$\_elign\_displaystyle{{}##}$\_hfil\_tabskip\_centering}
+\_def\_eqnoright#1{\_hbox to\_zo{\_hss$\_elign#1$}}
+\_def\_eqnoleft #1{\_hbox to\_zo{\_kern-\_displaywidth$\_elign#1$\_hss}}
+
 \_public \openup \eqalignno \leqalignno ;
 
    \_doc -----------------------------
@@ -1104,7 +1104,7 @@
    using different principle.
    \_cod -----------------------------
 
-\_def\_mathbox#1{{\_mathstyles{\_hbox{%
+\_def\_mathbox#1{{\_mathstyles{\_dirhbox{%
    \_ifnum\_stylenum<2 \_everymath{\_currstyle}%
    \_else \_ifx \_normalmath\_normalunimath
       \_ifnum\_stylenum=2 \_def\_textmff{ssty=1;}\_fi
@@ -1115,8 +1115,33 @@
 }
 \_public \mathbox ;
 
+   \_doc
+   \`\dirhbox` and \`\dirvbox` are equal to `\hbox` and `\vbox`, but they set
+   the printing of their parameter according to the \^`\inboxdirection` register.
+   \_cod
+
+\_def\_dirhbox{\_hbox bdir\_inboxdirection} \_def\_dirvbox{\_vbox bdir\_inboxdirection}
+\_public \dirhbox \dirvbox ;
+
+   \_doc
+   \`\swapeqno` swaps the meaning of \^`\eqno` with \^`\leqno`
+   and \^`\_eqnoright` with \^`\_eqnoleft`.
+   You can declare it if you want to move all equation marks from right to
+   left or from left to right in an already prepared document. Other use case
+   is with r2l languages: If `\pardirection=1` then the \^`\eqno` and \^`\leqno`
+   are swapped and if you don't want it then use \^`\swapeqno`.
+   \_cod
+
+\_def\_swapeqno{\_let\_tmp=\_eqno \_let\_eqno=\_leqno \_let\_leqno=\_tmp
+   \_let\_tmp=\_eqnoright \_let\_eqnoright=\_eqnoleft \_let\_eqnoleft=\_tmp
+   \_public \eqno \leqno ;
+}
+\_let\_orieqno=\_eqno  % you can do \_ifx\_eqno\_orieqno to test if they are swapped
+\_public \swapeqno ;
+
 \_endcode %---------------------------------------------------
 
+2026-03-18 \eqalignno, \leqalignno reimplemented, \swapeqno introduced.
 2025-04-13 \bBig strut macro introduced, \_scalebig re-implemented
 2025-04-10 \big strut size correction 0.6 -> 0.61 (due to LM Math)
 2024-12-21 \skew macro: bug fixed

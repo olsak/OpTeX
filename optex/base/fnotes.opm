@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fnote {Footnotes, marginal notes OpTeX <2026-02-15>} % preloaded in format
+\_codedecl \fnote {Footnotes, marginal notes OpTeX <2026-03-19>} % preloaded in format
 
    \_doc -----------------------------
    \`\_gfnotenum` is a counter which counts footnotes globally in the whole document.\nl
@@ -156,13 +156,14 @@
    \_doc -----------------------------
    The \`\_mnoteA` macro does the real work. The \`\_lrmnote``{<left>}{<right>}`
    uses only first or only second parameter depending on the left or right
-   marginal note.
+   marginal note. The \`\_mninvert` macro can be redefined for special purposes, see
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#mninvert]{\OpTeX/ trick 0175}.
    \_cod -----------------------------
 
 \_long\_def\_mnoteA #1{\_incr\_mnotenum
    \_ifx\_mnotesfixed\_undefined
       \_ifcsname _mn:\_the\_mnotenum \_endcsname
-          \_edef\_mnotesfixed{\_cs{_mn:\_the\_mnotenum}}%
+          \_edef\_mnotesfixed{\_mninvert\_cs{_mn:\_the\_mnotenum}}%
       \_else
           \_opwarning{unknown \_noexpand\mnote side. TeX me again}\_openref
           \_incr\_unresolvedrefs
@@ -177,6 +178,7 @@
           \_dp0=0pt \_box0 \_kern\_mnoteskip \_global\_mnoteskip=0pt}\_hss}%
 }
 \_def \_lrmnote#1#2{\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
+\_def\_mninvert{} % should be redefined, see OpTeX trick 0175
 
    \_doc -----------------------------
    We don't want to process `\fnote`, `\fnotemark`, `\mnote` in TOC, headlines
@@ -189,6 +191,7 @@
 
 \_endcode % -------------------------------------
 
+2026-03-19 \_mninvert introduced
 2026-02-15 \_resetattrs added to \mnote
 2025-12-15 \fnote, \fnotenum defined as \protected.
 2023-04-15 \fnote in math mode allowed
