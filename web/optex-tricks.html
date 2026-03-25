@@ -9247,7 +9247,7 @@ declaration then we can redefine:
 \_def \_lrmnote#1#2{\_ea\_unless\_ea\_ifx\_mnotesfixed\_left #1\_else #2\_fi}
 </pre>
 
-<p>Moreover, if we want to have correct spefification in both cases (l2r and r2l
+<p>Moreover, if we want to have correct specification in both cases (l2r and r2l
 directions) then we can define:
 
 <pre>
@@ -9255,14 +9255,14 @@ directions) then we can define:
 \_def \_whatmndir{\_ifnum\_bodydirection=0 \_else \_ea \_unless\_fi}
 </pre>
 
-<p>Whenewer we have true positions of margin notes (thanks to macros
+<p>Whenever we have true positions of margin notes (thanks to macros
 mentioned above) then we may face another problem: when margin notes have
 undeclared position then they are placed to the right margin at odd pages
 and to the left margin at even pages (outer margins in opened book). But
 there exist cases when we want to put margins to the inner margins or to the
 outer margins but with non-standard page numbers (because the book is opened
-from the right side, for example). The we need to invert the rule about
-odd/even pages => right/left margins. It can be done by following macro:
+from the right side, for example). Then we need to invert the rule about
+odd/even pages => right/left margins. It can be done by the following macro:
 
 <pre>
 \_def\_mninvert#1#2{\_ea\_ea\_ea\_ifx\_csname #2\_endcsname\_left \_right \_else \_left \_fi}

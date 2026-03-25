@@ -141,7 +141,7 @@
    \_else \_transformbox{\_pdfrotate{#1}}{#2}%
    \_fi \_fi
 }
-\_def\_rotboxA #1#2#3#4{\_hbox dir0{\_setbox0=\_dirhbox{{#4}}#2%
+\_def\_rotboxA #1#2#3#4{\_hbox bdir0{\_setbox0=\_dirhbox{{#4}}#2%
    \_vbox to\_wd0{#3\_wd0=\_zo \_dp0=\_zo \_ht0=\_zo
                   \_pdfsave\_pdfrotate{#1}\_box0\_pdfrestore\vfil}%
    \_kern\_tmpdim
