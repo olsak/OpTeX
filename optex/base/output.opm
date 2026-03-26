@@ -74,7 +74,7 @@
    and no transparency.
    \_cod -----------------------------
 
-\_def\_completepage{\_vbox{%
+\_def\_completepage{\_vbox bdir\_pagedirection{%
      \_resetattrs
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
@@ -264,7 +264,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 \enditems
 
 \_endinput
-
+2026-03-26 set \_vbox direction to \_pagedirection in \_completepage
 2025-05-04 \_pdfrunninglinkoff, \_pdfrunninglinkon moved, used only if non-empty \headline
 2024-02-29 \_pdfrunninglinkoff, \_pdfrunninglinkon used
 2022-04-28 \_optexshipout introduced
