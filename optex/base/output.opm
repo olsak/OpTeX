@@ -264,6 +264,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 \enditems
 
 \_endinput
+
 2026-03-26 set \_vbox direction to \_pagedirection in \_completepage
 2025-05-04 \_pdfrunninglinkoff, \_pdfrunninglinkon moved, used only if non-empty \headline
 2024-02-29 \_pdfrunninglinkoff, \_pdfrunninglinkon used
