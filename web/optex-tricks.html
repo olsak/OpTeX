@@ -4099,7 +4099,7 @@ group where \csvread is used:
 \def\dbunknown{??}
 </pre>
 
-<p>If \readcsv basename{filename} is used then the following macros are globally defined:
+<p>If \csvread basename{filename} is used then the following macros are globally defined:
 
 <pre>
    \dbitem:basename(row,column) -> data item in given row, column
@@ -7574,7 +7574,7 @@ the \directlua primitive. The \luamacros token list is used by
 
 <p CLASS="rmarg">
 autoload:<br>\sethours<br>\setminutes<br>\setseconds<br>\setweekday<br>
-declared also:<br>\hours<br>\minutes<br>\seconds<br>\weekday<br>\Othe
+declared also:<br>\hours<br>\minutes<br>\seconds<br>\weekday<br>\Othe<br>\ordnum
 </p>
 
 <p>The current date and time are saved in the TeX primitive registers
@@ -7607,6 +7607,8 @@ Today is
 \ifcase\month\or Jan\or Feb\or Mar\or Apr\or May\or Jun\or Jul\or
    Aug\or Sep\or Nov\or Dec\fi, \the\day, \the\year
 \ or in another format: \the\year/\Othe\month/\Othe\day.
+
+Today is \ordnum{\day} \_mtext{m\the\month}, \the\year.
 </pre>
 
 <p>Of course, you don't have to use just such abbreviations and such a format
@@ -7645,6 +7647,8 @@ to get the day in the week in given date.
    }\relax
 }
 \def\Othe#1{\ifnum#1&lt;10 0\fi\the#1}
+\def\ordnum#1{\the\numexpr #1$^{\rm\ordnumA{#1}}$}
+\def\ordnumA#1{\ifcase#1th\or st\or nd\or rd\else th\fi}
 </pre>
 
 <p CLASS=datum>(0055) -- P. O. 2021-04-06<p>

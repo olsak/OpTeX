@@ -32,7 +32,7 @@
 \_def\.printloglua#1{\_wlog{lua code processed (l.\.tmp):^^J#1-------------}}
 \:\_def\logginglua{\_let\.debuglua=\.printloglua}
 
-\_trick 0055 \sethours \setminutes \setseconds \setweekday ;
+\_trick 0055 \sethours \setminutes \setseconds \setweekday \Othe \ordnum ;
 %%%%%%%%%%%%
 
 \_newcount\.hours \_newcount\.minutes \_newcount\.seconds \_newcount\.weekday
@@ -56,6 +56,8 @@
    }\_relax
 }
 \:\_def\Othe#1{\_ifnum#1<10 0\_fi\_the#1}
+\:\_def\ordnum#1{\_the\_numexpr #1$^{\_rm\.ordnumA{#1}}$}
+\_def\.ordnumA#1{\_ifcase#1th\_or st\_or nd\_or rd\_else th\_fi}
 
 \_nspublic \hours \minutes \seconds \weekday ;
 
