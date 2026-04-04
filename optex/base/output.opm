@@ -68,7 +68,9 @@
    The \`\_completepage` is similar to what plain \TeX/ does in its output routine.
    New is only \`\_backgroundbox`. It is `\vbox` with zero height with its
    contents (from \^`\pgbackground`) extended down. It is shifted directly to the
-   left-upper corner of the paper.\nl
+   left-upper corner of the paper.
+   Please, correct the words \"left" and/or \"down" in previous two
+   sequences if `\pagedirection` is nonzero.\nl
    The \^`\_resetattrs` used here means that all newly created texts in
    output routine (texts used in headline, footline) have default color
    and no transparency.

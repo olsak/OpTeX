@@ -5118,8 +5118,10 @@ the implementation is this splitting problem:
    \frbottom=\dimexpr\pdfpageheight-\voffset-\vsize-\medskipamount\relax
    \ifx\frnext y \edef\tmp{B{\number\frtop}\tmp}\global\let\frnext n\fi
    \ea\printframes \tmp B{0}E{\number\frbottom}
+   \ifodd \pagedirection \def\.leftposition/{\_bp{-\_pdfpagewidth}}
+   \else \def\leftposition/{0}\fi % only directions 0 a 1 are correctly implemented
    \ifx\frameslist\empty \else
-   \pdfliteral{q 1 0 0 1 0 \bp{-\pdfpageheight} cm \frameslist Q}\fi
+   \pdfliteral{q 1 0 0 1 \leftposition/ \bp{-\pdfpageheight} cm \frameslist Q}\fi
 }
 \def\printframes B#1#2E#3{\ifnum#1=0 \else
    \printframe {\hoffset}{#3sp}{\_xhsize}{\ifnum#1=-1 \number\frtop\else#1\fi sp-#3sp}

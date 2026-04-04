@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-03-05>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-04-04>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -1071,8 +1071,10 @@ end,'global') % we want to keep the meanig after group
    \.frbottom=\_dimexpr\_pdfpageheight-\_voffset-\_vsize-\_medskipamount\_relax
    \_ifx\.frnext y \_edef\.tmp{B{\_number\.frtop}\.tmp}\_global\_let\.frnext n\_fi
    \_ea\.printframes \.tmp B{0}E{\_number\.frbottom}
+   \_ifodd \_pagedirection \_def\.leftposition/{\_bp{-\_pdfpagewidth}}
+   \_else \_def\.leftposition/{0}\_fi % only directions 0 a 1 are correctly implemented
    \_ifx\frameslist\_empty \_else
-   \_pdfliteral{q 1 0 0 1 0 \_bp{-\_pdfpageheight} cm \frameslist Q}\_fi
+   \_pdfliteral{q 1 0 0 1 \.leftposition/ \_bp{-\_pdfpageheight} cm \frameslist Q}\_fi
 }
 \_def\.printframes B#1#2E#3{\_ifnum#1=0 \_else
    \printframe {\_hoffset}{#3sp}{\_xhsize}{\_ifnum#1=-1 \_number\.frtop\_else#1\_fi sp-#3sp}
@@ -1396,6 +1398,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2026-04-04 \framedblocks: case of \pagedirection=1 corrected
 2026-03-05 \inspicto added
 2026-03-01 \algol corrected (\.testindent, \.addcoloneq, \_savemathsb)
 2026-02-14 \ul introduced
