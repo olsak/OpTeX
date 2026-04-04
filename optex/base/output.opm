@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2025-05-04>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2026-04-04>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another
@@ -84,7 +84,9 @@
      \_vbox to\_vsize {\_boxmaxdepth=\_maxdepth \_pagecontents}% \pagebody in plainTeX
      \_makefootline}%
 }
-\_def \_backgroundbox #1{\_moveleft\_hoffset\_vbox to\_zo{\_kern-\_voffset #1\_vss}}
+\_def \_backgroundbox #1{\_moveleft
+     \_ifodd\_pagedirection \_dimexpr\_pagerightoffset+1in\_else \_hoffset\_fi
+     \_vbox to\_zo{\_kern-\_voffset #1\_vss}}
 
    \_doc -----------------------------
    \`\_makeheadline` creates `\vbox to0pt` with its contents (the \^`\headline`)
@@ -267,6 +269,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2026-04-04 \_backgroundox moved left by \_pagerightoffset+1in if \pagedirection is odd
 2026-03-26 set \_vbox direction to \_pagedirection in \_completepage
 2025-05-04 \_pdfrunninglinkoff, \_pdfrunninglinkon moved, used only if non-empty \headline
 2024-02-29 \_pdfrunninglinkoff, \_pdfrunninglinkon used
