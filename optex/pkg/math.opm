@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.23, 2026-03-08}
+\_def\_math_version {0.25, 2026-04-07}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -323,6 +323,7 @@
    \_def\.tmpb{\.bb#1\.bb}\_replstring\.tmpb{ }{&}%
    \_replstring\.tmpb{\.bb&}{}\_replstring\.tmpb{&\.bb}{}\_replstring\.tmpb{&\cr}{\cr}%
    \_replstring\.tmpb{-}{\_mathord-}\_replstring\.tmpb{&\_mathord-&}{&-&}%
+   \_replstring\.tmpb{+}{\_mathord+}\_replstring\.tmpb{&\_mathord+&}{&+&}%
    \_let ~=\_relax
    \_the\_opt \_relax \_openup\.eqskip
    \_halign{&\_the\.eqfil\_kern.5\.eqsep$\_displaystyle{{}##{}}$\_kern.5\.eqsep\_hfil\_cr
@@ -1456,13 +1457,14 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.25  2026-04-07  \eqsystem: plus operator processed analogically like minus.
 0.24  2026-03-08  \scanlimits introduced, extended arrows \exw, \exh implemented.
 0.23  2026-02-15  \enablefic prints warning only when LuaTeX v>1.23
 0.22  2025-12-22  \multiprimes introduced
 0.21  2025-11-30  \rmsbsp: \_primes correction
 0.20  2025-06-10  \ibrackets introduced
 0.19  2025-02-14  \mathselector introduced.
-0.18  2025-01-15  \enablefic modifired.
+0.18  2025-01-15  \enablefic modified.
 0.17  2024-12-04  \mathsetup instead \mathset, \.unionly modified
 0.16  2024-10-17  \mathclap, etc.  corrected.
 0.15  2024-04-28  \_ as interval prefix added.
