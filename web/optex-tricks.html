@@ -1701,7 +1701,7 @@ data image is loaded. The following
 <h2><a name="inspicto"></a>Repeating image in the document in various sizes</h2>
 
 <p CLASS=rmarg>
-autoload:<br>\inspicto
+autoload:<br>\inspicto<br>\inspictoh
 
 <p>We create a macro \inspicto dimen{image-file} which does the same as
 \picw=dimen \inspic{image-file}, but it doesn't load the data into PDF
@@ -1722,26 +1722,30 @@ Usage of \mylogo. {\typosize[14/17] Greater \mylogo}.
 because the em unit is greater here. But the data of the mylgo.pdf is loaded
 into PDF only once.
 
+<p>The alternative \inspictoh dimen{image-file} gives dimen as desired height
+instead of width.
+
 <p>Implementation:
 
 <pre>
-\def\inspicto #1#{\bgroup \picheight=0pt \picw=#1\relax \inspictoA}
+\def\inspicto #1#{\hbox\bgroup \picheight=0pt\picw=#1\def\wh{width#1}\inspictoA}
+\def\inspictoh #1#{\hbox\bgroup \picw=0pt\picheight=#1\def\wh{height#1}\inspictoA}
 \def\inspictoA #1{%
-   \ifcsname insp:#1\endcsname
-      \pdfrefximage width\picw \lastnamedcs
+   \ifcsname insp:#1/\the\picparams\endcsname
+      \pdfrefximage \wh \lastnamedcs
    \else
       \inspic{#1}%
-      \global \ea \chardef \csname insp:#1\endcsname = \pdflastximage
+      \global \ea \chardef \csname insp:#1/\the\picparams\endcsname = \pdflastximage
    \fi \egroup
 }
 </pre>
 
-<p>The control sequence \insp:file-name is the character constant equal to
+<p>The control sequence \insp:file-name/picparams is the character constant equal to
 the pointer of read data saved in the \pdflastximage
 (\lastsavedimageresourceindex) when the data is read by \inspic (i.e. by
 \pdfximage, i.e. \saveimageresource). The repeated usage of the image is
 done by the pointer and printed by \pdfrefximage (\useimageresource). LuaTeX allows
-the optional parameter "width" (for re-scaling the image) when \pdfrefximage is used.
+the optional parameter "width" or "height" (for re-scaling the image) when \pdfrefximage is used.
 
 <p CLASS=datum>(0172) -- P. O. 2026-03-04<p>
 <hr>
