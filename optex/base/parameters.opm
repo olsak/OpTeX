@@ -58,25 +58,24 @@
 
    \_doc -----------------------------
    The following four registers were introduced to fix some bugs
-   in the \LuaTeX/ engine. When `\matheqdirmode` is positive short
+   in the \LuaTeX/ engine (see also
+   \ulink[https://ctan.gust.org.pl/tex-archive/macros/luatex/latex/luabidi/luabidi.pdf\#section.5]
+   {chapter 5 of luabidi documentation}). When `\matheqdirmode` is positive short
    skip detection around display equations will work with right to left 
    typesetting. When `\breakafterdirmode` is set to 1 a glue after a dir
    node will not be ignored. When `\mathemptydisplaymode` is set to 1 paragraphs
    before display equation containing only local_par and dir nodes will be discarded
    (other wise dir nodes are considered actual matirial in this case). When `\fixupboxesmode`
    is set to 1 dir nodes will be balanced at the end of hboxes (like in normal groups).
-   This is important for unboxing: 
-   
+   This is important for unboxing:
    \begtt
    \setbox0\hbox{\textdirection=1 text}\unhbox0 more text
    \endtt
    
    With `\fixupboxesmode` set to 0 you have
-   
    \begtt 
    \begindirTRT text more text\enddirTRT
    \endtt
-   
    where the `\enddirTRT` is added from \LuaTeX's par builder.
    While with `\fixupboxesmode` set to 1 you have
    
