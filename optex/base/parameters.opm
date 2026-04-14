@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalbaselineskip {Parameter settings <2023-09-19>} % preloaded in format
+\_codedecl \normalbaselineskip {Parameter settings <2026-04-14>} % preloaded in format
 
    \_doc -----------------------------
    \secc Primitive registers
@@ -90,6 +90,13 @@
 \_mathemptydisplaymode=1   
 \_fixupboxesmode=1
 \_fi
+
+   \_doc ----------------------------
+   The `\tracingfonts` register is equivalent to `\pdftracingfonts` from pdf\TeX.
+   We set it to 1 in order to enable the full font names in tracing information.
+   \_cod -----------------------------
+
+\_tracingfonts=1
 
    \_doc -----------------------------
    \secc Plain \TeX/ registers
@@ -665,6 +672,7 @@ a register then \OpTeX/ macros still work without change.
 \_endinput
 
 History:
+2026-04-14 ... \tracingfonts=1 introduced
 2024-04-30 ... \matheqdirmode set only if it is defined (LuaTeX 1.15 and newer).
 2023-09-19 ... \matheqdirmode and \breakafterdirmode set (relevant when RTL typesetting)
 2021-04-13 ... \bibpart added

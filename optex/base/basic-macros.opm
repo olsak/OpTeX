@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \sdef {Basic macros for OpTeX <2026-03-23>} % preloaded in format
+\_codedecl \sdef {Basic macros for OpTeX <2026-04-14>} % preloaded in format
 
    \_doc ------------------------------
    \`\bgroup`, \`\egroup`, \`\empty`, \`\space`, and \`\null`
@@ -117,16 +117,21 @@
    \_doc ------------------------------
    \`\loggingall` and \`\tracingall` are defined similarly as in
    plain \TeX/, but they print
-   more logging information to the log file and the terminal.
+   more logging information to the log file and the terminal, because e\TeX/
+   and pdf\TeX/ extensions are used.\nl
+   \`\tracingnone` sets the tracing registers to their default zero value.
    \_cod ------------------------------
 
-\_def\_loggingall{
+\_def\_loggingall{%
   \_tracingstats=2 \_tracingpages=1
   \_tracingoutput=1 \_tracingmacros=3 % \_tracinglostchars=2 is already set
   \_tracingparagraphs=1 \_tracingscantokens=1 \_tracingifs=1 \_tracinggroups=1
   \_tracingcommands=3 \_tracingrestores=1 \_tracingassigns=1 }
 \_def\_tracingall{\_tracingonline=1 \_loggingall}
-\_public \loggingall \tracingall ;
+\_def\_tracingnone{\_tracingassigns=0 \_tracingcommands=0 \_tracingmacros=0 \_tracingifs=0
+   \_ea \_settracingzero \_loggingall \_tracingonline=0 }
+\_def\_settracingzero #1=#2 {#1=0 \_ifnum#2>0 \_ea \_settracingzero \_fi}
+\_public \loggingall \tracingall \tracingnone ;
 
    \_doc ------------------------
    The `\optexversion` and `\fmtname` are defined in the `optex.ini` file.
@@ -157,6 +162,7 @@
 
 \_endcode % -------------------------------------
 
+2026-04-14: \tracingnone introduced
 2026-03-23: \_byehook: \message{^^J} added
 2026-03-01: \mathadef introduced
 2023-11-11: \adef reimplemented, \protected, \long, \global allowed before \adef
