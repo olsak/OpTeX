@@ -273,6 +273,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#shownodes">Listing all nodes in the box</a>
     <li><a href="#rebox">Lines modification inside \vbox</a>
     <li><a href="#runsystem">Running system commands during document processing</a>
+    <li><a href="#ibuffer">Regular expressions applied to each input line</a>
     <li><a href="#visualdebug">Using lua-visual-debug package</a>
     <li><a href="#sidenotes">Non-overlapping margin notes</a>
     <li><a href="#directchar">Printing a character regardless font ligature setting</a>
@@ -7862,6 +7863,61 @@ Moreover, the \exitstatus counter includes the status value after
 \runsystem, you can use it in your following macros.
 
 <p CLASS=datum>(0101) -- P. O. 2023-01-09<p>
+<hr>
+
+<h2><a name="ibuffer"></a>Regular expressions applied to each input line</h2>
+
+<p>OpTeX applies regular expression to each input line by the macro \mathsbon.
+Because the LuaTeX callbacks can be concatenated, we can add more regular expressions
+applied to the input lines. The example here implements two more comment writing methods
+(beside the TeX standard by %).
+
+<p>The first method allows (* comment *). The text between these parentheses
+(incuding them) is ignored.
+This method supposes that the beginning (* and ending *) are at the same line.
+The second method allows /* comment */. The text between these symbols  (including them)
+is ignored. The /* and */ can be at different input lines
+(comments can have more lines).
+
+<pre>
+\def\endcomment#1{*/} % prints "*/" if the comment /* isn't opened
+\def\commentson{%
+   \ifx\commentsoff\relax
+      \directlua{callback.add_to_callback("process_input_buffer",
+        function (str)
+           str = string.gsub(str, "\%/\%*", "\nbb iffalse ")             % /* -> \iffalse
+           str = string.gsub(str, "\%*\%/", "\nbb endcomment \nbb fi ")  % */ -> \endcomment\fi
+           str = string.gsub(str, "\%(\%*.-\%*\%)", "")                  % (* ... *) ->
+           return str
+        end, "comments") }%
+      \gdef\commentsoff{%
+         \directlua{ callback.remove_from_callback("process_input_buffer", "comments") }%
+         \glet\commentsoff=\relax }%
+   \fi
+}
+\let\commentsoff=\relax
+\commentson
+</pre>
+
+<p>The \commentson command registers a new callback at process_input_buffer.
+It transforms each occurrences of /* by \iffalse and all occurrences of */ are transformed
+to \endcomment\fi. So, /* ... */ behaves like \iffalse ... \fi from TeX's
+point of view. Moreover, the regular expression "%(%*.-%*%)" is applied,
+it removes (* ... *) from a single line.
+
+<p>We cannot register or unregister the same callback twice. This is the reason
+for testing \ifx\commentsoff\relax and defining \commentsoff only if the
+callback is registered. Now, repeated call of \commentson without \commentsoff
+(and vice versa) doesn't cause an error.
+
+<p>In order to deactivate the \commentson feature in verbatim environments like \begtt, \endtt,
+we can add:
+
+<pre>
+\addto\_setverb{\commentsoff \aftergroup\commentson}
+</pre>
+
+<p CLASS=datum>(0176) -- P. O. 2024-04-16<p>
 <hr>
 
 <h2><a name="visualdebug"></a>Using lua-visual-debug package</h2>
