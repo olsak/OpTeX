@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \normalbaselineskip {Parameter settings <2026-04-14>} % preloaded in format
+\_codedecl \normalbaselineskip {Parameter settings <2026-04-20>} % preloaded in format
 
    \_doc -----------------------------
    \secc Primitive registers
@@ -229,7 +229,7 @@
    \_doc -----------------------------
    You can control the dimensions of included images by
    the parameters \`\picwidth` (which is equivalent to \`\picw`) and
-   \`\picheight`. By default these parameters are set to zero: the native
+   \`\picheight` (\`\pich`). By default these parameters are set to zero: the native
    dimension of the image is used. If only `\picwidth` has a nonzero value,
    then this is the width of the image (height is calculated automatically in
    order to respect the aspect of the image). If only `\picheight` has
@@ -246,7 +246,7 @@
    \_cod -----------------------------
 
 \_newdimen\_picwidth   \_picwidth=0pt   \_let\picw=\_picwidth
-\_newdimen\_picheight  \_picheight=0pt
+\_newdimen\_picheight  \_picheight=0pt  \_let\pich=\_picheight
 \_newtoks\_picparams
 \_public \picwidth \picheight \picparams ;
 
@@ -672,6 +672,7 @@ a register then \OpTeX/ macros still work without change.
 \_endinput
 
 History:
+2026-04-20 ... \pich is equivalent to \picheight
 2026-04-14 ... \tracingfonts=1 introduced
 2024-04-30 ... \matheqdirmode set only if it is defined (LuaTeX 1.15 and newer).
 2023-09-19 ... \matheqdirmode and \breakafterdirmode set (relevant when RTL typesetting)
