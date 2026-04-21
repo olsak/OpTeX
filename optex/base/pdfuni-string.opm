@@ -44,7 +44,7 @@
    The \`\_prepinverb``<macro><separator>{<text>}`,
    e.g.\ `\_prepinverb\tmpb|{aaa |bbb| cccc |dd| ee}`
    does `\def\tmpb{<us>{aaa }bbb<us>{ cccc }dd<us>{ ee}}` where
-   <us> is `\unexpanded\ea{\scantextokens{..}}`. It means that in-line verbatim
+   <us> is `\unexpanded\scantextokens`. It means that in-line verbatim
    are not argument of `\scantextoken`. First `\edef\tmpb` tokenizes again
    the <text> but not the parts which were in the the in-line verbatim.
    \_cod -----------------------------

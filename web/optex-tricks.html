@@ -149,6 +149,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#tikzqrcode">Shadowed and colored QR codes</a>
     <li><a href="#pstricks">Using pstricks</a>
     <li><a href="#epic">Tikz pictures created outside OpTeX</a>
+    <li><a href="#wflag">Using flags from LaTeX worldflags package</a>
 </ul>
 
 <li>Math
@@ -2612,6 +2613,72 @@ in various format, no only Tikz. You have to convert them to a PDF file
 and then simply use them.
 
 <p CLASS=datum>(0122) -- P. O. 2023-11-19<p>
+<hr>
+
+<h2><a name="wflag"></a>Using flags from LaTeX worldflags package</h2>
+
+<p>As an example of the idea of the previous <a href="#epic">OpTeX trick 0122</a>,
+we show the method of using flag pictures from the LaTeX worldflags package.
+We don't convert the whole set of flags provided by the package to PDF file,
+but only selected ones which we want to use in our document. This set can be
+created by the following LaTeX file:
+
+<pre>
+\documentclass{article}
+\usepackage{worldflags}
+
+\def\declflags #1 {\ifx.#1\else \print{#1} \expandafter\declflags\fi}
+\def\print#1{
+   \setbox0=\hbox{\worldflag{#1}\unskip}
+   \pdfpageheight=\ht0 \pdfpagewidth=\wd0 \shipout\box0
+   \advance\count0 by1
+}
+\pdfhorigin=0pt \pdfvorigin=0pt
+
+\begin{document}
+
+\declflags AT BE BG HR CY CZ DK EE FI DE GR HU IE IT LV LT LU
+           MT NL PL PT RO SK SI ES SE .
+
+\end{document}
+</pre>
+
+<p>The \declflags is followed by selected set of flags finalized by period.
+You can set additional options before \declflags using the \flagsdefault
+macro, see LaTeX documentation of the package. Save this file as flags.tex and run
+pdflatex flags. The flags.pdf is created, one picture per page.
+
+<p>In OpTeX, we can do following:
+
+<pre>
+\newcount\flagnum
+\def\declflags #1 {\ifx.#1\else
+   \incr\flagnum \sxdef{flag:#1}{\the\flagnum}\ea\declflags\fi}
+\def\wflag#1{\hbox{\picparams{page\trycs{flag:#1}{1}}\inspic{\flags}}}
+\def\wflagw#1:#2{\hbox{\picparams{page\trycs{flag:#2}{1}}\inspicto#1{\flags}}}
+\def\wflagh#1:#2{\hbox{\picparams{page\trycs{flag:#2}{1}}\inspictoh#1{\flags}}}
+
+\def\flags{flags.pdf}  % the name of PDF file with flags
+
+\declflags AT BE BG HR CY CZ DK EE FI DE GR HU IE IT LV LT LU
+           MT NL PL PT RO SK SI ES SE .
+</pre>
+
+<p>The \declflags parameters have to be exactly the same as in the previous
+LaTeX file. Now, we can use \wflag{code} to create a flag with default
+size (15mm height) or use \wflagw dimen:{code} or \wflagh dimen:{code} in
+order to create a flag with specified width or height:
+
+<pre>
+\wflag{CZ}        % default size
+\wflagw 1cm:{PL}  % given width
+\wflagh 8mm:{PT}  % given height
+</pre>
+
+<p>You can declare your own default size by re-defining the \wflag macro, for
+example \def\wflag{\wflagh .9em:}
+
+<p CLASS=datum>(0177) -- P. O. 2026-04-21<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
