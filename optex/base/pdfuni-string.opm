@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \pdfunidef {PDFunicode strings for outlines <2024-12-18>} % preloaded in format
+\_codedecl \pdfunidef {PDFunicode strings for outlines <2026-04-21>} % preloaded in format
 
    \_doc -----------------------------
    \`\pdfunidef``\macro{<text>}` defines `\macro` as <text> converted to
@@ -9,7 +9,7 @@
    \^`\pdfunidef` does more things than only converting to hexadecimal PDF string.
    The <text> can be scanned in verbatim mode (it is true because \^`\_Xtoc`
    reads the <text> in verbatim mode). First `\edef` do
-   `\_scantextokens\unexpanded` and second `\edef` expands the parameter
+   `\unexpanded\ea{\scantextokens{..}}` and second `\edef` expands the parameter
    according to current values on selected macros from `\_regoul`. Then
    \`\_removeoutmath` converts `..$x^2$..` to `..x^2..`, i.e removes dollars.
    Then \`\_removeoutbraces` converts `..{x}..` to `..x..`.
@@ -23,7 +23,7 @@
    \_begingroup
       \_catcodetable\_optexcatcodes \_adef"{"}\_adef'{'}%
       \_the\_regoul \_relax % \_regmacro alternatives of logos etc.
-      \_ifx\_savedttchar\_undefined \_def#1{\_scantextokens{\_unexpanded{#2}}}%
+      \_ifx\_savedttchar\_undefined \_def#1{\_unexpanded\_ea{\_scantextokens{#2}}}%
       \_else \_lccode`\;=\_savedttchar \_lowercase{\_prepinverb#1;}{#2}\fi
       \_edef#1{#1}%
       \_escapechar=-1
@@ -43,14 +43,14 @@
    \_doc -----------------------------
    The \`\_prepinverb``<macro><separator>{<text>}`,
    e.g.\ `\_prepinverb\tmpb|{aaa |bbb| cccc |dd| ee}`
-   does `\def\tmpb{<su>{aaa }bbb<su>{ cccc }dd<su>{ ee}}` where
-   <su> is `\scantextokens\unexpanded`. It means that in-line verbatim
+   does `\def\tmpb{<us>{aaa }bbb<us>{ cccc }dd<us>{ ee}}` where
+   <us> is `\unexpanded\ea{\scantextokens{..}}`. It means that in-line verbatim
    are not argument of `\scantextoken`. First `\edef\tmpb` tokenizes again
    the <text> but not the parts which were in the the in-line verbatim.
    \_cod -----------------------------
 
 \_def\_prepinverb#1#2#3{\_def#1{}%
-   \_def\_dotmpb ##1#2##2{\_addto#1{\_scantextokens{\_unexpanded{##1}}}%
+   \_def\_dotmpb ##1#2##2{\_addto#1{\_unexpanded\_ea{\_scantextokens{##1}}}%
       \_ifx\_fin##2\_else\_ea\_dotmpbA\_ea##2\_fi}%
    \_def\_dotmpbA ##1#2{\_addto#1{##1}\_dotmpb}%
    \_dotmpb#3#2\_fin
@@ -95,6 +95,7 @@ This conversion is done by the expandable \"pseudoprimitive " \^`\pdfstring`.
 
 \_endinput
 
+2026-04-21 \scantextokens{\unexpanded -> \unexpanded\ea{\scantextokens, bug fixed
 2024-12-18 \_pdfhexstring removed, used \_pdfstring.
 2021-02-08 \_octalprint -> \_hexprint
 2020-03-12 Released
