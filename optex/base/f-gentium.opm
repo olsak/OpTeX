@@ -1,21 +1,23 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [Gentium] \Gentium {Serif free fonts, support Greek, Cyrillic, IPA}
-        {\caps} {\rm \bf \it \bi} {Termes}
+        {\caps \medium \bolder \book} {\rm \bf \it \bi} {Termes}
         {[Gentium-Regular]}
-        {\_def\_fontnamegen {[Gentium-\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[Gentium\_bnV-\_currV]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
  \caps ...... caps & small caps^^J
  \medium .... \rm\it Medium, \bf\bi Bold^^J
  \bolder .... \rm\it SemiBold, \bf\bi ExtraBold.^^J
+ \book ...... Book versions (slightly bolder)
 }}
 
-\_moddef \resetmod {\_fsetV caps={} \_fvars Regular Bold Italic BoldItalic }
+\_moddef \resetmod {\_fsetV caps={},bn={} \_fvars Regular Bold Italic BoldItalic }
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 \_moddef \medium   {\_fvars Medium Bold MediumItalic BoldItalic }
 \_moddef \bolder   {\_fvars SemiBold ExtraBold SemiBoldItalic ExtraBoldItalic }
+\_moddef \book     {\_fsetV bn=Book }
 
 \_initfontfamily % new font family must be initialized
 

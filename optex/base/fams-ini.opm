@@ -109,7 +109,7 @@
 
 \_famfrom{Victor Gaultney}
 \_faminfo [Gentium] {Serif free fonts, support Greek, Cyrillic, IPA} {f-gentium}
-   { -,\caps,\medium,\bolder,\bolder\caps: {\rm\bf\it\bi} }
+   { -,\caps,\medium,\bolder,\bolder\caps,\book: {\rm\bf\it\bi} }
 
 \_famfrom {Daniel Flipo}
 \_faminfo [KP fonts] {KP fonts -- Johannes Kepler project} {f-kpfonts}
