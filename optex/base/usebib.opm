@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2024-02-18>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2026-05-06>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -256,13 +256,13 @@
 }
 
    \_doc -----------------------------
-   The \`\_printentry` macro prints bibliographic reference entry.
+   The \`\_thisentry` macro prints bibliographic reference entry.
    It prints <bibnum> or <bimark> (including hyperlinks) and they are
    followed by printing the entry data. The format is given by the \^`\_printbib`
    macro and by `\_print:<entrytype>` declared in the bib-style file.
    \_cod -----------------------------
 
-\_def\_printentry {\_par \_bibskip
+\_def\_thisentry {\_par \_bibskip
   \_bibgl\_incr\_bibnum
   \_isdefined{_bim:\_bibp\_the\_bibnum}\_iftrue
      \_edef\_tmpb{\_csname _bim:\_bibp\_the\_bibnum\_endcsname}%
@@ -285,6 +285,30 @@
      \_wbib \_entrykey {\_the\_bibnum}{\_the\_bibmark}%
   }\_par
 }
+
+   \_doc -----------------------------
+   \`\_printentry` is equivalent to the \^`\_thisentry` macro by default, it
+   means that no filter is applied and all cited entries are printed. We
+   can re-define \^`\_printentry` in order to implement a filter which prints
+   only selected entries. It can be usable if we want to divide the
+   bibliography list to more sections. For example, suppose that a `test.bib`
+   file includes several entries with `entrysubtype` field and it can have a
+   value `primary` We want to print these entries in a special subsection and
+   then to print others entries. We can do following:
+   \begtt
+   \def\isfield[#1]#2{\_getfield[#1]\tmp \_ismacro\tmp{#2}}
+
+   \nonum\secc Primary Sources
+   \def\_printentry{\isfield[entrysubtype]{primary}\iftrue \_thisentry \_fi}
+   \usebib/s (simple) test  % only entrysubtype=primary entries are printed
+
+   \nonum\secc Secondary Sources
+   \def\_printentry{\isfield[entrysubtype]{primary}\iffalse \_thisentry \_fi}
+   \usebib/s (simple) test  % other cited entries are printed
+   \endtt
+   \_cod -----------------------------
+
+\_ifx\_printentry\_undefined \_let\_printentry=\_thisentry \_fi
 
    \_doc -----------------------------
    The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv`
@@ -402,7 +426,7 @@
          \_fi
      }%
    \_fi
-   \_global \_ea\_let \_csname _ctlst:\_bibp\_endcsname =\_write
+   \_sxdef {_ctwrite:\_bibp}{}%
    \_ifx\_citelist\_empty
      \_opwarning{No cited items. \_noexpand\usebib ignored}%
    \_else
@@ -675,6 +699,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+2026-05-06  \_thisentry / \_printentry pair introduced for filtering
 2024-02-18: missing .bib files checked, doc improved
 2023-06-25: \_fieldalias introduced
 2023-06-07: bug fix (\_namecount declaration)

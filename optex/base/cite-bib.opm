@@ -1,6 +1,6 @@
 % This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \cite {Cite, Bibliography <2021-04-13>} % preloaded in format
+\_codedecl \cite {Cite, Bibliography <2026-05-06>} % preloaded in format
 
    \_doc -----------------------------
    Registers used by `\cite`, `\bib` macros are declared here.
@@ -126,8 +126,7 @@
    must add the <label> to given `\_ctlst:<bibpart>/`.\nl
    When `\_addcitelist` is processed before \^`\usebib`,
    then \^`\_citeI``[<label>]` is added. \^`\usebib` will use this list for selecting
-   right records from `.bib` file. Then \^`\usebib` sets
-   `\_ctlst:<bibpart>/` to `\_write`.\nl
+   right records from `.bib` file. Then \^`\usebib` sets `\_ctwrite:<bibpart>/`.
    If `\_addcitelist` is processed after \^`\usebib`, then
    \`\_Xcite``{<bibpart>/}{<label>}` is saved to the `.ref`
    file. The `\_Xcite` creates `\_ctlstB:<bibpart>/` as a list of saved
@@ -137,8 +136,7 @@
 
 \_def\_addcitelist#1{%
    \_unless \_ifcsname _ctlst:\_bibp\_endcsname \_sxdef{_ctlst:\_bibp}{}\_fi
-   \_ea \_ifx \_csname _ctlst:\_bibp\_endcsname \_write
-       \_openref \_immediate\_wref\_Xcite{{\_bibp}{#1}}%
+   \_ifcsname _ctwrite:\_bibp \_endcsname \_openref \_immediate\_wref\_Xcite{{\_bibp}{#1}}%
    \_else \_global \_ea\_addto \_csname _ctlst:\_bibp\_endcsname {\_citeI[#1]}\_fi
 }
 \_def\_Xcite#1#2{%
@@ -300,6 +298,7 @@ See end of the `bib-iso690.opm` file for large documentation about `.bib` files
 structure and about the usage of `iso690` bib-style.
 
 History:
+2026-05-06 ... \_addcitelist: \_ctwrite used for setting write flag
 2021-04-13 ... \bibpart implemented
 2021-04-13 ... \_bibgl introduced (used in \slides)
 2020-03-09 ... released

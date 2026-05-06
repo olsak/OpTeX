@@ -371,7 +371,7 @@
 \_def\_primes{\_prime\_isnextchar'{\_primesA}%
                                   {\_isnextchar^{\_primesB}{\_egroup}}}
 \_def\_primesA #1{\_primes}
-\_def\_primesB #1#2{#2\egroup}
+\_def\_primesB #1#2{#2\_egroup}
 \_private \prime ;
 
    \_doc -----------------------------
