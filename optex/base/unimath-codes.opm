@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_ncharrmA {Uni math codes <2026-02-17>} % preloaded on demand by \loadmath
+\_codedecl \_ncharrmA {Uni math codes <2026-05-08>} % preloaded on demand by \loadmath
 
    \_doc -----------------------------
    Unicode math font includes all typical math alphabets together, user needs no
@@ -477,10 +477,8 @@
    \_cod -----------------------------
 
 \_protected\_def\_not#1{%
-  \_trycs{_not!\_csstring#1}{\_mathrel\_mathstyles{%
-     \_setbox0=\_hbox{\_math$\_currstyle#1$}%
-     \_hbox to\_wd0{\_hss$\_currstyle/$\_hss}\_kern-\_wd0 \_box0
-}}}
+  \_trycs{_not!\_csstring#1}{\_mathrel{\_Umathaccent overlay fixed 7 1 "00338 {#1}}}}
+
 \_def\_negationof #1#2{\_ea\_let \_csname _not!\_csstring#1\_endcsname =#2}
 
 \_negationof =         \neq
@@ -563,6 +561,7 @@ for technical details about Unicode-math.
 \_endinput
 
 History:
+2026-05-08  default \not defined as Umathaccent, no slash
 2025-02-17  \mathunderbar s_2 bug fixed, see tex.stackexchange.com/questions/759771/
 2026-02-09  \_umathholes use \_chardef
 2026-02-07  \_umathholes reimplemented
