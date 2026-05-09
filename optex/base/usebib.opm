@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2026-05-06>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2026-05-09>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -11,9 +11,9 @@
 
 \_newcount\_aunum
 \_newcount\_NameCount
-\_def\_eaddto#1#2{\_ea\_addto\_ea#1\_ea{#2}}
+\_gdef\_eaddto#1#2{\_ea\_addto\_ea#1\_ea{#2}}
 
-\_def\_readbibs #1{%
+\_gdef\_readbibs #1{%
    \_ifcsname _be:\_bibp*\_endcsname \_def\_citelist{}\_fi % \_citelist will be created
    \_begingroup
       \_everyeof{@{}}\_foreach#1,\_do##1,{%
@@ -33,9 +33,9 @@
    section~\ref[readbibs].
    \_cod -----------------------------
 
-\_long\_def\_nextat#1@{\_bgroup\_catcode` =9 \_ea\_egroup\_bibentry}
-\_def\_bibentry #1#{\_ifx^#1^\_else \_afterfi{\_bibentryA{#1}}\_fi}
-\_def\_bibentryA #1#2{\_lowercase{\_def\_entrytype{#1}}%
+\_long\_gdef\_nextat#1@{\_bgroup\_catcode` =9 \_ea\_egroup\_bibentry}
+\_gdef\_bibentry #1#{\_ifx^#1^\_else \_afterfi{\_bibentryA{#1}}\_fi}
+\_gdef\_bibentryA #1#2{\_lowercase{\_def\_entrytype{#1}}%
    \_ismacro\_entrytype{comment}\_iffalse  % comment is ignored
    \_ismacro\_entrytype{texcode}\_iftrue   % TeX code is processed
       \_endgroup #2\_begingroup \_everyeof{@{}}\_else
@@ -47,7 +47,7 @@
    \_fi\_fi\_fi
    \_nextat
 }
-\_def\_bibentryB #1#2,#3\_fin{\_def\_citekey{#1#2}\_def\_bibentryC{\_nextfield #3,\_fin}%
+\_gdef\_bibentryB #1#2,#3\_fin{\_def\_citekey{#1#2}\_def\_bibentryC{\_nextfield #3,\_fin}%
    \_ifcsname _be:\_bibp*\_endcsname
       \_bibentryC
       \_global\_addto\_citelist{\_citeI[#1#2]}
@@ -56,7 +56,7 @@
       \_bibentryC
    \_fi\_fi
 }
-\_def\_bibentryF {% finalize entry
+\_gdef\_bibentryF {% finalize entry
    \_preparebibsorting
    \_global\_ea\_let \_csname _be:\_bibp\_citekey\_endcsname = \_entrydata
 }
@@ -66,27 +66,27 @@
    and then reads field data and saves it to the \`\_fielddata`.
    \_cod -----------------------------
 
-\_def\_nextfield #1{\_ifx,#1\_ea\_nextfield   % skip commas from previous field
+\_gdef\_nextfield #1{\_ifx,#1\_ea\_nextfield   % skip commas from previous field
    \_else \_ifx\_fin#1\_ea\_ea\_ea\_bibentryF % finalize bib entry
    \_else \_def\_fieldname{#1}\_ea\_ea\_ea\_nextfieldA % first letter of fieldname found
    \_fi\_fi
 }
-\_def\_nextfieldA #1{% next letters of field name until = is found
+\_gdef\_nextfieldA #1{% next letters of field name until = is found
    \_ifx=#1\_afterfi{\_nospacefuturelet\_next\_nextfieldB}%
    \_else \_addto\_fieldname{#1}%
    \_ea\_nextfieldA \_fi
 }
-\_def\_nextfieldB {% reading field data
+\_gdef\_nextfieldB {% reading field data
    \_casesof\_next
    "        {\_nextfieldC}%  name = "data",
    \_bgroup {\_nextfieldD}%  name = {data},
    \_finc   {\_nextfieldE}%  name = data,
 }
-\_def\_nextfieldC "#1"{\_nextfieldD{#1}}
-\_def\_nextfieldD #1{\_def\_fielddata{#1}\_nextfieldF}
-\_def\_nextfieldE #1,{\_nextfieldD{#1}}
+\_gdef\_nextfieldC "#1"{\_nextfieldD{#1}}
+\_gdef\_nextfieldD #1{\_def\_fielddata{#1}\_nextfieldF}
+\_gdef\_nextfieldE #1,{\_nextfieldD{#1}}
 
-\_def\_nextfieldF{% finalize field
+\_gdef\_nextfieldF{% finalize field
    \_lowercase\_ea{\_ea\_def\_ea\_fieldname\_ea{\_fieldname}}% case insensitive field name
    \_ifcsname _fia:\_fieldname\_endcsname \_edef\_fieldname{\_cs{_fia:\_fieldname}}\_fi
    \_eaddto\_entrydata{\_ea[\_fieldname]}%
@@ -102,7 +102,7 @@
    defines `\_fia:<new_name>` as <given-name>.
    \_cod -----------------------------
 
-\_def\_fieldalias#1#2{\_lowercase{\_sxdef{_fia:#1}{#2}}}
+\_gdef\_fieldalias#1#2{\_lowercase{\_sxdef{_fia:#1}{#2}}}
 
    \_doc -----------------------------
    The \`\_auscan``{<authors/editors-names>}[<field-name>]` reads the specific Bib\TeX/
@@ -127,12 +127,12 @@
    these macros are saved to `\_fiedldata` and then to the `\_entrydata`.
    \_cod -----------------------------
 
-\_def\_auscan#1[#2]{\_def\_auname{}\_def\_fielddata{}\_def\_tmpb{}\_aunum=0\_tmpnum=0
+\_gdef\_auscan#1[#2]{\_def\_auname{}\_def\_fielddata{}\_def\_tmpb{}\_aunum=0\_tmpnum=0
    \_auscanA #1 and {}
    \_eaddto\_entrydata{\_ea{\_fielddata}[#2num]}%
    \_eaddto\_entrydata{\_ea{\_the\_aunum}}%
 }
-\_def\_auscanA #1 {%
+\_gdef\_auscanA #1 {%
    \_ifx^#1^\_else
       \_isequal{#1}{and}\_iftrue
          \_incr\_aunum
@@ -153,7 +153,7 @@
       \_ea\_auscanA
    \_fi
 }
-\_def\_auscanB{%
+\_gdef\_auscanB{%
    \_ifcase\_tmpnum  % 0 commas:  XXX. -> XX:X. ; XxxXX. -> X:xxXX. ;  xXX. -> :xXX. ; First:Last
       \_isinlist\_tmpb{x}\_iffalse \_replstring\_tmpb{X.}{:X.}\_else
       \_ea\_auscanT\_tmpb;\_iffalse \_replstring\_tmpb{Xx}{X:x}\_fi\_fi
@@ -162,9 +162,9 @@
    \_fi             % 2 commas: XX,XX,XXX no changes, generic format: Last, Junior, First
    \_def\_Firstname{}\_def\_Lastname{}\_def\_Von{}\_def\_Junior{}%
 }
-\_def\_auscanT #1#2;\_iffalse{\_ifx#1x\_def\_tmpb{:x#2}\_else} % xXX. -> :xXX.
-\_def\_auscanX {\_ea\_auscanD\_tmpb;}
-\_def\_auscanD #1#2;{%
+\_gdef\_auscanT #1#2;\_iffalse{\_ifx#1x\_def\_tmpb{:x#2}\_else} % xXX. -> :xXX.
+\_gdef\_auscanX {\_ea\_auscanD\_tmpb;}
+\_gdef\_auscanD #1#2;{%
    \_def\_tmpb{#2}%
    \_casesof #1
    . {\_auscanF}                              % dot is last character, do final job
@@ -174,17 +174,17 @@
    x {\_auscanE\_Firstname\_Junior\_Von}      % Von instead Lastname
    \_finc {}%
 }
-\_def\_auscanE#1#2#3{\_ifcase\_tmpnum \_ea\_auscanS\_ea#1\_or \_ea\_auscanS\_ea#2\_else
+\_gdef\_auscanE#1#2#3{\_ifcase\_tmpnum \_ea\_auscanS\_ea#1\_or \_ea\_auscanS\_ea#2\_else
                                   \_ea\_auscanS\_ea#3\_fi}
-\_def\_auscanS#1#2{% #1=\Firstname or \Lastname or etc., #2=word to be inserted
+\_gdef\_auscanS#1#2{% #1=\Firstname or \Lastname or etc., #2=word to be inserted
    \_ifx#1\_empty \_def#1{#2}\_else \_addto#1{ #2}\_fi
    \_auscanX
 }
-\_def\_auscanF{% final work of \auscanX
+\_gdef\_auscanF{% final work of \auscanX
    \_eaddto\_fielddata{\_ea{\_Lastname}}\_eaddto\_fielddata{\_ea{\_Firstname}}%
    \_eaddto\_fielddata{\_ea{\_Von}}\_eaddto\_fielddata{\_ea{\_Junior}}%
 }
-\_def\_auscanC #1,^{\_def\_tmp{#1}}  % removing final comma: Word,^ -> Word
+\_gdef\_auscanC #1,^{\_def\_tmp{#1}}  % removing final comma: Word,^ -> Word
 
    \_doc -----------------------------
    The \^`\_citelist` includes \`\_citeI``[<label>]`
@@ -197,7 +197,7 @@
    If the field isn't declared then the `\macro` is empty.
    \_cod -----------------------------
 
-\_def\_citeI[#1]{%
+\_gdef\_citeI[#1]{%
    \_begingroup
       \_ea\_ifx \_begincsname _be:\_bibp#1\_endcsname \_empty
          \_opwarning{\_string\usebib: entry [#1] isn't found in .bib}%
@@ -209,7 +209,7 @@
       \_fi
    \_endgroup
 }
-\_def\_getfield[#1]#2{%
+\_gdef\_getfield[#1]#2{%
    \_ifcsname _fd:#1\_endcsname
        \_ea\_ea\_ea \_def \_ea\_ea\_ea #2\_ea\_ea\_ea {\_csname _fd:#1\_endcsname}%
    \_else \_def#2{}%
@@ -227,7 +227,7 @@
    \`\_dobibsorting``\_citelist` sorts the \^`\_citelist` and runs it.
    \_cod -----------------------------
 
-\_def\_preparebibsorting{%
+\_gdef\_preparebibsorting{%
    \_getfield[sortedby]\_sortedby
    \_ifx\_sortedby\_empty   % explicitly given [sortedby] field has precedence
       \_def\_sortedby{}%
@@ -240,18 +240,18 @@
    \_fi
    \_sxdef{_bes:\_citekey\_ea}\_ea{\_csname;\_detokenize\_ea{\_sortedby}^^^\_citekey\_endcsname}%
 }
-\_def\_preparebibsortingA#1#2#3#4#5\_fin {% names of the first author used by sorting:
+\_gdef\_preparebibsortingA#1#2#3#4#5\_fin {% names of the first author used by sorting:
    \_def\_sortedby{#1 }%                         Lastname
    \_ifx^#2^\_else \_addto\_sortedby{#2 }\_fi  % Firstname
    \_ifx^#3^\_else \_addto\_sortedby{#3 }\_fi  % Von
    \_ifx^#4^\_else \_addto\_sortedby{#4 }\_fi  % Junior
 }
-\_def\_dobibsorting{%
+\_gdef\_dobibsorting{%
    {\_def\_citeI[##1]{\_ea\_citeIs\_csname _bes:##1\_endcsname{##1}}%
     \_edef\_citelist{\_ea}\_citelist % converting \_citelist
     \_dosorting\_citelist \_ea}%
 }
-\_def\_citeIs#1#2{\_eaddto\_citelist{#1}%
+\_gdef\_citeIs#1#2{\_eaddto\_citelist{#1}%
    \_ea\_gdef#1{\_citeI[#2]\_ea\_glet#1=\_undefined \_glet#1=\_undefined}%
 }
 
@@ -262,7 +262,7 @@
    macro and by `\_print:<entrytype>` declared in the bib-style file.
    \_cod -----------------------------
 
-\_def\_thisentry {\_par \_bibskip
+\_gdef\_thisentry {\_par \_bibskip
   \_bibgl\_incr\_bibnum
   \_isdefined{_bim:\_bibp\_the\_bibnum}\_iftrue
      \_edef\_tmpb{\_csname _bim:\_bibp\_the\_bibnum\_endcsname}%
@@ -308,15 +308,16 @@
    \endtt
    \_cod -----------------------------
 
-\_ifx\_printentry\_undefined \_let\_printentry=\_thisentry \_fi
+\_ifx\_printentry\_undefined \_glet\_printentry=\_thisentry 
+\_else \_glet\_printentry=\_printentry \_fi
 
    \_doc -----------------------------
    The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv`
    commands used in the style files:
    \_cod -----------------------------
 
-\_def\_bprinta {\_bprintb*}
-\_def\_bprintb #1[#2#3]{%
+\_gdef\_bprinta {\_bprintb*}
+\_gdef\_bprintb #1[#2#3]{%
    \_def\_bibfieldname{#2#3}%
    \_if!#2\_relax
       \_def\_bibfieldname{#3}%
@@ -334,15 +335,15 @@
    \_else \_ea \_bprintaA
    \_fi
 }
-\_def\_dofullfield#1#2{\_def\_dofield##1{#1}\_ea\_dofield\_ea{\_bibfield}}
-\_def\_doemptyfield#1#2{\_def\_dofield##1{#2}\_ea\_dofield\_ea{\_bibfield}}
-\_def\_bprintaA #1#2{\_ifx\_bibfield\_empty #2\_else\_bprintaB #1**\_fin\_fi}
-\_def\_bprintaB #1*#2*#3\_fin{\_ifx^#3^#1\_else\_ea\_bprintaC\_ea{\_bibfield}{#1}{#2}\_fi}
-\_def\_bprintaC #1#2#3{#2#1#3}
-\_def\_bprintc#1#2{\_bprintcA#1#2**\_relax}
-\_def\_bprintcA#1#2*#3*#4\_relax{\_ifx#1\_empty \_else \_if^#4^#2\_else#2#1#3\_fi\_fi}
-\_def\_bprintv [#1]#2#3{\_def\_tmpa{#2}\_def\_tmpb{#3}\_bprintvA #1,,}
-\_def\_bprintvA #1,{%
+\_gdef\_dofullfield#1#2{\_def\_dofield##1{#1}\_ea\_dofield\_ea{\_bibfield}}
+\_gdef\_doemptyfield#1#2{\_def\_dofield##1{#2}\_ea\_dofield\_ea{\_bibfield}}
+\_gdef\_bprintaA #1#2{\_ifx\_bibfield\_empty #2\_else\_bprintaB #1**\_fin\_fi}
+\_gdef\_bprintaB #1*#2*#3\_fin{\_ifx^#3^#1\_else\_ea\_bprintaC\_ea{\_bibfield}{#1}{#2}\_fi}
+\_gdef\_bprintaC #1#2#3{#2#1#3}
+\_gdef\_bprintc#1#2{\_bprintcA#1#2**\_relax}
+\_gdef\_bprintcA#1#2*#3*#4\_relax{\_ifx#1\_empty \_else \_if^#4^#2\_else#2#1#3\_fi\_fi}
+\_gdef\_bprintv [#1]#2#3{\_def\_tmpa{#2}\_def\_tmpb{#3}\_bprintvA #1,,}
+\_gdef\_bprintvA #1,{%
    \_if^#1^\_tmpb\_else
       \_getfield[#1]\_tmp
       \_ifx \_tmp\_empty
@@ -364,22 +365,22 @@
    \enditems
    \_cod -----------------------------
 
-\_def\_loopauthors #1{%
+\_gdef\_loopauthors #1{%
    \_NameCount=0
    \_ea\_ea\_ea\_foreach\_csname _fd:#1\_endcsname \_do ##1##2##3##4{%
       \_advance\_NameCount by1
       \_def\_Lastname{##1}\_def\_Firstname{##2}\_def\_Von{##3}\_def\_Junior{##4}%
       \_csname _#1ini\_endcsname \_csname _#1name\_endcsname
 }}
-\_def\_authorini{} % ready for \_AbbreviateFirstname or similar...
-\_def\_editorini{}
+\_gdef\_authorini{} % ready for \_AbbreviateFirstname or similar...
+\_gdef\_editorini{}
 
    \_doc -----------------------------
    \`\_bibwarning` can be used if the manatory field is missing.
    Note that \`\_nobibwarnlist` is used here, it is set by \^`\nobibwarning` macro.
    \_cod -----------------------------
 
-\_def\_bibwarning{%
+\_gdef\_bibwarning{%
    \_ea\_isinlist \_ea\_nobibwarnlist\_ea{\_ea,\_entrykey,}\_iffalse
        \_opwarning{Missing field "\_bibfieldname" in [\_entrykey]}\_fi}
 
@@ -391,17 +392,17 @@
    than in librarian package.
    \_cod -----------------------------
 
-\_def\_AbbreviateFirstname{\_addto\_authorini{\_abbrevnames\_Firstname}}
-\_def\_abbrevnames#1{% Karolina Pondelickova-Maslova -> K. P.-M.
+\_gdef\_AbbreviateFirstname{\_addto\_authorini{\_abbrevnames\_Firstname}}
+\_gdef\_abbrevnames#1{% Karolina Pondelickova-Maslova -> K. P.-M.
    \_edef#1{\_ea\_foreach #1 \_do ##1##2 {##1.%
                 \_foreach ##2-{}\_do ####1-####2{\_ifx^####2^\_else-####2.\_fi} }^%
    }\_replstring#1{ ^}{}%
 }
-\_def\_RetrieveFieldIn#1{\_getfield[#1]}
-\_def\_RetrieveField#1{\_trycs{_fd:#1}{}}
-\_def\_CreateField#1{}
-\_def\_SortingOrder#1#2{}
-\_def\_SpecialSort#1{}
+\_gdef\_RetrieveFieldIn#1{\_getfield[#1]}
+\_gdef\_RetrieveField#1{\_trycs{_fd:#1}{}}
+\_gdef\_CreateField#1{}
+\_gdef\_SortingOrder#1#2{}
+\_gdef\_SpecialSort#1{}
 
    \_doc -----------------------------
    The \^`\usebib` command is defined as `\input{usebib.opm}\_usebib` in the
@@ -415,7 +416,7 @@
    is processed: i.e.\ the macros \^`\_citeI` print desired entries.
    \_cod -----------------------------
 
-\_def\_usebib/#1 (#2) #3 {%
+\_gdef\_usebib/#1 (#2) #3 {%
    \_ifcsname _ctlst:\_bibp\_endcsname
        \_slet{_citelist}{_ctlst:\_bibp}\_else \_def\_citelist{}\_fi
    \_ea \_foreach\_citelist \_do ##1[##2]{\_sdef{_be:\_bibp##2}{}}%
@@ -699,6 +700,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+2026-05-09  \usebib sets its macros globaly
 2026-05-06  \_thisentry / \_printentry pair introduced for filtering
 2024-02-18: missing .bib files checked, doc improved
 2023-06-25: \_fieldalias introduced
