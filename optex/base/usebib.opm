@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \readbibs {Reading bib databases <2026-05-09>} % loaded on demand by \usebib
+\_codedecl \readbibs {Reading bib databases <2026-05-10>} % loaded on demand by \usebib
 
    \_doc -----------------------------
    First, we implement the scanner of `.bib` files. Unfortunately, the format of
@@ -308,9 +308,6 @@
    \endtt
    \_cod -----------------------------
 
-\_ifx\_printentry\_undefined \_glet\_printentry=\_thisentry 
-\_else \_glet\_printentry=\_printentry \_fi
-
    \_doc -----------------------------
    The \`\_bprinta`, \`\_bprintb`, \`\_bprintc`, \`\_bprintv`
    commands used in the style files:
@@ -428,6 +425,7 @@
      }%
    \_fi
    \_sxdef {_ctwrite:\_bibp}{}%
+   \_ifx\_printentry\_undefined \_let\_printentry=\_thisentry \_fi
    \_ifx\_citelist\_empty
      \_opwarning{No cited items. \_noexpand\usebib ignored}%
    \_else
@@ -700,6 +698,7 @@ author/editor data field. You can read them by
 
 History:
 --------
+2026-05-10  \let\printentry=\thisentry moved to keep the global/local logic
 2026-05-09  \usebib sets its macros globaly
 2026-05-06  \_thisentry / \_printentry pair introduced for filtering
 2024-02-18: missing .bib files checked, doc improved
