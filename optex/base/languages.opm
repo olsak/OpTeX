@@ -91,7 +91,7 @@
 
 \_def \_enquotes {\_quoteschars “”‘’}
 \_def \_csquotes {\_quoteschars „“‚‘}
-\_def \_frquotes {\_quoteschars “”«»}
+\_def \_frquotes {\_quoteschars «»“”}
 \_let \_dequotes = \_csquotes
 \_let \_skquotes = \_csquotes
 

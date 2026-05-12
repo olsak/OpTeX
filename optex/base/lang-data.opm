@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2025-05-12>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2026-05-12>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -53,12 +53,12 @@
 \_langw it  Capitolo     Tabella     Fig.         Oggetto
 \_monthw it gennaio febbraio marzo aprile maggio giugno
             luglio agosto settembre ottobre novembre dicembre
-\_quotationmarks it {“”«»}
+\_quotationmarks it {«»“”}
 % todo
 
 \_langdata es {Spanish} % ------------------------------------------------
 \_langw es  Capítulo     Tabla       Figura       Sujeto
-\_quotationmarks es {“”«»}
+\_quotationmarks es {«»“”}
 % todo
 \_let \_sortingdataes  = \_sortingdatalatin
 \_let \_ignoredcharses = \_ignoredcharsgeneric
@@ -67,7 +67,7 @@
 
 \_langdata fr {French}  % ------------------------------------------------
 \_langw fr  Chapitre     Tableau     Figure       Matière
-\_quotationmarks fr {“”«»}
+\_quotationmarks fr {«»“”}
 % todo
 \_let \_sortingdatafr  = \_sortingdatalatin
 \_let \_ignoredcharsfr = \_ignoredcharsgeneric
@@ -77,7 +77,7 @@
 
 \_langdata pl {Polish}  % ------------------------------------------------
 \_langw pl  Rozdział     Tabela      Ilustracja   Temat
-\_quotationmarks pl {“”«»}
+\_quotationmarks pl {„”»«}
 % todo
 \_let \_sortingdatapl  = \_sortingdatalatin
 \_let \_ignoredcharspl = \_ignoredcharsgeneric
@@ -119,17 +119,17 @@
 
 \_langdata el {Greek}   % ------------------------------------------------
 \_langw el  Κεφάλαιο     Πίνακας     Σχήμα        θέμα
-\_quotationmarks el {“”«»}
+\_quotationmarks el {«»“”}
 % todo
 
 \_langdata ru {Russian} % ------------------------------------------------
 \_langw ru  Глава        Таблица     Рисунок      Предмет
-\_quotationmarks ru {“”«»}
+\_quotationmarks ru {«»„“}
 % todo
 
 \_langdata uk {Ukrainian} % -----------------------------------------------
 \_langw uk  Глави        Таблиця     Малюнок      Тема
-\_quotationmarks uk {“”«»}
+\_quotationmarks uk {«»“”}
 % todo
 
 
@@ -155,6 +155,7 @@
 \_monthw pt janeiro fevereiro março abril maio junho julho agosto
             setembro outubro novembro dezembro 
 \_sdef{_mt:today:pt}{\_the\_day~de \_mtext{m\_the\_month}~ de \_the\_year}
+\_quotationmarks pt {«»“”}
 % todo
 
 \_langdata et {Estonian} % ------------------------------------------------
@@ -172,7 +173,7 @@
 \_monthw srlatn januara februara marta aprila maja juna
             jula avgusta septembra oktobra novembra decembra
 \_sdef{_mt:today:srlatn}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
-\_quotationmarks srlatn {„“‚‘}
+\_quotationmarks srlatn {„”’’}
 \_preplangmore   srlatn {\_frenchspacing \_postexhyphenchar=`\-
                      \_def\_langreset{\_postexhyphenchar=0 }}
 
@@ -196,7 +197,8 @@
 \_monthw srcyrl јануара фебруара марта априла маја јуна
             јула августа септембра октобра новембра децембра
 \_sdef{_mt:today:srcyrl}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
-\_quotationmarks srcyrl {„“‚‘}
+
+\_quotationmarks srcyrl {„”’’}
 \_preplangmore   srcyrl {\_frenchspacing \_postexhyphenchar=`\-
                      \_def\_langreset{\_postexhyphenchar=0 }}
 
@@ -240,6 +242,7 @@
 
 \_endcode
 
+2026-05-12: \_quotationmarks corrected by https://en.wikipedia.org/wiki/Quotation_mark
 2025-05-12: Serbian data added (by Vuk Djukanović)
 2023-08-30: Hebrew data added
 2022-10-11: \postexhyphenchar setting added to cs and sk languages
