@@ -150,6 +150,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#pstricks">Using pstricks</a>
     <li><a href="#epic">Tikz pictures created outside OpTeX</a>
     <li><a href="#wflag">Using flags from LaTeX worldflags package</a>
+    <li><a href="#twemoji">Using emoji symbols from twemojis package</a>
 </ul>
 
 <li>Math
@@ -2679,6 +2680,39 @@ order to create a flag with specified width or height:
 example \def\wflag{\wflagh .9em:}
 
 <p CLASS=datum>(0177) -- P. O. 2026-04-21<p>
+<hr>
+
+<h2><a name="twemoji"></a>Using emoji symbols from twemojis package</h2>
+
+<p>LaTeX package twemojis.sty provides 3689 symbols, see the documentation.
+These symbols are included in a single PDF file all-twemojis.pdf, so we can
+use them similarly like in the previous OpTeX trick <a href="#wflag">0177</a>.
+
+<p>The code below implements the macro \twemoji{symbol name} or
+\twemoji[height]{symbol name}. The names of the symbols are listed in the
+twemojis documentation. If you don't type the correct name then SOS symbol is
+printed.
+
+<p>User can set default height of the emoji symbols by
+\twemojiDefaultHeight=dimen. The implicit value is 1em (when the macros are
+loaded). The \texttwemoji macro isn't provided because user can type
+\twemoji[2em]{smile} for example and this symbol has its height dependent on
+the current font size.
+
+<p>Implementation:
+
+<pre>
+\def\defineTwemoji#1#2{\sxdef{twe:#2}{#1}}
+\long\def\skiptwemojihead#1\defineTwemoji{\defineTwemoji}
+\ea\skiptwemojihead \input twemojis.sty % loading twemojis names
+
+\newdimen\twemojiDefaultHeight   \twemojiDefaultHeight=1em
+\optdef\twemoji [\twemojiDefaultHeight] #1{%
+   \hbox{\picparams{page\trycs{twe:#1}{15}}\inspictoh \the\opt {all-twemojis.pdf}}%
+}
+</pre>
+
+<p CLASS=datum>(0178) -- P. O. 2026-05-13<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
