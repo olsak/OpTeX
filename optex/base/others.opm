@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \uv {Miscenaleous <2024-11-21>} % preloaded in format
+\_codedecl \uv {Miscenaleous <2026-05-17>} % preloaded in format
 
     \_doc ----------------------------
     \`\useOpTeX` and \`\useoptex` are declared as `\relax`.
@@ -19,20 +19,23 @@
 \_public \lastpage \totalpages ;
 
     \_doc ----------------------------
-    We need \`\uv`, \`\clqq`, \`\crqq`, \`\flqq`, \`\frqq`, \`\uslang`, \`\ehyph`
+    We need \`\uv`, \`\clqq`, \`\crqq`, \`\clq`, \`\crq`,
+    \`\flqq`, \`\frqq`, \`\flq`, \`\frq`,  \`\uslang`, \`\ehyph`
     \`\chyph`, \`\shyph`, for backward compatibility with \csplain.
     Codes are set according to Unicode because we are using Czech only in Unicode
     when \LuaTeX/ is used.
     \_cod ----------------------------
 
 
-% for compatibility with csplain:
+% \uv, \promile, \clqq, \crqq for compatibility with csplain:
 
-\_chardef\clqq=8222  \_chardef\crqq=8220
-\_chardef\flqq=171   \_chardef\frqq=187
+\_chardef\clqq=8222  \_chardef\crqq=8220  \_chardef\clq=8218   \_chardef\crq=8216
+\_def\flqq{«\_kern.3em } \_def\frqq{\_kern.3em»} % including traditional nobreak space, see
+\_def\flq{“\_kern.15em } \_def\frq{\_kern.15em”} % Lexique des Règles typographiques, page 149
 \_chardef\promile=8240
+\_private \flqq \frqq \flq \frq ; % used in \frquotes
 
-\_def\uv#1{\clqq#1\crqq}
+\_def\uv#1{„#1“}
 
 \_let\uslang=\enlang  \_let\ehyph=\enlang
 \_let\chyph=\cslang   \_let\shyph=\sklang
@@ -254,6 +257,7 @@
 
 \_endcode
 
+2026-05-17 \frqq, \flqq redefined
 2024-11-21 \_trickprefix introduced
 2024-09-09 for old LuaTeX 1.13: \_def\_bemulti removed
 2024-06-27 \_loadtrickD introduced in order to save format size.

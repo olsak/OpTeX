@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2026-05-12>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2026-05-17>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -67,7 +67,7 @@
 
 \_langdata fr {French}  % ------------------------------------------------
 \_langw fr  Chapitre     Tableau     Figure       Matière
-\_quotationmarks fr {«»“”}
+\_quotationmarks fr {\_flqq\_frqq\_flq\_frq}
 % todo
 \_let \_sortingdatafr  = \_sortingdatalatin
 \_let \_ignoredcharsfr = \_ignoredcharsgeneric
@@ -242,6 +242,7 @@
 
 \_endcode
 
+2026-05-17: \_quotationmarks fr redefined
 2026-05-12: \_quotationmarks corrected by https://en.wikipedia.org/wiki/Quotation_mark
 2025-05-12: Serbian data added (by Vuk Djukanović)
 2023-08-30: Hebrew data added
