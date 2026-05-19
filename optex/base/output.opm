@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \nopagenumbers {Output routine <2026-04-04>} % preloaded in format
+\_codedecl \nopagenumbers {Output routine <2026-05-19>} % preloaded in format
 
    \_doc -----------------------------
    \`\_optexoutput` is the default output routine. You can create another
@@ -77,7 +77,7 @@
    \_cod -----------------------------
 
 \_def\_completepage{\_vbox bdir\_pagedirection{%
-     \_resetattrs
+     \_resetattrs \_pdfrunninglinkoff
      \_istoksempty \_pgbackground
         \_iffalse \_backgroundbox{\_the\_pgbackground}\_nointerlineskip \_fi
      \_makeheadline
@@ -94,10 +94,9 @@
    \_cod -----------------------------
 
 \_def\_makeheadline {\_istoksempty \_headline \_iffalse
-   \_vbox to\_zo{\_vss \_pdfrunninglinkoff
-                 \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
+   \_vbox to\_zo{\_vss \_baselineskip=\_headlinedist \_lineskiplimit=-\_maxdimen
                  \_hbox to\_xhsize{\_normalbaselines\_the\_headline}\_hbox{}%
-                 \_pdfrunninglinkon}\_nointerlineskip
+                 }\_nointerlineskip
    \_fi
 }
 
@@ -119,10 +118,10 @@
 
 \_def\_pagecontents{\_pagedest % destination of the page
   \_ifvoid\_topins \_else \_unvbox\_topins\_fi
-  \_dimen0=\_dp255 \_unvbox255 % open up \box255
+  \_dimen0=\_dp255 \_pdfrunninglinkon \_unvbox255 \_pdfrunninglinkoff % open up \box255
   \_ifvoid\_footins \_else % footnote info is present
-    \_pdfrunninglinkoff \_vskip\_skip\_footins
-    \_footnoterule \_unvbox\_footins \_pdfrunninglinkon \_fi
+    \_vskip\_skip\_footins
+    \_footnoterule \_unvbox\_footins \_fi
   \_kern-\_dimen0 \_vskip \_pgbottomskip
 }
 \_def \_pagedest {{\_def\_destheight{25pt}\_dest[pg:\_the\_gpageno]}}
@@ -269,6 +268,7 @@ The output routine \^`\_optexoutput` is similar as in plain \TeX. It does:
 
 \_endinput
 
+2026-05-19 \_pdfrunninglinkoff, \_pdfrunninglinkon re-arranged
 2026-04-04 \_backgroundox moved left by \_pagerightoffset+1in if \pagedirection is odd
 2026-03-26 set \_vbox direction to \_pagedirection in \_completepage
 2025-05-04 \_pdfrunninglinkoff, \_pdfrunninglinkon moved, used only if non-empty \headline

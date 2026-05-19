@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \ulink {Hyperlinks <2021-08-31>} % preloaded in format
+\_codedecl \ulink {Hyperlinks <2026-05-19>} % preloaded in format
 
    \_doc ----------------------------
    \`\dest``[<type>:<spec>]` creates a destination of internal links. The
@@ -47,12 +47,21 @@
    \`\_pdfborder``{<type>}` macro expands to `/C[? ? ?] /Border[0 0 .6]` if the
    `\_<type>border` macro (i.e.\ \`\_refborder`, \`\_citeborder`, \`\_tocborder`,
    \`\_pgborder`, \`\_urlborder`, \`\_fntborder` or \`\_fnfborder`)
-   is defined.
+   is defined.\nl
+   The \^`\_xlink` is surrounded by the pair \`\_startxlink` and \`\_stopxlink`.
+   Their default values are `\pdfrunninglinkon` and `\pdfrunninglinkoff`,
+   i.e.\ the link can be broken to lines and pages. These primitives are used
+   in output routine too in order to suppress the active area of the link
+   in headline and footline when the link is broken to more pages.
+   But the case of a broken link to more pages AND broken another links
+   to more lines or pages in footnotes at the same page doesn't work correctly.
+   This very specific case should be solved by \LuaTeX/ attributes.
+   For the sake of simplicity, \OpTeX/ does not handle this now.
    \_cod
 
 \_protected\_def\_xlinkactive#1#2#3#4{\_quitvmode
-   \_pdfstartlink \_linkdimens attr{\_pdfborder{#1}}\_linkactions{#1}{#2}\_relax
-   {\_localcolor\_trycs{_#1linkcolor}{#3}#4}\_pdfendlink
+   \_startxlink \_pdfstartlink \_linkdimens attr{\_pdfborder{#1}}\_linkactions{#1}{#2}\_relax
+   {\_localcolor\_trycs{_#1linkcolor}{#3}#4}\_pdfendlink \_stopxlink
 }
 \_protected\_def\_xlink#1#2#3#4{\_quitvmode{#4}}
 
@@ -65,6 +74,9 @@
 \_def\_pdfborder#1{\_ifcsname _#1border\_endcsname
      /C [\_csname _#1border\_endcsname] /Border [0 0 .6]\_else  /Border [0 0 0]\_fi
 }
+
+\let\_startxlink=\_pdfrunninglinkon \let\_stopxlink=\_pdfrunninglinkoff
+
 
    \_doc ------------------------------
    \`\link``[<type>:<spec>]{<color>}{<text>}` creates a link. It is
@@ -203,6 +215,7 @@ Another example `\def\_tocborder{1 0 0}` causes red frames in TOC
 
 \_endinput
 
+2026-05-19 \_startxlink, \_stopxlink introduced
 2021-08-31 \hyperlinks{}{} allowed, bug fixed
 2021-05-14 \_xlink introduced, \link, \ilink, \ulink re-implemented.
 2021-05-12 \url: triplet :// instead //, \_urlslashslash removed.
