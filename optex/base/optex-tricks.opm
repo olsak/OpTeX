@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-04-09>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-05-20>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -286,8 +286,25 @@ end,'global') % we want to keep the meanig after group
 }
 
 \_trick 0136 \ereplstring ;
+%%%%%%%%%%%%
 
 \_def\ereplstring#1#2#3{\_immediateassigned{\_def\.repl{#1}\_replstring\.repl{#2}{#3}}\.repl}
+
+\_trick 0179 \verbhyphens \verbhyphenpenalty ;
+%%%%%%%%%%%%
+
+\:\_newcount\verbhyphenpenalty   \verbhyphenpenalty=50
+\:\_def\verbhyphens#1{%
+   \_def\_printinverbatim##1{%
+      \_edef\.tmp{\_detokenize{##1}}%
+      \_foreach#1\_do{\_ea\_replstring\_ea\.tmp\_expanded
+                    {{\_csstring####1}{\_noexpand\verbspecial{\_csstring####1}}}}%
+      \_replstring\.tmp{-}{\_hbox{-}}%
+      \_language=-1
+      \_quitvmode \.tmp}%
+   \_ifx\verbspecial\_undefined \_def\verbspecial##1{##1\_penalty\verbhyphenpenalty}\_fi
+}
+
 
 \_trick 0078 0145 0146 \algol \algolkw \algolcap \makeLOA \algolnum \setaca ;
 %%%%%%%%%%%%%%%%%%%%%%
@@ -1399,6 +1416,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2026-05-20 \verbhyphens added
 2026-04-09 \inspictoh added
 2026-04-04 \framedblocks: case of \pagedirection=1 corrected
 2026-03-05 \inspicto added

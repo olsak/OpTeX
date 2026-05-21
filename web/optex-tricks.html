@@ -122,6 +122,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Verbatim
 <ul>
     <li><a href="#inttinoval">Code blocks like in Markdown</a>
+    <li><a href="#verbhyphens">Inline verbatim hyphenated at given characters</a>
     <li><a href="#keepverb">Inline verbatim in macro parameters</a>
     <li><a href="#algol">Algorithms printed as pseudo-codes</a>
     <li><a href="#algolcap">Captions of algorithms and the list of them</a>
@@ -1215,6 +1216,64 @@ gives a strut inside the text. The height and depth of the text is set to
 the constant values in order all ovals have the same height plus depth.
 
 <p CLASS=datum>(0009) -- P. O. 2020-05-02<p>
+<hr>
+
+<h2><a name="verbhyphens"></a>Inline verbatim hyphenated at given characters</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\verbhyphens<br>\verbhyphenpenalty
+</p>
+
+<p>OpTeX by default uses \hbox{...} for inline verbatim texts. So texts
+printed by \code{...} or by `...` (where ` is declared as \verbchar`)
+are never broken to more lines. But sometimes users print long phrases
+as verbatim (for example identifiers including namespace, subfields,
+classes, etc. in modern programming languages).
+These users need to have their phrases breakable to more lines at selected
+characters. The breaking points should be just after these characters, no
+hyphenchar is added when the phrase is broken.
+
+<p>We create a declaration macro \verbhyphens{list} which declares the
+characters after which the line breaking is allowed. For example
+\verbhyphens{./} allows to break the lines after dots or slashes. Then
+the phrase \code{document.head.append(script)} is breakable after dots.
+
+<p>The characters in the list can be preceded by backslash
+which is ignored. So, you can declare, for example \verbhyphens{\%:.-}.
+
+<p>Internally, each character C in the printed text is replaced by \verbspecial{C}
+iff the C is declared in the list. Other characters from the text are unchanged.
+The default definition of \verbspecial is \def\verbspecial#1{#1\penalty\verbhyphenpenalty}.
+It means that the character is printed and the breakpoint is inserted after
+it. But you can define your own \verbspecial according to your needs. For
+example:
+<pre>
+\verbhyphens{./|}
+\def\verbspecial#1{\if#1|\else #1\fi \penalty\verbhyphenpenalty}
+</pre>
+<p>Now, the breakpoint is after each dot and slash. Moreover, the | character
+can be used as an invisible breakpoint which is not printed.
+
+<pre>
+\newcount\verbhyphenpenalty   \verbhyphenpenalty=50
+\def\verbhyphens#1{%
+   \def\_printinverbatim##1{%
+      \edef\tmp{\detokenize{##1}}%
+      \foreach#1\do{\ea\replstring\ea\tmp\expanded
+                    {{\csstring####1}{\noexpand\verbspecial{\csstring####1}}}}%
+      \replstring\tmp{-}{\hbox{-}}%
+      \language=-1
+      \quitvmode\tmp}%
+   \ifx\verbspecial\undefined \def\verbspecial##1{##1\penalty\verbhyphenpenalty}\fi
+}
+</pre>
+
+<p>The \verbhyphens{list} macro re-defines the internal OpTeX macro \_printinverbatim
+which is used for printing inline verbatim texts.
+The \csstring is used in \replstring parameters because we allow something
+like \% as declared character and the text is detokenized.
+
+<p CLASS=datum>(0179) -- P. O. 2026-05-20<p>
 <hr>
 
 <h2><a name="keepverb"></a>Inline verbatim in macro parameters</h2>

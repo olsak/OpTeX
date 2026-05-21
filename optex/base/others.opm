@@ -174,7 +174,8 @@
    \onlyifnew \thedimen \rebox \leftfill \rightfill \lrfill \directchar \ereplstring
    \xreplstring \replmacro \tdnum \clipbox \ismatch \isinmacro \mathinexpr \xparshape
    \csvread \csvdecl \dbcreate \inode \enode \execedges \showtree \jsonread \jsoncnv
-   \treedata \tracingtreedata \treenodes \ul \inspicto \inspictoh ;
+   \treedata \tracingtreedata \treenodes \ul \inspicto \inspictoh
+   \verbhyphens \verbhyphenpenalty ;
 \_sdef{_item:m}{\_loadtrick{\style m}\_cs{_item:m}}
 
    \_doc
