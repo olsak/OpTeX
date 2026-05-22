@@ -22,6 +22,13 @@ doc/   ... PDF version of the OpTeX documentation and sources.
 
 History:
 
+<1.20> May 2026:
+       Box-direction dependent macros corrected / reimplemented (thanks Udi-Fogiel).
+       Extensible arrows implemented in math.opm package.
+       A filter for creating bib. references enabled.
+       \mathadef, \inspicto, \ordnum, \tracingnone, \verbhyphens introduced.
+       \frquotes redefined.
+       Various little bugs fixed.
 <1.19> Feb 2026:
        Little improvements and bug fixes
        f-raleway font file added
