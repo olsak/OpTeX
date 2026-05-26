@@ -13,6 +13,7 @@
 -- \enditems
 
 local fmt = string.format
+local string_upper = string.upper
 
 local node_id = node.id
 local node_subtype = node.subtype
@@ -825,15 +826,16 @@ end, "_colors")
 --
 -- The hook has to be registered {\em after} `luaotfload` is loaded.
 local color_count = registernumber("_colorcnt")
+local optex_catcode = registernumber("_optexcatcodes")
 local function set_node_color(n, color) -- "1 0 0 rg" or "0 g", etc.
     local attr = tonumber(token_getmacro("_color::"..color))
     if not attr then
         attr = tex_getcount(color_count)
-        tex_setcount(color_count, attr + 1)
+        tex_setcount("global", color_count, attr + 1)
         local strattr = tostring(attr)
-        token_setmacro("_color::"..color, strattr, "global")
-        token_setmacro("_color:"..strattr, color, "global")
-        token_setmacro("_color-s:"..strattr, string.upper(color), "global")
+        token_setmacro(optex_catcode, "_color::"..color, strattr, "global")
+        token_setmacro(optex_catcode, "_color:"..strattr, color, "global")
+        token_setmacro(optex_catcode, "_color-s:"..strattr, string_upper(color), "global")
     end
     setattribute(todirect(n), color_attribute, attr)
 end
