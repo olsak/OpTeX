@@ -449,38 +449,35 @@ We want to use them. The following macro code does it:
 \protected\def\faregul#1{{\let\tenfafree=\tenfafreeregul #1}}
 \protected\def\fafree{\tenfafree\resizethefont}
 \protected\def\fabran{\tenfabran\resizethefont}
-\def\__fontawesome_def_icon:nnnnn#1#2#3#4#5{%
-   \ifx^#1^\else
-      \getfourtokens\tmp#3\relax
-      \protected\edef#1{{\csname fa\tmp\endcsname \char#5}}%
-   \fi
-}
-\def\getfourtokens#1#2#3#4#5#6\relax{\def#1{#2#3#4#5}}
-\input fontawesome5-mapping.def
-\__fontawesome_def_icon:nnnnn{\faWifi}{wifi}{free3}{213}{"F1EB}
+\beglua
+for fontname, macroname in pairs({ tenfafree = "fafree", tenfabran = "fabran", }) do
+    for name, value in pairs(font.getfont(font.id(fontname)).resources.unicodes) do
+        if ('-alt' ~= string.sub(name, -4)) and value >= 256 and name:match("^[a-z-]+$") then
+             tex.sprint("\\protected\\def"
+                   .. string.gsub('\\fa-' .. name, '-(%w)', string.upper)
+                   .. "{{\\" .. macroname .. "\\char" .. value .. "}}")
+end end end
+\endlua
 </pre>
 
 <p>Now, you can use all control sequences listed in the fontawesome5
 documentation. For example \faHouseUser, \faAngry, \faApple, etc.
 The alternative syntax like \faIcon{Angry} is not supported.
 A few icons are in its "regular" variants. They are listed as
-\faAngry[regular] in the fontawesone5 documentation.
-These icons are available by the \faregul prefix in uour macro,
+\faAngry[regular] in the
+<a href="http://mirrors.ctan.org/fonts/fontawesome5/doc/fontawesome5.pdf">fontawesone5</a>
+documentation. These icons are available by the \faregul prefix in uour macro,
 i.e. \faregul\faAngry.
 
 <p><b>Notice to the implementation</b>. The three fonts with dingbats are
 loaded as \tenfafree, \tenfabran and \tenfafreeregul. The third one includes
 the "regular" variants. The macros \fafree amd \fabran select these fonts
-at current size used by Font Selection System from OpTeX.
+at current size by the \resizethefont macro.
 
 <p>We need to read the mapping from names to the font codes. It is saved in
-the fontawesome5-mapping.def. The set of \__fontawesome_def macros
-are used here. We define such macro in order to read this mapping and then
-we do \input fontawesome5-mapping.def.
-
-<p>Of course, if Marcel Krüger make changes in the fontawesome5-mapping.def
-file syntax, we must to redeclare our macros. I hope that this syntax is
-more or less stable.
+the fontawesome5-mapping.def or directly in the fonts too. We use the data fom the
+font by Lua code, so the solution isn't dependent on the LaTeX package.
+The Lua code defines a set of macros like \protected\def\faName{{\fafree\char code}}.
 
 <p>You can compare the complexity of macros in the LaTeX implementation with
 these 16 lines of plain TeX macros. Only TeX primitives are used here (and
