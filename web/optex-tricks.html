@@ -137,6 +137,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#inspicto">Repeating image in the document in various sizes</a>
     <li><a href="#gradients">Color gradients</a>
+    <li><a href="#setRGBcolor">Colors components in 0..255 range</a>
     <li><a href="#clipbox">A box with its content clipped</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#cancel">Canceled text</a>
@@ -1854,6 +1855,29 @@ smaller white oval is drawn over it. Only the boundary remains visible.
 Finally, the text is printed in it.
 
 <p CLASS=datum>(0024) -- P. O. 2020-06-05<p>
+<hr>
+
+<h2><a name="setRGBcolor"></a>Colors components in 0..255 range</h2>
+
+<p>OpTeX provides \setrgbcolor, \setcmykcolor and \setgreycolor macros,
+their parameters are color components in range 0..1. But sometimes we may
+encounter other concept where the components are in the 0..255 range. We don't
+want to re-calculate each component manually in this case, we want only copy
+and paste the values to our source. Then we can define (for example) a macro
+\setRGBcolor red,green,blue (the space after the last component) and we can use it:
+<pre>
+\def\mycolor{\setRGBcolor 173,54,215 }
+</pre>
+and the result is the asme as \def\mycolor{\setrgbcolor{.678 .212 .843}}.
+The macro \setRGBcolor should be defined as follows:
+
+<pre>
+\def\setRGBcolor #1,#2,#3 {\directlua{
+   tex.print(string.format("\nbb setrgbcolor{\%.3f \%.3f \%.3f}", #1/255, #2/255, #3/255))
+}}
+</pre>
+
+<p CLASS=datum>(0180) -- P. O. 2026-06-05<p>
 <hr>
 
 <h2><a name="clipbox"></a>A box with its content clipped</h2>
