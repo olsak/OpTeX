@@ -110,6 +110,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#autokern">Modification kerning data in fonts</a>
     <li><a href="#glyphmove">Move glyphs by any offset</a>
     <li><a href="#luaul">Using the lua-ul package</a>
+    <li><a href="#fonttable">Printing font tables</a>
 </ul>
 
 <li>Lists
@@ -1057,6 +1058,44 @@ you can do \addto \_resetattrs {\LuaULResetUnderline*}.
 
 <p CLASS=datum>(0170) -- Udi Fogiel, 2025-11-25<p>
 <hr>
+
+<h2><a name="fonttable"></a>Printing font tables</h2>
+
+<p>We create the macro \fonttable[from=..., to=...]{font}
+which behaves similarly like the \displayfonttable macro from
+unicodefonttable.sty LaTeX package. It prints the table of glyphs from
+given font in given range. For example
+
+<pre>
+\fonttable [from=1D400,to=1D7FF]{NewCMMath-Regular}
+</pre>
+
+<p>prints a table from code U+1D400 to code U+1D7FF of NewCMMath-Regular font
+glyphs, i.e. the mathematical alphanumeric symbols are shown.
+If the optional parameter [...] is missing, the table shows codes 00--FF. 
+
+<p>The implementation:
+<pre>
+\optdef\fonttable[from=0,to=FF]#1{%
+   \readkv{\the\opt}%
+   \ufont\f=#1\relax
+   \baselineskip=18pt plus1pt
+   \footline={Font: #1\hss \the\pageno\qquad}
+   \tmpnum="\kv{from} \divide\tmpnum by16 \multiply\tmpnum by16
+   \fornumstep 16: \tmpnum.."\kv{to} \do {\tablerow{##1}}
+}
+\def\tablerow#1{\hbox{%
+   \hbox to40pt{\hss\Blue\tt U+\hexnum{#1}-\hexnum{#1+15}:}
+   \fornum #1..#1+15 \do {\tableslot{##1}}%
+}}
+\def\tableslot#1{\hbox to25pt{\hss \iffontchar\f#1 \f\char#1 \else\Red --\fi\hss}}
+\def\hexnum#1{\directlua{tex.print(string.format("\%.4X",#1))}}
+\headline={\Blue\kern40pt\ \foreach 0123456789ABCDEF \do{\hbox to25pt{\hss#1\hss}}\hss}
+</pre>  
+
+<p CLASS=datum>(0181) -- P. O. 2026-06-08<p>
+<hr>
+
 
 <p CLASS="lmarg">Lists</p>
 
