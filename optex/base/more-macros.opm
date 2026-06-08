@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \eoldef {OpTeX useful macros <2026-03-23>} % preloaded in format
+\_codedecl \eoldef {OpTeX useful macros <2026-06-04>} % preloaded in format
 
    \_doc -----------------------------
    We define \`\opinput` `{<file name>}` macro which
@@ -161,7 +161,7 @@
 \_def\_eoldef #1{\_def #1{\_begingroup \_catcode`\^^M=12 \_eoldefA #1}%
    \_ea\_def\_csname _eol:\_noprefix #1\_endcsname}
 \_catcode`\^^M=12 %
-\_def\_eoldefA #1#2^^M{\_endgroup\_csname _eol:\_noprefix #1\_endcsname{#2}}%
+\_long\_def\_eoldefA #1#2^^M{\_endgroup\_csname _eol:\_noprefix #1\_endcsname{#2}}%
 \_normalcatcodes %
 
 \_eoldef\_skiptoeol#1{}
@@ -418,6 +418,7 @@
 
 \_endcode % -------------------------------------
 
+2026-06-04 \_eoldefA declared as \long
 2026-03-23 \_loadA: unwanted space removed
 2026-03-07 \nospaceafter reimplemented in order to allow \nospaceafter{text}
 2024-10-31 \_tmptoks replaced by \_repltoks in \replstring
