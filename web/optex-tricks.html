@@ -154,6 +154,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#epic">Tikz pictures created outside OpTeX</a>
     <li><a href="#wflag">Using flags from LaTeX worldflags package</a>
     <li><a href="#twemoji">Using emoji symbols from twemojis package</a>
+    <li><a href="#pxpic">A simple macro for xreating pixel art</a>
 </ul>
 
 <li>Math
@@ -2832,6 +2833,77 @@ the current font size.
 </pre>
 
 <p CLASS=datum>(0178) -- P. O. 2026-05-13<p>
+<hr>
+
+<h2><a name="pxpic"></a>A simple macro for creating pixel art</h2>
+
+<p>We create the macro \pxpic [ declaration] { {line} {line} ... {line} }
+which creates a matrix of pixels declared in given lines. The [ declaration ]
+is optional and it is mentioned below. Each {line} can iclude x for black
+pixel or dot for white pixel. For example
+<pre>
+\pxpic { {xxx....xxx...x.x}
+         {x.x.....x....x.x}
+         {x.x.xx..x.xxx.x}
+         {x.x.x.x.x.x..x.x}
+         {xxx.x.x.x.xx.x.x}
+         {....xx....x}
+         {....x.....xxx}
+}
+</pre>
+
+<p>creates the OpTeX logo in very low resolution. The dimesion of pixels is
+given by the \pxwidth register and its default is 1pt.
+Moreover, users can declare
+other letters for various colors by \adef c{\px\Color} in the
+[ declaration ]. For example the Tux logo can be created by:
+
+<p CLASS="rmarg">
+<img SRC="../img/tux.png" alt="Tux" border=0>
+</p>
+
+<pre>
+\def \Orange {\setcmykcolor{0 0.5 1 0}}
+\def \OrangeG {\setcmykcolor{0 0.5 1 .3}}
+
+\pxpic [ \pxwidth=2pt \onlyrgb
+   \adef g{\px\Grey} \adef :{\px\Orange} \adef '{\px\LightGrey}
+   \adef O{\px\OrangeG} \adef k{\px\Black}
+]
+{
+  {...........gggg}            {.........gggkkggg}
+  {........ggkkkkkkkg}         {........gkkkkkkkkg}
+  {........kkkkkkkkkk}         {.......gkk.kkkk.kkk}
+  {.......gk.k.kk.k.kk}        {.......gk.k.kk.k.kk}
+  {.......gkkkkkkkkkkk}        {.......gkkk::::kkkk}
+  {.......gk::::::::kk}        {.......gk.:kkkk:kkk}
+  {......gkk..::::'kkkk}       {......gkk....'''kkkk}
+  {......gkk....''''kkk}       {.....gkk.....''''kkkk}
+  {.....gk.......''''kkk}      {....gkk........'''kkkk}
+  {....gkk........'''kkkk}     {....gk..........''kkkk}
+  {...gkkg.........'''kkkk}    {...gkkkk........'''kkkk}
+  {..OOOOkkk.......'''kOOOO}   {..O::::kkk......'''O:::O}
+  {.O::::::kk.....'''::::::O}  {.O::::::kkk...''kk::::::O}
+  {O:::::::kkk...'kkk:::::::O} {O:::::::kkk...'kkk:::::::O}
+  {.O:::::::kkkkkkkk:::::::O}  {..OO:::::kkkkkkkk:::::OO}
+  {....OO::O.kkkkkk.O::OO}     {......OOO........OOO}
+}
+</pre>
+
+<p>The implementation:
+
+<pre>
+\newdimen\pxwidth \pxwidth=1pt
+
+\def\Pink{\setrgbcolor{1 .71 .772}}
+\def\px#1{{#1\vrule width\pxwidth height\pxwidth}}
+\optdef\pxpic[]{\vbox\bgroup
+   \offinterlineskip \pxpicdefault \the\opt \pxpicA}
+\def\pxpicA#1{\foreach #1 \do{\hbox{##1\vbox to\pxwidth{}}}\egroup}
+\def\pxpicdefault {\adef .{\kern\pxwidth} \adef x{\px\Black}}
+</pre>
+
+<p CLASS=datum>(0182) -- P. O. 2026-06-09<p>
 <hr>
 
 <p CLASS="lmarg">Math</p>
