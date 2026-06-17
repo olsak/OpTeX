@@ -296,3 +296,23 @@ See the section 1.5.3 of OpTeX documentation for more information.
   citedate = "2014/04/22",
   url      = "http://knihovna.cvut.cz/studium/jak-psat-vskp/doporuceni/jak-citovat/",
 }
+
+Comments in .bib files (i.e. ignored text) is everything outside the
+bib-entry scope. Don't use the "at" character here and {...} have to be
+balanced.
+
+Another alternative is the COMMENT bib-entry, i.e.
+
+@comment{this is ignored text}.
+
+Another alternative is usage of the % character like in TeX documents
+(from % to the end of line). Tip: if you want to comment existing bib-entry,
+you can use % only twice:
+
+%@MISC{ trtikova,
+  author   = "Ilona Trtíková and Ludmila Tichá",
+  title    = "Jak citovat",
+  ednote   = "Ústřední knihovna ČVUT, 2011, 2012, 2013",
+  citedate = "2014/04/22",
+  url      = "http://knihovna.cvut.cz/studium/jak-psat-vskp/doporuceni/jak-citovat
+%}
