@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.26, 2026-10-06}
+\_def\_math_version {0.26, 2026-06-17}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -29,6 +29,7 @@
       \_kvx {mstyle}   {\.mstyle{##1}}%   sets mstyle=TeX or ISO or french or upright
       \_kvx {bstyle}   {\.bstyle{##1}}%   sets bstyle=TeX or ISO or upright or OpTeX
       \_kvx {bfserif}  {\.bfserif}%       \bf, \bi select fonts with serifs
+      \_kvx {morevars} {\.morevars}%      \bcal, \bfrak, etc. defined
       \_kvx {rmchars}  {\.rmchars{##1}}%  does \.rmchars{<list>}
       \_kvx {vargreek} {\.vargreek{##1}}% does \.vargreek{<list>}
       \_kvx {text}     {\.dotext{##1}}%   does \.dotext{<list>}
@@ -427,15 +428,22 @@
 }
 
    \_doc
-   \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.
+   \`\bfserif` re-defines internal \OpTeX/ \O`\_mabf` and \O`\_mabi` macros.\nl
+   \`\morevars` defines \`\bcal`, \`\bfrak`, \`\msans`, and \`\mbsans` selectors.
    \_cod
 
 \_def\.bfserif{\.unionly\bfserif{%
    \_protected\_def\_mabf {\_inmath{\_bfvariables\_bfgreek\_bfGreek\_bfdigits}}%
    \_protected\_def\_mabi {\_inmath{\_bivariables\_bigreek\_bfGreek\_bfdigits}}%
 }}
+\_def\.morevars{\.unionly\morevars{%
+   \_newpublic\_def \bcal {\_bcalvariables}%
+   \_newpublic\_def \bfrak {\_bfrakvariables}%
+   \_newpublic\_def \msans {\_sansvariables\_sansdigits}%
+   \_newpublic\_def \mbsans {\_bsansvariables\_bsansdigits\_bsansgreek\_bsansGreek}%
+}}
 
-\_nspublic \bfserif ;
+\_nspublic \bfserif \morevars ;
 
    \_doc
    \`\rmchars``{<list>}` is implemented using \O`\foreach`. The list is
@@ -692,6 +700,8 @@ The following macros are defined in this package:
 * \~`\multiprimes` sets double, triple, quadruple primes as active.
 * \~`\flexipa` enables flexible partial symbol.
 * \~`\bfserif` sets `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
+* \~`\morevars` defines new selectors \~`\bcal`, \~`\bfrak`, \~`\msans`, \~`\mbsans`.
+ `\bf` and `\bi` for math typesetting as for bold-serif, bold-italic-serif.
 * \~`\rmchars` sets selected characters printed as `\rm`,
   \~`\vargreek` sets Greek leters to their variants.
 * \~`\textvariables`, \~`\textdigits`, \~`\textmoremath`
@@ -718,6 +728,7 @@ Following options are provided by the `math` package. You can set them by
 * `flexipa` enables flexible partial symbol, the same as \~`\flexipa`.
 * `mstyle=<style>`, `bstyle=<style>` are math styles explained in section~\ref[mstyle].
 * `bfserif` sets bold-serif, bold-italic-serif, the same as \~`\bfserif`.
+* `morevars` sets more math selectors, the same as \~`\morevars`.
 * `rmchars={<list>}` sets `\rm` for selected characters, the same as \~`\rmchars`,
    see section~\ref[rmchars].
 * `vargreek={<list>}` sets variants for Greek letetters, the same as \~`\vargreek`,
@@ -1003,13 +1014,13 @@ $$
 $$
 It looks better, doesn't it?
 
-\sec[mstyle] `\bf` and `\bi` shapes, math styles
+\sec[mstyle] `\bf` and `\bi` shapes, math styles, more variables
 
 \OpTeX/ sets `\bf` and `\bi` math selectors as sans serif, because this
 follows the old traditional math typesetting of vectors and matrices.
 But Knuth's \TeX/ has another default behavior:`\bf` and `\bi` select serifed
-shapes. So, many people consider it as a standard. You can declare \^`\bfserif` if
-you want serifed `\bf` and `\bi` math letters.
+shapes. So, many people consider it as a standard. You can declare \^`\bfserif`
+or use `bfserif` option if you want serifed `\bf` and `\bi` math letters.
 
 Moreover, this package provides `mstyle=<style>` and `bstyle=<style>` options.
 The `mstyle` option can be `TeX`, `ISO`, `french` or `upright` and `bstyle`
@@ -1017,7 +1028,34 @@ option can be `TeX`, `OpTeX`, `ISO`, `upright`. The `mstyle` and `bstyle`
 options set the upright/italic versions of math Latin/Greek variables in the same
 manner as `math-style` and `bold-style` options (from \LaTeX's
 `unicode-math`) do it. The `bstyle=OpTeX` sets sans serif bold variables,
-which is default in \OpTeX.
+which is default in \OpTeX. The `mstyle` option affects the default setting
+and the `\mit` selector. The `bstyle` option affects `\bf` and `\bi`
+selectors. The `bstyle=TeX` is equal to the `bfserif` option
+(which is kept here for backward compatibility).
+
+\morevars
+Unicode math declares more math alphabets (for variables) than original \TeX/
+provides. We can declare \^`\morevars` or use the `morevars` option.
+Then besides the math selectors declared in the format:
+\nl
+`\rm` $\rm abcABC0123$,
+`\it` $\it abcABC0123$,
+`\cal`~$\cal ABC$,
+`\script` $\script ABC$,
+`\frak`~$\frak abcABC$,
+`\misans` $\misans abcABC0123$,
+`\mbisans` $\mbisans abcABC0123\alpha\beta\gamma\Gamma\Theta$,
+`\bbchar`~$\bbchar abcABC0123$,
+and `\tt` $\tt abcABC0123$,
+\nl
+the new math selectors are defined:
+\nl
+\^`\bcal` $\bcal ABC$,
+\^`\bfrak`~$\bfrak abcABC$,
+\^`\msans`~$\msans abcABC0123$,
+and \^`\mbsans`~$\mbsans abcABC0123\alpha\beta\gamma\Gamma\Theta$.
+\nl
+The Unicode block \"Mathematical Alphanumeric Symbols" is fully covered.
 
 \sec[rmchars] Selected upright letters and variants for Greek letters
 
@@ -1418,6 +1456,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.27  2026-06-17  \morevars introduced.
 0.26  2026-06-10  \harrowto, \varrowto reimplemented.
 0.25  2026-04-07  \eqsystem: plus operator processed analogically like minus.
 0.24  2026-03-08  \scanlimits introduced, extended arrows \exw, \exh implemented.
