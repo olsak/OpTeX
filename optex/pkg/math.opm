@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.26, 2026-06-17}
+\_def\_math_version {0.28, 2026-06-20}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -256,6 +256,37 @@
 \_optdef\.exh[0pt]#1{\_vcenter{\_hbox{$\.varrowto\_the\_opt{#1}$}}}
 
 \_nspublic \exw \exh \harrowto \varrowto \exwdist ;
+
+   \_doc
+   The first usage of \`\bigop``<op>` creates a box with name `\<op>.(<f>)box`. The scaled <op>
+   is here. Its italic correction is saved to the `\<op>.(<f>)kern` register.
+   The box is printed inside `\vcenter`. If the <op> is an integral, i.e. the macro
+   `\_int:<op>` is defined, then the existence of next `\limits` primitive is checked
+   and following limits are scanned by \^`\scanlimits` and the limits are shifted by
+   `\.bpopSp`, `\.bpopSb`.
+   \_cod
+
+\_optdef\.bigop[1.5]#1{\.unionly\bigop{%
+   \_ifcsname #1.(\_the\_opt)box\_endcsname \_else \_begingroup
+      \_typoscale[{\_expr[0]{1000*\_the\_opt}}/]
+      \_ea\_newbox \_csname#1.(\_the\_opt)box\_endcsname
+      \_global \_setbox \_cs{#1.(\_the\_opt)box}=\_hbox{$\_displaystyle#1$}%
+      \_ea\_newdimen \_csname#1.(\_the\_opt)kern\_endcsname
+      \_setbox0=\_hbox{$\_displaystyle#1^{xxxxx}$}\_tmpdim=\_wd0
+      \_setbox0=\_hbox{$\_displaystyle#1_{xxxxx}$}\_advance\_tmpdim by-\_wd0
+      \_global \_cs{#1.(\_the\_opt)kern}=\_tmpdim
+   \_endgroup\_fi
+   \_mathop {\_vcenter{\_copy\_cs{#1.(\_the\_opt)box}}}%
+   \_ifcsname _int:#1\_endcsname
+      \_edef\.bigopSp{\_kern\_cs{#1.(\_the\_opt)kern}}%
+      \_edef\.bigopSb{\_kern-\_cs{#1.(\_the\_opt)kern}}%
+      \_afterfi{\_nospacefuturelet\.next\.bigopA}\_fi
+}}
+\_def\.bigopA{\_ifx\.next\_limits    \_limits   \_afterfi{\_ignoresecond{\.scanlimits\.bigopB}}%
+              \_else \_def\.bigopSp{}\_nolimits \_afterfi{\.scanlimits\.bigopB}\_fi}
+\_def\.bigopB#1#2{_{\.bigopSb #2}^{\.bigopSp #1}}
+
+\_nspublic \bigop ;
 
    \_doc
    \`\multiprimes` sets {\def\\{\kern-3.8pt}{\tt '},
@@ -712,7 +743,7 @@ The following macros are defined in this package:
   for printing them from additional math font.
 * \~`\enablefic` enables final italic correction of inline-math lists.
 * \~`\scanlimits` transforms the limits format (usage of `^` and `_`) to the parameters pair.
-* \~`\exw`, \~`\exh` extend the horizontal and vertical arrows.
+* \~`\exw`, \~`\exh` extend the horizontal and vertical arrows, \~`\bigop` extends big operators.
 \enditems
 
 Following options are provided by the `math` package. You can set them by
@@ -870,7 +901,7 @@ We strictly don't recommend usage of `\.`, `\v`, `\=`, etc.\ for accents, so
 `math.opm` can define `\.` differently than the classical meaning \"dotaccent".
 
 
-\sec Extensible arrows
+\sec Extensible arrows and big operators
 
 You can use \^`\exw <arrow> <limits>`, where <arrow> is arbitrary horizontal
 arrow, for example `\leftarrow`,  `\Leftrightarrow`, `\mapsto`, `\hookleftarrow`, `=`,
@@ -898,6 +929,38 @@ limits by the \^`\exwdist` register. Default is `\exwdist=1.5pt`.
 See also \^`\harrowto` and  \^`\varrowto` macros. They extend the given
 horizontal or vertical arrow to given <dimem> and they are used for
 implementation of \^`\exw` and \^`\exh` macros.
+\medskip
+
+Sometimes a mad mathematician needs to print a very big integral or another
+big operator. He or she can prefix the macro of the operator (`\int`, `\sum`, etc.)
+by \^`\bigop`, i.e.\ usage is `\bigop\int` or `\bigop`~\raise.2ex\hbox{$\scriptstyle\sum$}.
+Then the operator is scaled 1.5 times from its normal display size by default.
+The \^`\bigop` macro can be used with optional
+parameter, for example `\bigop[1.8]\int`. Then the result is scaled by the parameter.
+Examples of usage of the `\bigop` macro follows. Note that the limits are
+correctly positioned and you can use `\limits` after `\bigop\int`
+(integral of function $g$ in the example).
+
+\begtt \adef ∑{\raise.2ex\hbox{$\scriptstyle\sum$}}
+$$
+  {\textstyle\int_a^b f},\int_a^b f, \bigop\int_a^b f,
+  \bigop\int\limits_0^\infty g, \bigop[1.8]\oiint_\Omega f, \quad
+  {\textstyle\sum_{n=0}^\infty c_n}, \sum_{n=0}^\infty c_n,
+  \bigop\sum_{n=0}^\infty c_n, \bigop[1.25] ∑_{n=0}^∞ d_n .
+$$
+\endtt
+
+\vskip-12pt
+$$
+  {\textstyle\int_a^b f},\int_a^b f, \bigop\int_a^b f,
+  \bigop\int\limits_0^\infty g, \bigop[1.8]\oiint_\Omega h, \quad
+  {\textstyle\sum_{n=0}^\infty c_n}, \sum_{n=0}^\infty c_n,
+  \bigop\sum_{n=0}^\infty c_n, \bigop[1.25] ∑_{n=0}^∞ d_n .
+$$
+Another option is usage of `stretchy` package by `\load[stretchy]`. It works
+with \OpTeX/, because it is based on the plain \TeX/ macros and
+\TeX/ primitives only. See its documentation `texdoc stretchy`.
+A next package usable for mad mathematicians is `pdfmsym`.
 
 
 \sec System of equations printed by `\eqsystem`
@@ -1456,6 +1519,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.28  2026-06-20  \bigop introduced.
 0.27  2026-06-17  \morevars introduced.
 0.26  2026-06-10  \harrowto, \varrowto reimplemented.
 0.25  2026-04-07  \eqsystem: plus operator processed analogically like minus.
