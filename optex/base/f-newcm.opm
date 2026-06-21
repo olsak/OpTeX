@@ -1,34 +1,68 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
 \_famdecl [New Computer Modern] \NewCM {CM with Book variants, Cyrillic, Greek}
-        {\book \ttset \sans \caps \bookMath \sansMath} {\rm \bf \it \bi} {NewCM-Regular}
+        {\book \ttset \sans \unci \dvgr \caps \bookMath \sansMath} {\rm \bf \it \bi} {NewCM-Regular}
         {[NewCM10-Regular]}
-        {\_def\_fontnamegen {[NewCM\_typfV-\_currV]:\_capsV\_fontfeatures}}
+        {\_def\_fontnamegen {[\_optname{ncm\_typfV.\_currV}]:\_capsV\_fontfeatures}}
 
 \_wlog{\_detokenize{%
 Modifiers:^^J
  \book ...... slightly bolder \rm, \it^^J
  \ttset ..... Typewriter variants^^J
  \sans ...... Sans serif variants^^J
+ \unci ...... Uncials (\rm \bf only)^^J
+ \dvngr ..... Devanagari (\rm \bf only)^^J
  \caps ...... caps & small caps (not in Italic variants)^^J
  \bookMath .. Book variant for math fonts^^J
  \sansMath .. Sans serif variants for math fonts
 }}
 
-\_moddef \resetmod {\_fsetV caps={},typf=10,book={} \_fvars Regular Bold {\_ncmI} {\_ncmBI} }
-\_moddef \book     {\_fsetV book=Book \_fvars Book Bold {\_ncmI} {\_ncmBI} }
-\_moddef \ttset    {\_fsetV typf=Mono10 }
-\_moddef \sans     {\_fsetV typf=Sans10 }
+\_regoptsizes ncm.r     NewCM?-Regular          08 <9 10 <*
+\_regoptsizes ncm.bk    NewCM?-Book             08 <9 10 <*
+\_regoptsizes ncm.bki   NewCM?-BookItalic       08 <9 10 <*
+\_regoptsizes ncm.i     NewCM?-Italic           08 <9 10 <*
+\_regoptsizes ncm.b     NewCM?-Bold             10 <*
+\_regoptsizes ncm.bi    NewCM?-BoldItalic       10 <*
+
+\_regoptsizes ncmm.r    NewCMMono?-Regular      10 <*
+\_regoptsizes ncmm.bk   NewCMMono?-Book         10 <*
+\_regoptsizes ncmm.bki  NewCMMono?-BookItalic   10 <*
+\_regoptsizes ncmm.i    NewCMMono?-Italic       10 <*
+\_regoptsizes ncmm.b    NewCMMono?-Bold         10 <*
+\_regoptsizes ncmm.bi   NewCMMono?-BoldOblique  10 <*
+
+\_regoptsizes ncms.r    NewCMSans?-Regular      08 <9 10 <*
+\_regoptsizes ncms.bk   NewCMSans?-Book         08 <9 10 <*
+\_regoptsizes ncms.bki  NewCMSans?-BookOblique  08 <9 10 <*
+\_regoptsizes ncms.i    NewCMSans?-Oblique      08 <9 10 <*
+\_regoptsizes ncms.b    NewCMSans?-Bold         10 <*
+\_regoptsizes ncms.bi   NewCMSans?-BoldOblique  10 <*
+
+\_regoptsizes ncmu.r    NewCMUncial?-Regular    08 <9 10 <*
+\_regoptsizes ncmu.bk   NewCMUncial?-Book       08 <9 10 <*
+\_regoptsizes ncmu.b    NewCMUncial?-Bold       08 <9 10 <*
+\_optfontalias {ncmu.i}   {ncmu.r}
+\_optfontalias {ncmu.bki} {ncmu.bk}
+\_optfontalias {ncmu.bi}  {ncmu.b}
+
+\_regoptsizes ncmd.r    NewCM?Devanagari-Regular 08 <9 10 <*
+\_regoptsizes ncmd.bk   NewCM?Devanagari-Book    08 <9 10 <*
+\_regoptsizes ncmd.b    NewCM?Devanagari-Bold    10 <*
+\_optfontalias {ncmd.i}   {ncmd.r}
+\_optfontalias {ncmd.bki} {ncmd.bk}
+\_optfontalias {ncmd.bi}  {ncmd.b}
+
+\_moddef \resetmod {\_fsetV caps={},typf={},book={} \_fvars r b i bi }
+\_moddef \book     {\_fsetV book=Book \_fvars bk b bki bi }
+\_moddef \ttset    {\_fsetV typf=m }
+\_moddef \sans     {\_fsetV typf=s }
+\_moddef \unci     {\_fsetV typf=u }
+\_moddef \dvngr    {\_fsetV typf=d }
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_moddef \bookMath {\_doloadmath
    \_loadmath {[NewCMMath-Book]}\_loadboldmath{NewCMMath-Bold} \to {[NewCMMath-Book]}}
 \_moddef \sansMath {\_doloadmath \_loadmath {[NewCMSansMath-Regular]}}
-
-\_def\_ncmtyprm{10}
-\_def\_ncmtypsans{Sans10}
-\_def\_ncmI  {\_bookV \_ifx\_typfV\_ncmtypsans Oblique\_else Italic\_fi}
-\_def\_ncmBI {Bold\_ifx\_typfV\_ncmtyprm Italic\_else Oblique\_fi}
 
 \_initfontfamily % new font family must be initialized
 

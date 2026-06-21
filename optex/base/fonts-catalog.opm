@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {Font catalogue <2023-06-04>} % loaded on demand by \fontfam[catalog]
+\_codedecl \_undefined {Font catalogue <2026-06-21>} % loaded on demand by \fontfam[catalog]
 
 \_tracinglostchars=1 % only to log file
 \_initunifonts
@@ -67,7 +67,8 @@
       {\_ttfixed \_detokenize\_ea{\_usemodifiers}\_detokenize{#1}\_unskip:}
       {\_usemodifiers #1\_ea\_ifx\_the\_font \_nullfont
           \_ttfixed ... This font isn't available in your system.%
-      \_else \_the\_catalogsample \_fi }%
+      \_else \_the\_catalogsample \_fi
+      \_immediate\_write-1 {Sample \_ea\_useit\_usemodifiers\_string#1: \_fontname\_font}}%
       \_ea \_dosamplesB \_fi
 }
 
@@ -147,6 +148,7 @@ described in the \code{fams-ini.opm} file.
 
 \_endcode % -------------------------------------
 
+2026-06-21  Sample info written to log
 2023-06-04  line breaking optimized
 2023-06-01  \_catalognextfam introduced, \_nobreak inserted
 2023-03-09  \_famsrc introduced

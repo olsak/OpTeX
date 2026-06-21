@@ -79,7 +79,7 @@
 \_faminfo [New Computer Modern] {CM with Book variants, Cyrillic, Greek} {f-newcm}
    { -: {\rm\bf\it\bi} \book: {\rm\it} \ttset: {\rm\bf\it\bi} \book\ttset: {\rm\it}
      \sans: {\rm\bf\it\bi} \book\sans: {\rm\it}
-     \caps: {\rm\bf} \book\caps: {\rm} }
+     \caps: {\rm\bf} \book\caps: {\rm} \unci: {\rm\bf} \book\unci: {\rm}}
 \_famalias [NewCM] \_famalias [NewCMfonts]
 
 \_famfrom{STI Pub group, MicroPress Inc., Coen Hoffman}
