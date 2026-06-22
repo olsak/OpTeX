@@ -41,23 +41,17 @@ Modifiers:^^J
 \_regoptsizes ncmu.r    NewCMUncial?-Regular    08 <9 10 <*
 \_regoptsizes ncmu.bk   NewCMUncial?-Book       08 <9 10 <*
 \_regoptsizes ncmu.b    NewCMUncial?-Bold       08 <9 10 <*
-\_optfontalias {ncmu.i}   {ncmu.r}
-\_optfontalias {ncmu.bki} {ncmu.bk}
-\_optfontalias {ncmu.bi}  {ncmu.b}
 
 \_regoptsizes ncmd.r    NewCM?Devanagari-Regular 08 <9 10 <*
 \_regoptsizes ncmd.bk   NewCM?Devanagari-Book    08 <9 10 <*
 \_regoptsizes ncmd.b    NewCM?Devanagari-Bold    10 <*
-\_optfontalias {ncmd.i}   {ncmd.r}
-\_optfontalias {ncmd.bki} {ncmd.bk}
-\_optfontalias {ncmd.bi}  {ncmd.b}
 
 \_moddef \resetmod {\_fsetV caps={},typf={},book={} \_fvars r b i bi }
 \_moddef \book     {\_fsetV book=Book \_fvars bk b bki bi }
 \_moddef \ttset    {\_fsetV typf=m }
 \_moddef \sans     {\_fsetV typf=s }
-\_moddef \unci     {\_fsetV typf=u }
-\_moddef \dvngr    {\_fsetV typf=d }
+\_moddef \unci     {\_fsetV typf=u \_fvars @ b . . }
+\_moddef \dvngr    {\_fsetV typf=d \_fvars @ b . . }
 \_moddef \caps     {\_fsetV caps=+smcp;\_ffonum; }
 
 \_moddef \bookMath {\_doloadmath

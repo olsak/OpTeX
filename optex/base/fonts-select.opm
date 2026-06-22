@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2025-06-29>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2026-06-22>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -49,6 +49,12 @@
       \_ea\_let \_ea\_tmpf \_csname _ten\_famv\_endcsname
       \_ea\_fontlet \_csname _ten\_xfamv\_endcsname \_tmpf \_sizespec
    \_else % \fontfam is used
+      \_let\_optname=\_useit
+      \_ea \_testmissingvar \_expanded{\_fontnamegen}\_relax\_iftrue % \relax inside \_fontnamegen
+          \_opwarning {Font variant \_currfamily: \_modlist \_cs{\_famv}unsupported, \rm used}%
+          \_def\_famv{rm}%
+      \_fi
+      \_let\_optname=\_optnameB
       \_ea\_font \_csname _ten\_xfamv\_endcsname {\_fontnamegen}\_sizespec
    \_fi \_relax
    \_ea \_fontselA \_csname _ten\_xfamv\_endcsname
@@ -62,6 +68,7 @@
 }
 \_def \_logfont #1{}
 \_def \_xfamv {\_famv}
+\_def \_testmissingvar #1\_relax#2\_iftrue{\_ifx\/#2\/\_else}
 
 \_public \fontsel ;
 
@@ -149,8 +156,10 @@
    \_doc -----------------------------
    \`\_fvars` `<rm-template> <bf-template> <it-template> <bi-template>`
    saves data for usage by the `\_currV` macro. If a template is only dot
-   then previous template is used (it can be used if the font family doesn't
-   dispose with all standard variants).
+   and a user selects it then warning about missing variant is printed
+   and <rm-template> is used (it can be used if a font family doesn't
+   provide all standard variants).
+   If a template is `@` then the relevant template declared previously is kept.
    \nl
    \`\_currV` expands to a template declared by `\_fvars` depending on the
    `<variant name>`. Usable only of standard four variants. Next variants
@@ -171,13 +180,13 @@
    \_cod -----------------------------
 
 \_def\_fvars #1 #2 #3 #4 {%
-   \_sdef{_fvar:rm}{#1}%
-   \_sdef{_fvar:bf}{#2}%
-   \_ifx.#2\_slet{_fvar:bf}{_fvar:rm}\_fi
-   \_sdef{_fvar:it}{#3}%
-   \_ifx.#3\_slet{_fvar:it}{_fvar:rm}\_fi
-   \_sdef{_fvar:bi}{#4}%
-   \_ifx.#4\_slet{_fvar:bi}{_fvar:it}\_fi
+   \_ifx@#1\_else \_sdef{_fvar:rm}{#1}\_fi
+   \_ifx@#2\_else \_sdef{_fvar:bf}{#2}\_fi
+   \_ifx.#2\_sdef{_fvar:bf}{\_relax}\_fi
+   \_ifx@#2\_else \_sdef{_fvar:it}{#3}\_fi
+   \_ifx.#3\_sdef{_fvar:it}{\_relax}\_fi
+   \_ifx@#4\_else \_sdef{_fvar:bi}{#4}\_fi
+   \_ifx.#4\_sdef{_fvar:bi}{\_relax}\_fi
 }
 \_def\_currV{\_trycs{_fvar:\_famv}{rm}}
 \_def\_V{ }
@@ -525,6 +534,7 @@
    \_ifdim\_optsize<#4pt #1#3#2\_optnameC
    \_else \_afterfifi \_optnameA #1?#2 \_fi\_fi
 }
+\_let\_optnameB=\_optname
 \_def\_optnameC #1* {\_fi\_fi}
 \_def\_afterfifi #1\_fi\_fi{\_fi\_fi #1}
 \_def\_optfontalias #1#2{\_slet{_oz:#1}{_oz:#2}}
@@ -972,6 +982,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2026-06-22  \_testmissingvar and @ for \_fvars introduced.
 2025-06-29  \_onlyif is expandable.
 2023-06-16  \fontfamsub improved.
 2023-05-30  \catalognextfam introduced.
