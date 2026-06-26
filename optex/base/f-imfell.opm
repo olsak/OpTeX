@@ -1,0 +1,37 @@
+%% This is part of the OpTeX project, see http://petr.olsak.net/optex
+
+\_famdecl [IMFellEnglish] \IMFell {revivals of serif fonts by John Fell, 1686}
+        {\caps} {\rm \it \feflowA \feflowB} {}
+        {[IMFeENrm28P]}
+        {\_def\_fontnamegen {[IMFeEN\_currV 28P]:\_fontfeatures}}
+
+\_wlog{\_detokenize{%
+Modifier:^^J
+ \caps .............. caps & small caps (\rm only)^^J%
+More fonts:^^J
+ \feflowA \feflowB .. two fonts with ornaments at slots ABC...^^J
+ \showornaments ..... prints the contents of fonts \feflowA, \feflowB^^J
+}}
+
+\_newpublic\_moddef \resetmod {\_fvars rm . it . }
+\_newpublic\_moddef \caps     {\_fvars sc . . . }
+
+\_initfontfamily % new font family must be initialized
+
+\_sfont\feflowA=[FeFlow1] \relax
+\_sfont\feflowB=[FeFlow2] \relax
+
+\_newpublic\_def\showornaments{\_medskip
+   \_noindent {\_tt\_string\feflowA}\_nl
+   \_foreach ABCDEFGHIJKLMNOPQRSTUVWXYZabc \_do
+           {{\_tt ##1}~{\feflowA ##1}\_quad} \_medskip
+   \_noindent {\_tt\_string\feflowB}\_nl
+   \_foreach 12ABCDEFGHIJKLMNOPQRSTUVWXYZabcdgjklmnopqrstuvwxyz \_do
+           {{\_tt ##1}~{\feflowB ##1}\_quad} \_par
+}
+
+\_endcode
+
+See the file `f-heros.opm` for information about principles of such
+font-macro-files.
+

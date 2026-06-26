@@ -181,6 +181,11 @@
    { -,\onum: {\rm\bf\it\bi} }
 \_famalias [Caslon]
 
+\_famfrom {Igino Marini}
+\_faminfo [IMFellEnglish] {revivals of serif fonts bequeathed by John Fell, 1686} {f-imfell}
+   { -:{\rm\it} \caps:{\rm} }
+\_famalias [IMFell]
+
 \_famfrom {Pablo Impallari, Igino Marini}
 \_faminfo [Cabin] {Inspired by Gill's typefaces + touch of a modernism} {f-cabin}
    { -,\caps: {\rm\bf\it\bi} \medium: {\rm\it} \semibold: {\bf\bi}
