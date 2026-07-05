@@ -345,6 +345,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#overlap">Crop marks if we want a picture out the pagesize</a>
     <li><a href="#putcrop">Placing crop marks directly at specified locations</a>
+    <li><a href="#docinsert">Inserting an external document into the current one</a>
     <li><a href="#frontsheet">More pages on single sheet</a>
     <li><a href="#booklet">Printing booklets</a>
     <li><a href="#directoutput">Direct output of a box to a single page</a>
@@ -9865,6 +9866,30 @@ overwrites the text of each page and is used for crop marks).
 </pre>
 
 <p CLASS=datum>(0184) -- P. O. 2026-07-04<p>
+<hr>
+
+<h2><a name="docinsert"></a>Inserting an external document into the current one</h2>
+
+<p>If we need to insert a PDF document into our current document, then we
+can use the following code. The inserted document can be created with any tool
+which is able to generate PDF.
+
+<pre>
+\def\document{document.pdf}  % the file name of the inserted document
+\def\mybox#1{\moveleft2cm \vbox to0pt{\kern-1cm\picw=20cm #1\vss}\vfil\break}
+
+\nopagenumbers
+\mybox{\inspic{\document}}  % first page
+\fornum 2..\pdflastximagepages \do{\mybox{\picparams={page#1}\inspic{\document}}}
+</pre>
+
+<p>The filename and dimensions (shift to left, shift to top and page width)
+should be modified according to your needs. The \pdflastimagepages register is set
+when the first page by \inspic is loaded. This register is subsequently used
+in the following loop in order to load and print all pages of the inserted
+document.
+
+<p CLASS=datum>(0185) -- P. O. 2026-07-05<p>
 <hr>
 
 <h2><a name="frontsheet"></a>More pages on single sheet</h2>
