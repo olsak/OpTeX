@@ -343,6 +343,8 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Others
 <ul>
+    <li><a href="#overlap">Crop marks if we want a picture out the pagesize</a>
+    <li><a href="#putcrop">Placing crop marks directly at specified locations</a>
     <li><a href="#frontsheet">More pages on single sheet</a>
     <li><a href="#booklet">Printing booklets</a>
     <li><a href="#directoutput">Direct output of a box to a single page</a>
@@ -9730,6 +9732,140 @@ For example:
 <hr>
 
 <p CLASS="lmarg">Others</p>
+
+<h2><a name="overlap"></a>Crop marks if we want a picture out the pagesize</h2>
+
+<p CLASS="rmarg">
+autoload:<br>\overlap
+</p>
+
+<p>OpTeX does not provide cropmarks itself because we suppose, that PDF is
+generated with real paper size (after crop is done) and the cropmarks and
+additional margins are added by the cropmarks.tex macro from
+<a href="https://ctan.org/pkg/olsak-misc">olsak-misc macro collection</a>
+released on CTAN and included in TeXlive. This macro reads
+the PDF and creates new PDF with crop marks.
+
+<p>The disadvantage of this approach is that the images shifted slightly out of
+the border are not fully printed. Only parts of them inside the real page
+size are shown. \overlap solves this problem.
+
+<p>We can use \overlap=dimen just after \margins specification in our OpTeX
+document.
+Then the margins are enlarged by the given dimen in all four sides (left,
+right, top, botom) and you can shift the images to this additional margin.
+Use \overpap=dimen (<b>the same dimesion</b>) when the cropmarks macro is used.
+More exactly, you can do in your document:
+
+<pre>
+\margins/1 (10,20) (0,0,0,0)cm % paper size is 10cm x 20cm
+\overlap 5mm                   % paper size enlarged by 5mm margins
+
+\putpic -3mm ... {...}         % a picture is shifted 3mm outside the paper
+...
+\bye
+</pre>
+
+Create the document (for example test.tex) by OpTeX and then run
+"pdftex out" or "optex out" when out.tex looks like this:
+
+<pre>
+\input cropmarks
+\overlap=5mm           % must be the same as \overlap in the document
+\hmiddle=0 \vmiddle=0  % no centered crop marks
+\def\document{test}    % name of the document file (without .pdf extension)
+\docropmarks           % creates crop marks
+</pre>
+
+<p>The out.pdf is the document including crop marks.
+
+Implementation:
+
+<pre>
+\def\overlap{\afterassignment\overlapA \tmpdim}
+\def\overlapA{\pdfvorigin=\tmpdim \pdfhorigin=\tmpdim
+   \advance\pdfpagewidth by2\tmpdim \advance\pdfpageheight by2\tmpdim
+}
+</pre>
+
+<p>Another approach shows the following <a href="#putcrop">OpTeX trick 0184</a>.
+
+<p CLASS=datum>(0183) -- P. O. 2026-07-03<p>
+<hr>
+
+<h2><a name="putcrop"></a>Placing crop marks directly at specified locations</h2>
+
+<p>If we are creating a book cover (for example), then we want to put crop marks
+at selected places and we want to see them when the cover is created.
+It can be done, if we do the following (in this order): \overlap=10mm
+(adding more margins for cropmarks) \input cropmarks (loading cropmarks.tex)
+\initboxes (setting cropmark boxes) \puttext ... {\cropLB} \putttext ...
+{\cropRB} (putting crop marks at given places). We need to know that \input
+cropmarks defines following crop marks: \cropLB (left bottom mark) \cropRB
+(right bottom mark) \cropLT (left top mark) \cropRT (right top mark) and
+single line marks: \middleB (mark at bottom) \middleT (mark at top) \middleL
+(mark at left side) \middleR (mark at right side). The dimensions of the
+marks can be customized by setting dimension variables (see the end of
+cropmark.tex file) and this setting must be done before \initboxes is
+executed.
+
+<p>The following example shows a book cover with left and right tabs (50mm) and
+the book spine 10mm. The book itself has dimension 95x170mm. We create four
+classical crop marks and moreover the bend marks for tabs and for book
+spine. The color of the book cover is oversized by 3mm to all sides.
+You can try to run the following example and you can modify it to your
+specific needs.
+
+<pre>
+\margins/1 (300,170) (0,0,0,0)mm  % dimension of the whole cover
+\overlap 10mm  % additional margins for crop marks
+\nopagenumbers
+
+\topskip=0pt \vglue\vsize  % origin is at the left botom corner
+\puttext -3mm -3mm {\Yellow\vrule height176mm width306mm} % cover color
+\puttext 155mm 120mm {\hsize=95mm\centerline{\typosize[20/]\bf Title of the book}}
+\puttext 148mm 30mm {\rotbox{90}{\typosize[15/]\bf Title on the spine}}
+\puttext 255mm 150mm {\raggedright\vtop{\hsize=40mm{\bf Front tab}\nl\lorem[4]}}
+\puttext 5mm 150mm  {\raggedright\vtop{\hsize=40mm{\bf Back tab}\nl\lorem[2]}}
+
+\input cropmarks % must be load after \overlap is set
+\initboxes   % initializes boxes with cropmarks
+\let\zo=\_zo \let\pgh=\_pgheight \let\pgw=\_pgwidth
+\puttext \zo  \zo   {\cropLB}   \puttext \zo   \pgh {\cropLT}
+\puttext \pgw \zo   {\cropRB}   \puttext \pgw  \pgh {\cropRT}  % classic crop marks
+\puttext 50mm \zo   {\middleB}  \puttext 250mm \zo  {\middleB}
+\puttext 50mm \pgh  {\middleT}  \puttext 250mm \pgh {\middleT} % bend for book tabs
+\puttext 145mm \zo  {\middleB}  \puttext 155mm \zo  {\middleB}
+\puttext 145mm \pgh {\middleT}  \puttext 155mm \pgh {\middleT} % spine of the book
+\bye
+</pre>
+
+<p>The example above inserts crop marks only on the single page (which is
+sufficient if we are creating a book cover). But if we want to put crop marks
+to all pages in the document, then we can use similar trick with \puttext and
+we need to re-define the \_optexshipout in order to implement the
+\foregroundbox, which is inserted as the last box on each page (i.e.
+overwrites the text of each page and is used for crop marks).
+
+<pre>
+\overlap 10mm                 % margins for crop marks
+\input cropmarks  \initboxes  % crop marks initialized
+\let\zo=\_zo
+\edef\pgh{\the\dimexpr \pdfpageheight-2\pdfvorigin} % height of the page
+\edef\pgw{\the\dimexpr \pdfpagewidth-2\pdfhorigin}  % width of the page
+\def\cropmarks{
+   \puttext \zo  \zo {\cropLB}  \puttext \zo  \pgh {\cropLT}
+   \puttext \pgw \zo {\cropRB}  \puttext \pgw \pgh {\cropRT} % classic crop marks
+}
+\def\_optexshipout#1{\setbox0=#1\tmpdim=\ht0 \advance\tmpdim by\dp0
+   \setbox0=\vbox{\box0 \kern-\tmpdim\kern-\voffset
+                  \nointerlineskip \moveleft\hoffset\foregroundbox}%
+   \_preshipout0\box0 \_shipout\box0 }
+\def\foregroundbox{\vbox to\pgh{\vss \cropmarks}} % overwrites each page
+</pre>
+
+<p CLASS=datum>(0184) -- P. O. 2026-07-04<p>
+<hr>
 
 <h2><a name="frontsheet"></a>More pages on single sheet</h2>
 

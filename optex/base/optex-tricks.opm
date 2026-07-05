@@ -184,6 +184,14 @@
    \_endgroup
 }
 
+\_trick 0183 \overlap ;
+%%%%%%%%%%%%
+
+\_def\overlap{\_afterassignment\.overlapA \_tmpdim}
+\_def\.overlapA{\_pdfvorigin=\_tmpdim \_pdfhorigin=\_tmpdim
+   \_advance\_pdfpagewidth by2\_tmpdim \_advance\_pdfpageheight by2\_tmpdim
+}
+
 \_trick 0135 \directchar ;
 %%%%%%%%%%%%
 
