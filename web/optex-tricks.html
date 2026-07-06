@@ -343,7 +343,7 @@ The important OPmac tricks will be re-implemented here soon.
 
 <li>Others
 <ul>
-    <li><a href="#overlap">Crop marks if we want a picture out the pagesize</a>
+    <li><a href="#overlap">Crop marks and pictures extending beyond the page page</a>
     <li><a href="#putcrop">Placing crop marks directly at specified locations</a>
     <li><a href="#docinsert">Inserting an external document into the current one</a>
     <li><a href="#frontsheet">More pages on single sheet</a>
@@ -9734,7 +9734,7 @@ For example:
 
 <p CLASS="lmarg">Others</p>
 
-<h2><a name="overlap"></a>Crop marks if we want a picture out the pagesize</h2>
+<h2><a name="overlap"></a>Crop marks and pictures extending beyond the page</h2>
 
 <p CLASS="rmarg">
 autoload:<br>\overlap
@@ -9747,9 +9747,11 @@ additional margins are added by the cropmarks.tex macro from
 released on CTAN and included in TeXlive. This macro reads
 the PDF and creates new PDF with crop marks.
 
-<p>The disadvantage of this approach is that the images shifted slightly out of
-the border are not fully printed. Only parts of them inside the real page
-size are shown. \overlap solves this problem.
+<p>Sometimes we need to put images shifted slightly off the page
+in order to prevent unwanted white borders after possibly inaccurate cutting.
+But unfortunately these images are not
+fully printed when the cropmarks.tex macro is used with default setting.
+Only parts of them inside the real page size are shown. \overlap solves this problem.
 
 <p>We can use \overlap=dimen just after \margins specification in our OpTeX
 document.
@@ -9767,12 +9769,12 @@ More exactly, you can do in your document:
 \bye
 </pre>
 
-Create the document (for example test.tex) by OpTeX and then run
+Create the document (for example test.pdf) by OpTeX and then run
 "pdftex out" or "optex out" when out.tex looks like this:
 
 <pre>
 \input cropmarks
-\overlap=5mm           % must be the same as \overlap in the document
+\overlap=5mm           % must be the same as \overlap in the OpTeX document
 \hmiddle=0 \vmiddle=0  % no centered crop marks
 \def\document{test}    % name of the document file (without .pdf extension)
 \docropmarks           % creates crop marks
@@ -9838,6 +9840,9 @@ specific needs.
 \puttext 50mm \pgh  {\middleT}  \puttext 250mm \pgh {\middleT} % bend for book tabs
 \puttext 145mm \zo  {\middleB}  \puttext 155mm \zo  {\middleB}
 \puttext 145mm \pgh {\middleT}  \puttext 155mm \pgh {\middleT} % spine of the book
+
+\expanded{\pdfpagesattr{/TrimBox[\bp{\pdfhorigin}      \bp{\pdfvorigin}
+                                 \bp{\pdfhorigin+\pgw} \bp{\pdfvorigin+\pgh}]}}
 \bye
 </pre>
 
@@ -9858,6 +9863,8 @@ overwrites the text of each page and is used for crop marks).
    \puttext \zo  \zo {\cropLB}  \puttext \zo  \pgh {\cropLT}
    \puttext \pgw \zo {\cropRB}  \puttext \pgw \pgh {\cropRT} % classic crop marks
 }
+\expanded{\pdfpagesattr{/TrimBox[\bp{\pdfhorigin}      \bp{\pdfvorigin}
+                                 \bp{\pdfhorigin+\pgw} \bp{\pdfvorigin+\pgh}]}}
 \def\_optexshipout#1{\setbox0=#1\tmpdim=\ht0 \advance\tmpdim by\dp0
    \setbox0=\vbox{\box0 \kern-\tmpdim\kern-\voffset
                   \nointerlineskip \moveleft\hoffset\foregroundbox}%
