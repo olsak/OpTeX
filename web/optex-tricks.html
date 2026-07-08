@@ -7181,6 +7181,25 @@ prepares all parameters as fully-expanded:
 replace #2 by \unexpanded\ea{#2}. And replace the symbol x to the
 symbol n or e in the \MP... macro name, of course.
 
+<p>If we want to effectivelly define all 39 variants of macros (\MPx, \MPxx,
+\MPxxx, \MPeen, etc.) with one or two or three parameters, we can do following:
+
+<pre>
+\sdef{MP:x}{\useit}  \sdef{MP:e}{\unexpanded\ea}   \sdef{MP:n}{\unexpanded}
+\def\MPI #1#2#3{\ea#2\expanded{{\cs{#1}{#3}}}}
+\def\MPII #1#2#3#4#5{\ea#3\expanded{{\cs{#1}{#4}}{\cs{#2}{#5}}}}
+\def\MPIII #1#2#3#4#5#6#7{\ea#4\expanded{{\cs{MP:#1}{#5}}{\cs{MP:#2}{#6}}{\cs{MP:#3}{#7}}}}
+\foreach xen\do{\sdef{MP#1}{\MPI #1}}
+\foreach xen\do{\foreach xen\do{\sdef{MP#1##1}{\MPII #1##1}}}
+\foreach xen\do{\foreach xen\do{\foreach xen\do{\sdef{MP#1##1####1}{\MPIII #1##1####1}}}}
+
+%% Test:
+\def\macro#1#2#3{\unexpanded{1:#1, 2:#2, 3:#3}}
+\def\test{\testA aha}
+\def\testA{A}
+\message{macro nxe: \MPnxe\macro\test\test\test} % prints 1:\test , 2:Aaha, 3:\testA aha
+</pre>
+
 <p CLASS=datum>(0085) -- P. O. 2022-05-25<p>
 <hr>
 

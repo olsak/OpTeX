@@ -2657,7 +2657,7 @@ In short:
                    of redundancy in the code in order of error recovering.
 
 * `tight`   ... Code without margins.
-* `padding` ... 4module blank margins around the code.
+* `padding` ... 4modules blank margins around the code.
 
 * `verbose` ... Information about calculating in terminal and in the log.
 * `silent`  ... No information about calculating.
