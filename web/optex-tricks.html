@@ -138,7 +138,7 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#inspicto">Repeating image in the document in various sizes</a>
     <li><a href="#gradients">Color gradients</a>
-    <li><a href="#setRGBcolor">Colors components in 0..255 range</a>
+    <li><a href="#ccd">Color components declared in various formats</a>
     <li><a href="#clipbox">A box with its content clipped</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#cancel">Canceled text</a>
@@ -1900,24 +1900,64 @@ Finally, the text is printed in it.
 <p CLASS=datum>(0024) -- P. O. 2020-06-05<p>
 <hr>
 
-<h2><a name="setRGBcolor"></a>Colors components in 0..255 range</h2>
+<h2><a name="ccd"></a>Color components declared in various formats</h2>
 
-<p>OpTeX provides \setrgbcolor, \setcmykcolor and \setgreycolor macros,
-their parameters are color components in range 0..1. But sometimes we may
-encounter other concept where the components are in the 0..255 range. We don't
-want to re-calculate each component manually in this case, we want only copy
-and paste the values to our source. Then we can define (for example) a macro
-\setRGBcolor red,green,blue (the space after the last component) and we can use it:
+<p CLASS="rmarg">
+autoload:<br>\ccd
+</p>
+
+<p>OpTeX provides only one format for setting color components: they have to be
+a decimal numbers between 0 and 1 separated by spaces.
+For example \setrgbcolor{.941 .071 .745}. But we can encounter different formats
+for color specifications, for example f012be or 240,18,190 (RGB color space)
+or 0,95,10,2 (CMYK color space). There are three numbers from
+0 to 255 in hexadecimal format (first example) or three numbers from 0
+to 255 in decimal format (second exmple) or four numbers from 0 to 100
+in decimal format (third example).
+
+<p>We create a macro \ccd/type data;
+The type parameter is hex or 255 or 100 and the data parameter are
+one or three or four numbers in hexadecimal two digits format (type hex) or in
+decimal format separated by commas (type 255 or 100). The data have to be
+terminated by semicolon. The \ccd macro expands to OpTeX color format,
+\ccd means Convert Color Data. Examples:
+
 <pre>
-\def\mycolor{\setRGBcolor 173,54,215 }
+\ccd/hex f012be;      expands to  .941 .071 .745
+\ccd/hex F012BE;      expands to  .941 .071 .745
+\ccd/255 240,18,190;  expands to  .941 .071 .745
+\ccd/100 94,07,74;    expands to  .94 .07 .74
+\ccd/100 50;          expands to  .5
+\ccd/100 0,95,10,2;   expands to  .0 .95 .1 .02.
 </pre>
-and the result is the asme as \def\mycolor{\setrgbcolor{.678 .212 .843}}.
-The macro \setRGBcolor should be defined as follows:
+
+<p>We can use \edef in order to define a color given by one of the format
+mentioned above:
 
 <pre>
-\def\setRGBcolor #1,#2,#3 {\directlua{
-   tex.print(string.format("\nbb setrgbcolor{\%.3f \%.3f \%.3f}", #1/255, #2/255, #3/255))
-}}
+\edef\Fuchsia{\noexpand\setrgbcolor{\ccd/hex f012be;}}
+or
+\edef\Fuchsia{\noexpand\setrgbcolor{\ccd/255 240,18,190;}}
+</pre>
+
+<p>Both methods in this example defines \Fuchsia as \setrgbcolor{.941 .071 .745}.
+
+<p>Implementation:
+
+<pre>
+\def\ccd/#1 #2;{\trycs{ccd:#1}{\ccdskip}#2,{},{},{},;}
+\sdef{ccd:hex}#1#2#3#4#5#6#7#8#9;{\ccdlua{0x}{255}{#1#2}{#3}{#4}{#5#6}{#7}{#8}}
+\sdef{ccd:255}#1,#2,#3,#4,#5;{\ccdlua{}{255}{#1}{#2}{}{#3}{}{#4}}
+\sdef{ccd:100}#1,#2,#3,#4,#5;{\ccdlua{}{100}{#1}{#2}{}{#3}{}{#4}}
+\def\ccdskip#1;{0}
+\def\ccdlua#1#2#3#4#5#6#7#8{% #1=prefix, #2=base, #3=a, #4#5=b, #6=c, #7#8=d
+   \ea\_stripzeros
+   \directlua{
+      tex.print(string.format("\%.3f", #1#3/#2))
+      \ifx^#4^\else tex.print(string.format("\%.3f \%.3f", #1#4#5/#2, #1#6/#2))
+         \ifx^#8^\else tex.print(string.format("\%.3f", #1#7#8/#2))
+      \fi\fi
+} ;}
 </pre>
 
 <p CLASS=datum>(0180) -- P. O. 2026-06-05<p>
