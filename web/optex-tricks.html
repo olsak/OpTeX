@@ -137,6 +137,7 @@ The important OPmac tricks will be re-implemented here soon.
 <ul>
     <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#inspicto">Repeating image in the document in various sizes</a>
+    <li><a href="#inspicwarn">Warning when \inspic doesn't find the file</a>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#ccd">Color components declared in various formats</a>
     <li><a href="#clipbox">A box with its content clipped</a>
@@ -1845,9 +1846,11 @@ instead of width.
    \ifcsname insp:#1/\the\picparams\endcsname
       \pdfrefximage \wh \lastnamedcs
    \else
+      \let\_lastinspic=\_inspic
       \inspic{#1}%
-      \global \ea \chardef \csname insp:#1/\the\picparams\endcsname = \pdflastximage
-   \fi \egroup
+      \ifx\_lastinspic\_inspic
+         \global \ea \chardef \csname insp:#1/\the\picparams\endcsname = \pdflastximage
+   \fi\fi \egroup
 }
 </pre>
 
@@ -1859,6 +1862,55 @@ done by the pointer and printed by \pdfrefximage (\useimageresource). LuaTeX all
 the optional parameter "width" or "height" (for re-scaling the image) when \pdfrefximage is used.
 
 <p CLASS=datum>(0172) -- P. O. 2026-03-04<p>
+<hr>
+
+<h2><a name="inspicwarn"></a>Warning when \inspic doesn't find the file</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\inspicwarn
+
+<p>If \inspic didn't find the given file then an error is reported and TeX is
+terminated immediately. This default behavior may not be practical.
+
+<p>We can declare \inspicwarn from this OpTeX trick in order to only warning is
+reported and the process continues when \inspic doesn't find the file. The
+shaded rectangle with the name of not found file is printed. This rectangle
+has correct size (like if the image is found) if both \picw and \pich are
+given. If only one is set, then we suppose that width:height=4:3. If none
+is set then we suppose that width=10cm. It means that typically the shaded
+rectangle has different size than the correct image.
+
+<pre>
+\_def\inspicwarn{%
+   \_def\_inspicB ##1{%
+      \_isfile{\_the\_picdir##1}\_iftrue
+         \_pdfximage \_ifdim\_picwidth=\_zo  \_else width\_picwidth\_fi
+                     \_ifdim\_picheight=\_zo \_else height\_picheight\_fi
+                     \_the\_picparams {\_the\_picdir##1}%
+         \_pdfrefximage\_pdflastximage
+         \_glet\_lastinspic=\_inspic
+      \_else \_noinspic{##1}\_glet\_lastinspic=\_noinspic \_fi
+      \_egroup}%
+}
+\_def\_noinspic#1{%
+   \_ifdim\_picheight=\_zo \_picheight=.75\_picwidth \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=1.33333\_picheight \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=10cm \_picheight=7.5cm \_fi
+   \_hbox to\_picwidth{%
+      \_rlap{\Grey\_vrule height\_picheight width\_picwidth}%
+      \_kern10pt\_raise10pt\_hbox{\_bf\_the\_picdir#1}\_hss}%
+   \_opwarning{\_string\inspic{\_the\_picdir#1}: file not found}%
+}
+</pre>
+
+<p>The internal \_inspicB is re-defined when \inspicwarn is declared.
+The new macro \_noinspic is executed if the file isn't found.
+Moreover, the \_lastinspic control sequence is set to \_inspic (if the file
+is found) or \_noinspic (if the file isn't found). This can be usable for
+macro programmers who can determine whether the last image was correctly
+printed. We use this in the OpTeX trick <a href="#inspicto">0172</a>.
+
+<p CLASS=datum>(0186) -- P. O. 2026-07-14<p>
 <hr>
 
 <h2><a name="gradients"></a>Color gradients</h2>
@@ -1945,10 +1997,10 @@ or
 <p>Implementation:
 
 <pre>
-\def\ccd/#1 #2;{\trycs{ccd:#1}{\ccdskip}#2,{},{},{},;}
-\sdef{ccd:hex}#1#2#3#4#5#6#7#8#9;{\ccdlua{0x}{255}{#1#2}{#3}{#4}{#5#6}{#7}{#8}}
-\sdef{ccd:255}#1,#2,#3,#4,#5;{\ccdlua{}{255}{#1}{#2}{}{#3}{}{#4}}
-\sdef{ccd:100}#1,#2,#3,#4,#5;{\ccdlua{}{100}{#1}{#2}{}{#3}{}{#4}}
+\def\ccd/#1 #2;{\trycs{ccd:/#1}{\ccdskip}#2,{},{},{},;}
+\sdef{ccd:/hex}#1#2#3#4#5#6#7#8#9;{\ccdlua{0x}{255}{#1#2}{#3}{#4}{#5#6}{#7}{#8}}
+\sdef{ccd:/255}#1,#2,#3,#4,#5;{\ccdlua{}{255}{#1}{#2}{}{#3}{}{#4}}
+\sdef{ccd:/100}#1,#2,#3,#4,#5;{\ccdlua{}{100}{#1}{#2}{}{#3}{}{#4}}
 \def\ccdskip#1;{0}
 \def\ccdlua#1#2#3#4#5#6#7#8{% #1=prefix, #2=base, #3=a, #4#5=b, #6=c, #7#8=d
    \ea\_stripzeros

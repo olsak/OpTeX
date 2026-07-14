@@ -128,10 +128,10 @@
 \_trick 0180 \ccd ;
 %%%%%%%%%%%%
 
-\_def\ccd/#1 #2;{\_trycs{ccd:#1}{\.ccdskip}#2,{},{},{},;}
-\_sdef{ccd:hex}#1#2#3#4#5#6#7#8#9;{\.ccdlua{0x}{255}{#1#2}{#3}{#4}{#5#6}{#7}{#8}}
-\_sdef{ccd:255}#1,#2,#3,#4,#5;{\.ccdlua{}{255}{#1}{#2}{}{#3}{}{#4}}
-\_sdef{ccd:100}#1,#2,#3,#4,#5;{\.ccdlua{}{100}{#1}{#2}{}{#3}{}{#4}}
+\_def\ccd/#1 #2;{\_trycs{ccd:/#1}{\.ccdskip}#2,{},{},{},;}
+\_sdef{ccd:/hex}#1#2#3#4#5#6#7#8#9;{\.ccdlua{0x}{255}{#1#2}{#3}{#4}{#5#6}{#7}{#8}}
+\_sdef{ccd:/255}#1,#2,#3,#4,#5;{\.ccdlua{}{255}{#1}{#2}{}{#3}{}{#4}}
+\_sdef{ccd:/100}#1,#2,#3,#4,#5;{\.ccdlua{}{100}{#1}{#2}{}{#3}{}{#4}}
 \_def\.ccdskip#1;{0}
 \_def\.ccdlua#1#2#3#4#5#6#7#8{% #1=prefix, #2=base, #3=a, #4#5=b, #6=c, #7#8=d
    \_ea\_stripzeros
@@ -451,9 +451,35 @@ end,'global') % we want to keep the meanig after group
    \_ifcsname insp:#1/\_the\_picparams\_endcsname
       \_pdfrefximage \.wh \_lastnamedcs
    \_else
-      \_inspic{#1}%
-      \_global \_ea \_chardef \_csname insp:#1/\_the\_picparams\_endcsname = \_pdflastximage
-   \_fi \_egroup
+       \_let\_lastinspic=\_inspic
+       \_inspic{#1}%
+       \_ifx\_lastinspic\_inspic
+            \_global \_ea \_chardef \_csname insp:#1/\_the\_picparams\_endcsname = \_pdflastximage
+   \_fi\_fi \_egroup
+}
+
+\_trick 0186 \inspicwarn ;
+%%%%%%%%%%%%
+
+\_def\inspicwarn{%
+   \_def\_inspicB ##1{%
+      \_isfile{\_the\_picdir##1}\_iftrue
+         \_pdfximage \_ifdim\_picwidth=\_zo  \_else width\_picwidth\_fi
+                     \_ifdim\_picheight=\_zo \_else height\_picheight\_fi
+                     \_the\_picparams {\_the\_picdir##1}%
+         \_pdfrefximage\_pdflastximage
+         \_glet\_lastinspic=\_inspic
+      \_else \_noinspic{##1}\_glet\_lastinspic=\_noinspic \_fi
+      \_egroup}%
+}
+\_def\_noinspic#1{%
+   \_ifdim\_picheight=\_zo \_picheight=.75\_picwidth \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=1.33333\_picheight \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=10cm \_picheight=7.5cm \_fi
+   \_hbox to\_picwidth{%
+      \_rlap{\_setgreycolor{.6}\_vrule height\_picheight width\_picwidth}%
+      \_kern10pt\_raise10pt\_hbox{\_bf\_the\_picdir#1}\_hss}%
+   \_opwarning{\_string\inspic{\_the\_picdir#1}: file not found}%
 }
 
 \_trick 0141 \clipbox ;
