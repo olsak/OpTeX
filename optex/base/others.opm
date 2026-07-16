@@ -167,7 +167,7 @@
 \_xargs \_regtrick \begfile \createfile \beglua \begLUA \logginglua
    \sethours \setminutes \setseconds \setweekday \Othe \ordnum \showpglists \shownodes \runsystem
    \directoutput \algol \algolkw \algolcap \algolnum \makeLOA \setaca \scaleto \scaletof
-   \ttlineref \lref \easylist \keepstyle \fcread \shadedframe \roundframe \cancel \ignoreinspic
+   \ttlineref \lref \easylist \keepstyle \fcread \shadedframe \roundframe \cancel \inspicignore
    \keystroke \colortab \crx \crtop \crbot \crmid \longtable \vcent \vbot \tnote
    \tabnodes \tablebefore \framedblocks \twoblocks \pstart \settabs \import \incrpp \ispageodd
    \iniseccc \seccc \makeLOF \makeLOT \captionF \captionT \correctvsize \pgforeground

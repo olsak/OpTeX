@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-05-20>} % chunks loaded on demand
+\_codedecl \_undefined {OpTeX tricks ready to autoload <2026-07-15>} % chunks loaded on demand
 
 % Selected OpTeX tricks are here, they are auto-loaded if the macro is used first
 % namespace: optextrick
@@ -461,25 +461,35 @@ end,'global') % we want to keep the meanig after group
 \_trick 0186 \inspicwarn ;
 %%%%%%%%%%%%
 
+\_def\.trydef #1{\_ifx#1\_undefined \_afterfi{\_def#1}\_else \_afterfi{\_def\.tmp}\_fi}
+\.trydef\nopicratio{1.3333}
+\.trydef\nopicw{10cm}
+
+\_let\.inspicBx=\_inspicB
 \_def\inspicwarn{%
-   \_def\_inspicB ##1{%
-      \_isfile{\_the\_picdir##1}\_iftrue
-         \_pdfximage \_ifdim\_picwidth=\_zo  \_else width\_picwidth\_fi
-                     \_ifdim\_picheight=\_zo \_else height\_picheight\_fi
-                     \_the\_picparams {\_the\_picdir##1}%
-         \_pdfrefximage\_pdflastximage
-         \_glet\_lastinspic=\_inspic
-      \_else \_noinspic{##1}\_glet\_lastinspic=\_noinspic \_fi
-      \_egroup}%
-}
-\_def\_noinspic#1{%
-   \_ifdim\_picheight=\_zo \_picheight=.75\_picwidth \_fi
-   \_ifdim\_picwidth=\_zo \_picwidth=1.33333\_picheight \_fi
-   \_ifdim\_picwidth=\_zo \_picwidth=10cm \_picheight=7.5cm \_fi
+   \_def\_inspicB##1{\_glet\_lastinspic=\_inspic
+   \_isfile{\_the\_picdir##1}\_iftrue \.inspicP\.inspicBx{##1}%
+   \_else \_opwarning{\_string\inspic{\_the\_picdir##1}: file not found}%
+      \.noinspic{NONE: \_the\_picdir##1}\_egroup
+   \_fi
+}}
+\_def\.noinspic#1{\_glet\_lastinspic=\.noinspic
+   \_ifdim\_picheight=\_zo \_edef\.tmp{\_expr{1/\nopicratio}}\_picheight=\.tmp\_picwidth \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=\nopicratio\_picheight \_fi
+   \_ifdim\_picwidth=\_zo \_picwidth=\nopicw \_picheight=\.tmp\_picwidth \_fi
    \_hbox to\_picwidth{%
       \_rlap{\_setgreycolor{.6}\_vrule height\_picheight width\_picwidth}%
-      \_kern10pt\_raise10pt\_hbox{\_bf\_the\_picdir#1}\_hss}%
-   \_opwarning{\_string\inspic{\_the\_picdir#1}: file not found}%
+      \_kern10pt\_raise10pt\_hbox{\_bf#1}\_hss}%
+}
+\_let\.inspicP=\_empty
+
+\_trick 0053 \inspicignore ;
+%%%%%%%
+
+\_def\inspicignore{%
+   \inspicwarn
+   \_def\.inspicP\.inspicBx##1{\_setbox0=\_hbox\_bgroup\.inspicBx{##1}%
+      \_picwidth=\_wd0 \_picheight=\_ht0 \.noinspic{\_the\_picdir##1}\_egroup}%
 }
 
 \_trick 0141 \clipbox ;
@@ -499,29 +509,6 @@ end,'global') % we want to keep the meanig after group
       \_vrule height#2sp depth#3sp width0pt \_hss
    }%
 }
-
-\_trick 0053 \ignoreinspic ;
-%%%%%%%%%%%%
-
-\_def\.trydef #1{\_ifx#1\_undefined \_afterfi{\_def#1}\_else \_afterfi{\_def\.tmp}\_fi}
-\.trydef\nopicw{5cm}
-\.trydef\nopicratio{1.7}
-
-\_let\.inspicBori=\_inspicB
-\_def\.inspicBnew#1{%
-   \_isfile{\_the\_picdir#1}\_iftrue
-      \_edef\.filename{\_the\_picdir#1}%
-      \_setbox0=\_hbox\_bgroup\.inspicBori{#1}% \egroup is in \inspicBori
-   \_else
-      \_edef\.filename{NONE: \_the\_picdir#1}%
-      \_ifdim\_picheight=0pt \_picheight=\_expr{1/\nopicratio}\_picwidth \_fi
-      \_ifdim\_picwidth=0pt \_picwidth=\nopicratio\_picheight \_fi
-      \_ifdim\_picwidth=0pt \_picwidth=\nopicw\_relax \_picheight=\_expr{1/\nopicratio}\_picwidth \_fi
-      \_setbox0=\_hbox to\_picwidth{\_vbox to\_picheight{}\_hss}%
-   \_fi
-   {\LightGrey \_vrule height\_ht0 width\_wd0\Black\_raise1ex\_llap{\.filename\ }}\_egroup
-}
-\_def\ignoreinspic{\_let\_inspicB=\.inspicBnew}
 
 \_trick 0040 \tdnum ;
 %%%%%%%%%%%%
@@ -1468,6 +1455,7 @@ end,'global') % we want to keep the meanig after group
 
 \_endcode
 
+2026-07-15 \inspicwarn introduced, \ignoreinspic reiplemented to \inspicignore
 2026-05-20 \verbhyphens added
 2026-04-09 \inspictoh added
 2026-04-04 \framedblocks: case of \pagedirection=1 corrected

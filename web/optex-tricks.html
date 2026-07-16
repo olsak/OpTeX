@@ -138,13 +138,13 @@ The important OPmac tricks will be re-implemented here soon.
     <li><a href="#loadicon">Repeating image in the document</a>
     <li><a href="#inspicto">Repeating image in the document in various sizes</a>
     <li><a href="#inspicwarn">Warning when \inspic doesn't find the file</a>
+    <li><a href="#inspicignore">Ignoring pictures when \inspic is processed</a>
     <li><a href="#gradients">Color gradients</a>
     <li><a href="#ccd">Color components declared in various formats</a>
     <li><a href="#clipbox">A box with its content clipped</a>
     <li><a href="#carrows">Curved arrows</a>
     <li><a href="#cancel">Canceled text</a>
     <li><a href="#circletext">Text around a circle</a>
-    <li><a href="#ignoreinspic">Ignoring pictures when \inspic is processed</a>
     <li><a href="#keystrokes">Keystrokes using special images</a>
     <li><a href="#shadedframe">Frames with shadows</a>
     <li><a href="#roundframe">Frames with rounded corners</a>
@@ -1868,50 +1868,89 @@ the optional parameter "width" or "height" (for re-scaling the image) when \pdfr
 
 <p CLASS=rmarg>
 autoload:<br>\inspicwarn
+<br>declared if undefined:<br>\nopicratio{1.3333}<br>\nopicw{10cm}
 
 <p>If \inspic didn't find the given file then an error is reported and TeX is
-terminated immediately. This default behavior may not be practical.
+terminated immediately. This default behavior may be somewhat impractical.
 
 <p>We can declare \inspicwarn from this OpTeX trick in order to only warning is
 reported and the process continues when \inspic doesn't find the file. The
 shaded rectangle with the name of not found file is printed. This rectangle
 has correct size (like if the image is found) if both \picw and \pich are
-given. If only one is set, then we suppose that width:height=4:3. If none
-is set then we suppose that width=10cm. It means that typically the shaded
+given. If only one is set, then we suppose that width:height=\nopicratio. If none
+is set then we suppose that width=\nopicw. It means that typically the shaded
 rectangle has different size than the correct image.
 
 <pre>
-\_def\inspicwarn{%
-   \_def\_inspicB ##1{%
-      \_isfile{\_the\_picdir##1}\_iftrue
-         \_pdfximage \_ifdim\_picwidth=\_zo  \_else width\_picwidth\_fi
-                     \_ifdim\_picheight=\_zo \_else height\_picheight\_fi
-                     \_the\_picparams {\_the\_picdir##1}%
-         \_pdfrefximage\_pdflastximage
-         \_glet\_lastinspic=\_inspic
-      \_else \_noinspic{##1}\_glet\_lastinspic=\_noinspic \_fi
-      \_egroup}%
+\def\nopicratio{1.3333}  \def\nopicw{10cm}  % default values
+
+\let\inspicBx=\_inspicB
+\def\inspicwarn{%
+   \def\_inspicB##1{\glet\_lastinspic=\inspic
+      \isfile{\the\picdir##1}\iftrue \inspicP\inspicBx{##1}%
+      \else \opwarning{\string\inspic{\the\picdir##1}: file not found}%
+         \noinspic{NONE: \the\picdir##1}\egroup
+      \fi
+}}
+\def\noinspic#1{\glet\_lastinspic=\noinspic
+   \ifdim\picheight=\_zo \edef\tmp{\expr{1/\nopicratio}}\picheight=\tmp\picwidth \fi
+   \ifdim\picwidth=\_zo \picwidth=\nopicratio\picheight \fi
+   \ifdim\picwidth=\_zo \picwidth=\nopicw \picheight=\tmp\picwidth \fi
+   \hbox to\picwidth{%
+      \rlap{\Grey\vrule height\picheight width\picwidth}%
+      \kern10pt\raise10pt\hbox{\bf #1}\hss}%
 }
-\_def\_noinspic#1{%
-   \_ifdim\_picheight=\_zo \_picheight=.75\_picwidth \_fi
-   \_ifdim\_picwidth=\_zo \_picwidth=1.33333\_picheight \_fi
-   \_ifdim\_picwidth=\_zo \_picwidth=10cm \_picheight=7.5cm \_fi
-   \_hbox to\_picwidth{%
-      \_rlap{\Grey\_vrule height\_picheight width\_picwidth}%
-      \_kern10pt\_raise10pt\_hbox{\_bf\_the\_picdir#1}\_hss}%
-   \_opwarning{\_string\inspic{\_the\_picdir#1}: file not found}%
-}
+\let\inspicP=\empty
 </pre>
 
 <p>The internal \_inspicB is re-defined when \inspicwarn is declared.
-The new macro \_noinspic is executed if the file isn't found.
-Moreover, the \_lastinspic control sequence is set to \_inspic (if the file
-is found) or \_noinspic (if the file isn't found). This can be usable for
+The new macro \noinspic is executed if the file isn't found.
+Moreover, the \_lastinspic control sequence is set to \inspic (if the file
+is found) or \noinspic (if the file isn't found). This can be usable for
 macro programmers who can determine whether the last image was correctly
 printed. We use this in the OpTeX trick <a href="#inspicto">0172</a>.
 
+<p>The \inspicP macro is empty by default. We can re-define
+it if we want to skip all images. See the following OpTeX trick
+<a href="#inspicignore">0053</a>.
+
 <p CLASS=datum>(0186) -- P. O. 2026-07-14<p>
 <hr>
+
+<h2><a name="inspicignore"></a>Ignoring pictures when \inspic is processed</h2>
+
+<p CLASS=rmarg>
+autoload:<br>\inspicignore
+
+<p>Pictures may take more size in the resulting PDF. We may want to disable their
+loading when a draft of our document is created.
+This can be solved by the \inspicignore macro. When it is used at the
+beginning of the document then all pictures loaded by \inspic are replaced
+by the shaded rectangle and the file name of the image is printed.
+The shaded rectagles have correct size if the image file exists. Otherwise
+\inspic bahaves like \inspicwarn was declared (OpTeX trick <a href="#inspicwarn">0186</a>)
+In order to distinguish between existing and non-existing files, the word
+NONE: is printed before file name, if it isn't found.
+
+<p>Implementation:
+
+<pre>
+\def\inspicignore{\inspicwarn
+   \def\inspicP\inspicBx##1{\setbox0=\hbox\bgroup\inspicBx{##1}%
+      \picwidth=\wd0 \picheight=\ht0 \noinspic{\the\picdir##1}\egroup}%
+}
+</pre>
+
+<p>The \inspicignore macro executes \inspicwarn
+from previous OpTeX trick <a href="#inspicwarn">0186</a>. Moreover, it redefines
+\inspicP which creates the picture in an unused box0. Only its dimensions
+are used and the \noinspic macro prints the shaded rectangle. Note: the
+original macro \inspicBx executes \egroup at its end, so the box0 is
+created. The final \egroup (after \noinspic) closes the outer group of the \inspic macro.
+
+<p CLASS=datum>(0053) -- P. O. 2021-04-04, 2026-07-15<p>
+<hr>
+
 
 <h2><a name="gradients"></a>Color gradients</h2>
 
@@ -2243,68 +2282,6 @@ is re-implemeted here. The calculation is done by \expr and \bp macros. The
 converts such length to the angular measure in degrees.
 
 <p CLASS=datum>(0038) -- P. O. 2021-02-05<p>
-<hr>
-
-<h2><a name="ignoreinspic"></a>Ignoring pictures when \inspic is processed</h2>
-
-<p CLASS=rmarg>
-autoload:<br>\ignoreinspic<br>declared if undefined:<br>\nopicw<br>\nopicratio
-
-<p>Pictures may take more size in the resulting PDF. We may want to disable their
-loading when a draft of our document is created. Or we may want to sent the
-source code to a colleague for experimenting, but without picture
-files. Both cases can be solve by \ignoreinspic macro. When it is used at the
-beginning of the document then all pictures loaded by \inspic have following
-features:
-
-<ul>
-<li>If the given picture file exists then \inspic loads it only in order to
-get its natural sizes (height and width) but the picture is not printed. The gray
-rectangle with the same sizes (calculated from \picwidth, \picheight values and
-from the natural sizes) is printed instead and the name of the picture file is appended.
-The real picture is not embedded to the PDF file, so the file keeps its small size.
-
-<li>If the given picture file does not exist then the virtual natural sizes of
-a non-existent image are taken from \nopicw and \nopicratio macros. The
-\nopicw gives the natural width and the \nopicratio gives the ratio
-width/height. The real sizes are calculated from \picwidth, \picheight and
-the virtual natural sizes (as \inspic normally does it) and a gray rectangle is
-printed. The text "NONE: file-name" is appended, where the file-name is the non
-existent picture file name given by the argument of \inspic.
-</ul>
-
-<p>Implementation:
-
-<pre>
-\def\nopicw{5cm}
-\def\nopicratio{1.7}
-
-\let\inspicBori=\_inspicB
-\def\inspicBnew#1{%
-   \isfile{\the\picdir#1}\iftrue
-      \edef\filename{\the\picdir#1}%
-      \setbox0=\hbox\bgroup\inspicBori{#1}% \egroup is in \inspicBori
-   \else
-      \edef\filename{NONE: \the\picdir#1}%
-      \ifdim\picheight=0pt \picheight=\expr{1/\nopicratio}\picwidth \fi
-      \ifdim\picwidth=0pt \picwidth=\nopicratio\picheight \fi
-      \ifdim\picwidth=0pt \picwidth=\nopicw\relax \picheight=\expr{1/\nopicratio}\picwidth \fi
-      \setbox0=\hbox to\picwidth{\vbox to\picheight{}\hss}%
-   \fi
-   {\LightGrey \vrule height\ht0 width\wd0\Black\raise1ex\llap{\filename\ }}\egroup
-}
-\def\ignoreinspic{\let\_inspicB=\inspicBnew}
-</pre>
-
-<p>
-The internal \_inspicB macro is re-defined when \ingnoreinspic is used.
-It loads the image to box0 (using the original \inspic macro) and uses only its
-dimensions. The contents of box0 is thrown away when the group is left.
-Note, that \inspic starts with \hbox\bgroup, so the final \egroup leaves its
-group. When the file does not exists then more calculatons are done and
-box0 is constructed with calculated dimensions.
-
-<p CLASS=datum>(0053) -- P. O. 2021-04-04<p>
 <hr>
 
 <h2><a name="keystrokes"></a>Keystrokes using special images</h2>
