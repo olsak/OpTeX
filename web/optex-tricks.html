@@ -329,6 +329,7 @@ The important OPmac tricks will be re-implemented here soon.
 <li>Languages
 <ul>
     <li><a href="#ngerman">The german.sty and ngerman.sty implementation</a>
+    <li><a href="#ucasort">Language sensitive sorting using lua-uca</a>
 </ul>
 
 <li>Directions
@@ -9644,6 +9645,100 @@ erweitert.
 quotation marks used by \"text" and preferred in OpTeX.
 
 <p CLASS=datum>(0036) -- P. O. 2021-01-22<p>
+<hr>
+
+<h2><a name="ucasort"></a>Language sensitive sorting using lua-uca</h2>
+
+<p>The default \_dosorting macro (used in OpTeX trick
+<a href="#sort">0068</a>) sorts the words using the sorting data declared
+in OpTeX for the selected language. If we need collation rules for a language
+which is not covered by these data, we can delegate the whole sorting to the
+<a href="https://ctan.org/pkg/lua-uca">lua-uca</a> library. It implements the
+Unicode Collation Algorithm (UCA) with the DUCET (Default Unicode Collation
+Element Table) and provides language specific tailorings for many languages.
+
+<p>We re-define \_dosorting in order to use lua-uca instead of the OpTeX
+sorting mechanism:
+
+<pre>
+\_directlua{
+  local scan_toks = token.scan_toks
+  local scan_string = token.scan_string
+  local put_next = token.unchecked_put_next
+  local ducet     = require"lua-uca.lua-uca-ducet"
+  local collator  = require"lua-uca.lua-uca-collator"
+  local languages = require"lua-uca.lua-uca-languages"
+  local collators = setmetatable({}, {__index = function(self, lang)
+    local c = collator.new(ducet)
+    local langfn = languages[lang]
+    if langfn then c = langfn(c) end
+    self[lang] = c
+    return c
+  end})
+  define_lua_command('doucasorting', function()
+      local lang = scan_string()
+      local list = scan_toks()
+      local key, less = {}, nil
+      if lang == "ASCII" then
+        for i, tok in ipairs(list) do key[i] = tok.csname:sub(2) end
+        less = function(i, j)
+          if key[i] ~= key[j] then return key[i] &lt; key[j] end
+          return i &lt; j
+        end
+      else
+        local c = collators[lang]
+        for i, tok in ipairs(list) do
+          key[i] = c:make_sort_key(c:string_to_codepoints(tok.csname:sub(2)))
+        end
+        less = function(i, j)
+          if c:compare(key[i], key[j]) then return true end
+          if c:compare(key[j], key[i]) then return false end
+          return i &lt; j
+        end
+      end
+      local perm = {}
+      for i = 1, \string#list do perm[i] = i end
+      table.sort(perm, less)
+      local sorted = {}
+      for k, i in ipairs(perm) do sorted[k] = list[i] end
+    put_next(sorted)
+  end
+  )
+}
+\_def\_dosorting#1{%
+   \edef\tmpa{\_ifasciisorting ASCII%
+   \_else\_ifx\_sortinglang\_undefined \_cs{_lan:\_the\_language}%
+   \_else \_sortinglang
+   \_fi\_fi}%
+   \_sortmessage{UCA: Sorting \_string#1 (\tmpa) ...^^J}%
+   \_ea\_def\_ea#1\_ea{\doucasorting{\tmpa}\_ea{#1}}%
+}
+</pre>
+
+<p>The \_directlua part defines a new \doucasorting command using
+define_lua_command. It reads two arguments: the language tag
+and the list of control sequences to be sorted (as a token list). A sort key
+is precomputed once for every item: for the "ASCII" language it is the cs
+name itself without the leading character, otherwise it is the collation sort
+key returned by collator:make_sort_key applied to the same string. The
+collator for the language is fetched from the collators table, whose __index
+metamethod builds it on first access from the DUCET and applies the tailoring
+for languages[lang] (when such a function exists). Because collator.new copies
+the whole DUCET before it is tailored, this happens for each language only
+once and the result is cached, so later \doucasorting calls reuse it instead
+of rebuilding it.
+
+<p>Instead of sorting the token list directly, we sort an array of its
+indices (perm). The comparator then receives the original positions i and j,
+so when the two keys are equal it can fall back to i &lt; j; this makes the
+comparison a strict total order and keeps items with equal keys in their input
+order, i.e. the sort is stable.
+
+<p>Finally, \_dosorting is re-defined to run \doucasorting on its argument #1
+(the list to be sorted, re-defined in place). The lua-uca collation is then
+used by \makeindex, \usebib and everywhere else where OpTeX sorts data.
+
+<p CLASS=datum>(0187) -- Udi Fogiel, 2026-07-19<p>
 <hr>
 
 <p CLASS="lmarg">Directions</p>
