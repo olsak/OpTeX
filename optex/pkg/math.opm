@@ -3,7 +3,7 @@
 % This file can serve as an template for other package files
 % See end of the file for more information
 
-\_def\_math_version {0.28, 2026-06-20}
+\_def\_math_version {0.29, 2026-07-19}
 \_codedecl \replacemissingchars {Doing math more comfortably <\_math_version>}
 \_namespace{math}
 
@@ -218,9 +218,9 @@
 \_newpublic\.pdef \arctg   {\_mathop{\_rm arctg}\_nolimits}
 \_newpublic\.pdef \arccotg {\_mathop{\_rm arccotg}\_nolimits}
 
-\_newpublic\.pdef \frac  #1#2{{{#1}\_over#2}}
-\_newpublic\.pdef \dfrac #1#2{{\_displaystyle{{#1}\_over#2}}}
-\_newpublic\.pdef \tfrac #1#2{{\_textstyle{{#1}\_over#2}}}
+\_newpublic\.pdef \frac  #1#2{\_Ustack{{#1}\_over#2}}
+\_newpublic\.pdef \dfrac #1#2{\_Ustack{\_displaystyle{{#1}\_over#2}}}
+\_newpublic\.pdef \tfrac #1#2{\_Ustack{\_textstyle{{#1}\_over#2}}}
 
 \_newpublic\.pdef \.#1{{\_bf#1}}
 
@@ -1519,6 +1519,7 @@ The user can read this warning and declare the macro after
 
 \endinput
 
+0.29  2026-07-19  \Ustack is now used in \frac, \tfrac and \dfrac
 0.28  2026-06-20  \bigop introduced.
 0.27  2026-06-17  \morevars introduced.
 0.26  2026-06-10  \harrowto, \varrowto reimplemented.
