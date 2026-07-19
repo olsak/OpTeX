@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \magstep {Macros from plain TeX <2022-10-11>} % preloaded in format
+\_codedecl \magstep {Macros from plain TeX <2026-07-18>} % preloaded in format
 
    \_doc -----------------------------
    The \`\dospecials` works like in plain TeX but does nothing with `_`.
@@ -266,24 +266,23 @@
    macro \`\oldaccents` which defines accented macros.
    \nl
    Much more usable is to define these control sequences for other purposes.
-   \nl
-   The \`\_uniaccents` macro redeclares codes for accents and it is run when
-   Unicode font family is loaded.
    \_cod -----------------------------
 
 \_def \_oldaccents {%
-   \_def\`##1{{\_accent\_tgrave  ##1}}%
-   \_def\'##1{{\_accent\_tacute  ##1}}%
-   \_def\v##1{{\_accent\_caron  ##1}}%
-   \_def\u##1{{\_accent\_tbreve  ##1}}%
-   \_def\=##1{{\_accent\_macron ##1}}%
-   \_def\^##1{{\_accent\_circumflex ##1}}%
-   \_def\.##1{{\_accent\_dotaccent ##1}}%
-   \_def\H##1{{\_accent\_hungarumlaut ##1}}%
-   \_def\~##1{{\_accent\_ttilde  ##1}}%
-   \_def\"##1{{\_accent\_dieresis ##1}}%
-   \_def\r##1{{\_accent\_ring   ##1}}%
+   \_def\`##1{{\_xaccent\_tgrave  ##1}}%
+   \_def\'##1{{\_xaccent\_tacute  ##1}}%
+   \_def\v##1{{\_xaccent\_caron  ##1}}%
+   \_def\u##1{{\_xaccent\_tbreve  ##1}}%
+   \_def\=##1{{\_xaccent\_macron ##1}}%
+   \_def\^##1{{\_xaccent\_circumflex ##1}}%
+   \_def\.##1{{\_xaccent\_dotaccent ##1}}%
+   \_def\H##1{{\_xaccent\_hungarumlaut ##1}}%
+   \_def\~##1{{\_xaccent\_ttilde  ##1}}%
+   \_def\"##1{{\_xaccent\_dieresis ##1}}%
+   \_def\r##1{{\_xaccent\_ring   ##1}}%
+   \_def\t##1{{##1\_tieafter}}
 }
+\_let\_xaccent=\_accent  % old composing method by \accent primitive like in classical TeX
 \_public \oldaccents ;
 
 % ec-lmr encoding (will be changed after \fontfam macro):
@@ -300,20 +299,37 @@
 \_chardef\_dotaccent=10
 \_chardef\_cedilla=11
 
+   \_doc -----------------------------
+   The \`\_uniaccents` macro redeclares codes for accents and it is run when
+   a Unicode font family is loaded. It redefines \`\_xaccent` (used in the
+   \^`\oldaccents` macro) in order to use Unicode combining diacritical marks
+   instead of the classical \TeX/ primitve `\accent`. It is more natural
+   when Unicode fonts are used. You can use these codes directly (without
+   running the \^`\oldaccents` macro). Only what you need to know is that the Unicode
+   accents are composed in reverse order than the syntax of the `\accent` primitive.
+   Use first the base character and then the combining character for the accent.
+   For example `C\_caron` creates~Č. You can combine more accents if the
+   font supports this, for example `a\_ogonek\_tacute`. Accents are of two
+   kinds in Unicode fonts: combining characters (used) and individual
+   characters (in comments).
+   \_cod -----------------------------
+
 \_def \_uniaccents {% accents with Unicode
-   \_chardef\_tgrave="0060
-   \_chardef\_tacute="00B4
-   \_chardef\_circumflex="005E
-   \_chardef\_ttilde="02DC
-   \_chardef\_dieresis="00A8
-   \_chardef\_hungarumlaut="02DD
-   \_chardef\_ring="02DA
-   \_chardef\_caron="02C7
-   \_chardef\_tbreve="02D8
-   \_chardef\_macron="00AF
-   \_chardef\_dotaccent="02D9
-   \_chardef\_cedilla="00B8
-   \_chardef\_ogonek="02DB
+   \_def \_xaccent ##1##2{##2##1}% reverse order when creating accents by \oldacents
+   \_chardef\_tgrave="0300       % "0060
+   \_chardef\_tacute="0301       % "00B4
+   \_chardef\_circumflex="0302   % "005E
+   \_chardef\_ttilde="0303       % "02DC
+   \_chardef\_dieresis="0308     % "00A8
+   \_chardef\_hungarumlaut="030B % "02DD
+   \_chardef\_ring="030A         % "02DA
+   \_chardef\_caron="030C        % "02C7
+   \_chardef\_tbreve="0306       % "02D8
+   \_chardef\_macron="0304       % "00AF
+   \_chardef\_dotaccent="0307    % "02D9
+   \_chardef\_cedilla="0327      % "00B8
+   \_chardef\_ogonek="0328       % "02DB
+   \_chardef\_tieafter="0361
    \_let \_uniaccents=\_relax
 }
 
@@ -375,6 +391,7 @@
 
 \_endcode % -------------------------------------
 
+2026-07-18 ... \oldaccents uses combining characters when Unicode font is loaded
 2024-04-28 ... \_ corrected
 2022-10-11 ... \_unichars extended
 2022-02-19 ... \input hyphen.tex moved here (format file is 80k smaller)
