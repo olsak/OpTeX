@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \_langdata {Language dependent data <2026-05-17>} % only en, cs preloaded in format
+\_codedecl \_langdata {Language dependent data <2026-07-20>} % only en, cs preloaded in format
 
 \_langdata en {English} % -----------------------------------------------
 \_langw en  Chapter      Table       Figure       Subject
@@ -31,8 +31,7 @@
             července srpna září října listopadu prosince
 \_sdef{_mt:today:cs}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks cs {„“‚‘}
-\_preplangmore   cs {\_frenchspacing \_postexhyphenchar=`\-
-                     \_def\_langreset{\_postexhyphenchar=0 }}
+\_preplangmore   cs {\_frenchspacing \_postexhyphenchar=`\- }
 
 \_let \_sortingdatacs  = \_sortingdatalatin
 \_let \_ignoredcharscs = \_ignoredcharsgeneric
@@ -142,8 +141,7 @@
             júla augusta septembra októbra novembra decembra
 \_sdef{_mt:today:sk}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks sk {„“‚‘}
-\_preplangmore   sk {\_frenchspacing \_postexhyphenchar=`\-
-                     \_def\_langreset{\_postexhyphenchar=0 }}
+\_preplangmore   sk {\_frenchspacing \_postexhyphenchar=`\- }
 
 \_let \_sortingdatask = \_sortingdatalatin
 \_let \_ignoredcharssk = \_ignoredcharsgeneric
@@ -174,8 +172,7 @@
             jula avgusta septembra oktobra novembra decembra
 \_sdef{_mt:today:srlatn}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 \_quotationmarks srlatn {„”’’}
-\_preplangmore   srlatn {\_frenchspacing \_postexhyphenchar=`\-
-                     \_def\_langreset{\_postexhyphenchar=0 }}
+\_preplangmore   srlatn {\_frenchspacing \_postexhyphenchar=`\- }
 
 \_def \_sortingdatasrlatn {% it is not a subset of \_sortingdatalatin, there is different order
   /,{ },-,&,@,%
@@ -199,8 +196,7 @@
 \_sdef{_mt:today:srcyrl}{\_the\_day.~\_mtext{m\_the\_month} \_the\_year} % date format
 
 \_quotationmarks srcyrl {„”’’}
-\_preplangmore   srcyrl {\_frenchspacing \_postexhyphenchar=`\-
-                     \_def\_langreset{\_postexhyphenchar=0 }}
+\_preplangmore   srcyrl {\_frenchspacing \_postexhyphenchar=`\- }
 
 \_def \_sortingdatasrcyrl {% it is not a subset of \_sortingdatalatin, there is different order
   /,{ },-,&,@,%
@@ -242,6 +238,7 @@
 
 \_endcode
 
+2026-07-20: redundant \_postexhyphenchar=0 removed
 2026-05-17: \_quotationmarks fr redefined
 2026-05-12: \_quotationmarks corrected by https://en.wikipedia.org/wiki/Quotation_mark
 2025-05-12: Serbian data added (by Vuk Djukanović)
