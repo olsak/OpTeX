@@ -8,6 +8,9 @@
    other applications, see an example in
    \ulink[http://petr.olsak.net/optex/optex-tricks.html\#sort]{\OpTeX/ trick~0068}.
 
+   We can also use another approach for sorting based on the lua-uca library, see
+   \ulink[http://petr.olsak.net/optex/optex-tricks.html\#ucasort]{\OpTeX/ trick~0187}.
+
    There are two passes in the sorting algorithm. The primary pass does not
    distinguish between a group of letters (typically non-accented and
    accented). If the result of comparing two string is equal in primary pass
@@ -17,7 +20,7 @@
    letters must be before uppercase letters.
 
    The \`\_sortingdatalatin`
-   implements these rules for the languages with latin alphabets.
+   implements these rules for the languages with Latin alphabets.
    The groups between commas are not distinguished in the first
    pass. The second pass distinguishes all characters mentioned in the
    \^`\_sortingdatalatin` (commas are ignored). The order of letters
