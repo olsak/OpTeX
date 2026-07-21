@@ -144,8 +144,8 @@
    \_startverb
 }
 \_ea\_def\_ea\_startverb \_ea#\_ea1\_csstring\\endtt#2^^J{%
-   \_prepareverbdata\_tmpb{#1^^J}%
-   \_ea\_printverb \_tmpb\_fin
+   \_prepareverbdata\_tmpb{#1}%
+   \_ea\_printverb \_tmpb ^^J\_fin
    \_par \_restoremathsb
    \_endgroup \_ttskip
    \_isnextchar\_par{}{\_noindent}%
@@ -285,9 +285,9 @@
             \_ifnum\_vidolines=0 \_else\_advance\_tmpnum by1 \_fi
             \_ifeof\_vifile \_tmpnum=\_vidolines\_space \_else \_visaveline \_fi %% save line
             \_repeat
-   \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb^^J}%
+   \_ea\_prepareverbdata \_ea \_tmpb\_ea{\_tmpb}%
    \_catcode`\ =10 \_catcode`\%=9 % used in \commentchars comments
-   \_ea\_printverb \_tmpb\_fin
+   \_ea\_printverb \_tmpb ^^J\_fin
    \_ttlinesave
    \_par \_restoremathsb
    \_endgroup
