@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \fontfam {Fonts selection system <2026-06-22>} % preloaded in format
+\_codedecl \fontfam {Fonts selection system <2026-09-21>} % preloaded in format
 
    \_doc -----------------------------
    The main principle of the Font Selection System is: run one or more
@@ -180,12 +180,12 @@
    \_cod -----------------------------
 
 \_def\_fvars #1 #2 #3 #4 {%
-   \_ifx@#1\_else \_sdef{_fvar:rm}{#1}\_fi
-   \_ifx@#2\_else \_sdef{_fvar:bf}{#2}\_fi
+   \_ifx@#1\_relax\_else \_sdef{_fvar:rm}{#1}\_fi
+   \_ifx@#2\_relax\_else \_sdef{_fvar:bf}{#2}\_fi
    \_ifx.#2\_sdef{_fvar:bf}{\_relax}\_fi
-   \_ifx@#2\_else \_sdef{_fvar:it}{#3}\_fi
+   \_ifx@#2\_relax\_else \_sdef{_fvar:it}{#3}\_fi
    \_ifx.#3\_sdef{_fvar:it}{\_relax}\_fi
-   \_ifx@#4\_else \_sdef{_fvar:bi}{#4}\_fi
+   \_ifx@#4\_relax\_else \_sdef{_fvar:bi}{#4}\_fi
    \_ifx.#4\_sdef{_fvar:bi}{\_relax}\_fi
 }
 \_def\_currV{\_trycs{_fvar:\_famv}{rm}}
@@ -982,6 +982,7 @@ with Unicode fonts loaded by \^`\fontfam`.
 
 \endinput
 
+2026-09-21  Bug in \_fvars test @ corrected.
 2026-06-22  \_testmissingvar and @ for \_fvars introduced.
 2025-06-29  \_onlyif is expandable.
 2023-06-16  \fontfamsub improved.
