@@ -30,9 +30,9 @@
    \_let#2=\_iffalse
 }
 \_def\_newifp #1{\_ea\_newifpA \_csstring#1\_relax#1}
-\_ea\_def \_ea\_newifpA \_ea#\_ea1\_detokenize{_if}#2\_relax#3{%
-   \_sdef{#1_#2true}{\_let#3=\_iftrue}%
-   \_sdef{#1_#2false}{\_let#3=\_iffalse}%
+\_ea\_ea\_ea\_def \_ea\_ea\_ea\_newifpA \_ea\_string\_ea _\_ea#\_ea1\_detokenize{_if}#2\_relax#3{%
+   \_sdef{_#1_#2true}{\_let#3=\_iftrue}%
+   \_sdef{_#1_#2false}{\_let#3=\_iffalse}%
    \_let#3=\_iffalse
 }
 \_public \newif ;
