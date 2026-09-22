@@ -340,13 +340,14 @@ namespace. Do load them before your \^`\_namespace`~`{<pkg>}` is
 initialized. Or close your namespace by \^`\_endnamespace` and open it again
 (after other packages are loaded) by \^`\_resetnamespace`~`{<pkg>}`.
 
-If the package writer needs to declare a control
-sequence by \^`\newif`, then there is an exception of the rule described above. Use
-\^`\_newifi\_if<pkg>_bar`, for example `\_newifi\_ifqr_incorner`.
-Then the control sequences `\_qr_incornertrue` and
-`\_qr_incornerfalse` can be used (or the sequences `\.incornertrue`
-and `\.incornerfalse` when `\_namespace{qr}` is used).
-
+If you need to declare a control
+sequence like by \^`\newif` in a currently set namespace,
+then use \^`\_newifp\.if<name>`. Then the control sequences
+`\.if<name>`, `\.<name>true` and `\.<name>false` can be used as usually.
+For example, after  \^`\_newifp\.iftest`
+you can use `\.iftest`, `\.testtrue` and `\.testfalse`.
+Internaly, they are `\_<pkg>_iftest`, `\_<pkg>_testtrue` and
+`\_<pkg>_testfalse`.
 
 \secc Summary about rules for external macro files published for \OpTeX/
 

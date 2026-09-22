@@ -1,6 +1,6 @@
 %% This is part of the OpTeX project, see http://petr.olsak.net/optex
 
-\_codedecl \newif {Special if-macros, is-macros and loops <2025-03-01>} % preloaded in format
+\_codedecl \newif {Special if-macros, is-macros and loops <2026-09-22>} % preloaded in format
 
    \_doc ----------------------------
    \secc Classical \code{\\newif}
@@ -12,7 +12,9 @@
 
    The macro \`\_newifi` enables to declare `\_ifxxx` and to use `\_xxxtrue` and
    `\_xxxfalse`. This means that it is usable for the internal namespace
-   (`_`prefixed macros).
+   (`_`prefixed macros). The macro \`\_newifp` enables to declare `\.ifxxx`
+   in a package macros where a \^`\_namespace` is set. It declares `\.xxxtrue`
+   and `\.xxxfalse`.
    \_cod ----------------------------
 
 \_def\_newif #1{\_ea\_newifA \_string #1\_relax#1}
@@ -21,11 +23,17 @@
    \_sdef{#1false}{\_let#2=\_iffalse}%
    \_let#2=\_iffalse
 }
-\_def\_newifi #1{\_ea\_newifiA \string#1\_relax#1}
+\_def\_newifi #1{\_ea\_newifiA \_string#1\_relax#1}
 \_ea\_def \_ea\_newifiA \_string\_if #1\_relax#2{%
    \_sdef{_#1true}{\_let#2=\_iftrue}%
    \_sdef{_#1false}{\_let#2=\_iffalse}%
    \_let#2=\_iffalse
+}
+\_def\_newifp #1{\_ea\_newifpA \_csstring#1\_relax#1}
+\_ea\_def \_ea\_newifpA \_ea#\_ea1\_detokenize{_if}#2\_relax#3{%
+   \_sdef{#1_#2true}{\_let#3=\_iftrue}%
+   \_sdef{#1_#2false}{\_let#3=\_iffalse}%
+   \_let#3=\_iffalse
 }
 \_public \newif ;
 
@@ -428,6 +436,7 @@
 
 \_endcode
 
+2026-09-22 \_newifp introduced.
 2025-03-01 \foreachx introduced.
 2024-11-24 \foreach bug fixed: \foreach {xx}\do {...}
 2024-11-12 \isinlist, \isfile allow space before \iftrue/\iffalse
